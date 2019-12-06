@@ -13,19 +13,22 @@
                     </h2>
                     <p class="slds-text-body_small slds-p-bottom_small">
                         {CUSTOM_LABELS.geBodyFormFieldsLeftCol}
-                        <span>
-                            <button class="slds-button slds-button__extension slds-p-left_xxx-small"
-                                    title={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
-                                    aria-label={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
-                                    onclick={handleBodyReadMore}>
-                                {CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
-                            </button>
-                        </span>
+                        <template if:false={isReadMoreActive}>
+                            <span>
+                                <button class="slds-button slds-button__extension slds-p-left_xxx-small"
+                                        data-id={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
+                                        title={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
+                                        aria-label={CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
+                                        onclick={handleBodyReadMore}>
+                                    {CUSTOM_LABELS.geBodyFormFieldsLeftColReadMore}
+                                </button>
+                            </span>
+                        </template>
                     </p>
-                    <div class="ge-locator_read-more slds-hide">
+                    <template if:true={isReadMoreActive}>
                         <lightning-formatted-rich-text value={CUSTOM_LABELS.geBodyFormFieldsLeftColAdditional}>
                         </lightning-formatted-rich-text>
-                    </div>
+                    </template>
                 </div>
                 <div class="slds-size_1-of-1">
                     <template if:false={isAllSectionsExpanded}>

@@ -27,6 +27,7 @@ import labelGeCancel from '@salesforce/label/c.labelGeCancel';
 import geButtonSaveAndClose from '@salesforce/label/c.geButtonSaveAndClose';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
+import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geButtonBuilderNavFormFields from '@salesforce/label/c.geButtonBuilderNavFormFields';
 import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
@@ -50,6 +51,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         geButtonSaveAndClose,
         geTabTemplateInfo,
         geTabFormFields,
+        geTabBatchHeader,
         geButtonBuilderNavFormFields,
         geButtonBuilderNavBatchHeader,
         geButtonBuilderNavBackTemplateInfo,
@@ -63,7 +65,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     TabEnums = Object.freeze({
         INFO_TAB: geTabTemplateInfo,
         FORM_FIELDS_TAB: geTabFormFields,
-        BATCH_HEADER_TAB: 'Batch Header'
+        BATCH_HEADER_TAB: geTabBatchHeader
     });
 
     formTemplateRecordId;

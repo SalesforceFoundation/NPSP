@@ -48,6 +48,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     objectMappingNames = [];
     @track isAllSectionsExpanded = false;
 
+    @track isReadMoreActive = false;
     @track hasErrors = false;
     @track errors;
 
@@ -584,9 +585,6 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     * @description Method shows additional text content under the left column body.
     */
     handleBodyReadMore() {
-        const element = this.template.querySelector('div.ge-locator_read-more');
-        if (element) {
-            element.classList.remove('slds-hide');
-        }
+        this.isReadMoreActive = true;
     }
 }
