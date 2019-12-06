@@ -85,7 +85,7 @@ public with sharing class RD2_OpportunityService {
             return createdOppIds;
         }
 
-        List<Database.SaveResult> saveResults = insertOpportunities(opps);
+        List<Database.SaveResult> saveResults = Database.insert(opps, false);
 
         for (Integer i = 0; i < saveResults.size(); i++) {
             Database.SaveResult result = saveResults[i];
@@ -136,7 +136,6 @@ public with sharing class RD2_OpportunityService {
     * @return Opportunity
     */
     private Opportunity buildOpportunity(npe03__Recurring_Donation__c rd, Date closeDate) {
-
         Opportunity opp = new Opportunity(
             AccountId = rd.npe03__Organization__c,
             Primary_Contact__c = rd.npe03__Contact__c,
@@ -146,9 +145,12 @@ public with sharing class RD2_OpportunityService {
             Recurring_Donation_Installment_Number__c = (rd.npe03__Total_Paid_Installments__c != null ?
                 rd.npe03__Total_Paid_Installments__c + 1 : 1),
             npe03__Recurring_Donation__c = rd.Id
-
         );
         opp.Name = buildOpportunityName(rd, opp);
+
+        if (rdSettings.npe03__Record_Type__c != null) {
+            opp.RecordTypeId = rdSettings.npe03__Record_Type__c;
+        }
 
         if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
             opp.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
@@ -169,30 +171,6 @@ public with sharing class RD2_OpportunityService {
             System.Label.npe03.RecurringDonationPrefix + ' (' +
             opp.Recurring_Donation_Installment_Number__c +  ') ' +
             opp.CloseDate.format();
-    }
-
-    /***
-    * @description Creates opportunities
-    * @param opps Opportunities
-    * @return List<Database.SaveResult> SaveResult records after the DML operation.
-    */
-    private static List<Database.SaveResult> insertOpportunities(List<Opportunity> opps) {
-        Set<Id> rdIds = new Set<Id>();
-        Database.SaveResult[] saveResults;
-
-        for (Opportunity o : opps) {
-            rdIds.add(o.npe03__Recurring_Donation__c);
-        }
-
-        //Check if the Recurring donation is one or more to know if it gets saved from UI or from batch
-        if (rdIds.size() == 1) {
-            saveResults = Database.insert(opps, true);
-
-        } else {//otherwise, this is a bulk operation.
-            saveResults = Database.insert(opps, false);
-        }
-
-        return saveResults;
     }
 
     /***
