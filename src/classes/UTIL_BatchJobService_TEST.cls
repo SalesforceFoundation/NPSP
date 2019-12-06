@@ -54,7 +54,7 @@ public with sharing class UTIL_BatchJobService_TEST {
         }
 
         System.assertNotEquals(null, actual, 'An exception should be thrown');
-        System.assertEquals(UTIL_BatchJobService.BATCH_JOB_REQUIRED, 
+        System.assertEquals(UTIL_BatchJobService.BATCH_JOB_REQUIRED,
             actual.getMessage(), 'Exception message should match');
     }
 
@@ -82,11 +82,11 @@ public with sharing class UTIL_BatchJobService_TEST {
     * @description Verifies batch job elapsed time is calculated as difference between start and completion date.
     * If the completion date is null, the difference is calculated using the current datetime.
     */
-    @isTest 
+    @isTest
     private static void shouldCalculateTimeElapsed() {
         AsyncApexJob job = buildAsyncApexJob();
         UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService.BatchJob(job);
-        
+
         DateTime startDate = DateTime.newInstance(2018, 01, 30, 15, 20, 40);
         DateTime endDate = DateTime.newInstance(2018, 01, 30, 18, 20, 40);
         System.assertEquals('03:00:00', batchJob.calcTimeElapsed(startDate, endDate));
@@ -111,7 +111,7 @@ public with sharing class UTIL_BatchJobService_TEST {
     private static void shouldUseCurrentDateToCalculateTimeElapsedForInProgressBatch() {
         AsyncApexJob job = buildAsyncApexJob();
         UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService.BatchJob(job);
-        
+
         DateTime startDate = DateTime.newInstance(2018, 01, 30, 15, 20, 40);
         DateTime endDate = null;
         String actual = batchJob.calcTimeElapsed(startDate, endDate);
@@ -131,7 +131,7 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         Integer jobItemsProcessed = 0;
         Integer totalJobItems = 100;
-        
+
         String status = UTIL_BatchJobService.ApexJobStatus.HOLDING.name();
         Long percentComplete = batchJob.calcPercentComplete(jobItemsProcessed, totalJobItems, status);
         System.assertEquals(defaultPercentage, percentComplete);
@@ -143,7 +143,7 @@ public with sharing class UTIL_BatchJobService_TEST {
         status = UTIL_BatchJobService.ApexJobStatus.PREPARING.name();
         percentComplete = batchJob.calcPercentComplete(jobItemsProcessed, totalJobItems, status);
         System.assertEquals(10, percentComplete);
-        
+
         jobItemsProcessed = 75;
         status = UTIL_BatchJobService.ApexJobStatus.PROCESSING.name();
         percentComplete = batchJob.calcPercentComplete(jobItemsProcessed, totalJobItems, status);
@@ -163,6 +163,101 @@ public with sharing class UTIL_BatchJobService_TEST {
         System.assertEquals(100, percentComplete);
     }
 
+
+    /***
+    * @description Builds an AsyncApexJob and sets attributes that are not writable otherwise
+    */
+    public class TestAsyncApexJob {
+        private Map<String, Object> valuesByFieldName;
+
+        /***
+        * @description Constructor sets default values
+        */
+        public TestAsyncApexJob() {
+            valuesByFieldName = new Map<String, Object>();
+
+            //defaults
+            valuesByFieldName.put('Status', UTIL_BatchJobService.ApexJobStatus.COMPLETED.name());
+            valuesByFieldName.put('CreatedDate', DateTime.newInstance(2018, 01, 31, 15, 10, 45));
+            valuesByFieldName.put('CompletedDate', DateTime.newInstance(2018, 2, 3, 15, 10, 45));
+            valuesByFieldName.put('JobItemsProcessed', 75);
+            valuesByFieldName.put('TotalJobItems', 75);
+        }
+
+        /***
+        * @description Sets the batch job Id to the Mock Id
+        * @return TestAsyncApexJob
+        */
+        public TestAsyncApexJob withMockId() {
+            return withId(MOCK_BATCH_ID);
+        }
+
+        /***
+        * @description Sets the batch job Id
+        * @param batchId
+        * @return TestAsyncApexJob
+        */
+        public TestAsyncApexJob withId(Id batchId) {
+            valuesByFieldName.put('Id', batchId);
+            return this;
+        }
+
+        /***
+        * @description Sets Created By for the batch job
+        * @param usr
+        * @return TestAsyncApexJob
+        */
+        public TestAsyncApexJob withCreatedBy(User usr) {
+            valuesByFieldName.put('CreatedBy', usr);
+            return this;
+        }
+
+        /***
+        * @description Sets the batch status
+        * @param status
+        * @return TestAsyncApexJob
+        */
+        public TestAsyncApexJob withStatus(String status) {
+            valuesByFieldName.put('Status', status);
+            return this;
+        }
+
+        /***
+        * @description Builds AsyncApexJob SObject based on the provided values
+        * @return TestAsyncApexJob
+        */
+        public AsyncApexJob build() {
+            String jsonString = JSON.serialize(valuesByFieldName);
+
+            return (AsyncApexJob) JSON.deserialize(jsonString, AsyncApexJob.class);
+        }
+    }
+
+    /***
+    * @description Database.BatchableContext Mock class
+    */
+    public class MockBatchableContext implements Database.BatchableContext {
+        private Id jobId;
+        private Id childJobId;
+
+        public MockBatchableContext returnJobId(Id jobId) {
+            this.jobId = jobId;
+            return this;
+        }
+
+        public MockBatchableContext returnChildJobId(Id childJobId) {
+            this.childJobId = childJobId;
+            return this;
+        }
+
+        public Id getJobId() {
+            return jobId;
+        }
+
+        public Id getChildJobId() {
+            return childJobId;
+        }
+    }
 
 
     // Helpers
@@ -187,75 +282,5 @@ public with sharing class UTIL_BatchJobService_TEST {
         return [SELECT Id, Name FROM User WHERE Id = :UserInfo.getUserId()];
     }
 
-
-    /***
-    * @description Builds an AsyncApexJob and sets attributes that are not writable otherwise
-    */
-    public class TestAsyncApexJob {
-        private Map<String, Object> valuesByFieldName;
-
-        /***
-        * @description Constructor sets default values
-        */
-        public TestAsyncApexJob() {
-            valuesByFieldName = new Map<String, Object>();
-            
-            //defaults
-            valuesByFieldName.put('Status', UTIL_BatchJobService.ApexJobStatus.COMPLETED.name());
-            valuesByFieldName.put('CreatedDate', DateTime.newInstance(2018, 01, 31, 15, 10, 45));
-            valuesByFieldName.put('CompletedDate', DateTime.newInstance(2018, 2, 3, 15, 10, 45));
-            valuesByFieldName.put('JobItemsProcessed', 75);
-            valuesByFieldName.put('TotalJobItems', 75);
-        }
-
-        /***
-        * @description Sets the batch job Id to the Mock Id
-        * @return TestAsyncApexJob
-        */
-        public TestAsyncApexJob withMockId() {
-            return withId(MOCK_BATCH_ID);
-        }
-
-        /***
-        * @description Sets the batch job Id
-        * @param batchId 
-        * @return TestAsyncApexJob
-        */
-        public TestAsyncApexJob withId(Id batchId) {
-            valuesByFieldName.put('Id', batchId);
-            return this;
-        }
-
-        /***
-        * @description Sets Created By for the batch job
-        * @param usr 
-        * @return TestAsyncApexJob
-        */
-        public TestAsyncApexJob withCreatedBy(User usr) {
-            valuesByFieldName.put('CreatedBy', usr);
-            return this;
-        }
-
-        /***
-        * @description Sets the batch status
-        * @param status 
-        * @return TestAsyncApexJob
-        */
-        public TestAsyncApexJob withStatus(String status) {
-            valuesByFieldName.put('Status', status);
-            return this;
-        }
-
-        /***
-        * @description Builds AsyncApexJob SObject based on the provided values
-        * @return TestAsyncApexJob
-        */
-        public AsyncApexJob build() {
-            String jsonString = JSON.serialize(valuesByFieldName);
-                
-            return (AsyncApexJob) JSON.deserialize(jsonString, AsyncApexJob.class);
-        }
-
-    }
 
 }
