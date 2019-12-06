@@ -300,6 +300,8 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * Display message on the current Visualforce page (if any).
+    *
     * @param errorRecords The errors to store.
     * @param context The context the errors were raised on.
     * @return void
@@ -322,24 +324,54 @@ public class ERR_Handler {
     }
 
     /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorResult The error result
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void processErrorsOnly(Errors errorResult, String context) {
+        if (errorResult == null || errorResult.errorsExist != true) {
+            return;
+        }
+
+        for (Error__c error : errorResult.errorRecords) {
+            error.Context_Type__c = context;
+        }
+
+        processErrorsOnly(errorResult.errorRecords, context);
+    }
+
+    /*******************************************************************************************************
+    * @description Stores errors in the database (if enabled), and sends error notifications (if enabled).
+    * @param errorRecords The errors to store.
+    * @param context The context the errors were raised on.
+    * @return void
+    */
+    public static void processErrorsOnly(List<Error__c> errorRecords, String context) {
+        if (errorRecords == null || errorRecords.isEmpty()) {
+            return;
+        }
+
+        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
+            Database.insert(errorRecords, false);
+        }
+
+        ERR_Notifier.sendErrorNotifications(context);
+    }
+
+    /*******************************************************************************************************
     * @description Stores errors in the database (if enabled), do not generate apex page messages and sends error notifications (if enabled).
     * @param errorRecords The errors to store.
     * @param context The context the errors were raised on.
     * @return void
     */
     public static void sendErrorNotification(Exception e, String context) {
-
         if (e == null) {
             return;
         }
 
         Error__c error = createError(e, context);
-        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-            Database.insert(error, false);
-        }
-
-        //ERR_Notifier takes care of checking the settings itself.
-        ERR_Notifier.sendErrorNotifications(context);
+        processErrorsOnly(new List<Error__c>{ error }, context);
     }
 
     /*******************************************************************************************************
@@ -365,6 +397,7 @@ public class ERR_Handler {
     * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
+    @TestVisible
     private static Error__c createError(Exception e, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
