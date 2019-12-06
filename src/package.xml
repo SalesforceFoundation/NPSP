@@ -1897,7 +1897,7 @@
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
         <members>geToastTemplateCreateSuccess</members>
-        <members>geToastTemplateSaveFail</members>
+        <members>geToastSaveFailed</members>
         <members>geToastTemplateTabError</members>
         <members>geToastTemplateTabsError</members>
         <members>geToastTemplateUpdateSuccess</members>

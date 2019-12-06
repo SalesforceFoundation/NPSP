@@ -42,7 +42,7 @@ import geHeaderWarning from '@salesforce/label/c.geHeaderWarning';
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
 import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCreateSuccess';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
-import geToastTemplateSaveFail from '@salesforce/label/c.geToastTemplateSaveFail';
+import geToastSaveFailed from '@salesforce/label/c.geToastSaveFailed';
 import geErrorPageLevelAdvancedMappingHeader from '@salesforce/label/c.geErrorPageLevelAdvancedMappingHeader';
 import geErrorPageLevelAdvancedMappingBody from '@salesforce/label/c.geErrorPageLevelAdvancedMappingBody';
 
@@ -772,7 +772,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
                 this.navigateToLandingPage();
             } catch (error) {
-                showToast(geHeaderError, geToastTemplateSaveFail, ERROR);
+                showToast(geHeaderError, geToastSaveFailed, ERROR);
                 this.isLoading = false;
             }
         }

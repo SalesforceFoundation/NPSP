@@ -4686,7 +4686,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The {0} template was created.</value>
     </labels>
     <labels>
-        <fullName>geToastTemplateSaveFail</fullName>
+        <fullName>geToastSaveFailed</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
