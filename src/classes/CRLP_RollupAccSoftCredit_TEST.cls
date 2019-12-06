@@ -48,7 +48,7 @@ private class CRLP_RollupAccSoftCredit_TEST {
     private static void setupBaseTestData() {
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
-        Account acc = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
+        Account acc = UTIL_UnitTestData_TEST.buildHouseholdAccount();
         insert acc;
     }
 
