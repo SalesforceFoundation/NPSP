@@ -1874,6 +1874,7 @@
         <members>geErrorRequiredField</members>
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
+        <members>geHeaderError</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
         <members>geHeaderFormFieldsLeftCol</members>
         <members>geHeaderFormFieldsModalDeleteSection</members>
@@ -1897,6 +1898,8 @@
         <members>geTabTemplateInfo</members>
         <members>geToastTemplateCreateSuccess</members>
         <members>geToastTemplateSaveFail</members>
+        <members>geToastTemplateTabError</members>
+        <members>geToastTemplateTabsError</members>
         <members>geToastTemplateUpdateSuccess</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>

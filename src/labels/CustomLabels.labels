@@ -4204,6 +4204,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Arrow button to move section down</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
         <value>Move the {0} section down.</value>
     </labels>
     <labels>
@@ -4212,6 +4213,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Arrow button to move section up</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
         <value>Move the {0} section up.</value>
     </labels>
     <labels>
@@ -4236,6 +4238,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
         <value>Edit the {0} section settings.</value>
     </labels>
     <labels>
@@ -4450,6 +4453,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error for insufficient field access with fields listed</shortDescription>
+        <!-- {0} is a list. Name of fields e.g. npsp__Amount__c, npsp__Description__c -->
         <value>To save changes to this template you must have permission to edit all of the fields in the form. Please remove the following fields: {0}</value>
     </labels>
     <labels>
@@ -4466,6 +4470,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error for insufficient field access about exiting without saving</shortDescription>
+        <!-- {0} is a list. Name of fields e.g. npsp__Amount__c, npsp__Description__c -->
         <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields: {0}</value>
     </labels>
     <labels>
@@ -4491,6 +4496,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header to configure batch header fields</shortDescription>
         <value>Configure Batch Header Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error</shortDescription>
+        <value>Error</value>
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsDefaultSectionName</fullName>
@@ -4561,7 +4574,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Warning header of required field added to Batch Header</shortDescription>
+        <shortDescription>Warning</shortDescription>
         <value>Warning</value>
     </labels>
     <labels>
@@ -4578,6 +4591,9 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields individual field help text</shortDescription>
+        <!-- {0} is a string. Name of an Object Mapping Group e.g. Account 1, Contact 2 -->
+        <!-- {1} is a string. Name of a standard or custom object field e.g. Name, Amount -->
+        <!-- {2} is a string. Name of a standard or custom object e.g. Account, Contact -->
         <value>This field uses the {0} Mapping Group to target the {1} Field on the {2} Object.</value>
     </labels>
     <labels>
@@ -4670,6 +4686,32 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The {0} template was created.</value>
     </labels>
     <labels>
+        <fullName>geToastTemplateSaveFail</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save if there isn't a system error to display</shortDescription>
+        <value>Your changes cannot be saved. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateTabsError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save and tabs has an error</shortDescription>
+        <!-- {0} is a list of strings. Names of the tabs with errors. -->
+        <value>Please review tabs {0}</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateTabError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save and a tab has an error</shortDescription>
+        <!-- {0} is a string. Name of the tab with errors. -->
+        <value>Please review tab {0}</value>
+    </labels>
+    <labels>
         <fullName>geToastTemplateUpdateSuccess</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4677,14 +4719,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Template successfully updated</shortDescription>
         <!-- {0} is a string. Name of the template that was created. -->
         <value>The {0} template was updated.</value>
-    </labels>
-    <labels>
-        <fullName>geToastTemplateSaveFail</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error when trying to save if there isn't a system error to display</shortDescription>
-        <value>Your changes cannot be saved. Please try again.</value>
     </labels>
     <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>

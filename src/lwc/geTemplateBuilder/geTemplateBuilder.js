@@ -34,6 +34,11 @@ import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNa
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
 import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
+import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
+import geToastTemplateTabError from '@salesforce/label/c.geToastTemplateTabError';
+import geHeaderError from '@salesforce/label/c.geHeaderError';
+import geHeaderWarning from '@salesforce/label/c.geHeaderWarning';
+import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -44,6 +49,12 @@ const SORT_ORDER = 'desc';
 const PICKLIST = 'Picklist';
 const NEW = 'new';
 const EDIT = 'edit';
+const SAVE = 'save';
+const DELETE = 'delete';
+const API_NAME = 'apiName';
+const ID = 'id';
+const ERROR = 'error';
+const EVENT_TOGGLE_MODAL = 'togglemodal';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
@@ -221,7 +232,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @description Method adds all required batch header fields on new templates.
     */
     addRequiredBatchHeaderFields() {
-        if (this.mode === 'new') {
+        if (this.mode === NEW) {
             const requiredFields = this.batchFieldFormElements.filter(batchField => {
                 return batchField.required;
             });
@@ -279,7 +290,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     @api
     notify(modalData) {
-        if (modalData.action === 'save') {
+        if (modalData.action === SAVE) {
             let formSections = mutable(this.formSections);
             let formSection = formSections.find((fs) => { return fs.id === modalData.section.id });
 
@@ -287,7 +298,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.formSections = formSections;
         }
 
-        if (modalData.action === 'delete') {
+        if (modalData.action === DELETE) {
             const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-form-fields');
             selectFieldsComponent.handleDeleteFormSection({ detail: modalData.section.id });
         }
@@ -301,7 +312,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     toggleModal(event) {
-        dispatch(this, 'togglemodal', event.detail);
+        dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
     /*******************************************************************************
@@ -380,7 +391,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldUp(event) {
-        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', event.detail);
+        let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index > 0) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index - 1);
@@ -396,7 +407,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldDown(event) {
-        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', event.detail);
+        let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index < this.batchHeaderFields.length - 1) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index + 1);
@@ -464,7 +475,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleFormSectionUp(event) {
-        let index = findIndexByProperty(this.formSections, 'id', event.detail);
+        let index = findIndexByProperty(this.formSections, ID, event.detail);
         if (index > 0) {
             this.formSections = shiftToIndex(this.formSections, index, index - 1);
         }
@@ -479,7 +490,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleFormSectionDown(event) {
-        let index = findIndexByProperty(this.formSections, 'id', event.detail);
+        let index = findIndexByProperty(this.formSections, ID, event.detail);
         if (index < this.formSections.length - 1) {
             this.formSections = shiftToIndex(this.formSections, index, index + 1);
         }
@@ -636,9 +647,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.validateBatchHeaderTab();
 
         if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchHeaderTabError) {
-            const message = `Please review ${tabsWithErrors.size > 1 ? 'tabs' : 'tab'}: `;
+            const message = `${tabsWithErrors.size > 1 ? geToastTemplateTabsError : geToastTemplateTabError}`;
             const errors = [...tabsWithErrors].join(', ');
-            showToast('Error', `${message} ${errors}`, 'error');
+            showToast(geHeaderError, `${message}${errors}.`, ERROR);
 
             return false;
         }
@@ -705,9 +716,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.handleAddBatchHeaderField({ detail: field.apiName });
             }
 
-            const fieldLabels = this.missingRequiredBatchFields.map(field => field.label);
-            showToast('Warning',
-                `Added the following missing required Batch Header fields: ${fieldLabels}`,
+            const fieldApiNames = this.missingRequiredBatchFields.map(field => field.apiName).join(', ');
+            showToast(geHeaderWarning,
+                `${geBodyBatchHeaderWarning} ${fieldApiNames}`,
                 'warning',
                 'sticky');
         }
