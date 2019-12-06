@@ -16,6 +16,7 @@ import {
     showToast,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
+    format,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS
 } from 'c/utilTemplateBuilder';
@@ -39,6 +40,9 @@ import geToastTemplateTabError from '@salesforce/label/c.geToastTemplateTabError
 import geHeaderError from '@salesforce/label/c.geHeaderError';
 import geHeaderWarning from '@salesforce/label/c.geHeaderWarning';
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
+import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCreateSuccess';
+import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
+import geToastTemplateSaveFail from '@salesforce/label/c.geToastTemplateSaveFail';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -53,6 +57,7 @@ const SAVE = 'save';
 const DELETE = 'delete';
 const API_NAME = 'apiName';
 const ID = 'id';
+const SUCCESS = 'success';
 const ERROR = 'error';
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 
@@ -751,14 +756,21 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 formatVersion: FORMAT_VERSION
             };
 
-            await storeFormTemplate(preppedFormTemplate);
-
-            this[NavigationMixin.Navigate]({
-                type: 'standard__navItemPage',
-                attributes: {
-                    apiName: this.listViewCustomTabApiName
+            try {
+                const recordId = await storeFormTemplate(preppedFormTemplate);
+                if (recordId) {
+                    const toastMessage =
+                        this.mode === NEW ?
+                            format(geToastTemplateCreateSuccess, [this.formTemplate.name])
+                            : format(geToastTemplateUpdateSuccess, [this.formTemplate.name]);
+                    showToast(toastMessage, '', SUCCESS);
                 }
-            });
+
+                this.navigateToLandingPage();
+            } catch (error) {
+                showToast(geHeaderError, geToastTemplateSaveFail, ERROR);
+                this.isLoading = false;
+            }
         }
     }
 
@@ -776,6 +788,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     /*******************************************************************************
     * @description Navigates to a record detail page by record id.
+    *
+    * @param {string} formTemplateRecordId: Form_Template__c record id.
     */
     navigateToRecordViewPage(formTemplateRecordId) {
         this[NavigationMixin.Navigate]({
@@ -783,6 +797,18 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             attributes: {
                 recordId: formTemplateRecordId,
                 actionName: 'view'
+            }
+        });
+    }
+
+    /*******************************************************************************
+    * @description Navigates to Gift Entry landing page.
+    */
+    navigateToLandingPage() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: this.listViewCustomTabApiName
             }
         });
     }
