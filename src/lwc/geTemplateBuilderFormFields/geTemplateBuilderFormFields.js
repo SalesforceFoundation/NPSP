@@ -1,24 +1,7 @@
 import { LightningElement, track, api } from 'lwc';
 import { findIndexByProperty, mutable, generateId, dispatch, showToast } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-
-// Import custom labels
-import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
-import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
-import geBodyFormFieldsLeftColReadMore from '@salesforce/label/c.geBodyFormFieldsLeftColReadMore';
-import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
-import geHeaderFormFieldsRightCol from '@salesforce/label/c.geHeaderFormFieldsRightCol';
-import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
-import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormFieldsCollapseAll';
-import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
-import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFieldsAddSection';
-import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
-import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
-import geAssistiveFormFieldsCollapseAll from '@salesforce/label/c.geAssistiveFormFieldsCollapseAll';
-import geAssistiveFormFieldsExpandAll from '@salesforce/label/c.geAssistiveFormFieldsExpandAll';
-import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
-import geHeaderError from '@salesforce/label/c.geHeaderError';
-import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
+import GeLabelService from 'c/geLabelService';
 
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -28,36 +11,19 @@ import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment
 export default class geTemplateBuilderFormFields extends LightningElement {
 
     // Expose labels to template
-    CUSTOM_LABELS = {
-        geBodyFormFieldsLeftCol,
-        geBodyFormFieldsLeftColReadMore,
-        geBodyFormFieldsLeftColAdditional,
-        geHeaderFormFieldsLeftCol,
-        geHeaderFormFieldsRightCol,
-        geBodyFormFieldsRightCol,
-        geButtonFormFieldsCollapseAll,
-        geButtonFormFieldsExpandAll,
-        geButtonFormFieldsAddSection,
-        geAssistiveSpinner,
-        geAssistiveFormFieldsCollapseAll,
-        geAssistiveFormFieldsExpandAll,
-        geErrorPageLevelMissingRequiredFields,
-        geHeaderError,
-    }
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     isInitialized;
     @api previousSaveAttempted;
-
-    @track isLoading = true;
     @api selectedFieldMappingSet;
+    @track isLoading = true;
 
     @api formSections;
-
     @api activeFormSectionId;
     @track _sectionIdsByFieldMappingDeveloperNames = {};
     @track objectMappings;
-    objectMappingNames = [];
     @track isAllSectionsExpanded = false;
+    objectMappingNames = [];
 
     @track isReadMoreActive = false;
     @track hasErrors = false;
@@ -182,7 +148,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 PAYMENT_CHECK_REF_NUM_INFO.fieldApiName
             ];
 
-            let sectionId = this.addSection(geHeaderFormFieldsDefaultSectionName);
+            let sectionId = this.addSection(this.CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName);
 
             for (let fieldMappingDevName in TemplateBuilderService.fieldMappingByDevName) {
                 if (TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName]) {
@@ -583,7 +549,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     * of.
     */
     validateGiftField(element) {
-        let customValidity = (element.required && element.checked === false) ? geErrorRequiredField : '';
+        let customValidity =
+            (element.required && element.checked === false) ?
+                this.CUSTOM_LABELS.geErrorRequiredField
+                : '';
         element.setCustomValidity(customValidity);
         element.reportValidity();
     }
