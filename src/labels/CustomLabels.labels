@@ -3974,6 +3974,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Cancel</value>
     </labels>
     <labels>
+        <fullName>commonDefaultValue</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Default Value</shortDescription>
+        <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field Label</shortDescription>
+        <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>commonRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Required</shortDescription>
+        <value>Required</value>
+    </labels>
+    <labels>
         <fullName>commonSave</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4637,30 +4661,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Help text for Form Fields Field Label</shortDescription>
         <value>This shows the Mapping Object Group and Target Field API Name. You can edit the user-facing label below.</value>
-    </labels>
-    <labels>
-        <fullName>geLabelDefaultValue</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Default Value</shortDescription>
-        <value>Default Value</value>
-    </labels>
-    <labels>
-        <fullName>geLabelFieldLabel</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Field Label</shortDescription>
-        <value>Field Label</value>
-    </labels>
-    <labels>
-        <fullName>geLabelRequired</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Required</shortDescription>
-        <value>Required</value>
     </labels>
     <labels>
         <fullName>geLabelSectionName</fullName>

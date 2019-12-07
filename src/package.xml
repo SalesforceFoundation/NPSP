@@ -1811,6 +1811,9 @@
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
         <members>commonCancel</members>
+        <members>commonDefaultValue</members>
+        <members>commonFieldLabel</members>
+        <members>commonRequired</members>
         <members>commonSave</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
@@ -1891,9 +1894,6 @@
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
-        <members>geLabelDefaultValue</members>
-        <members>geLabelFieldLabel</members>
-        <members>geLabelRequired</members>
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>

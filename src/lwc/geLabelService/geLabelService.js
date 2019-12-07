@@ -48,9 +48,9 @@ import geHeaderWarning from '@salesforce/label/c.geHeaderWarning';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
-import geLabelDefaultValue from '@salesforce/label/c.geLabelDefaultValue';
-import geLabelFieldLabel from '@salesforce/label/c.geLabelFieldLabel';
-import geLabelRequired from '@salesforce/label/c.geLabelRequired';
+import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
+import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonRequired from '@salesforce/label/c.commonRequired';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
@@ -118,9 +118,9 @@ class GeLabelService {
         geHelpTextBatchHeaderFieldLabelLabel,
         geHelpTextFormFieldsFieldCustomLabel,
         geHelpTextFormFieldsFieldLabelLabel,
-        geLabelDefaultValue,
-        geLabelFieldLabel,
-        geLabelRequired,
+        commonDefaultValue,
+        commonFieldLabel,
+        commonRequired,
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,

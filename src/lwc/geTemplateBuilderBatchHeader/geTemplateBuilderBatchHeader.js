@@ -14,9 +14,9 @@ import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftC
 import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeaderRightCol';
 import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
-import geLabelDefaultValue from '@salesforce/label/c.geLabelDefaultValue';
-import geLabelFieldLabel from '@salesforce/label/c.geLabelFieldLabel';
-import geLabelRequired from '@salesforce/label/c.geLabelRequired';
+import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
+import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonRequired from '@salesforce/label/c.commonRequired';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
 
 const PROP_API_NAME = 'apiName';
@@ -37,9 +37,9 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
         geHeaderBatchHeaderRightCol,
         geBodyBatchHeaderRightCol,
         geHelpTextBatchHeaderFieldLabelLabel,
-        geLabelDefaultValue,
-        geLabelFieldLabel,
-        geLabelRequired,
+        commonDefaultValue,
+        commonFieldLabel,
+        commonRequired,
         geAssistiveSpinner
     }
 

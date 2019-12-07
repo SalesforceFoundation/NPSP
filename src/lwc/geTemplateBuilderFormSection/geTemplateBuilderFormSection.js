@@ -1,15 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import { dispatch, format } from 'c/utilTemplateBuilder';
-
-// Import custom labels
-import geLabelFieldLabel from '@salesforce/label/c.geLabelFieldLabel';
-import geLabelRequired from '@salesforce/label/c.geLabelRequired';
-import geLabelDefaultValue from '@salesforce/label/c.geLabelDefaultValue';
-import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
-import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
-import geAssistiveFormFieldsSectionEdit from '@salesforce/label/c.geAssistiveFormFieldsSectionEdit';
-import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
-import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
+import GeLabelService from 'c/geLabelService';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
 const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
@@ -17,13 +8,7 @@ const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_smal
 export default class GeTemplateBuilderFormSection extends LightningElement {
 
     // Expose custom labels to template
-    CUSTOM_LABELS = {
-        geLabelFieldLabel,
-        geLabelRequired,
-        geLabelDefaultValue,
-        geHelpTextFormFieldsFieldLabelLabel,
-        geHelpTextFormFieldsFieldCustomLabel
-    }
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api activeFormSectionId;
     @api isFirst;
@@ -44,15 +29,15 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     get labelgeAssistiveFormFieldsSectionEdit() {
-        return format(geAssistiveFormFieldsSectionEdit, [this.formSection.label]);
+        return format(this.CUSTOM_LABELS.geAssistiveFormFieldsSectionEdit, [this.formSection.label]);
     }
 
     get labelGeBuilderButtonAltTextSectionUp() {
-        return format(geAssistiveSectionDown, [this.formSection.label]);
+        return format(this.CUSTOM_LABELS.geAssistiveSectionDown, [this.formSection.label]);
     }
 
     get labelGeBuilderButtonAltTextSectionDown() {
-        return format(geAssistiveSectionUp, [this.formSection.label]);
+        return format(this.CUSTOM_LABELS.geAssistiveSectionUp, [this.formSection.label]);
     }
 
     /*******************************************************************************
