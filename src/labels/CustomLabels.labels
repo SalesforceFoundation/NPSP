@@ -370,7 +370,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>BatchProgressTitleRD2DataMigration</shortDescription>
-        <value>Data migration batch details</value>
+        <value>Data Migration Run</value>
     </labels>
     <labels>
         <fullName>BatchProgressTotalJobItems</fullName>
@@ -6637,6 +6637,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentSucceeded</shortDescription>
         <value>Acknowledged</value>
+    </labels>
+    <labels>
+        <fullName>statusComplete</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>statusComplete</shortDescription>
+        <value>Complete</value>
     </labels>
     <labels>
         <fullName>statusCompleted</fullName>

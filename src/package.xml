@@ -1458,8 +1458,8 @@
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
-        <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
+        <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementEnableConfirm</members>
@@ -2118,6 +2118,7 @@
         <members>sendAcknowledgmentPageTitle</members>
         <members>sendAcknowledgmentReturnLinkLabel</members>
         <members>sendAcknowledgmentSucceeded</members>
+        <members>statusComplete</members>
         <members>statusCompleted</members>
         <members>statusInProgress</members>
         <members>statusNotStarted</members>

@@ -3,37 +3,42 @@
     <template if:true={batchJob}>
         <div class="slds-section slds-is-open slds-theme_shade">
 
-            <div class="slds-section__title slds-section__title slds-p-around_small">
-                <h3 class="slds-text-heading_small slds-text-heading_small_extension" title={title}>
-                    <span class="slds-truncate slds-m-right_large">{title}</span>
-                    <div class="slds-is-relative">
-                        <template if:true={batchJob.isInProgress}>
-                            <lightning-spinner alternative-text={labels.labelLoading} size="small">
-                            </lightning-spinner>
-                        </template>
-                    </div>
-                </h3>
-            </div>
-
             <div aria-hidden="false" class="slds-section__content slds-p-bottom_medium">
-                <lightning-layout horizontal-align="spread" multiple-rows="false">
+                <lightning-layout horizontal-align="spread" multiple-rows="true">
 
-                    <lightning-layout-item padding="horizontal-small" size="3">
-                        <div>
-                            <div id="progressBarLabel">
-                                <span>
-                                    <strong>{batchJob.percentComplete}%</strong>
-                                </span>
-                            </div>
-                            <div>
-                                <lightning-progress-bar value={batchJob.percentComplete} size="large"
-                                    variant="circular">
+                    <lightning-layout-item padding="horizontal-small" size="12">
+                        <lightning-layout horizontal-align="spread" multiple-rows="true">
+
+                            <lightning-layout-item size="8">
+                                <div title={title}>
+                                    <span class="slds-truncate"><strong>{title}</strong></span>
+                                </div>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="4" class="slds-text-align_right">
+                                <div class="slds-grid slds-grid_align-end">
+                                    <div class="slds-is-relative slds-m-right_large">
+                                        <template if:true={batchJob.isInProgress}>
+                                            <lightning-spinner alternative-text={labels.labelLoading} size="small"
+                                                variant="brand">
+                                            </lightning-spinner>
+                                        </template>
+                                    </div>
+                                    <div>
+                                        <span><strong>{progressMessage}</strong></span>
+                                    </div>
+                                </div>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12" class="slds-p-top_x-small slds-p-bottom_medium">
+                                <lightning-progress-bar value={batchJob.percentComplete} size="medium">
                                 </lightning-progress-bar>
-                            </div>
-                        </div>
+                            </lightning-layout-item>
+
+                        </lightning-layout>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="7" class="slds-media slds-media_center">
+                    <lightning-layout-item size="9" class="slds-media slds-media_center slds-text-body_small">
                         <dl class="slds-dl_horizontal slds-p-left_medium">
                             <dt class="slds-dl_horizontal__label slds-medium-size_4-of-12">{labels.labelStatus}</dt>
                             <dd class="slds-dl_horizontal__detail slds-medium-size_8-of-12">{batchJob.status}</dd>
@@ -75,8 +80,10 @@
                         </dl>
                     </lightning-layout-item>
 
-                    <lightning-layout-item size="2" class="slds-media slds-media_center slds-truncate">
-                        <lightning-badge label={batchJob.status} class={themeClass}></lightning-badge>
+                    <lightning-layout-item size="3"
+                        class="slds-media slds-media_center slds-truncate slds-grid slds-grid_align-end slds-p-right_small slds-text-body_small">
+                        <lightning-badge label={batchJob.status} title={batchJob.status} class={themeClass}>
+                        </lightning-badge>
                     </lightning-layout-item>
 
                 </lightning-layout>

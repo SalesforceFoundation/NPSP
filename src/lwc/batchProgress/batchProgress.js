@@ -7,6 +7,7 @@ import labelTimeElapsed from '@salesforce/label/c.BatchProgressTimeElapsed';
 import labelCompletedDate from '@salesforce/label/c.BatchProgressCompletedDate';
 import labelExtendedStatus from '@salesforce/label/c.BatchProgressExtendedStatus';
 import labelLoading from '@salesforce/label/c.labelMessageLoading';
+import labelStatusComplete from '@salesforce/label/c.statusComplete';
 import labelUnknownError from '@salesforce/label/c.stgUnknownError';
 
 import loadBatchJob from '@salesforce/apex/UTIL_BatchJobProgress_CTRL.loadBatchJob';
@@ -52,6 +53,16 @@ export default class BatchProgress extends LightningElement {
         }
 
         return themeClass;
+    }
+    /***
+    * @description Returns message indicating percent completed
+    */
+    get progressMessage() {
+        if (this.batchJob === undefined || this.batchJob == null) {
+            return '';
+        }
+
+        return this.batchJob.percentComplete + '% ' + labelStatusComplete;
     }
 
     /***
