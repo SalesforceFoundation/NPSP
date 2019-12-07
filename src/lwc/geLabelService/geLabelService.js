@@ -1,11 +1,19 @@
 // Import custom labels
 import commonCancel from '@salesforce/label/c.commonCancel';
-import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
-import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
+import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
+import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonRequired from '@salesforce/label/c.commonRequired';
+import commonSave from '@salesforce/label/c.commonSave';
+import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
+import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
+import geAssistiveFieldUp from '@salesforce/label/c.geAssistiveFieldUp';
 import geAssistiveFormFieldsCollapseAll from '@salesforce/label/c.geAssistiveFormFieldsCollapseAll';
 import geAssistiveFormFieldsExpandAll from '@salesforce/label/c.geAssistiveFormFieldsExpandAll';
+import geAssistiveFormFieldsRemoveField from '@salesforce/label/c.geAssistiveFormFieldsRemoveField';
 import geAssistiveFormFieldsSectionEdit from '@salesforce/label/c.geAssistiveFormFieldsSectionEdit';
 import geAssistiveModalCancelAndDiscard from '@salesforce/label/c.geAssistiveModalCancelAndDiscard';
+import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
+import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
 import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftCol';
 import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
@@ -48,9 +56,6 @@ import geHeaderWarning from '@salesforce/label/c.geHeaderWarning';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
-import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
-import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
-import commonRequired from '@salesforce/label/c.commonRequired';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
@@ -70,12 +75,20 @@ class GeLabelService {
     */
     CUSTOM_LABELS = {
         commonCancel,
-        geAssistiveSectionDown,
-        geAssistiveSectionUp,
+        commonDefaultValue,
+        commonFieldLabel,
+        commonRequired,
+        commonSave,
+        geAssistiveBatchHeaderRemoveField,
+        geAssistiveFieldDown,
+        geAssistiveFieldUp,
         geAssistiveFormFieldsCollapseAll,
         geAssistiveFormFieldsExpandAll,
+        geAssistiveFormFieldsRemoveField,
         geAssistiveFormFieldsSectionEdit,
         geAssistiveModalCancelAndDiscard,
+        geAssistiveSectionDown,
+        geAssistiveSectionUp,
         geAssistiveSpinner,
         geBodyBatchHeaderLeftCol,
         geBodyBatchHeaderRightCol,

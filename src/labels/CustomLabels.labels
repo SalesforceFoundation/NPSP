@@ -4239,6 +4239,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geAssistiveBatchHeaderRemoveField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Trash can button to remove field from batch header</shortDescription>
+        <!-- {0} is a string. Name of a DataImportBatch__c field e.g. npsp__Batch_Description__c -->
+        <value>Remove the {0} field from the batch header.</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveFieldDown</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4271,6 +4280,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Alt text: Button to expand all Object Groups and Template Components</shortDescription>
         <value>Expand all Object Groups and Template Components.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsRemoveField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Trash can button to remove field from template</shortDescription>
+        <!-- {0} is a string. Name of a form field e.g. Account 1: Name -->
+        <value>Remove the {0} field from the template.</value>
     </labels>
     <labels>
         <fullName>geAssistiveFormFieldsSectionEdit</fullName>

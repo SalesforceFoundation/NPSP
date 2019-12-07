@@ -1,32 +1,12 @@
 import { LightningElement, api } from 'lwc';
 import { mutable } from 'c/utilTemplateBuilder';
 import { fireEvent } from 'c/pubsubNoPageRef';
-
-// Import custom labels
-import geHeaderFormFieldsModalRenameSection from '@salesforce/label/c.geHeaderFormFieldsModalRenameSection';
-import geHeaderFormFieldsModalDeleteSection from '@salesforce/label/c.geHeaderFormFieldsModalDeleteSection';
-import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
-import geBodyFormFieldsModalDeleteSection from '@salesforce/label/c.geBodyFormFieldsModalDeleteSection';
-import geButtonFormFieldsModalDeleteSectionAndFields from '@salesforce/label/c.geButtonFormFieldsModalDeleteSectionAndFields';
-import labelGeCancel from '@salesforce/label/c.labelGeCancel';
-import labelGeSave from '@salesforce/label/c.labelGeSave';
-import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
-import geAssistiveModalCancelAndDiscard from '@salesforce/label/c.geAssistiveModalCancelAndDiscard';
+import GeLabelService from 'c/geLabelService';
 
 export default class GeTemplateBuilderSectionModalBody extends LightningElement {
 
     // Expose custom labels to template
-    CUSTOM_LABELS = {
-        geHeaderFormFieldsModalRenameSection,
-        geHeaderFormFieldsModalDeleteSection,
-        geWarningFormFieldsModalDeleteSection,
-        geBodyFormFieldsModalDeleteSection,
-        geButtonFormFieldsModalDeleteSectionAndFields,
-        geLabelSectionName,
-        labelGeCancel,
-        labelGeSave,
-        geAssistiveModalCancelAndDiscard
-    }
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api modalData;
 

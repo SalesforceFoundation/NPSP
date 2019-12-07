@@ -1844,10 +1844,12 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveFieldDown</members>
         <members>geAssistiveFieldUp</members>
         <members>geAssistiveFormFieldsCollapseAll</members>
         <members>geAssistiveFormFieldsExpandAll</members>
+        <members>geAssistiveFormFieldsRemoveField</members>
         <members>geAssistiveFormFieldsSectionEdit</members>
         <members>geAssistiveModalCancelAndDiscard</members>
         <members>geAssistiveSectionDown</members>
