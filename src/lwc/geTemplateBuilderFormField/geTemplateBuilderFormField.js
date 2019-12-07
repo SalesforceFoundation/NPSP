@@ -1,18 +1,33 @@
 import { LightningElement, api } from 'lwc';
 import { inputTypeByDescribeType, dispatch, format } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
+import GeLabelService from 'c/geLabelService';
 
-// Import custom labels
-import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
+const WIDGET = 'widget';
+const BOOLEAN = 'boolean';
+const TEXTAREA = 'textarea';
+const COMBOBOX = 'combobox';
+const SEARCH = 'search';
+const RICHTEXT = 'richtext';
+const CHECKBOX = 'checkbox';
+const DATE = 'date';
+const DATETIME = 'datetime';
+const YES = 'Yes';
+const TEXT = 'text';
+const TRUE = 'true';
 
 export default class geTemplateBuilderFormField extends LightningElement {
+
+    // Expose custom labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     @api isFirst;
     @api isLast;
     @api objectApiName;
     @api field;
 
     get name() {
-        if (this.field.elementType === 'widget') {
+        if (this.field.elementType === WIDGET) {
             return this.field.componentName;
         }
 
@@ -33,7 +48,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
         if (this.fieldMapping && this.fieldMapping.Target_Object_Mapping_Dev_Name) {
             const objectMapping = TemplateBuilderService.objectMappingByDevName[this.fieldMapping.Target_Object_Mapping_Dev_Name];
             return format(
-                geHelpTextFormFieldsFieldCustomLabel,
+                this.CUSTOM_LABELS.geHelpTextFormFieldsFieldCustomLabel,
                 [
                     objectMapping.MasterLabel,
                     this.fieldMapping.Target_Field_API_Name,
@@ -72,7 +87,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get isRequired() {
-        return (this.field.required === 'Yes' || this.field.required === true) ? true : false;
+        return (this.field.required === YES || this.field.required === true) ? true : false;
     }
 
     get isRemovable() {
@@ -80,52 +95,64 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get isWidget() {
-        return this.field.elementType === 'widget' ? true : false;
+        return this.field.elementType === WIDGET ? true : false;
     }
 
     get isLightningTextarea() {
-        return this.lightningInputType === 'textarea' ? true : false;
+        return this.lightningInputType === TEXTAREA ? true : false;
     }
 
     get isLightningCombobox() {
-        return this.lightningInputType === 'combobox' ? true : false;
+        return this.lightningInputType === COMBOBOX ? true : false;
     }
 
     get isLightningSearch() {
-        return this.lightningInputType === 'search' ? true : false;
+        return this.lightningInputType === SEARCH ? true : false;
     }
 
     get isLightningRichText() {
-        return this.lightningInputType === 'richtext' ? true : false;
+        return this.lightningInputType === RICHTEXT ? true : false;
     }
 
     get isLightningCheckbox() {
-        return this.lightningInputType === 'checkbox' ? true : false;
+        return this.lightningInputType === CHECKBOX ? true : false;
     }
 
     get isLightningDateOrDatetime() {
-        return (this.lightningInputType === 'date' || this.lightningInputType === 'datetime') ? true : false;
+        return (this.lightningInputType === DATE || this.lightningInputType === DATETIME) ? true : false;
     }
 
     get isLightningInput() {
-        if (this.lightningInputType !== 'textarea' &&
-            this.lightningInputType !== 'combobox' &&
-            this.lightningInputType !== 'richtext' &&
-            this.lightningInputType !== 'search' &&
-            this.lightningInputType !== 'checkbox' &&
-            this.lightningInputType !== 'date' &&
-            this.lightningInputType !== 'datetime') {
+        if (this.lightningInputType !== TEXTAREA &&
+            this.lightningInputType !== COMBOBOX &&
+            this.lightningInputType !== RICHTEXT &&
+            this.lightningInputType !== SEARCH &&
+            this.lightningInputType !== CHECKBOX &&
+            this.lightningInputType !== DATE &&
+            this.lightningInputType !== DATETIME) {
             return true;
         }
         return false;
     }
 
     get lightningInputType() {
-        return this.field.dataType ? inputTypeByDescribeType[this.field.dataType.toLowerCase()] : 'text';
+        return this.field.dataType ? inputTypeByDescribeType[this.field.dataType.toLowerCase()] : TEXT;
     }
 
     get defaultValueForCheckbox() {
-        return (this.field.defaultValue === 'true' || this.field.defaultValue === true) ? true : false;
+        return (this.field.defaultValue === TRUE || this.field.defaultValue === true) ? true : false;
+    }
+
+    get labelGeAssistiveFormFieldRemove() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFormFieldsRemoveField, [this.field.label]);
+    }
+
+    get labelGeAssistiveFormFieldUp() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldUp, [this.field.label]);
+    }
+
+    get labelGeAssistiveFormFieldDown() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFieldDown, [this.field.label]);
     }
 
     stopPropagation(event) {
@@ -176,7 +203,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     handleOnBlur(event) {
         let value;
 
-        if (this.field.dataType && this.field.dataType.toLowerCase() === 'boolean') {
+        if (this.field.dataType && this.field.dataType.toLowerCase() === BOOLEAN) {
             value = event.target.checked;
         } else {
             value = event.target.value;

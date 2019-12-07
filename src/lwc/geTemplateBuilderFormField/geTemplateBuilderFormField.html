@@ -123,20 +123,20 @@
                         <template if:true={isRemovable}>
                             <lightning-button-icon class="slds-m-right_xxx-small "
                                                    icon-name="utility:delete"
-                                                   alternative-text="Delete"
+                                                   alternative-text={labelGeAssistiveFormFieldRemove}
                                                    size="x-small"
                                                    onclick={handleDeleteFormElement}>
                             </lightning-button-icon>
                         </template>
                         <lightning-button-icon class="slds-m-right_xxx-small "
                                                icon-name="utility:chevronup"
-                                               alternative-text="Move up"
+                                               alternative-text={labelGeAssistiveFormFieldUp}
                                                size="x-small"
                                                onclick={handleFormElementUp}
                                                disabled={isFirst}>
                         </lightning-button-icon>
                         <lightning-button-icon icon-name="utility:chevrondown"
-                                               alternative-text="Move down"
+                                               alternative-text={labelGeAssistiveFormFieldDown}
                                                size="x-small"
                                                onclick={handleFormElementDown}
                                                disabled={isLast}>

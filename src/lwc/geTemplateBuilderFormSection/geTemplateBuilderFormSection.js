@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import { dispatch, format } from 'c/utilTemplateBuilder';
+import { dispatch } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
@@ -28,16 +28,16 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         return this.formSection.elements.length === 0 ? true : false;
     }
 
-    get labelgeAssistiveFormFieldsSectionEdit() {
-        return format(this.CUSTOM_LABELS.geAssistiveFormFieldsSectionEdit, [this.formSection.label]);
+    get labelGeAssistiveFormFieldsSectionEdit() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFormFieldsSectionEdit, [this.formSection.label]);
     }
 
-    get labelGeBuilderButtonAltTextSectionUp() {
-        return format(this.CUSTOM_LABELS.geAssistiveSectionDown, [this.formSection.label]);
+    get labelGeBuilderAssistiveSectionUp() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSectionUp, [this.formSection.label]);
     }
 
-    get labelGeBuilderButtonAltTextSectionDown() {
-        return format(this.CUSTOM_LABELS.geAssistiveSectionUp, [this.formSection.label]);
+    get labelGeBuilderAssistiveSectionDown() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSectionDown, [this.formSection.label]);
     }
 
     /*******************************************************************************
