@@ -1810,6 +1810,8 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonCancel</members>
+        <members>commonSave</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
         <members>conMergeErrNoPersonAccounts</members>
@@ -1839,12 +1841,14 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
-        <members>geAssistiveFormFieldSectionDown</members>
-        <members>geAssistiveFormFieldSectionUp</members>
+        <members>geAssistiveFieldDown</members>
+        <members>geAssistiveFieldUp</members>
         <members>geAssistiveFormFieldsCollapseAll</members>
         <members>geAssistiveFormFieldsExpandAll</members>
         <members>geAssistiveFormFieldsSectionEdit</members>
         <members>geAssistiveModalCancelAndDiscard</members>
+        <members>geAssistiveSectionDown</members>
+        <members>geAssistiveSectionUp</members>
         <members>geAssistiveSpinner</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
@@ -1896,8 +1900,8 @@
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
-        <members>geToastTemplateCreateSuccess</members>
         <members>geToastSaveFailed</members>
+        <members>geToastTemplateCreateSuccess</members>
         <members>geToastTemplateTabError</members>
         <members>geToastTemplateTabsError</members>
         <members>geToastTemplateUpdateSuccess</members>

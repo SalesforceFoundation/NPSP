@@ -4,6 +4,7 @@ import storeFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.storeFormT
 import retrieveFormTemplateById from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveFormTemplateById';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
+import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
     mutable,
@@ -22,29 +23,6 @@ import {
 } from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
-
-// Import custom labels
-import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
-import labelGeCancel from '@salesforce/label/c.labelGeCancel';
-import geButtonSaveAndClose from '@salesforce/label/c.geButtonSaveAndClose';
-import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
-import geTabFormFields from '@salesforce/label/c.geTabFormFields';
-import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
-import geButtonBuilderNavFormFields from '@salesforce/label/c.geButtonBuilderNavFormFields';
-import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
-import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
-import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
-import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
-import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
-import geToastTemplateTabError from '@salesforce/label/c.geToastTemplateTabError';
-import geHeaderError from '@salesforce/label/c.geHeaderError';
-import geHeaderWarning from '@salesforce/label/c.geHeaderWarning';
-import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
-import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCreateSuccess';
-import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
-import geToastSaveFailed from '@salesforce/label/c.geToastSaveFailed';
-import geErrorPageLevelAdvancedMappingHeader from '@salesforce/label/c.geErrorPageLevelAdvancedMappingHeader';
-import geErrorPageLevelAdvancedMappingBody from '@salesforce/label/c.geErrorPageLevelAdvancedMappingBody';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -65,31 +43,16 @@ const EVENT_TOGGLE_MODAL = 'togglemodal';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
-    // Expose custom labels to template
-    CUSTOM_LABELS = {
-        geHeaderNewTemplate,
-        labelGeCancel,
-        geButtonSaveAndClose,
-        geTabTemplateInfo,
-        geTabFormFields,
-        geTabBatchHeader,
-        geButtonBuilderNavFormFields,
-        geButtonBuilderNavBatchHeader,
-        geButtonBuilderNavBackTemplateInfo,
-        geButtonBuilderNavBackFormFields,
-        geAssistiveSpinner,
-        geErrorPageLevelAdvancedMappingHeader,
-        geErrorPageLevelAdvancedMappingBody,
-    }
+    // Expose label service to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    // TODO: The following enum values will become custom labels.
     /*******************************************************************************
     * @description Enums used for navigating and flagging active lightning-tabs.
     */
     TabEnums = Object.freeze({
-        INFO_TAB: geTabTemplateInfo,
-        FORM_FIELDS_TAB: geTabFormFields,
-        BATCH_HEADER_TAB: geTabBatchHeader
+        INFO_TAB: this.CUSTOM_LABELS.geTabTemplateInfo,
+        FORM_FIELDS_TAB: this.CUSTOM_LABELS.geTabFormFields,
+        BATCH_HEADER_TAB: this.CUSTOM_LABELS.geTabBatchHeader
     });
 
     formTemplateRecordId;
@@ -656,9 +619,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.validateBatchHeaderTab();
 
         if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchHeaderTabError) {
-            const message = `${tabsWithErrors.size > 1 ? geToastTemplateTabsError : geToastTemplateTabError}`;
+            const message = `${tabsWithErrors.size > 1 ?
+                this.CUSTOM_LABELS.geToastTemplateTabsError
+                : this.CUSTOM_LABELS.geToastTemplateTabError}`;
             const errors = [...tabsWithErrors].join(', ');
-            showToast(geHeaderError, `${message}${errors}.`, ERROR);
+            showToast(this.CUSTOM_LABELS.geHeaderError, `${message}${errors}.`, ERROR);
 
             return false;
         }
@@ -726,8 +691,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             }
 
             const fieldApiNames = this.missingRequiredBatchFields.map(field => field.apiName).join(', ');
-            showToast(geHeaderWarning,
-                `${geBodyBatchHeaderWarning} ${fieldApiNames}`,
+            showToast(this.CUSTOM_LABELS.geHeaderWarning,
+                `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldApiNames}`,
                 'warning',
                 'sticky');
         }
@@ -765,14 +730,14 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 if (recordId) {
                     const toastMessage =
                         this.mode === NEW ?
-                            format(geToastTemplateCreateSuccess, [this.formTemplate.name])
-                            : format(geToastTemplateUpdateSuccess, [this.formTemplate.name]);
+                            format(this.CUSTOM_LABELS.geToastTemplateCreateSuccess, [this.formTemplate.name])
+                            : format(this.CUSTOM_LABELS.geToastTemplateUpdateSuccess, [this.formTemplate.name]);
                     showToast(toastMessage, '', SUCCESS);
                 }
 
                 this.navigateToLandingPage();
             } catch (error) {
-                showToast(geHeaderError, geToastSaveFailed, ERROR);
+                showToast(this.CUSTOM_LABELS.geHeaderError, this.CUSTOM_LABELS.geToastSaveFailed, ERROR);
                 this.isLoading = false;
             }
         }

@@ -8,8 +8,8 @@ import geLabelDefaultValue from '@salesforce/label/c.geLabelDefaultValue';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geAssistiveFormFieldsSectionEdit from '@salesforce/label/c.geAssistiveFormFieldsSectionEdit';
-import geAssistiveFormFieldSectionUp from '@salesforce/label/c.geAssistiveFormFieldSectionUp';
-import geAssistiveFormFieldSectionDown from '@salesforce/label/c.geAssistiveFormFieldSectionDown';
+import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
+import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
 const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
@@ -48,11 +48,11 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     get labelGeBuilderButtonAltTextSectionUp() {
-        return format(geAssistiveFormFieldSectionDown, [this.formSection.label]);
+        return format(geAssistiveSectionDown, [this.formSection.label]);
     }
 
     get labelGeBuilderButtonAltTextSectionDown() {
-        return format(geAssistiveFormFieldSectionUp, [this.formSection.label]);
+        return format(geAssistiveSectionUp, [this.formSection.label]);
     }
 
     /*******************************************************************************

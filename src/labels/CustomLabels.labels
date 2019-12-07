@@ -3966,6 +3966,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>commonCancel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>commonSave</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
         <fullName>conFailedAccountCreate</fullName>
         <categories>Data Import, Contacts</categories>
         <language>en_US</language>
@@ -4199,22 +4215,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
-        <fullName>geAssistiveFormFieldSectionDown</fullName>
+        <fullName>geAssistiveFieldDown</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Alt text: Arrow button to move section down</shortDescription>
-        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
-        <value>Move the {0} section down.</value>
+        <shortDescription>Alt text: Arrow button to move field down</shortDescription>
+        <!-- {0} is a string. Name of a form field. -->
+        <value>Move the {0} field down.</value>
     </labels>
     <labels>
-        <fullName>geAssistiveFormFieldSectionUp</fullName>
+        <fullName>geAssistiveFieldUp</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Alt text: Arrow button to move section up</shortDescription>
-        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
-        <value>Move the {0} section up.</value>
+        <shortDescription>Alt text: Arrow button to move field up</shortDescription>
+        <!-- {0} is a string. Name of a form field. -->
+        <value>Move the {0} field up.</value>
     </labels>
     <labels>
         <fullName>geAssistiveFormFieldsCollapseAll</fullName>
@@ -4248,6 +4264,24 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Alt text: Button to cancel and discard changes to section settings</shortDescription>
         <value>Cancel and discard changes to section settings.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSectionDown</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move section down</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
+        <value>Move the {0} section down.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSectionUp</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move section up</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
+        <value>Move the {0} section up.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>
