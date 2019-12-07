@@ -17,7 +17,6 @@ import {
     showToast,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
-    format,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS
 } from 'c/utilTemplateBuilder';
@@ -728,10 +727,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             try {
                 const recordId = await storeFormTemplate(preppedFormTemplate);
                 if (recordId) {
-                    const toastMessage =
+                    let toastLabel =
                         this.mode === NEW ?
-                            format(this.CUSTOM_LABELS.geToastTemplateCreateSuccess, [this.formTemplate.name])
-                            : format(this.CUSTOM_LABELS.geToastTemplateUpdateSuccess, [this.formTemplate.name]);
+                            this.CUSTOM_LABELS.geToastTemplateCreateSuccess
+                            : this.CUSTOM_LABELS.geToastTemplateUpdateSuccess;
+
+                    const toastMessage = GeLabelService.format(toastLabel, [this.formTemplate.name]);
                     showToast(toastMessage, '', SUCCESS);
                 }
 

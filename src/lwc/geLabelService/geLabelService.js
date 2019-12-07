@@ -144,7 +144,8 @@ class GeLabelService {
     * @return {string} formattedString: Formatted custom label
     */
     format = (string, replacements) => {
-        let formattedString = isEmpty(string) ? '' : string;
+        const isNull = string === null || string === undefined;
+        let formattedString = isNull ? '' : string;
         if (replacements) {
             let key;
             const type = typeof replacements;
