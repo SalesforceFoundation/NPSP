@@ -4,10 +4,15 @@
         <componentInstances>
             <componentName>BGE_DataImportBatchEntry</componentName>
             <visibilityRule>
+                <booleanFilter>1 AND 2</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>true</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Form_Template_Name__c}</leftValue>
+                    <operator>EQUAL</operator>
                 </criteria>
             </visibilityRule>
         </componentInstances>
@@ -85,10 +90,20 @@
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
             <visibilityRule>
+                <booleanFilter>1 OR (2 AND 3)</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.GiftBatch__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>true</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Form_Template_Name__c}</leftValue>
+                    <operator>NE</operator>
                 </criteria>
             </visibilityRule>
         </componentInstances>
@@ -103,6 +118,21 @@
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
+                </criteria>
+            </visibilityRule>
+        </componentInstances>
+        <componentInstances>
+            <componentName>geBatchGiftEntryApp</componentName>
+            <visibilityRule>
+                <booleanFilter>1 AND 2</booleanFilter>
+                <criteria>
+                    <leftValue>{!Record.GiftBatch__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>true</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Form_Template_Name__c}</leftValue>
+                    <operator>NE</operator>
                 </criteria>
             </visibilityRule>
         </componentInstances>
