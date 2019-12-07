@@ -41,6 +41,11 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     public static final String LOG_EXCEPTION_ERROR_TYPE = 'Data Migration Exception';
 
     /**
+    * @description Contains Recurring Donation custom settings
+    */
+    private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+
+    /**
     * @description The default batch size for the migration job if it's not specified
     * in custom settings
     */
@@ -109,10 +114,14 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     public Database.QueryLocator start(Database.BatchableContext context) {
         setBatchJobId(context);
 
-        if (RD2_EnablementService.isRecurringDonations2Enabled) {
-            return Database.getQueryLocator(getRDMigrationQuery());
-        } else {
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new MigrationException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
+
+        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name()) {
+            throw new MigrationException(System.Label.RD2_DataMigrationInvalidCloseAction);
+            
+        } else {
+            return Database.getQueryLocator(getRDMigrationQuery());
         }
     }
 
@@ -124,9 +133,12 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
         setBatchJobId(context);
+        
+        RD2_OpportunityEvaluationService.overrideVoidOfOpenOpps = true;
 
-        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+        Logger logger = new Logger(logContext, LOG_EXCEPTION_ERROR_TYPE);
         Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);
+        Map<Id, List<Opportunity>> openOppsToVoidByRDId = new Map<Id, List<Opportunity>>();
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -141,11 +153,16 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
                 convertedRDs.add(mapper.convertToEnhancedRD());
 
             } catch (Exception e) {
-                addError(e, rd.Id, errorResult);
+                logger.addError(e, rd.Id);
+                continue;
+            }
+
+            if (!mapper.openOppsToVoid.isEmpty()) {
+                openOppsToVoidByRDId.put(rd.Id, mapper.openOppsToVoid);
             }
         }
 
-        handleSaveAndLogging(convertedRDs, errorResult);
+        handleSaveAndLogging(convertedRDs, openOppsToVoidByRDId, logger);
     }
 
     /**
@@ -183,63 +200,97 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     }
 
     /**
-    * @description Constructs log record and adds it into the error log container
-    * @param e Exception
-    * @param rdId Recurring Donation Id
-    * @param errorResult Exception/error log container
-    * @return void
-    */
-    private void addError(Exception e, Id rdId, ERR_Handler.Errors errorResult) {
-        Error__c logEntry = new Error__c(
-            Context_Type__c = logContext,
-            Datetime__c = System.now(),
-            Related_Record_ID__c = rdId,
-            Record_URL__c = ERR_Handler.getRecordURL(rdId),
-            Error_Type__c = LOG_EXCEPTION_ERROR_TYPE,
-            Full_Message__c = e.getMessage()
-        );
-
-        errorResult.errorRecords.add(logEntry);
-    }
-
-    /**
     * @description Save records and log all exceptions and errors generated during records' validation and save
     * @param convertedRDs Converted Recurring Donations
-    * @param errorResult Exception/error log container
+    * @param openOppsToVoidByRDId Open Opportunities by Recurring Donation Id to void
+    * @param logger Exception/error log container
     * @return void
     */
-    private void handleSaveAndLogging(List<npe03__Recurring_Donation__c> convertedRDs, ERR_Handler.Errors errorResult) {
-
-        List<Database.SaveResult> saveResults = saveRecords(convertedRDs);
-
-        errorResult.errorRecords.addAll(
-            ERR_Handler.getErrors(saveResults, convertedRDs).errorRecords
-        );
-
-        errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
-
-        ERR_Handler.processErrorsOnly(errorResult, logContext);
-    }
-
-    /**
-    * @description Save records
-    * @param convertedRDs Converted Recurring Donations
-    * @return List<Database.SaveResult>
-    */
-    private List<Database.SaveResult> saveRecords(List<npe03__Recurring_Donation__c> convertedRDs) {
-        if (convertedRDs.isEmpty()) {
-            return new List<Database.SaveResult>();
-        }
-
+    @TestVisible
+    private void handleSaveAndLogging(
+        List<npe03__Recurring_Donation__c> convertedRDs, 
+        Map<Id, List<Opportunity>> openOppsToVoidByRDId,
+        Logger logger
+    ) {
         Savepoint sp = Database.setSavepoint();
 
-        List<Database.SaveResult> saveResults = Database.update(convertedRDs, false);
+        Set<Id> savedRDIds = saveRecurringDonations(convertedRDs, logger);
 
-        if (this.isDryRunMode) {
+        voidOpenOpportunities(savedRDIds, openOppsToVoidByRDId, logger);
+
+        if (this.isDryRunMode || logger.hasRelatedRecordFailed) {
             Database.rollback(sp);
         }
 
-        return saveResults;
+        logger.processErrors();
+    }
+
+    /**
+    * @description Save Recurring Donations
+    * @param convertedRDs Converted Recurring Donations
+    * @param logger Exception/error log container
+    * @return Set<Id> Successfully saved Recurring Donation Ids
+    */
+    private Set<Id> saveRecurringDonations(List<npe03__Recurring_Donation__c> convertedRDs,  Logger logger) {
+
+        List<Database.SaveResult> saveResults = convertedRDs.isEmpty()
+            ? new List<Database.SaveResult>()
+            : Database.update(convertedRDs, false);
+        
+        logger.addErrors(saveResults, convertedRDs);
+
+        return getSavedRecordIds(saveResults);
+    }
+
+    /**
+    * @description Returns Ids of records that were saved successfully
+    * @param saveResults Insert/update DML save results
+    * @return Set<Id>
+    */
+    private Set<Id> getSavedRecordIds(List<Database.SaveResult> saveResults) {
+        Set<Id> recordIds = new Set<Id>();
+
+        for (Database.SaveResult result : saveResults) {
+            if (result.isSuccess()) {
+                recordIds.add(result.getId());
+            }
+        }
+
+        return recordIds;
+    }
+
+    /**
+    * @description Handles Open Opportunities that should be voided (sets them to Closed Lost or deletes them)
+    * @param savedRDIds Ids of successfully saved Recurring Donations
+    * @param openOppsToVoidByRDId To be voided Open Opportunities by Recurring Donation Id
+    * @param logger Exception/error log container
+    * @return void
+    */
+    private void voidOpenOpportunities(Set<Id> savedRDIds, Map<Id, List<Opportunity>> openOppsToVoidByRDId, Logger logger) {
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Id rdId : savedRDIds) {
+            if (openOppsToVoidByRDId.containsKey(rdId)) {
+                opps.addAll(openOppsToVoidByRDId.get(rdId));
+            }
+        }
+
+        if (opps.isEmpty()) {
+            return;
+        }
+
+        List<Object> dmlResults = new List<Object>();
+        if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Delete_Open_Opportunities.name()) {
+            dmlResults = Database.delete(opps, false);
+
+        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
+            for (Opportunity opp : opps) {
+                opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
+            } 
+
+            dmlResults = Database.update(opps, false);
+        }
+
+        logger.addErrors(dmlResults, opps);
     }
 
     /**
@@ -316,5 +367,100 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         return oppsByRdId;
     }
 
+
+    /**
+    * @description Builds and creates logs for errors and exceptions.
+    * The current logger version is the ERR_Handler wrapper.
+    */
+    public class Logger {
+        /**
+        * @description Contains error results
+        */
+        @TestVisible
+        private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+
+        /**
+        * @description Context in which logs are created and can be filtered out
+        */
+        private String context;
+
+        /**
+        * @description Exception error type
+        */
+        private String exceptionErrorType;
+
+        /**
+        * @description Indicates if there is error on a related record DML operation
+        */
+        public Boolean hasRelatedRecordFailed { get; private set; }
+
+        /**
+        * @description Constructor
+        * @param context Log context
+        */
+        public Logger(String context, String exceptionErrorType) {
+            this.context = context;
+            this.exceptionErrorType = exceptionErrorType;
+            hasRelatedRecordFailed = false;
+        }
+
+        /**
+        * @description Constructs log record and adds it into the error log container
+        * @param e Exception
+        * @param rdId Recurring Donation Id
+        * @return void
+        */
+        public void addError(Exception e, Id rdId) {
+            Error__c logEntry = new Error__c(
+                Context_Type__c = context,
+                Datetime__c = System.now(),
+                Related_Record_ID__c = rdId,
+                Record_URL__c = ERR_Handler.getRecordURL(rdId),
+                Error_Type__c = exceptionErrorType,
+                Full_Message__c = e.getMessage()
+            );
+
+            errorResult.errorRecords.add(logEntry);
+        }
+
+        /**
+        * @description Constructs and collects error logs for records that failed in the DML operation
+        * @param dmlResults Insert/update/delete DML operation results
+        * @param records Records which were saved/deleted by the DML operation
+        * @return void
+        */
+        public void addErrors(List<Object> dmlResults, List<SObject> records) {
+            if (records.isEmpty()) {
+                return;
+            }
+            
+            ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(dmlResults, records);
+
+            if (dmlErrors.errorsExist && records[0].getSObjectType() != npe03__Recurring_Donation__c.SObjectType) {
+                hasRelatedRecordFailed = true;
+            }
+
+            errorResult.errorRecords.addAll(
+                dmlErrors.errorRecords
+            );
+        }
+
+        /**
+        * @description Constructs and collects error logs for records that failed in the DML operation
+        * @param dmlResults Insert/update/delete DML operation results
+        * @param records Records which were saved/deleted by the DML operation
+        * @return void
+        */
+        public void processErrors() {
+            errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
+
+            ERR_Handler.processErrorsOnly(errorResult, context);
+        }
+    }
+
+
+    /**
+    * @description Custom data migration exception
+    */
     private class MigrationException extends Exception { }
 }
