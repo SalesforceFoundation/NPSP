@@ -40,6 +40,7 @@ private class RD2_DataMigration_TEST {
     private static final Date TODAY = System.today();
     private static final Date DATE_ESTABLISHED = TODAY.addMonths(-3);
     private static final Decimal AMOUNT_VALUE = 100;
+    private static String LOG_CONTEXT = 'RunDataMigrationTest';
 
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
@@ -176,7 +177,7 @@ private class RD2_DataMigration_TEST {
                 .build()
         };
 
-        runDataMigration();
+        Id jobId = runDataMigration();
 
         npe03__Recurring_Donation__c convertedRD = getRecords()[0];
 
@@ -194,6 +195,8 @@ private class RD2_DataMigration_TEST {
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        assertBatchSummarySuccess(jobId, 1);
     }
 
     /**
@@ -767,7 +770,7 @@ private class RD2_DataMigration_TEST {
         //reset custom settings static var
         UTIL_ListCustomSettingsFacade.mapCustomInstallmentSettings = null;
 
-        Id batchJobId = runDataMigration();
+        Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'Validation error should be logged');
@@ -780,9 +783,11 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
-        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');
+        System.assertEquals(getExpectedLogContext(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
         assertLegacyFormat(getRecords());
+        
+        assertBatchSummaryFailed(jobId, 1);
     }
 
     /**
@@ -803,7 +808,7 @@ private class RD2_DataMigration_TEST {
         update rd;
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
 
-        Id batchJobId = runDataMigration();
+        Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'Validation error should be logged');
@@ -812,9 +817,11 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
-        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');
+        System.assertEquals(getExpectedLogContext(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
         assertLegacyFormat(getRecords());
+
+        assertBatchSummaryFailed(jobId, 1);
     }
 
     /**
@@ -859,7 +866,7 @@ private class RD2_DataMigration_TEST {
         };
         insert opps;
 
-        runDataMigration();
+        Id jobId = runDataMigration();
 
         assertEnhancedFormat(getRecords());
 
@@ -870,6 +877,8 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in past should stay open');
         System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'Open Opp with Close Date equal to today should stay open');
         System.assertEquals(false, oppById.get(opps[3].Id).IsClosed, 'Open Opp with Close Date in future should stay open');
+
+        assertBatchSummarySuccess(jobId, 1);
     }
 
     /**
@@ -916,7 +925,7 @@ private class RD2_DataMigration_TEST {
         };
         insert opps;
 
-        runDataMigration();
+        Id jobId = runDataMigration();
 
         assertEnhancedFormat(getRecords());
 
@@ -927,6 +936,8 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in past should stay open');
         System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'Open Opp with Close Date equal to today should stay open');
         System.assertEquals(false, oppById.get(opps[3].Id).IsClosed, 'Open Opp with Close Date in future should stay open');
+
+        assertBatchSummarySuccess(jobId, 1);
     }
 
     /**
@@ -946,7 +957,7 @@ private class RD2_DataMigration_TEST {
             .withClosedWonStage()
             .build();
 
-        runDataMigration();
+        Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -956,6 +967,8 @@ private class RD2_DataMigration_TEST {
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'Number of Opportunities should stay the same');
         System.assertEquals(true, opps[0].IsClosed && opps[0].IsWon, 'Existing Closed Won Opp should be unchanged');
+
+        assertBatchSummarySuccess(jobId, 1);
     }
 
     /**
@@ -991,7 +1004,7 @@ private class RD2_DataMigration_TEST {
         };
         insert opps;
 
-        runDataMigration();
+        Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -1003,6 +1016,8 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
         System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
         System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'Open Opp with Close Date equal to yesterday should stay open');
+
+        assertBatchSummarySuccess(jobId, 1);
     }
 
     /**
@@ -1044,7 +1059,7 @@ private class RD2_DataMigration_TEST {
         };
         insert opps;
 
-        runDataMigration();
+        Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -1059,6 +1074,8 @@ private class RD2_DataMigration_TEST {
 
         System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon,
             'The next future Open Opp should be Closed Lost');
+
+        assertBatchSummarySuccess(jobId, 1);
     }
 
     /**
@@ -1101,7 +1118,7 @@ private class RD2_DataMigration_TEST {
         };
         insert opps;
 
-        runDataMigration();
+        Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -1116,6 +1133,8 @@ private class RD2_DataMigration_TEST {
 
         System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon,
             'The next future Open Opp should be Closed Lost');
+
+        assertBatchSummarySuccess(jobId, 1);
     }
 
     /**
@@ -1157,7 +1176,7 @@ private class RD2_DataMigration_TEST {
         };
         insert opps;
 
-        runDataMigration();
+        Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -1169,6 +1188,8 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
         System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
         System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'The first future Open Opp should stay open');
+
+        assertBatchSummarySuccess(jobId, 1);
     }
 
     /**
@@ -1201,8 +1222,10 @@ private class RD2_DataMigration_TEST {
         }
         insert opps;
 
+        UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        batch.execute(null, getRecords());
+        batch.execute(batchContext, getRecords());
+        batch.finish(batchContext);
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -1220,6 +1243,8 @@ private class RD2_DataMigration_TEST {
             'Second RD: Open Opp with Close Date today should stay open');
         System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon, 
             'Second RD: Open Opp with Close Date in future should be Closed Lost');
+
+        assertBatchSummarySuccess(batchContext.getJobId(), rds.size());
     }
 
     /**
@@ -1254,7 +1279,7 @@ private class RD2_DataMigration_TEST {
         insert opps;
 
         //simulate an error on a DML other than DML on a Recurring Donation
-        RD2_DataMigration_BATCH.Logger logger = getLogger();
+        RD2_DataMigration_BATCH.Logger logger = new RD2_DataMigration_BATCH.Logger(LOG_CONTEXT);
         List<Database.SaveResult> dmlResults = new List<Database.SaveResult>{ mockErrorDMLResult() };
         logger.addErrors(dmlResults, new List<Opportunity>{ new Opportunity() });
 
@@ -1285,6 +1310,8 @@ private class RD2_DataMigration_TEST {
         for (Opportunity opp : actualOpps) {
             System.assertEquals(false, opp.IsClosed, 'Open Opp should be unchanged');
         }
+
+        System.assertEquals(rds.size(), batch.totalRecordsFailed, 'Total Records Failed should match');
     }
 
     /**
@@ -1329,7 +1356,8 @@ private class RD2_DataMigration_TEST {
         };
 
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        batch.handleSaveAndLogging(convertedRDs, voidOppsByRDId, getLogger());
+        RD2_DataMigration_BATCH.Logger logger = new RD2_DataMigration_BATCH.Logger(LOG_CONTEXT);
+        batch.handleSaveAndLogging(convertedRDs, voidOppsByRDId, logger);
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -1346,6 +1374,8 @@ private class RD2_DataMigration_TEST {
 
         opp = oppById.get(voidOppsByRDId.get(rds[1].Id)[0].Id);
         System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'Open Opp for the enhanced RD should be Closed Lost');
+
+        System.assertEquals(0, batch.totalRecordsFailed, 'Total Records Failed should match');
     }
 
 
@@ -1550,27 +1580,15 @@ private class RD2_DataMigration_TEST {
     }
 
     /****
-    * @description Constructs data migration logger
-    * @return RD2_DataMigration_BATCH.Logger
-    */
-    private static RD2_DataMigration_BATCH.Logger getLogger() {
-        String logContext = 'RunDataMigrationTest';
-
-        return new RD2_DataMigration_BATCH.Logger(
-            logContext,
-            RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE
-        );
-    }
-
-    /****
     * @description Returns expected data migration log context
-    * @param batchJobId Batch job Id
+    * @param jobId Batch job Id
     * @return String
     */
-    private static String getExpectedLogContext(Id batchJobId) {
-        AsyncApexJob job = jobGateway.getRecord(batchJobId);
+    private static String getExpectedLogContext(Id jobId) {
+        AsyncApexJob job = jobGateway.getRecord(jobId);
 
-        return RD2_DataMigration_BATCH.LOG_CONTEXT_PREFIX + ' ' + String.valueOf(job.CreatedDate);
+        return RD2_DataMigration_BATCH.LOG_CONTEXT_PREFIX 
+            + (job == null ? '' : (' ' + String.valueOf(job.CreatedDate)));
     }
 
     /****
@@ -1583,10 +1601,59 @@ private class RD2_DataMigration_TEST {
 
         Test.startTest();
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        Id batchJobId = Database.executeBatch(batch);
+        Id jobId = Database.executeBatch(batch);
         Test.stopTest();
 
-        return batchJobId;
+        return jobId;
+    }
+
+    /****
+    * @description Verifies batch summary where all records are processed
+    * @param jobId Batch job Id
+    * @param totalProcessed Number of processed records
+    * @return void
+    */
+    private static void assertBatchSummarySuccess(Id jobId, Integer totalProcessed) {
+        RD2_DataMigration_BATCH.BatchJobSummary expectedSummary = 
+            new RD2_DataMigration_BATCH.BatchJobSummary(jobId, getExpectedLogContext(jobId))
+                .withTotalRecords(totalProcessed)
+                .withTotalRecordsProcessed(totalProcessed)
+                .withTotalRecordsFailed(0);
+
+        assertBatchSummary(expectedSummary);
+    }
+
+    /****
+    * @description Verifies batch summary where all records failed 
+    * @param jobId Batch job Id
+    * @param totalProcessed Number of processed records
+    * @return void
+    */
+    private static void assertBatchSummaryFailed(Id jobId, Integer totalFailed) {
+        RD2_DataMigration_BATCH.BatchJobSummary expectedSummary = 
+            new RD2_DataMigration_BATCH.BatchJobSummary(jobId, getExpectedLogContext(jobId))
+                .withTotalRecords(totalFailed)
+                .withTotalRecordsProcessed(0)
+                .withTotalRecordsFailed(totalFailed);
+
+        assertBatchSummary(expectedSummary);
+    }
+
+    /****
+    * @description Verifies batch summary created after data migration completes
+    * @return void
+    */
+    private static void assertBatchSummary(RD2_DataMigration_BATCH.BatchJobSummary expectedSummary) {
+        String jsonSummary = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DataMigrationBatchSummary__c;
+        RD2_DataMigration_BATCH.BatchJobSummary summary = String.isNotBlank(jsonSummary)
+            ? (RD2_DataMigration_BATCH.BatchJobSummary) JSON.deserialize(jsonSummary, RD2_DataMigration_BATCH.BatchJobSummary.class)
+            : null;
+        System.assertNotEquals(null, summary, 'Batch summary should be created');
+
+        System.assertEquals(expectedSummary.jobId, summary.jobId, 'Batch job Id should match');
+        System.assertEquals(expectedSummary.totalRecords, summary.totalRecords, 'Total Records should match');
+        System.assertEquals(expectedSummary.totalRecordsProcessed, summary.totalRecordsProcessed, 'Total Records Processed should match');
+        System.assertEquals(expectedSummary.totalRecordsFailed, summary.totalRecordsFailed, 'Total Records Failed should match');
     }
 
     /****

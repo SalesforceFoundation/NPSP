@@ -240,6 +240,10 @@ public with sharing class UTIL_BatchJobService_TEST {
         private Id jobId;
         private Id childJobId;
 
+        public MockBatchableContext() {
+            jobId = MOCK_BATCH_ID;
+        }
+
         public MockBatchableContext returnJobId(Id jobId) {
             this.jobId = jobId;
             return this;
