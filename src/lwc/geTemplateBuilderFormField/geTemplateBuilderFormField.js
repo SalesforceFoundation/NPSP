@@ -147,9 +147,12 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get labelGeAssistiveFormFieldRemove() {
-        return this.isBatchHeaderField ?
-            GeLabelService.format(this.CUSTOM_LABELS.geAssistiveBatchHeaderRemoveField, [this.field.label])
-            : GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFormFieldsRemoveField, [this.field.label]);
+        const customLabel =
+            this.isBatchHeaderField ?
+                this.CUSTOM_LABELS.geAssistiveBatchHeaderRemoveField
+                : this.CUSTOM_LABELS.geAssistiveFormFieldsRemoveField;
+
+        return GeLabelService.format(customLabel, [this.field.label]);
     }
 
     get labelGeAssistiveFormFieldUp() {
