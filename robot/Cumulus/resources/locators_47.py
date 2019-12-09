@@ -228,12 +228,16 @@ npsp_lex_locators={
         'button':"//button[text()='Create New Field Mapping']",
         'field-label':'//lightning-formatted-text[text()="{}"]',
         },
+    'modal-form':{
+        'label':'//div[./*/*[text()="{}"]]',
+        },
     
 }
     
 
 extra_locators={
     'related_list_items1':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "Relationships"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]',
+    
 }
 dnd={ ""
     }

@@ -1244,3 +1244,28 @@ class NPSP(SalesforceRobotLibraryBase):
         self.select_row(value)
         self.selenium.click_link("Delete")
         self.wait_until_url_contains("/list")
+        
+    def populate_modal_form(self,**kwargs):
+        """"""
+        
+        for key, value in kwargs.items():
+            locator = npsp_lex_locators["modal-form"][label].format(key)
+            if self.check_if_element_exists(locator):
+                classname=self.selenium.get_webelement(locator).getAttribute("class")
+                print(classname)
+                if "Lookup" in classname:
+                    self.salesforce.populate_lookup_field(key,value)
+                elif "Select" in classname:
+                    self.select_value_from_dropdown(key,value)
+                elif "Checkbox" in classname:
+                    self.select_lightning_checkbox(key) 
+                elif "Date" in classname:
+                    self.pick_date(value)
+                elif "uiInput--default" in classname:
+                    try :
+                        self.salesforce.populate_field(key,value)
+                    except Exception :
+                        self.search_field_by_value(key,value)    
+            else:
+                raise Exception("Locator for {} is not found on the page".format(key))   
+            
