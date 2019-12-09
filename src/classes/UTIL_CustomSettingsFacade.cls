@@ -522,7 +522,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         String oldProcessor = '';
         //modified to check again the Id instead of the object
         //get the model they used to be in
-        Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c;
+        Schema.DescribeFieldResult F = Schema.SObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c;
         List<Schema.PicklistEntry> P = F.getPicklistValues();
 
         for(Schema.PicklistEntry pe : P){
@@ -593,7 +593,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;
 
-            List<RecordType> oppRecordTypes = [select id from RecordType where sobjecttype = 'Opportunity' and IsActive = true];
+            List<RecordType> oppRecordTypes = [select id from RecordType where SObjectType = 'Opportunity' and IsActive = true];
             if (oppRecordTypes.size() > 0) {
                 settings.npe03__Record_Type__c = oppRecordTypes[0].id;
             }
@@ -848,6 +848,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
         recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
         recurringDonationsSettings.DisableRollupsWhenCreatingInstallments__c = settings.DisableRollupsWhenCreatingInstallments__c;
+        recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 

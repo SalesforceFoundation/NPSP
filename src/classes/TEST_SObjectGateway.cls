@@ -238,27 +238,48 @@ public class TEST_SObjectGateway {
     * @description Retrieves AsyncApexJob record(s)
     */
     public class AsyncApexJobGateway {
+        private Set<String> fields = new Set<String>{
+            'CreatedDate',
+            'CompletedDate',
+            'ExtendedStatus',
+            'JobItemsProcessed',
+            'TotalJobItems',
+            'NumberOfErrors',
+            'JobType',
+            'ApexClass.NamespacePrefix',
+            'ApexClass.Name',
+            'MethodName'
+        };
 
         /***
-        * @description Retrieves AsyncApexJob records
+        * @description Retrieves AsyncApexJob record for the specified class name
+        * @param className Class Name
         * @return AsyncApexJob
         */
         public AsyncApexJob getRecord(String className) {
-            return [
-                SELECT
-                    CompletedDate,
-                    ExtendedStatus,
-                    JobItemsProcessed,
-                    TotalJobItems,
-                    NumberOfErrors,
-                    JobType,
-                    ApexClass.NamespacePrefix,
-                    ApexClass.Name,
-                    MethodName
-                FROM AsyncApexJob
-                WHERE ApexClass.Name = :className
-                LIMIT 1
-            ];
+            String soql = new UTIL_Query()
+                .withFrom(AsyncApexJob.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('ApexClass.Name = :className')
+                .withLimit(1)
+                .build();
+
+            return (AsyncApexJob) Database.query(soql);
+        }
+
+        /***
+        * @description Retrieves AsyncApexJob record for the specified job Id
+        * @param jobId Async Apex Job Id
+        * @return AsyncApexJob
+        */
+        public AsyncApexJob getRecord(Id jobId) {
+            String soql = new UTIL_Query()
+                .withFrom(AsyncApexJob.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('Id = :jobId')
+                .build();
+
+            return (AsyncApexJob) Database.query(soql);
         }
     }
 }
