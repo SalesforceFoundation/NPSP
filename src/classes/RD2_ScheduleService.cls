@@ -193,6 +193,25 @@ public without sharing class RD2_ScheduleService {
         return isNeeded;
     }
 
+
+    /***
+    * @description Calculates the dates of the next n donations
+    * @param rds Recurring Donation records
+    * @param visualizationStartDate Date
+    * @param maxDates Integer
+    * @return Map<Id, List<Installment>>
+    */
+    public Map<Id, List<Installment>> getNextDonationsForVisualization(List<npe03__Recurring_Donation__c> rds, Date visualizationStartDate, Integer maxDates) {
+
+        //TODO: This is the signature for a bulkified version of getNextDonationsForVisualization().
+        // It will return a map of recurring donation Id to an ordered list of maxDates Installments.
+        // This is the signature that should be used for trigger and batch.  Pass in list of rds with the
+        // start date of installments you wish to retrieve, along with the maximum number of future dates
+        // you wish to retrieve.
+
+        return null;
+    }
+
     /***
     * @description Calculates the dates of the next n donations
     * @param rd Recurring Donation record
