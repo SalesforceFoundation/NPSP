@@ -1,19 +1,15 @@
 <template>
     <lightning-input
-            label="Batch Id for Testing (to simulate loading form from a Batch record)"
-            onchange={handleBatchId}></lightning-input>
-
-    <lightning-input
             label="Account Id For Testing (to simulate populating lookup field or loading from an Account record.)"
             onchange={handleAccountId}></lightning-input>
 
     <br/>
 
     <c-ge-form-renderer
-            is-batch-mode={isBatchMode}
+            is-batch-mode=true
             onsubmit={handleSubmit}
             onsectionsretrieved={handleSectionsRetrieved}>
     </c-ge-form-renderer>
 
-    <c-ge-batch-gift-entry-table></c-ge-batch-gift-entry-table>
+    <c-ge-batch-gift-entry-table batch-id={recordId}></c-ge-batch-gift-entry-table>
 </template>

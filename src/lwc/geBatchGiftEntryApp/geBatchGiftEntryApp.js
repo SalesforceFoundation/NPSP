@@ -9,23 +9,10 @@ import NPSP_DATA_IMPORT_BATCH_FIELD
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 
 export default class GeBatchGiftEntryApp extends LightningElement {
-    @api batchId;
-    @api accountId;
-    @api isBatchMode = false; // once we are loading from a batch, just batchId should be
-    // sufficient
+    @api recordId;
 
-    //method used for testing until form is ready to be loaded with a Batch id
-    handleBatchId(event) {
-        this.batchId = event.target.value;
-        this.isBatchMode = this.batchId ? true : false;
-
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.isBatchMode = this.isBatchMode;
-
-        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.setBatchId(event.target.value);
-        table.loadBatch();
-    }
+    // @api accountId;
+    @api accountId = '0011k00000W4UMyAAN';
 
     //method used for testing until form has Account/Contact Lookups or is ready to be loaded
     // with an Account Id
@@ -37,9 +24,13 @@ export default class GeBatchGiftEntryApp extends LightningElement {
     }
 
     connectedCallback() {
-        //The form will load in batch mode once we are passing a batch id into the app on
-        // load, since the form responds to this property
-        this.isBatchMode = this.batchId ? true : false;
+        //Remove after dev::
+        window.setTimeout(() => {
+            const table = this.template.querySelector('c-ge-batch-gift-entry-table');
+            table.setAccountId(this.accountId);
+            setServiceAccountId(this.accountId);
+        }, 2000);
+        //END Remove after dev::
     }
 
     handleSubmit(event) {
@@ -61,11 +52,11 @@ export default class GeBatchGiftEntryApp extends LightningElement {
         }
 
         if (!dataRow[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
-            dataRow[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+            dataRow[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.recordId;
         }
 
         GeFormService.saveAndDryRun(
-            this.batchId, dataRow)
+            this.recordId, dataRow)
             .then(
                 dataImportModel => {
                     const processedDataRow = dataImportModel.dataImportRows[0].record;
