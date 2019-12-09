@@ -201,15 +201,12 @@ public without sharing class RD2_ScheduleService {
     * @param maxDates Integer
     * @return Map<Id, List<Installment>>
     */
-    public Map<Id, List<Installment>> getNextDonationsForVisualization(List<npe03__Recurring_Donation__c> rds, Date visualizationStartDate, Integer maxDates) {
+    public List<Installment> getNextDonationsForVisualization(npe03__Recurring_Donation__c rd, Date visualizationStartDate, Integer maxDates) {
+        if (rd == null) {
+            return new List<Installment>();
+        }
 
-        //TODO: This is the signature for a bulkified version of getNextDonationsForVisualization().
-        // It will return a map of recurring donation Id to an ordered list of maxDates Installments.
-        // This is the signature that should be used for trigger and batch.  Pass in list of rds with the
-        // start date of installments you wish to retrieve, along with the maximum number of future dates
-        // you wish to retrieve.
-
-        return null;
+        return getNextDonationsForVisualization(new List<npe03__Recurring_Donation__c> {rd}, visualizationStartDate, maxDates).get(rd.Id);
     }
 
     /***
@@ -219,7 +216,7 @@ public without sharing class RD2_ScheduleService {
     * @param maxDates Integer
     * @return List<Installment>
     */
-    public List<Installment> getNextDonationsForVisualization(npe03__Recurring_Donation__c rd, Date visualizationStartDate, Integer maxDates) {
+    public Map<Id, List<Installment>> getNextDonationsForVisualization(List<npe03__Recurring_Donation__c> rds, Date visualizationStartDate, Integer maxDates) {
 
         if (maxDates == null) {
             maxDates = DEFAULT_VISUALIZATION_SCHEDULE_COUNT;
@@ -229,41 +226,55 @@ public without sharing class RD2_ScheduleService {
             visualizationStartDate = currentDate;
         }
 
-        Installment ins;
-        List<Installment> vizSchedules = new List<Installment>();
-        currentDate = visualizationStartDate;
-        Integer dateCount = 0;
-        List <RecurringDonationSchedule__c> filteredSchedules;
+        Map<Id, List<Installment>> installmentsByRDIds = new Map<Id, List<Installment>>();
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRDIds = getExistingSchedules(rds);
 
-        List <RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
+        for (npe03__Recurring_Donation__c rd : rds) {
 
-        if (schedules == null) {
-            return vizSchedules;
-        }
+            if (rd == null) {
+                continue;
+            }
 
-        while (dateCount < maxDates) {
+            installmentsByRDIds.put(rd.Id, new List<Installment>());
 
-            // We are changing currentDate with each loop, so the active schedules potentially change with each loop
-            filteredSchedules = new List<RecurringDonationSchedule__c>();
-            for (RecurringDonationSchedule__c schedule : schedules) {
-                if (schedule.EndDate__c == null || schedule.EndDate__c >= currentDate) {
-                    filteredSchedules.add(schedule);
+            Installment ins;
+            List<Installment> vizSchedules = new List<Installment>();
+            currentDate = visualizationStartDate;
+            Integer dateCount = 0;
+            List <RecurringDonationSchedule__c> filteredSchedules;
+
+            if (schedulesByRDIds.get(rd.Id) == null) {
+                continue;
+            }
+
+            while (dateCount < maxDates) {
+
+                // We are changing currentDate with each loop, so the active schedules potentially change with each loop
+                filteredSchedules = new List<RecurringDonationSchedule__c>();
+                for (RecurringDonationSchedule__c schedule : schedulesByRDIds.get(rd.Id)) {
+                    if (schedule.EndDate__c == null || schedule.EndDate__c >= currentDate) {
+                        filteredSchedules.add(schedule);
+                    }
                 }
+
+                ins = getNextDonationSchedule(filteredSchedules);
+                if (ins == null) {
+                    currentDate = date.today();
+                    break;
+                }
+
+                vizSchedules.add(ins);
+                dateCount++;
+                currentDate = ins.nextDonationDate.addDays(1);
             }
 
-            ins = getNextDonationSchedule(filteredSchedules);
-            if (ins == null) {
-                currentDate = date.today();
-                break;
-            }
+            installmentsByRDIds.get(rd.Id).addAll(vizSchedules);
 
-            vizSchedules.add(ins);
-            dateCount++;
-            currentDate = ins.nextDonationDate.addDays(1);
         }
 
         currentDate = date.today();
-        return vizSchedules;
+
+        return installmentsByRDIds;
     }
 
     /***
@@ -273,12 +284,9 @@ public without sharing class RD2_ScheduleService {
 
         public Id       campaignId {get; set;}
         public String   campaignName {get; set;}
-        public String   dayOfMonth {get; set;}
         public Date     endDate {get; set;}
         public String   externalId {get; set;}
         public Decimal  installmentAmount {get; set;}
-        public Integer  installmentFrequency {get; set;}
-        public String   installmentPeriod {get; set;}
         public Date     nextDonationDate {get; set;}
         public String   paymentMethod {get; set;}
         public Id       recurringDonationId {get; set;}
@@ -289,12 +297,9 @@ public without sharing class RD2_ScheduleService {
         Installment(RecurringDonationSchedule__c rdSchedule) {
             campaignId =            rdSchedule.Campaign__c;
             campaignName =          rdSchedule.Campaign__r.Name;
-            dayOfMonth =            rdSchedule.DayOfMonth__c;
             endDate =               rdSchedule.EndDate__c;
             externalId =            rdSchedule.ExternalId__c;
             installmentAmount =     rdSchedule.InstallmentAmount__c;
-            installmentFrequency =  Integer.valueOf(rdSchedule.InstallmentFrequency__c);
-            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
             paymentMethod =         rdSchedule.PaymentMethod__c;
             recurringDonationId =   rdSchedule.RecurringDonation__c;
             recurringDonationName = rdSchedule.RecurringDonation__r.Name;

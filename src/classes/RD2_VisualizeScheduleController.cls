@@ -52,7 +52,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @return List<Schedule>
      */
     @AuraEnabled
-    public static List<Schedule> getSchedule(Id recordId, Integer displayNum) {
+    public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
@@ -64,12 +64,12 @@ public with sharing class RD2_VisualizeScheduleController {
 
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
-        List<Schedule> upcomingDonations = new List<Schedule>();
+        List<Installment> upcomingDonations = new List<Installment>();
         if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
             List<RD2_ScheduleService.Installment> installments = scheduleService.getNextDonationsForVisualization(rd, Date.today(), displayNum);
             Integer num = 1;
             for (RD2_ScheduleService.Installment installment : installments) {
-                upcomingDonations.add(new Schedule(num++, rd, installment));
+                upcomingDonations.add(new Installment(num++, rd, installment));
             }
         }
 
@@ -97,7 +97,7 @@ public with sharing class RD2_VisualizeScheduleController {
     /**
      * @description Inner Class of Future Donations for a given Recurring Donation
      */
-    public class Schedule {
+    public class Installment {
         @AuraEnabled public Integer installmentNumber;
         @AuraEnabled public Date donationDate;
         @AuraEnabled public Decimal amount;
@@ -105,7 +105,7 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public String paymentMethod;
         @AuraEnabled public String currencyIsoCode;
 
-        public Schedule(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.Installment installment) {
+        public Installment(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.Installment installment) {
             this.installmentNumber = num;
             this.paymentMethod = installment.paymentMethod;
             this.campaign = installment.campaignName;

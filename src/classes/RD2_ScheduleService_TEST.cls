@@ -1084,19 +1084,19 @@ private with sharing class RD2_ScheduleService_TEST {
 
     }
 
-//    /***
-//    * @description Verifies visualization does not fail when null RD Id is used
-//    */
-//    @isTest
-//    private static void shouldReturnZeroInstallmentsWhenRDIdIsNull() {
-//
-//        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
-//
-//        List<RD2_ScheduleService.Installment> installments = service.getNextDonationsForVisualization(null, Date.newInstance(2019, 11, 1), 12);
-//
-//        System.assertEquals(0, installments.size(), 'There should be 0 installments.');
-//
-//    }
+    /***
+    * @description Verifies visualization does not fail when null RD Id is used
+    */
+    @isTest
+    private static void shouldReturnZeroInstallmentsWhenRDIdIsNull() {
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDIds = service.getNextDonationsForVisualization(new List<npe03__Recurring_Donation__c>{null}, Date.newInstance(2019, 11, 1), 12);
+
+        System.assertEquals(0, installmentsByRDIds.values()[0].size(), 'There should be 0 installments.');
+
+    }
 
     /***
     * @description Verifies visualization substitutes default when null start date is used
