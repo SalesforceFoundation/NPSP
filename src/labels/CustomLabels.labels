@@ -1588,7 +1588,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationCompleteMessage</shortDescription>
-        <value>&lt;b&gt;&lt;i&gt;All done! You’re now running the Enhanced Recurring Donations experience!&lt;/i&gt;&lt;/b&gt;</value>
+        <value>Your migration was successful with no errors, you’re all ready to go with Enhanced Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationErrorMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationErrorMessage</shortDescription>
+        <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationTitle</fullName>

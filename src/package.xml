@@ -1481,6 +1481,7 @@
         <members>RD2_EnablementMetaDeployTitle</members>
         <members>RD2_EnablementMigrationButton</members>
         <members>RD2_EnablementMigrationCompleteMessage</members>
+        <members>RD2_EnablementMigrationErrorMessage</members>
         <members>RD2_EnablementMigrationIntro</members>
         <members>RD2_EnablementMigrationTitle</members>
         <members>RD2_EnablementMigrationWarning</members>

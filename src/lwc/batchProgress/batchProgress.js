@@ -87,6 +87,8 @@ export default class BatchProgress extends LightningElement {
     handleLoadBatchJobSummary() {
         loadBatchJobSummary({ className: this.className })
             .then((data) => {
+                this.batchJobSummary = null;
+
                 if (isNull(this.batchJob)) {
                     return;
                 }
