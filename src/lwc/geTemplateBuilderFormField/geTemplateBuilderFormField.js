@@ -1,5 +1,6 @@
-import { LightningElement, api } from 'lwc';
-import { inputTypeByDescribeType, dispatch, format } from 'c/utilTemplateBuilder';
+import { LightningElement, api, wire } from 'lwc';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 
@@ -47,7 +48,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     get labelHelpText() {
         if (this.fieldMapping && this.fieldMapping.Target_Object_Mapping_Dev_Name) {
             const objectMapping = TemplateBuilderService.objectMappingByDevName[this.fieldMapping.Target_Object_Mapping_Dev_Name];
-            return format(
+            return GeLabelService.format(
                 this.CUSTOM_LABELS.geHelpTextFormFieldsFieldCustomLabel,
                 [
                     objectMapping.MasterLabel,
