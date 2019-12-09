@@ -31,6 +31,9 @@
             ],
             "c/utilStencil": [
                 "utilStencil/utilStencil.js"
+            ],
+            "c/util": [
+                "util/util.js"
             ]
         },
         "experimentalDecorators": true

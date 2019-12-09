@@ -1258,6 +1258,7 @@
         <members>npe03__Recurring_Donation__c.StartDate__c</members>
         <members>npe03__Recurring_Donation__c.Status__c</members>
         <members>npe03__Recurring_Donations_Settings__c.DataMigrationBatchSize__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.DataMigrationBatchSummary__c</members>
         <members>npe03__Recurring_Donations_Settings__c.EnableAutomaticNaming__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
@@ -1321,6 +1322,9 @@
         <members>BatchProgressTimeElapsedDays</members>
         <members>BatchProgressTitleRD2DataMigration</members>
         <members>BatchProgressTotalJobItems</members>
+        <members>BatchProgressTotalRecords</members>
+        <members>BatchProgressTotalRecordsFailed</members>
+        <members>BatchProgressTotalRecordsProcessed</members>
         <members>CMT_DeleteConfirm</members>
         <members>CMT_FilterGroupActiveRollupsHelpText</members>
         <members>CMT_FilterGroupDeleteError</members>
@@ -3095,6 +3099,7 @@
         <members>bdiObjectMappings</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>util</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>

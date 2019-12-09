@@ -786,7 +786,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(getExpectedLogContext(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
         assertLegacyFormat(getRecords());
-        
+
         assertBatchSummaryFailed(jobId, 1);
     }
 
@@ -1197,8 +1197,8 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldConvertRecurringDonationsAndVoidOpenOppsInBulk() {
-        setCloseActionSettingsToClosedLost();        
-        
+        setCloseActionSettingsToClosedLost();
+
         List<npe03__Recurring_Donation__c> rds = createLegacyRecurringDonationsNoOpps(2);
 
         List<Opportunity> opps = new List<Opportunity>();
@@ -1235,26 +1235,26 @@ private class RD2_DataMigration_TEST {
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rds));
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opps should match: ' + oppById.values());
 
-        System.assertEquals(false, oppById.get(opps[0].Id).IsClosed, 
+        System.assertEquals(false, oppById.get(opps[0].Id).IsClosed,
             'First RD: Open Opp with Close Date today should stay open');
-        System.assertEquals(true, oppById.get(opps[1].Id).IsClosed && !oppById.get(opps[1].Id).IsWon, 
+        System.assertEquals(true, oppById.get(opps[1].Id).IsClosed && !oppById.get(opps[1].Id).IsWon,
             'First RD: Open Opp with Close Date in future should be Closed Lost');
-        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 
+        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed,
             'Second RD: Open Opp with Close Date today should stay open');
-        System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon, 
+        System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon,
             'Second RD: Open Opp with Close Date in future should be Closed Lost');
 
         assertBatchSummarySuccess(batchContext.getJobId(), rds.size());
     }
 
     /**
-     * @description Verifies Recurring Donations and their Open Opportunities are not migrated 
+     * @description Verifies Recurring Donations and their Open Opportunities are not migrated
      * when DML fails on an Open Opportunity
      */
     @IsTest
     private static void shouldRollbackConversionWhenAnErrorOccursOnOppDML() {
-        setCloseActionSettingsToClosedLost();        
-        
+        setCloseActionSettingsToClosedLost();
+
         List<npe03__Recurring_Donation__c> rds = createLegacyRecurringDonationsNoOpps(2);
 
         List<Opportunity> opps = new List<Opportunity>();
@@ -1283,7 +1283,7 @@ private class RD2_DataMigration_TEST {
         List<Database.SaveResult> dmlResults = new List<Database.SaveResult>{ mockErrorDMLResult() };
         logger.addErrors(dmlResults, new List<Opportunity>{ new Opportunity() });
 
-        //try to update converted Recurring Donations and void Open Opps as Closed Lost        
+        //try to update converted Recurring Donations and void Open Opps as Closed Lost
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
         for (npe03__Recurring_Donation__c rd : getRecords()) {
             convertedRDs.add(new RD2_DataMigrationMapper(rd).convertToEnhancedRD());
@@ -1344,7 +1344,7 @@ private class RD2_DataMigration_TEST {
         }
         insert opps;
 
-        //convert only one RD to the enhanced format    
+        //convert only one RD to the enhanced format
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>{
             new RD2_DataMigrationMapper(rds[1]).convertToEnhancedRD()
         };
@@ -1409,7 +1409,7 @@ private class RD2_DataMigration_TEST {
 
         return rd;
     }
-     
+
     /**
      * @description Creates Recurring Donations without any Opportunity
      * @param size Number of Recurring Donations to create
@@ -1427,8 +1427,8 @@ private class RD2_DataMigration_TEST {
             rds.add(getLegacyRecurringDonationBuilder(contact.Id).withId(null).build());
         }
 
-        //It is required to execute RD bulk insert in a Test.start/stopTest() 
-        //so all async legacy RD methods are completed. 
+        //It is required to execute RD bulk insert in a Test.start/stopTest()
+        //so all async legacy RD methods are completed.
         Test.startTest();
         insert rds;
         Test.stopTest();
@@ -1587,7 +1587,7 @@ private class RD2_DataMigration_TEST {
     private static String getExpectedLogContext(Id jobId) {
         AsyncApexJob job = jobGateway.getRecord(jobId);
 
-        return RD2_DataMigration_BATCH.LOG_CONTEXT_PREFIX 
+        return RD2_DataMigration_BATCH.LOG_CONTEXT_PREFIX
             + (job == null ? '' : (' ' + String.valueOf(job.CreatedDate)));
     }
 
@@ -1614,8 +1614,8 @@ private class RD2_DataMigration_TEST {
     * @return void
     */
     private static void assertBatchSummarySuccess(Id jobId, Integer totalProcessed) {
-        RD2_DataMigration_BATCH.BatchJobSummary expectedSummary = 
-            new RD2_DataMigration_BATCH.BatchJobSummary(jobId, getExpectedLogContext(jobId))
+        UTIL_BatchJobService.BatchJobSummary expectedSummary =
+            new UTIL_BatchJobService.BatchJobSummary(jobId, getExpectedLogContext(jobId))
                 .withTotalRecords(totalProcessed)
                 .withTotalRecordsProcessed(totalProcessed)
                 .withTotalRecordsFailed(0);
@@ -1624,14 +1624,14 @@ private class RD2_DataMigration_TEST {
     }
 
     /****
-    * @description Verifies batch summary where all records failed 
+    * @description Verifies batch summary where all records failed
     * @param jobId Batch job Id
     * @param totalProcessed Number of processed records
     * @return void
     */
     private static void assertBatchSummaryFailed(Id jobId, Integer totalFailed) {
-        RD2_DataMigration_BATCH.BatchJobSummary expectedSummary = 
-            new RD2_DataMigration_BATCH.BatchJobSummary(jobId, getExpectedLogContext(jobId))
+        UTIL_BatchJobService.BatchJobSummary expectedSummary =
+            new UTIL_BatchJobService.BatchJobSummary(jobId, getExpectedLogContext(jobId))
                 .withTotalRecords(totalFailed)
                 .withTotalRecordsProcessed(0)
                 .withTotalRecordsFailed(totalFailed);
@@ -1643,14 +1643,14 @@ private class RD2_DataMigration_TEST {
     * @description Verifies batch summary created after data migration completes
     * @return void
     */
-    private static void assertBatchSummary(RD2_DataMigration_BATCH.BatchJobSummary expectedSummary) {
+    private static void assertBatchSummary(UTIL_BatchJobService.BatchJobSummary expectedSummary) {
         String jsonSummary = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DataMigrationBatchSummary__c;
-        RD2_DataMigration_BATCH.BatchJobSummary summary = String.isNotBlank(jsonSummary)
-            ? (RD2_DataMigration_BATCH.BatchJobSummary) JSON.deserialize(jsonSummary, RD2_DataMigration_BATCH.BatchJobSummary.class)
+        UTIL_BatchJobService.BatchJobSummary summary = String.isNotBlank(jsonSummary)
+            ? (UTIL_BatchJobService.BatchJobSummary) JSON.deserialize(jsonSummary, UTIL_BatchJobService.BatchJobSummary.class)
             : null;
         System.assertNotEquals(null, summary, 'Batch summary should be created');
 
-        System.assertEquals(expectedSummary.jobId, summary.jobId, 'Batch job Id should match');
+        System.assertEquals(expectedSummary.batchId, summary.batchId, 'Batch Id should match');
         System.assertEquals(expectedSummary.totalRecords, summary.totalRecords, 'Total Records should match');
         System.assertEquals(expectedSummary.totalRecordsProcessed, summary.totalRecordsProcessed, 'Total Records Processed should match');
         System.assertEquals(expectedSummary.totalRecordsFailed, summary.totalRecordsFailed, 'Total Records Failed should match');

@@ -132,7 +132,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
 
         } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name()) {
             throw new MigrationException(System.Label.RD2_DataMigrationInvalidCloseAction);
-            
+
         } else {
             return Database.getQueryLocator(getRDMigrationQuery());
         }
@@ -146,7 +146,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
         setBatchJobId(context);
-        
+
         RD2_OpportunityEvaluationService.overrideVoidOfOpenOpps = true;
 
         Logger logger = new Logger(logContext);
@@ -185,7 +185,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * @description Logs batch job summary
     */
     public void finish(Database.BatchableContext context) {
-        BatchJobSummary summary = new BatchJobSummary(batchJobId, logContext)
+        UTIL_BatchJobService.BatchJobSummary summary = new UTIL_BatchJobService.BatchJobSummary(batchJobId, logContext)
             .withTotalRecords(totalRecords)
             .withTotalRecordsProcessed(totalRecords - totalRecordsFailed)
             .withTotalRecordsFailed(totalRecordsFailed);
@@ -234,7 +234,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     @TestVisible
     private void handleSaveAndLogging(
-        List<npe03__Recurring_Donation__c> convertedRDs, 
+        List<npe03__Recurring_Donation__c> convertedRDs,
         Map<Id, List<Opportunity>> openOppsToVoidByRDId,
         Logger logger
     ) {
@@ -268,7 +268,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         List<Database.SaveResult> saveResults = convertedRDs.isEmpty()
             ? new List<Database.SaveResult>()
             : Database.update(convertedRDs, false);
-        
+
         logger.addErrors(saveResults, convertedRDs);
 
         return getSavedRecordIds(saveResults);
@@ -317,7 +317,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
             for (Opportunity opp : opps) {
                 opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
-            } 
+            }
 
             dmlResults = Database.update(opps, false);
         }
@@ -413,8 +413,8 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         private SObjectType sObjType;
 
         /**
-        * @description Context in which logs are created. 
-        * Users can filter Error__c records by providing log context. 
+        * @description Context in which logs are created.
+        * Users can filter Error__c records by providing log context.
         */
         private String context;
 
@@ -481,16 +481,16 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             if (records.isEmpty()) {
                 return;
             }
-            
+
             ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(dmlResults, records);
 
             if (!dmlErrors.errorsExist) {
                 return;
             }
-            
+
             if (records[0].getSObjectType() == sObjType) {
                 countRecordsFailed += dmlErrors.errorRecords.size();
-            
+
             } else {
                 isRelatedRecordFailed = true;
             }
@@ -508,57 +508,6 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
 
             ERR_Handler.processErrorsOnly(errorResult, context);
-        }
-    }
-
-    /***
-    * @description Represents data migration batch job summary
-    */
-    public class BatchJobSummary {
-        public Id jobId;
-        public String context;
-        public Integer totalRecords = 0;
-        public Integer totalRecordsProcessed = 0;
-        public Integer totalRecordsFailed = 0;
-
-        /**
-        * @description Contructor
-        * @param jobId Batch job Id
-        * @param context Log context
-        */
-        public BatchJobSummary(Id jobId, String context) {
-            this.jobId = jobId;
-            this.context = context;
-        }
-
-        /**
-        * @description Sets number of records selected
-        * @param totalRecords Number of records selected
-        * @return BatchJobSummary
-        */
-        public BatchJobSummary withTotalRecords(Integer totalRecords) {
-            this.totalRecords = totalRecords;
-            return this;
-        }
-        
-        /**
-        * @description Sets number of records processed
-        * @param totalRecordsProcessed Number of records processed
-        * @return BatchJobSummary
-        */
-        public BatchJobSummary withTotalRecordsProcessed(Integer totalRecordsProcessed) {
-            this.totalRecordsProcessed = totalRecordsProcessed;
-            return this;
-        }
-
-        /**
-        * @description Sets number of records failed
-        * @param totalRecordsFailed Number of records failed
-        * @return BatchJobSummary
-        */
-        public BatchJobSummary withTotalRecordsFailed(Integer totalRecordsFailed) {
-            this.totalRecordsFailed = totalRecordsFailed;
-            return this;
         }
     }
 

@@ -233,7 +233,57 @@ public with sharing class UTIL_BatchJobService {
         private Boolean isInProgress(String status) {
             return IN_PROGRESS_STATUSES.contains(status.toUpperCase());
         }
+    }
 
+    /***
+    * @description Represents batch job summary
+    */
+    public class BatchJobSummary {
+        public Id batchId;
+        public String context;
+        public Integer totalRecords = 0;
+        public Integer totalRecordsProcessed = 0;
+        public Integer totalRecordsFailed = 0;
+
+        /**
+        * @description Contructor
+        * @param batchId Batch job Id
+        * @param context Log context
+        */
+        public BatchJobSummary(Id batchId, String context) {
+            this.batchId = batchId;
+            this.context = context;
+        }
+
+        /**
+        * @description Sets number of records selected
+        * @param totalRecords Number of records selected
+        * @return BatchJobSummary
+        */
+        public BatchJobSummary withTotalRecords(Integer totalRecords) {
+            this.totalRecords = totalRecords;
+            return this;
+        }
+
+        /**
+        * @description Sets number of records processed
+        * @param totalRecordsProcessed Number of records processed
+        * @return BatchJobSummary
+        */
+        public BatchJobSummary withTotalRecordsProcessed(Integer totalRecordsProcessed) {
+            this.totalRecordsProcessed = totalRecordsProcessed;
+            return this;
+        }
+
+        /**
+        * @description Sets number of records failed
+        * @param totalRecordsFailed Number of records failed
+        * @return BatchJobSummary
+        */
+        public BatchJobSummary withTotalRecordsFailed(Integer totalRecordsFailed) {
+            this.totalRecordsFailed = totalRecordsFailed;
+            return this;
+        }
     }
 
 }

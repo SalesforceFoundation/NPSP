@@ -381,6 +381,30 @@
         <value>Total Batches:</value>
     </labels>
     <labels>
+        <fullName>BatchProgressTotalRecords</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecords</shortDescription>
+        <value>Total Records:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalRecordsProcessed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecordsProcessed</shortDescription>
+        <value>Records Processed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalRecordsFailed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecordsFailed</shortDescription>
+        <value>Records Failed:</value>
+    </labels>
+    <labels>
         <fullName>CONV_Accept_Risk</fullName>
         <language>en_US</language>
         <protected>false</protected>
