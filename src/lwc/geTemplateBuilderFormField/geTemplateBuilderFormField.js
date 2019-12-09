@@ -26,6 +26,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @api isLast;
     @api objectApiName;
     @api field;
+    isBatchHeaderField = false;
 
     get name() {
         if (this.field.elementType === WIDGET) {
@@ -39,6 +40,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
         // Used for standard/custom fields (i.e. DataImportBatch__c fields)
         if (this.field.apiName) {
+            this.isBatchHeaderField = true;
             return this.field.apiName;
         }
 
@@ -145,7 +147,9 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get labelGeAssistiveFormFieldRemove() {
-        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFormFieldsRemoveField, [this.field.label]);
+        return this.isBatchHeaderField ?
+            GeLabelService.format(this.CUSTOM_LABELS.geAssistiveBatchHeaderRemoveField, [this.field.label])
+            : GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFormFieldsRemoveField, [this.field.label]);
     }
 
     get labelGeAssistiveFormFieldUp() {
