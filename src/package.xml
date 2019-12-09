@@ -1812,9 +1812,11 @@
         <members>campaignMemberStatusResponded</members>
         <members>commonCancel</members>
         <members>commonDefaultValue</members>
+        <members>commonError</members>
         <members>commonFieldLabel</members>
         <members>commonRequired</members>
         <members>commonSave</members>
+        <members>commonUnknownError</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
         <members>conMergeErrNoPersonAccounts</members>

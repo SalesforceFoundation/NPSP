@@ -3982,6 +3982,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Default Value</value>
     </labels>
     <labels>
+        <fullName>commonError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
         <fullName>commonFieldLabel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4004,6 +4012,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Save</shortDescription>
         <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>commonUnknownError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unknown error</shortDescription>
+        <value>Unknown error</value>
     </labels>
     <labels>
         <fullName>conFailedAccountCreate</fullName>
@@ -4357,7 +4373,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Warning body of required field added to Batch Header</shortDescription>
         <!-- {0} is comma separated list of field api names from the Data Import Batch object -->
         <!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c -->
-        <value>These required fields were automatically added to the Batch Header: {0}</value>
+        <value>These required fields were automatically added to the Batch Header:</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>

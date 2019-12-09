@@ -47,8 +47,8 @@
                 <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
                     <template if:true={hasErrors}>
                         <div class="slds-size_1-of-1 slds-p-bottom_small">
-                            <c-util-page-level-message title="Warning"
-                                                       subtitle="These required fields were automatically added to the Batch Header: "
+                            <c-util-page-level-message title={CUSTOM_LABELS.geHeaderWarning}
+                                                       subtitle={CUSTOM_LABELS.geBodyBatchHeaderWarning}
                                                        variant='warning'>
                                 <ul slot="body"
                                     class="slds-list_dotted">

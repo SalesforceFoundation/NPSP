@@ -6,6 +6,7 @@ import {
     handleError,
     findMissingRequiredBatchFields
 } from 'c/utilTemplateBuilder';
+import GeLabelService from 'c/geLabelService';
 import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 
 const PROP_API_NAME = 'apiName';
