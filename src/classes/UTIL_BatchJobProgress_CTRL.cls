@@ -51,7 +51,7 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
 		} catch (Exception e) {
 			throwAuraHandledException(e.getMessage());
 		}
-		
+
 		return jsonBatchJob;
 	}
 
@@ -77,7 +77,7 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
 		} catch (Exception e) {
 			throwAuraHandledException(e.getMessage());
 		}
-		
+
 		return jsonBatchSummary;
 	}
 

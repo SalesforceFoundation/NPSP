@@ -165,6 +165,30 @@ public with sharing class UTIL_BatchJobService_TEST {
 
 
     /***
+    * @description Verifies batch job summary is set correctly
+    */
+    @isTest
+    private static void shouldSetBatchJobSummary() {
+        String context = 'foo';
+        Integer totalRecords = 100;
+        Integer totalRecordsProcessed = 80;
+        Integer totalRecordsFailed = 20;
+
+        UTIL_BatchJobService.BatchJobSummary summary =
+            new UTIL_BatchJobService.BatchJobSummary(MOCK_BATCH_ID, context)
+            .withTotalRecords(totalRecords)
+            .withTotalRecordsProcessed(totalRecordsProcessed)
+            .withTotalRecordsFailed(totalRecordsFailed);
+
+        System.assertEquals(MOCK_BATCH_ID, summary.batchId, 'Batch Id should match');
+        System.assertEquals(context, summary.context, 'Context should match');
+        System.assertEquals(totalRecords, summary.totalRecords, 'Total Records should match');
+        System.assertEquals(totalRecordsProcessed, summary.totalRecordsProcessed, 'Total Records Processed should match');
+        System.assertEquals(totalRecordsFailed, summary.totalRecordsFailed, 'Total Records Failed should match');
+    }
+
+
+    /***
     * @description Builds an AsyncApexJob and sets attributes that are not writable otherwise
     */
     public class TestAsyncApexJob {

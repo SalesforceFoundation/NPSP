@@ -12,7 +12,16 @@ import labelTotalRecords from '@salesforce/label/c.BatchProgressTotalRecords';
 import labelTotalRecordsProcessed from '@salesforce/label/c.BatchProgressTotalRecordsProcessed';
 import labelTotalRecordsFailed from '@salesforce/label/c.BatchProgressTotalRecordsFailed';
 import labelLoading from '@salesforce/label/c.labelMessageLoading';
-import labelStatusComplete from '@salesforce/label/c.statusComplete';
+import labelStatusComplete from '@salesforce/label/c.BatchProgressStatusComplete';
+import labelStatusCompleteErrors from '@salesforce/label/c.BatchProgressStatusCompleteErrors';
+import labelStatusFailed from '@salesforce/label/c.BatchProgressStatusFailed';
+import labelStatusHolding from '@salesforce/label/c.BatchProgressStatusHolding';
+import labelStatusErrors from '@salesforce/label/c.BatchProgressStatusErrors';
+import labelStatusPreparing from '@salesforce/label/c.BatchProgressStatusPreparing';
+import labelStatusProcessing from '@salesforce/label/c.BatchProgressStatusProcessing';
+import labelStatusQueued from '@salesforce/label/c.BatchProgressStatusQueued';
+import labelStatusStopped from '@salesforce/label/c.BatchProgressStatusStopped';
+import labelStatusSuccessful from '@salesforce/label/c.BatchProgressStatusSuccessful';
 import labelUnknownError from '@salesforce/label/c.stgUnknownError';
 
 import loadBatchJob from '@salesforce/apex/UTIL_BatchJobProgress_CTRL.loadBatchJob';
@@ -212,14 +221,11 @@ export default class BatchProgress extends LightningElement {
         }
 
         switch (this.batchJob.status) {
-            case 'Aborted':
-                status = 'Stopped';
-                break;
             case 'Completed':
-                status = this.batchJob.numberOfErrors > 0 ? 'Complete with Errors' : 'Complete';
+                status = this.batchJob.numberOfErrors > 0 ? labelStatusCompleteErrors : labelStatusComplete;
                 break;
             default:
-                status = this.batchJob.status;
+                status = this.batchStatus;
         }
 
         return status;
@@ -236,11 +242,40 @@ export default class BatchProgress extends LightningElement {
         }
 
         switch (this.batchJob.status) {
-            case 'Aborted':
-                status = 'Stopped';
-                break;
             case 'Completed':
-                status = this.batchJob.numberOfErrors > 0 ? 'Errors' : 'Successful';
+                status = this.batchJob.numberOfErrors > 0 ? labelStatusErrors : labelStatusSuccessful;
+                break;
+            default:
+                status = this.batchStatus;
+        }
+
+        return status;
+    }
+
+    /***
+    * @description Returns batch job status to display
+    */
+    get batchStatus() {
+        let status = '';
+
+        switch (this.batchJob.status) {
+            case 'Holding':
+                status = labelStatusHolding;
+                break;
+            case 'Queued':
+                status = labelStatusQueued;
+                break;
+            case 'Preparing':
+                status = labelStatusPreparing;
+                break;
+            case 'Processing':
+                status = labelStatusProcessing;
+                break;
+            case 'Failed':
+                status = labelStatusFailed;
+                break;
+            case 'Aborted':
+                status = labelStatusStopped;
                 break;
             default:
                 status = this.batchJob.status;

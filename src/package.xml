@@ -1318,6 +1318,16 @@
         <members>BatchProgressExtendedStatus</members>
         <members>BatchProgressJobItemsProcessed</members>
         <members>BatchProgressStatus</members>
+        <members>BatchProgressStatusComplete</members>
+        <members>BatchProgressStatusCompleteErrors</members>
+        <members>BatchProgressStatusErrors</members>
+        <members>BatchProgressStatusFailed</members>
+        <members>BatchProgressStatusHolding</members>
+        <members>BatchProgressStatusPreparing</members>
+        <members>BatchProgressStatusProcessing</members>
+        <members>BatchProgressStatusQueued</members>
+        <members>BatchProgressStatusStopped</members>
+        <members>BatchProgressStatusSuccessful</members>
         <members>BatchProgressTimeElapsed</members>
         <members>BatchProgressTimeElapsedDays</members>
         <members>BatchProgressTitleRD2DataMigration</members>
@@ -2124,7 +2134,6 @@
         <members>sendAcknowledgmentPageTitle</members>
         <members>sendAcknowledgmentReturnLinkLabel</members>
         <members>sendAcknowledgmentSucceeded</members>
-        <members>statusComplete</members>
         <members>statusCompleted</members>
         <members>statusInProgress</members>
         <members>statusNotStarted</members>

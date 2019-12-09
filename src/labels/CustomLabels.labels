@@ -349,6 +349,86 @@
         <value>Status:</value>
     </labels>
     <labels>
+        <fullName>BatchProgressStatusComplete</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusComplete</shortDescription>
+        <value>Complete</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusCompleteErrors</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusCompleteErrors</shortDescription>
+        <value>Complete with Errors</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusFailed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusFailed</shortDescription>
+        <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusHolding</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusHolding</shortDescription>
+        <value>Holding</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusErrors</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusErrors</shortDescription>
+        <value>Errors</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusPreparing</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusPreparing</shortDescription>
+        <value>Preparing</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusProcessing</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusProcessing</shortDescription>
+        <value>Processing</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusQueued</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusQueued</shortDescription>
+        <value>Queued</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusStopped</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusStopped</shortDescription>
+        <value>Stopped</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusSuccessful</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusSuccessful</shortDescription>
+        <value>Successful</value>
+    </labels>
+    <labels>
         <fullName>BatchProgressTimeElapsed</fullName>
         <categories>BatchProgress</categories>
         <language>en_US</language>
@@ -6677,14 +6757,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentSucceeded</shortDescription>
         <value>Acknowledged</value>
-    </labels>
-    <labels>
-        <fullName>statusComplete</fullName>
-        <categories>Status</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>statusComplete</shortDescription>
-        <value>Complete</value>
     </labels>
     <labels>
         <fullName>statusCompleted</fullName>
