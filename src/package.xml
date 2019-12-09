@@ -1457,6 +1457,7 @@
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
+        <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
