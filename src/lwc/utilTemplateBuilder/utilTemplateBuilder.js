@@ -9,6 +9,8 @@ import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportB
 import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
 import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
 import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
+import commonError from '@salesforce/label/c.commonError';
+import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
 const OBJECT = 'object';
 const FUNCTION = 'function';
@@ -47,7 +49,7 @@ const inputTypeByDescribeType = {
     'currency': 'number',
     'datacategorygroupreference': 'text',
     'date': 'date',
-    'datetime': 'datetime',
+    'datetime': 'datetime-local',
     'double': 'number',
     'email': 'email',
     'encryptedstring': 'password',
@@ -318,7 +320,7 @@ const showToast = (title, message, variant, mode, messageData) => {
 * @param {object} error: Event holding error details
 */
 const handleError = (error) => {
-    let message = 'Unknown error';
+    let message = commonUnknownError;
 
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
@@ -337,7 +339,7 @@ const handleError = (error) => {
         }
     }
 
-    showToast('Error', message, 'error', 'sticky');
+    showToast(commonError, message, 'error', 'sticky');
 };
 
 /*******************************************************************************
