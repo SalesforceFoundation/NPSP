@@ -168,32 +168,29 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         Object.getOwnPropertyNames(this.batchFields).forEach((key) => {
             let field = this.batchFields[key];
+            const isFieldExcluded = EXCLUDED_BATCH_HEADER_FIELDS.includes(field.apiName);
+            const isNewAndNotCreatable = this.mode === NEW && !field.createable;
+            const isEditAndNotAccessible = this.mode === EDIT && !field.createable && !field.updateable;
 
-            if (EXCLUDED_BATCH_HEADER_FIELDS.includes(field.apiName)) {
+            if (isFieldExcluded || isNewAndNotCreatable || isEditAndNotAccessible) {
                 return;
             }
 
-            if (field.dataType === PICKLIST) {
-                field.isPicklist = true;
-            } else {
-                field.isPicklist = false;
-            }
+            field.isPicklist = field.dataType === PICKLIST ? true : false;
 
             if (ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS.includes(field.apiName)) {
                 field.required = true;
             }
 
-            if (field.createable && field.updateable) {
-                if (field.required) {
-                    field.checked = true;
-                    field.isRequiredFieldDisabled = true;
-                } else {
-                    field.checked = false;
-                    field.isRequiredFieldDisabled = false;
-                }
-
-                this.batchFieldFormElements.push(field);
+            if (field.required) {
+                field.checked = true;
+                field.isRequiredFieldDisabled = true;
+            } else {
+                field.checked = false;
+                field.isRequiredFieldDisabled = false;
             }
+
+            this.batchFieldFormElements.push(field);
         });
 
         this.batchFieldFormElements = sort(this.batchFieldFormElements, SORTED_BY, SORT_ORDER);
