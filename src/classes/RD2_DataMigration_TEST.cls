@@ -1644,7 +1644,7 @@ private class RD2_DataMigration_TEST {
     * @return void
     */
     private static void assertBatchSummary(UTIL_BatchJobService.BatchJobSummary expectedSummary) {
-        String jsonSummary = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DataMigrationBatchSummary__c;
+        String jsonSummary = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2MigrationState__c;
         UTIL_BatchJobService.BatchJobSummary summary = String.isNotBlank(jsonSummary)
             ? (UTIL_BatchJobService.BatchJobSummary) JSON.deserialize(jsonSummary, UTIL_BatchJobService.BatchJobSummary.class)
             : null;

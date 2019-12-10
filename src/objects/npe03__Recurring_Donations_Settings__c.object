@@ -15,11 +15,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>DataMigrationBatchSummary__c</fullName>
-        <description>Contains latest data migration batch job summary.</description>
+        <fullName>RecurringDonations2MigrationState__c</fullName>
+        <description>Contains latest dry run and data migration results.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Contains latest data migration batch job summary.</inlineHelpText>
-        <label>Enhanced RD Data Migration Batch Summary</label>
+        <inlineHelpText>Contains latest dry run and data migration results.</inlineHelpText>
+        <label>Enhanced RD Data Migration State</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

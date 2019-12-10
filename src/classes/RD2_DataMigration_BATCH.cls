@@ -191,7 +191,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             .withTotalRecordsFailed(totalRecordsFailed);
 
         npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        rdSettings.DataMigrationBatchSummary__c = JSON.serialize(summary);
+        rdSettings.RecurringDonations2MigrationState__c = JSON.serialize(summary);
         if (!Test.isRunningTest()) {
             upsert rdSettings;
         }

@@ -70,7 +70,7 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
             switch on className {
                 when 'RD2_DataMigration_BATCH' {
                     npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-                    jsonBatchSummary = rdSettings.DataMigrationBatchSummary__c;
+                    jsonBatchSummary = rdSettings.RecurringDonations2MigrationState__c;
                 }
             }
 
