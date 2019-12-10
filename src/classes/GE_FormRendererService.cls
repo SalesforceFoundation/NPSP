@@ -120,8 +120,7 @@ public with sharing class GE_FormRendererService {
     public static Id saveAndProcessSingleGift(DataImport__c diRecord, String widgetData) {
 
         // Check for widget data and convert it to the correct format for processing
-        String additionalObjectJSON = convertWidgetDataToObjectJSON(widgetData);
-        diRecord.Additional_Object_JSON__c = additionalObjectJSON;
+        convertWidgetDataToObjectJSON(diRecord, widgetData);
 
         // Save the Data Import record to the Database
         diRecord = saveDataImport(diRecord);
@@ -136,53 +135,163 @@ public with sharing class GE_FormRendererService {
 
     }
 
-    private static String convertWidgetDataToObjectJSON(String widgetData) {
-        // System.debug('widgetData: '); 
-        // System.debug(widgetData); 
+    //VERSION THAT ASSUMES THE OBJECTS IN WIDGET DATA ARE DATAIMPORT__C OBJECTS
+    /*******************************************************************************************************
+    * @description Takes in a Data Import record and widget data then converts the widget data, which is in
+    * a JSON map of objectMappingDevName to temp DataImport Sobject list, and reverse maps it into temp DI 
+    * records which are then wrapped in dynamic source classes which allow the data for the records 
+    * to be processed as if they were normal BDI additional objects.
+    * @param diRecord - The DataImport__c record, as filled in by the user, which will have its Additional Object
+    * JSON field populated with the Dynamic Source Group JSON.
+    * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records 
+    * to be created.
+    */
+    @TestVisible
+    private static void convertWidgetDataToObjectJSON(DataImport__c diRecord, String widgetData) {
 
-        if(String.isBlank(widgetData)){
-            return null;
+        if (String.isBlank(widgetData)) {
+            return;
         }
 
-        Map<String, Object> objNameToObjList;
-        List<SObject> thisList;
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+        Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
+        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
+
+        dynSourceGroup.name = additionalObjJSONFieldName;
+        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
+
+        Map<String, Object> objMappingDevNameToObjList;
+
         try {
-            objNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
+            objMappingDevNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
         } catch(Exception e) {
             throw returnAuraException(e.getMessage());
         }
 
         // Create a map of sobject type to sobject list for processing
-        for(String widgetKey : objNameToObjList.keySet()) {
-            Object objList = objNameToObjList.get(widgetKey);
-            if(objList != null) {
-                String objListString = JSON.serialize(objList);
+        for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
+            Object objList = objMappingDevNameToObjList.get(objMappingDevName);
 
-                // System.debug(widgetKey); 
-                // System.debug(objListString); 
+            BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
 
-                // TODO: Depending on how data gets passed, this will change
-                //Type listType = Type.forName('List<' + objName + '>');
-                //thisList = (List<SObject>)JSON.deserialize(objListString, listType);
+            String[] tempObjStrings = new String[]{};
+
+            //Reserializing the object strings to resolve platform issue with deserializing SObjects
+            for (Object obj : (List<Object>)objMappingDevNameToObjList.get(objMappingDevName)){
+                tempObjStrings.add(JSON.serialize(obj)); 
+            }      
+
+            if(tempObjStrings != null && tempObjStrings.size() > 0) {
                 
-                // Might not need this, could be provided by N-object logic?
-                // String lookupField = opportunityLookupMap.get(objName);
-                // for(SObject relObj : thisList){
-                //     relObj.put(lookupField, oppId);
-                // }
+                Integer i = 0;
+                //Loop through the sObjects and construct DI records to hold the data in the expected fields
+                for (String objString : tempObjStrings) {
+
+                    SObject sObj = (SObject)JSON.deserialize(objString, Sobject.class);
+
+                    i++;
+
+                    BDI_DynamicSource dynSource = new BDI_DynamicSource();
+                    dynSource.objectMappingDevName = objMapping.DeveloperName + 'temp' + i;
+                    dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
+                    dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
+                    dynSource.sourceObj = sObj;
+
+                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName,dynSource);                    
+                }
             }
         }
 
-        // TODO: Fit widget data into a series of Data Import records, and prepare them for Additional_Object_JSON__c
-        // See BDI_AdditionalObjectService_TEST for an example of this process (dynamicParentAdditionalObjectsShouldBeCreated)
-        
-        // String additionalObjJSONFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
-        // Create BDI_DynamicSourceGroup
-        // Map of <String,BDI_DynamicSource>
-        // JSON.serialize(dynSourceGroupA);
-
-        return null;
+        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
+            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
+            diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
+        }
     }
+
+
+    // VERSION USING TARGET OBJECT AS WIDGET SOURCE
+    /*******************************************************************************************************
+    * @description Takes in a Data Import record and widget data then converts the widget data, which is in
+    * a JSON map of objectMappingDevName to target Sobject list, and reverse maps it into temp DI records which are
+    * then wrapped in dynamic source classes which allow the data for the records to be processed as if 
+    * they were normal BDI additional objects.
+    * @param diRecord - The DataImport__c record, as filled in by the user, which will have its Additional Object
+    * JSON field populated with the Dynamic Source Group JSON.
+    * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records 
+    * to be created.
+    */
+    /*
+    @TestVisible
+    private static void convertWidgetDataToObjectJSON(DataImport__c diRecord, String widgetData) {
+
+        if (String.isBlank(widgetData)) {
+            return;
+        }
+
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+        Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
+        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
+
+        dynSourceGroup.name = additionalObjJSONFieldName;
+        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
+
+        Map<String, Object> objMappingDevNameToObjList;
+
+        try {
+            objMappingDevNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
+        } catch(Exception e) {
+            throw returnAuraException(e.getMessage());
+        }
+
+        // Create a map of sobject type to sobject list for processing
+        for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
+            Object objList = objMappingDevNameToObjList.get(objMappingDevName);
+
+            BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
+
+            BDI_FieldMapping[] fieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(objMappingDevName);
+
+            String[] tempObjStrings = new String[]{};
+
+            //Reserializing the object strings to resolve platform issue with deserializing SObjects
+            for (Object obj : (List<Object>)objMappingDevNameToObjList.get(objMappingDevName)){
+                tempObjStrings.add(JSON.serialize(obj)); 
+            }      
+
+            if(tempObjStrings != null && tempObjStrings.size() > 0) {
+                
+                Integer i = 0;
+                //Loop through the sObjects and construct DI records to hold the data in the expected fields
+                for (String objString : tempObjStrings) {
+
+                    SObject sObj = (SObject)JSON.deserialize(objString, Sobject.class);
+
+                    i++;
+                    DataImport__c tempDI = new DataImport__c();
+
+                    //Reverse mapping the fields back onto a tempDI Record that respresents the source obj.
+                    for (BDI_FieldMapping fieldMapping: fieldMappings){
+                        Object value = sObj.get(fieldmapping.Target_Field_API_Name);
+                        tempDI.put(fieldmapping.Source_Field_API_Name, value);
+                    }
+
+                    BDI_DynamicSource dynSource = new BDI_DynamicSource();
+                    dynSource.objectMappingDevName = objMapping.DeveloperName + 'temp' + i;
+                    dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
+                    dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
+                    dynSource.sourceObj = tempDI;
+
+                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName,dynSource);                    
+                }
+            }
+        }
+
+        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
+            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
+            diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
+        }
+    }
+    */
 
     /*******************************************************************************************************
     * @description Takes a Data Import record and saves it to the database.

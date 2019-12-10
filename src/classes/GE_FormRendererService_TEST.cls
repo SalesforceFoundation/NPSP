@@ -83,4 +83,133 @@ private with sharing class GE_FormRendererService_TEST {
         );
     }
 
+    //VERSION OF TEST FOR DATAIMPORT__C OBJECT IN WIDGET DATA
+    /*******************************************************************************************************
+     * @description Tests that widget data can be properly coverted to the BDI_DynamicSourceGroup format required
+     * by BDI for N number of objects processing.
+     */
+    @isTest
+    private static void widgetDataShouldBeConvertedIntoDynamicSources() {
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 1',
+                                                                        Active__c = true);
+
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 2',
+                                                                        Active__c = true);
+        General_Accounting_Unit__c[] testGAUs = new General_Accounting_Unit__c[]{gau1,gau2};
+        insert testGAUs;
+
+        SObject sourceObjA1 = UTIL_Describe.getPrototypeObject(SObjectType.DataImport__c.getName());
+        sourceObjA1.put(DataImport__c.GAU_Allocation_1_GAU__c.getDescribe().getName(),
+                    gau1.Id);    
+        sourceObjA1.put(DataImport__c.GAU_Allocation_1_Percent__c.getDescribe().getName(),75);    
+
+        SObject sourceObjA2 = UTIL_Describe.getPrototypeObject(SObjectType.DataImport__c.getName());
+        sourceObjA2.put(DataImport__c.GAU_Allocation_1_GAU__c.getDescribe().getName(),
+                    gau2.Id);    
+        sourceObjA2.put(DataImport__c.GAU_Allocation_1_Percent__c.getDescribe().getName(),25);    
+
+        Sobject[] testWidgetRecords = new Sobject[]{sourceObjA1,sourceObjA2};
+        
+        Map<String,SObject[]> widgetData = new Map<String,SObject[]>();
+
+        widgetData.put('GAU_Allocation_1',testWidgetRecords);
+
+        String widgetDataString = JSON.serialize(widgetData);
+
+        DataImport__c testDI = new DataImport__c();
+        Test.startTest();
+        GE_FormRendererService.convertWidgetDataToObjectJSON(testDI,widgetDataString);
+        Test.stopTest();
+
+        System.assertNotEquals(null,testDI.Additional_Object_JSON__c);
+
+        BDI_DynamicSourceGroup testDSG = 
+            (BDI_DynamicSourceGroup)JSON.deserialize(testDI.Additional_Object_JSON__c, BDI_DynamicSourceGroup.class);
+
+        System.assertNotEquals(null,testDSG);
+        System.assertEquals(2,testDSG.dynamicSourceByObjMappingDevName.size());
+
+        BDI_DynamicSource dynSource1;
+        BDI_DynamicSource dynSource2;
+
+        for (String objMappingDevName : testDSG.dynamicSourceByObjMappingDevName.keySet()) {
+            BDI_DynamicSource tempDS = testDSG.dynamicSourceByObjMappingDevName.get(objMappingDevName);
+            if (tempDS.sourceObj.get('GAU_Allocation_1_GAU__c') == gau1.Id) {
+                dynSource1 = tempDS;
+            } else if (tempDS.sourceObj.get('GAU_Allocation_1_GAU__c')  == gau2.Id) {
+                dynSource2 = tempDS;
+            }
+        }
+
+        System.assertNotEquals(null, dynSource1);
+        System.assertNotEquals(null, dynSource2);
+        System.assertEquals(75,dynSource1.sourceObj.get('GAU_Allocation_1_Percent__c'));
+        System.assertEquals(25,dynSource2.sourceObj.get('GAU_Allocation_1_Percent__c'));
+    }
+
+    //VERSION OF TEST FOR TARGET OBJECT IN WIDGET DATA
+    /*******************************************************************************************************
+     * @description Tests that widget data can be properly coverted to the BDI_DynamicSourceGroup format required
+     * by BDI for N number of objects processing.
+     */
+    /*
+    @isTest
+    private static void widgetDataShouldBeConvertedIntoDynamicSources() {
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 1',
+                                                                        Active__c = true);
+
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 2',
+                                                                        Active__c = true);
+        General_Accounting_Unit__c[] testGAUs = new General_Accounting_Unit__c[]{gau1,gau2};
+        insert testGAUs;
+
+        SObject sourceObjA1 = UTIL_Describe.getPrototypeObject(SObjectType.Allocation__c.getName());
+        sourceObjA1.put(Allocation__c.General_Accounting_Unit__c.getDescribe().getName(),
+                    gau1.Id);    
+        sourceObjA1.put(Allocation__c.Percent__c.getDescribe().getName(),75);    
+
+        SObject sourceObjA2 = UTIL_Describe.getPrototypeObject(SObjectType.Allocation__c.getName());
+        sourceObjA2.put(Allocation__c.General_Accounting_Unit__c.getDescribe().getName(),
+                    gau2.Id);    
+        sourceObjA2.put(Allocation__c.Percent__c.getDescribe().getName(),25);    
+
+        Sobject[] testWidgetRecords = new Sobject[]{sourceObjA1,sourceObjA2};
+        
+        Map<String,SObject[]> widgetData = new Map<String,SObject[]>();
+
+        widgetData.put('GAU_Allocation_1',testWidgetRecords);
+
+        String widgetDataString = JSON.serialize(widgetData);
+
+        DataImport__c testDI = new DataImport__c();
+        Test.startTest();
+        GE_FormRendererService.convertWidgetDataToObjectJSON(testDI,widgetDataString);
+        Test.stopTest();
+
+        System.assertNotEquals(null,testDI.Additional_Object_JSON__c);
+
+        BDI_DynamicSourceGroup testDSG = 
+            (BDI_DynamicSourceGroup)JSON.deserialize(testDI.Additional_Object_JSON__c, BDI_DynamicSourceGroup.class);
+
+        System.assertNotEquals(null,testDSG);
+        System.assertEquals(2,testDSG.dynamicSourceByObjMappingDevName.size());
+
+        BDI_DynamicSource dynSource1;
+        BDI_DynamicSource dynSource2;
+
+        for (String objMappingDevName : testDSG.dynamicSourceByObjMappingDevName.keySet()) {
+            BDI_DynamicSource tempDS = testDSG.dynamicSourceByObjMappingDevName.get(objMappingDevName);
+            if (tempDS.sourceObj.get('GAU_Allocation_1_GAU__c') == gau1.Id) {
+                dynSource1 = tempDS;
+            } else if (tempDS.sourceObj.get('GAU_Allocation_1_GAU__c')  == gau2.Id) {
+                dynSource2 = tempDS;
+            }
+        }
+
+        System.assertNotEquals(null, dynSource1);
+        System.assertNotEquals(null, dynSource2);
+        System.assertEquals(75,dynSource1.sourceObj.get('GAU_Allocation_1_Percent__c'));
+        System.assertEquals(25,dynSource2.sourceObj.get('GAU_Allocation_1_Percent__c'));
+    }
+    */
 }
