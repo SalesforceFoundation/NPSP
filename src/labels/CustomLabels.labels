@@ -381,12 +381,12 @@
         <value>Holding</value>
     </labels>
     <labels>
-        <fullName>BatchProgressStatusErrors</fullName>
+        <fullName>BatchProgressStatusError</fullName>
         <categories>BatchProgress</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>BatchProgressStatusErrors</shortDescription>
-        <value>Errors</value>
+        <shortDescription>BatchProgressStatusError</shortDescription>
+        <value>Error</value>
     </labels>
     <labels>
         <fullName>BatchProgressStatusPreparing</fullName>

@@ -1320,7 +1320,7 @@
         <members>BatchProgressStatus</members>
         <members>BatchProgressStatusComplete</members>
         <members>BatchProgressStatusCompleteErrors</members>
-        <members>BatchProgressStatusErrors</members>
+        <members>BatchProgressStatusError</members>
         <members>BatchProgressStatusFailed</members>
         <members>BatchProgressStatusHolding</members>
         <members>BatchProgressStatusPreparing</members>
