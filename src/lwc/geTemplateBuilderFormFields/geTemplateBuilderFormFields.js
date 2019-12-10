@@ -8,6 +8,8 @@ import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amou
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
 
+const WARNING = 'warning';
+
 export default class geTemplateBuilderFormFields extends LightningElement {
 
     // Expose labels to template
@@ -273,7 +275,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 this.activeFormSectionId = sectionId;
             } else if (hasManySections && hasNoActiveSection) {
                 event.target.checked = false;
-                showToast('Please select a section', '', 'warning');
+                showToast(this.CUSTOM_LABELS.geToastSelectActiveSection, '', WARNING);
                 return;
             }
 

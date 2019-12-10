@@ -3982,6 +3982,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>commonAssistiveError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of an error page level message.</shortDescription>
+        <value>error</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of an info page level message.</shortDescription>
+        <value>info</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of a success page level message.</shortDescription>
+        <value>success</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of a warning page level message.</shortDescription>
+        <value>warning</value>
+    </labels>
+    <labels>
         <fullName>commonCancel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4271,6 +4303,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geAssistiveActiveSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Active section icon</shortDescription>
+        <value>Active Section.</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveBatchHeaderRemoveField</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4390,6 +4430,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is comma separated list of field api names from the Data Import Batch object -->
         <!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c -->
         <value>These required fields were automatically added to the Batch Header:</value>
+    </labels>
+    <labels>
+        <fullName>geBodyEmptyFormSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body for illustration card when a form section is empty</shortDescription>
+        <value>Select gift fields to add to this section.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>
@@ -4606,6 +4654,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Configure Batch Header Fields</value>
     </labels>
     <labels>
+        <fullName>geHeaderEmptyFormSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for illustration card when a form section is empty</shortDescription>
+        <value>No fields yet</value>
+    </labels>
+    <labels>
         <fullName>geHeaderError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4662,12 +4718,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Configure Form Fields</value>
     </labels>
     <labels>
+        <fullName>geHeaderNewSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Section</shortDescription>
+        <value>New Section</value>
+    </labels>
+    <labels>
         <fullName>geHeaderNewTemplate</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template header</shortDescription>
         <value>New Template</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderPageLevelError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for gift entry template information</shortDescription>
+        <value>Review the errors on this page.</value>
     </labels>
     <labels>
         <fullName>geHeaderTemplateInfoLeftCol</fullName>
@@ -4776,6 +4848,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Error when trying to save if there isn't a system error to display</shortDescription>
         <value>Your changes cannot be saved. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>geToastSelectActiveSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning when attempting to add a gift field and a section hasn't been selected.</shortDescription>
+        <value>Please select a section.</value>
     </labels>
     <labels>
         <fullName>geToastTemplateTabsError</fullName>

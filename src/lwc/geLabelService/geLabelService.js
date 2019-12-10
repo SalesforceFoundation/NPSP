@@ -1,9 +1,14 @@
 // Import custom labels
+import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
+import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
+import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
+import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonCancel from '@salesforce/label/c.commonCancel';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonSave from '@salesforce/label/c.commonSave';
+import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
 import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
 import geAssistiveFieldUp from '@salesforce/label/c.geAssistiveFieldUp';
@@ -18,6 +23,7 @@ import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
 import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftCol';
 import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
+import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
 import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geBodyFormFieldsLeftColReadMore from '@salesforce/label/c.geBodyFormFieldsLeftColReadMore';
@@ -43,6 +49,7 @@ import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPa
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
 import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeaderRightCol';
+import geHeaderEmptyFormSection from '@salesforce/label/c.geHeaderEmptyFormSection';
 import geHeaderError from '@salesforce/label/c.geHeaderError';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
@@ -50,7 +57,9 @@ import geHeaderFormFieldsModalDeleteSection from '@salesforce/label/c.geHeaderFo
 import geHeaderFormFieldsModalRenameSection from '@salesforce/label/c.geHeaderFormFieldsModalRenameSection';
 import geHeaderFormFieldsModalSectionSettings from '@salesforce/label/c.geHeaderFormFieldsModalSectionSettings';
 import geHeaderFormFieldsRightCol from '@salesforce/label/c.geHeaderFormFieldsRightCol';
+import geHeaderNewSection from '@salesforce/label/c.geHeaderNewSection';
 import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
+import geHeaderPageLevelError from '@salesforce/label/c.geHeaderPageLevelError';
 import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
 import geHeaderWarning from '@salesforce/label/c.geHeaderWarning';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
@@ -63,6 +72,7 @@ import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
 import geToastSaveFailed from '@salesforce/label/c.geToastSaveFailed';
+import geToastSelectActiveSection from '@salesforce/label/c.geToastSelectActiveSection';
 import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCreateSuccess';
 import geToastTemplateTabError from '@salesforce/label/c.geToastTemplateTabError';
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
@@ -74,11 +84,16 @@ class GeLabelService {
     * @description Expose imported custom labels.
     */
     CUSTOM_LABELS = {
+        commonAssistiveError,
+        commonAssistiveInfo,
+        commonAssistiveSuccess,
+        commonAssistiveWarning,
         commonCancel,
         commonDefaultValue,
         commonFieldLabel,
         commonRequired,
         commonSave,
+        geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
         geAssistiveFieldDown,
         geAssistiveFieldUp,
@@ -93,6 +108,7 @@ class GeLabelService {
         geBodyBatchHeaderLeftCol,
         geBodyBatchHeaderRightCol,
         geBodyBatchHeaderWarning,
+        geBodyEmptyFormSection,
         geBodyFormFieldsLeftCol,
         geBodyFormFieldsLeftColAdditional,
         geBodyFormFieldsLeftColReadMore,
@@ -118,6 +134,7 @@ class GeLabelService {
         geErrorRequiredField,
         geHeaderBatchHeaderLeftCol,
         geHeaderBatchHeaderRightCol,
+        geHeaderEmptyFormSection,
         geHeaderError,
         geHeaderFormFieldsDefaultSectionName,
         geHeaderFormFieldsLeftCol,
@@ -125,7 +142,9 @@ class GeLabelService {
         geHeaderFormFieldsModalRenameSection,
         geHeaderFormFieldsModalSectionSettings,
         geHeaderFormFieldsRightCol,
+        geHeaderNewSection,
         geHeaderNewTemplate,
+        geHeaderPageLevelError,
         geHeaderTemplateInfoLeftCol,
         geHeaderWarning,
         geHelpTextBatchHeaderFieldLabelLabel,
@@ -138,6 +157,7 @@ class GeLabelService {
         geTabFormFields,
         geTabTemplateInfo,
         geToastSaveFailed,
+        geToastSelectActiveSection,
         geToastTemplateCreateSuccess,
         geToastTemplateTabError,
         geToastTemplateTabsError,

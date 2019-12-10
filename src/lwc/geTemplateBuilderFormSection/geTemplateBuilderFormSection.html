@@ -35,7 +35,7 @@
 
             <template if:true={isActive}>
                 <span class="slds-icon_container slds-icon_container_extension slds-visual-picker__text-check slds-p-top_xxx-small">
-                    <lightning-icon alternative-text="Active Section"
+                    <lightning-icon alternative-text={CUSTOM_LABELS.geAssistiveActiveSection}
                                     icon-name="utility:check"
                                     variant="inverse"
                                     size="x-small">
@@ -48,8 +48,8 @@
         <div class="slds-card__body slds-card__body_inner slds-p-around_small">
 
             <template if:true={isEmptySection}>
-                <c-util-illustration title="No fields yet"
-                                     message="Select gift fields to add to this section"
+                <c-util-illustration title={CUSTOM_LABELS.geHeaderEmptyFormSection}
+                                     message={CUSTOM_LABELS.geBodyEmptyFormSection}
                                      size="small"
                                      variant="lake-mountain">
                 </c-util-illustration>
