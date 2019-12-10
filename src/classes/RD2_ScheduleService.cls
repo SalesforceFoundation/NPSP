@@ -201,33 +201,33 @@ public without sharing class RD2_ScheduleService {
     * @param maxDates Integer
     * @return Map<Id, List<Installment>>
     */
-    public List<Installment> getNextDonationsForVisualization(npe03__Recurring_Donation__c rd, Date visualizationStartDate, Integer maxDates) {
+    public List<Installment> getVisualizedInstallments(npe03__Recurring_Donation__c rd, Date startDate, Integer numInstallments) {
         if (rd == null) {
             return new List<Installment>();
         }
 
-        return getNextDonationsForVisualization(new List<npe03__Recurring_Donation__c> {rd}, visualizationStartDate, maxDates).get(rd.Id);
+        return getVisualizedInstallments(new List<npe03__Recurring_Donation__c> {rd}, startDate, numInstallments).get(rd.Id);
     }
 
     /***
     * @description Calculates the dates of the next n donations
     * @param rd Recurring Donation record
-    * @param visualizationStartDate Date
-    * @param maxDates Integer
+    * @param startDate Date
+    * @param numInstallments Integer
     * @return List<Installment>
     */
-    public Map<Id, List<Installment>> getNextDonationsForVisualization(List<npe03__Recurring_Donation__c> rds, Date visualizationStartDate, Integer maxDates) {
+    public Map<Id, List<Installment>> getVisualizedInstallments(List<npe03__Recurring_Donation__c> rds, Date startDate, Integer numInstallments) {
 
-        if (maxDates == null) {
-            maxDates = DEFAULT_VISUALIZATION_SCHEDULE_COUNT;
+        if (numInstallments == null) {
+            numInstallments = DEFAULT_VISUALIZATION_SCHEDULE_COUNT;
         }
 
-        if (visualizationStartDate == null) {
-            visualizationStartDate = currentDate;
+        if (startDate == null) {
+            startDate = currentDate;
         }
 
-        Map<Id, List<Installment>> installmentsByRDIds = new Map<Id, List<Installment>>();
-        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRDIds = getExistingSchedules(rds);
+        Map<Id, List<Installment>> installmentsByRd = new Map<Id, List<Installment>>();
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRd = getExistingSchedules(rds);
 
         for (npe03__Recurring_Donation__c rd : rds) {
 
@@ -235,46 +235,43 @@ public without sharing class RD2_ScheduleService {
                 continue;
             }
 
-            installmentsByRDIds.put(rd.Id, new List<Installment>());
+            installmentsByRd.put(rd.Id, new List<Installment>());
 
-            Installment ins;
             List<Installment> vizSchedules = new List<Installment>();
-            currentDate = visualizationStartDate;
-            Integer dateCount = 0;
+            currentDate = startDate;
             List <RecurringDonationSchedule__c> filteredSchedules;
 
-            if (schedulesByRDIds.get(rd.Id) == null) {
+            if (schedulesByRd.get(rd.Id) == null) {
                 continue;
             }
 
-            while (dateCount < maxDates) {
+            while (vizSchedules.size() < numInstallments) {
 
                 // We are changing currentDate with each loop, so the active schedules potentially change with each loop
                 filteredSchedules = new List<RecurringDonationSchedule__c>();
-                for (RecurringDonationSchedule__c schedule : schedulesByRDIds.get(rd.Id)) {
+                for (RecurringDonationSchedule__c schedule : schedulesByRd.get(rd.Id)) {
                     if (schedule.EndDate__c == null || schedule.EndDate__c >= currentDate) {
                         filteredSchedules.add(schedule);
                     }
                 }
 
-                ins = getNextDonationSchedule(filteredSchedules);
+                Installment ins = getNextInstallment(filteredSchedules);
                 if (ins == null) {
                     currentDate = date.today();
                     break;
                 }
 
                 vizSchedules.add(ins);
-                dateCount++;
                 currentDate = ins.nextDonationDate.addDays(1);
             }
 
-            installmentsByRDIds.get(rd.Id).addAll(vizSchedules);
+            installmentsByRd.get(rd.Id).addAll(vizSchedules);
 
         }
 
         currentDate = date.today();
 
-        return installmentsByRDIds;
+        return installmentsByRd;
     }
 
     /***
@@ -313,30 +310,34 @@ public without sharing class RD2_ScheduleService {
     * @param rdSchedules Recurring Donation Schedule records
     * @return Date
     */
-    public Installment getNextDonationSchedule(List<RecurringDonationSchedule__c> rdSchedules) {
+    private Installment getNextInstallment(List<RecurringDonationSchedule__c> rdSchedules) {
 
         Date nextDonationDate;
-        Installment nextDonationSchedule;
-        Installment previousDonationSchedule;
+        Installment nextInstallment;
+        Installment previousInstallment;
 
         if (rdSchedules == null) {
-            return nextDonationSchedule;
+            return nextInstallment;
         }
 
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
 
             nextDonationDate = getNextDonationDateGreaterThanToday(schedule);
-            if (nextDonationDate != null &&
-                (schedule.EndDate__c == null || nextDonationDate <= schedule.EndDate__c) &&
-                (previousDonationSchedule == null || previousDonationSchedule.nextDonationDate > nextDonationDate)) {
-                    nextDonationSchedule = new Installment(schedule);
-                    nextDonationSchedule.nextDonationDate = nextDonationDate;
+
+            if (nextDonationDate == null) {
+                continue;
             }
 
-            previousDonationSchedule = nextDonationSchedule;
+            if ((schedule.EndDate__c == null || nextDonationDate <= schedule.EndDate__c) &&
+                (previousInstallment == null || previousInstallment.nextDonationDate > nextDonationDate)) {
+                    nextInstallment = new Installment(schedule);
+                    nextInstallment.nextDonationDate = nextDonationDate;
+            }
+
+            previousInstallment = nextInstallment;
         }
 
-        return nextDonationSchedule;
+        return nextInstallment;
     }
 
     /***

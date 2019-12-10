@@ -66,7 +66,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
         List<Installment> upcomingDonations = new List<Installment>();
         if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-            List<RD2_ScheduleService.Installment> installments = scheduleService.getNextDonationsForVisualization(rd, Date.today(), displayNum);
+            List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(rd, Date.today(), displayNum);
             Integer num = 1;
             for (RD2_ScheduleService.Installment installment : installments) {
                 upcomingDonations.add(new Installment(num++, rd, installment));
