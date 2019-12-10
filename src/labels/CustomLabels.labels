@@ -421,12 +421,12 @@
         <value>Stopped</value>
     </labels>
     <labels>
-        <fullName>BatchProgressStatusSuccessful</fullName>
+        <fullName>BatchProgressStatusSuccess</fullName>
         <categories>BatchProgress</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>BatchProgressStatusSuccessful</shortDescription>
-        <value>Successful</value>
+        <shortDescription>BatchProgressStatusSuccess</shortDescription>
+        <value>Success</value>
     </labels>
     <labels>
         <fullName>BatchProgressTimeElapsed</fullName>

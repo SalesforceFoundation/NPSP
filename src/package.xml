@@ -1327,7 +1327,7 @@
         <members>BatchProgressStatusProcessing</members>
         <members>BatchProgressStatusQueued</members>
         <members>BatchProgressStatusStopped</members>
-        <members>BatchProgressStatusSuccessful</members>
+        <members>BatchProgressStatusSuccess</members>
         <members>BatchProgressTimeElapsed</members>
         <members>BatchProgressTimeElapsedDays</members>
         <members>BatchProgressTitleRD2DataMigration</members>

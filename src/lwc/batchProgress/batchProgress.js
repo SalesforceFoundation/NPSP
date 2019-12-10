@@ -21,7 +21,7 @@ import labelStatusPreparing from '@salesforce/label/c.BatchProgressStatusPrepari
 import labelStatusProcessing from '@salesforce/label/c.BatchProgressStatusProcessing';
 import labelStatusQueued from '@salesforce/label/c.BatchProgressStatusQueued';
 import labelStatusStopped from '@salesforce/label/c.BatchProgressStatusStopped';
-import labelStatusSuccessful from '@salesforce/label/c.BatchProgressStatusSuccessful';
+import labelStatusSuccess from '@salesforce/label/c.BatchProgressStatusSuccess';
 import labelUnknownError from '@salesforce/label/c.stgUnknownError';
 
 import loadBatchJob from '@salesforce/apex/UTIL_BatchJobProgress_CTRL.loadBatchJob';
@@ -243,7 +243,7 @@ export default class BatchProgress extends LightningElement {
 
         switch (this.batchJob.status) {
             case 'Completed':
-                status = this.batchJob.numberOfErrors > 0 ? labelStatusErrors : labelStatusSuccessful;
+                status = this.batchJob.numberOfErrors > 0 ? labelStatusErrors : labelStatusSuccess;
                 break;
             default:
                 status = this.batchStatus;
