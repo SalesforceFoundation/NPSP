@@ -232,8 +232,22 @@ public class RD2_DataMigrationMapper {
      * @return void
      */
     private void setStatus(npe03__Recurring_Donation__c rd) {
+        String openEndedStatus = rd.npe03__Open_Ended_Status__c;
 
-        if (rd.npe03__Open_Ended_Status__c == System.Label.npe03.RecurringDonationClosedStatus) {
+        if (String.isNotBlank(openEndedStatus)
+            && openEndedStatus != System.Label.npe03.RecurringDonationOpenStatus
+            && openEndedStatus != System.Label.npe03.RecurringDonationClosedStatus
+            && openEndedStatus != 'None'
+        ) {
+            throw new MigrationException(
+                String.format(
+                    System.Label.RD2_DataMigrationInvalidOpenEndedStatus,
+                    new String[]{ openEndedStatus }
+                )
+            );
+        }
+
+        if (openEndedStatus == System.Label.npe03.RecurringDonationClosedStatus) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
 
         } else {

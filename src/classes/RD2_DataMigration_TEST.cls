@@ -41,6 +41,17 @@ private class RD2_DataMigration_TEST {
     private static final Decimal AMOUNT_VALUE = 100;
 
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+    private static final TEST_SObjectGateway.AsyncApexJobGateway jobGateway = new TEST_SObjectGateway.AsyncApexJobGateway();
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
+
+    /****
+    * @description Creates data required for unit tests
+    */
+    @TestSetup
+    private static void setUp() {
+        insert UTIL_UnitTestData_TEST.getContact();
+    }
 
     /**
      * @description Verifies that the job should run with zero records processed when
@@ -48,10 +59,7 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldLaunchBatchJobWithNothingProcessed() {
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
-        insert getLegacyRecurringDonationBuilder(contact.Id)
+        insert getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .build();
 
@@ -79,26 +87,19 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldLaunchBatchJobWithOneRecordProcessed() {
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
-        insert getLegacyRecurringDonationBuilder(contact.Id)
+        insert getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .build();
 
         //enablement should be done after the legacy Recurring Donation has been created
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        RD2_EnablementService_TEST.configureRecurringDonations2Enabled();
 
         Test.startTest();
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
         Database.executeBatch(batch);
         Test.stopTest();
 
-        AsyncApexJob job = [SELECT Id, JobItemsProcessed FROM AsyncApexJob
-            WHERE JobType = 'BatchApex'
-            AND ApexClass.Name = 'RD2_DataMigration_BATCH'
-            LIMIT 1];
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
         System.assertEquals(1, job.JobItemsProcessed,
             'The batch should have run with one child batch processed'
         );
@@ -109,10 +110,7 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldConvertLegacyToEnhancedRecurringDonationInTheBatch() {
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
-        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id)
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withScheduleTypeMultiplyValue()
             .build();
@@ -120,7 +118,6 @@ private class RD2_DataMigration_TEST {
 
         //enablement should be done after the legacy Recurring Donation has been created
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        RD2_EnablementService_TEST.configureRecurringDonations2Enabled();
 
         Test.startTest();
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
@@ -146,6 +143,9 @@ private class RD2_DataMigration_TEST {
 
         System.assertEquals(RD2_Constants.RECURRING_TYPE_OPEN, convertedRD.RecurringType__c, 'Recurring Type should match');
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, convertedRD.Status__c, 'Status should match');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
     }
 
     /**
@@ -375,10 +375,7 @@ private class RD2_DataMigration_TEST {
     private static void shouldSetAmountFromInstallmentAmountWhenScheduleTypeIsDivideBy() {
         Integer installments = 4;
 
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
-        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id)
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withInstallmentPeriodYearly()
             .withInstallments(installments)
@@ -632,22 +629,47 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(RD2_Constants.STATUS_CLOSED, convertedRD.Status__c, 'Status should match');
     }
 
-     /**
+    /**
+     * @description Verifies an exception is thrown when Open Ended Status cannot be converted
+     */
+    @IsTest
+    private static void shouldThrowExceptionWhenOpenEndedStatusCannotBeConverted() {
+        String invalidOpenEndedStatus = 'foo';
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withOpenEndedStatus(invalidOpenEndedStatus)
+            .build();
+
+        Exception actualException;
+        try {
+            rd = new RD2_DataMigrationMapper(rd).convertToEnhancedRD();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        String expectedMessage = String.format(
+            System.Label.RD2_DataMigrationInvalidOpenEndedStatus,
+            new String[]{ invalidOpenEndedStatus }
+        );
+
+        System.assertNotEquals(null, actualException, 'An exception should be generated');
+        System.assertEquals(expectedMessage, actualException.getMessage(), 'An exception message should match');
+    }
+
+    /**
      * @description Verifies a schedule record is created for Enhanced Recurring Donation record.
      */
     @IsTest
     private static void shouldCreateScheduleForActiveEnhancedRDs() {
-
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
-        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id).withId(null).build();
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id).withId(null).build();
         insert rd;
+        rd = getRecords()[0];
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
-        
-        List<Opportunity> opps = getOpportunities(rd.Id);
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -663,7 +685,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(rd.npe03__Amount__c, rdSchedules[0].InstallmentAmount__c, 'RD and Schedule Amounts should match');
         System.assertEquals('1', rdSchedules[0].DayOfMonth__c,  'Day of Month should match');
 
-        System.assertEquals(opps.size(), getOpportunities(rd.Id).size(),  'No new Opportunity should be created during data migration');
+        System.assertEquals(opps.size(), oppGateway.getRecords(rd).size(),  'No new Opportunity should be created during data migration');
     }
 
     /**
@@ -671,14 +693,12 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldNotCreateScheduleForClosedEnhancedRDs() {
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
-        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(contact.Id)
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withOpenEndedStatusClosed()
             .build();
         insert rd;
+        rd = getRecords()[0];
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
@@ -689,16 +709,161 @@ private class RD2_DataMigration_TEST {
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
         batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
         Test.stopTest();
-        
+
         rdSchedules = rdScheduleGateway.getRecords(rd);
 
         System.assertEquals(0, rdSchedules.size(), 'No Schedule should be created');
     }
 
+    /**
+     * @description Verifies an error is logged when legacy Recurring Donation cannot be migrated
+     * due to a migration validation error
+     */
+    @IsTest
+    private static void shouldLogDataMigrationValidationError() {
+        npe03__Custom_Installment_Settings__c installment = createCustomInstallmentSettings('Months', 1);
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withInstallmentPeriod(installment.Name)
+            .build();
+        insert rd;
+
+        installment.npe03__Increment__c = 'foo';
+        update installment;
+
+        //reset custom settings static var
+        UTIL_ListCustomSettingsFacade.mapCustomInstallmentSettings = null;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        Id batchJobId = Database.executeBatch(new RD2_DataMigration_BATCH());
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'Validation error should be logged');
+
+        String expectedMessage = String.format(
+            System.Label.RD2_DataMigrationInvalidInstallmentPeriod,
+            new String[]{ installment.Name }
+        );
+        System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
+        System.assertEquals(RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE, errors[0].Error_Type__c, 'Error Type should match');
+        System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
+        System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
+        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');
+
+        System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
+    }
+
+    /**
+     * @description Verifies an error is logged when legacy Recurring Donation cannot be migrated
+     * due to Recurring Donation validation in trigger
+     */
+    @IsTest
+    private static void shouldLogEnhancedRDTriggerValidationError() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .build();
+        insert rd;
+
+        //Set legacy RD to an invalid state
+        //so an error is generated later during data migration
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        rd.npe03__Contact__c = null;
+        update rd;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        Id batchJobId = Database.executeBatch(new RD2_DataMigration_BATCH());
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'Validation error should be logged');
+
+        System.assertEquals(System.Label.RD_DonorIsRequired, errors[0].Full_Message__c, 'Error message should match');
+        System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
+        System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
+        System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
+        System.assertEquals(getExpectedLogContext(batchJobId), errors[0].Context_Type__c, 'Error Context Type should match');
+
+        System.assertEquals(null, getRecords()[0].InstallmentFrequency__c, 'The RD should not be converted');
+    }
+
+    /**
+     * @description Verifies open Opportunities for a closed *just migrated* RD are processed per RD settings
+     */
+    @IsTest
+    private static void shouldApplyCloseActionOnOpenOppsWhenMigratedRDIsClosed() {
+        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Open_Opportunity_Behavior__c = closeAction
+            )
+        );
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withOpenEndedStatusClosed()
+            .build();
+        insert rd;
+        rd = getRecords()[0];
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(DATE_ESTABLISHED.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+        batch.execute(null, new List<npe03__Recurring_Donation__c>{ rd });
+        Test.stopTest();
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+
+        System.assertEquals(2, opps.size(), 'Number of Opportunities should match');
+        System.assertEquals(true, oppById.get(opps[0].Id).isWon, 'Already closed Opp should stay won');
+        System.assertEquals(true, oppById.get(opps[1].Id).isClosed, 'Open Opp should be closed now');
+        System.assertEquals(false, oppById.get(opps[1].Id).isWon, 'Open Opp should be lost won now');
+    }
 
 
 
     // HELPER METHODS
+    //////////////////////
+
+    /****
+    * @description Returns contact record
+    * @return Contact
+    */
+    private static Contact getContact() {
+        return [
+            SELECT FirstName, LastName, AccountId
+            FROM Contact
+            LIMIT 1
+        ];
+    }
 
     /**
      * @description Instantiate a legacy recurring donation for a specific ContactId
@@ -796,26 +961,14 @@ private class RD2_DataMigration_TEST {
     }
 
     /****
-    * @description Returns Opportunities associated with the specified Recurring Donation
-    * @param rdId Recurring Donation Id
-    * @return List<Opportunity>
+    * @description Returns expected data migration log context
+    * @param batchJobId Batch job Id
+    * @return String
     */
-    private static List<Opportunity> getOpportunities(Id rdId) {
-        return getOpportunities(new Set<Id>{ rdId });
-    }
+    private static String getExpectedLogContext(Id batchJobId) {
+        AsyncApexJob job = jobGateway.getRecord(batchJobId);
 
-    /****
-    * @description Returns Opportunities associated with specified Recurring Donations
-    * @param rdIds Recurring Donation Ids
-    * @return List<Opportunity>
-    */
-    private static List<Opportunity> getOpportunities(Set<Id> rdIds) {
-        return [
-            SELECT Amount, npe03__Recurring_Donation__c
-            FROM Opportunity
-            WHERE npe03__Recurring_Donation__c IN :rdIds
-        ];
+        return RD2_DataMigration_BATCH.LOG_CONTEXT_PREFIX + ' ' + String.valueOf(job.CreatedDate);
     }
-
 
 }

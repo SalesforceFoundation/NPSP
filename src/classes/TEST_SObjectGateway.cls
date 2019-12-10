@@ -73,24 +73,58 @@ public class TEST_SObjectGateway {
             return [
                 SELECT
                     Name,
+                    npe03__Recurring_Donation_Campaign__c,
                     npe03__Organization__c,
                     npe03__Contact__c,
+                    npe03__Donor_Name__c,
                     npe03__Amount__c,
                     npe03__Paid_Amount__c,
-                    npe03__Next_Payment_Date__c, 
-                    npe03__Last_Payment_Date__c,
                     npe03__Date_Established__c,
-                    StartDate__c,
                     Day_of_Month__c,
-                    InstallmentFrequency__c,
+                    StartDate__c,
+                    npe03__Next_Payment_Date__c,
+                    npe03__Last_Payment_Date__c,
                     npe03__Installment_Period__c,
+                    InstallmentFrequency__c,
+                    npe03__Total_Paid_Installments__c,
+                    PaymentMethod__c,
                     RecurringType__c,
                     Status__c
-                FROM npe03__Recurring_Donation__c 
+                FROM npe03__Recurring_Donation__c
                 WHERE Id IN :rdIds
             ];
         }
+
+        /***
+        * @description Retrieves Recurring Donation records
+        * @return List<npe03__Recurring_Donation__c>
+        */
+        public List<npe03__Recurring_Donation__c> getRecords() {
+            return [
+                SELECT
+                    Name,
+                    npe03__Recurring_Donation_Campaign__c,
+                    npe03__Organization__c,
+                    npe03__Contact__c,
+                    npe03__Donor_Name__c,
+                    npe03__Amount__c,
+                    npe03__Paid_Amount__c,
+                    npe03__Date_Established__c,
+                    Day_of_Month__c,
+                    StartDate__c,
+                    npe03__Next_Payment_Date__c,
+                    npe03__Last_Payment_Date__c,
+                    npe03__Installment_Period__c,
+                    InstallmentFrequency__c,
+                    npe03__Total_Paid_Installments__c,
+                    PaymentMethod__c,
+                    RecurringType__c,
+                    Status__c
+                FROM npe03__Recurring_Donation__c
+            ];
+        }
     }
+
 
     /***
     * @description Retrieves Recurring Donation Schedule record(s)
@@ -117,18 +151,134 @@ public class TEST_SObjectGateway {
             }
 
             return [
-                    SELECT
-                            Campaign__c,
-                            DayOfMonth__c,
-                            EndDate__c,
-                            InstallmentAmount__c,
-                            InstallmentFrequency__c,
-                            InstallmentPeriod__c,
-                            RecurringDonation__c,
-                            StartDate__c
-                    FROM RecurringDonationSchedule__c
-                    WHERE RecurringDonation__c IN :rds
+                SELECT
+                    Campaign__c,
+                    DayOfMonth__c,
+                    EndDate__c,
+                    InstallmentAmount__c,
+                    InstallmentFrequency__c,
+                    InstallmentPeriod__c,
+                    RecurringDonation__c,
+                    StartDate__c
+                FROM RecurringDonationSchedule__c
+                WHERE RecurringDonation__c IN :rds
             ];
+        }
+    }
+
+    /***
+    * @description Retrieves Opportunities
+    */
+    public class OpportunityGateway {
+
+        /***
+        * @description Retrieves Opportunities for the related Recurring Donation
+        * @param rd Recurring donation
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecords(npe03__Recurring_Donation__c rd) {
+            return getRecords(new List<npe03__Recurring_Donation__c>{ rd });
+        }
+
+        /***
+        * @description Retrieves Opportunities for related Recurring Donations
+        * @param rds Recurring donations
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
+            return [
+                SELECT
+                    Name, Amount,
+                    AccountId, Primary_Contact__c,
+                    StageName, CloseDate,
+                    isClosed, isWon
+                FROM Opportunity
+                WHERE npe03__Recurring_Donation__c IN :rds
+            ];
+        }
+    }
+
+    /***
+    * @description Retrieves Error record(s)
+    */
+    public class ErrorGateway {
+
+        /***
+        * @description Retrieves Error records
+        * @return List<Error__c>
+        */
+        public List<Error__c> getRecords() {
+            return [
+                SELECT
+                    Context_Type__c,
+                    Datetime__c,
+                    Error_Type__c,
+                    Full_Message__c,
+                    Object_Type__c,
+                    Related_Record_ID__c,
+                    Record_URL__c,
+                    Retry_Pending__c,
+                    Email_Sent__c,
+                    Posted_In_Chatter__c
+                FROM Error__c
+            ];
+        }
+
+        /***
+        * @description Returns number of Error__c records
+        * @return Integer
+        */
+        public Integer getErrorCount() {
+            return Database.countQuery('SELECT Count() FROM Error__c');
+        }
+    }
+
+    /***
+    * @description Retrieves AsyncApexJob record(s)
+    */
+    public class AsyncApexJobGateway {
+        private Set<String> fields = new Set<String>{
+            'CreatedDate',
+            'CompletedDate',
+            'ExtendedStatus',
+            'JobItemsProcessed',
+            'TotalJobItems',
+            'NumberOfErrors',
+            'JobType',
+            'ApexClass.NamespacePrefix',
+            'ApexClass.Name',
+            'MethodName'
+        };
+
+        /***
+        * @description Retrieves AsyncApexJob record for the specified class name
+        * @param className Class Name
+        * @return AsyncApexJob
+        */
+        public AsyncApexJob getRecord(String className) {
+            String soql = new UTIL_Query()
+                .withFrom(AsyncApexJob.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('ApexClass.Name = :className')
+                .withLimit(1)
+                .build();
+
+            return (AsyncApexJob) Database.query(soql);
+        }
+
+        /***
+        * @description Retrieves AsyncApexJob record for the specified job Id
+        * @param jobId Async Apex Job Id
+        * @return AsyncApexJob
+        */
+        public AsyncApexJob getRecord(Id jobId) {
+            String soql = new UTIL_Query()
+                .withFrom(AsyncApexJob.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('Id = :jobId')
+                .build();
+
+            return (AsyncApexJob) Database.query(soql);
         }
     }
 }

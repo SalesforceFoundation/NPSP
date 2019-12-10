@@ -385,6 +385,26 @@ public class UTIL_UnitTestData_TEST {
         return accountsToAdd;
     }
 
+    /**
+     * @description Builds an Organization Account
+     * @return Account
+     */
+    public static Account buildOrganizationAccount() {
+        return new Account(
+            Name = getUniqueString(),
+            npe01__SYSTEMIsIndividual__c = false
+        );
+    }
+
+    /***
+    * @description Builds a Household Account
+    * @return Account 
+    */
+    public static Account buildHouseholdAccount() {
+        return createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
+    }
+
+
     public static List<Account> listAccT;
     public static List<Contact> listConT;
 
@@ -399,8 +419,8 @@ public class UTIL_UnitTestData_TEST {
     **********************************************************************************************************/
     public static void createAccountContactTestData(String accType, Integer cAcc, Integer cCon, Integer iUnique) {
 
-        listConT = UTIL_UnitTestData_TEST.createMultipleTestContacts(cAcc * cCon);
-        listAccT = UTIL_UnitTestData_TEST.createMultipleTestAccounts(cAcc, accType);
+        listConT = createMultipleTestContacts(cAcc * cCon);
+        listAccT = createMultipleTestAccounts(cAcc, accType);
         insert listAccT;
 
         for (Integer i = 0; i < cAcc; i++) {
@@ -419,16 +439,6 @@ public class UTIL_UnitTestData_TEST {
         insert listConT;
     }
 
-    /**
-     * @description Returns Organization Account
-     * @return Account
-     */
-    public static Account getOrgAccount() {
-        return new Account(
-            Name = UTIL_UnitTestData_TEST.getUniqueString(),
-            npe01__SYSTEMIsIndividual__c = false
-        );
-    }
 
     /**
      * @description Create Engagement Plan Templates for unit testing.
@@ -759,7 +769,7 @@ public class UTIL_UnitTestData_TEST {
     public static void disableHHNamingTriggers() {
         createDefaultTDTMHandlers();
         TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM', false);
-        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        turnOffAutomaticHHNaming();
     }
     /* @description Disable all HH Naming related trigger handlers and setting when not needed to improve performance */
     public static void disableAddressTriggers() {
@@ -768,7 +778,7 @@ public class UTIL_UnitTestData_TEST {
         TDTM_ProcessControl.toggleTriggerState('Contact', 'ADDR_Contact_TDTM', false);
         TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Addresses_TDTM', false);
         TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Validator_TDTM', false);
-        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        turnOffAutomaticHHNaming();
     }
 
     /**
