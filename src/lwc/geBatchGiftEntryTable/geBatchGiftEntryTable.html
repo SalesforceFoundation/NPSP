@@ -1,13 +1,20 @@
 <template>
-
-    <div if:true={batchId}>
-        <lightning-datatable
-                key-field="uid"
-                data={data}
-                columns={columns}
-                show-row-number-column="true"
-                onrowaction={handleRowActions}>
-        </lightning-datatable>
-    </div>
-
+    <article class='slds-card slds-card_extension slds-m-vertical_small'>
+        <div if:true={hasData}>
+            <lightning-datatable
+                    key-field="uid"
+                    data={data}
+                    columns={columns}
+                    show-row-number-column="true"
+                    onrowaction={handleRowActions}>
+            </lightning-datatable>
+        </div>
+        <div if:false={hasData}>
+            <c-util-illustration title="Looks like you haven't entered any gifts yet!"
+                                 message="Enter a new gift and it will appear here."
+                                 size="small"
+                                 variant="lake-mountain">
+            </c-util-illustration>
+        </div>
+    </article>
 </template>
