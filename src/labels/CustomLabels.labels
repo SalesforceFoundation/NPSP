@@ -1668,7 +1668,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationCompleteMessage</shortDescription>
-        <value>Your migration was successful with no errors, you’re all ready to go with Enhanced Recurring Donations.</value>
+        <value>Your migration was successful with no errors. All set up steps are now complete. You're ready to begin using Enhanced Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationErrorMessage</fullName>
