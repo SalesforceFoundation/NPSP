@@ -51,7 +51,42 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return List<String> list of DataImport__c field api names
     */
     public static List<String> getDataImportFields(Id batchId) {
-        return getDataImportFields(batchId, true);
+        List<String> fieldNames = new List<String>();
+
+        // Query the Batch to determine which set of fields will be needed.
+        // Batches created using BGE_DataImportBatchEntry store fields used by its Data
+        // Import records in Active_Fields__c, while Batches created in geBatchGiftEntryApp
+        // use all or a subset of fields mapped in Advanced Mapping.
+        DataImportBatch__c batch = [
+                SELECT Active_Fields__c,
+                        Form_Template_Name__c
+                FROM DataImportBatch__c
+                WHERE Id = :batchId
+        ];
+
+        if (String.isNotBlank(batch.Active_Fields__c)) {
+            fieldNames = getDataImportFields(batchId, true);
+        } else if (String.isNotBlank(batch.Form_Template_Name__c)) { // Change if we decide
+            // not to always populate Form_Template_Name__c
+
+            // Lowercase the core fields list for use below to avoid duplication
+            for (String field : getCoreDataImportFields(true)) {
+                fieldNames.add(field.toLowerCase());
+            }
+
+            // Get all mapped source fields
+            // (no matter which template is used, it will be a subset of mapped fields)
+            // question: safe? or could a widget ever include fields that are not mapped?
+            for (SObjectField sObjectField :
+                    BDI_DataImportService.getDefaultMappingService()
+                            .getTargetFieldsBySourceField().keySet()) {
+                String field = String.valueOf(sObjectField).toLowerCase();
+                if (!fieldNames.contains(field)) {
+                    fieldNames.add(field);
+                }
+            }
+        }
+        return fieldNames;
     }
 
     /*******************************************************************************************************
@@ -69,7 +104,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     public static List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
 
         List<String> fields = getCoreDataImportFields(includeRelationshipFields);
-        fields.addAll(getActiveFieldNamesFromBatch(batchId));
+            fields.addAll(getActiveFieldNamesFromBatch(batchId));
 
         return fields;
     }
@@ -113,19 +148,12 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     }
 
      /*******************************************************************************************************
-    * @description parses Active_Fields__c for the list of user-defined fields included in
-    * the batch config, and ensures that any fields included in the Batch's Matching Rule
-    * field are included.
+    * @description parses Active_Fields__c for the list of user-defined fields included in the batch config
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return list of field api names
     */
     public static List<String> getActiveFieldNamesFromBatch(Id batchId) {
-        DataImportBatch__c batch = [
-                SELECT Active_Fields__c,
-                        Donation_Matching_Rule__c
-                FROM DataImportBatch__c
-                WHERE Id = :batchId
-        ];
+        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
         String activeFieldsJSON = batch.Active_Fields__c;
         List<String> activeFieldNames = new List<String>();
 
@@ -144,20 +172,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                     );
                     String referencedObjectName = lookupDFR.getReferenceTo()[0].getDescribe().name;
                     activeFieldNames.add(field.name.substringBefore('__c') + '__r.' + UTIL_Describe.getNameField(referencedObjectName));
-                }
-            }
-        }
-
-        if (String.isNotBlank(batch.Donation_Matching_Rule__c)) {
-            for (String matchingField : batch.Donation_Matching_Rule__c.split(';')) {
-                // The npsp namespace is included in the string of fields listed in the
-                // DataImportBatch__c.Donation_Matching_Rule__c <defaultValue> element.
-                // UTIL_Namespace.alignSchemaNSWithEnvironment() ensures the namespace is
-                // aligned with that of the current environment if not npsp.
-                String namespaceAdjustedMatchingFieldName =
-                        UTIL_Namespace.alignSchemaNSWithEnvironment(matchingField);
-                if (!activeFieldNames.contains(namespaceAdjustedMatchingFieldName)) {
-                    activeFieldNames.add(namespaceAdjustedMatchingFieldName);
                 }
             }
         }
