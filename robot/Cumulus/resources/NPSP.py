@@ -80,20 +80,6 @@ class NPSP(SalesforceRobotLibraryBase):
         level_object = [o for o in objects if o['label'] == 'Level'][0]
         return self.get_namespace_prefix(level_object['name'])
 
-#     def populate_field_by_placeholder(self, loc, value):
-#         """ Populate field with Place Holder as a locator
-#             and actual value of the place holder.
-#         """
-#         xpath = npsp_lex_locators["placeholder"].format(loc)
-#         field = self.selenium.get_webelement(xpath)
-# #         self.salesforce._populate_field(xpath, value)
-#         
-#         field.send_keys(value)
-#         time.sleep(2)
-# # #         if loc == ("Search Contacts" or "Search Accounts"):
-# #         field.send_keys(Keys.ENTER)
-# # #             field.send_keys(Keys.ARROW_DOWN)
-#         field.send_keys(Keys.ENTER)
     
     def populate_campaign(self,loc,value):
         """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
@@ -160,12 +146,6 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.wait_until_element_is_visible(loc)
         self.selenium.click_link(loc)   
         
-#     def click_dropdown(self, title):
-#         """Click the dropdown to open it"""
-#         locator = npsp_lex_locators['record']['list'].format(title)
-#         self.selenium.set_focus_to_element(locator)
-#         self.selenium.get_webelement(locator).click()
-#         self.wait_for_locator('popup')
         
     def click_flexipage_dropdown(self, title):
         """Click the lightning dropdown to open it"""
