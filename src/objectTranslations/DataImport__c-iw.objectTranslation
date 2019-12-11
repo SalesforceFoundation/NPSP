@@ -342,6 +342,16 @@
         <name>Contact2_Work_Phone__c</name>
     </fields>
     <fields>
+        <label><!-- Donation Campaign Import Status --></label>
+        <name>DonationCampaignImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- Opportunity.CampaignId --></help>
+        <label><!-- Donation Campaign Source --></label>
+        <name>DonationCampaignImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
         <label>מצב יבוא תרומה</label>
         <name>DonationImportStatus__c</name>
     </fields>
@@ -408,7 +418,7 @@
         <name>Donation_Name__c</name>
     </fields>
     <fields>
-        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation. --></help>
+        <help><!-- A comma-separated list of Ids for the first 10 possible Opportunity matches for a donation. --></help>
         <label><!-- Donation Possible Matches --></label>
         <name>Donation_Possible_Matches__c</name>
     </fields>
@@ -431,6 +441,60 @@
         <help>תיאור הגורמים לכישלון הייבוא של רשומת יבוא הנתונים.</help>
         <label>פרטי כישלון</label>
         <name>FailureInformation__c</name>
+    </fields>
+    <fields>
+        <help><!-- The monetary amount attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 1: Amount --></label>
+        <name>GAU_Allocation_1_Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the GAU to be used for the first allocation. --></help>
+        <label><!-- GAU Allocation 1: GAU --></label>
+        <name>GAU_Allocation_1_GAU__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the first GAU Allocation. --></help>
+        <label><!-- GAU Allocation 1: Import Status --></label>
+        <name>GAU_Allocation_1_Import_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
+        <label><!-- GAU Allocation 1: Imported --></label>
+        <name>GAU_Allocation_1_Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 1: Percent --></label>
+        <name>GAU_Allocation_1_Percent__c</name>
+    </fields>
+    <fields>
+        <help><!-- The monetary amount attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 2: Amount --></label>
+        <name>GAU_Allocation_2_Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the GAU to be used for the second GAU allocation. --></help>
+        <label><!-- GAU Allocation 2: GAU --></label>
+        <name>GAU_Allocation_2_GAU__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the second GAU Allocation. --></help>
+        <label><!-- GAU Allocation 2: Import Status --></label>
+        <name>GAU_Allocation_2_Import_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
+        <label><!-- GAU Allocation 2: Imported --></label>
+        <name>GAU_Allocation_2_Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The percent attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 2: Percent --></label>
+        <name>GAU_Allocation_2_Percent__c</name>
     </fields>
     <fields>
         <label>מצב יבוא כתובת הבית</label>
@@ -482,10 +546,40 @@
         <name>ImportedDate__c</name>
     </fields>
     <fields>
-        <help><!-- an optional NPSP Data Import Batch this record belongs to --></help>
+        <help><!-- Lookup to the NPSP Data Import Batch this record belongs to. --></help>
         <label><!-- NPSP Data Import Batch --></label>
         <name>NPSP_Data_Import_Batch__c</name>
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the first Opportunity Contact Role. --></help>
+        <label><!-- Opportunity Contact Role 1: ImportStatus --></label>
+        <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 1: Imported --></label>
+        <name>Opportunity_Contact_Role_1_Imported__c</name>
+    </fields>
+    <fields>
+        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 1: Role --></label>
+        <name>Opportunity_Contact_Role_1_Role__c</name>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the second Opportunity Contact Role. --></help>
+        <label><!-- Opportunity Contact Role 2: ImportStatus --></label>
+        <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 2: Imported --></label>
+        <name>Opportunity_Contact_Role_2_Imported__c</name>
+    </fields>
+    <fields>
+        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 2: Role --></label>
+        <name>Opportunity_Contact_Role_2_Role__c</name>
     </fields>
     <fields>
         <label><!-- Payment Import Status --></label>
@@ -507,7 +601,7 @@
         <name>Payment_Method__c</name>
     </fields>
     <fields>
-        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Payment matches to a donation. --></help>
+        <help><!-- A comma-separated list of Ids for the first 10 possible Payment matches for a Donation. --></help>
         <label><!-- Payment Possible Matches --></label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
@@ -560,8 +654,12 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label>פרטי תרומה</label>
-            <section>Donation Information</section>
+            <label><!-- GAU Allocation 1 Information --></label>
+            <section>GAU Allocation 1 Information</section>
+        </sections>
+        <sections>
+            <label><!-- GAU Allocation 2 Information --></label>
+            <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
             <label>כתובת בבית</label>
@@ -570,6 +668,22 @@
         <sections>
             <label><!-- Household Account Information --></label>
             <section>Household Account Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role 1 Information --></label>
+            <section>Opportunity Contact Role 1 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role 2 Information --></label>
+            <section>Opportunity Contact Role 2 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Information --></label>
+            <section>Opportunity Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- Data Import ID --></nameFieldLabel>
