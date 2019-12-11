@@ -1,13 +1,17 @@
 <template>
     <article class='slds-card slds-card_extension slds-m-vertical_small'>
         <div if:true={hasData}>
-            <lightning-datatable
-                    key-field="uid"
-                    data={data}
-                    columns={columns}
-                    show-row-number-column="true"
-                    onrowaction={handleRowActions}>
-            </lightning-datatable>
+            <div style="height: 20rem;">
+                <lightning-datatable
+                        key-field="uid"
+                        data={data}
+                        columns={columns}
+                        show-row-number-column="true"
+                        onrowaction={handleRowActions}
+                        enable-infinite-loading
+                        onloadmore={loadMoreData}>
+                </lightning-datatable>
+            </div>
         </div>
         <div if:false={hasData}>
             <c-util-illustration title="Looks like you haven't entered any gifts yet!"
