@@ -41,7 +41,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         console.log('Form Cancel button clicked');
     }
 
-    handleSave() {
+    handleSave(event) {
+        event.target.disabled = true;
+        const enableSaveButton = function() {
+            this.disabled = false;
+        }.bind(event.target);
+
         console.log('Form Save button clicked');
 
         // TODO: Pass the actual Data Import record, and navigate to the new Opportunity
@@ -57,11 +62,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (this.isBatchMode) {
             const submission = {
-                sectionsList: sectionsList,
-                submissionId: this.submissions.length
+                sectionsList: sectionsList
             };
             this.submissions.push(submission);
-            this.dispatchEvent(new CustomEvent('submit'));
+            this.dispatchEvent(new CustomEvent('submit', {
+                detail: {
+                    success: function () {
+                        enableSaveButton();
+                    }
+                }
+            }));
             this.toggleSpinner();
         } else {
             GeFormService.handleSave(sectionsList).then(opportunityId => {

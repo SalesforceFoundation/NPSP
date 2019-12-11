@@ -6,7 +6,6 @@ import ACCOUNT_1_IMPORTED_FIELD from
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD
     from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
-import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 
 export default class GeBatchGiftEntryApp extends LightningElement {
     @api recordId;
@@ -38,10 +37,6 @@ export default class GeBatchGiftEntryApp extends LightningElement {
         const dataRow = this.getTableDataRow(
             event.target.submissions[event.target.submissions.length - 1]
         );
-        if (!dataRow[STATUS_FIELD.fieldApiName]) {
-            dataRow[STATUS_FIELD.fieldApiName] = 'Dry Run - Pending';
-        }
-        table.upsertData(dataRow, dataRow.Id ? 'Id' : 'submissionId');
 
         //simulate a lookup field being used to select an existing Account
         if (!dataRow[ACCOUNT_1_IMPORTED_FIELD.fieldApiName]) {
@@ -60,14 +55,14 @@ export default class GeBatchGiftEntryApp extends LightningElement {
             .then(
                 dataImportModel => {
                     const processedDataRow = dataImportModel.dataImportRows[0].record;
-                    processedDataRow.submissionId = dataRow.submissionId;
                     processedDataRow.Id = dataImportModel.dataImportRows[0].record.Id;
                     processedDataRow.donorName = dataImportModel.dataImportRows[0].donorName;
                     processedDataRow.donorLink = dataImportModel.dataImportRows[0].donorLink;
                     processedDataRow.matchedRecordLabel = dataImportModel.dataImportRows[0].matchedRecordLabel;
                     processedDataRow.matchedRecordUrl = dataImportModel.dataImportRows[0].matchedRecordUrl;
                     processedDataRow.errors = dataImportModel.dataImportRows[0].errors;
-                    table.upsertData(processedDataRow, 'submissionId');
+                    table.upsertData(processedDataRow, 'Id');
+                    event.detail.success(); //Re-enable the Save button
                 }
             )
             .catch(error => {
