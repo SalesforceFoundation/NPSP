@@ -1,6 +1,9 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
+import retrieveDefaultBGERenderWrapper
+    from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultBGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
-import saveAndDryRunRow from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
+import saveAndDryRunRow
+    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 import {api} from "lwc";
 
 
@@ -36,17 +39,31 @@ class GeFormService {
      * Retrieve the default form render wrapper.
      * @returns {Promise<FORM_RenderWrapper>}
      */
-    getFormTemplate() {
+    getFormTemplate(isBatchMode = false) {
         return new Promise((resolve, reject) => {
-            getRenderWrapper({})
-                .then((result) => {
-                    this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
-                    this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
-                    resolve(result);
-                })
-                .catch(error => {
-                    console.error(JSON.stringify(error));
-                });
+            if (isBatchMode) {
+                retrieveDefaultBGERenderWrapper()
+                    .then((result) => {
+                        this.fieldMappings =
+                            result.fieldMappingSetWrapper.fieldMappingByDevName;
+                        this.objectMappings =
+                            result.fieldMappingSetWrapper.objectMappingByDevName;
+                        resolve(result);
+                    })
+                    .catch(error => {
+                        console.error(JSON.stringify(error));
+                    });
+            } else {
+                getRenderWrapper({})
+                    .then((result) => {
+                        this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
+                        this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
+                        resolve(result);
+                    })
+                    .catch(error => {
+                        console.error(JSON.stringify(error));
+                    });
+            }
         });
     }
 

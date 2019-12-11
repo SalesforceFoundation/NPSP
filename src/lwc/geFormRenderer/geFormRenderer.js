@@ -19,7 +19,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     label = { messageLoading, geSave, geCancel };
 
     connectedCallback() {
-        GeFormService.getFormTemplate().then(response => {
+        GeFormService.getFormTemplate(this.isBatchMode).then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
                 const { formTemplate } = response;
