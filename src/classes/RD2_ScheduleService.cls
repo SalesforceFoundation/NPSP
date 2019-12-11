@@ -195,11 +195,11 @@ public without sharing class RD2_ScheduleService {
 
 
     /***
-    * @description Calculates the dates of the next n donations
-    * @param rds Recurring Donation records
-    * @param visualizationStartDate Date
-    * @param maxDates Integer
-    * @return Map<Id, List<Installment>>
+    * @description Calculates the dates of the next n donations for a single RD
+    * @param rd Recurring Donation record
+    * @param startDate Date
+    * @param numInstallments Integer
+    * @return List<Installment>
     */
     public List<Installment> getVisualizedInstallments(npe03__Recurring_Donation__c rd, Date startDate, Integer numInstallments) {
         if (rd == null) {
@@ -210,11 +210,11 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the dates of the next n donations
-    * @param rd Recurring Donation record
+    * @description Calculates the dates of the next n donations for a list of Recurring Donations
+    * @param rds List of Recurring Donation records
     * @param startDate Date
     * @param numInstallments Integer
-    * @return List<Installment>
+    * @return Map<Id, List<Installment>> Recurring Donation Ids to List of upcoming installments
     */
     public Map<Id, List<Installment>> getVisualizedInstallments(List<npe03__Recurring_Donation__c> rds, Date startDate, Integer numInstallments) {
 
@@ -235,43 +235,54 @@ public without sharing class RD2_ScheduleService {
                 continue;
             }
 
-            installmentsByRd.put(rd.Id, new List<Installment>());
-
-            List<Installment> vizSchedules = new List<Installment>();
-            currentDate = startDate;
-            List <RecurringDonationSchedule__c> filteredSchedules;
-
-            if (schedulesByRd.get(rd.Id) == null) {
-                continue;
-            }
-
-            while (vizSchedules.size() < numInstallments) {
-
-                // We are changing currentDate with each loop, so the active schedules potentially change with each loop
-                filteredSchedules = new List<RecurringDonationSchedule__c>();
-                for (RecurringDonationSchedule__c schedule : schedulesByRd.get(rd.Id)) {
-                    if (schedule.EndDate__c == null || schedule.EndDate__c >= currentDate) {
-                        filteredSchedules.add(schedule);
-                    }
-                }
-
-                Installment ins = getNextInstallment(filteredSchedules);
-                if (ins == null) {
-                    currentDate = date.today();
-                    break;
-                }
-
-                vizSchedules.add(ins);
-                currentDate = ins.nextDonationDate.addDays(1);
-            }
-
-            installmentsByRd.get(rd.Id).addAll(vizSchedules);
-
+            installmentsByRd.put(rd.Id, doVisualization(rd.Id, startDate, numInstallments, schedulesByRd.get(rd.Id)));
         }
 
         currentDate = date.today();
 
         return installmentsByRd;
+    }
+
+    /***
+    * @description Calculates the dates of the next n donations for a single Recurring Donation
+    * @param rdId Recurring Donation record Id
+    * @param startDate Date
+    * @param numInstallments Integer
+    * @param schedules List of active RecurringDonationSchedule__c records
+    * @return List<Installment>
+    */
+    private List<Installment> doVisualization(Id rdId, Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
+
+        List<Installment> installments = new List<Installment>();
+        currentDate = startDate;
+        List <RecurringDonationSchedule__c> filteredSchedules;
+
+        if (rdId == null || schedules == null) {
+            return installments;
+        }
+
+        while (installments.size() < numInstallments) {
+
+            // We are changing currentDate with each loop, so the active schedules potentially change with each loop
+            filteredSchedules = new List<RecurringDonationSchedule__c>();
+
+            for (RecurringDonationSchedule__c schedule : schedules) {
+                if (schedule.EndDate__c == null || schedule.EndDate__c >= currentDate) {
+                    filteredSchedules.add(schedule);
+                }
+            }
+
+            Installment ins = getNextInstallment(filteredSchedules);
+            if (ins == null) {
+                currentDate = date.today();
+                break;
+            }
+
+            installments.add(ins);
+            currentDate = ins.nextDonationDate.addDays(1);
+        }
+
+        return installments;
     }
 
     /***
