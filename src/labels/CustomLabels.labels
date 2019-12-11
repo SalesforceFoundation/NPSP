@@ -1646,7 +1646,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when Enhanced RD is not enabled</shortDescription>
-        <value>You must enable Enhanced Recurring Donations to use this component.</value>
+        <value>This component must be used on a Recurring Donations record page.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleVisualizerErrorInvalidUsage</fullName>
@@ -1654,7 +1654,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when the component is used on a Non-Recurring Donations page</shortDescription>
-        <value>This component must be used on a Recurring Donations record page.</value>
+        <value>You must enable Enhanced Recurring Donations to use this component.</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleVisualizerMessageNoSchedule</fullName>
