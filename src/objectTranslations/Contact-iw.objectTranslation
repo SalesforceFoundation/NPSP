@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Contact Merge Found FS --></label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
     <fields>
         <help>אם כתובת זו מחייבת אימות, לחץ על &apos;אמת כתובת&apos; בראש דף הכתובת. עיין במסמכי העזרה ב-Power of Us Hub לקבלת מידע נוסף.</help>
         <label>מצב אימות כתובת</label>
@@ -61,6 +73,10 @@
         <name>HHId__c</name>
     </fields>
     <fields>
+        <label><!-- Languages --></label>
+        <name>Languages__c</name>
+    </fields>
+    <fields>
         <help>סכום הקרדיט הגדול ביותר.</help>
         <label>סכום תרומה מערכתית גדולה ביותר</label>
         <name>Largest_Soft_Credit_Amount__c</name>
@@ -79,6 +95,22 @@
         <help>תאריך הקרדיט האחרון שהוענק.</help>
         <label>תאריך תרומה מערכתית אחרונה</label>
         <name>Last_Soft_Credit_Date__c</name>
+    </fields>
+    <fields>
+        <label><!-- Level --></label>
+        <name>Level__c</name>
+        <picklistValues>
+            <masterLabel>Primary</masterLabel>
+            <translation><!-- Primary --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Secondary</masterLabel>
+            <translation><!-- Secondary --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Tertiary</masterLabel>
+            <translation><!-- Tertiary --></translation>
+        </picklistValues>
     </fields>
     <fields>
         <help>מספר הקרדיטים, שנסגרו במספר הימים האחרונים שנקבע בהגדרות NPSP.</help>
@@ -185,4 +217,4 @@
         <label><!-- Recalculate_Rollups --></label>
         <name>Recalculate_Rollups</name>
     </webLinks>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

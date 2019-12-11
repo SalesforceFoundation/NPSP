@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS v2 --></label>
+        <name>BDE_Entry_FS_v2</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- New BDE List v2 --></label>
+        <name>BDE_List_FS_v2</name>
+    </fieldSets>
     <fields>
         <help>תאריך אישור</help>
         <label>תאריך אישור</label>
@@ -44,6 +52,31 @@
         <help>הערות המסבירות מדוע בקשת התרומה לא הניבה הצלחה.</help>
         <label>סיבה לסגירה ללא זכייה</label>
         <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
+        <label><!-- Current Generator(s) --></label>
+        <name>CurrentGenerators__c</name>
+    </fields>
+    <fields>
+        <label><!-- Delivery/Installation Status --></label>
+        <name>DeliveryInstallationStatus__c</name>
+        <picklistValues>
+            <masterLabel>Completed</masterLabel>
+            <translation><!-- Completed --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>In progress</masterLabel>
+            <translation><!-- In progress --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Yet to begin</masterLabel>
+            <translation><!-- Yet to begin --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- When selected, this field disables several aspects of NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate data. Refer to the product documentation for more details. --></help>
+        <label><!-- Disable Contact Role Automation --></label>
+        <name>DisableContactRoleAutomation__c</name>
     </fields>
     <fields>
         <help>ערך השוק ההוגן של תרומה שוות-ערך.</help>
@@ -135,18 +168,22 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <help><!-- The account of the company who will match this gift. --></help>
+        <label><!-- Main Competitor(s) --></label>
+        <name>MainCompetitors__c</name>
+    </fields>
+    <fields>
+        <help><!-- Lookup to the Account record of the company that will match this Donation. --></help>
         <label>חשבון השוואת תרומות</label>
         <name>Matching_Gift_Account__c</name>
         <relationshipLabel>תרומות שוות</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The name of the company who will match this gift. --></help>
+        <help><!-- The name of the company that will match this Donation. --></help>
         <label>מעסיק משווה תרומה</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>
-        <help><!-- The status of this gift being matched. --></help>
+        <help><!-- The status of the Matching Gift for this Donation, for example, Submitted or Received. --></help>
         <label>מצב השוואת תרומה</label>
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
@@ -163,7 +200,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The employer&apos;s matching gift for this employee&apos;s gift. --></help>
+        <help><!-- Lookup to the Opportunity record for the Matching Gift for this Donation. --></help>
         <label>השוואת תרומה</label>
         <name>Matching_Gift__c</name>
         <relationshipLabel>תרומות שוות</relationshipLabel>
@@ -216,6 +253,10 @@
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
+        <label><!-- Order Number --></label>
+        <name>OrderNumber__c</name>
+    </fields>
+    <fields>
         <help>אם מענק זה הוא חידוש של מענק קודם, השתמש בשדה זה לקישור בין רשומה זו והרשומה הקודמת.</help>
         <label>מענק/תרומה קודמת</label>
         <name>Previous_Grant_Opportunity__c</name>
@@ -251,6 +292,10 @@
         <help>הסכום שאתה מבקש. המספר עשוי להיות שונה מהסכום הסופי שיוענק.</help>
         <label>סכום מבוקש</label>
         <name>Requested_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Tracking Number --></label>
+        <name>TrackingNumber__c</name>
     </fields>
     <fields>
         <help>מציין אם התרומה היא בהוקרה או לזכרו של אדם.</help>
@@ -379,6 +424,38 @@
         <label>עדכון מהיר</label>
         <name>Quick_Update</name>
     </quickActions>
+    <recordTypes>
+        <label><!-- Donation --></label>
+        <name>Donation</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Grant --></label>
+        <name>Grant</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- In-Kind Gift --></label>
+        <name>InKindGift</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Major Gift --></label>
+        <name>MajorGift</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Matching Gift --></label>
+        <name>MatchingGift</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- Membership --></label>
+        <name>Membership</name>
+    </recordTypes>
+    <recordTypes>
+        <label><!-- NPSP Default --></label>
+        <name>NPSP_Default</name>
+    </recordTypes>
+    <webLinks>
+        <label><!-- DeliveryStatus --></label>
+        <name>DeliveryStatus</name>
+    </webLinks>
     <webLinks>
         <label>שלח אישור בדואר אלקטרוני</label>
         <name>Email_Acknowledgment</name>
@@ -399,4 +476,4 @@
         <label>רענן שם</label>
         <name>Refresh_Name</name>
     </webLinks>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>
