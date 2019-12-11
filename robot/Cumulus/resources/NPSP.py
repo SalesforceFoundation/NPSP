@@ -1244,28 +1244,45 @@ class NPSP(SalesforceRobotLibraryBase):
         self.select_row(value)
         self.selenium.click_link("Delete")
         self.wait_until_url_contains("/list")
-        
+    
+    @capture_screenshot_on_error    
     def populate_modal_form(self,**kwargs):
-        """"""
+        """Populates modal form with the field-value pairs 
+        supported keys are any input, textarea, lookup, checkbox, date and dropdown fields"""
         
         for key, value in kwargs.items():
-            locator = npsp_lex_locators["modal-form"][label].format(key)
+            locator = npsp_lex_locators["modal-form"]["label"].format(key)
             if self.check_if_element_exists(locator):
-                classname=self.selenium.get_webelement(locator).getAttribute("class")
-                print(classname)
-                if "Lookup" in classname:
-                    self.salesforce.populate_lookup_field(key,value)
-                elif "Select" in classname:
-                    self.select_value_from_dropdown(key,value)
-                elif "Checkbox" in classname:
-                    self.select_lightning_checkbox(key) 
-                elif "Date" in classname:
-                    self.pick_date(value)
-                elif "uiInput--default" in classname:
-                    try :
-                        self.salesforce.populate_field(key,value)
-                    except Exception :
-                        self.search_field_by_value(key,value)    
+                ele=self.selenium.get_webelements(locator)
+                for e in ele:
+                    classname=e.get_attribute("class")
+#                     print("key is {} and class is {}".format(key,classname))
+                    if "Lookup" in classname and "readonly" not in classname:
+                        self.salesforce.populate_lookup_field(key,value)
+                        print("Executed populate lookup field for {}".format(key))
+                    elif "Select" in classname and "readonly" not in classname:
+                        self.select_value_from_dropdown(key,value)
+                        print("Executed select value from dropdown for {}".format(key))
+                    elif "Checkbox" in classname and "readonly" not in classname:
+                        if value == "checked":
+                            locator = npsp_lex_locators["checkbox"]["model-checkbox"].format(key)
+                            self.selenium.get_webelement(locator).click() 
+                    elif "Date" in classname and "readonly" not in classname:
+                        self.open_date_picker(key)
+                        self.pick_date(value)
+                        print("Executed open date picker and pick date for {}".format(key))
+                    else:
+                        try :
+                            self.search_field_by_value(key,value)
+                            print("Executed search field by value for {}".format(key))
+                        except Exception :
+                            try :
+                                self.salesforce.populate_field(key,value)
+                                print("Executed populate field for {}".format(key))
+                                   
+                            except Exception:
+                                print ("class name for key {} did not match with field type supported by this keyword".format(key))
+                                     
             else:
                 raise Exception("Locator for {} is not found on the page".format(key))   
             

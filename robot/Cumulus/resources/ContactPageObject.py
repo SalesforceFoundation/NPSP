@@ -16,23 +16,7 @@ class ContactListingPage(ListingPage):
     @property
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
-
-
-    def populate_contact_form(self, **kwargs):
-        """Populates contact form with the field-value pairs
-           supported keys are any Primary Address Type, key containing Mailing, any input or textarea field 
-        """
-        for key, value in kwargs.items():
-            if key == "Primary Address Type":
-                self.npsp.select_value_from_dropdown(key,value)
-                
-            elif "Mailing" in key:
-                self.npsp.search_field_by_value(key,value)
-                
-            else:
-                locator = npsp_lex_locators["object"]["field"].format(key)
-                self.salesforce._populate_field(locator, value)    
-
+   
     def click_delete_account_button(self):
         """Clicks on Delete Account button inside the iframe"""
         self.npsp.wait_until_url_contains("/delete")

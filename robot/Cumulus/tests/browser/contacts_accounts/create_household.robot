@@ -36,7 +36,7 @@ Create Household With Name Only
     Go To Page                            Listing                               Contact
     Click Object Button                   New
     Wait For Modal                        New                                   Contact
-    Populate Form
+    Populate Modal Form
     ...                                   First Name=${first_name}
     ...                                   Last Name=${last_name}
     Click Modal Button                    Save
@@ -61,14 +61,14 @@ Create Household With additional details
     Go To Page                            Listing                             Contact
     Click Object Button                   New
     Wait For Modal                        New                                 Contact
-    Populate Contact Form
+    Populate Modal Form
     ...                                   First Name=${first_name1}
     ...                                   Last Name=${last_name1}
     ...                                   Work Email=skristem@salesforce.com
     Click Modal Button                    Save & New
     
     # Create a contact with name and address  
-    Populate Contact Form
+    Populate Modal Form
     ...                                   First Name=${first_name2}
     ...                                   Last Name=${last_name2}
     ...                                   Primary Address Type=Work
@@ -77,6 +77,7 @@ Create Household With additional details
     ...                                   Mailing Zip/Postal Code=95320
     ...                                   Mailing State/Province=CA
     ...                                   Mailing Country=USA
+
     Click Modal Button                    Save
     Wait Until Modal Is Closed
     Current Page Should Be                Details                               Contact

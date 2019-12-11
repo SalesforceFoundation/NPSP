@@ -18,11 +18,12 @@ Create Organization Foundation
     Click Object Button                    New
     Select Record Type                     Organization
     Wait For Modal                         New                                Account                                     expected_heading=New Account: Organization
-    Populate Form
+    Populate Modal Form
     ...                                    Account Name=${account_name}
     ...                                    Phone=1234567
     ...                                    Billing Street=50 Fremont st
     #...                                   Description=Account created with Robot Automation
+    # Adding Press Keys as alternative until Bryan fixes Populate field
     ${loc}                                 Get NPSP Locator                   object.field                                Description
     Press Keys                             ${loc}                             Account created with Robot Automation 
     Click Modal Button                     Save

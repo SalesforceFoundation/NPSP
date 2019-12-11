@@ -37,7 +37,7 @@ Add New related Contact to Household With Different LastName
     Select Tab                              Related
     Click Related List Button               Contacts                                New
     Wait For Modal                          New                                     Contact
-    Populate Form
+    Populate Modal Form
     ...                                     First Name=${first_name}
     ...                                     Last Name=${last_name}
     ...                                     Work Email=${EMAIL2}
