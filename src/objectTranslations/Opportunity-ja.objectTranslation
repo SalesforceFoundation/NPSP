@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
-        <name>BDE_Entry_FS_v2</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- New BDE List v2 --></label>
-        <name>BDE_List_FS_v2</name>
-    </fieldSets>
-    <fields>
+   <fields>
         <help>受領確認の日付。</help>
         <label>受領確認日</label>
         <name>Acknowledgment_Date__c</name>
@@ -52,26 +44,6 @@
         <help>支援の質問が成功しなかった理由に関するメモ。</help>
         <label>不成立の理由</label>
         <name>Closed_Lost_Reason__c</name>
-    </fields>
-    <fields>
-        <label><!-- Current Generator(s) --></label>
-        <name>CurrentGenerators__c</name>
-    </fields>
-    <fields>
-        <label><!-- Delivery/Installation Status --></label>
-        <name>DeliveryInstallationStatus__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation><!-- Completed --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In progress</masterLabel>
-            <translation><!-- In progress --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yet to begin</masterLabel>
-            <translation><!-- Yet to begin --></translation>
-        </picklistValues>
     </fields>
     <fields>
         <help>選択すると、一部の支援個人の役割の自動化が無効になり、不正なデータや重複データが発生することがあります。詳細は、商品ドキュメントを参照してください。</help>
@@ -168,10 +140,6 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <label><!-- Main Competitor(s) --></label>
-        <name>MainCompetitors__c</name>
-    </fields>
-    <fields>
         <help>この支援をマッチングする会社の団体レコードに対する参照。</help>
         <label>マッチング支援の団体</label>
         <name>Matching_Gift_Account__c</name>
@@ -253,10 +221,6 @@
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
-        <label><!-- Order Number --></label>
-        <name>OrderNumber__c</name>
-    </fields>
-    <fields>
         <help>この助成金が以前の助成金の更新である場合、この項目を使用してこのレコードを以前のレコードに関連付けます。</help>
         <label>以前の助成金支援</label>
         <name>Previous_Grant_Opportunity__c</name>
@@ -292,10 +256,6 @@
         <help>要求している金額。この金額は、最終的に獲得する金額と異なる可能性があります。</help>
         <label>要求金額</label>
         <name>Requested_Amount__c</name>
-    </fields>
-    <fields>
-        <label><!-- Tracking Number --></label>
-        <name>TrackingNumber__c</name>
     </fields>
     <fields>
         <help>支援が個人に敬意を表して行われるのか、個人を追悼して行われるのかを示します。</help>
@@ -424,38 +384,6 @@
         <label>クイック更新</label>
         <name>Quick_Update</name>
     </quickActions>
-    <recordTypes>
-        <label><!-- Donation --></label>
-        <name>Donation</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Grant --></label>
-        <name>Grant</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- In-Kind Gift --></label>
-        <name>InKindGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Major Gift --></label>
-        <name>MajorGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Matching Gift --></label>
-        <name>MatchingGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Membership --></label>
-        <name>Membership</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- NPSP Default --></label>
-        <name>NPSP_Default</name>
-    </recordTypes>
-    <webLinks>
-        <label><!-- DeliveryStatus --></label>
-        <name>DeliveryStatus</name>
-    </webLinks>
     <webLinks>
         <label>メール受領確認</label>
         <name>Email_Acknowledgment</name>
@@ -476,4 +404,4 @@
         <label>名前の更新</label>
         <name>Refresh_Name</name>
     </webLinks>
-    </CustomObjectTranslation>
+</CustomObjectTranslation>

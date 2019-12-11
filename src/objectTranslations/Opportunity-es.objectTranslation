@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
-        <name>BDE_Entry_FS_v2</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- New BDE List v2 --></label>
-        <name>BDE_List_FS_v2</name>
-    </fieldSets>
     <fields>
         <help>Fecha de acuse de recibo</help>
         <label>Fecha de acuse de recibo</label>
@@ -52,26 +44,6 @@
         <help>Notas sobre el motivo por el que la petición de la donación no fue satisfactoria.</help>
         <label>Motivo de cerrada perdida</label>
         <name>Closed_Lost_Reason__c</name>
-    </fields>
-    <fields>
-        <label><!-- Current Generator(s) --></label>
-        <name>CurrentGenerators__c</name>
-    </fields>
-    <fields>
-        <label><!-- Delivery/Installation Status --></label>
-        <name>DeliveryInstallationStatus__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation><!-- Completed --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In progress</masterLabel>
-            <translation><!-- In progress --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yet to begin</masterLabel>
-            <translation><!-- Yet to begin --></translation>
-        </picklistValues>
     </fields>
     <fields>
         <help>Cuando se selecciona, deshabilita varios aspectos de la automatización de funciones de contacto de oportunidades de NPSP, dando como resultado datos potencialmente incorrectos o duplicados. Consulte la documentación del producto para obtener más detalles.</help>
@@ -168,10 +140,6 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <label><!-- Main Competitor(s) --></label>
-        <name>MainCompetitors__c</name>
-    </fields>
-    <fields>
         <help>Búsqueda del registro de cuenta de la empresa que iguala esta donación.</help>
         <label>Cuenta de regalo igualado</label>
         <name>Matching_Gift_Account__c</name>
@@ -253,10 +221,6 @@
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
-        <label><!-- Order Number --></label>
-        <name>OrderNumber__c</name>
-    </fields>
-    <fields>
         <help>Si esta beca es una renovación de una beca anterior, use este campo para relacionar este registro con la beca anterior.</help>
         <label>Oportunidad de beca/regalo previa</label>
         <name>Previous_Grant_Opportunity__c</name>
@@ -292,10 +256,6 @@
         <help>El importe que se solicita. Este número puede ser diferente al importe otorgado al final.</help>
         <label>Importe solicitado</label>
         <name>Requested_Amount__c</name>
-    </fields>
-    <fields>
-        <label><!-- Tracking Number --></label>
-        <name>TrackingNumber__c</name>
     </fields>
     <fields>
         <help>Indica si la donación es en honor o memoria de una persona,</help>
@@ -424,38 +384,6 @@
         <label>Actualización rápida</label>
         <name>Quick_Update</name>
     </quickActions>
-    <recordTypes>
-        <label><!-- Donation --></label>
-        <name>Donation</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Grant --></label>
-        <name>Grant</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- In-Kind Gift --></label>
-        <name>InKindGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Major Gift --></label>
-        <name>MajorGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Matching Gift --></label>
-        <name>MatchingGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Membership --></label>
-        <name>Membership</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- NPSP Default --></label>
-        <name>NPSP_Default</name>
-    </recordTypes>
-    <webLinks>
-        <label><!-- DeliveryStatus --></label>
-        <name>DeliveryStatus</name>
-    </webLinks>
     <webLinks>
         <label>Acuse de recibo por correo electrónico</label>
         <name>Email_Acknowledgment</name>
@@ -476,4 +404,4 @@
         <label>Actualizar nombre</label>
         <name>Refresh_Name</name>
     </webLinks>
-    </CustomObjectTranslation>
+</CustomObjectTranslation>

@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
     <fields>
         <help>Klicken Sie oben auf der Seite &quot;Adresse&quot; auf die Schaltfläche &quot;Adresse überprüfen&quot;, falls diese Adresse überprüft werden muss. Weitere Informationen zur Adressenüberprüfung finden Sie in der Hilfedokumentation im &quot;Power of Us&quot;-Hub.</help>
         <label>Adressenüberprüfungsstatus</label>
@@ -70,10 +58,6 @@
         <name>HHId__c</name>
     </fields>
     <fields>
-        <label><!-- Languages --></label>
-        <name>Languages__c</name>
-    </fields>
-    <fields>
         <help>Der Betrag des höchsten Soft Credit dieses Kontakts</help>
         <label>Betrag des höchsten Soft Credit</label>
         <name>Largest_Soft_Credit_Amount__c</name>
@@ -92,22 +76,6 @@
         <help>Das Datum des letzten Soft Credit</help>
         <label>Datum des letzten Soft Credit</label>
         <name>Last_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <label><!-- Level --></label>
-        <name>Level__c</name>
-        <picklistValues>
-            <masterLabel>Primary</masterLabel>
-            <translation><!-- Primary --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Secondary</masterLabel>
-            <translation><!-- Secondary --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Tertiary</masterLabel>
-            <translation><!-- Tertiary --></translation>
-        </picklistValues>
     </fields>
     <fields>
         <help>Die Anzahl der Soft Credits, die in den letzten Tagen abgeschlossen wurden, wie in den NPSP-Einstellungen definiert</help>

@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
     <fields>
         <help>האצווה שממנה הפניה זו נוצרה.</help>
         <label>אצווה</label>
@@ -34,44 +26,4 @@
         <label>רחוב החברה</label>
         <name>CompanyStreet__c</name>
     </fields>
-    <fields>
-        <label><!-- Current Generator(s) --></label>
-        <name>CurrentGenerators__c</name>
-    </fields>
-    <fields>
-        <label><!-- Number of Locations --></label>
-        <name>NumberofLocations__c</name>
-    </fields>
-    <fields>
-        <label><!-- Primary --></label>
-        <name>Primary__c</name>
-        <picklistValues>
-            <masterLabel>No</masterLabel>
-            <translation><!-- No --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yes</masterLabel>
-            <translation><!-- Yes --></translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label><!-- Product Interest --></label>
-        <name>ProductInterest__c</name>
-        <picklistValues>
-            <masterLabel>GC1000 series</masterLabel>
-            <translation><!-- GC1000 series --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>GC3000 series</masterLabel>
-            <translation><!-- GC3000 series --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>GC5000 series</masterLabel>
-            <translation><!-- GC5000 series --></translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label><!-- SIC Code --></label>
-        <name>SICCode__c</name>
-    </fields>
-    </CustomObjectTranslation>
+</CustomObjectTranslation>

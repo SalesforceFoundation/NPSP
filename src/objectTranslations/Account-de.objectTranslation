@@ -13,38 +13,10 @@
         <name>Manage_Household_Custom</name>
     </fieldSets>
     <fields>
-        <label><!-- Active --></label>
-        <name>Active__c</name>
-        <picklistValues>
-            <masterLabel>No</masterLabel>
-            <translation><!-- No --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yes</masterLabel>
-            <translation><!-- Yes --></translation>
-        </picklistValues>
-    </fields>
-    <fields>
         <help>Der Batch, in dem dieser Account erstellt wurde.</help>
         <label>Batch</label>
         <name>Batch__c</name>
         <relationshipLabel>Accounts</relationshipLabel>
-    </fields>
-    <fields>
-        <label><!-- Customer Priority --></label>
-        <name>CustomerPriority__c</name>
-        <picklistValues>
-            <masterLabel>High</masterLabel>
-            <translation><!-- High --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Low</masterLabel>
-            <translation><!-- Low --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Medium</masterLabel>
-            <translation><!-- Medium --></translation>
-        </picklistValues>
     </fields>
     <fields>
         <help>Die allgemeinen Programmbereiche, die diese Organisation finanziert.</help>
@@ -154,54 +126,6 @@
         <label>Anzahl der Haushalt-Mitglieder</label>
         <name>Number_of_Household_Members__c</name>
     </fields>
-    <fields>
-        <label><!-- Number of Locations --></label>
-        <name>NumberofLocations__c</name>
-    </fields>
-    <fields>
-        <label><!-- SLA Expiration Date --></label>
-        <name>SLAExpirationDate__c</name>
-    </fields>
-    <fields>
-        <label><!-- SLA Serial Number --></label>
-        <name>SLASerialNumber__c</name>
-    </fields>
-    <fields>
-        <label><!-- SLA --></label>
-        <name>SLA__c</name>
-        <picklistValues>
-            <masterLabel>Bronze</masterLabel>
-            <translation><!-- Bronze --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Gold</masterLabel>
-            <translation><!-- Gold --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Platinum</masterLabel>
-            <translation><!-- Platinum --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Silver</masterLabel>
-            <translation><!-- Silver --></translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label><!-- Upsell Opportunity --></label>
-        <name>UpsellOpportunity__c</name>
-        <picklistValues>
-            <masterLabel>Maybe</masterLabel>
-            <translation><!-- Maybe --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No</masterLabel>
-            <translation><!-- No --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yes</masterLabel>
-            <translation><!-- Yes --></translation>
-        </picklistValues>
-    </fields>
     <layouts>
         <layout>Household Layout</layout>
         <sections>
@@ -292,20 +216,6 @@
         <label>Schnelle Aktualisierung</label>
         <name>Quick_Organization_Update</name>
     </quickActions>
-    <recordTypes>
-        <description><!-- An Account representing a Household containing one or more individuals --></description>
-        <label><!-- Household Account --></label>
-        <name>HH_Account</name>
-    </recordTypes>
-    <recordTypes>
-        <description><!-- An Account representing an organization --></description>
-        <label><!-- Organization --></label>
-        <name>Organization</name>
-    </recordTypes>
-    <webLinks>
-        <label><!-- Billing --></label>
-        <name>Billing</name>
-    </webLinks>
     <webLinks>
         <label>Haushalt verwalten</label>
         <name>Manage_Household</name>

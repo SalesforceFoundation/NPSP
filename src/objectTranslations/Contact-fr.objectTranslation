@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
     <fields>
         <help>Le statut de vérification de l’adresse actuelle. Si cette adresse doit être vérifiée, accédez à l’enregistrement de l’adresse actuelle et cliquez sur « Vérifier l’adresse ». Pour plus d’informations, consultez la documentation dans le hub Power of Us.</help>
         <label>Statut de vérification d’adresse</label>
@@ -70,10 +58,6 @@
         <name>HHId__c</name>
     </fields>
     <fields>
-        <label><!-- Languages --></label>
-        <name>Languages__c</name>
-    </fields>
-    <fields>
         <help>Le montant du crédit indirect le plus élevé de ce contact.</help>
         <label>Montant le plus élevé du crédit indirect</label>
         <name>Largest_Soft_Credit_Amount__c</name>
@@ -92,22 +76,6 @@
         <help>La date du crédit indirect le plus récent de ce contact.</help>
         <label>Date du dernier crédit indirect</label>
         <name>Last_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <label><!-- Level --></label>
-        <name>Level__c</name>
-        <picklistValues>
-            <masterLabel>Primary</masterLabel>
-            <translation><!-- Primary --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Secondary</masterLabel>
-            <translation><!-- Secondary --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Tertiary</masterLabel>
-            <translation><!-- Tertiary --></translation>
-        </picklistValues>
     </fields>
     <fields>
         <help>Le nombre de crédits indirects fermés aux cours des derniers jours tels que définis dans la configuration de NPSP.</help>

@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
     <fields>
         <help>De verificatiestatus van het huidige Adres. Als dit Adres verificatie vereist, gaat u naar de huidige Adresrecord en selecteert u Adres verifiëren. Raadpleeg de Power of Us Hub-documentatie voor meer informatie.</help>
         <label>Status van Adresverificatie</label>
@@ -70,10 +58,6 @@
         <name>HHId__c</name>
     </fields>
     <fields>
-        <label><!-- Languages --></label>
-        <name>Languages__c</name>
-    </fields>
-    <fields>
         <help>Het bedrag van de grootste soft credit van deze Contactpersoon.</help>
         <label>Bedrag van Grootste Soft Credit</label>
         <name>Largest_Soft_Credit_Amount__c</name>
@@ -92,22 +76,6 @@
         <help>De datum van de meest recente soft credit van deze Contactpersoon.</help>
         <label>Datum van Laatste Soft Credit</label>
         <name>Last_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <label><!-- Level --></label>
-        <name>Level__c</name>
-        <picklistValues>
-            <masterLabel>Primary</masterLabel>
-            <translation><!-- Primary --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Secondary</masterLabel>
-            <translation><!-- Secondary --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Tertiary</masterLabel>
-            <translation><!-- Tertiary --></translation>
-        </picklistValues>
     </fields>
     <fields>
         <help>Het aantal aan deze Contactpersoon toegekende soft credits die in de laatste N dagen zijn gesloten. De waarde van N is ingesteld in NPSP-instellingen | Donaties | Donorstatistieken.</help>

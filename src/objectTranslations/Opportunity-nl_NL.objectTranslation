@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
-        <name>BDE_Entry_FS_v2</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- New BDE List v2 --></label>
-        <name>BDE_List_FS_v2</name>
-    </fieldSets>
     <fields>
         <help>De datum waarop u deze Opportunity hebt erkend.</help>
         <label>Datum van Erkenning</label>
@@ -52,26 +44,6 @@
         <help>Notities over waarom de vraag naar donatie niet succesvol was.</help>
         <label>Reden voor Gesloten Verloren</label>
         <name>Closed_Lost_Reason__c</name>
-    </fields>
-    <fields>
-        <label><!-- Current Generator(s) --></label>
-        <name>CurrentGenerators__c</name>
-    </fields>
-    <fields>
-        <label><!-- Delivery/Installation Status --></label>
-        <name>DeliveryInstallationStatus__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation><!-- Completed --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In progress</masterLabel>
-            <translation><!-- In progress --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yet to begin</masterLabel>
-            <translation><!-- Yet to begin --></translation>
-        </picklistValues>
     </fields>
     <fields>
         <help>Indien aangevinkt, schakelt dit veld verscheidene aspecten van de automatisering van NPSP-Opportunitycontactpersoonrol uit, wat mogelijk leidt tot onjuiste gegevens of duplicaatgegevens. Raadpleeg de productdocumentatie voor meer informatie.</help>
@@ -168,10 +140,6 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <label><!-- Main Competitor(s) --></label>
-        <name>MainCompetitors__c</name>
-    </fields>
-    <fields>
         <help>Opzoeking van de Accountrecord van het bedrijf dat met deze Donatie zal overeenkomen.</help>
         <label>Overeenkomende Giftaccount</label>
         <name>Matching_Gift_Account__c</name>
@@ -253,10 +221,6 @@
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
-        <label><!-- Order Number --></label>
-        <name>OrderNumber__c</name>
-    </fields>
-    <fields>
         <help>Als deze Subsidie een verlenging is van een vorige Subsidie, gebruikt u dit veld om deze record te relateren aan de vorige Subsidie.</help>
         <label>Vorige Subsidie/Giftopportunity</label>
         <name>Previous_Grant_Opportunity__c</name>
@@ -292,10 +256,6 @@
         <help>Het bedrag dat u vraagt. Dit cijfer kan afwijken van het uiteindelijk toegekende bedrag.</help>
         <label>Aangevraagd Bedrag</label>
         <name>Requested_Amount__c</name>
-    </fields>
-    <fields>
-        <label><!-- Tracking Number --></label>
-        <name>TrackingNumber__c</name>
     </fields>
     <fields>
         <help>Geeft aan of de Donatie een eerbetoon is aan een individu of ter nagedachtenis is van een individu.</help>
@@ -424,38 +384,6 @@
         <label>Snelle Update</label>
         <name>Quick_Update</name>
     </quickActions>
-    <recordTypes>
-        <label><!-- Donation --></label>
-        <name>Donation</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Grant --></label>
-        <name>Grant</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- In-Kind Gift --></label>
-        <name>InKindGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Major Gift --></label>
-        <name>MajorGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Matching Gift --></label>
-        <name>MatchingGift</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- Membership --></label>
-        <name>Membership</name>
-    </recordTypes>
-    <recordTypes>
-        <label><!-- NPSP Default --></label>
-        <name>NPSP_Default</name>
-    </recordTypes>
-    <webLinks>
-        <label><!-- DeliveryStatus --></label>
-        <name>DeliveryStatus</name>
-    </webLinks>
     <webLinks>
         <label>Erkenning e-mailen</label>
         <name>Email_Acknowledgment</name>
@@ -476,4 +404,4 @@
         <label>Naam opnieuw laden</label>
         <name>Refresh_Name</name>
     </webLinks>
-    </CustomObjectTranslation>
+</CustomObjectTranslation>
