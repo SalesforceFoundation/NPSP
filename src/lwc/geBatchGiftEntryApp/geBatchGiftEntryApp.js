@@ -1,4 +1,4 @@
-import {LightningElement, api} from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 import {setAccountId as setServiceAccountId} from 'c/geFormService';
 import GeFormService from 'c/geFormService';
 import ACCOUNT_1_IMPORTED_FIELD from
@@ -9,9 +9,7 @@ import NPSP_DATA_IMPORT_BATCH_FIELD
 
 export default class GeBatchGiftEntryApp extends LightningElement {
     @api recordId;
-
-    // @api accountId;
-    @api accountId = '0011k00000W4UMyAAN';
+    @track accountId;
 
     //method used for testing until form has Account/Contact Lookups or is ready to be loaded
     // with an Account Id
@@ -20,16 +18,6 @@ export default class GeBatchGiftEntryApp extends LightningElement {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         table.setAccountId(event.target.value);
         setServiceAccountId(event.target.value);
-    }
-
-    connectedCallback() {
-        //Remove after dev::
-        window.setTimeout(() => {
-            const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-            table.setAccountId(this.accountId);
-            setServiceAccountId(this.accountId);
-        }, 2000);
-        //END Remove after dev::
     }
 
     handleSubmit(event) {
