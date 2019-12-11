@@ -43,6 +43,7 @@ npsp_lex_locators={
     'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'flexipage-popup':"//div[contains(@class, 'slds-is-open')][contains(@class, 'slds-combobox')]",
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
+    "toast-msg":"//span[@class='toastMessage slds-text-heading--small forceActionsText']",
     "toast-close":"//button[contains(@class,'toastClose')]",
     'frame_new':'//iframe[contains(@name, "{}") or contains(@title, "{}")]',
     'frame':'//iframe[@title= "{}"]',

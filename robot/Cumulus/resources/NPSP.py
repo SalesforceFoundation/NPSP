@@ -1265,4 +1265,15 @@ class NPSP(SalesforceRobotLibraryBase):
                                      
             else:
                 raise Exception("Locator for {} is not found on the page".format(key))   
-            
+     
+    def verify_toast_message(self,value):       
+        locator=npsp_lex_locators["toast-msg"]
+        ele=self.selenium.get_webelements(locator)
+        found=False
+        for e in ele:
+            msg=e.text
+            if msg == value:
+                found=True
+                print("Toast message verified")
+                break
+        assert found, "Expected Toast message not found on page"

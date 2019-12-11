@@ -27,6 +27,7 @@ Create Organization Foundation
     ${loc}                                 Get NPSP Locator                   object.field                                Description
     Press Keys                             ${loc}                             Account created with Robot Automation 
     Click Modal Button                     Save
+    Verify Toast Message                   Account "${account_name}" was created.
     Wait Until Modal Is Closed
     Current Page Should Be                 Details                            Account
     ${account_id}                          Save Session Record For Deletion   Account
