@@ -1812,6 +1812,18 @@
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
+        <fullName>New_Gift</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>New Gift</masterLabel>
+        <openType>sidebar</openType>
+        <url>/lightning/n/{!$Setup.npsp__Package_Settings__c.npsp__Namespace_Prefix__c}GE_Form_Renderer?c__recordId={!Contact.Id}</url>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
         <fullName>Recalculate_Rollups</fullName>
         <availability>online</availability>
         <displayType>button</displayType>

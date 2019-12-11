@@ -1,12 +1,19 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+import { getRecord } from 'lightning/uiRecordApi';
+
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import { showToast } from 'c/utilTemplateBuilder';
+import { showToast, getQueryParameters } from 'c/utilTemplateBuilder';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
+    @api recordId;
+    @track record;
+    @track error;
+
+
     @track sections = [];
     @track ready = false;
     @track name = '';
@@ -16,8 +23,25 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api showSpinner = false;
     label = { messageLoading, geSave, geCancel };
 
+    @wire(getRecord, { recordId: '0035400000Ob9VEAAZ'})
+    wiredContact({ error, data }) {
+        if (data) {
+            this.record = data;
+            this.error = undefined;
+        } else if (error) {
+            this.error = error;
+            this.record = undefined;
+        }
+        alert('wired = ' + this.record);
+    }
+
     connectedCallback() {
-        GeFormService.getFormTemplate().then(response => {
+        // check if there is a record id in the url
+        this.recordId = getQueryParameters().c__recordId;
+        alert('query param = ' + this.recordId);
+        
+
+        GeFormService.getFormTemplate(this.recordId).then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
                 const { formTemplate } = response;
