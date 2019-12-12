@@ -4472,7 +4472,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Form Fields sidebar help text</shortDescription>
+        <shortDescription>Link to read additional details</shortDescription>
         <value>Read More</value>
     </labels>
     <labels>
