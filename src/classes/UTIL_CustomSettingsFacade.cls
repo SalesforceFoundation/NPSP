@@ -102,8 +102,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     */
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
         if(Test.isRunningTest() && contactsSettings == null) {
-        	contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
-        	configContactsSettings(contactsSettings);
+            contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
+            configContactsSettings(contactsSettings);
         } else if (contactsSettings == null) {
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
             if(contactsSettings.Id == null)
@@ -139,8 +139,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
 
         if (Test.isRunningTest() && recurringDonationsSettings == null) {
-        	recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
-        	configRecurringDonationsSettings(recurringDonationsSettings);
+            recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
+            configRecurringDonationsSettings(recurringDonationsSettings);
 
         } else if (recurringDonationsSettings == null) {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
@@ -522,7 +522,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         String oldProcessor = '';
         //modified to check again the Id instead of the object
         //get the model they used to be in
-        Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c;
+        Schema.DescribeFieldResult F = Schema.SObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c;
         List<Schema.PicklistEntry> P = F.getPicklistValues();
 
         for(Schema.PicklistEntry pe : P){
@@ -584,6 +584,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Enable_Update_Check__c = true;
             settings.npe03__Maximum_Donations__c = 50;
             settings.Recurring_Donation_Batch_Size__c = 50;
+            settings.DataMigrationBatchSize__c = 25;
             settings.npe03__Opportunity_Forecast_Months__c = 12;
             settings.npe03__Update_Check_Interval__c = 90;
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
@@ -591,7 +592,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;
 
-            List<RecordType> oppRecordTypes = [select id from RecordType where sobjecttype = 'Opportunity' and IsActive = true];
+            List<RecordType> oppRecordTypes = [select id from RecordType where SObjectType = 'Opportunity' and IsActive = true];
             if (oppRecordTypes.size() > 0) {
                 settings.npe03__Record_Type__c = oppRecordTypes[0].id;
             }
@@ -843,6 +844,9 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
+        recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
+        recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
+        recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
@@ -1009,5 +1013,27 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static void setDataImportSettings(Data_Import_Settings__c dis) {
         // New default settings for the Batch Data Import engine
         dataImportSettings = dis;
+    }
+
+    /**
+    * @description Used to configure default Advanced Mapping settings in tests.
+    */
+    @TestVisible
+    private static void enableAdvancedMapping(){
+        Data_Import_Settings__c dis = getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        setDataImportSettings(dis);
+    }
+
+    /**
+    * @description Used to configure default Help Text Mapping settings in tests.
+    */
+    @TestVisible
+    private static void enableHelpTextMapping(){
+        Data_Import_Settings__c dis = getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_HELP_TEXT;
+        setDataImportSettings(dis);
     }
 }

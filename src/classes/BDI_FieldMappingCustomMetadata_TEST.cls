@@ -61,7 +61,7 @@ private class BDI_FieldMappingCustomMetadata_TEST {
         System.assert(accountFieldMapping.size() >= 8);
 
         String namespace = UTIL_Namespace.getNamespace();
-        String sampleField = 'npsp__Account1_City__c';
+        String sampleField = 'npsp__account1_city__c';
         
         if (UTIL_Namespace.shouldAlignNamespace) {
             sampleField = UTIL_Namespace.alignSchemaNSWithEnvironment(sampleField);
