@@ -12,28 +12,14 @@ export default class GeFormFieldLookup extends LightningElement {
     @api required;
     @api id; // unique identifier for this field, used mainly for accessibility
 
+
     @track options = [];
-    @track objectInfo;
     @track targetObjectInfo;
-    @track targetObjectApiName;
     @track value;
-
-
-    /**
-     * Retrieve information about the object the lookup field is defined on.
-     * @param response
-     */
-    @wire(getObjectInfo, { objectApiName: '$objectApiName' })
-    wiredObjectInfo(response) {
-        if(response.data) {
-            this.objectInfo = response;
-            this.targetObjectApiName = this.fieldInfo.referenceToInfos[0].apiName;
-        }
-    }
+    @track targetObjectApiName;
 
     /**
      * Retrieve information about the object the lookup points to.
-     * @param response
      */
     @wire(getObjectInfo, { objectApiName: '$targetObjectApiName' })
     wiredTargetObjectInfo(response) {
@@ -62,9 +48,22 @@ export default class GeFormFieldLookup extends LightningElement {
         this.dispatchEvent(new CustomEvent('change', { detail: event.detail }));
     }
 
+    @api
+    set objectDescribeInfo(newVal) {
+        this._objectDescribeInfo = newVal;
+        if(typeof newVal !== 'undefined') {
+            // needed for @wire reactive property
+            this.targetObjectApiName = this.fieldInfo.referenceToInfos[0].apiName;
+        }
+    }
+
+    get objectDescribeInfo() {
+        return this._objectDescribeInfo;
+    }
+
     get fieldInfo() {
-        if(this.objectInfo && this.objectInfo.data) {
-            return this.objectInfo.data.fields[this.fieldApiName];
+        if(this.objectDescribeInfo && this.objectDescribeInfo) {
+            return this.objectDescribeInfo.fields[this.fieldApiName];
         }
     }
 
