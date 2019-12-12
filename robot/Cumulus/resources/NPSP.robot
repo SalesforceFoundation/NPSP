@@ -166,7 +166,7 @@ New Contact for HouseHold
     Wait Until Modal Is Closed
     Go To Object Home         Contact
     Click Link                link= ${first_name} ${last_name}
-    Wait Until Url Contains    /view
+    Wait Until Location Contains    /view
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
         
@@ -222,7 +222,7 @@ Create Engagement Plan
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
     Click Button    Save
-    Wait Until Url Contains    /view
+    Wait Until Location Contains    /view
     ${ns} =  Get NPSP Namespace Prefix
     Save Current Record ID For Deletion    ${ns}Engagement_Plan_Template__c
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}

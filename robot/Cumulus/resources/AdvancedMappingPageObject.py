@@ -12,9 +12,9 @@ class AdvancedMappingPage(BasePage, BaseNPSPPage):
         """
         Verifies that current page is BDI Manage Advanced Mapping page
         """
-        self.npsp.wait_until_url_contains("BDI_ManageAdvancedMapping")
+        self.selenium.wait_until_location_contains("BDI_ManageAdvancedMapping", timeout=60, 
+                                                   message="Manage Advanced Mapping page did not open in 1 min")
         
-    
     def create_new_field_mapping(self,src_fld,tgt_fld):
         """Click on Create New Field Mapping button on the page 
            select 'src_fld' arg in Source Field Label box

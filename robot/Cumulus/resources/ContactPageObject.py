@@ -12,7 +12,7 @@ class ContactListingPage(ListingPage, BaseNPSPPage):
    
     def click_delete_account_button(self):
         """Clicks on Delete Account button inside the iframe"""
-        self.npsp.wait_until_url_contains("/delete")
+        self.selenium.wait_until_location_contains("/delete", message="Account delete page did not load in 30 seconds")
         self.npsp.select_frame_and_click_element("vfFrameId","button","Delete Account")    
 
 @pageobject("Details", "Contact")
@@ -23,7 +23,8 @@ class ContactDetailPage(DetailPage, BaseNPSPPage):
         """ Verify we are on the Contact detail page
             by verifying that the url contains '/view'
         """
-        self.npsp.wait_until_url_contains("/view")
+        self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail page did not load in 1 min")
+        self.selenium.location_should_contain("/lightning/r/Contact/",message="Current page is not a Contact record detail view")
         
 
     def update_field_value(self,field_name,old_value,new_value):

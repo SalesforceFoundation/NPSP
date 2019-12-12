@@ -97,7 +97,8 @@ class NPSP(SalesforceRobotLibraryBase):
         button = self.selenium.get_webelement(locator)
         button.click()
         time.sleep(5)
-        
+    
+    @capture_screenshot_on_error    
     def select_tab(self, title):
         """ Switch between different tabs on a record page like Related, Details, News, Activity and Chatter
             Pass title of the tab
@@ -1152,20 +1153,20 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.driver.execute_script('arguments[0].click()', element)   
             
         
-    def wait_until_url_contains(self,exp_text):
-        """Waits for maximum of 90sec for current url to contain the exp_text"""
-        self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
-        url=self.selenium.get_location()
-        i=0
-        for i in range(10):
-            if i == 9:
-                raise AssertionError("Failed to find an url containing {} in 90 seconds".format(exp_text))
-            if exp_text in url:
-                break
-            else:
-                time.sleep(10)
-                url=self.selenium.get_location()
-                i += 1
+#     def wait_until_url_contains(self,exp_text):
+#         """Waits for maximum of 90sec for current url to contain the exp_text"""
+#         self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
+#         url=self.selenium.get_location()
+#         i=0
+#         for i in range(10):
+#             if i == 9:
+#                 raise AssertionError("Failed to find an url containing {} in 90 seconds".format(exp_text))
+#             if exp_text in url:
+#                 break
+#             else:
+#                 time.sleep(10)
+#                 url=self.selenium.get_location()
+#                 i += 1
    
      
     @capture_screenshot_on_error    
@@ -1222,7 +1223,7 @@ class NPSP(SalesforceRobotLibraryBase):
            and wait till the focus is back on the listings page."""
         self.select_row(value)
         self.selenium.click_link("Delete")
-        self.wait_until_url_contains("/list")
+        self.selenium.wait_until_location_contains("/list")
     
     @capture_screenshot_on_error    
     def populate_modal_form(self,**kwargs):

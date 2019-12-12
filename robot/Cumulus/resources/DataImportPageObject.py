@@ -12,7 +12,8 @@ class DataImportPage(ListingPage, BaseNPSPPage):
         """
         Waits for the current page to be a Data Import list view
         """
-        self.npsp.wait_until_url_contains("/list")
+        self.selenium.wait_until_location_contains("/list",timeout=60, message="Records list view did not load in 1 min")
+        self.selenium.location_should_contain("DataImport__c",message="Current page is not a DataImport List view")
             
     def click(self,btn_name):
         """Clicks button with specified name on Data Import Page"""
@@ -27,7 +28,7 @@ class DataImportPage(ListingPage, BaseNPSPPage):
     def click_close_button(self):
         """Click on close button on DI processing page and waits for DI object homepage to load"""
         self.npsp.click_button_with_value("Close")
-        self.npsp.wait_until_url_contains("DataImport__c")      
+        self.selenium.wait_until_location_contains("DataImport__c")      
         
     def open_data_import_record(self,di_name): 
         """Clicks on the specified data import record to open the record""" 
