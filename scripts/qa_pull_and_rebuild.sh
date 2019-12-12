@@ -21,21 +21,21 @@ read org_name
 git checkout -- .
 
 # Switch to desired branch
-git checkout branch_name
+git checkout $branch_name
 
 # Pull most recent changes
 git pull
 
 # Delete exisiting scratch org if one exists with provided name
-cci org scratch_delete org_name
+cci org scratch_delete $org_name
 
 # Rebuild org with qa flow
-cci flow run qa_org --org org_name
+cci flow run qa_org --org $org_name
 
 # Mark org as default
-cci org default org_name
+cci org default $org_name
 
 # Open newly created org
-cci org browser org_name
+cci org browser $org_name
 
 fi
