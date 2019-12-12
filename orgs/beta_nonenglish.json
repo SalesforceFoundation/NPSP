@@ -1,13 +1,20 @@
 {
   "orgName": "NPSP - Beta Test Org",
   "edition": "Developer",
-  "language": "ja",
+  "language": "es",
   "hasSampleData": "true",
   "settings": {
-    "orgPreferenceSettings": {
-      "chatterEnabled": true,
-      "notesReservedPref01": true,
-      "s1DesktopEnabled": true
+    "chatterSettings": {
+      "enableChatter": true
+    },
+    "apexSettings": {
+      "enableDisableParallelApexTesting": true
+    },
+    "enhancedNotesSettings": {
+      "enableEnhancedNotes": true
+    },
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
     }
   }
 }
