@@ -33,13 +33,22 @@
             </div>
             <!-- END INTRO TEXT AND TOGGLE -->
 
-            <!-- BEGIN HELP TEXT -->
+            <apex:outputPanel rendered="{! and(stgService.stgCRLP.Customizable_Rollups_Enabled__c, isRD2Enabled) }">
+                <div role="alert" class="slds-notify notify__content slds-media slds-text-body_small slds-m-top_small slds-m-bottom_small">
+                    <div class="slds-media__figure">
+                        <c:UTIL_SLDS_Icon icon="warning" iconCategory="utility" size="x-small" fillColor="orange" />
+                    </div>
+                    <div class="slds-media__body">
+                        <c:UTIL_HtmlOutput html="{!$Label.RD2_DisableCustomizableRollupWarning}" />
+                    </div>
+                </div>
+            </apex:outputPanel>
+
             <div class="slds-grid {!IF(!isPolling, '', 'slds-hide')}">
                 <p class="slds-text-body_small slds-m-top_x-small">
                     <c:UTIL_HtmlOutput html="{!$Label.stgHelpCustomizableRollupsEnable2}" hasLink="true" />
                 </p>
             </div>
-            <!-- END HELP TEXT -->
 
             <!-- BEGIN ENABLED OPTIONS -->
             <apex:outputPanel rendered="{! stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isPolling}">

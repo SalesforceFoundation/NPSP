@@ -89,6 +89,10 @@
 
             this.refreshEnable(component);
             this.refreshMetaDeploy(component);
+
+            // notify NPSP Settings page about enhanced Recurring Donation enablement
+            var event = $A.get("e.c:RD2_EnhancementEnabledEvent");
+            event.fire();
         });
 
         $A.enqueueAction(action);
