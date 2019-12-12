@@ -42,14 +42,9 @@ export default class GeBatchGiftEntryApp extends LightningElement {
             this.recordId, dataRow)
             .then(
                 dataImportModel => {
-                    const processedDataRow = dataImportModel.dataImportRows[0].record;
-                    processedDataRow.Id = dataImportModel.dataImportRows[0].record.Id;
-                    processedDataRow.donorName = dataImportModel.dataImportRows[0].donorName;
-                    processedDataRow.donorLink = dataImportModel.dataImportRows[0].donorLink;
-                    processedDataRow.matchedRecordLabel = dataImportModel.dataImportRows[0].matchedRecordLabel;
-                    processedDataRow.matchedRecordUrl = dataImportModel.dataImportRows[0].matchedRecordUrl;
-                    processedDataRow.errors = dataImportModel.dataImportRows[0].errors;
-                    table.upsertData(processedDataRow, 'Id');
+                    Object.assign(dataImportModel.dataImportRows[0],
+                        dataImportModel.dataImportRows[0].record);
+                    table.upsertData(dataImportModel.dataImportRows[0], 'Id');
                     event.detail.success(); //Re-enable the Save button
                 }
             )

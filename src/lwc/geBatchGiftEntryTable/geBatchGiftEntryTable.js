@@ -87,18 +87,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.setReady();
     }
 
-    //todo
-    // getData(dataImportRows){
-    //     return dataImportRows.map(row => {
-    //         const record = row.record;
-    //         record.donorLink = row.donorLink;
-    //         record.donorName = row.donorName;
-    //         record.matchedRecordLabel = row.matchedRecordLabel;
-    //         record.matchedRecordUrl = row.matchedRecordUrl;
-    //         record.errors = row.errors.join(', ');
-    //     });
-    // }
-
     @api
     handleSectionsRetrieved(sections) {
         this.initColumns(this.buildColumns(sections));
