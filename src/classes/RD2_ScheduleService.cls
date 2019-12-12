@@ -253,12 +253,12 @@ public without sharing class RD2_ScheduleService {
     private List<Installment> doVisualization(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
 
         List<Installment> installments = new List<Installment>();
-        currentDate = startDate;
-        List <RecurringDonationSchedule__c> filteredSchedules;
-
         if (schedules == null) {
             return installments;
         }
+
+        currentDate = startDate;
+        List <RecurringDonationSchedule__c> filteredSchedules;
 
         while (installments.size() < numInstallments) {
 
