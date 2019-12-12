@@ -32,21 +32,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     connectedCallback() {
         // check if there is a record id in the url
         this.recordId = getQueryParameters().c__recordId;
-
-        /*GeFormService.getFormTemplate(this.recordId).then(response => {
-            // read the template header info
-            if(response !== null && typeof response !== 'undefined') {
-                const { formTemplate } = response;
-                this.ready = true;
-                this.name = formTemplate.name;
-                this.description = formTemplate.description;
-                this.version = formTemplate.layout.version;
-                if (typeof formTemplate.layout !== 'undefined'
-                        && Array.isArray(formTemplate.layout.sections)) {
-                    this.sections = formTemplate.layout.sections;
-                }
-            } 
-        });*/
     }
 
     handleGetTemplate = async () => {
