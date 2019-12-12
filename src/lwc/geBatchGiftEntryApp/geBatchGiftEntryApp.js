@@ -6,6 +6,7 @@ import ACCOUNT_1_IMPORTED_FIELD from
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD
     from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+import {handleError} from 'c/utilTemplateBuilder';
 
 export default class GeBatchGiftEntryApp extends LightningElement {
     @api recordId;
@@ -49,7 +50,7 @@ export default class GeBatchGiftEntryApp extends LightningElement {
                 }
             )
             .catch(error => {
-                console.error(JSON.stringify(error));
+                handleError(error);
             });
     }
 
