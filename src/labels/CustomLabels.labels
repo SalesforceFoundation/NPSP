@@ -4766,7 +4766,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is a string. Name of an Object Mapping Group e.g. Account 1, Contact 2 -->
         <!-- {1} is a string. Name of a standard or custom object field e.g. Name, Amount -->
         <!-- {2} is a string. Name of a standard or custom object e.g. Account, Contact -->
-        <value>This field uses the {0} Mapping Group to target the {1} Field on the {2} Object.</value>
+        <value>This field uses the {0} Object Group to target the {1} field on the {2} object.</value>
     </labels>
     <labels>
         <fullName>geHelpTextFormFieldsFieldLabelLabel</fullName>
@@ -4774,7 +4774,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for Form Fields Field Label</shortDescription>
-        <value>This shows the Mapping Object Group and Target Field API Name. You can edit the user-facing label below.</value>
+        <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
     </labels>
     <labels>
         <fullName>geLabelSectionName</fullName>
