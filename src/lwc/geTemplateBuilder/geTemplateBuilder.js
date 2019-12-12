@@ -619,7 +619,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.CUSTOM_LABELS.geToastTemplateTabsError
                 : this.CUSTOM_LABELS.geToastTemplateTabError}`;
             const errors = [...tabsWithErrors].join(', ');
-            showToast(this.CUSTOM_LABELS.geHeaderError, `${message}${errors}.`, ERROR);
+            showToast(this.CUSTOM_LABELS.commonError, `${message}${errors}.`, ERROR);
 
             return false;
         }
@@ -735,7 +735,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
                 this.navigateToLandingPage();
             } catch (error) {
-                showToast(this.CUSTOM_LABELS.geHeaderError, this.CUSTOM_LABELS.geToastSaveFailed, ERROR);
+                showToast(this.CUSTOM_LABELS.commonError, this.CUSTOM_LABELS.geToastSaveFailed, ERROR);
                 this.isLoading = false;
             }
         }

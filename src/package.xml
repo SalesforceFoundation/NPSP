@@ -1897,7 +1897,6 @@
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
         <members>geHeaderEmptyFormSection</members>
-        <members>geHeaderError</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
         <members>geHeaderFormFieldsLeftCol</members>
         <members>geHeaderFormFieldsModalDeleteSection</members>

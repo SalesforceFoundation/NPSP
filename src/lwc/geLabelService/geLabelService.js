@@ -5,6 +5,7 @@ import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonCancel from '@salesforce/label/c.commonCancel';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
+import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
@@ -50,7 +51,6 @@ import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
 import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeaderRightCol';
 import geHeaderEmptyFormSection from '@salesforce/label/c.geHeaderEmptyFormSection';
-import geHeaderError from '@salesforce/label/c.geHeaderError';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
 import geHeaderFormFieldsModalDeleteSection from '@salesforce/label/c.geHeaderFormFieldsModalDeleteSection';
@@ -90,6 +90,7 @@ class GeLabelService {
         commonAssistiveWarning,
         commonCancel,
         commonDefaultValue,
+        commonError,
         commonFieldLabel,
         commonReadMore,
         commonRequired,
@@ -135,7 +136,6 @@ class GeLabelService {
         geHeaderBatchHeaderLeftCol,
         geHeaderBatchHeaderRightCol,
         geHeaderEmptyFormSection,
-        geHeaderError,
         geHeaderFormFieldsDefaultSectionName,
         geHeaderFormFieldsLeftCol,
         geHeaderFormFieldsModalDeleteSection,

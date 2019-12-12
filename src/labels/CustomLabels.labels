@@ -4662,14 +4662,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>No fields yet</value>
     </labels>
     <labels>
-        <fullName>geHeaderError</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error</shortDescription>
-        <value>Error</value>
-    </labels>
-    <labels>
         <fullName>geHeaderFormFieldsDefaultSectionName</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
