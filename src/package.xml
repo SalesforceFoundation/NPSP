@@ -1826,6 +1826,7 @@
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonSave</members>
+        <members>commonSaveAndClose</members>
         <members>commonUnknownError</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
@@ -1885,7 +1886,6 @@
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
-        <members>geButtonSaveAndClose</members>
         <members>geErrorExistingTemplateName</members>
         <members>geErrorFieldPermission</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>

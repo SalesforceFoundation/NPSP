@@ -4070,6 +4070,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save</value>
     </labels>
     <labels>
+        <fullName>commonSaveAndClose</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save and Close</shortDescription>
+        <value>Save &amp; Close</value>
+    </labels>
+    <labels>
         <fullName>commonUnknownError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4562,14 +4570,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Button to delete a section and remove its fields</shortDescription>
         <value>Delete Section and Fields</value>
-    </labels>
-    <labels>
-        <fullName>geButtonSaveAndClose</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder save button text</shortDescription>
-        <value>Save &amp; Close</value>
     </labels>
     <labels>
         <fullName>geErrorExistingTemplateName</fullName>
