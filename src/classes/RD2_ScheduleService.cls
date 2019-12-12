@@ -238,7 +238,7 @@ public without sharing class RD2_ScheduleService {
             installmentsByRd.put(rd.Id, doVisualization(startDate, numInstallments, schedulesByRd.get(rd.Id)));
         }
 
-        currentDate = date.today();
+        currentDate = Date.today();
 
         return installmentsByRd;
     }
