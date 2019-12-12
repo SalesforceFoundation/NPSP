@@ -4497,7 +4497,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields right column text block</shortDescription>
-        <value>Click a section, then select a field in the side bar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. The gift entry form layout can be managed by creating sections and reordering the sections or fields.</value>
+        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. The gift entry form layout can be managed by creating sections and reordering the sections or fields.</value>
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBackFormFields</fullName>
