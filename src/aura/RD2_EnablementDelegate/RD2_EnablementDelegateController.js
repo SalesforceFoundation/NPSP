@@ -19,7 +19,7 @@
         helper.runMigration(component);
     },
     handleMigrationStatusChange: function (component, event, helper) {
-        helper.processMigrationStatusChange(component, event);
+        helper.handleBatchProgressEvent(component, event);
     },
     handleMigrationError: function (component, event, helper) {
         helper.processMigrationError(component, event);

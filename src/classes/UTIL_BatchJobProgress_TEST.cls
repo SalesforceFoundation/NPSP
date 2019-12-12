@@ -6,13 +6,13 @@
     modification, are permitted provided that the following conditions are met:
 
     * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+        notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
     * Neither the name of Salesforce.org nor the names of
-      its contributors may be used to endorse or promote products derived
-      from this software without specific prior written permission.
+        its contributors may be used to endorse or promote products derived
+        from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -47,7 +47,7 @@ private with sharing class UTIL_BatchJobProgress_TEST {
         );
 
         telemetryBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(
-            UTIL_FeatureManagement.class, 
+            UTIL_FeatureManagement.class,
             new UTIL_FeatureManagement_TEST.Mock()
         );
 

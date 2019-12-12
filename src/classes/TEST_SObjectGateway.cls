@@ -262,8 +262,9 @@ public class TEST_SObjectGateway {
                 .withWhere('ApexClass.Name = :className')
                 .withLimit(1)
                 .build();
-
-            return (AsyncApexJob) Database.query(soql);
+            
+            List<SObject> records = Database.query(soql);
+            return records == null  || records.isEmpty() ? null : (AsyncApexJob) records[0];
         }
 
         /***
@@ -278,7 +279,8 @@ public class TEST_SObjectGateway {
                 .withWhere('Id = :jobId')
                 .build();
 
-            return (AsyncApexJob) Database.query(soql);
+            List<SObject> records = Database.query(soql);
+            return records == null  || records.isEmpty() ? null : (AsyncApexJob) records[0];
         }
     }
 }
