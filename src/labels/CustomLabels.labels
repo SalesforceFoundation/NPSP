@@ -4666,7 +4666,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Name of default form section</shortDescription>
+        <shortDescription>Name of default form section in a new template</shortDescription>
         <value>Gift Entry Form</value>
     </labels>
     <labels>
