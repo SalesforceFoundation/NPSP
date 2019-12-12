@@ -4082,8 +4082,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Unknown error</shortDescription>
-        <value>Unknown error</value>
+        <shortDescription>Unknown Error</shortDescription>
+        <value>Unknown Error</value>
     </labels>
     <labels>
         <fullName>commonWarning</fullName>
