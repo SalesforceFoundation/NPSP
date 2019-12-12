@@ -4782,7 +4782,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for Form Fields Field Label</shortDescription>
-        <value>This shows the Mapping Object Group and Target Field API Name. You can edit the user-facing label below.</value>
+        <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
     </labels>
     <labels>
         <fullName>geLabelSectionName</fullName>
