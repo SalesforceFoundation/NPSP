@@ -38,11 +38,11 @@ public inherited sharing class RD2_Constants {
 
     /***
     * @description Enum to specify behavior of how to handle open opportunities when the related RD is closed
-    */ 
-    public enum CloseActions { 
-        Delete_Open_Opportunities, 
-        Mark_Opportunities_Closed_Lost, 
-        No_Action 
+    */
+    public enum CloseActions {
+        Delete_Open_Opportunities,
+        Mark_Opportunities_Closed_Lost,
+        No_Action
     }
 
     /**
@@ -72,5 +72,24 @@ public inherited sharing class RD2_Constants {
     * @description Recurring Donation "Recurring Type" picklist API values
     */
     public static final String RECURRING_TYPE_OPEN = 'Open';
+
+    /**
+    * @description Returns all valid Installment Periods
+    */
+    public static Set<String> allInstallmentPeriods {
+    get {
+        if (allInstallmentPeriods == null) {
+            allInstallmentPeriods = new Set<String>{
+                INSTALLMENT_PERIOD_DAILY,
+                INSTALLMENT_PERIOD_WEEKLY,
+                INSTALLMENT_PERIOD_MONTHLY,
+                INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH,
+                INSTALLMENT_PERIOD_YEARLY
+            };
+        }
+        return allInstallmentPeriods;
+    }
+    set;
+}
 
 }
