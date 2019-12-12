@@ -23,7 +23,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api showSpinner = false;
     label = { messageLoading, geSave, geCancel };
 
-    @wire(getRecord, { recordId: '0035400000Ob9VEAAZ'})
+    @wire(getRecord, { recordId: '$recordId'})
     wiredContact({ error, data }) {
         if (data) {
             this.record = data;
