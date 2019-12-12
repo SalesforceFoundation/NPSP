@@ -42,16 +42,43 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
      */
     @AuraEnabled
     public static String loadBatchJob(String className) {
-      String jsonBatchJob;
-      try {
-          UTIL_BatchJobService service = new UTIL_BatchJobService();
+        String jsonBatchJob;
 
-          jsonBatchJob = JSON.serialize(service.getBatchJob(className));
+        try {
+            UTIL_BatchJobService service = new UTIL_BatchJobService();
+            jsonBatchJob = JSON.serialize(service.getBatchJob(className));
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
+
         return jsonBatchJob;
+    }
+
+    /***
+     * @description Loads the batch job summary.
+     * NOTE: the batch summary is available for the latest batch for the class name
+     *
+     * @param className Batch job class name
+     * @return String JSON representation of the batch job summary
+     */
+    @AuraEnabled
+    public static String loadBatchJobSummary(String className) {
+        String jsonBatchSummary;
+
+        try {
+            switch on className {
+                when 'RD2_DataMigration_BATCH' {
+                    npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+                    jsonBatchSummary = rdSettings.RecurringDonations2MigrationState__c;
+                }
+            }
+
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+
+        return jsonBatchSummary;
     }
 
 
@@ -64,6 +91,6 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
         AuraHandledException e = new AuraHandledException(errMessage);
         e.setMessage(errMessage);
         throw e;
-    }    
+    }
 
 }

@@ -64,6 +64,13 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description An empty method called from actionFunction to reRender panels when it completes
+    */
+    public void refreshPanels() {
+        
+    }
+
+    /***
     * @description Enablement service
     */
     @TestVisible
@@ -108,11 +115,9 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 state.isConfirmed = false;
                 state.isMetaDeployLaunched = false;
                 state.isMetaDeployConfirmed = false;
-                state.isMigrationCompleted = false;
             } else {
                 state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
                 state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched && hasMetaDeployCompleted();
-                state.isMigrationCompleted = state.isMigrationCompleted && state.isMetaDeployConfirmed;
             }
 
         } catch (Exception e) {
@@ -239,17 +244,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
-    }
-    /***
-    * @description Saves data migration successful completion state
-    * @return void
-    */
-    @AuraEnabled
-    public static void completeMigration() {
-        EnablementState state = getEnablementState();
-        state.isMigrationCompleted = true;
-
-        saveEnablementState(state);
     }
 
     /***
