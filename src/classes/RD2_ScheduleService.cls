@@ -273,7 +273,6 @@ public without sharing class RD2_ScheduleService {
 
             Installment ins = getNextInstallment(filteredSchedules);
             if (ins == null) {
-                currentDate = date.today();
                 break;
             }
 
