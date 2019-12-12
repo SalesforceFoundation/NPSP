@@ -15,11 +15,13 @@
                                 onchange={handleValueChange}
                                 required={element.required}
                                 id={element.id}
+                                object-describe-info={objectDescribeInfo}
                                 label={fieldLabel}>
         </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
         <lightning-input-rich-text data-id='inputComponent'
+            label-visible='true'
             value={value}
             onblur={handleValueChange}
             label={fieldLabel}>
@@ -32,7 +34,8 @@
             field-name={fieldApiName}
             object-name={objectApiName}
             onchange={handleValueChange}
-            label={fieldLabel}>
+            label={fieldLabel}
+            object-describe-info={objectDescribeInfo}>
         </c-ge-form-field-picklist>
     </template>
     <template if:true={isTextArea}>
