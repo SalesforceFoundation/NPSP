@@ -21,7 +21,7 @@ then
 read -p "What branch would you like to pull most recent changes from?? [example: feature/julian-qa-rebuild-script] " -r branch_name
  
 # Request org name
-read -p "What would you like to name your org? [example: W-123456]" org_name
+read -p "What would you like to name your org? [example: W-123456] " org_name
 
 # Remove any existing modified files so a pull can take place
 git checkout -- .
