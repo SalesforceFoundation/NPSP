@@ -11,6 +11,7 @@ import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonSave from '@salesforce/label/c.commonSave';
 import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
+import commonWarning from '@salesforce/label/c.commonWarning';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
 import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
@@ -61,7 +62,6 @@ import geHeaderNewSection from '@salesforce/label/c.geHeaderNewSection';
 import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import geHeaderPageLevelError from '@salesforce/label/c.geHeaderPageLevelError';
 import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
-import geHeaderWarning from '@salesforce/label/c.geHeaderWarning';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
@@ -96,6 +96,7 @@ class GeLabelService {
         commonRequired,
         commonSave,
         commonSaveAndClose,
+        commonWarning,
         geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
         geAssistiveFieldDown,
@@ -146,7 +147,6 @@ class GeLabelService {
         geHeaderNewTemplate,
         geHeaderPageLevelError,
         geHeaderTemplateInfoLeftCol,
-        geHeaderWarning,
         geHelpTextBatchHeaderFieldLabelLabel,
         geHelpTextFormFieldsFieldCustomLabel,
         geHelpTextFormFieldsFieldLabelLabel,

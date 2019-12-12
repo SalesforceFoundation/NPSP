@@ -687,7 +687,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             }
 
             const fieldApiNames = this.missingRequiredBatchFields.map(field => field.apiName).join(', ');
-            showToast(this.CUSTOM_LABELS.geHeaderWarning,
+            showToast(this.CUSTOM_LABELS.commonWarning,
                 `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldApiNames}`,
                 'warning',
                 'sticky');

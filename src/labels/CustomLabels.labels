@@ -4086,6 +4086,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Unknown error</value>
     </labels>
     <labels>
+        <fullName>commonWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
         <fullName>conFailedAccountCreate</fullName>
         <categories>Data Import, Contacts</categories>
         <language>en_US</language>
@@ -4740,14 +4748,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for gift entry template information</shortDescription>
         <value>Gift Entry Template Information</value>
-    </labels>
-    <labels>
-        <fullName>geHeaderWarning</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Warning</shortDescription>
-        <value>Warning</value>
     </labels>
     <labels>
         <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>

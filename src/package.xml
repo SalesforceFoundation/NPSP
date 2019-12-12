@@ -1828,6 +1828,7 @@
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
         <members>commonUnknownError</members>
+        <members>commonWarning</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
         <members>conMergeErrNoPersonAccounts</members>
@@ -1907,7 +1908,6 @@
         <members>geHeaderNewTemplate</members>
         <members>geHeaderPageLevelError</members>
         <members>geHeaderTemplateInfoLeftCol</members>
-        <members>geHeaderWarning</members>
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
