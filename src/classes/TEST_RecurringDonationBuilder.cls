@@ -501,7 +501,8 @@ public without sharing class TEST_RecurringDonationBuilder {
             this.withStatusActive()
                 .withRecurringTypeOpen()
                 .withInstallmentPeriodMonthly()
-                .withInstallmentFrequency(1);
+                .withInstallmentFrequency(1)
+                .withDayOfMonth('15');
         }
 
         return this;
