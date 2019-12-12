@@ -37,6 +37,7 @@
     implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
 
     <aura:attribute name="state" type="Object" description="Contains enablement state attributes" />
+    <aura:attribute name="batchProgress" type="Object" description="Contains the latest batch progress details" />
     <aura:attribute name="metaDeployURL" type="String" description="Contains metadata deployment URL" />
     <aura:attribute name="errorSection" type="String" description="Contains section number where error has occurred" />
     <aura:attribute name="errorMessage" type="String" description="Contains latest error message" />
@@ -313,10 +314,15 @@
                         </lightning:layoutItem>
                         <lightning:layoutItem size="3" />
 
-                        <lightning:layoutItem size="9" class="slds-p-top_medium">
+                        <lightning:layoutItem size="9" class="slds-p-top_medium slds-p-bottom_x-large">
                             <aura:if isTrue="{!v.state.isMigrationCompleted}">
-                                <lightning:formattedRichText class="slds-p-bottom_x-large"
+                                <lightning:formattedRichText
                                     value="{!$Label.c.RD2_EnablementMigrationCompleteMessage}" />
+                            </aura:if>
+
+                            <aura:if
+                                isTrue="{! and(equals(v.batchProgress.status, 'Completed'), !v.batchProgress.isSuccess) }">
+                                <lightning:formattedRichText value="{!$Label.c.RD2_EnablementMigrationErrorMessage}" />
                             </aura:if>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="3" />

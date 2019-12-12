@@ -20,11 +20,11 @@
                 }
 
                 this.displayElement(component, "enabler");
-                enablementState.isMigrationInProgress = false;
                 component.set('v.state', enablementState);
 
                 this.refreshEnable(component);
                 this.refreshMetaDeploy(component);
+                this.refreshMigration(component);
 
             } else if (state === "ERROR") {
                 this.handleError(component, response.getError());
@@ -181,6 +181,7 @@
     */
     runMigration: function (component) {
         component.set('v.state.isMigrationInProgress', true);
+        component.set('v.batchProgress', null);
 
         this.clearError(component);
 
@@ -206,7 +207,7 @@
     /****
     * @description Updates page and settings based on the migration batch job status change
     */
-    processMigrationStatusChange: function (component, event) {
+    handleBatchProgressEvent: function (component, event) {
         if (!component.isValid()) {
             return;
         }
@@ -219,19 +220,36 @@
             return;
         }
 
-        let enablementState = component.get("v.state");
-        if (enablementState == undefined || enablementState == null) {
+        component.set('v.batchProgress', batchProgress);
+
+        this.refreshMigration(component);
+    },
+    /****
+    * @description Set data migration attributes
+    */
+    refreshMigration: function (component) {
+        if (!component.isValid()) {
             return;
         }
 
-        if (batchProgress.isInProgress) {
-            component.set('v.state.isMigrationInProgress', true);
+        const enablementState = component.get("v.state");
+        if (enablementState === undefined || enablementState === null) {
+            return;
+        }
 
-        } else if (batchProgress.isSuccess) {
-            this.confirmMigration(component);
+        const batchProgress = component.get("v.batchProgress");
+        if (batchProgress === undefined || batchProgress === null) {
+            component.set('v.state.isMigrationInProgress', false);
+            component.set('v.state.isMigrationCompleted', false);
 
         } else {
-            component.set('v.state.isMigrationInProgress', false);
+            component.set('v.state.isMigrationInProgress', batchProgress.isInProgress);
+
+            const isMigrationCompleted =
+                enablementState.isMetaDeployConfirmed
+                && batchProgress.status === 'Completed'
+                && batchProgress.isSuccess;
+            component.set('v.state.isMigrationCompleted', isMigrationCompleted);
         }
     },
     /****
@@ -252,38 +270,6 @@
 
         this.clearError(component);
         this.handleError(component, errorDetail, '3');
-    },
-    /****
-    * @description Starts data migration batch
-    */
-    confirmMigration: function (component) {
-        let enablementState = component.get("v.state");
-
-        if (enablementState.isMigrationCompleted || enablementState.isMetaDeployConfirmed !== true) {
-            return;
-        }
-        component.set('v.state.isMigrationCompleted', true);
-
-        this.clearError(component);
-
-        var action = component.get('c.completeMigration');
-
-        action.setCallback(this, function (response) {
-            if (!component.isValid()) {
-                return;
-            }
-            const state = response.getState();
-
-            if (state === 'SUCCESS') {
-                component.set('v.state.isMigrationInProgress', false);
-
-            } else if (state === 'ERROR') {
-                component.set('v.state.isMigrationCompleted', false);
-                this.handleError(component, response.getError(), '3');
-            }
-        });
-
-        $A.enqueueAction(action);
     },
     /****
     * @description Disables page elements and reloads the enablement state
