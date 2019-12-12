@@ -4377,7 +4377,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text: Button to cancel and discard changes to section settings</shortDescription>
-        <value>Cancel and discard changes to section settings.</value>
+        <value>Cancel and discard changes to Section Settings.</value>
     </labels>
     <labels>
         <fullName>geAssistiveSectionDown</fullName>
