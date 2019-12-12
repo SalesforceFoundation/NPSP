@@ -710,6 +710,7 @@
         <members>ManageHHApp</members>
         <members>RD2_EnablementApp</members>
         <members>RD2_EnablementDelegate</members>
+        <members>RD2_EnhancementEnabledEvent</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>
@@ -1475,6 +1476,7 @@
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
+        <members>RD2_DisableCustomizableRollupWarning</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementEnableConfirm</members>
@@ -1501,6 +1503,8 @@
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
+        <members>RD2_PageNotAvailableHeader</members>
+        <members>RD2_PageNotAvailableMessage</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
