@@ -132,7 +132,9 @@ public with sharing class RD2_EnablementService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100)
+            .withDefaultValues()
             .build();
+
         insert rd;
 
         insert buildOpportunity(rd.Id, contact.AccountId);
@@ -178,6 +180,7 @@ public with sharing class RD2_EnablementService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100)
+            .withDefaultValues()
             .build();
 
         Test.startTest();
