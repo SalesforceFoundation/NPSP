@@ -10,7 +10,7 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
 
-echo What branch would you like to pull most recent changes from?? [example: W-123456]
+echo What branch would you like to pull most recent changes from?? [example: feature/julian-qa-rebuild-script]
 read 1
 
 echo What would you like to name your org? [example: W-123456]
