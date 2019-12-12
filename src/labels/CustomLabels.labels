@@ -1511,14 +1511,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
     </labels>
     <labels>
-        <fullName>RD2_DisableCustomizableRollupWarning</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Not disable customizable rollups when RD2 is enabled</shortDescription>
-        <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
-    </labels>
-    <labels>
         <fullName>RD2_DataMigrationInvalidOpenEndedStatus</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1543,6 +1535,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>You must enter a value for Day of Month when Installment Period is Monthly.</value>
     </labels>
     <labels>
+        <fullName>RD2_DisableCustomizableRollupWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Not disable customizable rollups when RD2 is enabled</shortDescription>
+        <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1557,14 +1557,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementDisabledMessage</shortDescription>
         <value>You must enable both Customizable Rollups and Lightning Experience in order to enable Enhanced Recurring Donations.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementEnableTitle</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementEnableTitle</shortDescription>
-        <value>Enable Enhanced Recurring Donations</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableConfirm</fullName>
@@ -1589,6 +1581,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementEnableMessage</shortDescription>
         <value>Enable the Enhanced Recurring Donations functionality.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementEnableTitle</shortDescription>
+        <value>Enable Enhanced Recurring Donations</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableWarning</fullName>
@@ -1655,14 +1655,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Install Enhanced Recurring Donations Metadata</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementMigrationIntro</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationIntro</shortDescription>
-        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
-    </labels>
-    <labels>
         <fullName>RD2_EnablementMigrationButton</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1685,6 +1677,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationErrorMessage</shortDescription>
         <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationIntro</shortDescription>
+        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationTitle</fullName>
