@@ -11,31 +11,31 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
 
 echo What branch would you like to pull most recent changes from?? [example: feature/julian-qa-rebuild-script]
-read 1
+read branch_name
 
 echo What would you like to name your org? [example: W-123456]
-read 2
+read org_name
 
 
 # Remove any existing modified files so a pull can take place
 git checkout -- .
 
 # Switch to desired branch
-git checkout $1
+git checkout branch_name
 
 # Pull most recent changes
 git pull
 
 # Delete exisiting scratch org if one exists with provided name
-cci org scratch_delete $2
+cci org scratch_delete org_name
 
 # Rebuild org with qa flow
-cci flow run qa_org --org $2
+cci flow run qa_org --org org_name
 
 # Mark org as default
-cci org default $2
+cci org default org_name
 
 # Open newly created org
-cci org browser $2
+cci org browser org_name
 
 fi
