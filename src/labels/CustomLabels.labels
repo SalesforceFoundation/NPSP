@@ -4046,6 +4046,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Field Label</value>
     </labels>
     <labels>
+        <fullName>commonReadMore</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to read additional details</shortDescription>
+        <value>Read More</value>
+    </labels>
+    <labels>
         <fullName>commonRequired</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4466,14 +4474,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         &lt;/br&gt;
         See NPSP documentation about Advanced Mapping for additional details.
         </value>
-    </labels>
-    <labels>
-        <fullName>geBodyFormFieldsLeftColReadMore</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Form Fields sidebar help text</shortDescription>
-        <value>Read More</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsModalDeleteSection</fullName>

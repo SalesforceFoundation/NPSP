@@ -1823,6 +1823,7 @@
         <members>commonDefaultValue</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonSave</members>
         <members>commonUnknownError</members>
@@ -1873,7 +1874,6 @@
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
-        <members>geBodyFormFieldsLeftColReadMore</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
         <members>geBodyTemplateInfoLeftCol</members>
