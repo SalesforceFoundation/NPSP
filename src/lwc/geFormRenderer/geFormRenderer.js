@@ -1,6 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
-
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
@@ -9,11 +8,8 @@ import geCancel from '@salesforce/label/c.labelGeCancel';
 import { showToast, getQueryParameters } from 'c/utilTemplateBuilder';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
-    @api recordId;
-    @track record;
-    @track error;
-
-
+    @api recordId = '';
+    @track apiName = '';
     @track sections = [];
     @track ready = false;
     @track name = '';
@@ -23,25 +19,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api showSpinner = false;
     label = { messageLoading, geSave, geCancel };
 
-    @wire(getRecord, { recordId: '$recordId'})
-    wiredContact({ error, data }) {
+    @wire(getRecord, { recordId: '$recordId', optionalFields: ['Account.Name', 'Contact.Name']})
+    wiredGetRecordMethod({ error, data }) {
         if (data) {
-            this.record = data;
-            this.error = undefined;
+            this.apiName = data.apiName;
+            this.handleGetTemplate();
         } else if (error) {
-            this.error = error;
-            this.record = undefined;
+            console.error(JSON.stringify(error));
         }
-        alert('wired = ' + this.record);
     }
 
     connectedCallback() {
         // check if there is a record id in the url
         this.recordId = getQueryParameters().c__recordId;
-        alert('query param = ' + this.recordId);
-        
 
-        GeFormService.getFormTemplate(this.recordId).then(response => {
+        /*GeFormService.getFormTemplate(this.recordId).then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
                 const { formTemplate } = response;
@@ -53,9 +45,24 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         && Array.isArray(formTemplate.layout.sections)) {
                     this.sections = formTemplate.layout.sections;
                 }
-            }
+            } 
+        });*/
+    }
 
-        });
+    handleGetTemplate = async () => {
+        let response = await GeFormService.getFormTemplate(this.recordId, this.apiName);
+
+        if (response !== null && typeof response !== 'undefined') {
+            const { formTemplate } = response;
+            this.ready = true;
+            this.name = formTemplate.name;
+            this.description = formTemplate.description;
+            this.version = formTemplate.layout.version;
+            if (typeof formTemplate.layout !== 'undefined'
+                && Array.isArray(formTemplate.layout.sections)) {
+                this.sections = formTemplate.layout.sections;
+            }
+        }
     }
 
     handleCancel() {

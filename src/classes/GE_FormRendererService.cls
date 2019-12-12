@@ -35,12 +35,12 @@ public with sharing class GE_FormRendererService {
      *
      * @return  A FORM_RenderWrapper containing the default template JSON.
      */
-    public static FORM_RenderWrapper getDefaultSGERenderWrapper() {
+    public static FORM_RenderWrapper getDefaultSGERenderWrapper(String recordId) {
         FORM_Service formService = new FORM_Service();
 
         FORM_Template defaultTemplate = formService.retrieveDefaultSGEFormTemplate();
 
-        FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
+        FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate, recordId);
 
         return renderWrapper;
     }
@@ -57,7 +57,6 @@ public with sharing class GE_FormRendererService {
 
         FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
 
-
         return renderWrapper;
     }
 
@@ -72,6 +71,32 @@ public with sharing class GE_FormRendererService {
             BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
 
             updateTemplateWithRequired(template, mappingService.fieldMappingSet);
+
+            // Create the wrapper which will hold the template and field mapping set.
+            FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(template, mappingService.fieldMappingSet);
+
+            return renderWrapper;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * This method builds the wrapper given the template and the field mapping set. 
+     * sets the record field values to the default values on the template
+     *
+     * @return  A FORM_RenderWrapper containing the default template JSON.
+     */
+    private static FORM_RenderWrapper wrapTemplate(FORM_Template template, String recordId) {
+        if (template != null) {
+            // Get the mapping service which will retrieve all the mappings
+            BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+
+            updateTemplateWithRequired(template, mappingService.fieldMappingSet);
+
+            if (!string.isBlank(recordId)) {
+                updateTemplateWithValues(template, mappingService.fieldMappingSet);
+            }
 
             // Create the wrapper which will hold the template and field mapping set.
             FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(template, mappingService.fieldMappingSet);
@@ -107,6 +132,16 @@ public with sharing class GE_FormRendererService {
                         element.required = element.required || fieldMapping.Source_Field_Required;
                     }
                 }
+            }
+        }
+    }
+
+    private static void updateTemplateWithValues(FORM_Template template, BDI_FieldMappingSet fieldMappingSet) {
+        List<FORM_Section> sectionList = template.layout.sections;
+        system.debug('fieldMappingSet = ' + fieldMappingSet);
+        for (FORM_Section section : sectionList) {
+            for (FORM_Element element : section.elements) {
+                system.debug('element = ' + element);
             }
         }
     }
