@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # Script to be used by qa to rebuild a scratch environment.
-# To run paste into command line "bash scripts/qa_rebuild.sh <orgname> <branch>
-# For example "bash scripts/qa_rebuild.sh W-037818 feature/RD2__rad-data-migration-display-errors"
+# To run paste into command line "bash scripts/qa_rebuild_script.sh <orgname> <branch>"
+# For example "bash scripts/qa_rebuild_script.sh W-037818 feature/RD2__rad-data-migration-display-errors"
 
 # ***IMPORTANT*** This script will rollback any modifications to files and delete a scratch org with the same name.
 
