@@ -167,7 +167,7 @@ New Contact for HouseHold
     Go To Object Home         Contact
     Click Link                link= ${first_name} ${last_name}
     Wait Until Url Contains    /view
-    ${contact_id} =           Save Session Record For Deletion      Contact
+    ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
         
 
@@ -224,7 +224,7 @@ Create Engagement Plan
     Click Button    Save
     Wait Until Url Contains    /view
     ${ns} =  Get NPSP Namespace Prefix
-    Save Session Record For Deletion    ${ns}Engagement_Plan_Template__c
+    Save Current Record ID For Deletion    ${ns}Engagement_Plan_Template__c
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     
 Create Level
@@ -244,7 +244,7 @@ Create Level
     Click Button  Save
     Unselect Frame
     Wait For Locator  obj-header  Level
-    ${level_id} =   Save Session Record For Deletion  Level__c  
+    ${level_id} =   Save Current Record ID For Deletion  Level__c  
     [Return]    ${level_id}  ${level_name}
 
 Verify Engagement Plan

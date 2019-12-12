@@ -1,15 +1,12 @@
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
+from Basenpspobjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
 
 @pageobject("Custom", "BDI_ManageAdvancedMapping")
-class AdvancedMappingPage(BasePage):
+class AdvancedMappingPage(BasePage, BaseNPSPPage):
 
-    
-    @property
-    def npsp(self):
-        return self.builtin.get_library_instance('NPSP')
     
     def _is_current_page(self):
         """

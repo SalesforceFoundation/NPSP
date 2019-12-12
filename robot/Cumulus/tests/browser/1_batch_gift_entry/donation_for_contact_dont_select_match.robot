@@ -63,7 +63,7 @@ Dont select match for contact new donation with grid changes
     Select Window    ${value} | Salesforce    10
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
-    ${newopp_id}    Save Session Record For Deletion      Opportunity
+    ${newopp_id}    Save Current Record ID For Deletion      Opportunity
     Verify Expected Values    nonns    Opportunity    ${newopp_id}
     ...    Amount=20.0
     ...    CloseDate=${date}

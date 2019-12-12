@@ -47,8 +47,8 @@ Match Based on Number of Days from Donation Date Functionality
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    ${pay_no}
-    ${pay}    Save Session Record For Deletion      npe01__OppPayment__c  
-    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay}
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
+    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${api_date}
     ...    npe01__Paid__c=True   

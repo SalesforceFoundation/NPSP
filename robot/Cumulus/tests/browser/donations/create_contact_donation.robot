@@ -21,7 +21,7 @@ Create Donation from a Contact
     ${value}    Return Locator Value    alert
     Go To Object Home         Opportunity
     Click Link    ${value}
-    Save Session Record For Deletion    Opportunity    
+    Save Current Record ID For Deletion    Opportunity    
     Select Tab    Related
     Load Related List    Payments
     Verify Occurrence    Payments    1

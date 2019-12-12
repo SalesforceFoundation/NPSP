@@ -55,14 +55,14 @@ Best Match Donation Matching Behaviour
     Click Link With Text    @{value}[0]
     # Verify that a new payment and opportunity are created for the gift in closed won stage
     Select Window    @{value}[0] | Salesforce    7
-    ${pay_id}    Save Session Record For Deletion      npe01__OppPayment__c
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=200.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
-    ${opp_id} =           Save Session Record For Deletion     Opportunity  
+    ${opp_id} =   Save Current Record ID For Deletion     Opportunity  
     Confirm Field Value    Amount    $200.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Field Value    Close Date    ${opp_date}    Y
@@ -76,8 +76,8 @@ Best Match Donation Matching Behaviour
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    ${pay_no}
-    ${pay}    Save Session Record For Deletion      npe01__OppPayment__c  
-    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay}
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
+    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True  

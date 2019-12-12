@@ -1,18 +1,12 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
+from Basenpspobjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 @pageobject("Listing", "DataImport__c")
-class DataImportPage(ListingPage):
+class DataImportPage(ListingPage, BaseNPSPPage):
 
-    @property
-    def npsp(self):
-        return self.builtin.get_library_instance('NPSP')
-    
-    @property
-    def pageobjects(self):
-        return self.builtin.get_library_instance("cumulusci.robotframework.PageObjects")
     
     def _is_current_page(self):
         """
@@ -44,13 +38,9 @@ class DataImportPage(ListingPage):
         
         
 @pageobject("Details", "DataImport__c")
-class DataImportDetailPage(DetailPage): 
+class DataImportDetailPage(DetailPage, BaseNPSPPage): 
     
     
-    @property
-    def npsp(self):
-        return self.builtin.get_library_instance('NPSP')
-           
         
     def edit_record(self):
         """From the actions dropdown select edit action and wait for modal to open"""

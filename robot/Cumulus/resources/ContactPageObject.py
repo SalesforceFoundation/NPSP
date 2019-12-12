@@ -1,21 +1,14 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
+from Basenpspobjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 
 
 @pageobject("Listing", "Contact")
-class ContactListingPage(ListingPage):
+class ContactListingPage(ListingPage, BaseNPSPPage):
     object_name = "Contact"
-
-    @property
-    def npsp(self):
-        return self.builtin.get_library_instance('NPSP')
-
-    @property
-    def cumulusci(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
    
     def click_delete_account_button(self):
         """Clicks on Delete Account button inside the iframe"""
@@ -23,7 +16,7 @@ class ContactListingPage(ListingPage):
         self.npsp.select_frame_and_click_element("vfFrameId","button","Delete Account")    
 
 @pageobject("Details", "Contact")
-class ContactDetailPage(DetailPage):
+class ContactDetailPage(DetailPage, BaseNPSPPage):
     object_name = "Contact"
 
     def _is_current_page(self):
@@ -32,13 +25,6 @@ class ContactDetailPage(DetailPage):
         """
         self.npsp.wait_until_url_contains("/view")
         
-    @property
-    def npsp(self):
-        return self.builtin.get_library_instance('NPSP')
-
-    @property
-    def cumulusci(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
 
     def update_field_value(self,field_name,old_value,new_value):
         """Delete the old value in specified field by clicking on delete icon and update with new value"""

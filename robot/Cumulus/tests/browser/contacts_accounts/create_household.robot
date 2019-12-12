@@ -45,7 +45,7 @@ Create Household With Name Only
     Current Page Should Be                Details                               Contact
     
     #Verify contact is created and shows under recently viewed
-    ${contact_id} =                       Save Session Record For Deletion      Contact
+    ${contact_id} =                       Save Current Record ID For Deletion      Contact
     &{contact}                            Verify Record Is Created In Database  Contact                     ${contact_id} 
     Store Session Record                  Account                               &{contact}[AccountId]
     Header Field Value                    Account Name                          ${last_name} Household
@@ -65,7 +65,7 @@ Create Household With additional details
     Populate Modal Form
     ...                                   First Name=${first_name1}
     ...                                   Last Name=${last_name1}
-    ...                                   Work Email=skristem@salesforce.com
+    ...                                   Work Email=automation@example.com
     Click Modal Button                    Save & New
     
     # Create a contact with name and address  
@@ -84,7 +84,7 @@ Create Household With additional details
     Current Page Should Be                Details                               Contact
     
     # Verify records are saved and displayed in recently viewed contact list
-    ${contact_id2} =                      Save Session Record For Deletion      Contact
+    ${contact_id2} =                      Save Current Record ID For Deletion      Contact
     &{contact2}                           Verify Record Is Created In Database  Contact                       ${contact_id2}
     Store Session Record                  Account                               &{contact2}[AccountId]
     Header Field Value                    Account Name                          ${last_name2} Household
@@ -93,9 +93,9 @@ Create Household With additional details
     Verify Record                         ${first_name2} ${last_name2}
     Verify Record                         ${first_name1} ${last_name1}
     Click Link                            ${first_name1} ${last_name1}
-    ${contact_id1} =                      Save Session Record For Deletion      Contact
+    ${contact_id1} =                      Save Current Record ID For Deletion      Contact
     &{contact1}                           Verify Record Is Created In Database  Contact                        ${contact_id1}
     Store Session Record                  Account                               &{contact1}[AccountId]
     Select Tab                            Details 
-    Confirm Field Value                   Work Email                            skristem@salesforce.com        Y
+    Confirm Field Value                   Work Email                            automation@example.com        Y
     

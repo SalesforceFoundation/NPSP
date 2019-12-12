@@ -15,4 +15,4 @@ Create Primary Affiliation for Contact
     Click Link    link=&{account}[Name]
     Verify Affiliated Contact    Affiliated Contacts    &{contact}[FirstName]    &{contact}[LastName]    Y  
     Click Related Item Link      Affiliated Contacts    &{contact}[FirstName] &{contact}[LastName]
-    Save Session Record For Deletion    npe5__Affiliation__c    
+    Save Current Record ID For Deletion    npe5__Affiliation__c    

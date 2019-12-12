@@ -11,7 +11,7 @@ Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 Setup Test Data
-    &{contact} =              API Create Contact        Email=automation@robot.com 
+    &{contact} =              API Create Contact        Email=automation@example.com 
     Set suite variable        &{contact}
     Store Session record      Account                   &{contact}[AccountId] 
     &{opportunity} =          API Create Opportunity    &{Contact}[AccountId]        Donation    Name=Sravani $100 donation

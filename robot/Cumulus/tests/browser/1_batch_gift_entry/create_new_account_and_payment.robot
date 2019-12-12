@@ -56,10 +56,10 @@ Create a new account and enter payment information
     Select Window    ${value} | Salesforce    10
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
-    ${opp_id} =           Save Session Record For Deletion      Opportunity  
+    ${opp_id} =           Save Current Record ID For Deletion      Opportunity  
     Confirm Field Value    Amount    $20.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Field Value    Close Date    ${opp_date}    Y
     Confirm Field Value    Stage    Closed Won    Y
     Click Link With Text    text=${acc_name}
-    ${account_id} =           Save Session Record For Deletion      Account
+    ${account_id} =       Save Current Record ID For Deletion      Account

@@ -74,7 +74,7 @@ Create a new opportunity for a contact with open donations
     Select Window    ${value} | Salesforce    10
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
-    ${newopp_id}    Save Session Record For Deletion    Opportunity    
+    ${newopp_id}    Save Current Record ID For Deletion    Opportunity    
     Confirm Field Value   Amount    $100.00    Y
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Field Value  Close Date  ${opp_date}  Y

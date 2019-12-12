@@ -36,7 +36,7 @@ Create BGE Batch With Custom Fields
     Verify Title    Batch Gift Entry    ${batch}         
     ${ns} =  Get NPSP Namespace Prefix
     Set Global Variable     ${ns}       ${ns}
-    ${batch_id}    Save Session Record For Deletion      ${ns}DataImportBatch__c
+    ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c
     Verify Expected Batch Values    ${batch_id}
     ...    Batch_Process_Size__c=50.0
     ...    Donation_Date_Range__c=0.0
@@ -88,7 +88,7 @@ Verify Custom Fields on Payment and Donation
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
-    ${pay_id}    Save Session Record For Deletion      npe01__OppPayment__c  
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     ${org_ns} =  Get Org Namespace Prefix
     &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}

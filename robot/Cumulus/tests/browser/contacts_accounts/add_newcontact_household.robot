@@ -21,8 +21,8 @@ Setup Test Data
     Set suite variable    &{contact1}
 
 *** Variables ***
-${EMAIL1}  user1@robot.com
-${EMAIL2}  user2@robot.com
+${EMAIL1}  user1@example.com
+${EMAIL2}  user2@example.com
 
 *** Test Cases ***
 
@@ -46,6 +46,6 @@ Add New related Contact to Household With Different LastName
     Go To Page                              Listing                                 Contact
     Click Link                              link= ${first_name} ${last_name}
     Current Page Should Be                  Details                                 Contact
-    ${contact_id2} =                        Save Session Record For Deletion        Contact
+    ${contact_id2} =                        Save Current Record ID For Deletion     Contact
     &{contact2}                             Verify Record Is Created In Database    Contact                                 ${contact_id2}
     Header Field Value                      Account Name                            &{contact1}[LastName] and &{contact2}[LastName] Household

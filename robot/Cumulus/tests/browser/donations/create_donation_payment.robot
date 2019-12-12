@@ -15,7 +15,7 @@ Create Donation and Opportunity and Create Payment Manually
     Click Object Button       New
     Select Record Type        Donation
     Create Opportunities    Sravani $100 donation    &{Contact}[LastName] Household    Closed Won
-    Save Session Record For Deletion    Opportunity   
+    Save Current Record ID For Deletion    Opportunity   
     Select Tab    Related
     Load Related List    Payments
     Verify Occurrence    Payments    0

@@ -59,7 +59,7 @@ Select a payment for a contact make grid changes and process it
     # Click Link    ${value}
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
-    ${pay_id}    Save Session Record For Deletion      npe01__OppPayment__c  
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=20.0
     ...    npe01__Payment_Date__c=${date}

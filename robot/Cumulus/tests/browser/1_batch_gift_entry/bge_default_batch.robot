@@ -23,7 +23,7 @@ BGE Batch With Default Values
     Wait For Locator    bge.title    Batch Gift Entry
     Verify Title    Batch Gift Entry    ${batch}
     ${ns} =  Get NPSP Namespace Prefix
-    ${batch_id}    Save Session Record For Deletion      ${ns}DataImportBatch__c 
+    ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c 
     Verify Expected Batch Values    ${batch_id}
     ...    Batch_Process_Size__c=50.0
     ...    Donation_Date_Range__c=0.0

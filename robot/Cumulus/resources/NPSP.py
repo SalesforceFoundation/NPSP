@@ -1179,8 +1179,7 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.wait_until_page_contains(view_name)
 
     def search_field_by_value(self, fieldname, value):
-         """ Populate field with Place Holder as a locator
-             and actual value of the place holder.
+         """ search the field with the placeholder given by 'fieldname' for the given 'value'
          """
          xpath = npsp_lex_locators["placeholder"].format(fieldname)
          field = self.selenium.get_webelement(xpath)
@@ -1189,8 +1188,8 @@ class NPSP(SalesforceRobotLibraryBase):
          time.sleep(2)
          field.send_keys(Keys.ENTER)
         
-    def save_session_record_for_deletion(self,object_name): 
-        """Gets the current page record id and stores the for specified object 
+    def save_current_record_id_for_deletion(self,object_name): 
+        """Gets the current page record id and stores it for specified object 
            in order to delete record during suite teardown """   
         id=self.salesforce.get_current_record_id()
         self.salesforce.store_session_record(object_name,id)   
@@ -1200,7 +1199,7 @@ class NPSP(SalesforceRobotLibraryBase):
         """Verifies that a record with specified id is saved 
            in specified object table in database and returns the record"""
         record=self.salesforce.salesforce_get(object_name,id)
-        self.builtin.should_not_be_empty(record)
+        self.builtin.should_not_be_empty(record, msg="the database object {} with id {} is not in the database".format(object_name,id))
         return record
     
 

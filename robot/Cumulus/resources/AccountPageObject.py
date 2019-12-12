@@ -1,19 +1,17 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
+from Basenpspobjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 @pageobject("Listing", "Account")
-class AccountListingPage(ListingPage):
+class AccountListingPage(ListingPage, BaseNPSPPage):
     object_name = "Account"
 
-    @property
-    def npsp(self):
-        return self.builtin.get_library_instance('NPSP')
-    
+
     
 @pageobject("Details", "Account")
-class AccountDetailPage(DetailPage):
+class AccountDetailPage(DetailPage, BaseNPSPPage):
     object_name = "Account"
 
     def _is_current_page(self):
@@ -22,10 +20,4 @@ class AccountDetailPage(DetailPage):
         """
         self.npsp.wait_until_url_contains("/view")
     
-    @property
-    def npsp(self):
-        return self.builtin.get_library_instance('NPSP')
-
-    @property
-    def cumulusci(self):
-        return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')    
+ 
