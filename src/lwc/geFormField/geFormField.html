@@ -21,6 +21,7 @@
     </template>
     <template if:true={isRichText}>
         <lightning-input-rich-text data-id='inputComponent'
+            label-visible='true'
             value={value}
             onblur={handleValueChange}
             label={fieldLabel}>
