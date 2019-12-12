@@ -4683,7 +4683,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for Form Fields sidebar</shortDescription>
-        <value>Form Fields &amp; Field Bundles</value>
+        <value>Form Fields &amp; Template Components</value>
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsModalDeleteSection</fullName>
