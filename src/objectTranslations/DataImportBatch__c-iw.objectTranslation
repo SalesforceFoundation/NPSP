@@ -90,6 +90,10 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
+        <label><!-- Form Template Name --></label>
+        <name>Form_Template_Name__c</name>
+    </fields>
+    <fields>
         <help><!-- The date and time when the batch was last processed. --></help>
         <label><!-- Last Processed On --></label>
         <name>Last_Processed_On__c</name>

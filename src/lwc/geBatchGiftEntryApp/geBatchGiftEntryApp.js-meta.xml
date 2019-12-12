@@ -4,4 +4,7 @@
     <description>Ge Batch Gift Entry App</description>
     <isExposed>true</isExposed>
     <masterLabel>Ge Batch Gift Entry App</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
 </LightningComponentBundle>

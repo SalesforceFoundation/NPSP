@@ -78,6 +78,10 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
+        <label><!-- Form Template Name --></label>
+        <name>Form_Template_Name__c</name>
+    </fields>
+    <fields>
         <help>De datum en tijd van de laatste verwerking van de Batch.</help>
         <label>Laatst Verwerkt Op</label>
         <name>Last_Processed_On__c</name>

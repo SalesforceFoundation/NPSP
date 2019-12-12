@@ -1,24 +1,16 @@
-import {LightningElement, api} from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 import {setAccountId as setServiceAccountId} from 'c/geFormService';
+import GeFormService from 'c/geFormService';
+import ACCOUNT_1_IMPORTED_FIELD from
+        '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import NPSP_DATA_IMPORT_BATCH_FIELD
+    from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+import {handleError} from 'c/utilTemplateBuilder';
 
 export default class GeBatchGiftEntryApp extends LightningElement {
-    @api batchId;
-    @api accountId;
-    @api isBatchMode = false; // once we are loading from a batch, just batchId should be
-    // sufficient
-
-    //method used for testing until form is ready to be loaded with a Batch id
-    handleBatchId(event) {
-        this.batchId = event.target.value;
-        this.isBatchMode = this.batchId ? true : false;
-
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.isBatchMode = this.isBatchMode;
-
-        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.setBatchId(event.target.value);
-        table.loadBatch();
-    }
+    @api recordId;
+    @track accountId;
 
     //method used for testing until form has Account/Contact Lookups or is ready to be loaded
     // with an Account Id
@@ -29,17 +21,44 @@ export default class GeBatchGiftEntryApp extends LightningElement {
         setServiceAccountId(event.target.value);
     }
 
-    connectedCallback() {
-        //The form will load in batch mode once we are passing a batch id into the app on
-        // load, since the form responds to this property
-        this.isBatchMode = this.batchId ? true : false;
+    handleSubmit(event) {
+        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
+        const dataRow = this.getTableDataRow(
+            event.target.submissions[event.target.submissions.length - 1]
+        );
+
+        //simulate a lookup field being used to select an existing Account
+        if (!dataRow[ACCOUNT_1_IMPORTED_FIELD.fieldApiName]) {
+            dataRow[ACCOUNT_1_IMPORTED_FIELD.fieldApiName] = this.accountId;
+        }
+        if (!dataRow[DONATION_DONOR_FIELD.fieldApiName]) {
+            dataRow[DONATION_DONOR_FIELD.fieldApiName] = 'Account1';
+        }
+
+        if (!dataRow[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
+            dataRow[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.recordId;
+        }
+
+        GeFormService.saveAndDryRun(
+            this.recordId, dataRow)
+            .then(
+                dataImportModel => {
+                    Object.assign(dataImportModel.dataImportRows[0],
+                        dataImportModel.dataImportRows[0].record);
+                    table.upsertData(dataImportModel.dataImportRows[0], 'Id');
+                    event.detail.success(); //Re-enable the Save button
+                }
+            )
+            .catch(error => {
+                handleError(error);
+            });
     }
 
-    handleSubmit(event) {
-        const latestSubmission =
-            event.target.submissions[event.target.submissions.length - 1];
-        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.handleFormSubmission(latestSubmission);
+    getTableDataRow(formSubmission) {
+        let dataImportRecord =
+            GeFormService.getDataImportRecord(formSubmission.sectionsList);
+        dataImportRecord.submissionId = formSubmission.submissionId;
+        return dataImportRecord;
     }
 
     handleSectionsRetrieved(event) {
