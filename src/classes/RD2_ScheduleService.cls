@@ -231,11 +231,11 @@ public without sharing class RD2_ScheduleService {
 
         for (npe03__Recurring_Donation__c rd : rds) {
 
-            if (rd == null) {
+            if (rd == null || rd.Id == null) {
                 continue;
             }
 
-            installmentsByRd.put(rd.Id, doVisualization(rd.Id, startDate, numInstallments, schedulesByRd.get(rd.Id)));
+            installmentsByRd.put(rd.Id, doVisualization(startDate, numInstallments, schedulesByRd.get(rd.Id)));
         }
 
         currentDate = date.today();
@@ -245,19 +245,18 @@ public without sharing class RD2_ScheduleService {
 
     /***
     * @description Calculates the dates of the next n donations for a single Recurring Donation
-    * @param rdId Recurring Donation record Id
     * @param startDate Date
     * @param numInstallments Integer
     * @param schedules List of active RecurringDonationSchedule__c records
     * @return List<Installment>
     */
-    private List<Installment> doVisualization(Id rdId, Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
+    private List<Installment> doVisualization(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
 
         List<Installment> installments = new List<Installment>();
         currentDate = startDate;
         List <RecurringDonationSchedule__c> filteredSchedules;
 
-        if (rdId == null || schedules == null) {
+        if (schedules == null) {
             return installments;
         }
 
