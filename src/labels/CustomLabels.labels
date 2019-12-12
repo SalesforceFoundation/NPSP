@@ -349,6 +349,86 @@
         <value>Status:</value>
     </labels>
     <labels>
+        <fullName>BatchProgressStatusComplete</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusComplete</shortDescription>
+        <value>Complete</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusCompleteErrors</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusCompleteErrors</shortDescription>
+        <value>Complete with Errors</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusFailed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusFailed</shortDescription>
+        <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusHolding</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusHolding</shortDescription>
+        <value>Holding</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusError</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusError</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusPreparing</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusPreparing</shortDescription>
+        <value>Preparing</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusProcessing</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusProcessing</shortDescription>
+        <value>Processing</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusQueued</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusQueued</shortDescription>
+        <value>Queued</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusStopped</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusStopped</shortDescription>
+        <value>Stopped</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressStatusSuccess</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressStatusSuccess</shortDescription>
+        <value>Success</value>
+    </labels>
+    <labels>
         <fullName>BatchProgressTimeElapsed</fullName>
         <categories>BatchProgress</categories>
         <language>en_US</language>
@@ -370,7 +450,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>BatchProgressTitleRD2DataMigration</shortDescription>
-        <value>Data migration batch details</value>
+        <value>Data Migration Run</value>
     </labels>
     <labels>
         <fullName>BatchProgressTotalJobItems</fullName>
@@ -379,6 +459,30 @@
         <protected>true</protected>
         <shortDescription>BatchProgressTotalJobItems</shortDescription>
         <value>Total Batches:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalRecords</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecords</shortDescription>
+        <value>Total Records:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalRecordsProcessed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecordsProcessed</shortDescription>
+        <value>Records Processed:</value>
+    </labels>
+    <labels>
+        <fullName>BatchProgressTotalRecordsFailed</fullName>
+        <categories>BatchProgress</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BatchProgressTotalRecordsFailed</shortDescription>
+        <value>Records Failed:</value>
     </labels>
     <labels>
         <fullName>CONV_Accept_Risk</fullName>
@@ -1564,7 +1668,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationCompleteMessage</shortDescription>
-        <value>&lt;b&gt;&lt;i&gt;All done! You’re now running the Enhanced Recurring Donations experience!&lt;/i&gt;&lt;/b&gt;</value>
+        <value>Your migration was successful with no errors. All set up steps are now complete. You're ready to begin using Enhanced Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationErrorMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationErrorMessage</shortDescription>
+        <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationTitle</fullName>

@@ -94,6 +94,19 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     }
 
     /***
+    * @description Count of Recurring Donations that are migrated
+    */
+    @TestVisible
+    private Integer totalRecords = 0;
+
+    /***
+    * @description Count of Recurring Donations that failed to be migrated
+    */
+    @TestVisible
+    private Integer totalRecordsFailed = 0;
+
+
+    /***
     * @description Schedulable executes the batch job
     */
     public void execute(SchedulableContext context) {
@@ -119,7 +132,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
 
         } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name()) {
             throw new MigrationException(System.Label.RD2_DataMigrationInvalidCloseAction);
-            
+
         } else {
             return Database.getQueryLocator(getRDMigrationQuery());
         }
@@ -133,10 +146,10 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
         setBatchJobId(context);
-        
+
         RD2_OpportunityEvaluationService.overrideVoidOfOpenOpps = true;
 
-        Logger logger = new Logger(logContext, LOG_EXCEPTION_ERROR_TYPE);
+        Logger logger = new Logger(logContext);
         Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);
         Map<Id, List<Opportunity>> openOppsToVoidByRDId = new Map<Id, List<Opportunity>>();
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
@@ -148,6 +161,9 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             if (mapper.isConverted()) {
                 continue;
             }
+
+            //track only records that have not been migrated yet
+            totalRecords++;
 
             try {
                 convertedRDs.add(mapper.convertToEnhancedRD());
@@ -166,9 +182,19 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     }
 
     /**
-    * @description Batch Finish Method
+    * @description Logs batch job summary
     */
     public void finish(Database.BatchableContext context) {
+        UTIL_BatchJobService.BatchJobSummary summary = new UTIL_BatchJobService.BatchJobSummary(batchJobId, logContext)
+            .withTotalRecords(totalRecords)
+            .withTotalRecordsProcessed(totalRecords - totalRecordsFailed)
+            .withTotalRecordsFailed(totalRecordsFailed);
+
+        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        rdSettings.RecurringDonations2MigrationState__c = JSON.serialize(summary);
+        if (!Test.isRunningTest()) {
+            upsert rdSettings;
+        }
     }
 
 
@@ -208,7 +234,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     */
     @TestVisible
     private void handleSaveAndLogging(
-        List<npe03__Recurring_Donation__c> convertedRDs, 
+        List<npe03__Recurring_Donation__c> convertedRDs,
         Map<Id, List<Opportunity>> openOppsToVoidByRDId,
         Logger logger
     ) {
@@ -218,8 +244,14 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
 
         voidOpenOpportunities(savedRDIds, openOppsToVoidByRDId, logger);
 
-        if (this.isDryRunMode || logger.hasRelatedRecordFailed) {
+        if (this.isDryRunMode || logger.isRelatedRecordFailed) {
             Database.rollback(sp);
+
+            totalRecordsFailed += logger.isRelatedRecordFailed
+                ? convertedRDs.size() //every record failed regardless of the run mode
+                : logger.countRecordsFailed; //track individual records that failed
+        } else {
+            totalRecordsFailed += logger.countRecordsFailed;
         }
 
         logger.processErrors();
@@ -236,7 +268,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         List<Database.SaveResult> saveResults = convertedRDs.isEmpty()
             ? new List<Database.SaveResult>()
             : Database.update(convertedRDs, false);
-        
+
         logger.addErrors(saveResults, convertedRDs);
 
         return getSavedRecordIds(saveResults);
@@ -285,7 +317,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
             for (Opportunity opp : opps) {
                 opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
-            } 
+            }
 
             dmlResults = Database.update(opps, false);
         }
@@ -373,54 +405,70 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     * The current logger version is the ERR_Handler wrapper.
     */
     public class Logger {
-        /**
-        * @description Contains error results
-        */
+        /* @description Contains error results */
         @TestVisible
         private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
 
+        /* @description Primary records' SObjectType */
+        private SObjectType sObjType;
+
         /**
-        * @description Context in which logs are created and can be filtered out
+        * @description Context in which logs are created.
+        * Users can filter Error__c records by providing log context.
         */
         private String context;
 
-        /**
-        * @description Exception error type
-        */
+        /* @description Exception error type */
         private String exceptionErrorType;
 
+        /* @description Contains number of failed primary records. It excludes related records. */
+        public Integer countRecordsFailed { get; private set; }
+
+        /* @description Indicates if there is error on a related record DML operation */
+        public Boolean isRelatedRecordFailed { get; private set; }
+
         /**
-        * @description Indicates if there is error on a related record DML operation
+        * @description Default constructor applicable to Recurring Donations
+        * @param context Log context
+        * @param exceptionErrorType Error record Error Type value to log exception details
         */
-        public Boolean hasRelatedRecordFailed { get; private set; }
+        public Logger(String context) {
+            this(npe03__Recurring_Donation__c.SObjectType, context, LOG_EXCEPTION_ERROR_TYPE);
+        }
 
         /**
         * @description Constructor
+        * @param sObjType Primary record SObjectType
         * @param context Log context
+        * @param exceptionErrorType Error record Error Type value to log exception details
         */
-        public Logger(String context, String exceptionErrorType) {
+        public Logger(SObjectType sObjType, String context, String exceptionErrorType) {
+            this.sObjType = sObjType;
             this.context = context;
             this.exceptionErrorType = exceptionErrorType;
-            hasRelatedRecordFailed = false;
+
+            countRecordsFailed = 0;
+            isRelatedRecordFailed = false;
         }
 
         /**
         * @description Constructs log record and adds it into the error log container
         * @param e Exception
-        * @param rdId Recurring Donation Id
+        * @param recordId Id Recurring Donation record Id
         * @return void
         */
-        public void addError(Exception e, Id rdId) {
-            Error__c logEntry = new Error__c(
+        public void addError(Exception e, Id recordId) {
+            Error__c errorRecord = new Error__c(
                 Context_Type__c = context,
                 Datetime__c = System.now(),
-                Related_Record_ID__c = rdId,
-                Record_URL__c = ERR_Handler.getRecordURL(rdId),
+                Related_Record_ID__c = recordId,
+                Record_URL__c = ERR_Handler.getRecordURL(recordId),
                 Error_Type__c = exceptionErrorType,
                 Full_Message__c = e.getMessage()
             );
 
-            errorResult.errorRecords.add(logEntry);
+            errorResult.errorRecords.add(errorRecord);
+            countRecordsFailed++;
         }
 
         /**
@@ -433,11 +481,18 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
             if (records.isEmpty()) {
                 return;
             }
-            
+
             ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(dmlResults, records);
 
-            if (dmlErrors.errorsExist && records[0].getSObjectType() != npe03__Recurring_Donation__c.SObjectType) {
-                hasRelatedRecordFailed = true;
+            if (!dmlErrors.errorsExist) {
+                return;
+            }
+
+            if (records[0].getSObjectType() == sObjType) {
+                countRecordsFailed += dmlErrors.errorRecords.size();
+
+            } else {
+                isRelatedRecordFailed = true;
             }
 
             errorResult.errorRecords.addAll(
@@ -446,9 +501,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         }
 
         /**
-        * @description Constructs and collects error logs for records that failed in the DML operation
-        * @param dmlResults Insert/update/delete DML operation results
-        * @param records Records which were saved/deleted by the DML operation
+        * @description Creates Error__c record for each errorResult.errorRecords
         * @return void
         */
         public void processErrors() {

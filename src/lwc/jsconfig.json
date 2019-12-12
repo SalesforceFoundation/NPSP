@@ -23,6 +23,9 @@
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
             ],
+            "c/util": [
+                "util/util.js"
+            ],
             "c/utilPlatformEventListener": [
                 "utilPlatformEventListener/utilPlatformEventListener.js"
             ],
