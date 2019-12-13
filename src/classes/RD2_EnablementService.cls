@@ -95,7 +95,7 @@ public with sharing class RD2_EnablementService {
     */
     public Boolean isRecurringDonations2Ready() {
         return 
-            CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
+            STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c == true
             && isUserRunningLightning
             && isPilotEnabled;
     }
