@@ -220,7 +220,6 @@
         <label>Mise à jour rapide</label>
         <name>Quick_Update</name>
     </quickActions>
-    <startsWith><!-- Consonant --></startsWith>
     <webLinks>
         <label>Recalculer des cumuls</label>
         <name>Recalculate_Rollups</name>

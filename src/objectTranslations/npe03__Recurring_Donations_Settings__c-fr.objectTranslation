@@ -30,5 +30,4 @@
         <label>Taille du lot de dons réguliers</label>
         <name>Recurring_Donation_Batch_Size__c</name>
     </fields>
-    <startsWith><!-- Consonant --></startsWith>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

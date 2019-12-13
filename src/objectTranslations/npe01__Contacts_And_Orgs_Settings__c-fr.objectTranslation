@@ -75,5 +75,4 @@
         <label>Simple modif. d’adresse traitée en m à j</label>
         <name>Simple_Address_Change_Treated_as_Update__c</name>
     </fields>
-    <startsWith><!-- Consonant --></startsWith>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

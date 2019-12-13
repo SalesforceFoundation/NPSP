@@ -30,5 +30,4 @@
         <label>Mise à jour rapide</label>
         <name>Quick_Update</name>
     </quickActions>
-    <startsWith><!-- Consonant --></startsWith>
     </CustomObjectTranslation>

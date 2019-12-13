@@ -9,5 +9,4 @@
         <label>Mettre à jour un foyer</label>
         <name>Update_Household</name>
     </quickActions>
-    <startsWith><!-- Consonant --></startsWith>
     </CustomObjectTranslation>

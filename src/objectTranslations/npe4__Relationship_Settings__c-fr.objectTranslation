@@ -5,5 +5,4 @@
         <label>Activer synchr. champ personnalisé</label>
         <name>Enable_Custom_Field_Sync__c</name>
     </fields>
-    <startsWith><!-- Consonant --></startsWith>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

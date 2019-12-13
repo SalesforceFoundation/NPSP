@@ -15,5 +15,4 @@
         <label>Utiliser taux convers. datés si néces.</label>
         <name>Use_Dated_Conversion_Rates__c</name>
     </fields>
-    <startsWith><!-- Consonant --></startsWith>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>
