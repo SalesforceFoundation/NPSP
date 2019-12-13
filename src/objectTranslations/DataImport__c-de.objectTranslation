@@ -50,42 +50,34 @@
         <relationshipLabel><!-- NPSP Data Imports (Account1 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help>Account1.BillingCity</help>
         <label>Account1 Stadt</label>
         <name>Account1_City__c</name>
     </fields>
     <fields>
-        <help>Account1.BillingCountry</help>
         <label>Account1 Land</label>
         <name>Account1_Country__c</name>
     </fields>
     <fields>
-        <help>Account1.Name</help>
         <label>Account1 Name</label>
         <name>Account1_Name__c</name>
     </fields>
     <fields>
-        <help>Account1.Phone</help>
         <label>Account1 Telefon</label>
         <name>Account1_Phone__c</name>
     </fields>
     <fields>
-        <help>Account1.BillingState</help>
         <label>Account1 Bundesstaat/Provinz</label>
         <name>Account1_State_Province__c</name>
     </fields>
     <fields>
-        <help>Account1.BillingStreet</help>
         <label>Account1 Straße</label>
         <name>Account1_Street__c</name>
     </fields>
     <fields>
-        <help>Account1.Website</help>
         <label>Account1 Website</label>
         <name>Account1_Website__c</name>
     </fields>
     <fields>
-        <help>Account1.BillingPostalCode</help>
         <label>Account1 Postleitzahl</label>
         <name>Account1_Zip_Postal_Code__c</name>
     </fields>
@@ -99,42 +91,34 @@
         <relationshipLabel><!-- NPSP Data Imports (Account2 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help>Account2.BillingCity</help>
         <label>Account2 Stadt</label>
         <name>Account2_City__c</name>
     </fields>
     <fields>
-        <help>Account2.BillingCountry</help>
         <label>Account2 Land</label>
         <name>Account2_Country__c</name>
     </fields>
     <fields>
-        <help>Account2.Name</help>
         <label>Account2 Name</label>
         <name>Account2_Name__c</name>
     </fields>
     <fields>
-        <help>Account2.Phone</help>
         <label>Account2 Telefon</label>
         <name>Account2_Phone__c</name>
     </fields>
     <fields>
-        <help>Account2.BillingState</help>
         <label>Account2 Bundesstaat/Provinz</label>
         <name>Account2_State_Province__c</name>
     </fields>
     <fields>
-        <help>Account2.BillingStreet</help>
         <label>Account2 Straße</label>
         <name>Account2_Street__c</name>
     </fields>
     <fields>
-        <help>Account2.Website</help>
         <label>Account2 Website</label>
         <name>Account2_Website__c</name>
     </fields>
     <fields>
-        <help>Account2.BillingPostalCode</help>
         <label>Account2 Postleitzahl</label>
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
@@ -157,47 +141,38 @@
         <relationshipLabel><!-- NPSP Data Imports (Contact1 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help>Contact1.npe01__AlternateEmail__c</help>
         <label>Kontakt1 Alternative E-Mail-Adresse</label>
         <name>Contact1_Alternate_Email__c</name>
     </fields>
     <fields>
-        <help>Contact1.Birthdate</help>
         <label>Kontakt1 Geburtsdatum</label>
         <name>Contact1_Birthdate__c</name>
     </fields>
     <fields>
-        <help>Contact1.Firstname</help>
         <label>Kontakt1 Vorname</label>
         <name>Contact1_Firstname__c</name>
     </fields>
     <fields>
-        <help>Contact1.HomePhone</help>
         <label>Kontakt1 Telefon privat</label>
         <name>Contact1_Home_Phone__c</name>
     </fields>
     <fields>
-        <help>Contact1.Lastname</help>
         <label>Kontakt1 Nachname</label>
         <name>Contact1_Lastname__c</name>
     </fields>
     <fields>
-        <help>Contact1.MobilePhone</help>
         <label>Kontakt1 Mobiltelefon</label>
         <name>Contact1_Mobile_Phone__c</name>
     </fields>
     <fields>
-        <help>Contact1.OtherPhone</help>
         <label>Kontakt1 Sonstiges Telefon</label>
         <name>Contact1_Other_Phone__c</name>
     </fields>
     <fields>
-        <help>Contact1.npe01__HomeEmail__c</help>
         <label>Kontakt1 Persönliche E-Mail-Adresse</label>
         <name>Contact1_Personal_Email__c</name>
     </fields>
     <fields>
-        <help>Contact1.npe01__Preferred_Email__c</help>
         <label>Kontakt1 Bevorzugte E-Mail-Adresse</label>
         <name>Contact1_Preferred_Email__c</name>
         <picklistValues>
@@ -214,7 +189,6 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Contact1.npe01__PreferredPhone__c</help>
         <label>Kontakt1 Bevorzugte Telefonnummer</label>
         <name>Contact1_Preferred_Phone__c</name>
         <picklistValues>
@@ -235,22 +209,18 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Contact1.Salutation</help>
         <label>Kontakt1 Anrede</label>
         <name>Contact1_Salutation__c</name>
     </fields>
     <fields>
-        <help>Contact1.Title</help>
         <label>Kontakt1 Titel</label>
         <name>Contact1_Title__c</name>
     </fields>
     <fields>
-        <help>Contact1.npe01__WorkEmail__c</help>
         <label>Kontakt1 E-Mail-Adresse Büro</label>
         <name>Contact1_Work_Email__c</name>
     </fields>
     <fields>
-        <help>Contact1.npe01__WorkPhone__c</help>
         <label>Kontakt1 Telefon Büro</label>
         <name>Contact1_Work_Phone__c</name>
     </fields>
@@ -264,47 +234,38 @@
         <relationshipLabel><!-- NPSP Data Imports (Contact2 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help>Contact2.npe01__AlternateEmail__c</help>
         <label>Kontakt2 Alternative E-Mail-Adresse</label>
         <name>Contact2_Alternate_Email__c</name>
     </fields>
     <fields>
-        <help>Contact2.Birthdate</help>
         <label>Kontakt2 Geburtsdatum</label>
         <name>Contact2_Birthdate__c</name>
     </fields>
     <fields>
-        <help>Contact2.Firstname</help>
         <label>Kontakt2 Vorname</label>
         <name>Contact2_Firstname__c</name>
     </fields>
     <fields>
-        <help>Contact2.HomePhone</help>
         <label>Kontakt2 Telefon privat</label>
         <name>Contact2_Home_Phone__c</name>
     </fields>
     <fields>
-        <help>Contact2.Lastname</help>
         <label>Kontakt2 Nachname</label>
         <name>Contact2_Lastname__c</name>
     </fields>
     <fields>
-        <help>Contact2.MobilePhone</help>
         <label>Kontakt2 Mobiltelefon</label>
         <name>Contact2_Mobile_Phone__c</name>
     </fields>
     <fields>
-        <help>Contact2.OtherPhone</help>
         <label>Kontakt2 Sonstiges Telefon</label>
         <name>Contact2_Other_Phone__c</name>
     </fields>
     <fields>
-        <help>Contact2.npe01__HomeEmail__c</help>
         <label>Kontakt2 Persönliche E-Mail-Adresse</label>
         <name>Contact2_Personal_Email__c</name>
     </fields>
     <fields>
-        <help>Contact2.npe01__Preferred_Email__c</help>
         <label>Kontakt2 Bevorzugte E-Mail-Adresse</label>
         <name>Contact2_Preferred_Email__c</name>
         <picklistValues>
@@ -321,7 +282,6 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Contact2.npe01__PreferredPhone__c</help>
         <label>Kontakt2 Bevorzugte Telefonnummer</label>
         <name>Contact2_Preferred_Phone__c</name>
         <picklistValues>
@@ -342,22 +302,18 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Contact2.Salutation</help>
         <label>Kontakt2 Anrede</label>
         <name>Contact2_Salutation__c</name>
     </fields>
     <fields>
-        <help>Contact2.Title</help>
         <label>Kontakt2 Titel</label>
         <name>Contact2_Title__c</name>
     </fields>
     <fields>
-        <help>Contact2.npe01__WorkEmail__c</help>
         <label>Kontakt2 E-Mail-Adresse Büro</label>
         <name>Contact2_Work_Email__c</name>
     </fields>
     <fields>
-        <help>Contact2.npe01__WorkPhone__c</help>
         <label>Kontakt2 Telefon Büro</label>
         <name>Contact2_Work_Phone__c</name>
     </fields>
@@ -366,7 +322,6 @@
         <name>DonationCampaignImportStatus__c</name>
     </fields>
     <fields>
-        <help>Opportunity.CampaignId</help>
         <label>Spendenkampagnenquelle</label>
         <name>DonationCampaignImported__c</name>
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
@@ -381,7 +336,6 @@
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
-        <help>Opportunity.Amount</help>
         <label>Spende Betrag</label>
         <name>Donation_Amount__c</name>
     </fields>
@@ -390,12 +344,10 @@
         <name>Donation_Campaign_Name__c</name>
     </fields>
     <fields>
-        <help>Opportunity.CloseDate</help>
         <label>Spendendatum</label>
         <name>Donation_Date__c</name>
     </fields>
     <fields>
-        <help>Opportunity.Description</help>
         <label>Spendenbeschreibung</label>
         <name>Donation_Description__c</name>
     </fields>
@@ -413,27 +365,22 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Opportunity.npe01__Member_Level__c</help>
         <label>Spende auf Mitgliederebene</label>
         <name>Donation_Member_Level__c</name>
     </fields>
     <fields>
-        <help>Opportunity.npe01__Membership_End_Date__c</help>
         <label>Enddatum der Spendenmitgliedschaft</label>
         <name>Donation_Membership_End_Date__c</name>
     </fields>
     <fields>
-        <help>Opportunity.npe01__Membership_Origin__c</help>
         <label>Ursprung der Spendenmitgliedschaft</label>
         <name>Donation_Membership_Origin__c</name>
     </fields>
     <fields>
-        <help>Opportunity.npe01__Membership_Start_Date__c</help>
         <label>Startdatum der Spendenmitgliedschaft</label>
         <name>Donation_Membership_Start_Date__c</name>
     </fields>
     <fields>
-        <help>Opportunity.Name</help>
         <label>Spendenname</label>
         <name>Donation_Name__c</name>
     </fields>
@@ -443,17 +390,14 @@
         <name>Donation_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help>Opportunity.RecordTypeId</help>
         <label>Spendenname für Datensatztyp</label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>
     <fields>
-        <help>Opportunity.StageName</help>
         <label>Spendenphase</label>
         <name>Donation_Stage__c</name>
     </fields>
     <fields>
-        <help>Opportunity.Type</help>
         <label>Spendentyp</label>
         <name>Donation_Type__c</name>
     </fields>
@@ -526,27 +470,22 @@
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
-        <help>Address.npsp__MailingCity__c</help>
         <label>Stadt privat</label>
         <name>Home_City__c</name>
     </fields>
     <fields>
-        <help>Address.npsp__MailingCountry__c</help>
         <label>Land privat </label>
         <name>Home_Country__c</name>
     </fields>
     <fields>
-        <help>Address.npsp__MailingState__c</help>
         <label>Bundesstaat/Provinz privat</label>
         <name>Home_State_Province__c</name>
     </fields>
     <fields>
-        <help>Address.npsp__MailingStreet__c</help>
         <label>Straße privat</label>
         <name>Home_Street__c</name>
     </fields>
     <fields>
-        <help>Address.npsp__MailingPostalCode__c</help>
         <label>Postleitzahl privat</label>
         <name>Home_Zip_Postal_Code__c</name>
     </fields>
@@ -556,7 +495,6 @@
         <relationshipLabel>NPSP-Datenimporte (Haushalt-Account importiert)</relationshipLabel>
     </fields>
     <fields>
-        <help>Household.Phone</help>
         <label>Haushalt-Telefon</label>
         <name>Household_Phone__c</name>
     </fields>
@@ -611,12 +549,10 @@
         <relationshipLabel>NPSP-Datenimporte</relationshipLabel>
     </fields>
     <fields>
-        <help>Payment.npe01__Check_Reference_Number__c</help>
         <label>Zahlungsprüfung/Referenznummer</label>
         <name>Payment_Check_Reference_Number__c</name>
     </fields>
     <fields>
-        <help>Payment.npe01__Payment_Method__c</help>
         <label>Zahlungsmethode</label>
         <name>Payment_Method__c</name>
     </fields>

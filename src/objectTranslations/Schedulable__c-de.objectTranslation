@@ -54,27 +54,7 @@
         <help>Wie oft der Auftrag ausgeführt wird.</help>
         <label>Häufigkeit</label>
         <name>Frequency__c</name>
-        <picklistValues>
-            <masterLabel>Daily</masterLabel>
-            <translation>Täglich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Hourly</masterLabel>
-            <translation>Stündlich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monthly</masterLabel>
-            <translation>Monatlich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Quarterly</masterLabel>
-            <translation>Vierteljährlich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Weekly</masterLabel>
-            <translation>Wöchentlich</translation>
-        </picklistValues>
-    </fields>
+        </fields>
     <fields>
         <help>Letzte Ausführung des Auftrags.</help>
         <label>Letzte Ausführung</label>

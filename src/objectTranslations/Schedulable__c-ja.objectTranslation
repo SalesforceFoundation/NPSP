@@ -18,27 +18,7 @@
         <help>ジョブの実行頻度。</help>
         <label>頻度</label>
         <name>Frequency__c</name>
-        <picklistValues>
-            <masterLabel>Daily</masterLabel>
-            <translation>毎日</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Hourly</masterLabel>
-            <translation>1 時間ごと</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monthly</masterLabel>
-            <translation>毎月</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Quarterly</masterLabel>
-            <translation>毎四半期</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Weekly</masterLabel>
-            <translation>毎週</translation>
-        </picklistValues>
-    </fields>
+        </fields>
     <fields>
         <help>ジョブが最後に実行された日時。</help>
         <label>最終実行日時</label>

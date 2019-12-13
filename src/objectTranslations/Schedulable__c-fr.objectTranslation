@@ -22,27 +22,7 @@
         <help>Quand exécuter la tâche.</help>
         <label>Fréquence</label>
         <name>Frequency__c</name>
-        <picklistValues>
-            <masterLabel>Daily</masterLabel>
-            <translation>Quotidien</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Hourly</masterLabel>
-            <translation>Toutes les heures</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monthly</masterLabel>
-            <translation>Mensuel</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Quarterly</masterLabel>
-            <translation>Trimestriel</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Weekly</masterLabel>
-            <translation>Hebdomadaire</translation>
-        </picklistValues>
-    </fields>
+        </fields>
     <fields>
         <help>La dernière fois que la tâche a été exécutée.</help>
         <label>Date de dernière exécution</label>
