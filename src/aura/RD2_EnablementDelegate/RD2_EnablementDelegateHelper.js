@@ -15,13 +15,14 @@
                 const enablementState = JSON.parse(response.getReturnValue());
 
                 if (!enablementState.isReady && !enablementState.isEnabled) {
-                    this.displayElement(component, "enablement-disabled");
+                    this.displayElement(component, "enablementDisabled");
                     return;
                 }
 
                 this.displayElement(component, "enabler");
                 component.set('v.state', enablementState);
 
+                this.refreshDryRun(component);
                 this.refreshEnable(component);
                 this.refreshMetaDeploy(component);
                 this.refreshMigration(component);
@@ -38,8 +39,9 @@
     */
     confirmEnable: function (component) {
         //disable the current active step so the next step is enabled only on current step success
+        component.set('v.state.hideDryRun', true);
         component.set('v.state.isConfirmed', false);
-
+        this.showSpinner(component, 'enableConfirmSpinner');
         this.clearError(component);
 
         var action = component.get('c.confirmEnablement');
@@ -54,10 +56,11 @@
                 component.set('v.state.isConfirmed', true);
 
             } else if (state === 'ERROR') {
-                this.handleError(component, response.getError(), '1');
+                this.handleError(component, response.getError(), 'enablement');
             }
 
             this.refreshEnable(component);
+            this.hideSpinner(component, 'enableConfirmSpinner');
         });
 
         $A.enqueueAction(action);
@@ -68,9 +71,8 @@
     completeEnable: function (component) {
         //disable the current active step so the next step is enabled only on current step success
         component.set('v.state.isEnabled', false);
-
         this.clearError(component);
-        this.disableEdit(component, "enable-toggle");
+        this.disableEdit(component, "enableToggle");
 
         var action = component.get('c.enableEnhancement');
 
@@ -84,7 +86,7 @@
                 component.set('v.state.isEnabled', true);
 
             } else if (state === 'ERROR') {
-                this.handleError(component, response.getError(), '1');
+                this.handleError(component, response.getError(), 'enablement');
             }
 
             this.refreshEnable(component);
@@ -138,7 +140,7 @@
                 component.set('v.state.isMetaDeployLaunched', true);
 
             } else if (state === 'ERROR') {
-                this.handleError(component, response.getError(), '2');
+                this.handleError(component, response.getError(), 'metadeploy');
             }
 
             this.refreshMetaDeploy(component);
@@ -153,6 +155,7 @@
     confirmDeploy: function (component) {
         //disable the current active step so the next step is enabled only on current step success
         component.set('v.state.isMetaDeployConfirmed', false);
+        this.showSpinner(component, 'metadeployConfirmSpinner');
 
         this.clearError(component);
 
@@ -168,10 +171,39 @@
                 component.set('v.state.isMetaDeployConfirmed', true);
 
             } else if (state === 'ERROR') {
-                this.handleError(component, response.getError(), '2');
+                this.handleError(component, response.getError(), 'metadeploy');
             }
 
             this.refreshMetaDeploy(component);
+            this.hideSpinner(component, 'metadeployConfirmSpinner');
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description Starts data migration batch in dry run mode
+    */
+    runDryRun: function (component) {
+        component.set('v.state.isDryRunInProgress', true);
+        component.set('v.dryRunBatch', null);
+
+        this.clearError(component);
+
+        var action = component.get('c.runDryRun');
+
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            const state = response.getState();
+
+            if (state === 'SUCCESS') {
+                component.find('dryRunJob').handleLoadBatchJob();
+
+            } else if (state === 'ERROR') {
+                component.set('v.state.isDryRunInProgress', false);
+                this.handleError(component, response.getError(), 'dryRun');
+            }
         });
 
         $A.enqueueAction(action);
@@ -181,7 +213,7 @@
     */
     runMigration: function (component) {
         component.set('v.state.isMigrationInProgress', true);
-        component.set('v.batchProgress', null);
+        component.set('v.migrationBatch', null);
 
         this.clearError(component);
 
@@ -194,11 +226,11 @@
             const state = response.getState();
 
             if (state === 'SUCCESS') {
-                component.find('rdMigrationBatchJob').handleLoadBatchJob();
+                component.find('migrationJob').handleLoadBatchJob();
 
             } else if (state === 'ERROR') {
                 component.set('v.state.isMigrationInProgress', false);
-                this.handleError(component, response.getError(), '3');
+                this.handleError(component, response.getError(), 'migration');
             }
         });
 
@@ -207,55 +239,25 @@
     /****
     * @description Updates page and settings based on the migration batch job status change
     */
-    handleBatchProgressEvent: function (component, event) {
+    handleBatchEvent: function (component, event, batchAttribute) {
         if (!component.isValid()) {
             return;
         }
 
-        const batchProgress = event.getParam('batchProgress');
-        if (batchProgress === undefined
-            || batchProgress === null
-            || batchProgress.className !== 'RD2_DataMigration_BATCH'
+        const batch = event.getParam('batchProgress');
+        if (batch === undefined
+            || batch === null
+            || batch.className !== 'RD2_DataMigration_BATCH'
         ) {
             return;
         }
 
-        component.set('v.batchProgress', batchProgress);
-
-        this.refreshMigration(component);
-    },
-    /****
-    * @description Set data migration attributes
-    */
-    refreshMigration: function (component) {
-        if (!component.isValid()) {
-            return;
-        }
-
-        const enablementState = component.get("v.state");
-        if (enablementState === undefined || enablementState === null) {
-            return;
-        }
-
-        const batchProgress = component.get("v.batchProgress");
-        if (batchProgress === undefined || batchProgress === null) {
-            component.set('v.state.isMigrationInProgress', false);
-            component.set('v.state.isMigrationCompleted', false);
-
-        } else {
-            component.set('v.state.isMigrationInProgress', batchProgress.isInProgress);
-
-            const isMigrationCompleted =
-                enablementState.isMetaDeployConfirmed
-                && batchProgress.status === 'Completed'
-                && batchProgress.isSuccess;
-            component.set('v.state.isMigrationCompleted', isMigrationCompleted);
-        }
+        component.set(batchAttribute, batch);
     },
     /****
     * @description Displays an unexpected error generated during data migration batch execution
     */
-    processMigrationError: function (component, event) {
+    handleBatchError: function (component, event, section) {
         if (!component.isValid()) {
             return;
         }
@@ -269,57 +271,114 @@
         }
 
         this.clearError(component);
-        this.handleError(component, errorDetail, '3');
+        this.handleError(component, errorDetail, section);
     },
     /****
     * @description Disables page elements and reloads the enablement state
     */
     refreshView: function (component) {
-        this.hideElement(component, "enablement-disabled");
+        this.hideElement(component, "enablementDisabled");
         this.hideElement(component, "enabler");
 
         this.loadState(component);
     },
     /****
+    * @description Refreshes dry run migration section
+    */
+    refreshDryRun: function (component) {
+        if (!component.isValid()) {
+            return;
+        }
+
+        const state = component.get("v.state");
+        if (state === undefined || state === null) {
+            return;
+        }
+
+        component.set('v.state.hideDryRun', state.isConfirmed);
+
+        const batch = component.get("v.dryRunBatch");
+        let isInProgress = false;
+        let isCompleted = false;
+
+        if (state.isConfirmed) {
+            isCompleted = true;
+
+        } else if (batch !== undefined && batch !== null) {
+            isInProgress = batch.isInProgress;
+            isCompleted = batch.status === 'Completed' && batch.isSuccess;
+        }
+
+        component.set('v.state.isDryRunInProgress', isInProgress);
+        component.set('v.state.isDryRunCompleted', isCompleted);
+    },
+    /****
+    * @description Set data migration attributes
+    */
+    refreshMigration: function (component) {
+        if (!component.isValid()) {
+            return;
+        }
+
+        const state = component.get("v.state");
+        if (state === undefined || state === null) {
+            return;
+        }
+
+        const batch = component.get("v.migrationBatch");
+        if (batch === undefined || batch === null) {
+            component.set('v.state.isMigrationInProgress', false);
+            component.set('v.state.isMigrationCompleted', false);
+
+        } else {
+            component.set('v.state.isMigrationInProgress', batch.isInProgress);
+
+            const isMigrationCompleted = state.isMetaDeployConfirmed
+                && batch.status === 'Completed'
+                && batch.isSuccess;
+            component.set('v.state.isMigrationCompleted', isMigrationCompleted);
+        }
+    },
+    /****
     * @description Refreshes enable Recurring Donations section
     */
     refreshEnable: function (component) {
-        let enablementState = component.get("v.state");
+        let state = component.get("v.state");
 
         let enableProgress = 0;
-        if (enablementState.isEnabled) {
+        if (state.isEnabled) {
             enableProgress = 100;
-        } else if (enablementState.isConfirmed) {
+        } else if (state.isConfirmed) {
             enableProgress = 50;
         }
         component.set('v.state.enableProgress', enableProgress);
 
-        if (!enablementState.isConfirmed || enablementState.isEnabled) {
-            this.disableEdit(component, "enable-toggle");
+        if (!state.isConfirmed || state.isEnabled) {
+            this.disableEdit(component, "enableToggle");
         } else {
-            this.enableEdit(component, "enable-toggle");
+            this.enableEdit(component, "enableToggle");
         }
     },
     /****
     * @description Refreshes MetaDeploy section
     */
     refreshMetaDeploy: function (component) {
-        let enablementState = component.get("v.state");
+        let state = component.get("v.state");
 
         let metaDeployProgress = 0;
-        if (enablementState.isMetaDeployConfirmed) {
+        if (state.isMetaDeployConfirmed) {
             metaDeployProgress = 100;
-        } else if (enablementState.isMetaDeployLaunched) {
+        } else if (state.isMetaDeployLaunched) {
             metaDeployProgress = 50;
         }
         component.set('v.state.metaDeployProgress', metaDeployProgress);
 
-        let linkIcon = component.find('metadeploy-link-icon');
-        if (enablementState.isEnabled) {
-            this.enableEdit(component, "metadeploy-link");
+        let linkIcon = component.find('metadeployIcon');
+        if (state.isEnabled) {
+            this.enableEdit(component, "metadeployLink");
             $A.util.addClass(linkIcon, "activeIcon");
         } else {
-            this.disableEdit(component, "metadeploy-link");
+            this.disableEdit(component, "metadeployLink");
             $A.util.removeClass(linkIcon, "activeIcon");
         }
     },
@@ -376,5 +435,19 @@
 
         component.set('v.errorSection', section);
         component.set('v.errorMessage', message);
+    },
+    /**
+     * @description: shows specific spinner 
+     */
+    showSpinner: function (component, element) {
+        var spinner = component.find(element);
+        $A.util.removeClass(spinner, 'slds-hide');
+    },
+    /**
+     * @description: hides specific spinner 
+     */
+    hideSpinner: function (component, element) {
+        var spinner = component.find(element);
+        $A.util.addClass(spinner, 'slds-hide');
     }
 })

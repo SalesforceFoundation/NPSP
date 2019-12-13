@@ -1479,6 +1479,11 @@
         <members>RD2_DisableCustomizableRollupWarning</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
+        <members>RD2_EnablementDryRunBatchTitle</members>
+        <members>RD2_EnablementDryRunButton</members>
+        <members>RD2_EnablementDryRunComplete</members>
+        <members>RD2_EnablementDryRunIntro</members>
+        <members>RD2_EnablementDryRunTitle</members>
         <members>RD2_EnablementEnableConfirm</members>
         <members>RD2_EnablementEnableIntro</members>
         <members>RD2_EnablementEnableMessage</members>

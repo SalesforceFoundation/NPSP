@@ -1559,6 +1559,46 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>You must enable both Customizable Rollups and Lightning Experience in order to enable Enhanced Recurring Donations.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementDryRunBatchTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDryRunBatchTitle</shortDescription>
+        <value>Test Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDryRunButton</shortDescription>
+        <value>Validate Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunComplete</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDryRunComplete</shortDescription>
+        <value>Test Migration has completed successfully.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDryRunTitle</shortDescription>
+        <value>Test Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDryRunIntro</shortDescription>
+        <value>The test migration validates your existing data and gives you a chance to fix any errors before you convert to the Enhanced Recurring Donations data model. If errors are found, you can see them by going to NPSP Settings | System Tools | Error Logs. After you fix the errors, return here and run the test migration again.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementEnableTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

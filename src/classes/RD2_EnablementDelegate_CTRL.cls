@@ -232,6 +232,21 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Starts the dry run data migration
+    * @return void
+    */
+    @AuraEnabled
+    public static void runDryRun() {
+        try {
+            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+            Database.executeBatch(batch, batch.batchSize);
+
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+    }
+
+    /***
     * @description Starts the data migration batch
     * @return void
     */
