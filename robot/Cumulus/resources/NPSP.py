@@ -259,9 +259,9 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()   
         
         
-    def confirm_field_value(self, field,value,status):
-        """If status is Y then the specified value should be present in the field
-                        N then the specified value should not be present in the field
+    def confirm_field_value(self, field,status,value):
+        """If status is 'contains' then the specified value should be present in the field
+                        'does not contain' then the specified value should not be present in the field
         """
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
@@ -269,9 +269,9 @@ class NPSP(SalesforceRobotLibraryBase):
             locator = i.format(field)
             if self.check_if_element_exists(locator):   
                 actual_value=self.selenium.get_webelement(locator).text
-                if status.upper() == "Y":
+                if status == "contains":
                     assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
-                elif status.upper() == "N":
+                elif status == "does not contain":
                     assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
                 list_found = True
                 break

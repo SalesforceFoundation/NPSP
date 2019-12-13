@@ -52,7 +52,7 @@ Select an opportunity for an account make grid changes and process it
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     Go To Record Home    &{opportunity}[Id]
-    Confirm Field Value    Amount    $10.00    Y
+    Confirm Field Value    Amount    contains    $10.00    
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Field Value    Close Date    ${opp_date}    Y
-    Confirm Field Value    Stage    Closed Won    Y
+    Confirm Field Value    Close Date    contains    ${opp_date}    
+    Confirm Field Value    Stage    contains    Closed Won    
