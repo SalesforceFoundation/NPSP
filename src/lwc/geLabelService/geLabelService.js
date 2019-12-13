@@ -1,3 +1,6 @@
+// Import utility method
+import { format } from 'c/utilTemplateBuilder';
+
 // Import custom labels
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
@@ -11,6 +14,7 @@ import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonSave from '@salesforce/label/c.commonSave';
 import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
+import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import commonWarning from '@salesforce/label/c.commonWarning';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
@@ -80,10 +84,15 @@ import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpd
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
 
 class GeLabelService {
+
     /*******************************************************************************
-    * @description Expose imported custom labels.
+    * @description Expose imported custom labels. We freeze this object because any
+    * import of this service component within the same session is shared across
+    * components. We disallow mutations of labels at this level. Components importing
+    * the provided labels must clone in order to mutate/format the labels. A 'format'
+    * utility method is provided.
     */
-    CUSTOM_LABELS = {
+    CUSTOM_LABELS = Object.freeze({
         commonAssistiveError,
         commonAssistiveInfo,
         commonAssistiveSuccess,
@@ -96,6 +105,7 @@ class GeLabelService {
         commonRequired,
         commonSave,
         commonSaveAndClose,
+        commonUnknownError,
         commonWarning,
         geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
@@ -163,38 +173,18 @@ class GeLabelService {
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,
-    }
+    });
 
     /*******************************************************************************
-    * @description Javascript method comparable to Apex's String.format(...).
+    * @description Pass through method for imported 'format' utility method.
+    * Javascript method comparable to Apex's String.format(...).
     * Replaces placeholders in Custom Labels ({0}, {1}, etc) with provided values.
     *
     * @param {string} string: Custom Label to be formatted.
     * @param {list} replacements: List of string to use as replacements.
     * @return {string} formattedString: Formatted custom label
     */
-    format = (string, replacements) => {
-        const isNull = string === null || string === undefined;
-        let formattedString = isNull ? '' : string;
-        if (replacements) {
-            let key;
-            const type = typeof replacements;
-            const args =
-                'string' === type || 'number' === type
-                    ? Array.prototype.slice.call(replacements)
-                    : replacements;
-            for (key in args) {
-                if (args.hasOwnProperty(key)) {
-                    formattedString = formattedString.replace(
-                        new RegExp('\\{' + key + '\\}', 'gi'),
-                        args[key]
-                    );
-                }
-            }
-        }
-
-        return formattedString;
-    };
+    format = (string, replacements) => format(string, replacements);
 }
 
 export default new GeLabelService();

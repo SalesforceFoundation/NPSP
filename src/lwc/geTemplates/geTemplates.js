@@ -5,9 +5,7 @@ import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFo
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { findIndexByProperty } from 'c/utilTemplateBuilder';
-
-// Import custom labels
-import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
+import GeLabelService from 'c/geLabelService';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
@@ -27,9 +25,7 @@ const columns = [
 export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
-    CUSTOM_LABELS = {
-        geAssistiveSpinner,
-    }
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @track templates;
     @track columns = columns;
