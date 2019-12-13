@@ -119,10 +119,12 @@ export default class GeFormField extends LightningElement {
         return this.fieldType === RICH_TEXT_TYPE;
     }
 
+    @api
     get isLookup() {
         return this.fieldType === LOOKUP_TYPE;
     }
 
+    @api
     get isPicklist() {
         return this.fieldType === PICKLIST_TYPE;
     }
@@ -144,7 +146,24 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
+    get sourceFieldAPIName() {
+        return this.fieldInfo.Source_Field_API_Name;
+    }
+
+    @api
     get fieldLabel() {
         return this.element.label;
+    }
+
+    @api
+    setCustomValidity(errorMessage) {
+        let inputField = this.template.querySelector('[data-id="inputComponent"]');
+        
+        if (this.isLookup) {
+            // This is where we will set the lookup's error when it is available. 
+        } else {
+            inputField.setCustomValidity(errorMessage);
+            inputField.reportValidity();
+        }
     }
 }
