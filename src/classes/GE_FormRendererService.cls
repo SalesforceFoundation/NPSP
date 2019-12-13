@@ -1,4 +1,6 @@
 public with sharing class GE_FormRendererService {
+    private static final String CONTACT_TYPE = 'Contact';
+    private static final String ACCOUNT_TYPE = 'Account';
 
     @AuraEnabled
     public static FORM_RenderWrapper getRenderWrapperById(Id templateId) {
@@ -95,7 +97,8 @@ public with sharing class GE_FormRendererService {
 
             updateTemplateWithRequired(template, mappingService.fieldMappingSet);
 
-            if (!String.isBlank(recordId) && !String.isBlank(apiName)) {
+            // display record values if contact or account
+            if (!String.isBlank(recordId) && !String.isEmpty(apiName)) {
                 updateTemplateWithValues(template, mappingService.fieldMappingSet, recordId, apiName);
             }
 
@@ -156,9 +159,13 @@ public with sharing class GE_FormRendererService {
 
         //UTIL_Describe describeService = UTIL_Describe.getInstance();
 
-        Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(apiName);
+        //Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(apiName);
 
-        system.debug('fields = ' + fields);
+        sObject record = getRecord(recordId, apiName);
+        system.debug('record = '  + record);
+        
+
+        /*system.debug('fields = ' + fields);
         system.debug('field count = ' + fields.keySet().size());
         for(String fieldName : fields.keySet()) {
             system.debug('field = ' + fieldName);
@@ -166,12 +173,55 @@ public with sharing class GE_FormRendererService {
 
         for (FORM_Section section : sectionList) {
             for (FORM_Element element : section.elements) {
-                //system.debug('element = ' + element);
+                //system.debug('element = ' + element.value);
             }
-        }
+        }*/
     }
 
-    private static Contact getObject(String recordId, String apiName) {
+     /*******************************************************************************************************
+    * @description selects a contact or account by record id
+     * @param recordId - id of the contact or account
+    * @param apiName - sobject type for the record, contact or account
+    */
+    private static sObject getRecord(String recordId, String apiName) {
+        String soql = buildSoql(recordId, apiName);
+
+        List<sObject> sObjectList = Database.query(soql);
+        if (!sObjectList.isEmpty()) {
+            return sObjectList[0];
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description builds the soql to retrieve all fields for contact or account record
+     * @param recordId - id of the contact or account
+    * @param apiName - sobject type for the record, contact or account
+    */
+    private static string buildSoql(String recordId, String apiName) {
+        Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(apiName);
+        List<String> selectFields = new List<String>(fields.keySet());
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom(apiName)
+            .withWhere('Id = :recordId')
+            .build();
+    }
+
+    private static String buildContactSoql(String recordId) {
+        Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe('Contact');
+        List<String> selectFields = new List<String>(fields.keySet());
+
+        return new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom(String.valueOf(Contact.SObjectType))
+            .withWhere('Id = :recordId')
+            .build();
+    }
+
+    private static sObject getObject(String recordId, String apiName) {
         return null;
     }
 
