@@ -7,17 +7,17 @@
     <fields>
         <label>団体</label>
         <name>Account__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
     <fields>
         <label>キャンペーン</label>
         <name>Campaign__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
     <fields>
         <label>ケース</label>
         <name>Case__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
     <fields>
         <label>完了した ToDo</label>
@@ -26,7 +26,7 @@
     <fields>
         <label>個人</label>
         <name>Contact__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
     <fields>
         <label>エンゲージメント計画テンプレート</label>
@@ -36,12 +36,12 @@
     <fields>
         <label>支援</label>
         <name>Opportunity__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
     <fields>
         <label>継続支援</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>エンゲージメント計画</relationshipLabel>
     </fields>
     <fields>
         <label>状況</label>

@@ -43,17 +43,17 @@
     <fields>
         <label>Account</label>
         <name>Account__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
     <fields>
         <label>Kampagne</label>
         <name>Campaign__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
     <fields>
         <label>Fall</label>
         <name>Case__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
     <fields>
         <label>Abgeschlossene Aufgaben</label>
@@ -62,7 +62,7 @@
     <fields>
         <label>Kontakt</label>
         <name>Contact__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
     <fields>
         <label>Engagementplan-Vorlage</label>
@@ -72,12 +72,12 @@
     <fields>
         <label>Opportunity</label>
         <name>Opportunity__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
     <fields>
         <label>Wiederkehrende Spende</label>
         <name>Recurring_Donation__c</name>
-        <relationshipLabel><!-- Engagement Plans --></relationshipLabel>
+        <relationshipLabel>Engagementpläne</relationshipLabel>
     </fields>
     <fields>
         <label>Status</label>
