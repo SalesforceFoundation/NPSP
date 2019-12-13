@@ -127,7 +127,7 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
     public Database.QueryLocator start(Database.BatchableContext context) {
         setBatchJobId(context);
 
-        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+        if (!RD2_EnablementService.isRecurringDonations2Enabled && !isDryRunMode) {
             throw new MigrationException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
 
         } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name()) {
@@ -149,13 +149,21 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
 
         RD2_OpportunityEvaluationService.overrideVoidOfOpenOpps = true;
 
+        if (!RD2_EnablementService.isRecurringDonations2Enabled && isDryRunMode) {
+            RD2_EnablementService.isRecurringDonations2EnabledOverride = true;
+        }
+
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            throw new MigrationException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
+        }
+
         Logger logger = new Logger(logContext);
         Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);
         Map<Id, List<Opportunity>> openOppsToVoidByRDId = new Map<Id, List<Opportunity>>();
         List<npe03__Recurring_Donation__c> convertedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd)
+            RD2_DataMigrationMapper mapper = new RD2_DataMigrationMapper(rd, isDryRunMode)
                 .withRelatedOpportunities(oppsByRdId.get(rd.Id));
 
             if (mapper.isConverted()) {
@@ -179,6 +187,10 @@ public class RD2_DataMigration_BATCH implements Database.Batchable<SObject>, Sch
         }
 
         handleSaveAndLogging(convertedRDs, openOppsToVoidByRDId, logger);
+
+        //even though the flag will be reset in actual execution,
+        //set override to false for unit test verification
+        RD2_EnablementService.isRecurringDonations2EnabledOverride = false;
     }
 
     /**

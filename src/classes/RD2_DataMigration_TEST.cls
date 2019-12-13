@@ -86,6 +86,44 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
+     * @description Verifies that the job should process records for dry run migration when
+     * Enhanced Recurring Donations is not enabled
+     */
+    @IsTest
+    private static void shouldNotThrowExceptionWhenEnablementIsOffAndModeIsDryRun() {
+        insert getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .build();
+
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+            'Enhanced RDs should not be enabled');
+
+        Exception jobException;
+        try {
+            Test.startTest();
+            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+            Database.executeBatch(batch);
+            Test.stopTest();
+
+        } catch (Exception ex) {
+            jobException = ex;
+        }
+
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+            'Enhanced RDs should not be enabled *by* Dry Run migration');
+
+        System.assertEquals(null, jobException,
+            'No exception should be generated when enhanced RDs are not enabled in dry run mode: ' + jobException);
+
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
+        System.assertEquals(1, job.JobItemsProcessed,
+            'The batch should have run with one child batch processed'
+        );
+
+        assertLegacyFormat(getRecords());
+    }
+
+    /**
      * @description Verifies that the job should run with zero records processed when
      * RD Settings close action is set to No_Action
      */
@@ -103,6 +141,40 @@ private class RD2_DataMigration_TEST {
         try {
             Test.startTest();
             RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+            Database.executeBatch(batch);
+            Test.stopTest();
+
+        } catch (Exception ex) {
+            jobException = ex;
+        }
+
+        System.assertNotEquals(null, jobException,
+            'The exception should be generated because RD settings close action is set to No_Action');
+
+        System.assert(jobException.getMessage().containsIgnoreCase(System.Label.RD2_DataMigrationInvalidCloseAction),
+            'The exception message should match. Actual message: ' + jobException.getMessage());
+
+        assertLegacyFormat(getRecords());
+    }
+
+    /**
+     * @description Verifies that the job should run with zero records processed for dry run migration when
+     * RD Settings close action is set to No_Action
+     */
+    @IsTest
+    private static void shouldThrowExceptionAndNotRunMigrationWhenCloseActionIsNoActionAndModeIsDryRun() {
+        setCloseActionSettingsToNoAction();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .build();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Exception jobException;
+        try {
+            Test.startTest();
+            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
             Database.executeBatch(batch);
             Test.stopTest();
 
@@ -1222,6 +1294,8 @@ private class RD2_DataMigration_TEST {
         }
         insert opps;
 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
         batch.execute(batchContext, getRecords());
@@ -1252,7 +1326,7 @@ private class RD2_DataMigration_TEST {
      * when DML fails on an Open Opportunity
      */
     @IsTest
-    private static void shouldRollbackConversionWhenAnErrorOccursOnOppDML() {
+    private static void shouldRollbackMigrationWhenAnErrorOccursOnOppDML() {
         setCloseActionSettingsToClosedLost();
 
         List<npe03__Recurring_Donation__c> rds = createLegacyRecurringDonationsNoOpps(2);
@@ -1376,6 +1450,150 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'Open Opp for the enhanced RD should be Closed Lost');
 
         System.assertEquals(0, batch.totalRecordsFailed, 'Total Records Failed should match');
+    }
+
+
+    /**
+     * @description Verifies Recurring Donations and their Open Opportunities are attempted to be migrated
+     * successfully when migration is run in the dry run mode
+     */
+    @IsTest
+    private static void shouldRollbackSuccessfulMigrationWhenDryRunMode() {
+        setCloseActionSettingsToClosedLost();
+
+        List<npe03__Recurring_Donation__c> rds = createLegacyRecurringDonationsNoOpps(2);
+
+        List<Opportunity> opps = new List<Opportunity>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+                .withContact(rd.npe03__Contact__c)
+                .withRecurringDonation(rd.Id)
+                .withAmount(rd.npe03__Amount__c)
+                .withOpenStage();
+
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(TODAY)
+                .build()
+            );
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .build()
+            );
+        }
+        insert opps;
+
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+            'Enhanced RDs should not be enabled');
+
+        UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+        batch.execute(batchContext, getRecords());
+        batch.finish(batchContext);      
+
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+            'Enhanced RDs should not be enabled *by* Dry Run migration');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        assertLegacyFormat(getRecords());
+
+        List<Opportunity> actualOpps = oppGateway.getRecords(rds);
+        System.assertEquals(opps.size(), actualOpps.size(), 'Number of Opps should match: ' + actualOpps);
+
+        for (Opportunity opp : actualOpps) {
+            System.assertEquals(false, opp.IsClosed, 'Open Opp should be unchanged');
+        }
+
+        assertBatchSummarySuccess(batchContext.getJobId(), rds.size());
+    }
+
+    /**
+     * @description Verifies an error is logged when legacy Recurring Donation cannot be migrated
+     * due to a migration validation error in a dry run mode
+     */
+    @IsTest
+    private static void shouldRollbackMigrationWhenRDFailsConversionInDryRunMode() {
+        npe03__Custom_Installment_Settings__c installment = createCustomInstallmentSettings('Months', 1);
+
+        List<Contact> contacts = new List<Contact> {
+            UTIL_UnitTestData_TEST.getContact(),
+            UTIL_UnitTestData_TEST.getContact()
+        };
+        insert contacts;
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        for (Contact contact : contacts) {
+            rds.add(getLegacyRecurringDonationBuilder(contact.Id).withId(null).build());
+        }
+        rds[0].npe03__Installment_Period__c = installment.Name;
+
+        Test.startTest();
+        insert rds;
+        Test.stopTest();
+
+        installment.npe03__Increment__c = 'foo';
+        update installment;
+
+        //reset custom settings static var
+        UTIL_ListCustomSettingsFacade.mapCustomInstallmentSettings = null;
+
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+            'Enhanced RDs should not be enabled');
+
+        UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+        batch.execute(batchContext, getRecords());
+        batch.finish(batchContext);   
+        Id jobId = batchContext.getJobId();   
+
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+            'Enhanced RDs should not be enabled *by* Dry Run migration');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
+        System.assertEquals(rds[0].Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
+
+        assertLegacyFormat(getRecords());
+
+        UTIL_BatchJobService.BatchJobSummary expectedSummary =
+            new UTIL_BatchJobService.BatchJobSummary(jobId, getExpectedLogContext(jobId))
+                .withTotalRecords(2)
+                .withTotalRecordsProcessed(1)
+                .withTotalRecordsFailed(1);
+
+        assertBatchSummary(expectedSummary);
+    }
+
+    /**
+     * @description Verifies no error is logged when legacy Recurring Donation has Day Of MOnth > 28
+     * when migration is run in a dry run mode
+     */
+    @IsTest
+    private static void shouldNotLogErrorWhenDayOfMonthIsLastDayInDryRunMode() { 
+        final String dayOfMonth = '29';
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withDayOfMonth(dayOfMonth)
+            .build();
+        insert rd;
+
+        UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
+        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+        batch.execute(batchContext, getRecords());
+        batch.finish(batchContext);   
+        Id jobId = batchContext.getJobId();   
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        List<npe03__Recurring_Donation__c> rds = getRecords();
+        System.assertEquals(dayOfMonth, rds[0].Day_of_Month__c, 'Day of Month should not change');
+        assertLegacyFormat(rds);
+        
+        assertBatchSummarySuccess(batchContext.getJobId(), 1);
     }
 
 
