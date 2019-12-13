@@ -1,12 +1,24 @@
 import { LightningElement, api } from 'lwc';
 import { mutable } from 'c/utilTemplateBuilder';
 import { fireEvent } from 'c/pubsubNoPageRef';
+import GeLabelService from 'c/geLabelService';
 
 export default class GeTemplateBuilderSectionModalBody extends LightningElement {
+
+    // Expose custom labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     @api modalData;
 
     get sectionBeingEdited() {
         return this.modalData ? this.modalData.section : {};
+    }
+
+    get hasRequiredFields() {
+        const section = this.modalData.section;
+        return section && section.elements && section.elements.length > 0 ?
+            section.elements.some(element => element.required === true)
+            : false;
     }
 
     /*******************************************************************************
