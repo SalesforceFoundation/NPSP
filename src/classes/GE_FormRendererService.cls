@@ -1,5 +1,4 @@
 public with sharing class GE_FormRendererService {
-    private final UTIL_Describe describeService = UTIL_Describe.getInstance();
 
     @AuraEnabled
     public static FORM_RenderWrapper getRenderWrapperById(Id templateId) {
@@ -150,19 +149,32 @@ public with sharing class GE_FormRendererService {
                                                 String recordId, String apiName) {
 
         List<FORM_Section> sectionList = template.layout.sections;
-        system.debug('fieldMappingSet = ' + fieldMappingSet);
-        system.debug('recordId = ' + recordId);
-        system.debug('apiName = ' + apiName);
-
-        describeService.SELECT  FROM ${1||}
         
+        // system.debug('fieldMappingSet = ' + fieldMappingSet);
+        // system.debug('recordId = ' + recordId);
+        // system.debug('apiName = ' + apiName);
+
+        //UTIL_Describe describeService = UTIL_Describe.getInstance();
+
+        Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(apiName);
+
+        system.debug('fields = ' + fields);
+        system.debug('field count = ' + fields.keySet().size());
+        for(String fieldName : fields.keySet()) {
+            system.debug('field = ' + fieldName);
+        }
 
         for (FORM_Section section : sectionList) {
             for (FORM_Element element : section.elements) {
-                system.debug('element = ' + element);
+                //system.debug('element = ' + element);
             }
         }
     }
+
+    private static Contact getObject(String recordId, String apiName) {
+        return null;
+    }
+
 
     /*******************************************************************************************************
     * @description Takes a Data Import record from the Gift Entry form and saves it to the database.
