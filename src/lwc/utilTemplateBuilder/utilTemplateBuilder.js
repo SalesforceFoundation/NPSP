@@ -433,6 +433,26 @@ const format = (string, replacements) => {
     return formattedString;
 };
 
+/*******************************************************************************
+* @description returns a list of target field names for the fields in the template
+*
+* @param formTemplate: the form template
+* @param fieldMappings: the field mappings dev names
+*/
+const getRecordFieldNames = (formTemplate, fieldMappings) => {
+    let fieldNames = [];
+    
+    for (const section of formTemplate.layout.sections) {
+        for (const element of section.elements) {
+            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                fieldNames.push(fieldName)
+            }     
+        }
+    }
+    return fieldNames;
+};
+
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
@@ -454,5 +474,6 @@ export {
     isFunction,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
-    format
+    format,
+    getRecordFieldNames
 }

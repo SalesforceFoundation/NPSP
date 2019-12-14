@@ -5,12 +5,14 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import { showToast, getQueryParameters } from 'c/utilTemplateBuilder';
+import { showToast, getQueryParameters, getRecordFieldNames } from 'c/utilTemplateBuilder';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api recordId = '';
     @track apiName = '';
     @track sections = [];
+    @track fieldNames = [];
+
     @track ready = false;
     @track name = '';
     @track description = '';
@@ -32,6 +34,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     connectedCallback() {
         // check if there is a record id in the url
         this.recordId = getQueryParameters().c__recordId;
+
+        GeFormService.getFormTemplate(this.recordId, this.apiName).then(response => {
+            // read the template header info
+            if(response !== null && typeof response !== 'undefined') {
+                //alert(JSON.stringify(response));
+                const { formTemplate } = response;
+                let fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+
+                this.fieldNames = getRecordFieldNames(formTemplate, fieldMappings);
+                alert(JSON.stringify(this.fieldNames));
+            }
+        });
     }
 
     handleGetTemplate = async () => {
