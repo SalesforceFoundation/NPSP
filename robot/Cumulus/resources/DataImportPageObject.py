@@ -1,11 +1,11 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
-from Basenpspobjects import BaseNPSPPage
+from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 @pageobject("Listing", "DataImport__c")
-class DataImportPage(ListingPage, BaseNPSPPage):
+class DataImportPage(BaseNPSPPage, ListingPage):
 
     
     def _is_current_page(self):
@@ -39,7 +39,7 @@ class DataImportPage(ListingPage, BaseNPSPPage):
         
         
 @pageobject("Details", "DataImport__c")
-class DataImportDetailPage(DetailPage, BaseNPSPPage): 
+class DataImportDetailPage(BaseNPSPPage, DetailPage): 
     
     
         

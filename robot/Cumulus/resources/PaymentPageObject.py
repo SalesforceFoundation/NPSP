@@ -1,10 +1,10 @@
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
-from Basenpspobjects import BaseNPSPPage
+from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 @pageobject("Detail", "npe01__OppPayment__c")
-class PaymentPage(DetailPage, BaseNPSPPage):
+class PaymentPage(BaseNPSPPage, DetailPage):
     object_name = "npe01__OppPayment__c"
     
     

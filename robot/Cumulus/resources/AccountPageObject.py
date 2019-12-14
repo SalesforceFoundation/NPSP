@@ -1,17 +1,17 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
-from Basenpspobjects import BaseNPSPPage
+from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 @pageobject("Listing", "Account")
-class AccountListingPage(ListingPage, BaseNPSPPage):
+class AccountListingPage(BaseNPSPPage, ListingPage):
     object_name = "Account"
 
 
     
 @pageobject("Details", "Account")
-class AccountDetailPage(DetailPage, BaseNPSPPage):
+class AccountDetailPage(BaseNPSPPage,DetailPage ):
     object_name = "Account"
 
     def _is_current_page(self):

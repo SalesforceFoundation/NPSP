@@ -1,13 +1,13 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
-from Basenpspobjects import BaseNPSPPage
+from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 
 
 @pageobject("Listing", "Contact")
-class ContactListingPage(ListingPage, BaseNPSPPage):
+class ContactListingPage(BaseNPSPPage, ListingPage):
     object_name = "Contact"
    
     def click_delete_account_button(self):
@@ -16,7 +16,7 @@ class ContactListingPage(ListingPage, BaseNPSPPage):
         self.npsp.select_frame_and_click_element("vfFrameId","button","Delete Account")    
 
 @pageobject("Details", "Contact")
-class ContactDetailPage(DetailPage, BaseNPSPPage):
+class ContactDetailPage(BaseNPSPPage, DetailPage):
     object_name = "Contact"
 
     def _is_current_page(self):

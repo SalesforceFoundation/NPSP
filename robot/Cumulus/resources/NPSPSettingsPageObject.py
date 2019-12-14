@@ -2,12 +2,12 @@ import time
 
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
-from Basenpspobjects import BaseNPSPPage
+from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
 
 @pageobject("Custom", "NPSP_Settings")
-class NPSPSettingsPage(BasePage, BaseNPSPPage):
+class NPSPSettingsPage(BaseNPSPPage, BasePage):
 
     
     def _go_to_page(self, filter_name=None):
