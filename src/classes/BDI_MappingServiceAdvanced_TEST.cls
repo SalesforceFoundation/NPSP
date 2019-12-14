@@ -124,8 +124,8 @@ private class BDI_MappingServiceAdvanced_TEST {
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         //Retrieve a mapping service instance
-        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME);
-        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME);
+        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
 
         System.assert(fms != null);
         System.assert(fms.objectMappingByDevName.size() > 0);
@@ -145,8 +145,8 @@ private class BDI_MappingServiceAdvanced_TEST {
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         //Retrieve a mapping service instance
-        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME);
-        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME);
+        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
 
         // Confirm that we have the Donation_Donor__c field from DataImport__c as a Field Mapping
         Boolean hasDonationDonorFieldMapping = false;
