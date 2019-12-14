@@ -108,9 +108,12 @@ class NPSP(SalesforceRobotLibraryBase):
         for i in locators:
             locator = i.format(title)
             if self.check_if_element_exists(locator):
+                print(locator)
                 buttons = self.selenium.get_webelements(locator)
                 for button in buttons:
+                    print(button)
                     if button.is_displayed():
+                        print("button displayed is {}".format(button))
                         self.salesforce._focus(button)
                         button.click()
                         time.sleep(5)
