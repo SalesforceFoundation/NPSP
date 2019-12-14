@@ -6,6 +6,7 @@ import {
     handleError,
     findMissingRequiredBatchFields
 } from 'c/utilTemplateBuilder';
+import GeLabelService from 'c/geLabelService';
 import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 
 const PROP_API_NAME = 'apiName';
@@ -18,6 +19,10 @@ const EVENT_BATCH_HEADER_FIELD_ADD = 'addbatchheaderfield';
 const EVENT_BATCH_HEADER_FIELD_REMOVE = 'removebatchheaderfield';
 
 export default class geTemplateBuilderBatchHeader extends LightningElement {
+
+    // Expose custom labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     @track isLoading = true;
     @api batchFields;
     @api selectedBatchFields;

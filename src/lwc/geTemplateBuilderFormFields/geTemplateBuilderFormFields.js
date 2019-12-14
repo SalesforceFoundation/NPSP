@@ -1,27 +1,33 @@
 import { LightningElement, track, api } from 'lwc';
 import { findIndexByProperty, mutable, generateId, dispatch, showToast } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
+import GeLabelService from 'c/geLabelService';
 
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
 
-export default class geTemplateBuilderSelectFields extends LightningElement {
+const WARNING = 'warning';
+
+export default class geTemplateBuilderFormFields extends LightningElement {
+
+    // Expose labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     isInitialized;
     @api previousSaveAttempted;
-
-    @track isLoading = true;
     @api selectedFieldMappingSet;
+    @track isLoading = true;
 
     @api formSections;
-
     @api activeFormSectionId;
     @track _sectionIdsByFieldMappingDeveloperNames = {};
     @track objectMappings;
-    objectMappingNames = [];
     @track isAllSectionsExpanded = false;
+    objectMappingNames = [];
 
+    @track isReadMoreActive = false;
     @track hasErrors = false;
     @track errors;
 
@@ -144,7 +150,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 PAYMENT_CHECK_REF_NUM_INFO.fieldApiName
             ];
 
-            let sectionId = this.addSection('Gift Entry Form');
+            let sectionId = this.addSection(this.CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName);
 
             for (let fieldMappingDevName in TemplateBuilderService.fieldMappingByDevName) {
                 if (TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName]) {
@@ -269,7 +275,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 this.activeFormSectionId = sectionId;
             } else if (hasManySections && hasNoActiveSection) {
                 event.target.checked = false;
-                showToast('Please select a section', '', 'warning');
+                showToast(this.CUSTOM_LABELS.geToastSelectActiveSection, '', WARNING);
                 return;
             }
 
@@ -317,6 +323,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         return {
             id: generateId(),
             label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+            customLabel: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
             required: fieldMapping.Is_Required || false,
             sectionId: sectionId,
             defaultValue: null,
@@ -532,9 +539,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * event handler.
     */
     handleCollapseAllSections() {
-        const lightningAccordion = this.template.querySelector(
-            'lightning-accordion'
-        );
+        const lightningAccordion = this.template.querySelector('lightning-accordion');
         lightningAccordion.activeSectionName = [];
         this.isAllSectionsExpanded = false;
     }
@@ -546,10 +551,18 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * of.
     */
     validateGiftField(element) {
-        let customValidity = 'Required field';
-        customValidity = (element.required && element.checked === false) ? customValidity : '';
-
+        let customValidity =
+            (element.required && element.checked === false) ?
+                this.CUSTOM_LABELS.geErrorRequiredField
+                : '';
         element.setCustomValidity(customValidity);
         element.reportValidity();
+    }
+
+    /*******************************************************************************
+    * @description Method shows additional text content under the left column body.
+    */
+    handleBodyReadMore() {
+        this.isReadMoreActive = true;
     }
 }

@@ -1821,6 +1821,20 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonAssistiveError</members>
+        <members>commonAssistiveInfo</members>
+        <members>commonAssistiveSuccess</members>
+        <members>commonAssistiveWarning</members>
+        <members>commonCancel</members>
+        <members>commonDefaultValue</members>
+        <members>commonError</members>
+        <members>commonFieldLabel</members>
+        <members>commonReadMore</members>
+        <members>commonRequired</members>
+        <members>commonSave</members>
+        <members>commonSaveAndClose</members>
+        <members>commonUnknownError</members>
+        <members>commonWarning</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
         <members>conMergeErrNoPersonAccounts</members>
@@ -1850,6 +1864,72 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>geAssistiveActiveSection</members>
+        <members>geAssistiveBatchHeaderRemoveField</members>
+        <members>geAssistiveFieldDown</members>
+        <members>geAssistiveFieldUp</members>
+        <members>geAssistiveFormFieldsCollapseAll</members>
+        <members>geAssistiveFormFieldsExpandAll</members>
+        <members>geAssistiveFormFieldsRemoveField</members>
+        <members>geAssistiveFormFieldsSectionEdit</members>
+        <members>geAssistiveModalCancelAndDiscard</members>
+        <members>geAssistiveSectionDown</members>
+        <members>geAssistiveSectionUp</members>
+        <members>geAssistiveSpinner</members>
+        <members>geBodyBatchHeaderLeftCol</members>
+        <members>geBodyBatchHeaderRightCol</members>
+        <members>geBodyBatchHeaderWarning</members>
+        <members>geBodyEmptyFormSection</members>
+        <members>geBodyFormFieldsLeftCol</members>
+        <members>geBodyFormFieldsLeftColAdditional</members>
+        <members>geBodyFormFieldsModalDeleteSection</members>
+        <members>geBodyFormFieldsRightCol</members>
+        <members>geBodyTemplateInfoLeftCol</members>
+        <members>geButtonBuilderNavBackFormFields</members>
+        <members>geButtonBuilderNavBackTemplateInfo</members>
+        <members>geButtonBuilderNavBatchHeader</members>
+        <members>geButtonBuilderNavFormFields</members>
+        <members>geButtonFormFieldsAddSection</members>
+        <members>geButtonFormFieldsCollapseAll</members>
+        <members>geButtonFormFieldsExpandAll</members>
+        <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
+        <members>geErrorExistingTemplateName</members>
+        <members>geErrorFieldPermission</members>
+        <members>geErrorPageLevelAdvancedMappingBody</members>
+        <members>geErrorPageLevelAdvancedMappingHeader</members>
+        <members>geErrorPageLevelFieldPermission1</members>
+        <members>geErrorPageLevelFieldPermission2</members>
+        <members>geErrorPageLevelMissingRequiredFields</members>
+        <members>geErrorRequiredField</members>
+        <members>geHeaderBatchHeaderLeftCol</members>
+        <members>geHeaderBatchHeaderRightCol</members>
+        <members>geHeaderEmptyFormSection</members>
+        <members>geHeaderFormFieldsDefaultSectionName</members>
+        <members>geHeaderFormFieldsLeftCol</members>
+        <members>geHeaderFormFieldsModalDeleteSection</members>
+        <members>geHeaderFormFieldsModalRenameSection</members>
+        <members>geHeaderFormFieldsModalSectionSettings</members>
+        <members>geHeaderFormFieldsRightCol</members>
+        <members>geHeaderNewSection</members>
+        <members>geHeaderNewTemplate</members>
+        <members>geHeaderPageLevelError</members>
+        <members>geHeaderTemplateInfoLeftCol</members>
+        <members>geHelpTextBatchHeaderFieldLabelLabel</members>
+        <members>geHelpTextFormFieldsFieldCustomLabel</members>
+        <members>geHelpTextFormFieldsFieldLabelLabel</members>
+        <members>geLabelSectionName</members>
+        <members>geLabelTemplateInfoDescriptionField</members>
+        <members>geLabelTemplateInfoNameField</members>
+        <members>geTabBatchHeader</members>
+        <members>geTabFormFields</members>
+        <members>geTabTemplateInfo</members>
+        <members>geToastSaveFailed</members>
+        <members>geToastSelectActiveSection</members>
+        <members>geToastTemplateCreateSuccess</members>
+        <members>geToastTemplateTabError</members>
+        <members>geToastTemplateTabsError</members>
+        <members>geToastTemplateUpdateSuccess</members>
+        <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
@@ -3141,12 +3221,13 @@
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
         <members>geFormWidgetRow</members>
+        <members>geLabelService</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
+        <members>geTemplateBuilderFormFields</members>
         <members>geTemplateBuilderFormSection</members>
         <members>geTemplateBuilderSectionModalBody</members>
-        <members>geTemplateBuilderSelectFields</members>
         <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>geTemplates</members>

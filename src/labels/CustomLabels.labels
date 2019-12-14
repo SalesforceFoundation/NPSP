@@ -4022,6 +4022,118 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>commonAssistiveError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of an error page level message.</shortDescription>
+        <value>error</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of an info page level message.</shortDescription>
+        <value>info</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of a success page level message.</shortDescription>
+        <value>success</value>
+    </labels>
+    <labels>
+        <fullName>commonAssistiveWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive text for the header of a warning page level message.</shortDescription>
+        <value>warning</value>
+    </labels>
+    <labels>
+        <fullName>commonCancel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>commonDefaultValue</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Default Value</shortDescription>
+        <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>commonError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>commonFieldLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field Label</shortDescription>
+        <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>commonReadMore</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to read additional details</shortDescription>
+        <value>Read More</value>
+    </labels>
+    <labels>
+        <fullName>commonRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Required</shortDescription>
+        <value>Required</value>
+    </labels>
+    <labels>
+        <fullName>commonSave</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>commonSaveAndClose</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Save and Close</shortDescription>
+        <value>Save &amp; Close</value>
+    </labels>
+    <labels>
+        <fullName>commonUnknownError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unknown Error</shortDescription>
+        <value>Unknown Error</value>
+    </labels>
+    <labels>
+        <fullName>commonWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning</shortDescription>
+        <value>Warning</value>
+    </labels>
+    <labels>
         <fullName>conFailedAccountCreate</fullName>
         <categories>Data Import, Contacts</categories>
         <language>en_US</language>
@@ -4253,6 +4365,564 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>flsReadAccessError</shortDescription>
         <value>You do not have permissions to access {0}.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveActiveSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Active section icon</shortDescription>
+        <value>Active Section.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveBatchHeaderRemoveField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Trash can button to remove field from batch header</shortDescription>
+        <!-- {0} is a string. Name of a DataImportBatch__c field e.g. npsp__Batch_Description__c -->
+        <value>Remove the {0} field from the batch header.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFieldDown</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move field down</shortDescription>
+        <!-- {0} is a string. Name of a form field. -->
+        <value>Move the {0} field down.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFieldUp</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move field up</shortDescription>
+        <!-- {0} is a string. Name of a form field. -->
+        <value>Move the {0} field up.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsCollapseAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to collapse all Object Groups and Template Components</shortDescription>
+        <value>Collapse all Object Groups and Template Components.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsExpandAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to expand all Object Groups and Template Components</shortDescription>
+        <value>Expand all Object Groups and Template Components.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsRemoveField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Trash can button to remove field from template</shortDescription>
+        <!-- {0} is a string. Name of a form field e.g. Account 1: Name -->
+        <value>Remove the {0} field from the template.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveFormFieldsSectionEdit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder Form Fields section edit button alt text</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
+        <value>Edit the {0} section settings.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveModalCancelAndDiscard</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button to cancel and discard changes to section settings</shortDescription>
+        <value>Cancel and discard changes to Section Settings.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSectionDown</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move section down</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
+        <value>Move the {0} section down.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSectionUp</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Arrow button to move section up</shortDescription>
+        <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
+        <value>Move the {0} section up.</value>
+    </labels>
+    <labels>
+        <fullName>geAssistiveSpinner</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: lightning-spinner</shortDescription>
+        <value>Content is loading.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchHeaderLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text block about adding or removing fields in the batch header</shortDescription>
+        <value>Choose fields to include in your Batch Header. Select the checkbox to add a field and deselect to remove the field from the form. If you'd like additional custom fields available for the Batch Header, add them in the NPSP Data Import Batch object.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchHeaderRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text block about setting up batch header fields</shortDescription>
+        <value>For each field, you can edit the field label, mark it as required, or assign a default value. Default values can be overwritten by the person who creates the batch.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchHeaderWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning body of required field added to Batch Header</shortDescription>
+        <!-- {0} is comma separated list of field api names from the Data Import Batch object -->
+        <!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c -->
+        <value>These required fields were automatically added to the Batch Header:</value>
+    </labels>
+    <labels>
+        <fullName>geBodyEmptyFormSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body for illustration card when a form section is empty</shortDescription>
+        <value>Select gift fields to add to this section.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template Builder Form Fields tab left column body</shortDescription>
+        <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsLeftColAdditional</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>More information about adding and mapping fields</shortDescription>
+        <value>
+        Set up a field by completing the following steps:
+        &lt;/br&gt;
+        &lt;/br&gt;
+        &lt;ol&gt;
+            &lt;li&gt; Create the field on the target object. &lt;/li&gt;
+            &lt;li&gt; Create the field on the NPSP Data Import object. &lt;/li&gt;
+            &lt;li&gt; If this is part of a new Object Group, create additional fields for a new Object group and create the new Object Group in NPSP Settings. &lt;/li&gt;
+            &lt;li&gt; Add Field Mapping in NPSP Settings to connect the NPSP Data Import field to the target field. &lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;/br&gt;
+        See NPSP documentation about Advanced Mapping for additional details.
+        </value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for deleting a section without required fields</shortDescription>
+        <value>Deleting this section also removes any fields in it.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyTemplateInfoLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template Info sidebar text block</shortDescription>
+        <value>Enter details about this Gift Entry Template.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields right column text block</shortDescription>
+        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. The gift entry form layout can be managed by creating sections and reordering the sections or fields.</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavBackFormFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Back: Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavBackTemplateInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Back: Template Info</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavBatchHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Next: Batch Header</value>
+    </labels>
+    <labels>
+        <fullName>geButtonBuilderNavFormFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <value>Next: Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsAddSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to add new section to template</shortDescription>
+        <value>Add Section</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsCollapseAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to collapse all</shortDescription>
+        <value>Collapse All</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsExpandAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to expand all</shortDescription>
+        <value>Expand All</value>
+    </labels>
+    <labels>
+        <fullName>geButtonFormFieldsModalDeleteSectionAndFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to delete a section and remove its fields</shortDescription>
+        <value>Delete Section and Fields</value>
+    </labels>
+    <labels>
+        <fullName>geErrorExistingTemplateName</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message when template name is not unique</shortDescription>
+        <value>This name has been used by another template. Please enter a unique name.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorFieldPermission</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message for insufficient field access</shortDescription>
+        <value>You don't have permission to edit this field.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelAdvancedMappingBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message body when Advanced Mapping off</shortDescription>
+        <value>This feature requires Advanced Mapping. Please enable it in NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message header when Advanced Mapping off</shortDescription>
+        <value>Enable Advanced Mapping</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelFieldPermission1</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for insufficient field access with fields listed</shortDescription>
+        <!-- {0} is a list. Name of fields e.g. npsp__Amount__c, npsp__Description__c -->
+        <value>To save changes to this template you must have permission to edit all of the fields in the form. Please remove the following fields: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelFieldPermission2</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for insufficient field access about exiting without saving</shortDescription>
+        <value>Alternatively, exit this form without saving and check your permissions on both the target object and on the NPSP Data Import object.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPageLevelMissingRequiredFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for insufficient field access about exiting without saving</shortDescription>
+        <!-- Label should be followed by a list of fields e.g. npsp__Amount__c, npsp__Description__c -->
+        <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields:</value>
+    </labels>
+    <labels>
+        <fullName>geErrorRequiredField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field-level error message for required field missing on NPSP Data Import object</shortDescription>
+        <value>Required field</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchHeaderLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to select batch header fields</shortDescription>
+        <value>Select Batch Header Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchHeaderRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to configure batch header fields</shortDescription>
+        <value>Configure Batch Header Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderEmptyFormSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for illustration card when a form section is empty</shortDescription>
+        <value>No fields yet</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsDefaultSectionName</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name of default form section in a new template</shortDescription>
+        <value>Gift Entry Form</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Form Fields sidebar</shortDescription>
+        <value>Form Fields &amp; Template Components</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for deleting section in settings modal</shortDescription>
+        <value>Delete Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalRenameSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for renaming section in settings modal</shortDescription>
+        <value>Rename Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsModalSectionSettings</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for form fields section settings modal</shortDescription>
+        <value>Section Settings</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFormFieldsRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Form Fields body</shortDescription>
+        <value>Configure Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderNewSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Section</shortDescription>
+        <value>New Section</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderNewTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template header</shortDescription>
+        <value>New Template</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderPageLevelError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for gift entry template information</shortDescription>
+        <value>Review the errors on this page.</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderTemplateInfoLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for gift entry template information</shortDescription>
+        <value>Gift Entry Template Information</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Batch Header Field Label</shortDescription>
+        <value>You can rename the user-facing field labels.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextFormFieldsFieldCustomLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields individual field help text</shortDescription>
+        <!-- {0} is a string. Name of an Object Mapping Group e.g. Account 1, Contact 2 -->
+        <!-- {1} is a string. Name of a standard or custom object field e.g. Name, Amount -->
+        <!-- {2} is a string. Name of a standard or custom object e.g. Account, Contact -->
+        <value>This field uses the {0} Object Group to target the {1} field on the {2} object.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextFormFieldsFieldLabelLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Form Fields Field Label</shortDescription>
+        <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
+    </labels>
+    <labels>
+        <fullName>geLabelSectionName</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Section Name</shortDescription>
+        <value>Section Name</value>
+    </labels>
+    <labels>
+        <fullName>geLabelTemplateInfoDescriptionField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the field for the template's description</shortDescription>
+        <value>Description</value>
+    </labels>
+    <labels>
+        <fullName>geLabelTemplateInfoNameField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the field for the template's name</shortDescription>
+        <value>Template Name</value>
+    </labels>
+    <labels>
+        <fullName>geTabBatchHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Header</shortDescription>
+        <value>Batch Header</value>
+    </labels>
+    <labels>
+        <fullName>geTabFormFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields</shortDescription>
+        <value>Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geTabTemplateInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template Info</shortDescription>
+        <value>Template Info</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateCreateSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully created</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The {0} template was created.</value>
+    </labels>
+    <labels>
+        <fullName>geToastSaveFailed</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save if there isn't a system error to display</shortDescription>
+        <value>Your changes cannot be saved. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>geToastSelectActiveSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning when attempting to add a gift field and a section hasn't been selected.</shortDescription>
+        <value>Please select a section.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateTabsError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save and tabs has an error</shortDescription>
+        <!-- {0} is a list of strings. Names of the tabs with errors. -->
+        <value>Please review tabs {0}</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateTabError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when trying to save and a tab has an error</shortDescription>
+        <!-- {0} is a string. Name of the tab with errors. -->
+        <value>Please review tab {0}</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateUpdateSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully updated</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The {0} template was updated.</value>
+    </labels>
+    <labels>
+        <fullName>geWarningFormFieldsModalDeleteSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for deleting a section if it contains required field</shortDescription>
+        <value>Warning: By deleting this section, you are also removing required fields from the template. These fields need to be added into another section before you can save the template.</value>
     </labels>
     <labels>
         <fullName>labelGeCancel</fullName>
