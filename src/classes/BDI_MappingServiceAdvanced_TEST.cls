@@ -132,4 +132,31 @@ private class BDI_MappingServiceAdvanced_TEST {
         System.assert(fms.fieldMappingByDevName.size() > 0);
         System.assert(fms.fieldMappingsByObjMappingDevName.size() > 0);
     }
+
+    /*******************************************************************************************************
+    * @description Tests that the Donation_Donor__c field from DataImport__c object has been added as a
+    * simulated Field Mapping.
+    */
+    @isTest static void shouldAddDonationDonorFieldToMapsAsSimulatedFieldMapping() {
+        //Set the custom setting for Data import to use Data Import Field Mappings (eg Custom Metadata Type Mapping)
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        //Retrieve a mapping service instance
+        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME);
+        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME);
+
+        // Confirm that we have the Donation_Donor__c field from DataImport__c as a Field Mapping
+        Boolean hasDonationDonorFieldMapping = false;
+        Schema.DescribeFieldResult dfr = SObjectType.DataImport__c.fields.Donation_Donor__c;
+        BDI_FieldMapping donationDonorFieldMapping = fms.fieldMappingByDevName.get(dfr.getName());
+
+        System.debug(donationDonorFieldMapping);
+        System.assertNotEquals(
+            null,
+            donationDonorFieldMapping,
+            'DataImport__c.Donation_Donor__c not found as a simulated Field Mapping.');
+    }
 }
