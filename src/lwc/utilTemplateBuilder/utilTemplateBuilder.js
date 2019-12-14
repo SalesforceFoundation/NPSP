@@ -9,6 +9,8 @@ import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportB
 import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
 import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
 import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
+import commonError from '@salesforce/label/c.commonError';
+import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
 const OBJECT = 'object';
 const FUNCTION = 'function';
@@ -47,7 +49,7 @@ const inputTypeByDescribeType = {
     'currency': 'number',
     'datacategorygroupreference': 'text',
     'date': 'date',
-    'datetime': 'datetime',
+    'datetime': 'datetime-local',
     'double': 'number',
     'email': 'email',
     'encryptedstring': 'password',
@@ -80,6 +82,10 @@ const lightningInputTypeByDataType = {
 * @description Collects all the missing required field mappings. Currently only
 * checks 'requiredness' of the source (DataImport__c).
 *
+* @param {object} TemplateBuilderService: Instance of geTemplateBuilderService
+* web component.
+* @param {list} formSections: List of existing form sections in the template.
+*
 * @return {list} missingRequiredFieldMappings: List of missing field mappings.
 */
 const findMissingRequiredFieldMappings = (TemplateBuilderService, formSections) => {
@@ -107,6 +113,9 @@ const findMissingRequiredFieldMappings = (TemplateBuilderService, formSections) 
 
 /*******************************************************************************
 * @description Collects all the missing required DataImportBatch__c fields.
+*
+* @param {list} batchFields: List of all Batch Header fields.
+* @param {list} selectedBatchFields: List of added Batch Header fields.
 *
 * @return {list} missingRequiredFields: List of missing DataImportBatch__c fields.
 */
@@ -145,6 +154,8 @@ const removeByProperty = (array, property, value) => {
 * @param {list} array: List of items.
 * @param {string} property: Property to find by.
 * @param {string} value: Value of property to check against.
+*
+* @return {Integer}: Index of the item from provided array.
 */
 const findIndexByProperty = (array, property, value) => {
     return array.findIndex(element => element[property] === value);
@@ -156,14 +167,21 @@ const findIndexByProperty = (array, property, value) => {
 * @param {list} array: List of items.
 * @param {integer} oldIndex: Current index of the item to be moved.
 * @param {integer} newIndex: Index to move the item to.
+*
+* @return {list} array: Array with shifted items.
 */
 const shiftToIndex = (array, oldIndex, newIndex) => {
     [array[oldIndex], array[newIndex]] = [array[newIndex], array[oldIndex]];
     return array;
 }
 
-// TODO: Look into more robust deep cloning methods
-// This method loses any Javascript properties that have no equivalent type in JSON
+/*******************************************************************************
+* @description Shallow clones the provided object.
+*
+* @param {object} obj: Object to clone
+*
+* @return {object}: Cloned object
+*/
 const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
 }
@@ -172,6 +190,8 @@ const mutable = (obj) => {
 * @description Checks if value parameter is null or undefined
 *
 * @param {*} value: Anything
+*
+* @return {boolean}: True if provided value is null or undefined.
 */
 const isEmpty = (value) => {
     return value === null || value === undefined;
@@ -181,6 +201,8 @@ const isEmpty = (value) => {
 * @description Checks if value parameter is a function
 *
 * @param {*} value: Anything
+*
+* @return {boolean}: True if provided value is a function.
 */
 const isFunction = (value) => {
     return typeof value === FUNCTION;
@@ -191,6 +213,8 @@ const isFunction = (value) => {
 * 'function'.
 *
 * @param {any} obj: Thing to check
+*
+* @return {boolean}: True if the provided obj is an object or a function.
 */
 const isObject = (obj) => {
     return isFunction(obj) || typeof obj === OBJECT && !!obj;
@@ -201,6 +225,8 @@ const isObject = (obj) => {
 * if the current value is an object or an array and copy accordingly.
 *
 * @param {any} src: Thing to clone
+*
+* @return {object} clone: Deep clone copy of src
 */
 const deepClone = (src) => {
     let clone = null;
@@ -249,6 +275,8 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 * @param {array} list: List to be sorted
 * @param {string} property: Property to sort by
 * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
+*
+* @return {list} data: Sorted instance of list.
 */
 const sort = (list, property, sortDirection) => {
     const data = mutable(list);
@@ -292,7 +320,7 @@ const showToast = (title, message, variant, mode, messageData) => {
 * @param {object} error: Event holding error details
 */
 const handleError = (error) => {
-    let message = 'Unknown error';
+    let message = commonUnknownError;
 
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
@@ -311,7 +339,7 @@ const handleError = (error) => {
         }
     }
 
-    showToast('Error', message, 'error', 'sticky');
+    showToast(commonError, message, 'error', 'sticky');
 };
 
 /*******************************************************************************
@@ -375,6 +403,36 @@ const generateId = () => {
         '-' + random4() + random4() + random4();
 };
 
+/*******************************************************************************
+* @description Javascript method comparable to Apex's String.format(...).
+* Replaces placeholders in Custom Labels ({0}, {1}, etc) with provided values.
+*
+* @param {string} string: Custom Label to be formatted.
+* @param {list} replacements: List of string to use as replacements.
+* @return {string} formattedString: Formatted custom label
+*/
+const format = (string, replacements) => {
+    let formattedString = isEmpty(string) ? '' : string;
+    if (replacements) {
+        let key;
+        const type = typeof replacements;
+        const args =
+            'string' === type || 'number' === type
+                ? Array.prototype.slice.call(replacements)
+                : replacements;
+        for (key in args) {
+            if (args.hasOwnProperty(key)) {
+                formattedString = formattedString.replace(
+                    new RegExp('\\{' + key + '\\}', 'gi'),
+                    args[key]
+                );
+            }
+        }
+    }
+
+    return formattedString;
+};
+
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
@@ -395,5 +453,6 @@ export {
     isEmpty,
     isFunction,
     findMissingRequiredFieldMappings,
-    findMissingRequiredBatchFields
+    findMissingRequiredBatchFields,
+    format
 }

@@ -1,6 +1,6 @@
 <template>
     <template if:true={isLoading}>
-        <lightning-spinner alternative-text="tab is loading"></lightning-spinner>
+        <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
     </template>
 
     <template if:true={isAccessible}>
@@ -8,21 +8,21 @@
 
             <c-util-page-header>
                 <h1 slot="title">
-                    <span class="slds-page-header__title"
-                          title="Batch Gift Entry">
-                        New Template
+                    <span class="slds-page-header__title slds-truncate"
+                          title={templateBuilderHeader}>
+                        {templateBuilderHeader}
                     </span>
                 </h1>
                 <div slot="actions"
                      class="slds-button-group">
-                    <lightning-button label="Cancel"
-                                      title="Cancel"
+                    <lightning-button label={CUSTOM_LABELS.commonCancel}
+                                      title={CUSTOM_LABELS.commonCancel}
                                       variant="neutral"
                                       class="slds-float_right slds-m-right_small"
                                       onclick={handleCancel}>
                     </lightning-button>
-                    <lightning-button label="Save &amp; Close"
-                                      title="Cancel"
+                    <lightning-button label={CUSTOM_LABELS.commonSaveAndClose}
+                                      title={CUSTOM_LABELS.commonSaveAndClose}
                                       variant="brand"
                                       class="slds-float_right"
                                       onclick={handleFormTemplateSave}>
@@ -33,7 +33,6 @@
             <div class="slds-card slds-card_extension">
                 <lightning-tabset active-tab-value={activeTab}
                                   class="extension_test">
-
                     <lightning-tab value={TabEnums.INFO_TAB}
                                    label={TabEnums.INFO_TAB}
                                    class="slds-p-around_none"
@@ -48,12 +47,12 @@
                         </c-ge-template-builder-template-info>
                     </lightning-tab>
 
-                    <lightning-tab value={TabEnums.SELECT_FIELDS_TAB}
-                                   label={TabEnums.SELECT_FIELDS_TAB}
+                    <lightning-tab value={TabEnums.FORM_FIELDS_TAB}
+                                   label={TabEnums.FORM_FIELDS_TAB}
                                    class="slds-p-around_none"
                                    onactive={handleOnActiveTab}
                                    show-error-indicator={hasSelectFieldsTabError}>
-                        <c-ge-template-builder-select-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
+                        <c-ge-template-builder-form-fields selected-field-mapping-set={formLayout.fieldMappingSetDevName}
                                                              form-sections={formSections}
                                                              active-form-section-id={activeFormSectionId}
                                                              previous-save-attempted={previousSaveAttempted}
@@ -70,7 +69,7 @@
                                                              ondeleteformelement={handleDeleteFormElement}
                                                              onupdateformelement={handleUpdateFormElement}
                                                              onrefreshformsections={handleRefreshFormSections}>
-                        </c-ge-template-builder-select-fields>
+                        </c-ge-template-builder-form-fields>
                     </lightning-tab>
 
                     <lightning-tab value={TabEnums.BATCH_HEADER_TAB}
@@ -89,31 +88,29 @@
                                                             onupdatebatchheaderfield={handleUpdateBatchHeaderField}>
                         </c-ge-template-builder-batch-header>
                     </lightning-tab>
-
                 </lightning-tabset>
             </div>
 
             <template if:false={isLoading}>
                 <div class="slds-docked-form-footer"
                      aria-label="Utility Bar">
-
                     <div class="slds-grid slds-nowrap slds-p-around_small">
                         <div class="slds-size_1-of-3">
                             <template if:true={inSelectFieldsTab}>
-                                <lightning-button label="Back: Template Info"
-                                                  title="Previous"
+                                <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}
+                                                  title={CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}
                                                   onclick={handleGoToTab}
                                                   variant="outline-brand"
                                                   data-tab-value={TabEnums.INFO_TAB}>
                                 </lightning-button>
                             </template>
                             <template if:true={inBatchHeaderTab}>
-                                <lightning-button label="Back: Select Fields"
-                                                  title="Previous"
+                                <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBackFormFields}
+                                                  title={CUSTOM_LABELS.geButtonBuilderNavBackFormFields}
                                                   onclick={handleGoToTab}
                                                   variant="outline-brand"
                                                   class="slds-m-right_small"
-                                                  data-tab-value={TabEnums.SELECT_FIELDS_TAB}>
+                                                  data-tab-value={TabEnums.FORM_FIELDS_TAB}>
                                 </lightning-button>
                             </template>
                         </div>
@@ -121,13 +118,13 @@
                             <lightning-progress-indicator current-step={activeTab}
                                                           type="base"
                                                           variant="base">
-                                <lightning-progress-step label="Template Info"
-                                                         aria-label="Template Info"
+                                <lightning-progress-step label={CUSTOM_LABELS.geTabTemplateInfo}
+                                                         aria-label={CUSTOM_LABELS.geTabTemplateInfo}
                                                          value={TabEnums.INFO_TAB}>
                                 </lightning-progress-step>
-                                <lightning-progress-step label="Select Fields"
-                                                         aria-label="Select Fields"
-                                                         value={TabEnums.SELECT_FIELDS_TAB}>
+                                <lightning-progress-step label={CUSTOM_LABELS.geTabFormFields}
+                                                         aria-label={CUSTOM_LABELS.geTabFormFields}
+                                                         value={TabEnums.FORM_FIELDS_TAB}>
                                 </lightning-progress-step>
                                 <lightning-progress-step label="Batch Header"
                                                          aria-label="Batch Header"
@@ -137,17 +134,17 @@
                         </div>
                         <div class="slds-size_1-of-3">
                             <template if:true={inTemplateInfoTab}>
-                                <lightning-button label="Next: Select Fields"
-                                                  title="Next"
+                                <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavFormFields}
+                                                  title={CUSTOM_LABELS.geButtonBuilderNavFormFields}
                                                   variant="brand"
                                                   class="slds-float_right"
                                                   onclick={handleGoToTab}
-                                                  data-tab-value={TabEnums.SELECT_FIELDS_TAB}>
+                                                  data-tab-value={TabEnums.FORM_FIELDS_TAB}>
                                 </lightning-button>
                             </template>
                             <template if:true={inSelectFieldsTab}>
-                                <lightning-button label="Next: Batch Header"
-                                                  title="Next"
+                                <lightning-button label={CUSTOM_LABELS.geButtonBuilderNavBatchHeader}
+                                                  title={CUSTOM_LABELS.geButtonBuilderNavBatchHeader}
                                                   class="slds-float_right"
                                                   onclick={handleGoToTab}
                                                   variant="brand"
@@ -155,17 +152,15 @@
                                 </lightning-button>
                             </template>
                             <template if:true={inBatchHeaderTab}>
-                                <lightning-button label="Save &amp; Close"
-                                                  title="Next"
+                                <lightning-button label={CUSTOM_LABELS.commonSaveAndClose}
+                                                  title={CUSTOM_LABELS.commonSaveAndClose}
                                                   class="slds-float_right"
                                                   onclick={handleFormTemplateSave}
                                                   variant="brand">
                                 </lightning-button>
                             </template>
                         </div>
-
                     </div>
-
                 </div>
             </template>
         </div>
@@ -173,8 +168,8 @@
 
     <template if:false={isAccessible}>
         <div class="slds-card slds-card_extension slds-p-around_large">
-            <c-util-illustration title='You do not have access to this page'
-                                 message='Template Builder requires Advanced Mapping. Please go to NPSP Settings and turn on Advanced Mapping.'
+            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
+                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
                                  size="large">
             </c-util-illustration>
         </div>

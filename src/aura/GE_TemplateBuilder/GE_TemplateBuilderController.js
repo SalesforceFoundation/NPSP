@@ -14,7 +14,7 @@
                     const modalBody = components[0];
 
                     let modalReference = component.find('overlayLib').showCustomModal({
-                        header: 'Section Settings',
+                        header: $A.get('$Label.c.geHeaderFormFieldsModalSectionSettings'),
                         body: modalBody,
                         showCloseButton: true,
                         cssClass: component.getName() + ' customModal'
