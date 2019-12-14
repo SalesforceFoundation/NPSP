@@ -324,20 +324,40 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         Map<String,BDI_FieldMapping> fieldMappingByDevName,
         Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName) {
 
-
         // TODO: Turn magic strings below into constants once custom labels/names are decided.
-        BDI_ObjectMapping simulatedObjectMapping =
-            constructSimulatedObjectMapping('Donor_Fields', 'Donor Fields', SObjectType.DataImport__c.Name);
+        BDI_ObjectMapping simulatedDataImportObjectMapping =
+            constructSimulatedObjectMapping('Data_Import', 'Data Import', SObjectType.DataImport__c.Name);
+
+        // Add the various 'Imported' lookup fields from Object Mappings as simulated Field Mappings
+        for (String objectMappingDevName : objectMappingByDevName.keySet()) {
+            BDI_ObjectMapping currentObjectMapping = objectMappingByDevName.get(objectMappingDevName);
+            Schema.DescribeFieldResult unmappedFieldDescribe =
+                UTIL_Describe.getFieldDescribe(
+                    SObjectType.DataImport__c.Name,
+                    currentObjectMapping.Imported_Record_Field_Name);
+
+            BDI_FieldMapping simulatedFieldMapping =
+                constructSimulatedFieldMapping(unmappedFieldDescribe, simulatedDataImportObjectMapping);
+
+            fieldMappingByDevName.put(simulatedFieldMapping.DeveloperName, simulatedFieldMapping);
+            BDI_FieldMapping[] currentObjectMappings = fieldMappingsByObjMappingDevName.get(objectMappingDevName);
+            currentObjectMappings.add(simulatedFieldMapping);
+        }
+
         BDI_FieldMapping donationDonorField =
             constructSimulatedFieldMapping(
                 SObjectType.DataImport__c.fields.Donation_Donor__c,
-                simulatedObjectMapping);
+                simulatedDataImportObjectMapping);
 
         BDI_FieldMapping[] simulatedFieldMappings = new BDI_FieldMapping[] {donationDonorField};
 
-        objectMappingByDevName.put(simulatedObjectMapping.DeveloperName, simulatedObjectMapping);
         fieldMappingByDevName.put(donationDonorField.DeveloperName, donationDonorField);
-        fieldMappingsByObjMappingDevName.put(simulatedObjectMapping.DeveloperName, simulatedFieldMappings);
+        objectMappingByDevName.put(
+            simulatedDataImportObjectMapping.DeveloperName,
+            simulatedDataImportObjectMapping);
+        fieldMappingsByObjMappingDevName.put(
+            simulatedDataImportObjectMapping.DeveloperName,
+            simulatedFieldMappings);
     }
 
     /*******************************************************************************************************
