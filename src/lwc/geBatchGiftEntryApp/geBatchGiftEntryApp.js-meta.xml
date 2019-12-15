@@ -7,4 +7,11 @@
     <targets>
         <target>lightning__RecordPage</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <objects>
+                <object>DataImportBatch__c</object>
+            </objects>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

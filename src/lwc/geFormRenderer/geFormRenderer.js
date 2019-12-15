@@ -1,10 +1,13 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import { showToast } from 'c/utilTemplateBuilder';
+import { showToast, handleError } from 'c/utilTemplateBuilder';
+import { getRecord } from 'lightning/uiRecordApi';
+import FORM_TEMPLATE_NAME_FIELD
+    from '@salesforce/schema/DataImportBatch__c.Form_Template_Name__c';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api sections = [];
@@ -14,26 +17,40 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track mappingSet = '';
     @track version = '';
     @api showSpinner = false;
-    @api isBatchMode = false;
+    @api batchId;
     @api submissions = [];
     label = { messageLoading, geSave, geCancel };
 
-    connectedCallback() {
-        GeFormService.getFormTemplate(this.isBatchMode).then(response => {
-            // read the template header info
-            if(response !== null && typeof response !== 'undefined') {
-                const { formTemplate } = response;
-                this.ready = true;
-                this.name = formTemplate.name;
-                this.description = formTemplate.description;
-                this.version = formTemplate.layout.version;
-                if (typeof formTemplate.layout !== 'undefined'
-                        && Array.isArray(formTemplate.layout.sections)) {
-                    this.sections = formTemplate.layout.sections;
-                    this.dispatchEvent(new CustomEvent('sectionsretrieved'));
-                }
-            }
+    @wire(getRecord, {
+        recordId: '$batchId',
+        fields: FORM_TEMPLATE_NAME_FIELD
+    })
+    wiredBatch({data, error}) {
+        if (data) {
+            this.loadTemplate(data.fields[FORM_TEMPLATE_NAME_FIELD.fieldApiName].value);
+        } else if (error) {
+            handleError(error);
+        }
+    }
 
+    loadTemplate(templateName) {
+        GeFormService.getFormTemplate(this.batchId, templateName)
+            .then(response => {
+                // read the template header info
+                if (response !== null && typeof response !== 'undefined') {
+                    const {formTemplate} = response;
+                    this.ready = true;
+                    this.name = formTemplate.name;
+                    this.description = formTemplate.description;
+                    this.version = formTemplate.layout.version;
+                    if (typeof formTemplate.layout !== 'undefined'
+                        && Array.isArray(formTemplate.layout.sections)) {
+                        this.sections = formTemplate.layout.sections;
+                        this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+                    }
+                }
+            }).catch(error => {
+            handleError(error);
         });
     }
 
@@ -60,7 +77,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // show the spinner
         this.toggleSpinner();
 
-        if (this.isBatchMode) {
+        if (this.batchId) {
             const submission = {
                 sectionsList: sectionsList
             };

@@ -1,6 +1,8 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import retrieveDefaultBGERenderWrapper
     from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultBGERenderWrapper';
+import retrieveFormRenderWrapper
+    from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormRenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 import saveAndDryRunRow
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
@@ -36,28 +38,36 @@ class GeFormService {
     objectMappings;
 
     /**
-     * Retrieve the default form render wrapper.
+     * Retrieve the appropriate form render wrapper.
      * @returns {Promise<FORM_RenderWrapper>}
      */
-    getFormTemplate(isBatchMode = false) {
+    getFormTemplate(batchId, formTemplateName) {
         return new Promise((resolve, reject) => {
-            if (isBatchMode) {
-                retrieveDefaultBGERenderWrapper()
-                    .then((result) => {
-                        this.fieldMappings =
-                            result.fieldMappingSetWrapper.fieldMappingByDevName;
-                        this.objectMappings =
-                            result.fieldMappingSetWrapper.objectMappingByDevName;
-                        resolve(result);
-                    })
-                    .catch(error => {
-                        console.error(JSON.stringify(error));
-                    });
+            if (batchId) {
+                if (formTemplateName) {
+                    retrieveFormRenderWrapper({templateName: formTemplateName})
+                        .then((result) => {
+                            this.setMappings(result);
+                            resolve(result);
+                        })
+                        .catch(error => {
+                            console.error(JSON.stringify(error));
+                        });
+                } else {
+                    retrieveDefaultBGERenderWrapper() //todo: maybe refactor this method
+                        // so we don't have a different version for the default specifically
+                        .then((result) => {
+                            this.setMappings(result);
+                            resolve(result);
+                        })
+                        .catch(error => {
+                            console.error(JSON.stringify(error));
+                        });
+                }
             } else {
                 getRenderWrapper({})
                     .then((result) => {
-                        this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
-                        this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
+                        this.setMappings(result);
                         resolve(result);
                     })
                     .catch(error => {
@@ -181,6 +191,13 @@ class GeFormService {
         this.accountId = id;
     }
     //END temporary storage of Account Id to use for testing
+
+    setMappings(renderWrapper) {
+        this.fieldMappings =
+            renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
+        this.objectMappings =
+            renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
+    }
 }
 
 const geFormServiceInstance = new GeFormService();
