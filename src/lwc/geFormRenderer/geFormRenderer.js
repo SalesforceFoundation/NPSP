@@ -10,9 +10,9 @@ import { showToast, getQueryParameters, getRecordFieldNames } from 'c/utilTempla
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api recordId = '';
     @track apiName = '';
-    @track sections = [];
-    @track fieldNames = [];
+    fieldNames = [];
 
+    @track sections = [];
     @track ready = false;
     @track name = '';
     @track description = '';
@@ -21,9 +21,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api showSpinner = false;
     label = { messageLoading, geSave, geCancel };
 
-    @wire(getRecord, { recordId: '$recordId', optionalFields: ['Account.Name', 'Contact.Name']})
+    //@wire(getRecord, { recordId: '$recordId', optionalFields: ['Account.Name', 'Contact.Name']})
+    @wire(getRecord, { recordId: '$recordId', fields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
         if (data) {
+            alert(JSON.stringify(data));
             this.apiName = data.apiName;
             this.handleGetTemplate();
         } else if (error) {
@@ -38,7 +40,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         GeFormService.getFormTemplate(this.recordId, this.apiName).then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
-                //alert(JSON.stringify(response));
                 const { formTemplate } = response;
                 let fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 

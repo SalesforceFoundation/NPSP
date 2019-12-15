@@ -15,6 +15,8 @@ import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 const OBJECT = 'object';
 const FUNCTION = 'function';
 const ASC = 'asc';
+const ACCOUNT = 'account';
+const CONTACT = 'contact';
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
@@ -446,11 +448,15 @@ const getRecordFieldNames = (formTemplate, fieldMappings) => {
         for (const element of section.elements) {
             for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-                let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
-                fieldNames.push(`${objectName}.${fieldName}`);
+                if (objectName.toLowerCase() === CONTACT || objectName.toLowerCase() === ACCOUNT) {
+                    let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                    //fieldNames.push(`${objectName}.${fieldName}`);
+                }              
             }     
         }
     }
+    fieldNames.push('Contact.FirstName');
+    fieldNames.push('Contact.LastName');
     return fieldNames;
 };
 
