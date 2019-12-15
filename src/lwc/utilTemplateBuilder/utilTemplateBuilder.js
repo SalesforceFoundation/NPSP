@@ -435,7 +435,7 @@ const format = (string, replacements) => {
 
 /*******************************************************************************
 * @description returns a list of target field names for the fields in the template
-*
+* in the format objectName.fieldName
 * @param formTemplate: the form template
 * @param fieldMappings: the field mappings dev names
 */
@@ -445,8 +445,9 @@ const getRecordFieldNames = (formTemplate, fieldMappings) => {
     for (const section of formTemplate.layout.sections) {
         for (const element of section.elements) {
             for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
                 let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
-                fieldNames.push(fieldName)
+                fieldNames.push(`${objectName}.${fieldName}`);
             }     
         }
     }
