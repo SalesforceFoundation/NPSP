@@ -47,4 +47,4 @@ Remove Primary Affiliation for Contact2
     Click Link        link=&{account}[Name]
     Load Related List    Affiliated Contacts
     Get Id
-    Confirm Value    Status    Former    Y
+    Confirm Field Value    Status    contains    Former    

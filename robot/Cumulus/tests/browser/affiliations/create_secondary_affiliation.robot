@@ -15,5 +15,4 @@ Create Secondary Affiliation for Contact
     Page Should Contain    &{account}[Name]
     ${value}    Get NPSP Locator    alert
     Click Element    ${value}
-    ${id}    Get Current Record Id
-    Store Session Record    npe5__Affiliation__c    ${id}
+    Save Current Record ID For Deletion    npe5__Affiliation__c   
