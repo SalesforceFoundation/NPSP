@@ -211,7 +211,6 @@
     */
     stopDryRun: function (component) {
         const batchId = component.get("v.dryRunBatch.batchId");
-        console.log('****batchId: ' + batchId);
 
         component.set('v.state.isDryRunStopped', true);
         this.clearError(component);
@@ -265,7 +264,6 @@
     */
     stopMigration: function (component) {
         const batchId = component.get("v.migrationBatch.batchId");
-        console.log('****batchId: ' + batchId);
 
         component.set('v.state.isMigrationStopped', true);
         this.clearError(component);

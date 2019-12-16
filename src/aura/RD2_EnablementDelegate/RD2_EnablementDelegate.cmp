@@ -111,6 +111,12 @@
                                     </div>
 
                                     <div class="slds-grid slds-grid_align-end slds-size_1-of-4 slds-p-right_x-small">
+                                        <div class="slds-is-relative slds-m-right_large">
+                                            <lightning:spinner aura:id="dryRunSpinner" size="small" variant="brand"
+                                                alternativeText="{!$Label.c.labelMessageLoading}"
+                                                class="{!if(and(v.state.isDryRunInProgress, v.state.isDryRunStopped), '', 'slds-hide')}" />
+                                        </div>
+
                                         <span>
                                             <aura:if isTrue="{!and(!v.state.isDryRunInProgress, !v.state.isConfirmed)}">
                                                 <lightning:button class="styleButton"
@@ -366,6 +372,12 @@
                                     <lightning:formattedText value="{!$Label.c.RD2_EnablementMigrationIntro}" />
                                 </div>
                                 <div class="slds-grid slds-grid_align-end slds-size_1-of-4 slds-p-right_x-small">
+                                    <div class="slds-is-relative slds-m-right_large">
+                                        <lightning:spinner aura:id="migrationSpinner" size="small" variant="brand"
+                                            alternativeText="{!$Label.c.labelMessageLoading}"
+                                            class="{!if(and(v.state.isMigrationInProgress, v.state.isMigrationStopped), '', 'slds-hide')}" />
+                                    </div>
+
                                     <span>
                                         <aura:if
                                             isTrue="{!and(!v.state.isMigrationCompleted, !v.state.isMigrationInProgress)}">
