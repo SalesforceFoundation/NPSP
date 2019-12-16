@@ -1,27 +1,37 @@
 *** Settings ***
-
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
+
+***Keywords***
+Setup Test Data
+    &{contact1} =                        API Create Contact    Email=automation@example.com
+    Store Session record                 Account               &{contact1}[AccountId] 
+    Set suite variable                   &{contact1}
+    &{contact2} =                        API Create Contact    AccountId=&{contact1}[AccountId]
+    Set suite variable                   &{contact2}
+
 
 *** Test Cases ***
 
 Delete Contact from Household
-    [tags]  unstable
-    &{contact1} =  API Create Contact    Email=skristem@robot.com
-    Go To Record Home  &{contact1}[AccountId]
-    ${contact_id2} =  New Contact for HouseHold
-    Store Session Record    Contact    ${contact_id2}
-    Store Session Record    Account    &{contact1}[AccountId]
-    &{contact2} =  Salesforce Get  Contact  ${contact_id2}
-    Header Field Value    Account Name    &{contact1}[LastName] and &{contact2}[LastName] Household
-    Go To Object Home    Contact
-    Select Row    &{Contact2}[FirstName] &{Contact2}[LastName]
-    Click Link    title=Delete
-    Sleep    2
-    Go To Object Home    Account
-    Page Should Contain Link   link=&{contact1}[LastName] Household
-    Go To Object Home    Contact
-    Select Row    &{Contact1}[FirstName] &{Contact1}[LastName]
-    Click Link    title=Delete
-    Page Should Contain    Warning
+    [Documentation]                      Create two contacts with API which inturn creates 2 household accounts.
+    ...                                  Navigate to contacts listing page and select second contact. Delete the contact and validate that there is only primary household account
+    ...                                  Now try to delete the primary household account and verify that a warning message is displayed.
+    [tags]                               W-037650              feature:Contacts And Accounts
+    Go To Page                           Listing               Contact
+    Delete Record                        &{Contact2}[FirstName] &{Contact2}[LastName]
+    Go To Page                           Details               Account                                object_id=&{contact1}[Id]
+    Page Should Contain Link             link=&{contact1}[LastName] Household
+    Go To Page                           Listing               Contact
+    Select Row                           &{Contact1}[FirstName] &{Contact1}[LastName]
+    Click Link                           title=Delete
+    Wait Until Page Contains             Warning
+
+
