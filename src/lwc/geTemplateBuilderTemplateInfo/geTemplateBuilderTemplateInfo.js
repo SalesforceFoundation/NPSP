@@ -1,7 +1,11 @@
 import { LightningElement, api } from 'lwc';
 import { dispatch, isEmpty, isFunction } from 'c/utilTemplateBuilder';
+import GeLabelService from 'c/geLabelService';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
+
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     @api isLoading;
     @api templateName;
     @api templateDescription;
