@@ -118,7 +118,8 @@
                                                     title="{!$Label.c.RD2_EnablementDryRunButton}"
                                                     onclick="{!c.handleDryRun}" />
                                             </aura:if>
-                                            <aura:if isTrue="{!and(v.state.isDryRunInProgress, v.dryRunBatch != null)}">
+                                            <aura:if
+                                                isTrue="{!and(v.state.isDryRunInProgress, !v.state.isDryRunStopped)}">
                                                 <lightning:button class="styleButton" aura:id="dryRunStopButton"
                                                     label="{!$Label.c.RD2_EnablementDryRunStopButton}" variant="neutral"
                                                     title="{!$Label.c.RD2_EnablementDryRunStopButton}"
@@ -374,6 +375,13 @@
                                                 title="{!$Label.c.RD2_EnablementMigrationButton}"
                                                 onclick="{!c.handleRunMigration}"
                                                 disabled="{! !v.state.isMetaDeployConfirmed }" />
+                                        </aura:if>
+                                        <aura:if
+                                            isTrue="{!and(v.state.isMigrationInProgress, !v.state.isMigrationStopped)}">
+                                            <lightning:button class="styleButton" aura:id="migrationStopButton"
+                                                label="{!$Label.c.RD2_EnablementMigrationStopButton}" variant="neutral"
+                                                title="{!$Label.c.RD2_EnablementMigrationStopButton}"
+                                                onclick="{!c.handleMigrationStop}" />
                                         </aura:if>
                                     </span>
                                 </div>

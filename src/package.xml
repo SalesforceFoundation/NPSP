@@ -333,10 +333,10 @@
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD2_Constants</members>
-        <members>RD2_DataMigrationMapper</members>
-        <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigrationBase_BATCH</members>
         <members>RD2_DataMigrationDryRun_BATCH</members>
+        <members>RD2_DataMigrationMapper</members>
+        <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigration_TEST</members>
         <members>RD2_Donor</members>
         <members>RD2_Donor_TEST</members>
@@ -1484,8 +1484,8 @@
         <members>RD2_EnablementDryRunBatchTitle</members>
         <members>RD2_EnablementDryRunButton</members>
         <members>RD2_EnablementDryRunComplete</members>
-        <members>RD2_EnablementDryRunStopButton</members>
         <members>RD2_EnablementDryRunIntro</members>
+        <members>RD2_EnablementDryRunStopButton</members>
         <members>RD2_EnablementDryRunTitle</members>
         <members>RD2_EnablementEnableConfirm</members>
         <members>RD2_EnablementEnableIntro</members>
@@ -1503,6 +1503,7 @@
         <members>RD2_EnablementMigrationCompleteMessage</members>
         <members>RD2_EnablementMigrationErrorMessage</members>
         <members>RD2_EnablementMigrationIntro</members>
+        <members>RD2_EnablementMigrationStopButton</members>
         <members>RD2_EnablementMigrationTitle</members>
         <members>RD2_EnablementMigrationWarning</members>
         <members>RD2_EnablementPrepIntro</members>

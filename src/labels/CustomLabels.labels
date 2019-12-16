@@ -1588,7 +1588,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementDryRunStopButton</shortDescription>
-        <value>Stop Processing</value>
+        <value>Stop Validation</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDryRunTitle</fullName>
@@ -1733,6 +1733,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationErrorMessage</shortDescription>
         <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStopButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationStopButton</shortDescription>
+        <value>Stop Migration</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationTitle</fullName>

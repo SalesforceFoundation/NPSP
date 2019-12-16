@@ -185,12 +185,10 @@
     */
     runDryRun: function (component) {
         component.set('v.state.isDryRunInProgress', true);
-        component.set('v.dryRunBatch', null);
-
+        component.set('v.state.isDryRunStopped', false);
         this.clearError(component);
 
         var action = component.get('c.runDryRun');
-
         action.setCallback(this, function (response) {
             if (!component.isValid()) {
                 return;
@@ -212,27 +210,24 @@
     * @description Stops data migration batch in dry run mode
     */
     stopDryRun: function (component) {
-        let batchId = component.get("v.dryRunBatch.batchId");
+        const batchId = component.get("v.dryRunBatch.batchId");
+        console.log('****batchId: ' + batchId);
 
-        this.disableEdit(component, "dryRunStopButton");
-        component.set('v.dryRunBatch', null);
+        component.set('v.state.isDryRunStopped', true);
         this.clearError(component);
 
         var action = component.get("c.stopProcessing");
         action.setParams({
             batchId: batchId
         });
-
         action.setCallback(this, function (response) {
             if (!component.isValid()) {
                 return;
             }
             const state = response.getState();
 
-            if (state === 'SUCCESS') {
-                component.find('dryRunJob').handleLoadBatchJob();
-
-            } else if (state === 'ERROR') {
+            if (state === 'ERROR') {
+                component.set('v.state.isDryRunStopped', false);
                 this.handleError(component, response.getError(), 'dryRun');
             }
         });
@@ -244,12 +239,10 @@
     */
     runMigration: function (component) {
         component.set('v.state.isMigrationInProgress', true);
-        component.set('v.migrationBatch', null);
-
+        component.set('v.state.isMigrationStopped', false);
         this.clearError(component);
 
         var action = component.get('c.runMigration');
-
         action.setCallback(this, function (response) {
             if (!component.isValid()) {
                 return;
@@ -261,6 +254,34 @@
 
             } else if (state === 'ERROR') {
                 component.set('v.state.isMigrationInProgress', false);
+                this.handleError(component, response.getError(), 'migration');
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description Stops data migration batch
+    */
+    stopMigration: function (component) {
+        const batchId = component.get("v.migrationBatch.batchId");
+        console.log('****batchId: ' + batchId);
+
+        component.set('v.state.isMigrationStopped', true);
+        this.clearError(component);
+
+        var action = component.get("c.stopProcessing");
+        action.setParams({
+            batchId: batchId
+        });
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            const state = response.getState();
+
+            if (state === 'ERROR') {
+                component.set('v.state.isMigrationStopped', false);
                 this.handleError(component, response.getError(), 'migration');
             }
         });
@@ -296,7 +317,7 @@
         const errorDetail = event.getParam('errorDetail');
         if (errorDetail === undefined
             || errorDetail === null
-            || (batch.className !== 'RD2_DataMigration_BATCH' && batch.className !== 'RD2_DataMigrationDryRun_BATCH')
+            || (errorDetail.className !== 'RD2_DataMigration_BATCH' && errorDetail.className !== 'RD2_DataMigrationDryRun_BATCH')
         ) {
             return;
         }

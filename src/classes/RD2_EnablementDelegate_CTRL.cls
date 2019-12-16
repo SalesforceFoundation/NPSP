@@ -310,7 +310,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void stopProcessing(Id batchId) {
-        if (batchId == null || !batchService.isInProgress(batchId)) {
+        if (batchId == null) {
             return;
         }
 

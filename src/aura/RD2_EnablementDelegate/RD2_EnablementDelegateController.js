@@ -18,6 +18,9 @@
     handleDryRun: function (component, event, helper) {
         helper.runDryRun(component);
     },
+    handleDryRunStop: function (component, event, helper) {
+        helper.stopDryRun(component);
+    },
     handleDryRunStatusChange: function (component, event, helper) {
         helper.handleBatchEvent(component, event, 'v.dryRunBatch');
         helper.refreshDryRun(component);
@@ -25,11 +28,11 @@
     handleDryRunError: function (component, event, helper) {
         helper.handleBatchError(component, event, 'dryRun');
     },
-    handleDryRunStop: function (component, event, helper) {
-        helper.stopDryRun(component);
-    },
     handleRunMigration: function (component, event, helper) {
         helper.runMigration(component);
+    },
+    handleMigrationStop: function (component, event, helper) {
+        helper.stopMigration(component);
     },
     handleMigrationStatusChange: function (component, event, helper) {
         helper.handleBatchEvent(component, event, 'v.migrationBatch');

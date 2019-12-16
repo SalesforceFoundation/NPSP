@@ -1582,9 +1582,8 @@ private class RD2_DataMigration_TEST {
         try {
             insert rd;
         } catch (Exception e) {
-            if (e.getMessage().contains('INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST')) {
-                //do not execute the test when the org has RD2 config deployed
-                return;
+            if (e.getMessage().contains('INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST')) {                
+                return; //do not execute the test when the org has RD2 config deployed
             } else {
                 throw e;
             }
