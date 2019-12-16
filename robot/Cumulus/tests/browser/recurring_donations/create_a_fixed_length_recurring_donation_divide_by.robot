@@ -33,13 +33,13 @@ Create Fixed Length Recurring Donation Divide By
     @{opportunity1} =            API Query Installment          &{recurringdonation}[Id]    (1 of 12)
     Go To Record Home            ${opportunity1}[0][Id]
     Select Tab                   Details
-    Confirm Value                Amount                         $100.00      Y
+    Confirm Field Value          Amount                         contains                    $100.00      
 
     #Find 2nd Opportunity for Recurring Donation and Check Amount
     @{opportunity2} =            API Query Installment          &{recurringdonation}[Id]    (2 of 12)
     Go To Record Home            ${opportunity2}[0][Id]
     Select Tab                   Details
-    Confirm Value                Amount                         $100.00      Y  
+    Confirm Field Value          Amount                         contains                    $100.00      
 
 
 
