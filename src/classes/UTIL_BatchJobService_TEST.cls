@@ -169,22 +169,20 @@ public with sharing class UTIL_BatchJobService_TEST {
     */
     @isTest
     private static void shouldSetBatchJobSummary() {
-        String context = 'foo';
-        Integer totalRecords = 100;
-        Integer totalRecordsProcessed = 80;
-        Integer totalRecordsFailed = 20;
+        Integer total = 100;
+        Integer processed = 80;
+        Integer failed = 20;
 
-        UTIL_BatchJobService.BatchJobSummary summary =
-            new UTIL_BatchJobService.BatchJobSummary(MOCK_BATCH_ID, context)
-            .withTotalRecords(totalRecords)
-            .withTotalRecordsProcessed(totalRecordsProcessed)
-            .withTotalRecordsFailed(totalRecordsFailed);
+        UTIL_BatchJobService.JobSummary summary =
+            new UTIL_BatchJobService.JobSummary(MOCK_BATCH_ID)
+            .withTotalRecords(total)
+            .withTotalRecordsProcessed(processed)
+            .withTotalRecordsFailed(failed);
 
         System.assertEquals(MOCK_BATCH_ID, summary.batchId, 'Batch Id should match');
-        System.assertEquals(context, summary.context, 'Context should match');
-        System.assertEquals(totalRecords, summary.totalRecords, 'Total Records should match');
-        System.assertEquals(totalRecordsProcessed, summary.totalRecordsProcessed, 'Total Records Processed should match');
-        System.assertEquals(totalRecordsFailed, summary.totalRecordsFailed, 'Total Records Failed should match');
+        System.assertEquals(total, summary.total, 'Total Records should match');
+        System.assertEquals(processed, summary.processed, 'Total Records Processed should match');
+        System.assertEquals(failed, summary.failed, 'Total Records Failed should match');
     }
 
 

@@ -131,8 +131,8 @@
 
                             <lightning:layoutItem size="9" padding="horizontal-medium" class="slds-p-top_medium">
                                 <c:batchProgress aura:id="dryRunJob" title="{!$Label.c.RD2_EnablementDryRunBatchTitle}"
-                                    className="RD2_DataMigration_BATCH" onstatuschange="{!c.handleDryRunStatusChange}"
-                                    onerror="{!c.handleDryRunError}" />
+                                    className="RD2_DataMigrationDryRun_BATCH"
+                                    onstatuschange="{!c.handleDryRunStatusChange}" onerror="{!c.handleDryRunError}" />
                             </lightning:layoutItem>
                             <lightning:layoutItem size="3" />
                         </lightning:layout>

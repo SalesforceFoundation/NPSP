@@ -69,8 +69,10 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
         try {
             switch on className {
                 when 'RD2_DataMigration_BATCH' {
-                    npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-                    jsonBatchSummary = rdSettings.RecurringDonations2MigrationState__c;
+                    jsonBatchSummary = getMigrationState(className);
+                }
+                when 'RD2_DataMigrationDryRun_BATCH' {
+                    jsonBatchSummary = getMigrationState(className);
                 }
             }
 
@@ -79,6 +81,27 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
         }
 
         return jsonBatchSummary;
+    }
+
+
+    /***
+    * @description Returns batch summary for enhanced RD data migration batch jobs
+    * @param className Batch class name
+    * @return String Batch Job Summary JSON string
+    */
+    @TestVisible
+    private static String getMigrationState(String className) {     
+        String summaryType = className == 'RD2_DataMigrationDryRun_BATCH' ? 'dryRun' : 'run';   
+        String migrationState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2MigrationState__c;
+
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = String.isBlank(migrationState)
+            ? new Map<String, UTIL_BatchJobService.JobSummary>()
+            : (Map<String, UTIL_BatchJobService.JobSummary>) JSON.deserialize(migrationState, Map<String, UTIL_BatchJobService.JobSummary>.class);
+
+        return
+            summaryByType.containsKey(summaryType)
+            ? JSON.serialize(summaryByType.get(summaryType))
+            : null;
     }
 
 

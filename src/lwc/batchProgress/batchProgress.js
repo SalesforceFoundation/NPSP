@@ -109,9 +109,9 @@ export default class BatchProgress extends LightningElement {
                         this.batchJobSummary = summary;
 
                         if (this.batchJob.numberOfErrors === 0) {
-                            this.batchJob.numberOfErrors = isNull(this.batchJobSummary.totalRecordsFailed)
+                            this.batchJob.numberOfErrors = isNull(this.batchJobSummary.failed)
                                 ? 0
-                                : this.batchJobSummary.totalRecordsFailed;
+                                : this.batchJobSummary.failed;
                         }
                     }
                 }

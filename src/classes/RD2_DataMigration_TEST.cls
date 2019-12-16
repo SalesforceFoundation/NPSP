@@ -101,7 +101,7 @@ private class RD2_DataMigration_TEST {
         Exception jobException;
         try {
             Test.startTest();
-            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+            RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
             Database.executeBatch(batch);
             Test.stopTest();
 
@@ -115,7 +115,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(null, jobException,
             'No exception should be generated when enhanced RDs are not enabled in dry run mode: ' + jobException);
 
-        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigrationDryRun_BATCH');
         System.assertEquals(1, job.JobItemsProcessed,
             'The batch should have run with one child batch processed'
         );
@@ -174,7 +174,7 @@ private class RD2_DataMigration_TEST {
         Exception jobException;
         try {
             Test.startTest();
-            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+            RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
             Database.executeBatch(batch);
             Test.stopTest();
 
@@ -852,7 +852,7 @@ private class RD2_DataMigration_TEST {
             new String[]{ installment.Name }
         );
         System.assertEquals(expectedMessage, errors[0].Full_Message__c, 'Error message should match');
-        System.assertEquals(RD2_DataMigration_BATCH.LOG_EXCEPTION_ERROR_TYPE, errors[0].Error_Type__c, 'Error Type should match');
+        System.assertEquals(RD2_DataMigrationBase_BATCH.LOG_EXCEPTION_ERROR_TYPE, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
         System.assertEquals(getExpectedLogContext(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
@@ -1353,7 +1353,7 @@ private class RD2_DataMigration_TEST {
         insert opps;
 
         //simulate an error on a DML other than DML on a Recurring Donation
-        RD2_DataMigration_BATCH.Logger logger = new RD2_DataMigration_BATCH.Logger(LOG_CONTEXT);
+        RD2_DataMigrationBase_BATCH.Logger logger = new RD2_DataMigrationBase_BATCH.Logger(LOG_CONTEXT);
         List<Database.SaveResult> dmlResults = new List<Database.SaveResult>{ mockErrorDMLResult() };
         logger.addErrors(dmlResults, new List<Opportunity>{ new Opportunity() });
 
@@ -1430,7 +1430,7 @@ private class RD2_DataMigration_TEST {
         };
 
         RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-        RD2_DataMigration_BATCH.Logger logger = new RD2_DataMigration_BATCH.Logger(LOG_CONTEXT);
+        RD2_DataMigrationBase_BATCH.Logger logger = new RD2_DataMigrationBase_BATCH.Logger(LOG_CONTEXT);
         batch.handleSaveAndLogging(convertedRDs, voidOppsByRDId, logger);
 
         List<Error__c> errors = errorGateway.getRecords();
@@ -1488,7 +1488,7 @@ private class RD2_DataMigration_TEST {
             'Enhanced RDs should not be enabled');
 
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+        RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
         batch.execute(batchContext, getRecords());
         batch.finish(batchContext);      
 
@@ -1544,7 +1544,7 @@ private class RD2_DataMigration_TEST {
             'Enhanced RDs should not be enabled');
 
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+        RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
         batch.execute(batchContext, getRecords());
         batch.finish(batchContext);   
         Id jobId = batchContext.getJobId();   
@@ -1558,8 +1558,8 @@ private class RD2_DataMigration_TEST {
 
         assertLegacyFormat(getRecords());
 
-        UTIL_BatchJobService.BatchJobSummary expectedSummary =
-            new UTIL_BatchJobService.BatchJobSummary(jobId, getExpectedLogContext(jobId))
+        UTIL_BatchJobService.JobSummary expectedSummary =
+            new UTIL_BatchJobService.JobSummary(jobId)
                 .withTotalRecords(2)
                 .withTotalRecordsProcessed(1)
                 .withTotalRecordsFailed(1);
@@ -1578,10 +1578,20 @@ private class RD2_DataMigration_TEST {
             .withId(null)
             .withDayOfMonth(dayOfMonth)
             .build();
-        insert rd;
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            if (e.getMessage().contains('INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST')) {
+                //do not execute the test when the org has RD2 config deployed
+                return;
+            } else {
+                throw e;
+            }
+        }
 
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
-        RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
+        RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
         batch.execute(batchContext, getRecords());
         batch.finish(batchContext);   
         Id jobId = batchContext.getJobId();   
@@ -1805,7 +1815,7 @@ private class RD2_DataMigration_TEST {
     private static String getExpectedLogContext(Id jobId) {
         AsyncApexJob job = jobGateway.getRecord(jobId);
 
-        return RD2_DataMigration_BATCH.LOG_CONTEXT_PREFIX
+        return RD2_DataMigrationBase_BATCH.LOG_CONTEXT_PREFIX
             + (job == null ? '' : (' ' + String.valueOf(job.CreatedDate)));
     }
 
@@ -1832,8 +1842,8 @@ private class RD2_DataMigration_TEST {
     * @return void
     */
     private static void assertBatchSummarySuccess(Id jobId, Integer totalProcessed) {
-        UTIL_BatchJobService.BatchJobSummary expectedSummary =
-            new UTIL_BatchJobService.BatchJobSummary(jobId, getExpectedLogContext(jobId))
+        UTIL_BatchJobService.JobSummary expectedSummary =
+            new UTIL_BatchJobService.JobSummary(jobId)
                 .withTotalRecords(totalProcessed)
                 .withTotalRecordsProcessed(totalProcessed)
                 .withTotalRecordsFailed(0);
@@ -1848,8 +1858,8 @@ private class RD2_DataMigration_TEST {
     * @return void
     */
     private static void assertBatchSummaryFailed(Id jobId, Integer totalFailed) {
-        UTIL_BatchJobService.BatchJobSummary expectedSummary =
-            new UTIL_BatchJobService.BatchJobSummary(jobId, getExpectedLogContext(jobId))
+        UTIL_BatchJobService.JobSummary expectedSummary =
+            new UTIL_BatchJobService.JobSummary(jobId)
                 .withTotalRecords(totalFailed)
                 .withTotalRecordsProcessed(0)
                 .withTotalRecordsFailed(totalFailed);
@@ -1861,17 +1871,20 @@ private class RD2_DataMigration_TEST {
     * @description Verifies batch summary created after data migration completes
     * @return void
     */
-    private static void assertBatchSummary(UTIL_BatchJobService.BatchJobSummary expectedSummary) {
-        String jsonSummary = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2MigrationState__c;
-        UTIL_BatchJobService.BatchJobSummary summary = String.isNotBlank(jsonSummary)
-            ? (UTIL_BatchJobService.BatchJobSummary) JSON.deserialize(jsonSummary, UTIL_BatchJobService.BatchJobSummary.class)
-            : null;
-        System.assertNotEquals(null, summary, 'Batch summary should be created');
+    private static void assertBatchSummary(UTIL_BatchJobService.JobSummary expectedSummary) {
+        String migrationState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2MigrationState__c;
+         Map<String, UTIL_BatchJobService.JobSummary> summaryByType = String.isBlank(migrationState)
+            ? new Map<String, UTIL_BatchJobService.JobSummary>()
+            : (Map<String, UTIL_BatchJobService.JobSummary>) JSON.deserialize(migrationState, Map<String, UTIL_BatchJobService.JobSummary>.class);
 
-        System.assertEquals(expectedSummary.batchId, summary.batchId, 'Batch Id should match');
-        System.assertEquals(expectedSummary.totalRecords, summary.totalRecords, 'Total Records should match');
-        System.assertEquals(expectedSummary.totalRecordsProcessed, summary.totalRecordsProcessed, 'Total Records Processed should match');
-        System.assertEquals(expectedSummary.totalRecordsFailed, summary.totalRecordsFailed, 'Total Records Failed should match');
+        System.assertNotEquals(null, summaryByType, 'Batch summary should be created');
+        System.assertEquals(1, summaryByType.values().size(), 'Batch summary should be created');
+
+        UTIL_BatchJobService.JobSummary summary = summaryByType.values()[0];
+        System.assertEquals(expectedSummary.batchId, summary.batchId, 'Batch Id should match: ' + summary);
+        System.assertEquals(expectedSummary.total, summary.total, 'Total Records should match: ' + summary);
+        System.assertEquals(expectedSummary.processed, summary.processed, 'Total Records Processed should match: ' + summary);
+        System.assertEquals(expectedSummary.failed, summary.failed, 'Total Records Failed should match: ' + summary);
     }
 
     /****
@@ -1899,9 +1912,8 @@ private class RD2_DataMigration_TEST {
     /***
     * @description Generates error Database.SaveResult
     */
-    public static Database.SaveResult mockErrorDMLResult() {
+    private static Database.SaveResult mockErrorDMLResult() {
         return Database.insert(new Opportunity(), false);
     }
-
 
 }

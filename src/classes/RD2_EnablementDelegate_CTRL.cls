@@ -248,32 +248,38 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
     * @description Starts the dry run data migration
-    * @return void
+    * @return Id Batch Job Id
     */
     @AuraEnabled
-    public static void runDryRun() {
+    public static Id runDryRun() {
+        Id jobId;
         try {
-            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH().enableDryRunMode();
-            Database.executeBatch(batch, batch.batchSize);
+            RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
+            jobId = Database.executeBatch(batch, batch.batchSize);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
+        
+        return jobId;
     }
 
     /***
     * @description Starts the data migration batch
-    * @return void
+    * @return Id Batch Job Id
     */
     @AuraEnabled
-    public static void runMigration() {
+    public static Id runMigration() {
+        Id jobId;
         try {
             RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-            Database.executeBatch(batch, batch.batchSize);
+            jobId = Database.executeBatch(batch, batch.batchSize);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
+
+        return jobId;
     }
 
     /***

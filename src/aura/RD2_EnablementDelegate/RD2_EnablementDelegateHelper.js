@@ -278,7 +278,7 @@
         const batch = event.getParam('batchProgress');
         if (batch === undefined
             || batch === null
-            || batch.className !== 'RD2_DataMigration_BATCH'
+            || (batch.className !== 'RD2_DataMigration_BATCH' && batch.className !== 'RD2_DataMigrationDryRun_BATCH')
         ) {
             return;
         }
@@ -296,7 +296,7 @@
         const errorDetail = event.getParam('errorDetail');
         if (errorDetail === undefined
             || errorDetail === null
-            || errorDetail.className !== 'RD2_DataMigration_BATCH'
+            || (batch.className !== 'RD2_DataMigration_BATCH' && batch.className !== 'RD2_DataMigrationDryRun_BATCH')
         ) {
             return;
         }

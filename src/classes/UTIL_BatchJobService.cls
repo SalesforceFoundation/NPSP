@@ -238,50 +238,47 @@ public with sharing class UTIL_BatchJobService {
     /***
     * @description Represents batch job summary
     */
-    public class BatchJobSummary {
+    public class JobSummary {
         public Id batchId;
-        public String context;
-        public Integer totalRecords = 0;
-        public Integer totalRecordsProcessed = 0;
-        public Integer totalRecordsFailed = 0;
+        public Integer total = 0;
+        public Integer processed = 0;
+        public Integer failed = 0;
 
         /**
         * @description Contructor
         * @param batchId Batch job Id
-        * @param context Log context
         */
-        public BatchJobSummary(Id batchId, String context) {
+        public JobSummary(Id batchId) {
             this.batchId = batchId;
-            this.context = context;
         }
 
         /**
         * @description Sets number of records selected
-        * @param totalRecords Number of records selected
-        * @return BatchJobSummary
+        * @param total Number of records selected
+        * @return JobSummary
         */
-        public BatchJobSummary withTotalRecords(Integer totalRecords) {
-            this.totalRecords = totalRecords;
+        public JobSummary withTotalRecords(Integer total) {
+            this.total = total;
             return this;
         }
 
         /**
         * @description Sets number of records processed
-        * @param totalRecordsProcessed Number of records processed
-        * @return BatchJobSummary
+        * @param processed Number of records processed
+        * @return JobSummary
         */
-        public BatchJobSummary withTotalRecordsProcessed(Integer totalRecordsProcessed) {
-            this.totalRecordsProcessed = totalRecordsProcessed;
+        public JobSummary withTotalRecordsProcessed(Integer processed) {
+            this.processed = processed;
             return this;
         }
 
         /**
         * @description Sets number of records failed
-        * @param totalRecordsFailed Number of records failed
-        * @return BatchJobSummary
+        * @param failed Number of records failed
+        * @return JobSummary
         */
-        public BatchJobSummary withTotalRecordsFailed(Integer totalRecordsFailed) {
-            this.totalRecordsFailed = totalRecordsFailed;
+        public JobSummary withTotalRecordsFailed(Integer failed) {
+            this.failed = failed;
             return this;
         }
     }

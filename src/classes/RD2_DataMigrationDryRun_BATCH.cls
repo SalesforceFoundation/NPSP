@@ -31,17 +31,25 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Data Migration batch job used to convert Recurring Donation Records from
-* Legacy to Enhanced Recurring Donation format
+* @description Data Migration batch job executed in Dry Run mode to convert Recurring Donation Records 
+* from Legacy to Enhanced Recurring Donation format
 *
 */
-public class RD2_DataMigration_BATCH extends RD2_DataMigrationBase_BATCH {
+public class RD2_DataMigrationDryRun_BATCH extends RD2_DataMigrationBase_BATCH {
 
     /***
     * @description Schedulable executes the batch job
     */
     public void execute(SchedulableContext context) {
-        Database.executeBatch(new RD2_DataMigration_BATCH(), batchSize);
+        Database.executeBatch(new RD2_DataMigrationDryRun_BATCH(), batchSize);
     }
 
+    /***
+    * @description Constructor
+    */
+    public RD2_DataMigrationDryRun_BATCH() {
+        super();
+
+        this.isDryRunMode = true;
+    }
 }
