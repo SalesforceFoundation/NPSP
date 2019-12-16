@@ -61,7 +61,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     /**
     * @description Should Rollups be disabled before any new Installments Opps are inserted
     */
-    public Boolean disableRollups {
+    private Boolean disableRollups {
         get {
             disableRollups = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DisableRollupsWhenCreatingInstallments__c;
             if (disableRollups == null) {

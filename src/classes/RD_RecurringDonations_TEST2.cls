@@ -1452,7 +1452,6 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //--------------------------------
         // Remove the Opportunity's Recurring Donation value by setting the field to null
         o.npe03__Recurring_Donation__c = null;
-        System.debug('---------');
         update o;
         Test.stopTest();
 
@@ -1469,7 +1468,8 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @IsTest
     private static void shouldRecalcRollupsOnRdAfterBatchJobWithLegacyRollups() {
 
-        npe03__Recurring_Donation__c rd = configureForBatchJobWithRollupDisableTests(false, true);
+        configureForBatchJobWithRollupDisableTests(false, true);
+        npe03__Recurring_Donation__c rd = createTestDataForRollupRecalcTest();
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
 
         Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
@@ -1489,7 +1489,8 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @IsTest
     private static void shouldRecalcRollupsOnRdAfterBatchJobWithCRLP() {
 
-        npe03__Recurring_Donation__c rd = configureForBatchJobWithRollupDisableTests(true, false);
+        configureForBatchJobWithRollupDisableTests(true, false);
+        npe03__Recurring_Donation__c rd = createTestDataForRollupRecalcTest();
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
 
         Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
@@ -1509,7 +1510,8 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @IsTest
     private static void shouldNotRecalcRollupsOnRdAfterBatchJobWithCRLP() {
 
-        npe03__Recurring_Donation__c rd = configureForBatchJobWithRollupDisableTests(true, true);
+        configureForBatchJobWithRollupDisableTests(true, true);
+        npe03__Recurring_Donation__c rd = createTestDataForRollupRecalcTest();
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
 
         Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
@@ -1526,13 +1528,12 @@ private with sharing class RD_RecurringDonations_TEST2 {
     ////////////
 
     /**
-    * @description Configure Settings and create a single Recurring Donation to use for validating
-    * the behavior of the DisableRollupsWhenCreatingInstallments__c setting in the RD Batch Job
-    * Triggers are disabled to prevent an installment opp from being created since that is what we want to
-    * test in the batch job logic.
-    * @return Created Recurring Donation Record
+    * @description Configure Settings for validating the behavior of the DisableRollupsWhenCreatingInstallments__c
+    * setting in the RD Batch Job. Also mocks the CRLP settings for Legacy Recurring Donations, and
+    * disables the internal setting that would normally prevent a null field from being updated to a zero
+    * value during rollups. This is used to tell that rollups did or did not run in the batch job.
     */
-    private static npe03__Recurring_Donation__c configureForBatchJobWithRollupDisableTests(Boolean isCRLP, Boolean isDisableRollups) {
+    private static void configureForBatchJobWithRollupDisableTests(Boolean isCRLP, Boolean isDisableRollups) {
 
         if (isCRLP) {
             UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
@@ -1549,6 +1550,16 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Add_Campaign_to_All_Opportunites__c = true
         ));
 
+    }
+
+    /**
+    * @description Create a single Legacy Recurring Donation to use for validating
+    * the behavior of the DisableRollupsWhenCreatingInstallments__c setting in the RD Batch Job.
+    * Triggers are disabled to prevent an installment opp from being created since that is what we want to
+    * test in the batch job logic.
+    * @return Created Recurring Donation Record
+    */
+    private static npe03__Recurring_Donation__c createTestDataForRollupRecalcTest() {
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
