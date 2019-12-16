@@ -34,7 +34,7 @@ Enter a donation for an account with exact payment match
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Populate Field By Placeholder    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
@@ -61,14 +61,13 @@ Enter a donation for an account with exact payment match
     #Click Link    ${value}
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
-    ${pay_id}    Get Current Record ID
-    Store Session Record      npe01__OppPayment__c  ${pay_id}
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
     Go To Record Home    &{opportunity}[Id]
-    Confirm Value    Amount    $100.00    Y 
+    Confirm Field Value   Amount    contains    $100.00    
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y 
+    Confirm Field Value    Close Date    contains    ${opp_date}    
+    Confirm Field Value    Stage    contains    Closed Won    
