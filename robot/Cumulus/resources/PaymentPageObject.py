@@ -1,14 +1,11 @@
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
+from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 @pageobject("Detail", "npe01__OppPayment__c")
-class PaymentPage(DetailPage):
+class PaymentPage(BaseNPSPPage, DetailPage):
     object_name = "npe01__OppPayment__c"
-
-    @property
-    def npsp(self):
-        return self.builtin.get_library_instance('NPSP')
     
     
     def verify_payment_allocations(self, **kwargs):

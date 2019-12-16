@@ -18,7 +18,7 @@ Match Based on Number of Days from Donation Date Functionality
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Populate Field By Placeholder    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     Page Should Contain    &{opp}[Name]
@@ -40,16 +40,15 @@ Match Based on Number of Days from Donation Date Functionality
     Wait Until Element Is Visible    text:All Gifts
     # Verify that the gift matched to existing opportunity and updated it to closed won status with gift date and payment is paid
     Go To Record Home    &{opp}[Id]
-    Confirm Value    Amount    $100.00    Y 
+    Confirm Field Value    Amount    contains    $100.00    
     ${date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${date}    Y 
-    Confirm Value    Stage    Closed Won    Y 
+    Confirm Field Value    Close Date    contains    ${date}    
+    Confirm Field Value    Stage    contains    Closed Won    
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    ${pay_no}
-    ${pay}    Get Current Record ID
-    Store Session Record      npe01__OppPayment__c  ${pay}
-    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay}
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
+    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${api_date}
     ...    npe01__Paid__c=True   

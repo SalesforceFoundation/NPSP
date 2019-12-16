@@ -43,6 +43,7 @@ npsp_lex_locators={
     'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'flexipage-popup':"//div[contains(@class, 'slds-is-open')][contains(@class, 'slds-combobox')]",
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
+    "toast-msg":"//span[@class='toastMessage slds-text-heading--small forceActionsText']",
     "toast-close":"//button[contains(@class,'toastClose')]",
     'frame_new':'//iframe[contains(@name, "{}") or contains(@title, "{}")]',
     'frame':'//iframe[@title= "{}"]',
@@ -124,6 +125,7 @@ npsp_lex_locators={
     },
     'object':{
         'record':'//tbody//a[text()= "{}"]',
+        "field": "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//*[self::input or self::textarea]",
         'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
         'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
         'field-value':'//tbody/tr[./th//a[text()="{}"]]/td[.//span[text()="{}"]]',
@@ -227,12 +229,16 @@ npsp_lex_locators={
         'button':"//button[text()='Create New Field Mapping']",
         'field-label':'//lightning-formatted-text[text()="{}"]',
         },
+    'modal-form':{
+        'label':'//div[./*/*[text()="{}"]]',
+        },
     
 }
     
 
 extra_locators={
     'related_list_items1':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "Relationships"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]',
+    
 }
 dnd={ ""
     }
