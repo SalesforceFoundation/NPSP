@@ -80,24 +80,10 @@ class NPSP(SalesforceRobotLibraryBase):
         level_object = [o for o in objects if o['label'] == 'Level'][0]
         return self.get_namespace_prefix(level_object['name'])
 
-    def populate_field_by_placeholder(self, loc, value):
-        """ Populate field with Place Holder as a locator
-            and actual value of the place holder.
-        """
-        xpath = npsp_lex_locators["placeholder"].format(loc)
-        field = self.selenium.get_webelement(xpath)
-#         self.salesforce._populate_field(xpath, value)
-        
-        field.send_keys(value)
-        time.sleep(2)
-# #         if loc == ("Search Contacts" or "Search Accounts"):
-#         field.send_keys(Keys.ENTER)
-# #             field.send_keys(Keys.ARROW_DOWN)
-        field.send_keys(Keys.ENTER)
     
     def populate_campaign(self,loc,value):
         """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
-        self.populate_field_by_placeholder(loc, value)
+        self.search_field_by_value(loc, value)
         print(self.latest_api_version)       
         if self.latest_api_version == 47.0:
             self.selenium.click_link(value)
@@ -111,7 +97,8 @@ class NPSP(SalesforceRobotLibraryBase):
         button = self.selenium.get_webelement(locator)
         button.click()
         time.sleep(5)
-        
+    
+    @capture_screenshot_on_error    
     def select_tab(self, title):
         """ Switch between different tabs on a record page like Related, Details, News, Activity and Chatter
             Pass title of the tab
@@ -121,9 +108,12 @@ class NPSP(SalesforceRobotLibraryBase):
         for i in locators:
             locator = i.format(title)
             if self.check_if_element_exists(locator):
+                print(locator)
                 buttons = self.selenium.get_webelements(locator)
                 for button in buttons:
+                    print(button)
                     if button.is_displayed():
+                        print("button displayed is {}".format(button))
                         self.salesforce._focus(button)
                         button.click()
                         time.sleep(5)
@@ -160,12 +150,6 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.wait_until_element_is_visible(loc)
         self.selenium.click_link(loc)   
         
-    def click_dropdown(self, title):
-        """Click the dropdown to open it"""
-        locator = npsp_lex_locators['record']['list'].format(title)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('popup')
         
     def click_flexipage_dropdown(self, title):
         """Click the lightning dropdown to open it"""
@@ -213,7 +197,7 @@ class NPSP(SalesforceRobotLibraryBase):
             if element.text == value:
                 drop_down = npsp_lex_locators['locate_dropdown'].format(index + 1)
                 self.selenium.get_webelement(drop_down).click()
-                time.sleep(1)
+                self.selenium.wait_until_page_contains("Delete")
 
     def select_related_row(self, value):
         """To select a row on object page based on name and open the dropdown"""
@@ -278,16 +262,19 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()   
         
         
-    def confirm_value(self, field,value,status):
+    def confirm_field_value(self, field,status,value):
+        """If status is 'contains' then the specified value should be present in the field
+                        'does not contain' then the specified value should not be present in the field
+        """
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
         for i in locators:
             locator = i.format(field)
-            if self.check_if_element_exists(locator):
+            if self.check_if_element_exists(locator):   
                 actual_value=self.selenium.get_webelement(locator).text
-                if status.upper() == "Y":
+                if status == "contains":
                     assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
-                elif status.upper() == "N":
+                elif status == "does not contain":
                     assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
                 list_found = True
                 break
@@ -312,7 +299,7 @@ class NPSP(SalesforceRobotLibraryBase):
         """ Checks for the record in the object page and returns true if found else returns false
         """
         locator=npsp_lex_locators['account_list'].format(name)
-        self.selenium.page_should_contain_element(locator)
+        self.selenium.wait_until_page_contains_element(locator, error="could not find "+name+" on the page")
 
             
     def select_option(self, name):  
@@ -1167,24 +1154,129 @@ class NPSP(SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["record"]["related"]["button"].format(heading, button_title)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)   
+            
         
-    def change_view_to(self,view_name):
-        """Changes the view on the object page to the selected view"""
-        self.select_object_dropdown()
-        locator=npsp_lex_locators['link'].format(view_name)
-        self.selenium.click_element(locator)     
+#     def wait_until_url_contains(self,exp_text):
+#         """Waits for maximum of 90sec for current url to contain the exp_text"""
+#         self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
+#         url=self.selenium.get_location()
+#         i=0
+#         for i in range(10):
+#             if i == 9:
+#                 raise AssertionError("Failed to find an url containing {} in 90 seconds".format(exp_text))
+#             if exp_text in url:
+#                 break
+#             else:
+#                 time.sleep(10)
+#                 url=self.selenium.get_location()
+#                 i += 1
+   
+     
+    @capture_screenshot_on_error    
+    def change_view_to(self,view_name): 
+        """Selects a different view for the object records in listing page""" 
+        locator=npsp_lex_locators['object_dd']
+        view=npsp_lex_locators['link'].format(view_name)
+        self.selenium.wait_until_page_contains("List Views")
+        self.selenium.get_webelement(locator).click()  
+        self.selenium.click_element(view)
+        self.selenium.wait_until_page_contains(view_name)
+
+    def search_field_by_value(self, fieldname, value):
+         """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
+         """
+         xpath = npsp_lex_locators["placeholder"].format(fieldname)
+         field = self.selenium.get_webelement(xpath)
+         self.selenium.clear_element_text(field)
+         field.send_keys(value)
+         time.sleep(2)
+         field.send_keys(Keys.ENTER)
         
-    def wait_until_url_contains(self,exp_text):
-        """Waits for maximum of 90sec for current url to contain the exp_text"""
-        self.builtin.log("This keyword can be removed once we support SeleniumLibrary 4.0.")
-        url=self.selenium.get_location()
-        i=0
-        for i in range(10):
-            if i == 9:
-                raise AssertionError("Failed to find an url containing {} in 90 seconds".format(exp_text))
-            if exp_text in url:
-                break
+    def save_current_record_id_for_deletion(self,object_name): 
+        """Gets the current page record id and stores it for specified object 
+           in order to delete record during suite teardown """   
+        id=self.salesforce.get_current_record_id()
+        self.salesforce.store_session_record(object_name,id)   
+        return id
+    
+    def verify_record_is_created_in_database(self,object_name,id):
+        """Verifies that a record with specified id is saved 
+           in specified object table in database and returns the record"""
+        record=self.salesforce.salesforce_get(object_name,id)
+        self.builtin.should_not_be_empty(record, msg="The database object {} with id {} is not in the database".format(object_name,id))
+        return record
+    
+
+    def select_value_from_dropdown(self,dropdown,value): 
+        """Select given value in the dropdown field"""
+        locator = npsp_lex_locators['record']['list'].format(dropdown)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
+        self.wait_for_locator('popup')
+        self.selenium.click_link(value) 
+        
+    def edit_record(self):
+        """Clicks on the edit button on record page for standard objects
+           and waits for the modal to open"""  
+        self.salesforce.click_object_button("Edit")
+        self.salesforce.wait_until_modal_is_open()
+
+    def delete_record(self,value):
+        """Select the row to be deleted on the listing page, click delete
+           and wait till the focus is back on the listings page."""
+        self.select_row(value)
+        self.selenium.click_link("Delete")
+        self.selenium.wait_until_location_contains("/list")
+    
+    @capture_screenshot_on_error    
+    def populate_modal_form(self,**kwargs):
+        """Populates modal form with the field-value pairs 
+        supported keys are any input, textarea, lookup, checkbox, date and dropdown fields"""
+        
+        for key, value in kwargs.items():
+            locator = npsp_lex_locators["modal-form"]["label"].format(key)
+            if self.check_if_element_exists(locator):
+                ele=self.selenium.get_webelements(locator)
+                for e in ele:
+                    classname=e.get_attribute("class")
+#                     print("key is {} and class is {}".format(key,classname))
+                    if "Lookup" in classname and "readonly" not in classname:
+                        self.salesforce.populate_lookup_field(key,value)
+                        print("Executed populate lookup field for {}".format(key))
+                    elif "Select" in classname and "readonly" not in classname:
+                        self.select_value_from_dropdown(key,value)
+                        print("Executed select value from dropdown for {}".format(key))
+                    elif "Checkbox" in classname and "readonly" not in classname:
+                        if value == "checked":
+                            locator = npsp_lex_locators["checkbox"]["model-checkbox"].format(key)
+                            self.selenium.get_webelement(locator).click() 
+                    elif "Date" in classname and "readonly" not in classname:
+                        self.open_date_picker(key)
+                        self.pick_date(value)
+                        print("Executed open date picker and pick date for {}".format(key))
+                    else:
+                        try :
+                            self.search_field_by_value(key,value)
+                            print("Executed search field by value for {}".format(key))
+                        except Exception :
+                            try :
+                                self.salesforce.populate_field(key,value)
+                                print("Executed populate field for {}".format(key))
+                                   
+                            except Exception:
+                                print ("class name for key {} did not match with field type supported by this keyword".format(key))
+                                     
             else:
-                time.sleep(10)
-                url=self.selenium.get_location()
-                i += 1
+                raise Exception("Locator for {} is not found on the page".format(key))   
+     
+    def verify_toast_message(self,value):       
+        locator=npsp_lex_locators["toast-msg"]
+        ele=self.selenium.get_webelements(locator)
+        found=False
+        for e in ele:
+            msg=e.text
+            if msg == value:
+                found=True
+                print("Toast message verified")
+                break
+        assert found, "Expected Toast message not found on page"
