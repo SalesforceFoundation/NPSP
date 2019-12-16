@@ -1042,7 +1042,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         Test.startTest();
         insert rd;
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), 480);
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), 480, null);
         Test.stopTest();
 
         System.assertEquals(480, installments.size(), 'There should be 480 installments.');
@@ -1077,7 +1077,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         Test.startTest();
         insert rd;
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), 12);
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), 12, null);
         Test.stopTest();
 
         System.assertEquals(0, installments.size(), 'There should be 0 installments.');
@@ -1092,7 +1092,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
 
-        Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDIds = service.getVisualizedInstallments(new List<npe03__Recurring_Donation__c>{null}, Date.newInstance(2019, 11, 1), 12);
+        Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDIds = service.getVisualizedInstallments(new List<npe03__Recurring_Donation__c>{null}, Date.newInstance(2019, 11, 1), 12, null);
 
         System.assertEquals(0, installmentsByRDIds.size(), 'Map of RDIds to installments should be empty.');
 
@@ -1124,7 +1124,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         Test.startTest();
         insert rd;
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, null, 12);
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, null, 12, null);
         Test.stopTest();
 
         System.assertEquals(12, installments.size(), 'There should be 12 installments.');
@@ -1158,9 +1158,59 @@ private with sharing class RD2_ScheduleService_TEST {
 
         Test.startTest();
         insert rd;
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), null);
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), null, null);
         Test.stopTest();
 
+        System.assertEquals(12, installments.size(), 'There should be 12 installments.');
+        System.assertEquals(Date.newInstance(2020, 10, 1), installments[11].nextDonationDate, 'Final installment date should be 10/1/2020.');
+
+    }
+
+    /***
+    * @description Verifies visualization substitutes default when null maxDates are requested
+    */
+    @isTest
+    private static void shouldReturn12InstallmentsWhenSchedulesInjected() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth('1')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> rds = [
+                SELECT
+                    Campaign__c,
+                    Campaign__r.Name,
+                    DayOfMonth__c,
+                    EndDate__c,
+                    InstallmentAmount__c,
+                    InstallmentFrequency__c,
+                    InstallmentPeriod__c,
+                    PaymentMethod__c,
+                    RecurringDonation__c,
+                    StartDate__c
+                FROM RecurringDonationSchedule__c
+                WHERE RecurringDonation__c = :rd.Id
+                AND Active__c = true];
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), null, rds);
         System.assertEquals(12, installments.size(), 'There should be 12 installments.');
         System.assertEquals(Date.newInstance(2020, 10, 1), installments[11].nextDonationDate, 'Final installment date should be 10/1/2020.');
 
@@ -1197,7 +1247,7 @@ private with sharing class RD2_ScheduleService_TEST {
         List<RecurringDonationSchedule__c> rdSchedules = [SELECT Id, EndDate__c FROM RecurringDonationSchedule__c WHERE RecurringDonation__c = :rd.Id];
         rdSchedules[0].EndDate__c = Date.newInstance(2020, 10, 31);
         update rdSchedules;
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2020, 1, 1), 12);
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2020, 1, 1), 12, null);
 
         System.assertEquals(10, installments.size(), 'There should be 10 installments.');
         System.assertEquals(Date.newInstance(2020, 10, 1), installments[9].nextDonationDate, 'Final installment date should be 10/1/2020.');
@@ -1248,7 +1298,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         Test.startTest();
         insert rds;
-        Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = service.getVisualizedInstallments(rds, Date.newInstance(2019, 11, 1), null);
+        Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = service.getVisualizedInstallments(rds, Date.newInstance(2019, 11, 1), null, null);
         Test.stopTest();
 
         System.assertEquals(Date.newInstance(2019, 12, 1), installmentsByRDId.get(rds[0].Id)[1].nextDonationDate, 'Donation date should be 12/1/2019.');
@@ -1283,7 +1333,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         Test.startTest();
         insert rd;
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), -5);
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), -5, null);
         Test.stopTest();
 
         System.assertEquals(0, installments.size(), 'There should be 0 installments.');
@@ -1315,7 +1365,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         Test.startTest();
         insert rd;
-        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), 12);
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(rd, Date.newInstance(2019, 11, 1), 12, null);
         Test.stopTest();
 
         System.assertEquals(12, installments.size(), 'There should be 12 installments.');

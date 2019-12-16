@@ -157,7 +157,8 @@ public without sharing class RD2_ScheduleService {
     * @param oldRd Trigger.old record
     * @return Boolean
     */
-    public Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
+    @TestVisible
+    private Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
 
         Boolean isNeeded = false;
 
@@ -197,26 +198,35 @@ public without sharing class RD2_ScheduleService {
     /***
     * @description Calculates the dates of the next n donations for a single RD
     * @param rd Recurring Donation record
-    * @param startDate Date
-    * @param numInstallments Integer
+    * @param startDate Date (if null, current date will be used)
+    * @param numInstallments Integer (if null, DEFAULT_VISUALIZATION_SCHEDULE_COUNT will be used)
+    * @param schedules RecurringDonationSchedule__c (if null, getVisualizedInstallments will query for all active schedules)
     * @return List<Installment>
     */
-    public List<Installment> getVisualizedInstallments(npe03__Recurring_Donation__c rd, Date startDate, Integer numInstallments) {
+    public List<Installment> getVisualizedInstallments(npe03__Recurring_Donation__c rd, Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
         if (rd == null) {
             return new List<Installment>();
         }
 
-        return getVisualizedInstallments(new List<npe03__Recurring_Donation__c> {rd}, startDate, numInstallments).get(rd.Id);
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRd;
+        if (schedules != null) {
+            schedulesByRd = new Map<Id, List<RecurringDonationSchedule__c>>();
+            schedulesByRd.put(rd.Id, schedules);
+        }
+
+        return getVisualizedInstallments(new List<npe03__Recurring_Donation__c> {rd}, startDate, numInstallments, schedulesByRd).get(rd.Id);
     }
 
     /***
     * @description Calculates the dates of the next n donations for a list of Recurring Donations
     * @param rds List of Recurring Donation records
-    * @param startDate Date
-    * @param numInstallments Integer
+    * @param startDate Date (if null, current date will be used)
+    * @param numInstallments Integer (if null, DEFAULT_VISUALIZATION_SCHEDULE_COUNT will be used)
+    * @param schedulesByRd Map Id, RecurringDonationSchedule__c (if null, getVisualizedInstallments will query for all active schedules)
     * @return Map<Id, List<Installment>> Recurring Donation Ids to List of upcoming installments
     */
-    public Map<Id, List<Installment>> getVisualizedInstallments(List<npe03__Recurring_Donation__c> rds, Date startDate, Integer numInstallments) {
+    public Map<Id, List<Installment>> getVisualizedInstallments(
+            List<npe03__Recurring_Donation__c> rds, Date startDate, Integer numInstallments, Map<Id, List<RecurringDonationSchedule__c>> schedulesByRd) {
 
         if (numInstallments == null) {
             numInstallments = DEFAULT_VISUALIZATION_SCHEDULE_COUNT;
@@ -227,7 +237,9 @@ public without sharing class RD2_ScheduleService {
         }
 
         Map<Id, List<Installment>> installmentsByRd = new Map<Id, List<Installment>>();
-        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRd = getExistingSchedules(rds);
+        if (schedulesByRd == null) {
+            schedulesByRd = getExistingSchedules(rds);
+        }
 
         for (npe03__Recurring_Donation__c rd : rds) {
 
@@ -291,12 +303,9 @@ public without sharing class RD2_ScheduleService {
         public Id       campaignId {get; set;}
         public String   campaignName {get; set;}
         public Date     endDate {get; set;}
-        public String   externalId {get; set;}
         public Decimal  installmentAmount {get; set;}
         public Date     nextDonationDate {get; set;}
         public String   paymentMethod {get; set;}
-        public Id       recurringDonationId {get; set;}
-        public String   recurringDonationName {get; set;}
         public Id       scheduleId {get; set;}
         public Date     startDate {get; set;}
 
@@ -304,11 +313,8 @@ public without sharing class RD2_ScheduleService {
             campaignId =            rdSchedule.Campaign__c;
             campaignName =          rdSchedule.Campaign__r.Name;
             endDate =               rdSchedule.EndDate__c;
-            externalId =            rdSchedule.ExternalId__c;
             installmentAmount =     rdSchedule.InstallmentAmount__c;
             paymentMethod =         rdSchedule.PaymentMethod__c;
-            recurringDonationId =   rdSchedule.RecurringDonation__c;
-            recurringDonationName = rdSchedule.RecurringDonation__r.Name;
             scheduleId =            rdSchedule.Id;
             startDate =             rdSchedule.StartDate__c;
         }
@@ -530,18 +536,6 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Retrieves recurring donation schedules associated with a single recurring donation
-    * @param rd npe03__Recurring_Donation__c
-    */
-    public List<RecurringDonationSchedule__c> getExistingSchedules(npe03__Recurring_Donation__c rd) {
-        if (rd == null) {
-            return null;
-        }
-
-        return getExistingSchedules(new List<npe03__Recurring_Donation__c> {rd}).get(rd.Id);
-    }
-
-    /***
     * @description Retrieves recurring donation schedules associated with recurring donation list
     * @param rds List<npe03__Recurring_Donation__c>
     */
@@ -555,13 +549,11 @@ public without sharing class RD2_ScheduleService {
                     Campaign__r.Name,
                     DayOfMonth__c,
                     EndDate__c,
-                    ExternalId__c,
                     InstallmentAmount__c,
                     InstallmentFrequency__c,
                     InstallmentPeriod__c,
                     PaymentMethod__c,
                     RecurringDonation__c,
-                    RecurringDonation__r.Name,
                     StartDate__c
                 FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :rds
@@ -614,7 +606,7 @@ public without sharing class RD2_ScheduleService {
     * @param rd SObject
     * @param newSchedulesByRdId Map<Id, List<RecurringDonationSchedule__c>>
     */
-    public void addUpdatedSchedules(RecurringDonationSchedule__c rd, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
+    private void addUpdatedSchedules(RecurringDonationSchedule__c rd, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
 
         if (rd.EndDate__c == null || (rd.EndDate__c >= Date.today() && rd.StartDate__c < rd.EndDate__c)) {
 
