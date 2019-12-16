@@ -29,7 +29,7 @@ Select an opportunity for an account make grid changes and process it
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Populate Field By Placeholder    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     Click BGE Button    Update this Opportunity
@@ -52,7 +52,7 @@ Select an opportunity for an account make grid changes and process it
     Click Button With Value   Close
     Wait Until Element Is Visible    text:All Gifts
     Go To Record Home    &{opportunity}[Id]
-    Confirm Value    Amount    $10.00    Y 
+    Confirm Field Value    Amount    contains    $10.00    
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y 
+    Confirm Field Value    Close Date    contains    ${opp_date}    
+    Confirm Field Value    Stage    contains    Closed Won    
