@@ -12,6 +12,7 @@ import PAYMENT_INFO from '@salesforce/schema/npe01__OppPayment__c';
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
+import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
@@ -26,6 +27,7 @@ const DEFAULT_FORM_FIELDS = {
     [DONATION_AMOUNT_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
     [DONATION_DATE_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
     [PAYMENT_CHECK_REF_NUM_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
+    [PAYMENT_METHOD_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
 }
 
 export default class geTemplateBuilderFormFields extends LightningElement {
