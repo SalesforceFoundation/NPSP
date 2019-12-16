@@ -2,8 +2,7 @@
     <lightning-layout multiple-rows='true' class='ge-form-container'>
         <lightning-layout-item size='12' class='slds-card'>
             <div if:true={hasPageLevelError} class="slds-size_1-of-1 slds-card slds-p-around_small">
-                <c-util-page-level-message title="Review the errors on this page."
-                                            subtitle={pageLevelErrorMessage}
+                <c-util-page-level-message subtitle={pageLevelErrorMessage}
                                             variant='error'>
                 </c-util-page-level-message>
             </div>
