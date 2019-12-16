@@ -26,13 +26,13 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
     Go To Record Home  &{contact1}[AccountId]
     Select Tab    Details
     Scroll Element Into View    text:Membership Information
-    Confirm Value           Total Gifts    $150.00    Y
-    Confirm Value           Total Number of Gifts    2    Y
+    Confirm Field Value           Total Gifts    contains    $150.00    
+    Confirm Field Value           Total Number of Gifts    contains    2    
     Run Donations Batch Process
     Go To Record Home  &{contact1}[Id]
     Scroll Element Into View    text:Soft Credit Total
-    Confirm Value           Total Gifts    $100.00    Y
-    Confirm Value           Total Number of Gifts    1    Y
+    Confirm Field Value           Total Gifts    contains    $100.00    
+    Confirm Field Value           Total Number of Gifts    contains    1    
     Scroll Element Into View    text:Household Donation Info
-    Confirm Value           Soft Credit Total    $50.00    Y
-    Confirm Value           Number of Soft Credits    1    Y
+    Confirm Field Value           Soft Credit Total    contains    $50.00    
+    Confirm Field Value           Number of Soft Credits    contains    1    
