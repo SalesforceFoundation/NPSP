@@ -1,27 +1,80 @@
 import { LightningElement, track, api } from 'lwc';
 import { findIndexByProperty, mutable, generateId, dispatch, showToast } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
+import GeLabelService from 'c/geLabelService';
 
 // Import source field names for required Field Mappings
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
 
-export default class geTemplateBuilderSelectFields extends LightningElement {
-    @track isLoading = true;
+const WARNING = 'warning';
+
+export default class geTemplateBuilderFormFields extends LightningElement {
+
+    // Expose labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
+    isInitialized;
+    @api previousSaveAttempted;
     @api selectedFieldMappingSet;
+    @track isLoading = true;
 
     @api formSections;
-
     @api activeFormSectionId;
     @track _sectionIdsByFieldMappingDeveloperNames = {};
-    @track fieldMappingSetComboboxOptions;
     @track objectMappings;
-    objectMappingNames = [];
     @track isAllSectionsExpanded = false;
+    objectMappingNames = [];
+
+    @track isReadMoreActive = false;
+    @track hasErrors = false;
+    @track errors;
+
+    @api
+    validate() {
+        let isValid;
+        let objectMappingsWithMissingRequiredFields = new Set();
+        let missingRequiredFieldMappings = [];
+
+        const elements = this.template.querySelectorAll('lightning-input');
+        elements.forEach(el => {
+            if (el.required && !el.checked) {
+                objectMappingsWithMissingRequiredFields.add(el.getAttribute('data-object-mapping'));
+                let objectMappingLabel = el.getAttribute('data-object-mapping-label');
+                missingRequiredFieldMappings.push(`${objectMappingLabel}: ${el.label}`);
+            }
+
+            this.validateGiftField(el);
+        });
+
+        if (missingRequiredFieldMappings.length > 0) {
+            const lightningAccordion = this.template.querySelector('lightning-accordion');
+            lightningAccordion.activeSectionName = [...objectMappingsWithMissingRequiredFields];
+
+            this.hasErrors = true;
+            this.errors = [...missingRequiredFieldMappings];
+
+            isValid = false;
+        } else {
+            isValid = true;
+            this.hasErrors = false;
+            this.errors = [];
+        }
+
+        dispatch(this, 'updatevalidity', { property: 'hasSelectFieldsTabError', hasError: this.hasErrors });
+        return isValid;
+    }
 
     toggleModal(event) {
         dispatch(this, 'togglemodal', event.detail);
+    }
+
+    renderedCallback() {
+        if (!this.isInitialized && this.isLoading === false && this.previousSaveAttempted) {
+            this.isInitialized = true;
+            this.validate();
+        }
     }
 
     connectedCallback() {
@@ -97,7 +150,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 PAYMENT_CHECK_REF_NUM_INFO.fieldApiName
             ];
 
-            let sectionId = this.addSection('Gift Entry Form');
+            let sectionId = this.addSection(this.CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName);
 
             for (let fieldMappingDevName in TemplateBuilderService.fieldMappingByDevName) {
                 if (TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName]) {
@@ -148,6 +201,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     @api
     handleDeleteFormSection(event) {
         const formSectionId = event.detail;
+        let isRequiredFormElement = false;
 
         let formSections = mutable(this.formSections);
         let formSection = formSections.find(fs => fs.id === formSectionId);
@@ -159,6 +213,10 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         if (formSection.elements && formSection.elements.length > 0) {
             const formFields = formSection.elements;
             for (let i = 0; i < formFields.length; i++) {
+                if (formFields[i].Is_Required) {
+                    isRequiredFormElement = true;
+                }
+
                 const inputName = formFields[i].componentName ? formFields[i].componentName : formFields[i].dataImportFieldMappingDevNames[0];
                 let checkbox =
                     this.template.querySelector(`lightning-input[data-field-mapping="${inputName}"]`);
@@ -171,6 +229,10 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
 
         if (formSections.length === 1) {
             this.handleChangeActiveSection({ detail: this.formSections[0].id });
+        }
+
+        if (isRequiredFormElement) {
+            this.validate();
         }
 
         dispatch(this, 'refreshformsections', formSections);
@@ -195,6 +257,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     */
     handleToggleFieldMapping(event) {
         const name = event.target.value;
+        const fieldMapping = TemplateBuilderService.fieldMappingByDevName[name];
+        const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
         let sectionId = this.activeFormSectionId;
         const isAddField = event.target.checked;
 
@@ -211,12 +275,9 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
                 this.activeFormSectionId = sectionId;
             } else if (hasManySections && hasNoActiveSection) {
                 event.target.checked = false;
-                showToast('Please select a section', '', 'warning');
+                showToast(this.CUSTOM_LABELS.geToastSelectActiveSection, '', WARNING);
                 return;
             }
-
-            const fieldMapping = TemplateBuilderService.fieldMappingByDevName[name];
-            const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
 
             let formElement;
             if (fieldMapping.Element_Type === 'field') {
@@ -229,6 +290,10 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
             this.formSections = this.addFieldToSection(sectionId, formElement);
         } else {
             this.handleRemoveFormElement(name);
+        }
+
+        if (fieldMapping.Is_Required) {
+            this.validate();
         }
     }
 
@@ -258,7 +323,8 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
         return {
             id: generateId(),
             label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
-            required: false,
+            customLabel: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+            required: fieldMapping.Is_Required || false,
             sectionId: sectionId,
             defaultValue: null,
             dataType: fieldMapping.Target_Field_Data_Type,
@@ -364,9 +430,13 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection -> here
     */
     handleDeleteFormElement(event) {
+        const fieldMapping = TemplateBuilderService.fieldMappingByDevName[event.detail.fieldName];
         const element = this.template.querySelector(`lightning-input[data-field-mapping="${event.detail.fieldName}"]`);
         element.checked = false;
 
+        if (fieldMapping.Is_Required) {
+            this.validate();
+        }
         dispatch(this, 'deleteformelement', event.detail);
     }
 
@@ -456,9 +526,7 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * event handler.
     */
     handleExpandAllSections() {
-        const lightningAccordion = this.template.querySelector(
-            'lightning-accordion'
-        );
+        const lightningAccordion = this.template.querySelector('lightning-accordion');
         lightningAccordion.activeSectionName = [...this.objectMappingNames];
         this.isAllSectionsExpanded = true;
     }
@@ -471,10 +539,30 @@ export default class geTemplateBuilderSelectFields extends LightningElement {
     * event handler.
     */
     handleCollapseAllSections() {
-        const lightningAccordion = this.template.querySelector(
-            'lightning-accordion'
-        );
+        const lightningAccordion = this.template.querySelector('lightning-accordion');
         lightningAccordion.activeSectionName = [];
         this.isAllSectionsExpanded = false;
+    }
+
+    /*******************************************************************************
+    * @description Method takes in a lightning-input element and sets validity.
+    *
+    * @param {object} element: Lightning-input element to set and report validity
+    * of.
+    */
+    validateGiftField(element) {
+        let customValidity =
+            (element.required && element.checked === false) ?
+                this.CUSTOM_LABELS.geErrorRequiredField
+                : '';
+        element.setCustomValidity(customValidity);
+        element.reportValidity();
+    }
+
+    /*******************************************************************************
+    * @description Method shows additional text content under the left column body.
+    */
+    handleBodyReadMore() {
+        this.isReadMoreActive = true;
     }
 }

@@ -2,8 +2,7 @@
     <div class="slds-grid slds-wrap">
 
         <template if:true={isLoading}>
-            <lightning-spinner alternative-text="tab is loading">
-            </lightning-spinner>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
         </template>
 
         <div class="slds-size_1-of-1 slds-medium-size_3-of-12 slds-large-size_3-of-12 slds-p-around_large slds-border_right">
@@ -13,10 +12,11 @@
                 </c-util-stencil>
             </template>
             <template if:false={isLoading}>
-                <h2 class="slds-text-heading_small slds-p-bottom_small">Select Batch Fields</h2>
+                <h2 class="slds-text-heading_small slds-p-bottom_small">
+                    {CUSTOM_LABELS.geHeaderBatchHeaderLeftCol}
+                </h2>
                 <p class="slds-text-body_small slds-p-bottom_small">
-                    Select the fields for capturing batch information. Manage these fields in the
-                    NPSP Batch Data Import settings in Object Manager.
+                    {CUSTOM_LABELS.geBodyBatchHeaderLeftCol}
                 </p>
 
                 <template for:each={batchFields}
@@ -45,25 +45,50 @@
             </template>
             <template if:false={isLoading}>
                 <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                    <template if:true={hasErrors}>
+                        <div class="slds-size_1-of-1 slds-p-bottom_small">
+                            <c-util-page-level-message title={CUSTOM_LABELS.commonWarning}
+                                                       subtitle={CUSTOM_LABELS.geBodyBatchHeaderWarning}
+                                                       variant='warning'>
+                                <ul slot="body"
+                                    class="slds-list_dotted">
+                                    <template for:each={missingRequiredFields}
+                                              for:item="missingRequiredField">
+                                        <li key={missingRequiredField.apiName}>
+                                            {missingRequiredField.label}
+                                        </li>
+                                    </template>
+                                </ul>
+                            </c-util-page-level-message>
+                        </div>
+                    </template>
                     <div class="slds-size_1-of-1 slds-p-bottom_small">
-                        <h2 class="slds-text-heading_small slds-p-bottom_small">Set Batch Field Values</h2>
+                        <h2 class="slds-text-heading_small slds-p-bottom_small">
+                            {CUSTOM_LABELS.geHeaderBatchHeaderRightCol}
+                        </h2>
                         <p class="slds-text-body_small">
-                            Mark require batch fields and enable default values for user input. Please note that
-                            any default values can be overwritten by the gift entry user. Reorder fields by using
-                            the arrow icons on the right.
+                            {CUSTOM_LABELS.geBodyBatchHeaderRightCol}
                         </p>
                     </div>
 
                     <div class="slds-size_1-of-1 slds-p-bottom_small">
                         <div class="slds-grid slds-grid_vertical-align-center">
                             <div class="slds-size_5-of-12">
-                                Field Label
-                            </div>
-                            <div class="slds-size_1-of-12">
-                                Required
+                                <p class="slds-form-element__label">
+                                    {CUSTOM_LABELS.commonFieldLabel}
+                                </p>
+                                <lightning-helptext content={CUSTOM_LABELS.geHelpTextBatchHeaderFieldLabelLabel}>
+                                </lightning-helptext>
                             </div>
                             <div class="slds-size_5-of-12">
-                                Default Value
+                                <p class="slds-form-element__label">
+                                    {CUSTOM_LABELS.commonDefaultValue}
+                                </p>
+                            </div>
+                            <div class="slds-size_1-of-12">
+                                <p class="slds-form-element__label">
+                                    {CUSTOM_LABELS.commonRequired}
+                                </p>
                             </div>
                             <div class="slds-size_1-of-12">
                             </div>

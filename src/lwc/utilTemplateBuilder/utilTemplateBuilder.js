@@ -1,5 +1,42 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
+import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
+import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
+import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
+import DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Implementing_Class__c'
+import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Rule__c'
+import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
+import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
+import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
+import commonError from '@salesforce/label/c.commonError';
+import commonUnknownError from '@salesforce/label/c.commonUnknownError';
+
+const OBJECT = 'object';
+const FUNCTION = 'function';
+const ASC = 'asc';
+
+const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
+    DI_BATCH_NAME_FIELD_INFO.fieldApiName
+];
+Object.freeze(ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS);
+
+// We've opted to exclude the following batch fields related to
+// matching logic as we're removing the matching options page
+// from this flow.
+// We're considering putting matching options in a 'global
+// batch settings' area. Potentially in NPSP Settings.
+const EXCLUDED_BATCH_HEADER_FIELDS = [
+    DI_BATCH_PROCESS_SIZE_INFO.fieldApiName,
+    DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO.fieldApiName,
+    DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO.fieldApiName,
+    DI_BATCH_DONATION_MATCHING_IMPLENTING_CLASS_INFO.fieldApiName,
+    DI_BATCH_DONATION_MATCHING_RULE_INFO.fieldApiName,
+    DI_BATCH_DONATION_DATE_RANGE_INFO.fieldApiName,
+    DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO.fieldApiName,
+    DI_BATCH_OWNER_ID_INFO.fieldApiName,
+];
+Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
 
 /*******************************************************************************
 * @description Map of lightning-input types by data type.
@@ -12,7 +49,7 @@ const inputTypeByDescribeType = {
     'currency': 'number',
     'datacategorygroupreference': 'text',
     'date': 'date',
-    'datetime': 'datetime',
+    'datetime': 'datetime-local',
     'double': 'number',
     'email': 'email',
     'encryptedstring': 'password',
@@ -42,6 +79,64 @@ const lightningInputTypeByDataType = {
 }
 
 /*******************************************************************************
+* @description Collects all the missing required field mappings. Currently only
+* checks 'requiredness' of the source (DataImport__c).
+*
+* @param {object} TemplateBuilderService: Instance of geTemplateBuilderService
+* web component.
+* @param {list} formSections: List of existing form sections in the template.
+*
+* @return {list} missingRequiredFieldMappings: List of missing field mappings.
+*/
+const findMissingRequiredFieldMappings = (TemplateBuilderService, formSections) => {
+    const requiredFieldMappings =
+        Object.keys(TemplateBuilderService.fieldMappingByDevName).filter(developerName => {
+            if (TemplateBuilderService.fieldMappingByDevName[developerName].Is_Required) {
+                return developerName;
+            }
+            return undefined;
+        });
+
+    let selectedFieldMappingDevNames =
+        formSections
+            .flatMap(section => section.elements)
+            .map(element => {
+                return element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0]
+            });
+
+    const missingRequiredFieldMappings =
+        requiredFieldMappings
+            .filter(developerName => !selectedFieldMappingDevNames.includes(developerName));
+
+    return missingRequiredFieldMappings;
+}
+
+/*******************************************************************************
+* @description Collects all the missing required DataImportBatch__c fields.
+*
+* @param {list} batchFields: List of all Batch Header fields.
+* @param {list} selectedBatchFields: List of added Batch Header fields.
+*
+* @return {list} missingRequiredFields: List of missing DataImportBatch__c fields.
+*/
+const findMissingRequiredBatchFields = (batchFields, selectedBatchFields) => {
+    let missingRequiredFields = [];
+    const requiredFields = batchFields.filter(batchField => { return batchField.required });
+    const selectedFieldsExists = selectedBatchFields && selectedBatchFields.length > 0;
+
+    requiredFields.forEach((field) => {
+        if (selectedFieldsExists) {
+            const alreadySelected = selectedBatchFields.find(bf => { return bf.apiName === field.apiName; });
+            if (!alreadySelected) {
+                missingRequiredFields = [...missingRequiredFields, { apiName: field.apiName, label: field.label }];
+            }
+        }
+    });
+
+    return missingRequiredFields;
+}
+
+/*******************************************************************************
 * @description Removes an item in an array by a property.
 *
 * @param {list} array: List of items.
@@ -59,6 +154,8 @@ const removeByProperty = (array, property, value) => {
 * @param {list} array: List of items.
 * @param {string} property: Property to find by.
 * @param {string} value: Value of property to check against.
+*
+* @return {Integer}: Index of the item from provided array.
 */
 const findIndexByProperty = (array, property, value) => {
     return array.findIndex(element => element[property] === value);
@@ -70,27 +167,57 @@ const findIndexByProperty = (array, property, value) => {
 * @param {list} array: List of items.
 * @param {integer} oldIndex: Current index of the item to be moved.
 * @param {integer} newIndex: Index to move the item to.
+*
+* @return {list} array: Array with shifted items.
 */
 const shiftToIndex = (array, oldIndex, newIndex) => {
     [array[oldIndex], array[newIndex]] = [array[newIndex], array[oldIndex]];
     return array;
 }
 
-// TODO: Look into more robust deep cloning methods
-// This method loses any Javascript properties that have no equivalent type in JSON
+/*******************************************************************************
+* @description Shallow clones the provided object.
+*
+* @param {object} obj: Object to clone
+*
+* @return {object}: Cloned object
+*/
 const mutable = (obj) => {
     return JSON.parse(JSON.stringify(obj));
 }
+
+/*******************************************************************************
+* @description Checks if value parameter is null or undefined
+*
+* @param {*} value: Anything
+*
+* @return {boolean}: True if provided value is null or undefined.
+*/
+const isEmpty = (value) => {
+    return value === null || value === undefined;
+};
+
+/*******************************************************************************
+* @description Checks if value parameter is a function
+*
+* @param {*} value: Anything
+*
+* @return {boolean}: True if provided value is a function.
+*/
+const isFunction = (value) => {
+    return typeof value === FUNCTION;
+};
 
 /*******************************************************************************
 * @description Checks to see if the passed parameter is of type 'Object' or
 * 'function'.
 *
 * @param {any} obj: Thing to check
+*
+* @return {boolean}: True if the provided obj is an object or a function.
 */
 const isObject = (obj) => {
-    const type = typeof obj;
-    return type === 'function' || type === 'object' && !!obj;
+    return isFunction(obj) || typeof obj === OBJECT && !!obj;
 }
 
 /*******************************************************************************
@@ -98,6 +225,8 @@ const isObject = (obj) => {
 * if the current value is an object or an array and copy accordingly.
 *
 * @param {any} src: Thing to clone
+*
+* @return {object} clone: Deep clone copy of src
 */
 const deepClone = (src) => {
     let clone = null;
@@ -146,11 +275,13 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 * @param {array} list: List to be sorted
 * @param {string} property: Property to sort by
 * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
+*
+* @return {list} data: Sorted instance of list.
 */
 const sort = (list, property, sortDirection) => {
     const data = mutable(list);
     const key = (a) => a[property];
-    const reverse = sortDirection === 'asc' ? 1 : -1;
+    const reverse = sortDirection === ASC ? 1 : -1;
 
     data.sort((a, b) => {
         let valueA = key(a) ? key(a) : '';
@@ -189,7 +320,7 @@ const showToast = (title, message, variant, mode, messageData) => {
 * @param {object} error: Event holding error details
 */
 const handleError = (error) => {
-    let message = 'Unknown error';
+    let message = commonUnknownError;
 
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
@@ -208,7 +339,7 @@ const handleError = (error) => {
         }
     }
 
-    showToast('Error', message, 'error', 'sticky');
+    showToast(commonError, message, 'error', 'sticky');
 };
 
 /*******************************************************************************
@@ -272,7 +403,39 @@ const generateId = () => {
         '-' + random4() + random4() + random4();
 };
 
+/*******************************************************************************
+* @description Javascript method comparable to Apex's String.format(...).
+* Replaces placeholders in Custom Labels ({0}, {1}, etc) with provided values.
+*
+* @param {string} string: Custom Label to be formatted.
+* @param {list} replacements: List of string to use as replacements.
+* @return {string} formattedString: Formatted custom label
+*/
+const format = (string, replacements) => {
+    let formattedString = isEmpty(string) ? '' : string;
+    if (replacements) {
+        let key;
+        const type = typeof replacements;
+        const args =
+            'string' === type || 'number' === type
+                ? Array.prototype.slice.call(replacements)
+                : replacements;
+        for (key in args) {
+            if (args.hasOwnProperty(key)) {
+                formattedString = formattedString.replace(
+                    new RegExp('\\{' + key + '\\}', 'gi'),
+                    args[key]
+                );
+            }
+        }
+    }
+
+    return formattedString;
+};
+
 export {
+    ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
+    EXCLUDED_BATCH_HEADER_FIELDS,
     removeByProperty,
     findIndexByProperty,
     shiftToIndex,
@@ -286,5 +449,10 @@ export {
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
     deepClone,
-    debouncify
+    debouncify,
+    isEmpty,
+    isFunction,
+    findMissingRequiredFieldMappings,
+    findMissingRequiredBatchFields,
+    format
 }

@@ -138,4 +138,12 @@
         <tab>npe5__Affiliation__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
+    <tabVisibilities>
+        <tab>GE_Template_Builder</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
+        <tab>GE_Templates</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
 </Profile>

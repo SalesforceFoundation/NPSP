@@ -1,5 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 
 export default class GeFormFieldPicklist extends LightningElement {
     @api objectName;
@@ -8,14 +8,13 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api variant;
     @api required;
     @api value;
+    @api objectDescribeInfo;
 
     @track picklistValues;
 
-    @wire(getObjectInfo, { objectApiName: '$objectName' } ) objectInfo;
-
     @wire(getPicklistValues, {
         fieldApiName: '$fullFieldApiName',
-        recordTypeId: '$objectInfo.data.defaultRecordTypeId' })
+        recordTypeId: '$objectDescribeInfo.defaultRecordTypeId' })
     wiredPicklistValues({error, data}) {
         if(data) {
             this.picklistValues = data.values;

@@ -1,26 +1,61 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import storeFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.storeFormTemplate';
 import retrieveFormTemplateById from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveFormTemplateById';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { mutable, findIndexByProperty, shiftToIndex, dispatch, getQueryParameters, handleError } from 'c/utilTemplateBuilder';
+import GeLabelService from 'c/geLabelService';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import {
+    mutable,
+    findIndexByProperty,
+    shiftToIndex,
+    dispatch,
+    sort,
+    getQueryParameters,
+    handleError,
+    showToast,
+    findMissingRequiredFieldMappings,
+    findMissingRequiredBatchFields,
+    ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
+    EXCLUDED_BATCH_HEADER_FIELDS
+} from 'c/utilTemplateBuilder';
+import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
+const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
+const LANDING_PAGE_TAB_NAME = 'GE_Templates';
+const SORTED_BY = 'required';
+const SORT_ORDER = 'desc';
+const PICKLIST = 'Picklist';
+const NEW = 'new';
+const EDIT = 'edit';
+const SAVE = 'save';
+const DELETE = 'delete';
+const API_NAME = 'apiName';
+const ID = 'id';
+const SUCCESS = 'success';
+const ERROR = 'error';
+const EVENT_TOGGLE_MODAL = 'togglemodal';
+
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
+
+    // Expose label service to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     /*******************************************************************************
     * @description Enums used for navigating and flagging active lightning-tabs.
     */
     TabEnums = Object.freeze({
-        INFO_TAB: 'geTemplateBuilderTemplateInfo',
-        SELECT_FIELDS_TAB: 'geTemplateBuilderSelectFields',
-        BATCH_HEADER_TAB: 'geTemplateBuilderBatchHeader'
-    })
+        INFO_TAB: this.CUSTOM_LABELS.geTabTemplateInfo,
+        FORM_FIELDS_TAB: this.CUSTOM_LABELS.geTabFormFields,
+        BATCH_HEADER_TAB: this.CUSTOM_LABELS.geTabBatchHeader
+    });
 
     formTemplateRecordId;
+    currentNamespace;
     @track isLoading = true;
     @track isAccessible = true;
     @track activeTab = this.TabEnums.INFO_TAB;
@@ -38,7 +73,33 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     @track batchHeaderFields = [];
     @track formSections = [];
     @track activeFormSectionId;
-    currentNamespace;
+    @track diBatchInfo;
+    @track batchFields;
+    @track missingRequiredBatchFields;
+    batchFieldFormElements = [];
+
+    @track hasTemplateInfoTabError;
+    @track hasSelectFieldsTabError;
+    @track hasBatchHeaderTabError;
+    @track previousSaveAttempted = false;
+
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_BATCH_OBJECT })
+    wiredBatchDataImportObject({ error, data }) {
+        if (data) {
+            this.diBatchInfo = data;
+            this.init();
+        } else if (error) {
+            handleError(this, error);
+        }
+    }
+
+    get templateBuilderHeader() {
+        return this.formTemplateRecordId ? this.formTemplate.name : this.CUSTOM_LABELS.geHeaderNewTemplate;
+    }
+
+    get mode() {
+        return this.formTemplateRecordId === undefined ? NEW : EDIT;
+    }
 
     get inTemplateInfoTab() {
         return this.activeTab === this.TabEnums.INFO_TAB ? true : false;
@@ -49,15 +110,15 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get inSelectFieldsTab() {
-        return this.activeTab === this.TabEnums.SELECT_FIELDS_TAB ? true : false;
+        return this.activeTab === this.TabEnums.FORM_FIELDS_TAB ? true : false;
+    }
+
+    get namespace() {
+        return this.currentNamespace ? `${this.currentNamespace}__` : '';
     }
 
     get listViewCustomTabApiName() {
-        return this.currentNamespace ? `${this.currentNamespace}__GE_Templates` : 'GE_Templates';
-    }
-
-    connectedCallback() {
-        this.init();
+        return this.currentNamespace ? `${this.namespace + LANDING_PAGE_TAB_NAME}` : LANDING_PAGE_TAB_NAME;
     }
 
     init = async () => {
@@ -69,7 +130,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.isLoading = false;
 
             } else if (dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING) {
-                await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
+                await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
                 this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
                 // Check if there's a record id in the url
@@ -84,12 +145,82 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                     this.formSections = this.formLayout.sections;
                 }
 
+                this.collectBatchHeaderFields();
+                this.addRequiredBatchHeaderFields();
+                this.validateBatchHeaderTab();
+
                 this.isLoading = false;
                 this.isAccessible = true;
             }
         } catch (error) {
             handleError(error);
         }
+    }
+
+    /*******************************************************************************
+    * @description Method builds and sorts a list of batch header fields for the
+    * child component geTemplateBuilderBatchHeader. Takes into consideration
+    * additionally required fields and exluded fields. List is used by the sidebar
+    * for the lightning-input checkboxes.
+    */
+    collectBatchHeaderFields() {
+        this.batchFields = mutable(this.diBatchInfo.fields);
+
+        Object.getOwnPropertyNames(this.batchFields).forEach((key) => {
+            let field = this.batchFields[key];
+            const isFieldExcluded = EXCLUDED_BATCH_HEADER_FIELDS.includes(field.apiName);
+            const isNewAndNotCreatable = this.mode === NEW && !field.createable;
+            const isEditAndNotAccessible = this.mode === EDIT && !field.createable && !field.updateable;
+
+            if (isFieldExcluded || isNewAndNotCreatable || isEditAndNotAccessible) {
+                return;
+            }
+
+            field.isPicklist = field.dataType === PICKLIST ? true : false;
+
+            if (ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS.includes(field.apiName)) {
+                field.required = true;
+            }
+
+            if (field.required) {
+                field.checked = true;
+                field.isRequiredFieldDisabled = true;
+            } else {
+                field.checked = false;
+                field.isRequiredFieldDisabled = false;
+            }
+
+            this.batchFieldFormElements.push(field);
+        });
+
+        this.batchFieldFormElements = sort(this.batchFieldFormElements, SORTED_BY, SORT_ORDER);
+    }
+
+    /*******************************************************************************
+    * @description Method adds all required batch header fields on new templates.
+    */
+    addRequiredBatchHeaderFields() {
+        if (this.mode === NEW) {
+            const requiredFields = this.batchFieldFormElements.filter(batchField => {
+                return batchField.required;
+            });
+
+            requiredFields.forEach((field) => {
+                this.handleAddBatchHeaderField({ detail: field.apiName });
+            });
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method handles tab validity change events from child components
+    * that happen outside an explicit save action.
+    *
+    * @param {object} event: Event received from any of the following components.
+    * geTemplateBuilderTemplateInfo, geTemplateBuilderSelectFields, and
+    * geTemplateBuilderBatchHeader.
+    */
+    handleUpdateValidity(event) {
+        this[event.detail.property] = event.detail.hasError;
     }
 
     /*******************************************************************************
@@ -105,11 +236,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             case this.TabEnums.INFO_TAB:
                 this.activeTab = this.TabEnums.INFO_TAB;
                 break;
+            case this.TabEnums.FORM_FIELDS_TAB:
+                this.activeTab = this.TabEnums.FORM_FIELDS_TAB;
+                break;
             case this.TabEnums.BATCH_HEADER_TAB:
                 this.activeTab = this.TabEnums.BATCH_HEADER_TAB;
-                break;
-            case this.TabEnums.SELECT_FIELDS_TAB:
-                this.activeTab = this.TabEnums.SELECT_FIELDS_TAB;
                 break;
             default:
                 this.activeTab = this.TabEnums.INFO_Tab;
@@ -127,7 +258,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     @api
     notify(modalData) {
-        if (modalData.action === 'save') {
+        if (modalData.action === SAVE) {
             let formSections = mutable(this.formSections);
             let formSection = formSections.find((fs) => { return fs.id === modalData.section.id });
 
@@ -135,8 +266,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.formSections = formSections;
         }
 
-        if (modalData.action === 'delete') {
-            const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-select-fields');
+        if (modalData.action === DELETE) {
+            const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-form-fields');
             selectFieldsComponent.handleDeleteFormSection({ detail: modalData.section.id });
         }
     }
@@ -149,7 +280,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     toggleModal(event) {
-        dispatch(this, 'togglemodal', event.detail);
+        dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
     /*******************************************************************************
@@ -185,7 +316,20 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderbatchHeader -> here
     */
     handleAddBatchHeaderField(event) {
-        this.batchHeaderFields = [...this.batchHeaderFields, event.detail];
+        const fieldName = event.detail;
+        let batchField = this.batchFields[fieldName];
+
+        let field = {
+            label: batchField.label,
+            apiName: batchField.apiName,
+            required: batchField.required,
+            isRequiredFieldDisabled: batchField.isRequiredFieldDisabled,
+            allowDefaultValue: true,
+            defaultValue: null,
+            dataType: batchField.dataType
+        }
+
+        this.batchHeaderFields = [...this.batchHeaderFields, field];
     }
 
     /*******************************************************************************
@@ -215,7 +359,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldUp(event) {
-        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', event.detail);
+        let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index > 0) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index - 1);
@@ -231,7 +375,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldDown(event) {
-        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', event.detail);
+        let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index < this.batchHeaderFields.length - 1) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index + 1);
@@ -299,7 +443,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleFormSectionUp(event) {
-        let index = findIndexByProperty(this.formSections, 'id', event.detail);
+        let index = findIndexByProperty(this.formSections, ID, event.detail);
         if (index > 0) {
             this.formSections = shiftToIndex(this.formSections, index, index - 1);
         }
@@ -314,7 +458,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleFormSectionDown(event) {
-        let index = findIndexByProperty(this.formSections, 'id', event.detail);
+        let index = findIndexByProperty(this.formSections, ID, event.detail);
         if (index < this.formSections.length - 1) {
             this.formSections = shiftToIndex(this.formSections, index, index + 1);
         }
@@ -460,36 +604,141 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
+    * @description Methods runs validity checks for all tabs, sets tab errors, and
+    * throws a toast to notify users which tabs to check.
+    */
+    checkTabsValidity() {
+        let tabsWithErrors = new Set();
+
+        this.validateTemplateInfoTab(tabsWithErrors);
+        this.validateSelectFieldsTab(tabsWithErrors);
+        this.validateBatchHeaderTab();
+
+        if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchHeaderTabError) {
+            const message = `${tabsWithErrors.size > 1 ?
+                this.CUSTOM_LABELS.geToastTemplateTabsError
+                : this.CUSTOM_LABELS.geToastTemplateTabError}`;
+            const errors = [...tabsWithErrors].join(', ');
+            showToast(this.CUSTOM_LABELS.commonError, `${message}${errors}.`, ERROR);
+
+            return false;
+        }
+
+        return tabsWithErrors.size === 0 ? true : false;
+    }
+
+    /*******************************************************************************
+    * @description Method checks for errors in the Template Info tab. Tab currently
+    * only has one required field (Name) and this only checks that any value is present
+    * there.
+    */
+    validateTemplateInfoTab(tabsWithErrors) {
+        const templateInfoComponent = this.template.querySelector('c-ge-template-builder-template-info');
+
+        if (templateInfoComponent) {
+            // Component exists in the dom and can validate itself.
+            const isTemplateInfoTabValid = templateInfoComponent.validate();
+
+            if (isTemplateInfoTabValid) {
+                this.hasTemplateInfoTabError = false;
+            } else {
+                this.hasTemplateInfoTabError = true;
+                tabsWithErrors.add(this.TabEnums.INFO_TAB);
+            }
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method checks for errors in the Select Fields tab. Currently only
+    * checks for 'requiredness' in the Field Mapping's source (DataImport__c).
+    */
+    validateSelectFieldsTab(tabsWithErrors) {
+        const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-form-fields');
+
+        if (selectFieldsComponent) {
+            // Component exists in the dom and can validate itself.
+            this.hasSelectFieldsTabError = !selectFieldsComponent.validate();
+        } else {
+            // Component doesn't exist in the dom and can't validate itself.
+            const missingRequiredFields = findMissingRequiredFieldMappings(
+                TemplateBuilderService,
+                this.formSections);
+
+            if (missingRequiredFields && missingRequiredFields.length > 0) {
+                this.hasSelectFieldsTabError = true;
+                tabsWithErrors.add(this.TabEnums.FORM_FIELDS_TAB);
+            } else {
+                this.hasSelectFieldsTabError = false;
+            }
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method checks for missing required DataImportBatch__c fields
+    * and adds them proactively.
+    */
+    validateBatchHeaderTab() {
+        this.missingRequiredBatchFields = findMissingRequiredBatchFields(this.batchFieldFormElements,
+            this.batchHeaderFields);
+
+        if (this.missingRequiredBatchFields && this.missingRequiredBatchFields.length > 0) {
+            for (let field of this.missingRequiredBatchFields) {
+                this.handleAddBatchHeaderField({ detail: field.apiName });
+            }
+
+            const fieldApiNames = this.missingRequiredBatchFields.map(field => field.apiName).join(', ');
+            showToast(this.CUSTOM_LABELS.commonWarning,
+                `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldApiNames}`,
+                'warning',
+                'sticky');
+        }
+    }
+
+    /*******************************************************************************
     * @description Method sets properties on the formTemplate object and passes the
     * FormTemplate JSON to apex and waits for a record id so we can navigate
     * to the newly inserted Form_Template__c record detail page.
     */
     handleFormTemplateSave = async () => {
-        this.isLoading = true;
-        this.formLayout.sections = this.formSections;
-        this.formTemplate.batchHeaderFields = this.batchHeaderFields;
-        this.formTemplate.layout = this.formLayout;
+        this.previousSaveAttempted = true;
+        const isTemplateValid = this.checkTabsValidity();
 
-        // TODO: Currently hardcoded as we're not providing a way to
-        // create custom migrated field mapping sets yet.
-        this.formTemplate.layout.fieldMappingSetDevName = 'Migrated_Custom_Field_Mapping_Set';
+        if (isTemplateValid) {
+            this.isLoading = true;
+            this.formLayout.sections = this.formSections;
+            this.formTemplate.batchHeaderFields = this.batchHeaderFields;
+            this.formTemplate.layout = this.formLayout;
 
-        const preppedFormTemplate = {
-            id: this.formTemplateRecordId || null,
-            templateJSON: JSON.stringify(this.formTemplate),
-            name: this.formTemplate.name,
-            description: this.formTemplate.description,
-            formatVersion: FORMAT_VERSION
-        };
+            // TODO: Currently hardcoded as we're not providing a way to
+            // create custom migrated field mapping sets yet.
+            this.formTemplate.layout.fieldMappingSetDevName = DEFAULT_FIELD_MAPPING_SET;
 
-        await storeFormTemplate(preppedFormTemplate);
+            const preppedFormTemplate = {
+                id: this.formTemplateRecordId || null,
+                templateJSON: JSON.stringify(this.formTemplate),
+                name: this.formTemplate.name,
+                description: this.formTemplate.description,
+                formatVersion: FORMAT_VERSION
+            };
 
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: this.listViewCustomTabApiName
+            try {
+                const recordId = await storeFormTemplate(preppedFormTemplate);
+                if (recordId) {
+                    let toastLabel =
+                        this.mode === NEW ?
+                            this.CUSTOM_LABELS.geToastTemplateCreateSuccess
+                            : this.CUSTOM_LABELS.geToastTemplateUpdateSuccess;
+
+                    const toastMessage = GeLabelService.format(toastLabel, [this.formTemplate.name]);
+                    showToast(toastMessage, '', SUCCESS);
+                }
+
+                this.navigateToLandingPage();
+            } catch (error) {
+                showToast(this.CUSTOM_LABELS.commonError, this.CUSTOM_LABELS.geToastSaveFailed, ERROR);
+                this.isLoading = false;
             }
-        });
+        }
     }
 
     /*******************************************************************************
@@ -506,6 +755,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     /*******************************************************************************
     * @description Navigates to a record detail page by record id.
+    *
+    * @param {string} formTemplateRecordId: Form_Template__c record id.
     */
     navigateToRecordViewPage(formTemplateRecordId) {
         this[NavigationMixin.Navigate]({
@@ -513,6 +764,18 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             attributes: {
                 recordId: formTemplateRecordId,
                 actionName: 'view'
+            }
+        });
+    }
+
+    /*******************************************************************************
+    * @description Navigates to Gift Entry landing page.
+    */
+    navigateToLandingPage() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: this.listViewCustomTabApiName
             }
         });
     }
