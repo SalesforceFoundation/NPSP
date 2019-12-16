@@ -20,5 +20,5 @@ Create Donation from a Contact and Delete Opportunity
     Go To Record Home  &{contact}[AccountId]
     Select Tab    Details
     Scroll Element Into View    text:Membership Information
-    Confirm Value           Total Gifts    $0.00    Y
-    Confirm Value           Total Number of Gifts    0    Y
+    Confirm Field Value           Total Gifts    contains    $0.00    
+    Confirm Field Value           Total Number of Gifts    contains    0    

@@ -21,8 +21,7 @@ Create Relationships for contacts
     Select Tab  Related
     Click Related List Button  Relationships    New
     Populate Lookup Field    Related Contact    &{contact1}[FirstName] &{contact1}[LastName]
-    Click Dropdown            Type
-    Click link    link=Parent
+    Select Value From Dropdown   Type              Parent
     Click Modal Button        Save
     ${expected result1}        Catenate    &{contact1}[FirstName] &{contact1}[LastName]    is    &{contact2}[FirstName] &{contact2}[LastName]'s    Parent
     Log to Console    ${expected result1}
@@ -40,8 +39,7 @@ Create Relationships for contacts
     ${id}    ${status2}    Check Status    &{contact2}[FirstName] &{contact2}[LastName]
     Should Be Equal As Strings    ${status2}    ${expected result2}
     Click Related Item Link      Relationships    &{contact2}[FirstName] &{contact2}[LastName]
-    ${id}    Get Current Record Id
-    Store Session Record    npe4__Relationship__c    ${id}
+    Save Current Record ID For Deletion    npe4__Relationship__c    
 
 
 *** Keywords ***
