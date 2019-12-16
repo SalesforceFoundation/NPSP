@@ -118,6 +118,12 @@
                                                     title="{!$Label.c.RD2_EnablementDryRunButton}"
                                                     onclick="{!c.handleDryRun}" />
                                             </aura:if>
+                                            <aura:if isTrue="{!and(v.state.isDryRunInProgress, v.dryRunBatch != null)}">
+                                                <lightning:button class="styleButton" aura:id="dryRunStopButton"
+                                                    label="{!$Label.c.RD2_EnablementDryRunStopButton}" variant="neutral"
+                                                    title="{!$Label.c.RD2_EnablementDryRunStopButton}"
+                                                    onclick="{!c.handleDryRunStop}" />
+                                            </aura:if>
                                         </span>
                                     </div>
                                 </div>

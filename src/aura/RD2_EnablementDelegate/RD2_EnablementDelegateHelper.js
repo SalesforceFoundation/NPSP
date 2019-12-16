@@ -209,6 +209,37 @@
         $A.enqueueAction(action);
     },
     /****
+    * @description Stops data migration batch in dry run mode
+    */
+    stopDryRun: function (component) {
+        let batchId = component.get("v.dryRunBatch.batchId");
+
+        this.disableEdit(component, "dryRunStopButton");
+        component.set('v.dryRunBatch', null);
+        this.clearError(component);
+
+        var action = component.get("c.stopProcessing");
+        action.setParams({
+            batchId: batchId
+        });
+
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            const state = response.getState();
+
+            if (state === 'SUCCESS') {
+                component.find('dryRunJob').handleLoadBatchJob();
+
+            } else if (state === 'ERROR') {
+                this.handleError(component, response.getError(), 'dryRun');
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
     * @description Starts data migration batch
     */
     runMigration: function (component) {
@@ -239,7 +270,7 @@
     /****
     * @description Updates page and settings based on the migration batch job status change
     */
-    handleBatchEvent: function (component, event, batchAttribute) {
+    handleBatchEvent: function (component, event, element) {
         if (!component.isValid()) {
             return;
         }
@@ -252,7 +283,7 @@
             return;
         }
 
-        component.set(batchAttribute, batch);
+        component.set(element, batch);
     },
     /****
     * @description Displays an unexpected error generated during data migration batch execution
@@ -333,10 +364,10 @@
         } else {
             component.set('v.state.isMigrationInProgress', batch.isInProgress);
 
-            const isMigrationCompleted = state.isMetaDeployConfirmed
+            const isCompleted = state.isMetaDeployConfirmed
                 && batch.status === 'Completed'
                 && batch.isSuccess;
-            component.set('v.state.isMigrationCompleted', isMigrationCompleted);
+            component.set('v.state.isMigrationCompleted', isCompleted);
         }
     },
     /****

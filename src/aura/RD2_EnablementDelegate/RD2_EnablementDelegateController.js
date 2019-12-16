@@ -25,6 +25,9 @@
     handleDryRunError: function (component, event, helper) {
         helper.handleBatchError(component, event, 'dryRun');
     },
+    handleDryRunStop: function (component, event, helper) {
+        helper.stopDryRun(component);
+    },
     handleRunMigration: function (component, event, helper) {
         helper.runMigration(component);
     },

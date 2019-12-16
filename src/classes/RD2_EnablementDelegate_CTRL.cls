@@ -36,6 +36,34 @@
 public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
+    * @description Enablement service
+    */
+    @TestVisible
+    private static RD2_EnablementService service {
+        get {
+            if (service == null) {
+                service = new RD2_EnablementService();
+            }
+            return service;
+        }
+        set;
+    }
+
+    /***
+    * @description Batch Job service
+    */
+    @TestVisible
+    private static UTIL_BatchJobService batchService {
+        get {
+            if (batchService == null) {
+                batchService = new UTIL_BatchJobService();
+            }
+            return batchService;
+        }
+        set;
+    }
+
+    /***
     * @description Returns Day of Month field picklist value specific to enhanced Recurring Donations
     */
     @TestVisible
@@ -70,19 +98,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         
     }
 
-    /***
-    * @description Enablement service
-    */
-    @TestVisible
-    private static RD2_EnablementService service {
-        get {
-            if (service == null) {
-                service = new RD2_EnablementService();
-            }
-            return service;
-        }
-        set;
-    }
 
     /***
     * @description Loads the enablement state so the current completed and pending options can be displayed
@@ -278,6 +293,23 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             if (!Test.isRunningTest()) {
                 upsert STG_Panel.stgService.stgRD;
             }
+
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+    }
+
+    /***
+    * @description Stops the archive batch process
+    */
+    @AuraEnabled
+    public static void stopProcessing(Id batchId) {
+        if (batchId == null || !batchService.isInProgress(batchId)) {
+            return;
+        }
+
+        try {            
+            System.abortJob(batchId);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());

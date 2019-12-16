@@ -138,6 +138,7 @@ export default class BatchProgress extends LightningElement {
             const isSuccess = this.batchJob.numberOfErrors === 0;
 
             const batchProgress = {
+                batchId: this.batchJob.batchId,
                 className: this.className,
                 status: this.batchJob.status,
                 isInProgress: this.batchJob.isInProgress,

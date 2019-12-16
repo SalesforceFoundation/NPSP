@@ -1583,6 +1583,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Test Migration has completed successfully.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementDryRunStopButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDryRunStopButton</shortDescription>
+        <value>Stop Processing</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementDryRunTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
