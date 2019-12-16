@@ -1183,7 +1183,7 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.wait_until_page_contains(view_name)
 
     def search_field_by_value(self, fieldname, value):
-         """ search the field with the placeholder given by 'fieldname' for the given 'value'
+         """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
          """
          xpath = npsp_lex_locators["placeholder"].format(fieldname)
          field = self.selenium.get_webelement(xpath)
@@ -1203,7 +1203,7 @@ class NPSP(SalesforceRobotLibraryBase):
         """Verifies that a record with specified id is saved 
            in specified object table in database and returns the record"""
         record=self.salesforce.salesforce_get(object_name,id)
-        self.builtin.should_not_be_empty(record, msg="the database object {} with id {} is not in the database".format(object_name,id))
+        self.builtin.should_not_be_empty(record, msg="The database object {} with id {} is not in the database".format(object_name,id))
         return record
     
 
