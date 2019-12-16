@@ -30,7 +30,7 @@ Merge Contacts
     Select App Launcher Tab  Contact Merge
     Select Frame with Name  vfFrameId
     Wait Until Page Contains Element  //input[@placeholder='Search Contacts']
-    Populate Field By Placeholder  Search Contacts  Robot
+    Search Field By Value  Search Contacts  Robot
     Click Button  Search
     Click Element  //tr[./td/a[contains(@href,'${losing_id}')]]/td//span[@id='fauxCBSelect']
     Click Element  //tr[./td/a[contains(@href,'${winning_id}')]]/td//span[@id='fauxCBSelect']
