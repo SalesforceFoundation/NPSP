@@ -1,5 +1,6 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getRecord } from 'lightning/uiRecordApi';
 import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
 
 const DELAY = 300;
@@ -8,6 +9,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @api fieldApiName;
     @api objectApiName;
     @api displayValue = '';
+    @api defaultValue;
     @api label;
     @api required;
     @api id; // unique identifier for this field, used mainly for accessibility
@@ -25,6 +27,17 @@ export default class GeFormFieldLookup extends LightningElement {
     wiredTargetObjectInfo(response) {
         this.targetObjectInfo = response;
     }
+
+    connectedCallback() {
+        this.init();
+    }
+
+    init = async () => {
+        if(typeof this.defaultValue !== 'undefined') {
+            const defaultRecord = await getRecord(this.defaultValue, ['Id', 'Name']);
+            debugger;
+        }
+    };
 
     /**
      * Handle text input change, and retrieve lookup options.

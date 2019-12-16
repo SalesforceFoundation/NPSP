@@ -28,6 +28,13 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    connectedCallback() {
+        const { defaultValue } = this.element;
+        if(defaultValue) {
+            this.value = defaultValue;
+        }
+    }
+
     handleValueChange(event) {
         this.value = this.getValueFromChangeEvent(event);
         window.clearTimeout(this.changeTimeout);
