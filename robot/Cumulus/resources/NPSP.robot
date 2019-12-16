@@ -154,59 +154,6 @@ API Create DataImport
     &{data_import} =     Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
     [return]         &{data_import} 
 
-   
-Create Contact
-    ${first_name} =           Generate Random String
-    ${last_name} =            Generate Random String
-    Go To Object Home         Contact
-    Click Object Button       New
-    Populate Form
-    ...                       First Name=${first_name}
-    ...                       Last Name=${last_name}
-    Click Modal Button        Save    
-    Wait Until Modal Is Closed
-    ${contact_id} =           Get Current Record Id
-    Store Session Record      Contact  ${contact_id}
-    [return]                  ${contact_id}
-    
-Create Contact with Email
-    ${first_name} =           Generate Random String
-    ${last_name} =            Generate Random String
-    Go To Object Home         Contact
-    Click Object Button       New
-    Populate Form
-    ...                       First Name=${first_name}
-    ...                       Last Name=${last_name}
-    ...                       Work Email= skristem@salesforce.com
-    Click Modal Button        Save    
-    Wait Until Modal Is Closed
-    ${contact_id} =           Get Current Record Id
-    Store Session Record      Contact  ${contact_id}
-    [return]                  ${contact_id}    
-    
-    
-Create Contact with Address
-    ${first_name} =           Generate Random String
-    ${last_name} =            Generate Random String
-    Go To Object Home         Contact
-    Click Object Button       New
-    Populate Form
-    ...                       First Name=${first_name}
-    ...                       Last Name=${last_name}
-    Click Dropdown            Primary Address Type
-    Click Link                link=Work
-    Populate Field By Placeholder          Mailing Street            50 Fremont Street  
-    Populate Field By Placeholder          Mailing City              San Francisco
-    Populate Field By Placeholder          Mailing Zip/Postal Code   95320
-    Populate Field By Placeholder          Mailing State/Province    CA
-    Populate Field By Placeholder          Mailing Country           USA  
-    Click Modal Button        Save    
-    Wait Until Modal Is Closed
-    
-    ${contact_id} =           Get Current Record Id
-    Store Session Record      Contact  ${contact_id}
-    [return]                  ${contact_id}     
-
 New Contact for HouseHold
     Click Related List Button  Contacts    New 
     Wait Until Modal Is Open
@@ -219,36 +166,10 @@ New Contact for HouseHold
     Wait Until Modal Is Closed
     Go To Object Home         Contact
     Click Link                link= ${first_name} ${last_name}
-    Wait Until Url Contains    /view
-    ${contact_id} =           Get Current Record Id
-    Store Session Record      Account  ${contact_id}
+    Wait Until Location Contains    /view
+    ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
         
-Create Organization Foundation   
-    ${account_name} =          Generate Random String
-    Go To Object Home          Account
-    Click Object Button        New
-    Select Record Type         Organization
-    Populate Form
-    ...                        Account Name=${account_name}
-    Click Modal Button         Save    
-    Wait Until Modal Is Closed
-    ${account_id} =            Get Current Record Id
-    Store Session Record       Account  ${account_id}
-    [return]                   ${account_id}
-    
-Create HouseHold    
-    ${account_name} =         Generate Random String
-    Go To Object Home         Account
-    Click Object Button       New
-    Select Record Type        Household Account
-    Populate Form
-    ...                       Account Name=${account_name}
-    Click Modal Button        Save    
-    Wait Until Modal Is Closed
-    ${account_id} =           Get Current Record Id
-    Store Session Record      Account  ${account_id}
-    [return]                  ${account_id}
 
 Create Primary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
@@ -274,8 +195,7 @@ Create Opportunities
     Populate Form
     ...                       Opportunity Name= ${opp_name}
     ...                       Amount=100 
-    Click Dropdown    Stage
-    Click Link    link=${stage}
+    Select Value From Dropdown    Stage    ${stage}
     Populate Lookup Field    Account Name    ${hh_name}
     Open Date Picker    Close Date
     Pick Date    Today
@@ -302,10 +222,9 @@ Create Engagement Plan
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
     Click Button    Save
-    Wait Until Url Contains    /view
+    Wait Until Location Contains    /view
     ${ns} =  Get NPSP Namespace Prefix
-    ${eng_id} =           Get Current Record Id
-    Store Session Record    ${ns}Engagement_Plan_Template__c    ${eng_id}
+    Save Current Record ID For Deletion    ${ns}Engagement_Plan_Template__c
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     
 Create Level
@@ -325,8 +244,7 @@ Create Level
     Click Button  Save
     Unselect Frame
     Wait For Locator  obj-header  Level
-    ${level_id} =            Get Current Record Id
-    Store Session Record  Level__c  ${level_id}
+    ${level_id} =   Save Current Record ID For Deletion  Level__c  
     [Return]    ${level_id}  ${level_name}
 
 Verify Engagement Plan
