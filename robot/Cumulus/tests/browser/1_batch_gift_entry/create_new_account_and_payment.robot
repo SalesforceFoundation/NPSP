@@ -27,7 +27,7 @@ Create a new account and enter payment information
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
     ${acc_name} =  Generate Random String
-    Populate Field By Placeholder    Search Accounts    ${acc_name}
+    Search Field By Value    Search Accounts    ${acc_name}
     Click Element    title:Search Accounts...
     Wait For Locator    record.edit_button    New Account
     Click Element    title=New Account
@@ -56,12 +56,10 @@ Create a new account and enter payment information
     Select Window    ${value} | Salesforce    10
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
-    ${opp_id} =           Get Current Record Id
-    Store Session Record      Opportunity  ${opp_id}
-    Confirm Value    Amount    $20.00    Y 
+    ${opp_id} =           Save Current Record ID For Deletion      Opportunity  
+    Confirm Field Value    Amount    contains    $20.00    
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y
+    Confirm Field Value    Close Date    contains    ${opp_date}    
+    Confirm Field Value    Stage    contains    Closed Won    
     Click Link With Text    text=${acc_name}
-    ${account_id} =           Get Current Record Id
-    Store Session Record      Account  ${account_id}
+    ${account_id} =       Save Current Record ID For Deletion      Account
