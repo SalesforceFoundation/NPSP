@@ -296,7 +296,7 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Wrapper class for Recurring Donation schedule data
+    * @description Wrapper class for Recurring Donation Installment data
     */
     public class Installment {
 
@@ -321,9 +321,9 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the date of the next donation
+    * @description Calculate the Next Installment using the provided Schedule with the CurrentDate as the starting point
     * @param rdSchedules Recurring Donation Schedule records
-    * @return Date
+    * @return Installment
     */
     private Installment getNextInstallment(List<RecurringDonationSchedule__c> rdSchedules) {
 
