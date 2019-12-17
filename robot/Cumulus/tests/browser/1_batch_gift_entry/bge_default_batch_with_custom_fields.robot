@@ -33,11 +33,10 @@ Create BGE Batch With Custom Fields
     Click BGE Button        Next
     Click BGE Button        Save
     Wait For Locator    bge.title    Batch Gift Entry
-    Verify Title    Batch Gift Entry    ${batch}
-    ${batch_id}    Get Current Record Id
+    Verify Title    Batch Gift Entry    ${batch}         
     ${ns} =  Get NPSP Namespace Prefix
     Set Global Variable     ${ns}       ${ns}
-    Store Session Record      ${ns}DataImportBatch__c  ${batch_id}
+    ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c
     Verify Expected Batch Values    ${batch_id}
     ...    Batch_Process_Size__c=50.0
     ...    Donation_Date_Range__c=0.0
@@ -56,7 +55,7 @@ Create New gift and process batch and validate
     &{campaign} =    API Create Campaign
     Set Global Variable     ${camp_id}       &{campaign}[Id]
     Select Value From BGE DD    Donor Type    Contact
-    Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Fill BGE Form
     ...    Donation Amount=100
@@ -89,8 +88,7 @@ Verify Custom Fields on Payment and Donation
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
-    ${pay_id}    Get Current Record ID
-    Store Session Record      npe01__OppPayment__c  ${pay_id}
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     ${org_ns} =  Get Org Namespace Prefix
     &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
