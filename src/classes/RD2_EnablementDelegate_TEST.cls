@@ -235,6 +235,77 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /**
+     * @description Verifies Enhanced Recurring Donations dry run migration batch job is executed.
+     * If metadata deployment is not checked, dry run part 2 is not visible.
+     */
+    @IsTest
+    private static void shouldRunDryRun() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        setEnablementState(JSON.serialize(expectedState));
+
+        Test.startTest();
+        Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
+        Test.stopTest();
+        
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigrationDryRun_BATCH');
+        System.assertEquals(1, job.JobItemsProcessed,
+            'The batch should have run with one child batch processed'
+        );
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations dry run migration batch job sets "isDryRun2" 
+     * if metadata deployment has been confirmed
+     */
+    @IsTest
+    private static void shouldSetDryRun2WhenRunDryRunAndMetaDeploymentConfirmed() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isEnabled = true;
+        expectedState.isMetaLaunched = true;
+        expectedState.isMetaConfirmed = true;
+        setEnablementState(JSON.serialize(expectedState));
+        
+        stubRD2ReadyAndEnabled();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
+        Test.stopTest();
+
+        expectedState.isDryRun2 = true;
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies migration enabled flag is set when user skips dry run
+    */
+    @isTest
+    private static void shouldEnableMigrationWhenUserSkipsOptionalDryRun() {
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isEnabled = true;
+        setEnablementState(JSON.serialize(expectedState));
+        
+        stubRD2ReadyAndEnabled();
+
+        RD2_EnablementDelegate_CTRL.skipDryRun();
+
+        expectedState.isMigrationEnabled = true;
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /**
      * @description Verifies Enhanced Recurring Donations migration batch job is executed
      */
     @IsTest
@@ -250,28 +321,6 @@ public with sharing class RD2_EnablementDelegate_TEST {
         Test.stopTest();
 
         AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
-        System.assertEquals(1, job.JobItemsProcessed,
-            'The batch should have run with one child batch processed'
-        );
-    }
-
-    /**
-     * @description Verifies Enhanced Recurring Donations dry run migration batch job is executed.
-     * If the dry run init state is turned on, it will be switched off. 
-     */
-    @IsTest
-    private static void shouldRunMigrationInDryRunMode() {
-        setRDSettings();
-
-        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
-
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
-        Test.stopTest();
-        
-        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigrationDryRun_BATCH');
         System.assertEquals(1, job.JobItemsProcessed,
             'The batch should have run with one child batch processed'
         );
@@ -302,7 +351,9 @@ public with sharing class RD2_EnablementDelegate_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 RecurringDonations2EnablementState__c = state,
-                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Maximum_Donations__c = 50,
+                npe03__Opportunity_Forecast_Months__c = 6
             )
         );
     }
