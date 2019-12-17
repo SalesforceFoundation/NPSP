@@ -37,8 +37,7 @@ Create and Close a Recurring Donation and Refresh Opportunities
     Store Session Record         Opportunity                    ${opportunity1}[0][Id]
     Go To Record Home            ${opportunity1}[0][Id]
     Click Link                   link=Edit
-    Click Dropdown               Stage
-    Click Link                   link=Closed Won
+    Select Value From Dropdown   Stage    Closed Won
     Click Modal Button           Save
 
     #Find 2nd Opportunity for Recurring Donation and Close It
@@ -46,15 +45,13 @@ Create and Close a Recurring Donation and Refresh Opportunities
     Store Session Record         Opportunity                    ${opportunity2}[0][Id]
     Go To Record Home            ${opportunity2}[0][Id]
     Click Link                   link=Edit
-    Click Dropdown               Stage
-    Click Link                   link=Closed Won
+    Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
 
     #Close Recurring Donation and Refresh Opportunities
     Go To Record Home            &{recurringdonation}[Id]
     Click Link                   link=Edit
-    Click Dropdown               Open Ended Status
-    Click Link                   link=Closed
+    Select Value From Dropdown   Open Ended Status              Closed
     Click Modal Button           Save
     Click Link                   link=Show more actions
     Click Link                   link=Refresh Opportunities
@@ -63,4 +60,4 @@ Create and Close a Recurring Donation and Refresh Opportunities
     @{opportunity3} =            API Query Installment          &{recurringdonation}[Id]    (3)
     Go To Record Home            ${opportunity3}[0][Id]
     Select Tab                   Details
-    Confirm Value                Stage                          Closed Lost    Y
+    Confirm Field Value          Stage                          contains                    Closed Lost    
