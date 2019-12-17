@@ -14,8 +14,7 @@ Create ASC for Affiliated Contact
     Select Tab    Related
     Click Related List Button   Organization Affiliations    New
     Populate Lookup Field    Organization    &{account}[Name]
-    Click Dropdown            Related Opportunity Contact Role
-    Click link    title:Soft Credit
+    Select Value From Dropdown   Related Opportunity Contact Role              Soft Credit
     Click Modal Button        Save
     &{opportunity} =  API Create Opportunity    &{account}[Id]    Donation    Name=&{account}[Name] $500 donation    Amount=500    
     Go To Record Home    &{opportunity}[Id]
@@ -31,5 +30,5 @@ Create ASC for Affiliated Contact
     Go To Record Home    &{Contact}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Soft Credit This Year    $500.00    Y
-    Confirm Value    Soft Credit Total    $500.00    Y
+    Confirm Field Value    Soft Credit This Year    contains    $500.00    
+    Confirm Field Value    Soft Credit Total    contains    $500.00    
