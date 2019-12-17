@@ -180,17 +180,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             this.isLoading = false;
         }.bind(event.target);
 
-        getDataImportRows({batchId: this.batchId, offset: this.data.length}).then(
-            rows => {
-                rows.forEach(
-                    row => {
-                        const record = row.record;
-                        record.donorLink = row.donorLink;
-                        record.donorName = row.donorName;
-                        record.matchedRecordLabel = row.matchedRecordLabel;
-                        record.matchedRecordUrl = row.matchedRecordUrl;
-                        record.errors = row.errors.join(', ');
-                        this.data.push(record);
+        getDataImportRows({batchId: this.batchId, offset: this.data.length})
+            .then(rows => {
+                rows.forEach(row => {
+                        this.data.push(
+                            Object.assign(row, row.record)
+                        );
                     }
                 );
                 this.data = [...this.data];
@@ -198,11 +193,11 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     disableInfiniteLoading();
                 }
                 disableIsLoading();
-            }
-        ).catch(
-            error => {
-                handleError(error);
-            }
-        );
+            })
+            .catch(
+                error => {
+                    handleError(error);
+                }
+            );
     }
 }
