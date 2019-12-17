@@ -1,6 +1,6 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { getRecord } from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
 
 const DELAY = 300;
@@ -16,28 +16,30 @@ export default class GeFormFieldLookup extends LightningElement {
 
 
     @track options = [];
-    @track targetObjectInfo;
     @track value;
     @track targetObjectApiName;
+    @track queryFields;
 
     /**
      * Retrieve information about the object the lookup points to.
      */
     @wire(getObjectInfo, { objectApiName: '$targetObjectApiName' })
     wiredTargetObjectInfo(response) {
-        this.targetObjectInfo = response;
-    }
-
-    connectedCallback() {
-        this.init();
-    }
-
-    init = async () => {
-        if(typeof this.defaultValue !== 'undefined') {
-            const defaultRecord = await getRecord(this.defaultValue, ['Id', 'Name']);
-            debugger;
+        if(response.data) {
+            this.targetObjectInfo = response;
+            this.queryFields = this.getQueryFields();
         }
-    };
+    }
+
+    @wire(getRecord, { recordId: '$defaultValue', fields: '$queryFields'})
+    wiredGetRecord({error, data}) {
+        if(data) {
+            if(typeof this.value === 'undefined') {
+                this.value = this.defaultValue;
+                this.displayValue = data.fields.Name.value;
+            }
+        }
+    }
 
     /**
      * Handle text input change, and retrieve lookup options.
@@ -68,6 +70,11 @@ export default class GeFormFieldLookup extends LightningElement {
             // needed for @wire reactive property
             this.targetObjectApiName = this.fieldInfo.referenceToInfos[0].apiName;
         }
+    }
+
+    getQueryFields() {
+        const fields = ['Id', 'Name'];
+        return fields.map(f => `${this.targetObjectApiName}.${f}`);
     }
 
     get objectDescribeInfo() {
