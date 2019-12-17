@@ -14,6 +14,15 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Opportunity-de</members>
+        <members>Opportunity-es</members>
+        <members>Opportunity-fr</members>
+        <members>Opportunity-iw</members>
+        <members>Opportunity-ja</members>
+        <members>Opportunity-nl_NL</members>
+        <name>CustomObjectTranslation</name>
+    </types>
+    <types>
         <members>Account.Level__c</members>
         <members>Account.Previous_Level__c</members>
         <members>Contact.Gender__c</members>
