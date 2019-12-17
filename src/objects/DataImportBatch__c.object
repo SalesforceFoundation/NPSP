@@ -122,6 +122,19 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
+        <fullName>Batch_Gift_Entry_Version__c</fullName>
+        <description>The version of the Batch Gift Entry feature used to create this Batch.</description>
+        <externalId>false</externalId>
+        <label>Batch Gift Entry Version</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Batch_Process_Size__c</fullName>
         <defaultValue>50</defaultValue>
         <description>The number of NPSP Data Import records to process at a time in each batch.</description>

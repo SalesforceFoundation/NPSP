@@ -11,8 +11,9 @@
                     <rightValue>true</rightValue>
                 </criteria>
                 <criteria>
-                    <leftValue>{!Record.Form_Template_Name__c}</leftValue>
-                    <operator>EQUAL</operator>
+                    <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
+                    <operator>LT</operator>
+                    <rightValue>2.0</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>
@@ -90,20 +91,10 @@
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
             <visibilityRule>
-                <booleanFilter>1 OR (2 AND 3)</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
-                </criteria>
-                <criteria>
-                    <leftValue>{!Record.GiftBatch__c}</leftValue>
-                    <operator>EQUAL</operator>
-                    <rightValue>true</rightValue>
-                </criteria>
-                <criteria>
-                    <leftValue>{!Record.Form_Template_Name__c}</leftValue>
-                    <operator>NE</operator>
                 </criteria>
             </visibilityRule>
         </componentInstances>
@@ -131,8 +122,9 @@
                     <rightValue>true</rightValue>
                 </criteria>
                 <criteria>
-                    <leftValue>{!Record.Form_Template_Name__c}</leftValue>
-                    <operator>NE</operator>
+                    <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
+                    <operator>GE</operator>
+                    <rightValue>2.0</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>

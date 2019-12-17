@@ -58,14 +58,15 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         // Import records in Active_Fields__c, while Batches created in geBatchGiftEntryApp
         // use all or a subset of fields mapped in Advanced Mapping.
         DataImportBatch__c batch = [
-                SELECT Form_Template_Name__c
+                SELECT Batch_Gift_Entry_Version__c
                 FROM DataImportBatch__c
                 WHERE Id = :batchId
         ];
 
-        if (String.isBlank(batch.Form_Template_Name__c)) {
+        if (batch.Batch_Gift_Entry_Version__c == null ||
+                batch.Batch_Gift_Entry_Version__c < 2.0) {
             fieldNames = getDataImportFields(batchId, true);
-        } else if (String.isNotBlank(batch.Form_Template_Name__c)) { // Change if we decide
+        } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) { // Change if we decide
             // not to always populate Form_Template_Name__c
 
             // Lowercase the core fields list for use below to avoid duplication
