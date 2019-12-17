@@ -1564,7 +1564,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementDryRunBatchTitle</shortDescription>
-        <value>Test Migration</value>
+        <value>Validate Migration</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDryRunButton</fullName>
@@ -1580,7 +1580,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementDryRunComplete</shortDescription>
-        <value>Test Migration has completed successfully.</value>
+        <value>Validation completed successfully.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDryRunStopButton</fullName>
@@ -1596,7 +1596,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementDryRunTitle</shortDescription>
-        <value>Test Migration</value>
+        <value>Validate Migration</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDryRunIntro</fullName>
@@ -1604,7 +1604,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2_EnablementDryRunIntro</shortDescription>
-        <value>The test migration validates your existing data and gives you a chance to fix any errors before you convert to the Enhanced Recurring Donations data model. If errors are found, you can see them by going to NPSP Settings | System Tools | Error Logs. After you fix the errors, return here and run the test migration again.</value>
+        <value>In this step, NPSP will simulate the data migration and identify any errors in your existing data. If there are errors, go to NPSP Settings | System Tools | Error Log. After you fix the errors, return here and validate the migration again. Once the validation completes without errors, you can proceed to the next step.&lt;br/&gt;&lt;br/&gt;The validation process may take some time to complete. You can leave this page and return later to check the progress.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableTitle</fullName>
