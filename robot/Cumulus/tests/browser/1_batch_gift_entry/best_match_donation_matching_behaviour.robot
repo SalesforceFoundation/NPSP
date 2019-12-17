@@ -18,7 +18,7 @@ Best Match Donation Matching Behaviour
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Populate Field By Placeholder    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
     Click Link With Text    Review Donations
     Page Should Contain    &{opp_match}[Name]
@@ -35,7 +35,7 @@ Best Match Donation Matching Behaviour
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
     Scroll Page To Location    0    0
-    Populate Field By Placeholder    Search Accounts    &{account}[Name]
+    Search Field By Value    Search Accounts    &{account}[Name]
     Click Element With Locator   bge.modal-link    &{account}[Name]
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
@@ -55,41 +55,38 @@ Best Match Donation Matching Behaviour
     Click Link With Text    @{value}[0]
     # Verify that a new payment and opportunity are created for the gift in closed won stage
     Select Window    @{value}[0] | Salesforce    7
-    ${pay_id}    Get Current Record ID
-    Store Session Record      npe01__OppPayment__c  ${pay_id}
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=200.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
-    ${opp_id} =           Get Current Record Id
-    Store Session Record      Opportunity  ${opp_id}
-    Confirm Value    Amount    $200.00    Y 
+    ${opp_id} =   Save Current Record ID For Deletion     Opportunity  
+    Confirm Field Value    Amount    contains    $200.00    
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y
+    Confirm Field Value    Close Date    contains    ${opp_date}    
+    Confirm Field Value    Stage    contains    Closed Won    
     # Verify that the gift matched to existing opportunity and updated it to closed won status and payment is paid
     Go To Record Home    &{opp_match}[Id]
-    Confirm Value    Amount    $100.00    Y 
+    Confirm Field Value    Amount    contains    $100.00    
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Closed Won    Y 
+    Confirm Field Value    Close Date    contains    ${opp_date}    
+    Confirm Field Value    Stage    contains    Closed Won    
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    ${pay_no}
-    ${pay}    Get Current Record ID
-    Store Session Record      npe01__OppPayment__c  ${pay}
-    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay}
+    ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
+    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True  
     # Verify that the opportunity that does not match is still in prospecting stage
     Go To Record Home    &{opp_dont_match}[Id]
-    Confirm Value    Amount    $50.00    Y 
+    Confirm Field Value    Amount    contains    $50.00    
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Value    Close Date    ${opp_date}    Y 
-    Confirm Value    Stage    Prospecting    Y  
+    Confirm Field Value    Close Date    contains    ${opp_date}    
+    Confirm Field Value   Stage    contains    Prospecting    
 
 ***Keywords***
 Setup Test Data
