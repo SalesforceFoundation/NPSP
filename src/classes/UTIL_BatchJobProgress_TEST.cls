@@ -78,7 +78,7 @@ private with sharing class UTIL_BatchJobProgress_TEST {
      * @description Verifies Enhanced Recurring Donations migration batch job summary is returned
      */
     @IsTest
-    private static void shouldReturnRD2MigrationSummary() {
+    private static void shouldReturnEnhancedRDMigrationSummary() {
         setRDSettings();
 
         insert getLegacyRecurringDonationBuilder(getContact().Id).build();
@@ -89,12 +89,7 @@ private with sharing class UTIL_BatchJobProgress_TEST {
         Id jobId = Database.executeBatch(new RD2_DataMigration_BATCH());
         Test.stopTest();
 
-        String jsonSummary = UTIL_BatchJobProgress_CTRL.loadBatchJobSummary('RD2_DataMigration_BATCH');
-        UTIL_BatchJobService.JobSummary summary = (UTIL_BatchJobService.JobSummary) JSON.deserialize(
-            jsonSummary, UTIL_BatchJobService.JobSummary.class
-        );
-
-        System.assertNotEquals(null, summary, 'Job Summary instance should be returned');
+        UTIL_BatchJobService.JobSummary summary = RD2_DataMigrationEnablement_TEST.getJobSummary('RD2_DataMigration_BATCH');
         System.assertEquals(jobId, summary.batchId, 'Batch Id should match: ' + summary);
         System.assertEquals(1, summary.total, 'Total Records should match: ' + summary);
         System.assertEquals(1, summary.processed, 'Total Records Processed should match: ' + summary);
@@ -105,7 +100,7 @@ private with sharing class UTIL_BatchJobProgress_TEST {
      * @description Verifies Enhanced Recurring Donations dry run migration batch job summary is returned
      */
     @IsTest
-    private static void shouldReturnRD2DryRunMigrationSummary() {
+    private static void shouldReturnEnhancedRDDryRunMigrationSummary() {
         setRDSettings();
 
         insert getLegacyRecurringDonationBuilder(getContact().Id).build();
@@ -115,13 +110,8 @@ private with sharing class UTIL_BatchJobProgress_TEST {
         Test.startTest();
         Id jobId = Database.executeBatch(new RD2_DataMigrationDryRun_BATCH());
         Test.stopTest();
-
-        String jsonSummary = UTIL_BatchJobProgress_CTRL.loadBatchJobSummary('RD2_DataMigrationDryRun_BATCH');
-        UTIL_BatchJobService.JobSummary summary = (UTIL_BatchJobService.JobSummary) JSON.deserialize(
-            jsonSummary, UTIL_BatchJobService.JobSummary.class
-        );
-
-        System.assertNotEquals(null, summary, 'Job Summary instance should be returned');
+        
+        UTIL_BatchJobService.JobSummary summary = RD2_DataMigrationEnablement_TEST.getJobSummary('RD2_DataMigrationDryRun_BATCH');
         System.assertEquals(jobId, summary.batchId, 'Batch Id should match: ' + summary);
         System.assertEquals(1, summary.total, 'Total Records should match: ' + summary);
         System.assertEquals(1, summary.processed, 'Total Records Processed should match: ' + summary);

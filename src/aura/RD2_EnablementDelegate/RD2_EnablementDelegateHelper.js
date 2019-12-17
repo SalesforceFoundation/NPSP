@@ -137,7 +137,7 @@
             const state = response.getState();
 
             if (state === 'SUCCESS') {
-                component.set('v.state.isMetaDeployLaunched', true);
+                component.set('v.state.isMetaLaunched', true);
 
             } else if (state === 'ERROR') {
                 this.handleError(component, response.getError(), 'metadeploy');
@@ -154,8 +154,11 @@
     */
     confirmDeploy: function (component) {
         //disable the current active step so the next step is enabled only on current step success
-        component.set('v.state.isMetaDeployConfirmed', false);
+        component.set('v.state.isMetaConfirmed', false);
         this.showSpinner(component, 'metadeployConfirmSpinner');
+
+        component.set('v.state.isDryRunInProgress', false);
+        component.set('v.state.isDryRunStopped', false);
 
         this.clearError(component);
 
@@ -168,7 +171,7 @@
             const state = response.getState();
 
             if (state === 'SUCCESS') {
-                component.set('v.state.isMetaDeployConfirmed', true);
+                component.set('v.state.isMetaConfirmed', true);
 
             } else if (state === 'ERROR') {
                 this.handleError(component, response.getError(), 'metadeploy');
@@ -184,7 +187,9 @@
     * @description Starts data migration batch in dry run mode
     */
     runDryRun: function (component) {
+        component.set('v.state.dryRunBatch', null);
         component.set('v.state.isDryRunInProgress', true);
+        component.set('v.state.isDryRun2Completed', false);
         component.set('v.state.isDryRunStopped', false);
         this.clearError(component);
 
@@ -194,13 +199,21 @@
                 return;
             }
             const state = response.getState();
+            const enablementState = component.get("v.state");
 
             if (state === 'SUCCESS') {
-                component.find('dryRunJob').handleLoadBatchJob();
+                if (enablementState.isMetaConfirmed) {
+                    component.set('v.state.isDryRun2', true);
+                }
+
+                const element = !enablementState.isConfirmed ? 'dryRunJob' : 'dryRun2Job';
+                component.find(element).handleLoadBatchJob();
 
             } else if (state === 'ERROR') {
                 component.set('v.state.isDryRunInProgress', false);
-                this.handleError(component, response.getError(), 'dryRun');
+
+                const section = !enablementState.isConfirmed ? 'dryRun' : 'migration';
+                this.handleError(component, response.getError(), section);
             }
         });
 
@@ -227,7 +240,36 @@
 
             if (state === 'ERROR') {
                 component.set('v.state.isDryRunStopped', false);
-                this.handleError(component, response.getError(), 'dryRun');
+                const enablementState = component.get("v.state");
+                const section = !enablementState.isConfirmed ? 'dryRun' : 'migration';
+                this.handleError(component, response.getError(), section);
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description Skips dry run migration run before actual migration
+    */
+    skipDryRun: function (component) {
+        component.set('v.state.dryRunBatch', null);
+        component.set('v.state.isMigrationEnabled', false);
+        component.set('v.state.isMigrationInProgress', false);
+        this.clearError(component);
+
+        var action = component.get("c.skipDryRun");
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            const state = response.getState();
+
+            if (state === 'SUCCESS') {
+                component.set('v.state.isMigrationEnabled', true);
+                component.set('v.migrationProgress', 'runMigrationStep');
+
+            } else if (state === 'ERROR') {
+                this.handleError(component, response.getError(), 'migration');
             }
         });
 
@@ -321,7 +363,14 @@
         }
 
         this.clearError(component);
-        this.handleError(component, errorDetail, section);
+
+        if (section === 'dryRun') {
+            const enablementState = component.get("v.state");
+            this.handleError(component, response.getError(), !enablementState.isConfirmed ? 'dryRun' : 'migration');
+
+        } else {
+            this.handleError(component, errorDetail, section);
+        }
     },
     /****
     * @description Disables page elements and reloads the enablement state
@@ -347,20 +396,28 @@
 
         component.set('v.state.hideDryRun', state.isConfirmed);
 
-        const batch = component.get("v.dryRunBatch");
         let isInProgress = false;
         let isCompleted = false;
+        let isCompleted2 = false;
 
         if (state.isConfirmed) {
             isCompleted = true;
+        }
+        if (state.isMigrationEnabled) {
+            component.set('v.migrationProgress', 'runMigrationStep');
+            isCompleted2 = true;
+        }
 
-        } else if (batch !== undefined && batch !== null) {
+        const batch = component.get("v.dryRunBatch");
+        if (batch !== undefined && batch !== null) {
             isInProgress = batch.isInProgress;
-            isCompleted = batch.status === 'Completed' && batch.isSuccess;
+            isCompleted = state.isConfirmed ? true : batch.status === 'Completed' && batch.isSuccess;
+            isCompleted2 = state.isDryRun2 ? batch.status === 'Completed' && batch.isSuccess : false;
         }
 
         component.set('v.state.isDryRunInProgress', isInProgress);
         component.set('v.state.isDryRunCompleted', isCompleted);
+        component.set('v.state.isDryRun2Completed', isCompleted2);
     },
     /****
     * @description Set data migration attributes
@@ -383,7 +440,7 @@
         } else {
             component.set('v.state.isMigrationInProgress', batch.isInProgress);
 
-            const isCompleted = state.isMetaDeployConfirmed
+            const isCompleted = state.isMetaConfirmed
                 && batch.status === 'Completed'
                 && batch.isSuccess;
             component.set('v.state.isMigrationCompleted', isCompleted);
@@ -416,9 +473,9 @@
         let state = component.get("v.state");
 
         let metaDeployProgress = 0;
-        if (state.isMetaDeployConfirmed) {
+        if (state.isMetaConfirmed) {
             metaDeployProgress = 100;
-        } else if (state.isMetaDeployLaunched) {
+        } else if (state.isMetaLaunched) {
             metaDeployProgress = 50;
         }
         component.set('v.state.metaDeployProgress', metaDeployProgress);

@@ -21,6 +21,9 @@
     handleDryRunStop: function (component, event, helper) {
         helper.stopDryRun(component);
     },
+    handleDryRunSkip: function (component, event, helper) {
+        helper.skipDryRun(component);
+    },
     handleDryRunStatusChange: function (component, event, helper) {
         helper.handleBatchEvent(component, event, 'v.dryRunBatch');
         helper.refreshDryRun(component);

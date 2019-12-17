@@ -37,6 +37,8 @@
 @isTest(IsParallel=true)
 public with sharing class RD2_EnablementDelegate_TEST {
 
+    private static final TEST_SObjectGateway.AsyncApexJobGateway jobGateway = new TEST_SObjectGateway.AsyncApexJobGateway();
+
     /****
     * @description Creates data required for unit tests
     */
@@ -160,18 +162,13 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isConfirmed = true;
         setEnablementState(JSON.serialize(expectedState));
 
-        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class,
-            new RD2_EnablementService_TEST.Stub()
-                .withRecurringDonations2Ready()
-                .withRecurringDonations2Enabled()
-        );
+        stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.launchMetaDeploy();
 
         expectedState.isReady = true;
         expectedState.isEnabled = true;
-        expectedState.isMetaDeployLaunched = true;
+        expectedState.isMetaLaunched = true;
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
 
@@ -186,15 +183,10 @@ public with sharing class RD2_EnablementDelegate_TEST {
     private static void shouldConfirmMetaDeploy() {
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
-        expectedState.isMetaDeployLaunched = true;
+        expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
-
-        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class,
-            new RD2_EnablementService_TEST.Stub()
-                .withRecurringDonations2Ready()
-                .withRecurringDonations2Enabled()
-        );
+        
+        stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
 
@@ -202,7 +194,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         expectedState.isReady = true;
         expectedState.isEnabled = true;
-        expectedState.isMetaDeployConfirmed = true;
+        expectedState.isMetaConfirmed = true;
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
     }
@@ -216,15 +208,10 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
-        expectedState.isMetaDeployLaunched = true;
+        expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
-
-        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class,
-            new RD2_EnablementService_TEST.Stub()
-                .withRecurringDonations2Ready()
-                .withRecurringDonations2Enabled()
-        );
+        
+        stubRD2ReadyAndEnabled();
 
         //mock value that does not exist but is expected
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '32';
@@ -242,7 +229,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         expectedState.isReady = true;
         expectedState.isEnabled = true;
-        expectedState.isMetaDeployConfirmed = false;
+        expectedState.isMetaConfirmed = false;
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
     }
@@ -262,15 +249,15 @@ public with sharing class RD2_EnablementDelegate_TEST {
         Id jobId = RD2_EnablementDelegate_CTRL.runMigration();
         Test.stopTest();
 
-        UTIL_BatchJobService.JobSummary summary = getJobSummary('RD2_DataMigration_BATCH');
-        System.assertEquals(jobId, summary.batchId, 'Batch Id should match: ' + summary);
-        System.assertEquals(1, summary.total, 'Total Records should match: ' + summary);
-        System.assertEquals(1, summary.processed, 'Total Records Processed should match: ' + summary);
-        System.assertEquals(0, summary.failed, 'Total Records Failed should match: ' + summary);
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
+        System.assertEquals(1, job.JobItemsProcessed,
+            'The batch should have run with one child batch processed'
+        );
     }
 
     /**
-     * @description Verifies Enhanced Recurring Donations dry run migration batch job is executed
+     * @description Verifies Enhanced Recurring Donations dry run migration batch job is executed.
+     * If the dry run init state is turned on, it will be switched off. 
      */
     @IsTest
     private static void shouldRunMigrationInDryRunMode() {
@@ -283,12 +270,11 @@ public with sharing class RD2_EnablementDelegate_TEST {
         Test.startTest();
         Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
         Test.stopTest();
-
-        UTIL_BatchJobService.JobSummary summary = getJobSummary('RD2_DataMigrationDryRun_BATCH');
-        System.assertEquals(jobId, summary.batchId, 'Batch Id should match: ' + summary);
-        System.assertEquals(1, summary.total, 'Total Records should match: ' + summary);
-        System.assertEquals(1, summary.processed, 'Total Records Processed should match: ' + summary);
-        System.assertEquals(0, summary.failed, 'Total Records Failed should match: ' + summary);
+        
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigrationDryRun_BATCH');
+        System.assertEquals(1, job.JobItemsProcessed,
+            'The batch should have run with one child batch processed'
+        );
     }
 
 
@@ -331,8 +317,21 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(expectedState.isReady, state.isReady, 'isReady should match');
         System.assertEquals(expectedState.isConfirmed, state.isConfirmed, 'isConfirmed should match');
         System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match');
-        System.assertEquals(expectedState.isMetaDeployLaunched, state.isMetaDeployLaunched, 'isMetaDeployLaunched should match');
-        System.assertEquals(expectedState.isMetaDeployConfirmed, state.isMetaDeployConfirmed, 'isMetaDeployConfirmed should match');
+        System.assertEquals(expectedState.isMetaLaunched, state.isMetaLaunched, 'isMetaLaunched should match');
+        System.assertEquals(expectedState.isMetaConfirmed, state.isMetaConfirmed, 'isMetaConfirmed should match');
+    }
+
+    /****
+    * @description Set enablement service to return true for the enablement ready and enabled state
+    * @return void
+    */
+    private static void stubRD2ReadyAndEnabled() {
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class,
+            new RD2_EnablementService_TEST.Stub()
+                .withRecurringDonations2Ready()
+                .withRecurringDonations2Enabled()
+        );
     }
 
     /**
@@ -378,22 +377,4 @@ public with sharing class RD2_EnablementDelegate_TEST {
             .withInstallmentPeriodMonthly()
             .withDayOfMonth('1');
     }
-
-    /**
-     * @description Returns batch job summary for the specified class name
-     * @param className Class name
-     * @return UTIL_BatchJobService.JobSummary
-     */
-    private static UTIL_BatchJobService.JobSummary getJobSummary(String className) {
-        String jsonSummary = UTIL_BatchJobProgress_CTRL.loadBatchJobSummary(className);
-        UTIL_BatchJobService.JobSummary summary = (UTIL_BatchJobService.JobSummary) JSON.deserialize(
-            jsonSummary, UTIL_BatchJobService.JobSummary.class
-        );
-
-        System.assertNotEquals(null, summary, 'Job Summary instance should be returned');
-
-        return summary;
-    }
-
-
 }

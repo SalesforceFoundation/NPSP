@@ -1583,6 +1583,22 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Validation completed successfully.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementDryRunNextButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDryRunNextButton</shortDescription>
+        <value>Next</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunSkipButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementDryRunSkipButton</shortDescription>
+        <value>Skip Validation</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementDryRunStopButton</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1733,6 +1749,22 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>RD2_EnablementMigrationErrorMessage</shortDescription>
         <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStepDryRun</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationStepDryRun</shortDescription>
+        <value>&lt;i&gt;(Optional)&lt;/i&gt; Start with a migration validation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStepFinal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2_EnablementMigrationStepFinal</shortDescription>
+        <value>Let's go for it.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationStopButton</fullName>

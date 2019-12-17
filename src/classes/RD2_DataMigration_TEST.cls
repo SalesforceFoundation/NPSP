@@ -1872,7 +1872,7 @@ private class RD2_DataMigration_TEST {
     */
     private static void assertBatchSummary(UTIL_BatchJobService.JobSummary expectedSummary) {
         String migrationState = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2MigrationState__c;
-         Map<String, UTIL_BatchJobService.JobSummary> summaryByType = String.isBlank(migrationState)
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = String.isBlank(migrationState)
             ? new Map<String, UTIL_BatchJobService.JobSummary>()
             : (Map<String, UTIL_BatchJobService.JobSummary>) JSON.deserialize(migrationState, Map<String, UTIL_BatchJobService.JobSummary>.class);
 

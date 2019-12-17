@@ -185,19 +185,8 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             .withTotalRecords(totalRecords)
             .withTotalRecordsProcessed(totalRecords - totalRecordsFailed)
             .withTotalRecordsFailed(totalRecordsFailed);
-
-        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = String.isBlank(rdSettings.RecurringDonations2MigrationState__c)
-            ? new Map<String, UTIL_BatchJobService.JobSummary>()
-            : (Map<String, UTIL_BatchJobService.JobSummary>) JSON.deserialize(rdSettings.RecurringDonations2MigrationState__c, Map<String, UTIL_BatchJobService.JobSummary>.class);
-        String summaryType = isDryRunMode ? 'dryRun' : 'run';
-
-        summaryByType.put(summaryType, summary);
-        rdSettings.RecurringDonations2MigrationState__c = JSON.serialize(summaryByType);
-
-        if (!Test.isRunningTest()) {
-            upsert rdSettings;
-        }
+        
+        new RD2_DataMigrationEnablement.BatchJob().saveSummary(summary, isDryRunMode);
     }
 
 
@@ -513,7 +502,6 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             ERR_Handler.processErrorsOnly(errorResult, context);
         }
     }
-
 
     /**
     * @description Custom data migration exception
