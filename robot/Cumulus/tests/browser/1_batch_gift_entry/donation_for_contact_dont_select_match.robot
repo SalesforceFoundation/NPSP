@@ -30,7 +30,7 @@ Dont select match for contact new donation with grid changes
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Contact
-    Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Page Should Contain Link    Review Donations
     Click Element With Locator    bge.field-input    Donation Amount
@@ -63,8 +63,7 @@ Dont select match for contact new donation with grid changes
     Select Window    ${value} | Salesforce    10
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
-    ${newopp_id}    Get Current Record ID
-    Store Session Record      Opportunity    ${newopp_id}
+    ${newopp_id}    Save Current Record ID For Deletion      Opportunity
     Verify Expected Values    nonns    Opportunity    ${newopp_id}
     ...    Amount=20.0
     ...    CloseDate=${date}
