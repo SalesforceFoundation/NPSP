@@ -1,13 +1,9 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
-import retrieveDefaultBGERenderWrapper
-    from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultBGERenderWrapper';
-import retrieveFormRenderWrapper
-    from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveFormRenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 import saveAndDryRunRow
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 import {api} from "lwc";
-
+import {handleError} from 'c/utilTemplateBuilder';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -38,42 +34,21 @@ class GeFormService {
     objectMappings;
 
     /**
-     * Retrieve the appropriate form render wrapper.
+     * Retrieve the default form render wrapper.
      * @returns {Promise<FORM_RenderWrapper>}
      */
-    getFormTemplate(batchId, formTemplateName) {
+    @api
+    getFormTemplate() {
         return new Promise((resolve, reject) => {
-            if (batchId) {
-                if (formTemplateName) {
-                    retrieveFormRenderWrapper({templateName: formTemplateName})
-                        .then((result) => {
-                            this.setMappings(result);
-                            resolve(result);
-                        })
-                        .catch(error => {
-                            console.error(JSON.stringify(error));
-                        });
-                } else {
-                    retrieveDefaultBGERenderWrapper() //todo: maybe refactor this method
-                        // so we don't have a different version for the default specifically
-                        .then((result) => {
-                            this.setMappings(result);
-                            resolve(result);
-                        })
-                        .catch(error => {
-                            console.error(JSON.stringify(error));
-                        });
-                }
-            } else {
-                getRenderWrapper({})
-                    .then((result) => {
-                        this.setMappings(result);
-                        resolve(result);
-                    })
-                    .catch(error => {
-                        console.error(JSON.stringify(error));
-                    });
-            }
+            getRenderWrapper({})
+                .then((result) => {
+                    this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
+                    this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
+                    resolve(result);
+                })
+                .catch(error => {
+                    handleError(error);
+                });
         });
     }
 
@@ -162,7 +137,7 @@ class GeFormService {
             if (fieldData.hasOwnProperty(key)) {
                 let value = fieldData[key];
 
-                // Get the field mapping wrapper with the CMT record name (this is the key variable). 
+                // Get the field mapping wrapper with the CMT record name (this is the key variable).
                 let fieldWrapper = this.getFieldMappingWrapper(key);
 
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
@@ -191,13 +166,6 @@ class GeFormService {
         this.accountId = id;
     }
     //END temporary storage of Account Id to use for testing
-
-    setMappings(renderWrapper) {
-        this.fieldMappings =
-            renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
-        this.objectMappings =
-            renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
-    }
 }
 
 const geFormServiceInstance = new GeFormService();

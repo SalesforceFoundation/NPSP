@@ -78,8 +78,9 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <label><!-- Form Template Name --></label>
-        <name>Form_Template_Name__c</name>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
     </fields>
     <fields>
         <help>De datum en tijd van de laatste verwerking van de Batch.</help>
