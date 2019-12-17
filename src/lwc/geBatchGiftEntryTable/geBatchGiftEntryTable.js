@@ -5,6 +5,7 @@ import getDataImportRows
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 import GeFormService from 'c/geFormService';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
+import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import {deleteRecord} from 'lightning/uiRecordApi';
 import {handleError} from 'c/utilTemplateBuilder';
 
@@ -22,7 +23,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @track columns = [];
     _columns = [
         {label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text'},
-        {label: 'Errors', fieldName: 'errors', type: 'text'},
+        {label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text'},
         {
             label: 'Donor', fieldName: 'donorLink', type: 'url',
             typeAttributes: {label: {fieldName: 'donorName'}}
