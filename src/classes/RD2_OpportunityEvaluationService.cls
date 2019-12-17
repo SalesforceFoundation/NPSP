@@ -84,7 +84,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Indicates if Recurring Donation Settings close action on Open Opportunities 
+     * @description Indicates if Recurring Donation Settings close action on Open Opportunities
      * is overriden when Recurring Donation is Closed
      */
     public static Boolean overrideVoidOfOpenOpps = false;
@@ -108,7 +108,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     public Boolean hasKeyFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        return 
+        return
             rd.npe03__Contact__c != oldRd.npe03__Contact__c ||
             rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
             rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
@@ -130,6 +130,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         Map<npe03__Recurring_Donation__c, List<Date>> newRDsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
         List<npe03__Recurring_Donation__c> updatedRDs = new List<npe03__Recurring_Donation__c>();
         List<Opportunity> openOppsToVoid = new List<Opportunity>();
+        List<npe03__Recurring_Donation__c> rdWithOpenOpps = new List<npe03__Recurring_Donation__c>();
+
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds,null,1);
 
         for (npe03__Recurring_Donation__c rd : rds) {
 
@@ -138,6 +141,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             // Collect the list of Opps that require a new Installment Opp
             if (isNewRecurringDonation(rd)) {
                 newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
+                continue;
+            } else if (isExistingRecurringDonation(rd)) {
+                rdWithOpenOpps.add(rd);
                 continue;
             }
 
@@ -157,21 +163,40 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         voidOpportunities(openOppsToVoid);
 
+        if (rdWithOpenOpps.size() > 0) {
+            oppService.updateInstallmentOpportunities(rdWithOpenOpps, vizMap);
+        }
+
         return this;
     }
 
     /**
-     * @description Is this a new Recurring Donation that was just inserted and 
+     * @description Is this a new Recurring Donation that was just inserted and
      * has not yet had an Installment Opportunity created?
      * @param rd Recurring Donation
-     * @return Boolean 
+     * @return Boolean
      */
     @TestVisible
     private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
         return
             rd.npe03__Next_Payment_Date__c != null
-            && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
+            && rd.Status__c == RD2_Constants.STATUS_ACTIVE
             && rd.npe03__Donations__r.isEmpty()
+            && !rd.RecurringDonationSchedules__r.isEmpty();
+    }
+
+     /**
+     * @description Is this a new Recurring Donation that was just inserted and
+     * has not yet had an Installment Opportunity created?
+     * @param rd Recurring Donation
+     * @return Boolean
+     */
+    @TestVisible
+    private Boolean isExistingRecurringDonation(npe03__Recurring_Donation__c rd) {
+        return
+
+            rd.Status__c == RD2_Constants.STATUS_ACTIVE
+            && !rd.npe03__Donations__r.isEmpty()
             && !rd.RecurringDonationSchedules__r.isEmpty();
     }
 
@@ -236,7 +261,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                     Id = opp.Id,
                     StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage
                 ));
-            } 
+            }
 
             UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
         }
@@ -268,7 +293,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             queryFields.add(fld);
         }
 
-        String oppSubquery = 
+        String oppSubquery =
             '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
             'npe03__Recurring_Donation__c, ' +
             'Amount, CloseDate, ' +
@@ -279,7 +304,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'OR CloseDate >= TODAY ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
-        String scheduleSubquery = 
+        String scheduleSubquery =
             '(SELECT Id, InstallmentAmount__c, ' +
             'Campaign__c, ' +
             'Campaign__r.Name, ' +

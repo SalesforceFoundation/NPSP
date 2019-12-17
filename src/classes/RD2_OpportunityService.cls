@@ -46,7 +46,7 @@ public with sharing class RD2_OpportunityService {
         get {
             if (oppStageName == null) {
                 oppStageName = String.isNotBlank(rdSettings.InstallmentOppStageName__c)
-                    ? rdSettings.InstallmentOppStageName__c 
+                    ? rdSettings.InstallmentOppStageName__c
                     : System.Label.npe03.RecurringDonationStageName;
             }
             return oppStageName;
@@ -64,7 +64,7 @@ public with sharing class RD2_OpportunityService {
             return;
         }
 
-        Set<Id> createdOppIds = createOpportunities(rdsWithCloseDates);   
+        Set<Id> createdOppIds = createOpportunities(rdsWithCloseDates);
 
         updatePaymentRecords(createdOppIds, rdsWithCloseDates.keySet());
     }
@@ -109,6 +109,39 @@ public with sharing class RD2_OpportunityService {
         return createdOppIds;
     }
 
+   /***
+    * @description Updates Opportunities and updates payment records for specified Recurring Donations
+    * @param rdsWithCloseDates The Map of Recurring Donations with close dates
+    * @return void
+    */
+    public void updateInstallmentOpportunities(List<npe03__Recurring_Donation__c> rdWithOpenOpps, Map<Id, List<RD2_ScheduleService.Installment>> rdsWithInstallments) {
+        List<Opportunity> openOpps = new List<Opportunity>();
+        List<Opportunity> oppsToUpdate = new List<Opportunity>();
+
+        for (npe03__Recurring_Donation__c rd : rdWithOpenOpps) {
+            Opportunity opp = rd.npe03__Donations__r;
+            if (opp.CloseDate > Date.Today()) {
+                openOpps.add(opp);
+            }
+        }
+
+        for (npe03__Recurring_Donation__c rd: rdWithOpenOpps) {
+            List<RD2_ScheduleService.Installment> installment = rdsWithInstallments.get(rd.id);
+            Opportunity opp = rd.npe03__Donations__r;
+            opp.Amount = installment[0].installmentAmount;
+            opp.CloseDate = installment[0].nextDonationDate;
+            if (installment[0].campaignName != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
+                opp.CampaignId = installment[0].campaignName;
+            }
+
+
+            oppsToUpdate.add(opp);
+
+        }
+        List<Database.SaveResult> saveResults = Database.update(oppsToUpdate, false);
+
+    }
+
     /***
     * @description Builds Opportunities for the specified Recurring Donation and Close Dates
     * @param rdsWithCloseDates the Map of Recurring Donations with various close dates
@@ -131,7 +164,7 @@ public with sharing class RD2_OpportunityService {
 
     /***
     * @description Builds the opportunity and populates its fields from the recurring donation.
-    * @param rd Recurring donation 
+    * @param rd Recurring donation
     * @param closeDate The next donation date on the recurring donation.
     * @return Opportunity
     */
@@ -161,7 +194,7 @@ public with sharing class RD2_OpportunityService {
 
     /***
     * @description Constructs the opportunity name in a specific format.
-    * @param rd Recurring donation 
+    * @param rd Recurring donation
     * @param opp The new Opportunity on the recurring donation.
     * @return String The Opportunity Name
     */
@@ -179,8 +212,8 @@ public with sharing class RD2_OpportunityService {
     * @param rds Recurring Donations
     * @return void
     */
-    private void updatePaymentRecords(Set<Id> oppIds, Set<npe03__Recurring_Donation__c> rds) { 
-        List<npe01__OppPayment__c> payments = new List <npe01__OppPayment__c>();        
+    private void updatePaymentRecords(Set<Id> oppIds, Set<npe03__Recurring_Donation__c> rds) {
+        List<npe01__OppPayment__c> payments = new List <npe01__OppPayment__c>();
         Map<Id, String> paymentMethodByRDId = new Map<Id, String>();
 
         for (npe03__Recurring_Donation__c r : rds) {
@@ -188,9 +221,9 @@ public with sharing class RD2_OpportunityService {
         }
 
         for (npe01__OppPayment__c payment : [
-            SELECT 
+            SELECT
                 npe01__Payment_Method__c,
-                npe01__Payment_Date__c, 
+                npe01__Payment_Date__c,
                 npe01__Opportunity__c,
                 npe01__Opportunity__r.npe03__Recurring_Donation__c
             FROM npe01__OppPayment__c
