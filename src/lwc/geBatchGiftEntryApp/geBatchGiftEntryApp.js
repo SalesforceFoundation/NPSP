@@ -46,6 +46,8 @@ export default class GeBatchGiftEntryApp extends LightningElement {
                     Object.assign(dataImportModel.dataImportRows[0],
                         dataImportModel.dataImportRows[0].record);
                     table.upsertData(dataImportModel.dataImportRows[0], 'Id');
+                    table.setTotalCount(dataImportModel.totalCountOfRows);
+                    table.setTotalAmount(dataImportModel.totalAmountOfRows);
                     event.detail.success(); //Re-enable the Save button
                 }
             )
@@ -65,5 +67,10 @@ export default class GeBatchGiftEntryApp extends LightningElement {
         const formSections = event.target.sections;
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         table.handleSectionsRetrieved(formSections);
+    }
+
+    handleBatchDryRun() {
+        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
+        table.runBatchDryRun();
     }
 }

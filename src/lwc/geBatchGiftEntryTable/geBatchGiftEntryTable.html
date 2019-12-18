@@ -2,6 +2,12 @@
     <article class='slds-card slds-card_extension slds-m-vertical_small'>
         <div if:true={ready}>
             <div if:true={hasData}>
+                <div if:false={isLoaded} class="slds-is-relative">
+                    <lightning-spinner
+                            alternative-text="Loading..."
+                            class="loading">
+                    </lightning-spinner>
+                </div>
                 <div style="height: 20rem;">
                     <lightning-datatable
                             key-field="uid"

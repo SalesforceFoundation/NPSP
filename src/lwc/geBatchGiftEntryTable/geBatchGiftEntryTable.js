@@ -5,9 +5,11 @@ import getDataImportRows
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 import GeFormService from 'c/geFormService';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
-import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
+import FAILURE_INFORMATION_FIELD
+    from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import {deleteRecord} from 'lightning/uiRecordApi';
 import {handleError} from 'c/utilTemplateBuilder';
+import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -17,7 +19,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     _batchLoaded = false;
     @track data = [];
     @track hasData;
-    _totalCountOfRows;
 
     _columnsLoaded = false;
     @track columns = [];
@@ -43,6 +44,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     };
 
+    _totalCountOfGifts;
+    _totalAmountOfGifts;
+    @track isLoaded = true;
+
     connectedCallback() {
         if (this.batchId) {
             this.loadBatch();
@@ -63,14 +68,13 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .then(
                 response => {
                     const dataImportModel = JSON.parse(response);
-                    this._totalCountOfRows = dataImportModel.totalCountOfRows;
-                    dataImportModel.dataImportRows.forEach(
-                        row => {
+                    this._totalCountOfGifts = dataImportModel.totalCountOfRows;
+                    this._totalAmountOfGifts = dataImportModel.totalRowAmount;
+                    dataImportModel.dataImportRows.forEach(row => {
                             this.data.push(
-                                Object.assign(row, row.record)
-                            );
+                                Object.assign(row, row.record));
                         }
-                    )
+                    );
                     this.data = [...this.data];
                     this.hasData = this.data.length > 0 ? true : false;
                     this.batchLoaded();
@@ -146,6 +150,16 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     }
 
+    @api
+    setTotalCount(value) {
+        this._totalCountOfGifts = value;
+    }
+
+    @api
+    setTotalAmount(value) {
+        this._totalAmountOfGifts = value;
+    }
+
     handleRowActions(event) {
         switch (event.detail.action.name) {
             // TODO: decide if going to edit inline in table or load into form
@@ -170,13 +184,13 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         this.data = [...this.data];
     }
 
-    loadMoreData(event){
+    loadMoreData(event) {
         event.target.isLoading = true;
-        const disableInfiniteLoading = function(){
+        const disableInfiniteLoading = function () {
             this.enableInfiniteLoading = false;
         }.bind(event.target);
 
-        const disableIsLoading = function(){
+        const disableIsLoading = function () {
             this.isLoading = false;
         }.bind(event.target);
 
@@ -189,15 +203,41 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 );
                 this.data = [...this.data];
-                if (this.data.length >= this._totalCountOfRows) {
+                if (this.data.length >= this._totalCountOfGifts) {
                     disableInfiniteLoading();
                 }
                 disableIsLoading();
             })
-            .catch(
-                error => {
-                    handleError(error);
-                }
-            );
+            .catch(error => {
+                handleError(error);
+            });
+    }
+
+    @api
+    runBatchDryRun() {
+        this.isLoaded = false;
+        const isLoaded = () => {
+            this.isLoaded = true;
+        }
+
+        runBatchDryRun({
+            batchId: this.batchId,
+            numberOfRowsToReturn: this.data.length
+        })
+            .then(result => {
+                const dataImportModel = JSON.parse(result);
+                this.setTotalCount(dataImportModel.totalCountOfRows);
+                this.setTotalCount(dataImportModel.totalRowAmount);
+                dataImportModel.dataImportRows.forEach((row, idx) => {
+                    this.upsertData(
+                        Object.assign(row, row.record), 'Id');
+                });
+            })
+            .catch(error => {
+                handleError(error);
+            })
+            .finally(() => {
+                isLoaded();
+            });
     }
 }

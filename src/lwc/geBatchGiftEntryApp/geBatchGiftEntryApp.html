@@ -1,4 +1,8 @@
 <template>
+    <c-ge-batch-gift-entry-header
+            batch-id={recordId}
+            onbatchdryrun={handleBatchDryRun}></c-ge-batch-gift-entry-header>
+
     <lightning-input
             label="Account Id For Testing (to simulate populating lookup field or loading from an Account record.)"
             onchange={handleAccountId}></lightning-input>
