@@ -115,31 +115,38 @@ public with sharing class RD2_OpportunityService {
     * @return void
     */
     public void updateInstallmentOpportunities(List<npe03__Recurring_Donation__c> rdWithOpenOpps, Map<Id, List<RD2_ScheduleService.Installment>> rdsWithInstallments) {
-        List<Opportunity> openOpps = new List<Opportunity>();
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
+        Set<Id> updatedOppIds = new Set<Id>();
+
+        List<npe03__Recurring_Donation__c> rdsForFutureOpps = getRdsForFutureOpportunities(rdWithOpenOpps);
+
+        oppsToUpdate = buildInstallmentFieldsOnOpportunities(rdsForFutureOpps, rdsWithInstallments);
+
+        List<Database.SaveResult> saveResults = Database.update(oppsToUpdate, false);
+
+        updatedOppIds = extractIds(oppsToUpdate);
+
+        updatePaymentRecords(updatedOppIds, rdsWithInstallments);
+
+    }
+
+    /***
+    * @description gets the list of Recurring Donations for future opportunities
+    * @param rdWithOpenOpps The List of Recurring Donations with opportunity fields
+    * @return List of Recurring Donations
+    */
+
+    private List<npe03__Recurring_Donation__c> getRdsForFutureOpportunities(List<npe03__Recurring_Donation__c> rdWithOpenOpps) {
+        List<npe03__Recurring_Donation__c> rdsForOpps = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rdWithOpenOpps) {
             Opportunity opp = rd.npe03__Donations__r;
             if (opp.CloseDate > Date.Today()) {
-                openOpps.add(opp);
+                rdsForOpps.add(rd);
             }
         }
 
-        for (npe03__Recurring_Donation__c rd: rdWithOpenOpps) {
-            List<RD2_ScheduleService.Installment> installment = rdsWithInstallments.get(rd.id);
-            Opportunity opp = rd.npe03__Donations__r;
-            opp.Amount = installment[0].installmentAmount;
-            opp.CloseDate = installment[0].nextDonationDate;
-            if (installment[0].campaignName != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
-                opp.CampaignId = installment[0].campaignName;
-            }
-
-
-            oppsToUpdate.add(opp);
-
-        }
-        List<Database.SaveResult> saveResults = Database.update(oppsToUpdate, false);
-
+        return rdsForOpps;
     }
 
     /***
@@ -207,6 +214,78 @@ public with sharing class RD2_OpportunityService {
     }
 
     /***
+    * @description Builds Opportunities for the specified Recurring Donation and Close Dates
+    * @param rdsWithCloseDates the Map of Recurring Donations with various close dates
+    * @return List<Opportunity>
+    */
+    private List<Opportunity> buildInstallmentFieldsOnOpportunities(List<npe03__Recurring_Donation__c> rdsForFutureOpps, Map<Id, List<RD2_ScheduleService.Installment>> rdsWithInstallments) {
+        List<Opportunity> oppsToUpdate = new List<Opportunity>();
+
+        for (npe03__Recurring_Donation__c rd: rdsForFutureOpps) {
+            RD2_ScheduleService.Installment installment = rdsWithInstallments.get(rd.id)[0];
+
+            oppsToUpdate.add(buildInstallmentFieldsOnOpportunity(rd, installment));
+        }
+
+        return oppsToUpdate;
+    }
+    /***
+    * @description Builds the installment fields in opportunity from Schedule installment.
+    * @param rd Recurring donation
+    * @param installment RD2_ScheduleService.Installment.
+    * @return Opportunity
+    */
+    private Opportunity buildInstallmentFieldsOnOpportunity(npe03__Recurring_Donation__c rd,  RD2_ScheduleService.Installment installment) {
+        Opportunity opp = rd.npe03__Donations__r;
+
+        if (opp.Amount != installment.installmentAmount) {
+            opp.Amount = installment.installmentAmount;
+        }
+        if (opp.CloseDate != installment.nextDonationDate) {
+            opp.CloseDate = installment.nextDonationDate;
+            opp.name = buildOpportunityName(rd, opp);
+        }
+        if (installment.campaignId != null && opp.CampaignId != installment.campaignId && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
+            opp.CampaignId = installment.campaignId;
+        }
+        return opp;
+    }
+    /***
+    * @description Updates payment method on the payment records for the created opportunities.
+    * @param oppIds Opportunity Ids
+    * @param rds Recurring Donations
+    * @return void
+    */
+    private void updatePaymentRecords(Set<Id> oppIds, Map<Id, List<RD2_ScheduleService.Installment>> rdsWithInstallments) {
+        List<npe01__OppPayment__c> payments = new List <npe01__OppPayment__c>();
+
+        for (npe01__OppPayment__c payment : [
+            SELECT
+                npe01__Payment_Method__c,
+                npe01__Payment_Date__c,
+                npe01__Opportunity__c,
+                npe01__Opportunity__r.npe03__Recurring_Donation__c
+            FROM npe01__OppPayment__c
+            WHERE npe01__Opportunity__c IN :oppIds
+        ]) {
+            Id rdId = payment.npe01__Opportunity__r.npe03__Recurring_Donation__c;
+            RD2_ScheduleService.Installment installment = rdsWithInstallments.get(rdId)[0];
+            String paymentMethod = installment.paymentMethod;
+
+            if (String.isBlank(paymentMethod) || payment.npe01__Payment_Method__c == paymentMethod ) {
+                continue;
+            }
+            payment.npe01__Payment_Method__c = paymentMethod;
+            payments.add(payment);
+        }
+
+        if (!payments.isEmpty()) {
+            Database.SaveResult[] saveResults = Database.update(payments, false);
+        }
+
+    }
+
+    /***
     * @description Updates payment method on the payment records for the created opportunities.
     * @param oppIds Opportunity Ids
     * @param rds Recurring Donations
@@ -243,6 +322,18 @@ public with sharing class RD2_OpportunityService {
         if (!payments.isEmpty()) {
             Database.SaveResult[] saveResults = Database.update(payments, false);
         }
+    }
+
+    /***
+    * @description Extracts record Ids from a list of SObject records.
+    * @param records
+    * @return Set<Id>
+    */
+    private Set<Id> extractIds(List<SObject> records) {
+        if (records == null || records.isEmpty()) {
+            return new Set<Id>();
+        }
+        return new Map<Id, SObject>(records).keySet();
     }
 
 }

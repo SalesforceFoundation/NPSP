@@ -132,7 +132,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<Opportunity> openOppsToVoid = new List<Opportunity>();
         List<npe03__Recurring_Donation__c> rdWithOpenOpps = new List<npe03__Recurring_Donation__c>();
 
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds,null,1);
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
 
         for (npe03__Recurring_Donation__c rd : rds) {
 
@@ -298,7 +298,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'npe03__Recurring_Donation__c, ' +
             'Amount, CloseDate, ' +
             'StageName, IsClosed, IsWon, ' +
-            'CampaignId ' +
+            'CampaignId, Recurring_Donation_Installment_Number__c ' +
             'FROM npe03__Donations__r ' +
             'WHERE IsClosed = false ' +
             'OR CloseDate >= TODAY ' +
