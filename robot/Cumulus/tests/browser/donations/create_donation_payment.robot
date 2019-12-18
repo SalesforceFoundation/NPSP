@@ -15,16 +15,14 @@ Create Donation and Opportunity and Create Payment Manually
     Click Object Button       New
     Select Record Type        Donation
     Create Opportunities    Sravani $100 donation    &{Contact}[LastName] Household    Closed Won
-    ${id}    Get Current Record Id
-    Store Session Record    Opportunity    ${id}
+    Save Current Record ID For Deletion    Opportunity   
     Select Tab    Related
     Load Related List    Payments
     Verify Occurrence    Payments    0
     Click Related List Button    Payments    New
     Select Window
     Populate Field    Payment Amount    100
-    Click Dropdown    Payment Method
-    Click Link    link=Credit Card
+    Select Value From Dropdown   Payment Method              Credit Card
     Open Date Picker    Payment Date
     Pick Date    Today
     Click Modal Button        Save
@@ -32,7 +30,7 @@ Create Donation and Opportunity and Create Payment Manually
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Go To Record Home  &{contact}[Id]
     Scroll Element Into View    text:Donation Totals
-    Confirm Value           Last Gift Date    ${opp_date}    Y
+    Confirm Field Value           Last Gift Date    contains    ${opp_date}    
     Scroll Element Into View    text:Soft Credit Total
-    Confirm Value           Total Gifts    $100.00    Y
-    Confirm Value           Total Number of Gifts    1    Y
+    Confirm Field Value          Total Gifts    contains    $100.00    
+    Confirm Field Value           Total Number of Gifts    contains    1    
