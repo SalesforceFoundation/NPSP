@@ -22,6 +22,36 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     label = { messageLoading, geSave, geCancel };
     @track formTemplateId;
 
+    connectedCallback() {
+        if (this.batchId) {
+            // When the form is being used for Batch Gift Entry, the Form Template JSON
+            // uses the @wire service below to retrieve the Template using the Template Id
+            // stored on the Batch.
+            return;
+        }
+
+        GeFormService.getFormTemplate().then(response => {
+            // read the template header info
+            if(response !== null && typeof response !== 'undefined') {
+                const { formTemplate } = response;
+                this.initializeForm(formTemplate);
+            }
+        });
+    }
+
+    initializeForm(formTemplate) {
+        // read the template header info
+        this.ready = true;
+        this.name = formTemplate.name;
+        this.description = formTemplate.description;
+        this.version = formTemplate.layout.version;
+        if (typeof formTemplate.layout !== 'undefined'
+            && Array.isArray(formTemplate.layout.sections)) {
+            this.sections = formTemplate.layout.sections;
+            this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+        }
+    }
+
     @wire(getRecord, {
         recordId: '$batchId',
         fields: FORM_TEMPLATE_FIELD
@@ -40,29 +70,22 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     })
     wiredTemplate({data, error}) {
         if (data) {
-            this.loadTemplate2(
+            this.loadTemplate(
                 JSON.parse(data.fields[TEMPLATE_JSON_FIELD.fieldApiName].value));
         } else if (error) {
             handleError(error);
         }
     }
 
-    async loadTemplate2(templateJSON){
+    async loadTemplate(formTemplate){
         // With the change to using a Lookup field to connect a Batch to a Template,
         // we can use getRecord to get the Template JSON.  But the GeFormService
         // component still needs to be initialized with the field mappings, and the
         // call to getFormTemplate() does that.
+        // TODO: Maybe initialize GeFormService with the field mappings in its connected
+        //       callback instead?
         await GeFormService.getFormTemplate();
-
-        this.ready = true;
-        this.name = templateJSON.name;
-        this.description = templateJSON.description;
-        this.version = templateJSON.layout.version;
-        if (typeof templateJSON.layout !== 'undefined'
-            && Array.isArray(templateJSON.layout.sections)) {
-            this.sections = templateJSON.layout.sections;
-            this.dispatchEvent(new CustomEvent('sectionsretrieved'));
-        }
+        this.initializeForm(formTemplate);
     }
 
     handleCancel() {
