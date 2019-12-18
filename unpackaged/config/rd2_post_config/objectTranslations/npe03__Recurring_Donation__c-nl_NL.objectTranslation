@@ -20,4 +20,12 @@
         <label>Deprecated-Totaal</label>
         <name>npe03__Total__c</name>
     </fields>
+    <fields>
+        <label>Dag van de Maand</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last_Day</masterLabel>
+            <translation><!-- Last Day Of Month --></translation>
+        </picklistValues>
+    </fields>
 </CustomObjectTranslation>

@@ -20,4 +20,12 @@
         <label>Deprecated-Total</label>
         <name>npe03__Total__c</name>
     </fields>
+    <fields>
+        <label>Jour du mois</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last_Day</masterLabel>
+            <translation>Dernier jour du mois</translation>
+        </picklistValues>
+    </fields>
 </CustomObjectTranslation>

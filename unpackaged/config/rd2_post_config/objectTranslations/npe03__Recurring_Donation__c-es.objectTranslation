@@ -12,12 +12,20 @@
     </fields>
     <fields>
         <help>Para donaciones recurrentes sin finalización definida, es el importe total de todas las oportunidades.</help>
-        <label>Deprecated-Tipo de programación<</label>
+        <label>Deprecated-Tipo de programación</label>
         <name>npe03__Schedule_Type__c</name>
     </fields>
     <fields>
         <help>Para donaciones recurrentes sin final abierto, es la suma del importe de todas las oportunidades.</help>
         <label>Deprecated-Total</label>
         <name>npe03__Total__c</name>
+    </fields>
+    <fields>
+        <label>Día del mes</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last_Day</masterLabel>
+            <translation>El último día del mes</translation>
+        </picklistValues>
     </fields>
 </CustomObjectTranslation>

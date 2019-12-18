@@ -20,6 +20,12 @@
         <label>Deprecated-Gesamt</label>
         <name>npe03__Total__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
-    <nameFieldLabel><!-- Recurring Donation Name --></nameFieldLabel>
+    <fields>
+        <label>Tag des Monats</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last_Day</masterLabel>
+            <translation>Letzter Tag des Monats</translation>
+        </picklistValues>
+    </fields>
 </CustomObjectTranslation>
