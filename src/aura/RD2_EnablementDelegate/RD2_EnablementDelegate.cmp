@@ -106,35 +106,41 @@
                     </aura:if>
 
                     <aura:if isTrue="{! !v.state.hideDryRun }">
-                        <lightning:layout multipleRows="true">
+                        <lightning:layout horizontalAlign="spread" multipleRows="true">
                             <lightning:layoutItem size="12" flexibility="auto">
                                 <div class="slds-grid slds-grid_align-spread">
                                     <div class="slds-size_3-of-4 slds-p-right_small">
                                         <lightning:formattedRichText value="{!$Label.c.RD2_EnablementDryRunIntro}" />
                                     </div>
 
-                                    <div class="slds-grid slds-grid_align-end slds-size_1-of-4 slds-p-right_x-small">
-                                        <div class="slds-is-relative slds-m-right_large">
-                                            <lightning:spinner aura:id="dryRunSpinner" size="small" variant="brand"
-                                                alternativeText="{!$Label.c.labelMessageLoading}"
-                                                class="{!if(and(v.state.isDryRunInProgress, v.state.isDryRunStopped), '', 'slds-hide')}" />
+                                    <div class="slds-size_1-of-4 slds-p-right_x-small">
+                                        <div class="slds-grid slds-grid_align-end">
+                                            <div class="slds-is-relative slds-m-right_large">
+                                                <aura:if
+                                                    isTrue="{! and(v.state.isDryRunInProgress, v.state.isDryRunStopped) }">
+                                                    <lightning:spinner aura:id="dryRunSpinner" size="small"
+                                                        variant="brand"
+                                                        alternativeText="{!$Label.c.labelMessageLoading}" />
+                                                </aura:if>
+                                            </div>
+                                            <span>
+                                                <aura:if
+                                                    isTrue="{!and(!v.state.isDryRunInProgress, !v.state.isConfirmed)}">
+                                                    <lightning:button class="styleButton"
+                                                        label="{!$Label.c.RD2_EnablementDryRunButton}" variant="brand"
+                                                        title="{!$Label.c.RD2_EnablementDryRunButton}"
+                                                        onclick="{!c.handleDryRun}" />
+                                                </aura:if>
+                                                <aura:if isTrue="{!v.state.isDryRunInProgress}">
+                                                    <lightning:button class="styleButton" aura:id="dryRunStopButton"
+                                                        label="{!$Label.c.RD2_EnablementDryRunStopButton}"
+                                                        variant="neutral"
+                                                        title="{!$Label.c.RD2_EnablementDryRunStopButton}"
+                                                        onclick="{!c.handleDryRunStop}"
+                                                        disabled="{!v.state.isDryRunStopped}" />
+                                                </aura:if>
+                                            </span>
                                         </div>
-
-                                        <span>
-                                            <aura:if isTrue="{!and(!v.state.isDryRunInProgress, !v.state.isConfirmed)}">
-                                                <lightning:button class="styleButton"
-                                                    label="{!$Label.c.RD2_EnablementDryRunButton}" variant="brand"
-                                                    title="{!$Label.c.RD2_EnablementDryRunButton}"
-                                                    onclick="{!c.handleDryRun}" />
-                                            </aura:if>
-                                            <aura:if
-                                                isTrue="{!and(v.state.isDryRunInProgress, !v.state.isDryRunStopped)}">
-                                                <lightning:button class="styleButton" aura:id="dryRunStopButton"
-                                                    label="{!$Label.c.RD2_EnablementDryRunStopButton}" variant="neutral"
-                                                    title="{!$Label.c.RD2_EnablementDryRunStopButton}"
-                                                    onclick="{!c.handleDryRunStop}" />
-                                            </aura:if>
-                                        </span>
                                     </div>
                                 </div>
                             </lightning:layoutItem>
@@ -417,40 +423,49 @@
                                         <lightning:formattedRichText
                                             value="{!$Label.c.RD2_EnablementMigrationStepDryRun}" />
                                     </div>
-                                    <div class="slds-grid slds-grid_align-end slds-size_2-of-4 slds-p-right_x-small">
-                                        <div class="slds-is-relative slds-m-right_large">
-                                            <lightning:spinner aura:id="dryRun2Spinner" size="small" variant="brand"
-                                                alternativeText="{!$Label.c.labelMessageLoading}"
-                                                class="{!if(and(v.state.isDryRunInProgress, v.state.isDryRunStopped), '', 'slds-hide')}" />
+                                    <div class="slds-size_2-of-4 slds-p-right_x-small">
+                                        <div class="slds-grid slds-grid_align-end">
+                                            <div class="slds-is-relative slds-m-right_large">
+                                                <aura:if
+                                                    isTrue="{! and(v.state.isDryRunInProgress, v.state.isDryRunStopped) }">
+                                                    <lightning:spinner aura:id="dryRun2Spinner" size="small"
+                                                        variant="brand"
+                                                        alternativeText="{!$Label.c.labelMessageLoading}" />
+                                                </aura:if>
+                                            </div>
+                                            <span>
+                                                <aura:if
+                                                    isTrue="{! and(!v.state.isDryRunInProgress, !v.state.isDryRun2) }">
+                                                    <lightning:button class="styleButton"
+                                                        label="{!$Label.c.RD2_EnablementDryRunSkipButton}"
+                                                        variant="neutral"
+                                                        title="{!$Label.c.RD2_EnablementDryRunSkipButton}"
+                                                        onclick="{!c.handleDryRunSkip}" />
+                                                </aura:if>
+                                                <aura:if isTrue="{! !v.state.isDryRunInProgress }">
+                                                    <lightning:button class="styleButton"
+                                                        label="{!$Label.c.RD2_EnablementDryRunButton}"
+                                                        variant="{!if(v.state.isDryRun2Completed, 'neutral', 'brand')}"
+                                                        title="{!$Label.c.RD2_EnablementDryRunButton}"
+                                                        onclick="{!c.handleDryRun}" />
+                                                </aura:if>
+                                                <aura:if isTrue="{! v.state.isDryRunInProgress }">
+                                                    <lightning:button class="styleButton" aura:id="dryRunStopButton"
+                                                        label="{!$Label.c.RD2_EnablementDryRunStopButton}"
+                                                        variant="neutral"
+                                                        title="{!$Label.c.RD2_EnablementDryRunStopButton}"
+                                                        onclick="{!c.handleDryRunStop}"
+                                                        disabled="{!v.state.isDryRunStopped}" />
+                                                </aura:if>
+                                                <aura:if isTrue="{! v.state.isDryRun2Completed }">
+                                                    <lightning:button class="styleButton"
+                                                        label="{!$Label.c.RD2_EnablementDryRunNextButton}"
+                                                        variant="brand"
+                                                        title="{!$Label.c.RD2_EnablementDryRunNextButton}"
+                                                        onclick="{!c.handleDryRunSkip}" />
+                                                </aura:if>
+                                            </span>
                                         </div>
-                                        <span>
-                                            <aura:if isTrue="{! and(!v.state.isDryRunInProgress, !v.state.isDryRun2) }">
-                                                <lightning:button class="styleButton"
-                                                    label="{!$Label.c.RD2_EnablementDryRunSkipButton}" variant="neutral"
-                                                    title="{!$Label.c.RD2_EnablementDryRunSkipButton}"
-                                                    onclick="{!c.handleDryRunSkip}" />
-                                            </aura:if>
-                                            <aura:if isTrue="{! !v.state.isDryRunInProgress }">
-                                                <lightning:button class="styleButton"
-                                                    label="{!$Label.c.RD2_EnablementDryRunButton}"
-                                                    variant="{!if(v.state.isDryRun2Completed, 'neutral', 'brand')}"
-                                                    title="{!$Label.c.RD2_EnablementDryRunButton}"
-                                                    onclick="{!c.handleDryRun}" />
-                                            </aura:if>
-                                            <aura:if
-                                                isTrue="{!and(v.state.isDryRunInProgress, !v.state.isDryRunStopped)}">
-                                                <lightning:button class="styleButton" aura:id="dryRunStopButton"
-                                                    label="{!$Label.c.RD2_EnablementDryRunStopButton}" variant="neutral"
-                                                    title="{!$Label.c.RD2_EnablementDryRunStopButton}"
-                                                    onclick="{!c.handleDryRunStop}" />
-                                            </aura:if>
-                                            <aura:if isTrue="{! v.state.isDryRun2Completed }">
-                                                <lightning:button class="styleButton"
-                                                    label="{!$Label.c.RD2_EnablementDryRunNextButton}" variant="brand"
-                                                    title="{!$Label.c.RD2_EnablementDryRunNextButton}"
-                                                    onclick="{!c.handleDryRunSkip}" />
-                                            </aura:if>
-                                        </span>
                                     </div>
                                 </div>
                             </lightning:layoutItem>
@@ -473,39 +488,38 @@
                             <lightning:layoutItem size="12" flexibility="auto">
                                 <div class="slds-grid slds-grid_align-spread">
                                     <div class="slds-size_3-of-4 slds-p-right_small">
-                                        <aura:if isTrue="{! !v.state.isMigrationCompleted }">
-                                            <lightning:formattedRichText
-                                                value="{!$Label.c.RD2_EnablementMigrationStepFinal}"
-                                                class="slds-p-bottom_medium" />
-                                        </aura:if>
+                                        <lightning:formattedRichText
+                                            value="{!$Label.c.RD2_EnablementMigrationStepFinal}"
+                                            class="slds-p-bottom_medium" />
                                     </div>
-                                    <div class="slds-grid slds-grid_align-end slds-size_1-of-4 slds-p-right_x-small">
-                                        <div class="slds-is-relative slds-m-right_large">
-                                            <lightning:spinner aura:id="migrationSpinner" size="small" variant="brand"
-                                                alternativeText="{!$Label.c.labelMessageLoading}"
-                                                class="{!if(and(v.state.isMigrationInProgress, v.state.isMigrationStopped), '', 'slds-hide')}" />
-                                        </div>
-
-                                        <aura:if isTrue="{!v.state.isMigrationEnabled}">
-                                            <span>
+                                    <div class="slds-size_1-of-4 slds-p-right_x-small">
+                                        <div class="slds-grid slds-grid_align-end">
+                                            <div class="slds-is-relative slds-m-right_large">
                                                 <aura:if
-                                                    isTrue="{!and(!v.state.isMigrationCompleted, !v.state.isMigrationInProgress)}">
+                                                    isTrue="{! and(v.state.isMigrationInProgress, v.state.isMigrationStopped) }">
+                                                    <lightning:spinner aura:id="migrationSpinner" size="small"
+                                                        variant="brand"
+                                                        alternativeText="{!$Label.c.labelMessageLoading}" />
+                                                </aura:if>
+                                            </div>
+                                            <span>
+                                                <aura:if isTrue="{! !v.state.isMigrationInProgress }">
                                                     <lightning:button class="slds-no-flex styleButton"
                                                         label="{!$Label.c.RD2_EnablementMigrationButton}"
                                                         variant="brand"
                                                         title="{!$Label.c.RD2_EnablementMigrationButton}"
-                                                        onclick="{!c.handleRunMigration}" />
+                                                        onclick="{!c.handleMigrationRun}" />
                                                 </aura:if>
-                                                <aura:if
-                                                    isTrue="{!and(v.state.isMigrationInProgress, !v.state.isMigrationStopped)}">
+                                                <aura:if isTrue="{! v.state.isMigrationInProgress }">
                                                     <lightning:button class="styleButton" aura:id="migrationStopButton"
                                                         label="{!$Label.c.RD2_EnablementMigrationStopButton}"
                                                         variant="neutral"
                                                         title="{!$Label.c.RD2_EnablementMigrationStopButton}"
-                                                        onclick="{!c.handleMigrationStop}" />
+                                                        onclick="{!c.handleMigrationStop}"
+                                                        disabled="{!v.state.isMigrationStopped}" />
                                                 </aura:if>
                                             </span>
-                                        </aura:if>
+                                        </div>
                                     </div>
                                 </div>
                             </lightning:layoutItem>
@@ -542,7 +556,7 @@
                                 <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
                             </aura:if>
                         </lightning:layoutItem>
-                        <lightning:layoutItem size="12" padding="horizontal-medium" class="slds-p-bottom_xx-large">
+                        <lightning:layoutItem size="3" padding="horizontal-medium" class="slds-p-bottom_xx-large">
                         </lightning:layoutItem>
                     </lightning:layout>
 

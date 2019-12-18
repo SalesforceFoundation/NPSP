@@ -190,7 +190,6 @@
         component.set('v.state.dryRunBatch', null);
         component.set('v.state.isDryRunInProgress', true);
         component.set('v.state.isDryRun2Completed', false);
-        component.set('v.state.isDryRunStopped', false);
         this.clearError(component);
 
         var action = component.get('c.runDryRun');
@@ -202,6 +201,8 @@
             const enablementState = component.get("v.state");
 
             if (state === 'SUCCESS') {
+                component.set('v.state.isDryRunStopped', false);
+
                 if (enablementState.isMetaConfirmed) {
                     component.set('v.state.isDryRun2', true);
                 }
@@ -280,7 +281,6 @@
     */
     runMigration: function (component) {
         component.set('v.state.isMigrationInProgress', true);
-        component.set('v.state.isMigrationStopped', false);
         this.clearError(component);
 
         var action = component.get('c.runMigration');
@@ -292,6 +292,7 @@
 
             if (state === 'SUCCESS') {
                 component.find('migrationJob').handleLoadBatchJob();
+                component.set('v.state.isMigrationStopped', false);
 
             } else if (state === 'ERROR') {
                 component.set('v.state.isMigrationInProgress', false);
