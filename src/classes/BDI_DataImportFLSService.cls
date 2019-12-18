@@ -48,6 +48,12 @@ public class BDI_DataImportFLSService {
         VALIDATE_READ, VALIDATE_CREATE, VALIDATE_UPDATE
     }
 
+    public BDI_DataImportFLSService (Set<AccessLevel> accessLevels){
+        this.accessLevels = accessLevels;
+        describeService = UTIL_Describe.getInstance();
+        permissionsService = UTIL_Permissions.getInstance();
+    }
+
     public BDI_DataImportFLSService(List<DataImport__c> dataImports,
             BDI_FieldMapping fieldMapping,
             Set<AccessLevel> accessLevels){
@@ -136,6 +142,7 @@ public class BDI_DataImportFLSService {
         }//END loop of Data Import records
     }
 
+    @TestVisible
     private Boolean isValid(SObjectType objectType, SObjectField field) {
         Set<SObjectField> fieldSet = new Set<SObjectField>{
                 field
@@ -144,8 +151,7 @@ public class BDI_DataImportFLSService {
                 && !permissionsService.canCreate(fieldSet))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-                        && !isValidateUpdateException(objectType, field)
-                        && !permissionsService.canUpdate(new Set<SObjectField>{field}))
+                        && !isValidateUpdateException(objectType, field))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_READ)
                         && !permissionsService.canRead(fieldSet))) {
@@ -155,10 +161,19 @@ public class BDI_DataImportFLSService {
         }
     }
 
+
     private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field) {
-        return (((objectType == CampaignMember.SObjectType
-                && field == CampaignMember.CampaignId)
-                && !describeService.isMasterDetailField(field)));
+        if(describeService.isMasterDetailField(field)){
+            return true;
+        }else{
+            if(objectType == CampaignMember.SObjectType
+                    && field == CampaignMember.CampaignId){
+                return true;
+            }else if(permissionsService.canUpdate(new Set<SObjectField>{field})){
+                return true;
+            }
+        }
+        return false;
     }
 
     private class SObjectFieldWrapper {
