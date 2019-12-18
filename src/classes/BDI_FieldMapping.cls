@@ -89,6 +89,13 @@ public virtual with sharing class BDI_FieldMapping {
             this.Target_Object_API_Name,
             this.Target_Field_API_Name);
 
+        //Updating field and object names to make sure they are using the actual correctly cased
+        //API names so it doesn't cause problems with some LWC functions
+        this.Target_Object_API_Name = UTIL_Describe.getObjectName(this.Target_Object_API_Name);
+        this.Target_Field_API_Name = UTIL_Describe.getFieldName(this.Target_Object_API_Name, this.Target_Field_API_Name);
+        this.Source_Field_API_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name, 
+                                                                    this.Source_Field_API_Name);
+
         this.DeveloperName = fieldMapping.DeveloperName;
         this.MasterLabel = fieldMapping.MasterLabel;
 
