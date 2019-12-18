@@ -1828,11 +1828,16 @@
         <members>commonDefaultValue</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonListView</members>
+        <members>commonNoItems</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
+        <members>commonTemplates</members>
         <members>commonUnknownError</members>
+        <members>commonViewAll</members>
+        <members>commonViewMore</members>
         <members>commonWarning</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
@@ -1874,6 +1879,7 @@
         <members>geAssistiveModalCancelAndDiscard</members>
         <members>geAssistiveSectionDown</members>
         <members>geAssistiveSectionUp</members>
+        <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
@@ -1884,14 +1890,17 @@
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
         <members>geBodyTemplateInfoLeftCol</members>
+        <members>geBodyTemplatesTabDescription</members>
         <members>geButtonBuilderNavBackFormFields</members>
         <members>geButtonBuilderNavBackTemplateInfo</members>
         <members>geButtonBuilderNavBatchHeader</members>
         <members>geButtonBuilderNavFormFields</members>
+        <members>geButtonEnterGifts</members>
         <members>geButtonFormFieldsAddSection</members>
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
+        <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geErrorExistingTemplateName</members>
         <members>geErrorFieldPermission</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>
@@ -1909,6 +1918,7 @@
         <members>geHeaderFormFieldsModalRenameSection</members>
         <members>geHeaderFormFieldsModalSectionSettings</members>
         <members>geHeaderFormFieldsRightCol</members>
+        <members>geHeaderGiftEntry</members>
         <members>geHeaderNewSection</members>
         <members>geHeaderNewTemplate</members>
         <members>geHeaderPageLevelError</members>
@@ -1922,6 +1932,10 @@
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
+        <members>geTextListViewItemCount</members>
+        <members>geTextListViewItemsCount</members>
+        <members>geTextListViewSortedBy</members>
+        <members>geTextListViewUpdatedAgo</members>
         <members>geToastSaveFailed</members>
         <members>geToastSelectActiveSection</members>
         <members>geToastTemplateCreateSuccess</members>
@@ -3083,6 +3097,7 @@
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
+        <members>Form_Template__c</members>
         <members>GE_Template_Builder</members>
         <members>GE_Templates</members>
         <members>General_Accounting_Unit__c</members>
@@ -3230,8 +3245,10 @@
         <members>geTemplates</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>utilCumulusStaticResources</members>
         <members>utilDedicatedListener</members>
         <members>utilIllustration</members>
+        <members>utilListView</members>
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
@@ -3253,6 +3270,7 @@
         <members>DataImport__c.Succesfully_Imported</members>
         <members>DataImport__c.To_Be_Imported</members>
         <members>Engagement_Plan_Template__c.All</members>
+        <members>Form_Template__c.Templates</members>
         <members>General_Accounting_Unit__c.All</members>
         <members>Level__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>

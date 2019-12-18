@@ -190,8 +190,17 @@
         <label>Form Template Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Form_Template</pluralLabel>
+    <pluralLabel>Form Templates</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
+    <listViews>
+        <fullName>Templates</fullName>
+        <columns>NAME</columns>
+        <columns>Description__c</columns>
+        <columns>CREATEDBY_USER</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <label>Templates</label>
+    </listViews>
 </CustomObject>
