@@ -90,8 +90,9 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <label><!-- Form Template Name --></label>
-        <name>Form_Template_Name__c</name>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
     </fields>
     <fields>
         <help><!-- The date and time when the batch was last processed. --></help>

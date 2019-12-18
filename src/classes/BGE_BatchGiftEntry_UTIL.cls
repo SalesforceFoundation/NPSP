@@ -66,9 +66,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         if (batch.Batch_Gift_Entry_Version__c == null ||
                 batch.Batch_Gift_Entry_Version__c < 2.0) {
             fieldNames = getDataImportFields(batchId, true);
-        } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) { // Change if we decide
-            // not to always populate Form_Template_Name__c
-
+        } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) {
             // Lowercase the core fields list for use below to avoid duplication
             for (String field : getCoreDataImportFields(true)) {
                 fieldNames.add(field.toLowerCase());
