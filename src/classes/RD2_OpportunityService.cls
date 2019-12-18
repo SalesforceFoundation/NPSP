@@ -131,25 +131,6 @@ public with sharing class RD2_OpportunityService {
     }
 
     /***
-    * @description gets the list of Recurring Donations for future opportunities
-    * @param rdWithOpenOpps The List of Recurring Donations with opportunity fields
-    * @return List of Recurring Donations
-    */
-
-    private List<npe03__Recurring_Donation__c> getRdsForFutureOpportunities(List<npe03__Recurring_Donation__c> rdWithOpenOpps) {
-        List<npe03__Recurring_Donation__c> rdsForOpps = new List<npe03__Recurring_Donation__c>();
-
-        for (npe03__Recurring_Donation__c rd : rdWithOpenOpps) {
-            Opportunity opp = rd.npe03__Donations__r;
-            if (opp.CloseDate > Date.Today()) {
-                rdsForOpps.add(rd);
-            }
-        }
-
-        return rdsForOpps;
-    }
-
-    /***
     * @description Builds Opportunities for the specified Recurring Donation and Close Dates
     * @param rdsWithCloseDates the Map of Recurring Donations with various close dates
     * @return List<Opportunity>
@@ -197,6 +178,25 @@ public with sharing class RD2_OpportunityService {
         }
 
         return opp;
+    }
+
+    /***
+    * @description gets the list of Recurring Donations for future opportunities
+    * @param rdWithOpenOpps The List of Recurring Donations with opportunity fields
+    * @return List of Recurring Donations
+    */
+
+    private List<npe03__Recurring_Donation__c> getRdsForFutureOpportunities(List<npe03__Recurring_Donation__c> rdWithOpenOpps) {
+        List<npe03__Recurring_Donation__c> rdsForOpps = new List<npe03__Recurring_Donation__c>();
+
+        for (npe03__Recurring_Donation__c rd : rdWithOpenOpps) {
+            Opportunity opp = rd.npe03__Donations__r;
+            if (opp.CloseDate > Date.Today()) {
+                rdsForOpps.add(rd);
+            }
+        }
+
+        return rdsForOpps;
     }
 
     /***
