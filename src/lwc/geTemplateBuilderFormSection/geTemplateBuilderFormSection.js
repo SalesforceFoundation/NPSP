@@ -1,10 +1,15 @@
 import { LightningElement, api } from 'lwc';
 import { dispatch } from 'c/utilTemplateBuilder';
+import GeLabelService from 'c/geLabelService';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
 const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
 
 export default class GeTemplateBuilderFormSection extends LightningElement {
+
+    // Expose custom labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     @api activeFormSectionId;
     @api isFirst;
     @api isLast;
@@ -21,6 +26,18 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
 
     get isEmptySection() {
         return this.formSection.elements.length === 0 ? true : false;
+    }
+
+    get labelGeAssistiveFormFieldsSectionEdit() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveFormFieldsSectionEdit, [this.formSection.label]);
+    }
+
+    get labelGeBuilderAssistiveSectionUp() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSectionUp, [this.formSection.label]);
+    }
+
+    get labelGeBuilderAssistiveSectionDown() {
+        return GeLabelService.format(this.CUSTOM_LABELS.geAssistiveSectionDown, [this.formSection.label]);
     }
 
     /*******************************************************************************

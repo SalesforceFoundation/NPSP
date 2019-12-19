@@ -4,6 +4,7 @@ import storeFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.storeFormT
 import retrieveFormTemplateById from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveFormTemplateById';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
+import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
     mutable,
@@ -31,17 +32,26 @@ const SORT_ORDER = 'desc';
 const PICKLIST = 'Picklist';
 const NEW = 'new';
 const EDIT = 'edit';
+const SAVE = 'save';
+const DELETE = 'delete';
+const API_NAME = 'apiName';
+const ID = 'id';
+const SUCCESS = 'success';
+const ERROR = 'error';
+const EVENT_TOGGLE_MODAL = 'togglemodal';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
-    // TODO: The following enum values will become custom labels.
+    // Expose label service to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     /*******************************************************************************
     * @description Enums used for navigating and flagging active lightning-tabs.
     */
     TabEnums = Object.freeze({
-        INFO_TAB: 'Template Info',
-        SELECT_FIELDS_TAB: 'Form Fields',
-        BATCH_HEADER_TAB: 'Batch Header'
+        INFO_TAB: this.CUSTOM_LABELS.geTabTemplateInfo,
+        FORM_FIELDS_TAB: this.CUSTOM_LABELS.geTabFormFields,
+        BATCH_HEADER_TAB: this.CUSTOM_LABELS.geTabBatchHeader
     });
 
     formTemplateRecordId;
@@ -83,6 +93,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
     }
 
+    get templateBuilderHeader() {
+        return this.formTemplateRecordId ? this.formTemplate.name : this.CUSTOM_LABELS.geHeaderNewTemplate;
+    }
+
     get mode() {
         return this.formTemplateRecordId === undefined ? NEW : EDIT;
     }
@@ -96,7 +110,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get inSelectFieldsTab() {
-        return this.activeTab === this.TabEnums.SELECT_FIELDS_TAB ? true : false;
+        return this.activeTab === this.TabEnums.FORM_FIELDS_TAB ? true : false;
     }
 
     get namespace() {
@@ -222,8 +236,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             case this.TabEnums.INFO_TAB:
                 this.activeTab = this.TabEnums.INFO_TAB;
                 break;
-            case this.TabEnums.SELECT_FIELDS_TAB:
-                this.activeTab = this.TabEnums.SELECT_FIELDS_TAB;
+            case this.TabEnums.FORM_FIELDS_TAB:
+                this.activeTab = this.TabEnums.FORM_FIELDS_TAB;
                 break;
             case this.TabEnums.BATCH_HEADER_TAB:
                 this.activeTab = this.TabEnums.BATCH_HEADER_TAB;
@@ -244,7 +258,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     @api
     notify(modalData) {
-        if (modalData.action === 'save') {
+        if (modalData.action === SAVE) {
             let formSections = mutable(this.formSections);
             let formSection = formSections.find((fs) => { return fs.id === modalData.section.id });
 
@@ -252,8 +266,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.formSections = formSections;
         }
 
-        if (modalData.action === 'delete') {
-            const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-select-fields');
+        if (modalData.action === DELETE) {
+            const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-form-fields');
             selectFieldsComponent.handleDeleteFormSection({ detail: modalData.section.id });
         }
     }
@@ -266,7 +280,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     toggleModal(event) {
-        dispatch(this, 'togglemodal', event.detail);
+        dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
     /*******************************************************************************
@@ -345,7 +359,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldUp(event) {
-        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', event.detail);
+        let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index > 0) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index - 1);
@@ -361,7 +375,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderbatchHeader -> here
     */
     handleBatchHeaderFieldDown(event) {
-        let index = findIndexByProperty(this.batchHeaderFields, 'apiName', event.detail);
+        let index = findIndexByProperty(this.batchHeaderFields, API_NAME, event.detail);
         if (index < this.batchHeaderFields.length - 1) {
             this.batchHeaderFields =
                 shiftToIndex(this.batchHeaderFields, index, index + 1);
@@ -429,7 +443,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleFormSectionUp(event) {
-        let index = findIndexByProperty(this.formSections, 'id', event.detail);
+        let index = findIndexByProperty(this.formSections, ID, event.detail);
         if (index > 0) {
             this.formSections = shiftToIndex(this.formSections, index, index - 1);
         }
@@ -444,7 +458,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
     */
     handleFormSectionDown(event) {
-        let index = findIndexByProperty(this.formSections, 'id', event.detail);
+        let index = findIndexByProperty(this.formSections, ID, event.detail);
         if (index < this.formSections.length - 1) {
             this.formSections = shiftToIndex(this.formSections, index, index + 1);
         }
@@ -601,9 +615,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.validateBatchHeaderTab();
 
         if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchHeaderTabError) {
-            const message = `Please review ${tabsWithErrors.size > 1 ? 'tabs' : 'tab'}: `;
+            const message = `${tabsWithErrors.size > 1 ?
+                this.CUSTOM_LABELS.geToastTemplateTabsError
+                : this.CUSTOM_LABELS.geToastTemplateTabError}`;
             const errors = [...tabsWithErrors].join(', ');
-            showToast('Error', `${message} ${errors}`, 'error');
+            showToast(this.CUSTOM_LABELS.commonError, `${message}${errors}.`, ERROR);
 
             return false;
         }
@@ -637,7 +653,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * checks for 'requiredness' in the Field Mapping's source (DataImport__c).
     */
     validateSelectFieldsTab(tabsWithErrors) {
-        const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-select-fields');
+        const selectFieldsComponent = this.template.querySelector('c-ge-template-builder-form-fields');
 
         if (selectFieldsComponent) {
             // Component exists in the dom and can validate itself.
@@ -650,7 +666,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             if (missingRequiredFields && missingRequiredFields.length > 0) {
                 this.hasSelectFieldsTabError = true;
-                tabsWithErrors.add(this.TabEnums.SELECT_FIELDS_TAB);
+                tabsWithErrors.add(this.TabEnums.FORM_FIELDS_TAB);
             } else {
                 this.hasSelectFieldsTabError = false;
             }
@@ -670,9 +686,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.handleAddBatchHeaderField({ detail: field.apiName });
             }
 
-            const fieldLabels = this.missingRequiredBatchFields.map(field => field.label);
-            showToast('Warning',
-                `Added the following missing required Batch Header fields: ${fieldLabels}`,
+            const fieldApiNames = this.missingRequiredBatchFields.map(field => field.apiName).join(', ');
+            showToast(this.CUSTOM_LABELS.commonWarning,
+                `${this.CUSTOM_LABELS.geBodyBatchHeaderWarning} ${fieldApiNames}`,
                 'warning',
                 'sticky');
         }
@@ -705,14 +721,23 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 formatVersion: FORMAT_VERSION
             };
 
-            await storeFormTemplate(preppedFormTemplate);
+            try {
+                const recordId = await storeFormTemplate(preppedFormTemplate);
+                if (recordId) {
+                    let toastLabel =
+                        this.mode === NEW ?
+                            this.CUSTOM_LABELS.geToastTemplateCreateSuccess
+                            : this.CUSTOM_LABELS.geToastTemplateUpdateSuccess;
 
-            this[NavigationMixin.Navigate]({
-                type: 'standard__navItemPage',
-                attributes: {
-                    apiName: this.listViewCustomTabApiName
+                    const toastMessage = GeLabelService.format(toastLabel, [this.formTemplate.name]);
+                    showToast(toastMessage, '', SUCCESS);
                 }
-            });
+
+                this.navigateToLandingPage();
+            } catch (error) {
+                showToast(this.CUSTOM_LABELS.commonError, this.CUSTOM_LABELS.geToastSaveFailed, ERROR);
+                this.isLoading = false;
+            }
         }
     }
 
@@ -730,6 +755,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     /*******************************************************************************
     * @description Navigates to a record detail page by record id.
+    *
+    * @param {string} formTemplateRecordId: Form_Template__c record id.
     */
     navigateToRecordViewPage(formTemplateRecordId) {
         this[NavigationMixin.Navigate]({
@@ -737,6 +764,18 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             attributes: {
                 recordId: formTemplateRecordId,
                 actionName: 'view'
+            }
+        });
+    }
+
+    /*******************************************************************************
+    * @description Navigates to Gift Entry landing page.
+    */
+    navigateToLandingPage() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: this.listViewCustomTabApiName
             }
         });
     }

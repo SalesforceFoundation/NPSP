@@ -82,7 +82,7 @@ public class TEST_SObjectGateway {
                     npe03__Date_Established__c,
                     Day_of_Month__c,
                     StartDate__c,
-                    npe03__Next_Payment_Date__c, 
+                    npe03__Next_Payment_Date__c,
                     npe03__Last_Payment_Date__c,
                     npe03__Installment_Period__c,
                     InstallmentFrequency__c,
@@ -90,7 +90,7 @@ public class TEST_SObjectGateway {
                     PaymentMethod__c,
                     RecurringType__c,
                     Status__c
-                FROM npe03__Recurring_Donation__c 
+                FROM npe03__Recurring_Donation__c
                 WHERE Id IN :rdIds
             ];
         }
@@ -112,7 +112,7 @@ public class TEST_SObjectGateway {
                     npe03__Date_Established__c,
                     Day_of_Month__c,
                     StartDate__c,
-                    npe03__Next_Payment_Date__c, 
+                    npe03__Next_Payment_Date__c,
                     npe03__Last_Payment_Date__c,
                     npe03__Installment_Period__c,
                     InstallmentFrequency__c,
@@ -120,7 +120,7 @@ public class TEST_SObjectGateway {
                     PaymentMethod__c,
                     RecurringType__c,
                     Status__c
-                FROM npe03__Recurring_Donation__c 
+                FROM npe03__Recurring_Donation__c
             ];
         }
     }
@@ -187,15 +187,15 @@ public class TEST_SObjectGateway {
         */
         public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
             return [
-                SELECT 
-                    Name, Amount, 
-                    AccountId, Primary_Contact__c, 
+                SELECT
+                    Name, Amount,
+                    AccountId, Primary_Contact__c,
                     StageName, CloseDate,
                     isClosed, isWon
-                FROM Opportunity 
+                FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN :rds
             ];
-        }        
+        }
     }
 
     /***
@@ -223,7 +223,7 @@ public class TEST_SObjectGateway {
                 FROM Error__c
             ];
         }
-        
+
         /***
         * @description Returns number of Error__c records
         * @return Integer
@@ -237,27 +237,48 @@ public class TEST_SObjectGateway {
     * @description Retrieves AsyncApexJob record(s)
     */
     public class AsyncApexJobGateway {
+        private Set<String> fields = new Set<String>{
+            'CreatedDate',
+            'CompletedDate',
+            'ExtendedStatus',
+            'JobItemsProcessed',
+            'TotalJobItems',
+            'NumberOfErrors',
+            'JobType',
+            'ApexClass.NamespacePrefix',
+            'ApexClass.Name',
+            'MethodName'
+        };
 
         /***
-        * @description Retrieves AsyncApexJob records
+        * @description Retrieves AsyncApexJob record for the specified class name
+        * @param className Class Name
         * @return AsyncApexJob
         */
         public AsyncApexJob getRecord(String className) {
-            return [
-                SELECT 
-                    CompletedDate,
-                    ExtendedStatus,
-                    JobItemsProcessed,
-                    TotalJobItems,
-                    NumberOfErrors,
-                    JobType,
-                    ApexClass.NamespacePrefix,
-                    ApexClass.Name,
-                    MethodName
-                FROM AsyncApexJob
-                WHERE ApexClass.Name = :className
-                LIMIT 1
-            ];
+            String soql = new UTIL_Query()
+                .withFrom(AsyncApexJob.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('ApexClass.Name = :className')
+                .withLimit(1)
+                .build();
+
+            return (AsyncApexJob) Database.query(soql);
+        }
+
+        /***
+        * @description Retrieves AsyncApexJob record for the specified job Id
+        * @param jobId Async Apex Job Id
+        * @return AsyncApexJob
+        */
+        public AsyncApexJob getRecord(Id jobId) {
+            String soql = new UTIL_Query()
+                .withFrom(AsyncApexJob.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('Id = :jobId')
+                .build();
+
+            return (AsyncApexJob) Database.query(soql);
         }
     }
 }

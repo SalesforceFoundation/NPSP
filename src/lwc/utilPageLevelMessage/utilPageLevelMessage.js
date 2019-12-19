@@ -1,9 +1,9 @@
 import { LightningElement, api } from 'lwc';
+import GeLabelService from 'c/geLabelService';
 
 const SUCCESS = 'success';
 const WARNING = 'warning';
 const ERROR = 'error';
-const INFO = 'info';
 const THEME_SUCCESS = 'slds-theme_success';
 const THEME_WARNING = 'slds-theme_warning';
 const THEME_ERROR = 'slds-theme_error';
@@ -21,7 +21,7 @@ export default class utilPageLevelMessage extends LightningElement {
     @api variant;
 
     get titleText() {
-        return this.title ? this.title : 'Review the errors on this page.';
+        return this.title ? this.title : GeLabelService.CUSTOM_LABELS.geHeaderPageLevelError;
     }
 
     get subtitleText() {
@@ -35,13 +35,13 @@ export default class utilPageLevelMessage extends LightningElement {
     get assistiveText() {
         switch (this.variant) {
             case SUCCESS:
-                return SUCCESS;
+                return GeLabelService.CUSTOM_LABELS.commonAssistiveSuccess;
             case WARNING:
-                return WARNING;
+                return GeLabelService.CUSTOM_LABELS.commonAssistiveWarning;
             case ERROR:
-                return ERROR;
+                return GeLabelService.CUSTOM_LABELS.commonAssistiveError;
             default:
-                return INFO;
+                return GeLabelService.CUSTOM_LABELS.commonAssistiveInfo;
         }
     }
 

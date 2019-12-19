@@ -1,5 +1,6 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api, track, wire} from 'lwc';
 import GeFormService from 'c/geFormService';
+import {getObjectInfo} from "lightning/uiObjectInfoApi";
 
 const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
@@ -11,6 +12,7 @@ const DELAY = 300;
 export default class GeFormField extends LightningElement {
     @track value;
     @track picklistValues = [];
+    @track objectDescribeInfo;
     @api element;
     @api targetFieldName;
 
@@ -24,6 +26,17 @@ export default class GeFormField extends LightningElement {
                 required: this.fieldInfo.Is_Required,
                 dataImportFieldMappingDevNames: [this.targetFieldName]
             };
+        }
+    }
+
+
+    /**
+     * Retrieve field metadata. Used to configure how fields are displayed on the form.
+     */
+    @wire(getObjectInfo, { objectApiName: '$objectApiName' })
+    wiredObjectInfo(response) {
+        if(response.data) {
+            this.objectDescribeInfo = response.data;
         }
     }
 
@@ -57,8 +70,8 @@ export default class GeFormField extends LightningElement {
         let fieldIsValid = this.checkFieldValidity();
 
         if(this.element !== null && this.element.required) {
-            return this.value !== null 
-                && typeof this.value !== 'undefined' 
+            return this.value !== null
+                && typeof this.value !== 'undefined'
                 && this.value !== ''
                 && fieldIsValid;
         }
@@ -111,9 +124,15 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldInfo() {
-        return this.targetFieldName !== undefined ? 
+        return this.targetFieldName !== undefined ?
             GeFormService.getFieldMappingWrapperFromTarget(this.targetFieldName) :
             GeFormService.getFieldMappingWrapper(this.formElementName);
+    }
+
+    get fieldDescribeInfo() {
+        if(this.objectDescribeInfo) {
+            return this.objectDescribeInfo.fields[this.fieldApiName];
+        }
     }
 
     get objectInfo() {
@@ -129,7 +148,9 @@ export default class GeFormField extends LightningElement {
     }
 
     get isRichText() {
-        return this.fieldType === RICH_TEXT_TYPE;
+        if(typeof this.fieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
+            return this.fieldDescribeInfo.htmlFormatted;
+        }
     }
 
     get isLookup() {
@@ -141,7 +162,9 @@ export default class GeFormField extends LightningElement {
     }
 
     get isTextArea() {
-        return this.fieldType === TEXT_AREA_TYPE;
+        if(typeof this.fieldDescribeInfo !== 'undefined' && this.fieldType === TEXT_AREA_TYPE) {
+            return !this.fieldDescribeInfo.htmlFormatted;
+        }
     }
 
     get objectDevName() {
@@ -149,7 +172,9 @@ export default class GeFormField extends LightningElement {
     }
 
     get objectApiName() {
-        return this.objectInfo.Object_API_Name;
+        if(typeof this.objectInfo !== 'undefined') {
+            return this.objectInfo.Object_API_Name;
+        }
     }
 
     get fieldApiName() {
