@@ -393,12 +393,11 @@
                         <lightning:layout horizontalAlign="spread" multipleRows="true">
                             <lightning:layoutItem size="12" flexibility="auto">
                                 <div class="slds-grid slds-grid_align-spread">
-                                    <div
-                                        class="slds-size_3-of-4 slds-grid_vertical-align-center slds-p-right_small slds-p-bottom_medium">
+                                    <div class="slds-size_8-of-12 slds-grid_vertical-align-center slds-p-right_small">
                                         <lightning:formattedRichText
                                             value="{!$Label.c.RD2_EnablementMigrationStepDryRun}" />
                                     </div>
-                                    <div class="slds-size_1-of-4 slds-p-right_x-small">
+                                    <div class="slds-size_4-of-12">
                                         <div class="slds-grid slds-grid_align-end">
                                             <div class="slds-is-relative slds-m-right_large">
                                                 <aura:if
@@ -409,10 +408,10 @@
                                                         class="{!if(v.state.isMetaConfirmed, '', 'slds-hide')}" />
                                                 </aura:if>
                                             </div>
-                                            <span>
+                                            <span class="slds-grid slds-grid_align-end slds-p-right_x-small">
                                                 <aura:if
                                                     isTrue="{! or(!v.state.isMetaConfirmed, and(!v.state.isDryRunInProgress, !v.state.isDryRun2)) }">
-                                                    <lightning:button class="styleButton"
+                                                    <lightning:button class="slds-no-flex styleButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunSkipButton}"
                                                         variant="neutral"
                                                         title="{!$Label.c.RD2_EnablementDryRunSkipButton}"
@@ -421,7 +420,7 @@
                                                 </aura:if>
                                                 <aura:if
                                                     isTrue="{! or(!v.state.isMetaConfirmed, !v.state.isDryRunInProgress) }">
-                                                    <lightning:button class="styleButton"
+                                                    <lightning:button class="slds-no-flex styleButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunButton}"
                                                         variant="{!if(v.state.isDryRun2Completed, 'neutral', 'brand')}"
                                                         title="{!$Label.c.RD2_EnablementDryRunButton}"
@@ -430,16 +429,17 @@
                                                 </aura:if>
                                                 <aura:if
                                                     isTrue="{! and(v.state.isMetaConfirmed, v.state.isDryRunInProgress) }">
-                                                    <lightning:button class="styleButton" aura:id="dryRunStopButton"
+                                                    <lightning:button class="slds-no-flex styleButton"
+                                                        aura:id="dryRunStopButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunStopButton}"
                                                         variant="neutral"
                                                         title="{!$Label.c.RD2_EnablementDryRunStopButton}"
                                                         onclick="{!c.handleDryRunStop}"
-                                                        disabled="{!v.state.isDryRunStopped}" />
+                                                        disabled="{! v.state.isDryRunStopped }" />
                                                 </aura:if>
                                                 <aura:if
                                                     isTrue="{! and(v.state.isMetaConfirmed, v.state.isDryRun2Completed) }">
-                                                    <lightning:button class="styleButton"
+                                                    <lightning:button class="slds-no-flex styleButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunNextButton}"
                                                         variant="brand"
                                                         title="{!$Label.c.RD2_EnablementDryRunNextButton}"
@@ -462,7 +462,7 @@
                                             value="{!$Label.c.RD2_EnablementMigrationStepFinal}"
                                             class="slds-p-bottom_medium" />
                                     </div>
-                                    <div class="slds-size_1-of-4 slds-p-right_x-small">
+                                    <div class="slds-size_1-of-4">
                                         <div class="slds-grid slds-grid_align-end">
                                             <div class="slds-is-relative slds-m-right_large">
                                                 <aura:if
@@ -472,9 +472,9 @@
                                                         alternativeText="{!$Label.c.labelMessageLoading}" />
                                                 </aura:if>
                                             </div>
-                                            <span>
+                                            <span class="slds-grid slds-grid_align-end slds-p-right_x-small">
                                                 <aura:if isTrue="{! !v.state.isMigrationInProgress }">
-                                                    <lightning:button class="styleButton"
+                                                    <lightning:button class="slds-no-flex styleButton"
                                                         label="{!$Label.c.RD2_EnablementMigrationSkipButton}"
                                                         variant="neutral"
                                                         title="{!$Label.c.RD2_EnablementMigrationSkipButton}"
@@ -504,7 +504,7 @@
                     </aura:if>
 
                     <lightning:layout horizontalAlign="spread" multipleRows="true">
-                        <lightning:layoutItem size="12" padding="horizontal-medium" class="slds-p-top_medium">
+                        <lightning:layoutItem size="12" padding="around-medium">
                             <aura:if isTrue="{! v.state.isLoading }">
                                 <lightning:spinner aura:id="loadingSpinner" size="small" variant="brand"
                                     alternativeText="{!$Label.c.labelMessageLoading}" />
@@ -526,7 +526,7 @@
                             </aura:if>
                         </lightning:layoutItem>
 
-                        <lightning:layoutItem size="9" class="slds-p-top_medium">
+                        <lightning:layoutItem size="9">
                             <aura:if isTrue="equals(v.migrationProgress, 'runMigrationStep')">
                                 <aura:if isTrue="{!v.state.isMigrationCompleted}">
                                     <lightning:formattedRichText
