@@ -37,7 +37,8 @@
 */
 public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<SObject>, Schedulable, Database.Stateful {
 
-    public static final String LOG_CONTEXT_PREFIX = 'RDDataMigration:';
+    public static final String LOG_CONTEXT_MIGRATION = 'RDDataMigration:';
+    public static final String LOG_CONTEXT_DRY_RUN = 'RDValidateMigration:';
     public static final String LOG_EXCEPTION_ERROR_TYPE = 'Data Migration Exception';
 
     /**
@@ -214,7 +215,9 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             ? ''
             : ' ' + String.valueOf(batchJob.CreatedDate);
 
-        return LOG_CONTEXT_PREFIX + formattedDateSuffix;
+        String context = isDryRunMode ? LOG_CONTEXT_DRY_RUN : LOG_CONTEXT_MIGRATION;
+
+        return context + formattedDateSuffix;
     }
 
     /**

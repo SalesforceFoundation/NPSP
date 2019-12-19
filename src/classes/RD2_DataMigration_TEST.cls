@@ -855,7 +855,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(RD2_DataMigrationBase_BATCH.LOG_EXCEPTION_ERROR_TYPE, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
-        System.assertEquals(getExpectedLogContext(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
+        System.assertEquals(getLogContextMigration(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
         assertLegacyFormat(getRecords());
 
@@ -889,7 +889,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
-        System.assertEquals(getExpectedLogContext(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
+        System.assertEquals(getLogContextMigration(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
         assertLegacyFormat(getRecords());
 
@@ -1550,11 +1550,12 @@ private class RD2_DataMigration_TEST {
         Id jobId = batchContext.getJobId();   
 
         System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
-            'Enhanced RDs should not be enabled *by* Dry Run migration');
+            'Enhanced RDs should not be enabled *by* the Dry Run batch');
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'An error should be logged: ' + errors);
         System.assertEquals(rds[0].Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
+        System.assertEquals(getLogContextDryRun(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
         assertLegacyFormat(getRecords());
 
@@ -1811,11 +1812,33 @@ private class RD2_DataMigration_TEST {
     * @param jobId Batch job Id
     * @return String
     */
-    private static String getExpectedLogContext(Id jobId) {
+    private static String getLogContextMigration(Id jobId) {
+        return getLogContext(jobId, false);
+    }
+
+    /****
+    * @description Returns expected data migration log context
+    * @param jobId Batch job Id
+    * @return String
+    */
+    private static String getLogContextDryRun(Id jobId) {
+        return getLogContext(jobId, true);
+    }
+
+    /****
+    * @description Returns expected data migration log context
+    * @param isDryRunMode Indicates if the batch runs in dry run mode
+    * @param jobId Batch job Id
+    * @return String
+    */
+    private static String getLogContext(Id jobId, Boolean isDryRunMode) {
         AsyncApexJob job = jobGateway.getRecord(jobId);
 
-        return RD2_DataMigrationBase_BATCH.LOG_CONTEXT_PREFIX
-            + (job == null ? '' : (' ' + String.valueOf(job.CreatedDate)));
+        String logContext = isDryRunMode
+            ? RD2_DataMigrationBase_BATCH.LOG_CONTEXT_DRY_RUN
+            : RD2_DataMigrationBase_BATCH.LOG_CONTEXT_MIGRATION;
+
+        return logContext + (job == null ? '' : (' ' + String.valueOf(job.CreatedDate)));
     }
 
     /****
