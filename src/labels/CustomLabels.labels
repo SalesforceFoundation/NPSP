@@ -4620,6 +4620,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Delete Section and Fields</value>
     </labels>
     <labels>
+        <fullName>geErrorCompleteThisField</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field level validation error message when a required field is not filled in</shortDescription>
+        <value>Complete this field.</value>
+    </labels>
+    <labels>
         <fullName>geErrorExistingTemplateName</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

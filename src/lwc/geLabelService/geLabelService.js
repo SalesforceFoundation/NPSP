@@ -45,6 +45,7 @@ import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFields
 import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormFieldsCollapseAll';
 import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
 import geButtonFormFieldsModalDeleteSectionAndFields from '@salesforce/label/c.geButtonFormFieldsModalDeleteSectionAndFields';
+import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
 import geErrorFieldPermission from '@salesforce/label/c.geErrorFieldPermission';
 import geErrorPageLevelAdvancedMappingBody from '@salesforce/label/c.geErrorPageLevelAdvancedMappingBody';
@@ -136,6 +137,7 @@ class GeLabelService {
         geButtonFormFieldsCollapseAll,
         geButtonFormFieldsExpandAll,
         geButtonFormFieldsModalDeleteSectionAndFields,
+        geErrorCompleteThisField,
         geErrorExistingTemplateName,
         geErrorFieldPermission,
         geErrorPageLevelAdvancedMappingBody,
