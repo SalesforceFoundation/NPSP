@@ -163,13 +163,13 @@ public class BDI_DataImportFLSService {
 
 
     private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field) {
-        if(describeService.isMasterDetailField(field)){
+        if (describeService.isMasterDetailField(field)) {
             return true;
-        }else{
-            if(objectType == CampaignMember.SObjectType
-                    && field == CampaignMember.CampaignId){
+        } else {
+            if (objectType == CampaignMember.SObjectType
+                    && field == CampaignMember.CampaignId) {
                 return true;
-            }else if(permissionsService.canUpdate(new Set<SObjectField>{field})){
+            }else if (permissionsService.canUpdate(new Set<SObjectField>{field})) {
                 return true;
             }
         }

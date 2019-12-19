@@ -110,7 +110,8 @@ private class BDI_DataImportFLSService_TEST {
         DataImport__c dataImport = new DataImport__c(
                 Contact1_Firstname__c = 'testFirst',
                 Contact1_Lastname__c = 'testLast',
-                Contact1_Work_Email__c = 'test@test99875409948.com', Opportunity_Contact_Role_1_Role__c = 'Test'
+                Contact1_Work_Email__c = 'test@test99875409948.com',
+                Opportunity_Contact_Role_1_Role__c = 'Test'
         );
         insert dataImport;
 
@@ -188,7 +189,7 @@ private class BDI_DataImportFLSService_TEST {
      * exempted from Field Level Security checks to allow for campaign member imports
      */
     @IsTest
-    static void testCampaignIdIsValidateUpdateException (){
+    static void testCampaignIdIsValidateUpdateException () {
         UTIL_CustomSettingsFacade.enableAdvancedMapping();
         Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
                 Set<BDI_DataImportFLSService.AccessLevel>{
@@ -215,7 +216,7 @@ private class BDI_DataImportFLSService_TEST {
         );
 
         BDI_DataImportFLSService service = new BDI_DataImportFLSService(
-                new List<DataImport__c>{
+                new List<DataImport__c> {
                         dataImport
                 },
                 BDI_DataImportService.getDefaultFieldMapping(),
@@ -230,17 +231,18 @@ private class BDI_DataImportFLSService_TEST {
      * @description This test validates the FLS checks on a master-detail field
      */
     @IsTest
-    static void testMasterDetailFieldValid(){
+    static void testMasterDetailFieldValid() {
         Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
-                Set<BDI_DataImportFLSService.AccessLevel>{
+                Set<BDI_DataImportFLSService.AccessLevel> {
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE,
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_READ,
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE
         };
 
         BDI_DataImportFLSService service = new BDI_DataImportFLSService(accessLevels);
-        Boolean valid = service.isValid(Account_Soft_Credit__c.SObjectType , Account_Soft_Credit__c.Opportunity__c);
-        System.assertEquals(true, valid, 'This master detail field should be certified valid for data import processing');
+        Boolean valid = service.isValid(Account_Soft_Credit__c.SObjectType, Account_Soft_Credit__c.Opportunity__c);
+        System.assertEquals(true, valid, 'This master detail field ' +
+                'should be certified valid for data import processing');
     }
 
 
@@ -248,16 +250,16 @@ private class BDI_DataImportFLSService_TEST {
     * @description This test validates the FLS checks on a non-master-detail field
     */
     @IsTest
-    static void testNormalFieldValid(){
+    static void testNormalFieldValid() {
         Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
-                Set<BDI_DataImportFLSService.AccessLevel>{
+                Set<BDI_DataImportFLSService.AccessLevel> {
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE,
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_READ,
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE
         };
 
         BDI_DataImportFLSService service = new BDI_DataImportFLSService(accessLevels);
-        Boolean valid = service.isValid(Contact.SObjectType ,Contact.FirstName);
+        Boolean valid = service.isValid(Contact.SObjectType, Contact.FirstName);
         System.assertEquals(true, valid, 'This field should be certified valid for data import processing');
     }
 
