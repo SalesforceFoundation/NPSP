@@ -9,16 +9,18 @@ const PICKLIST_TYPE = 'PICKLIST';
 const TEXT_AREA_TYPE = 'TEXTAREA';
 const BOOLEAN_TYPE = 'BOOLEAN';
 const DELAY = 300;
+const RICH_TEXT_FORMATS = [
+    'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
+];
 
 export default class GeFormField extends LightningElement {
     @track value;
     @track picklistValues = [];
     @track objectDescribeInfo;
     @track richTextValid = true;
-    @track richTextFormats = [
-        'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
-    ];
     @api element;
+
+    richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     changeTimeout;
 
