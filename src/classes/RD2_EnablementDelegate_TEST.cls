@@ -34,7 +34,7 @@
 * @description Recurring Donations enablement options and status tests
 *
 */
-@isTest(IsParallel=true)
+@isTest(IsParallel=false)
 public with sharing class RD2_EnablementDelegate_TEST {
 
     private static final TEST_SObjectGateway.AsyncApexJobGateway jobGateway = new TEST_SObjectGateway.AsyncApexJobGateway();
@@ -264,7 +264,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
      * if metadata deployment has been confirmed
      */
     @IsTest
-    private static void shouldSetDryRun2WhenRunDryRunAndMetaDeploymentConfirmed() {
+    private static void shouldAllowDryRunAfterMetaDeployIsConfirmed() {
         setRDSettings();
 
         insert getLegacyRecurringDonationBuilder(getContact().Id).build();

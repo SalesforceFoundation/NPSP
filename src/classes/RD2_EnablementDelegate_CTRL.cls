@@ -268,15 +268,16 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     @AuraEnabled
     public static Id runDryRun() {
         Id jobId;
+        
         try {
-            RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
-            jobId = Database.executeBatch(batch, batch.batchSize);
-
             EnablementState state = getEnablementState();
             if (state.isMetaConfirmed) {
                 state.isDryRun2 = true;
                 saveEnablementState(state);
             } 
+
+            RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
+            jobId = Database.executeBatch(batch, batch.batchSize);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
