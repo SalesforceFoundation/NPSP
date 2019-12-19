@@ -55,20 +55,14 @@
                                                       list-view-api-name={templatesListViewApiName}
                                                       object-name={formTemplateObjectApiName}
                                                       show-standard-footer="true"
-                                                      limit="100"
+                                                      use-imperative-query="true"
+                                                      limit="50"
                                                       actions={templatesTableActions}
                                                       onrowaction={handleTemplatesTableRowAction}>
                                         <lightning-button label={CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}
                                                           onclick={handleNewFormTemplate}
                                                           slot="actions">
                                         </lightning-button>
-                                    </c-util-list-view>
-                                </div>
-                            </div>
-
-                            <div class="slds-size_1-of-1 slds-p-around_medium">
-                                <div class="slds-card slds-card_extension">
-                                    <c-util-list-view object-name="Account">
                                     </c-util-list-view>
                                 </div>
                             </div>

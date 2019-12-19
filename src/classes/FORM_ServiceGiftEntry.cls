@@ -37,6 +37,24 @@
 public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
+    * @description Method retrieves records based on a query string.
+    */
+    @AuraEnabled
+    public static SObject[] retrieveRecords(String[] selectFields,
+        String sObjectApiName, String[] whereClauses, String orderByClause, Integer limitClause) {
+
+        String queryString = new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom(sObjectApiName)
+            .withWhere(whereClauses)
+            .withOrderBy(orderByClause)
+            .withLimit(limitClause)
+            .build();
+
+        return Database.query(String.escapeSingleQuotes(queryString));
+    }
+
+    /*******************************************************************************************************
     * @description Method for retrieving all existing form templates.
     */
     @AuraEnabled

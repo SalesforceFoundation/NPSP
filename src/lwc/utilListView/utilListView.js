@@ -1,8 +1,9 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getListUi } from 'lightning/uiListApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { deepClone, dispatch, sort, handleError, format } from 'c/utilTemplateBuilder';
 import { NavigationMixin } from 'lightning/navigation'
+import { deepClone, dispatch, sort, handleError, format } from 'c/utilTemplateBuilder';
+import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
 import CumulusStaticResources from 'c/utilCumulusStaticResources';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
@@ -11,7 +12,8 @@ import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 
 const TEMPLATE_BUILDER_TAB_NAME = '{0}GE_Template_Builder';
 const SLDS_ICON_CATEGORY_STANDARD = 'standard';
-const INCREMENT_BY = 10;
+const DEFAULT_INCREMENT_BY = 10;
+const DEFAULT_LIMIT = 10;
 const MAX_RECORDS = 2000;
 
 export default class utilListView extends NavigationMixin(LightningElement) {
@@ -25,10 +27,22 @@ export default class utilListView extends NavigationMixin(LightningElement) {
     @api listViewApiName;
     @api showStandardFooter;
     @api description;
-    @api limit = 10;
+    @api limit = DEFAULT_LIMIT;
+    @api incrementBy = DEFAULT_INCREMENT_BY;
     @api actions;
     @api sortedBy;
     @api sortDirection;
+
+    /*******************************************************************************
+    * @description Flag determines whether or not we use an imperative call to query
+    * for the list view's records. This is required if we want to be able to
+    * explicitly 'refresh' the list view without a page reload. This is a limitation
+    * on the current state of the uiListApi module.
+    *
+    * If true, we use the retrieveRecords method from FORM_ServiceGiftEntry.
+    * If false, we use the records provided by getListUi.
+    */
+    @api useImperativeQuery = false;
 
     @track isLoading = true;
     @track options = [];
@@ -179,18 +193,39 @@ export default class utilListView extends NavigationMixin(LightningElement) {
     getRecordByListViewApiName({ error, data }) {
         if (data && data.info && data.records) {
             this.selectedListView = data.info;
-            this.setDatatableColumns(data.info.displayColumns);
-            this.setDatatableActions();
-            this.setDatatableRecords(data.records.records);
-            this.setDatatableOrder(data.info.orderedByInfo);
-
-            this.isLoading = false;
+            this.handleDatatableRecords(data);
         }
 
         if (error) {
             handleError(error);
             this.isLoading = false;
         }
+    }
+
+    handleDatatableRecords = async (data) => {
+        if (this.useImperativeQuery === false) {
+            this.setDatatableColumns(data.info.displayColumns);
+            this.setDatatableActions();
+            this.setDatatableRecords(data.records.records);
+            this.setDatatableOrder(data.info.orderedByInfo);
+        } else {
+            this.setDatatableColumns(data.info.displayColumns);
+            this.setDatatableActions();
+
+            let queryObject = this.buildSoqlQuery();
+            let formTemplates = await retrieveRecords({
+                selectFields: queryObject.selectFields,
+                sObjectApiName: queryObject.sObjectApiName,
+                whereClause: queryObject.whereClause,
+                orderByClause: queryObject.orderByClause,
+                limitClause: queryObject.limitClause,
+            });
+
+            this.setDatatableRecordsForImperativeCall(formTemplates);
+            this.setDatatableOrder(data.info.orderedByInfo);
+        }
+
+        this.isLoading = false;
     }
 
     /*******************************************************************************
@@ -236,7 +271,7 @@ export default class utilListView extends NavigationMixin(LightningElement) {
             }
 
             this.columns = [...this.columns, columnEntry];
-            this.columnLabelsByName[fieldApiName] = column.label;
+            this.columnLabelsByName[columnEntry.fieldName] = columnEntry.label;
         });
     }
 
@@ -322,6 +357,121 @@ export default class utilListView extends NavigationMixin(LightningElement) {
     }
 
     /*******************************************************************************
+    * @description Method builds a SOQL query based on the currently selected list
+    * view's describe info.
+    */
+    buildSoqlQuery() {
+        // Get select fields
+        let fields = this.selectedListView.displayColumns.map(column => column.fieldApiName);
+        const selectFields = fields.join(', ');
+
+        // Get object name
+        const sObjectApiName = this.selectedListView.listReference.objectApiName;
+
+        // Get where clause
+        let whereClause;
+        let filters = this.selectedListView.filteredByInfo;
+        if (filters && filters.length > 0) {
+            whereClause = filters.map((filter) => {
+                return this.createFilterEntry(filter);
+            });
+        }
+
+        // Get oreder by clause
+        let orderByClause;
+        let orderedBy = this.selectedListView.orderedByInfo;
+        if (orderedBy && orderedBy.length === 1) {
+            orderByClause = `${orderedBy[0].fieldApiName} ${orderedBy[0].isAscending ? 'ASC' : 'DESC'}`;
+        }
+
+        // Get limit
+        const limitClause = `${this.limit}`;
+
+        return { selectFields, sObjectApiName, whereClause, orderByClause, limitClause };
+    }
+
+    /*******************************************************************************
+    * @description Method creates expressions for the where clause of a soql query.
+    *
+    * @param {object} filterInfo: Filter object from a list view describe that
+    * contains a field api name, an operator, and operand labels.
+    */
+    createFilterEntry(filterInfo) {
+        const OPERATORS = {
+            'Equals': '=',
+            'NotEqual': '!=',
+            'LessThan': '<',
+            'GreaterThan': '>',
+            'LessOrEqual': '<=',
+            'GreaterOrEqual': '>=',
+            'Contains': 'LIKE',
+            'NotContain': 'LIKE',
+            'StartsWith': 'LIKE',
+        }
+
+        const fieldName = filterInfo.fieldApiName;
+        const comparisonOperator = OPERATORS[filterInfo.operator];
+        const value = filterInfo.operandLabels[0];
+
+        const isString = typeof value === 'string';
+        const isNumber = typeof value === 'number';
+        let filter = `${fieldName} ${comparisonOperator} `;
+
+        if (isString && filterInfo.operator === 'Contains') {
+            filter += `'%${value}%'`;
+
+        } else if (isString && filterInfo.operator === 'NotContain') {
+            filter = `NOT ${fieldName} ${comparisonOperator} '%${value}%'`
+
+        } else if (isString && filterInfo.operator === 'StartsWith') {
+            filter += `'${value}%'`
+
+        } else if (isString) {
+            filter += `'${value}'`;
+
+        } else if (isNumber) {
+            filter += `${value}`;
+
+        }
+
+        return filter;
+    }
+
+    /*******************************************************************************
+    * @description Method handles setting up the records provided by the imperative
+    * method call retrieveRecords. Some values for fields like 'CreatedBy.Name' and
+    * 'LastModifiedDate' need to get parsed/reassigned so we can display more user
+    * friendly values i.e. Name rather than RecordId or a formatted date.
+    *
+    * @param {list} dataRecords: List of sObject records
+    */
+    setDatatableRecordsForImperativeCall(dataRecords) {
+        this.records = [];
+        //let records = deepClone(dataRecords);
+        let recordUrl = this.getRecordUrl();
+
+        dataRecords.forEach(record => {
+            Object.keys(record).forEach(key => {
+                if (record[key].Name) {
+                    record[key] = record[key].Name;
+                }
+
+                const datetimeObject = CumulusStaticResources.moment(
+                    record[key],
+                    CumulusStaticResources.moment.ISO_8601, true);
+
+                if (datetimeObject.isValid()) {
+                    record[key] = CumulusStaticResources.moment(record[key]).format('MM/DD/YYYY, h:mm A');
+                }
+            });
+
+            record.URL = format(recordUrl, [record.Id]);
+
+            this.records = [...this.records, record];
+        });
+    }
+
+    /*******************************************************************************
     * @description Method attempts to set a default slds icon based on the provided
     * object describe info e.g. 'standard:account', 'custom:custom24', etc.
     */
@@ -394,7 +544,7 @@ export default class utilListView extends NavigationMixin(LightningElement) {
     * more records.
     */
     handleViewMore() {
-        const NEW_LIMIT = Number(this.limit) + INCREMENT_BY;
+        const NEW_LIMIT = Number(this.limit) + this.incrementBy;
         this.limit = NEW_LIMIT < MAX_RECORDS ? NEW_LIMIT : MAX_RECORDS;
     }
 }
