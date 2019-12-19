@@ -14,16 +14,14 @@ Create Donation from a Contact
     Click Object Button  New Donation
     Populate Form
     ...                       Amount=100
-    Click Dropdown    Stage
-    Click Link    link=Closed Won
+    Select Value From Dropdown   Stage              Closed Won
     Open Date Picker    Close Date
     Pick Date    10
     Click Modal Button        Save
     ${value}    Return Locator Value    alert
     Go To Object Home         Opportunity
     Click Link    ${value}
-    ${id}    Get Current Record Id
-    Store Session Record    Opportunity    ${id}
+    Save Current Record ID For Deletion    Opportunity    
     Select Tab    Related
     Load Related List    Payments
     Verify Occurrence    Payments    1
