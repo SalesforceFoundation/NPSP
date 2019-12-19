@@ -37,14 +37,6 @@
 @isTest(IsParallel=true)
 private with sharing class UTIL_BatchJobProgress_TEST {
 
-    /****
-    * @description Creates data required for unit tests
-    */
-    @TestSetup
-    private static void setUp() {
-        insert UTIL_UnitTestData_TEST.getContact();
-    }
-
     /***
     * @description Verifies batch job details are retrieved
     */
@@ -63,105 +55,25 @@ private with sharing class UTIL_BatchJobProgress_TEST {
         Database.executeBatch(telemetryBatch);
         Test.stopTest();
 
-        String className = 'UTIL_OrgTelemetry_SObject_BATCH';
-
-        String jsonBatchJob = UTIL_BatchJobProgress_CTRL.loadBatchJob(className);
-        System.assert(String.isNotBlank(jsonBatchJob), 'Batch job details should be retrieved');
-
-        UTIL_BatchJobService.BatchJob batchJob = (UTIL_BatchJobService.BatchJob) JSON.deserialize(
-            jsonBatchJob, UTIL_BatchJobService.BatchJob.class
-        );
-        System.assertNotEquals(null, batchJob, 'BatchJob instance should be returned');
-    }
-
-    /**
-     * @description Verifies Enhanced Recurring Donations migration batch job summary is returned
-     */
-    @IsTest
-    private static void shouldReturnEnhancedRDMigrationSummary() {
-        setRDSettings();
-
-        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
-
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        Id jobId = Database.executeBatch(new RD2_DataMigration_BATCH());
-        Test.stopTest();
-
-        UTIL_BatchJobService.JobSummary summary = RD2_DataMigrationEnablement_TEST.getJobSummary('RD2_DataMigration_BATCH');
-        System.assertEquals(jobId, summary.batchId, 'Batch Id should match: ' + summary);
-        System.assertEquals(1, summary.total, 'Total Records should match: ' + summary);
-        System.assertEquals(1, summary.processed, 'Total Records Processed should match: ' + summary);
-        System.assertEquals(0, summary.failed, 'Total Records Failed should match: ' + summary);
-    }
-
-    /**
-     * @description Verifies Enhanced Recurring Donations dry run migration batch job summary is returned
-     */
-    @IsTest
-    private static void shouldReturnEnhancedRDDryRunMigrationSummary() {
-        setRDSettings();
-
-        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
-
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Test.startTest();
-        Id jobId = Database.executeBatch(new RD2_DataMigrationDryRun_BATCH());
-        Test.stopTest();
-        
-        UTIL_BatchJobService.JobSummary summary = RD2_DataMigrationEnablement_TEST.getJobSummary('RD2_DataMigrationDryRun_BATCH');
-        System.assertEquals(jobId, summary.batchId, 'Batch Id should match: ' + summary);
-        System.assertEquals(1, summary.total, 'Total Records should match: ' + summary);
-        System.assertEquals(1, summary.processed, 'Total Records Processed should match: ' + summary);
-        System.assertEquals(0, summary.failed, 'Total Records Failed should match: ' + summary);
+        UTIL_BatchJobService.BatchJob batchJob = getBatchJob('UTIL_OrgTelemetry_SObject_BATCH');
+        System.assertNotEquals(null, batchJob, 'Batch Job should be returned');
     }
 
 
     // HELPER METHODS
     //////////////////////
 
-    /****
-    * @description Returns contact record
-    * @return Contact
-    */
-    private static Contact getContact() {
-        return [
-            SELECT FirstName, LastName, AccountId
-            FROM Contact
-            LIMIT 1
-        ];
-    }
-
     /**
-     * @description Sets RD Settings 
-     * @return void
+     * @description Returns batch job wrapper
+     * @param className Class name
+     * @return UTIL_BatchJobService.BatchJob
      */
-    private static void setRDSettings() {
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
-                npe03__Maximum_Donations__c = 50,
-                npe03__Opportunity_Forecast_Months__c = 6
-            )
+    private static UTIL_BatchJobService.BatchJob getBatchJob(String className) {
+        String jsonBatchJob = UTIL_BatchJobProgress_CTRL.loadBatchJob(className);
+        System.assert(String.isNotBlank(jsonBatchJob), 'Batch job details should be retrieved');
+
+        return (UTIL_BatchJobService.BatchJob) JSON.deserialize(
+            jsonBatchJob, UTIL_BatchJobService.BatchJob.class
         );
     }
-
-    /**
-     * @description Instantiate a legacy recurring donation for a specific ContactId
-     * @param contactId
-     * @return TEST_RecurringDonationBuilder New Recurring Donation builder
-     */
-    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder(Id contactId) {
-        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withId(null)
-            .withDateEstablished(Date.today().addMonths(-1))
-            .withOpenEndedStatusOpen()
-            .withContact(contactId)
-            .withAmount(100)
-            .withInstallmentPeriodMonthly()
-            .withDayOfMonth('1');
-    }
-
 }

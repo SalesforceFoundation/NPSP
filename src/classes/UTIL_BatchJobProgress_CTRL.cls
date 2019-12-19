@@ -56,31 +56,6 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
     }
 
     /***
-     * @description Loads the batch job summary.
-     * NOTE: the batch summary is available for the latest batch for the class name
-     *
-     * @param className Batch job class name
-     * @return String JSON representation of the batch job summary
-     */
-    @AuraEnabled
-    public static String loadBatchJobSummary(String className) {
-        String jsonBatchSummary;
-
-        try {
-            switch on className {
-                when 'RD2_DataMigration_BATCH', 'RD2_DataMigrationDryRun_BATCH' {
-                    jsonBatchSummary = new RD2_DataMigrationEnablement.BatchJob().getSummary(className);
-                }
-            }
-
-        } catch (Exception e) {
-            throwAuraHandledException(e.getMessage());
-        }
-
-        return jsonBatchSummary;
-    }
-
-    /***
     * @description Throws AuraHandledException
     * @param errMessage
     * @return void

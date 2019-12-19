@@ -50,20 +50,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Batch Job service
-    */
-    @TestVisible
-    private static UTIL_BatchJobService batchService {
-        get {
-            if (batchService == null) {
-                batchService = new UTIL_BatchJobService();
-            }
-            return batchService;
-        }
-        set;
-    }
-
-    /***
     * @description Returns Day of Month field picklist value specific to enhanced Recurring Donations
     */
     @TestVisible
@@ -251,10 +237,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void skipDryRun() {
-        EnablementState state = getEnablementState();
-        state.isMigrationEnabled = true;
-
-        saveEnablementState(state);
+        setMigrationEnabled(true);
     }
 
     /***
@@ -263,8 +246,17 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void skipMigration() {
+        setMigrationEnabled(false);
+    }
+
+    /***
+    * @description Sets migration enabled state
+    * @param isMigrationEnabled Indicates if migration is enabled
+    * @return void
+    */
+    private static void setMigrationEnabled(Boolean isMigrationEnabled) {
         EnablementState state = getEnablementState();
-        state.isMigrationEnabled = false;
+        state.isMigrationEnabled = isMigrationEnabled;
 
         saveEnablementState(state);
     }

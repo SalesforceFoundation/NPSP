@@ -208,7 +208,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
     * @return String Log context containing batch job Created Date
     */
     private String constructLogContext() {
-        UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService().getBatchJob(batchJobId);
+        AsyncApexJob batchJob = new UTIL_BatchJobService().getAsyncApexJob(batchJobId);
 
         String formattedDateSuffix = batchJob == null
             ? ''

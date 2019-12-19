@@ -81,28 +81,24 @@ public with sharing class RD2_DataMigrationEnablement {
         }
 
         /***
-        * @description Returns batch summary for the dry run migration
-        * @return String Batch Job Summary JSON string
-        */
-        public String getDryRunSummary() {    
-            return getSummary(DRY_RUN_MIGRATION_BATCH_CLASS);
-        }
-
-        /***
         * @description Returns batch summary for the specified batch class name
+        * @param batchId Batch job Id
         * @param className Batch class name
-        * @return String Batch Job Summary JSON string
+        * @return UTIL_BatchJobService.JobSummary
         */
-        public String getSummary(String className) {     
+        public UTIL_BatchJobService.JobSummary getSummary(Id batchId, String className) {     
             String summaryType = getSummaryType(className);   
 
             Map<String, UTIL_BatchJobService.JobSummary> summaryByType = 
                 getSummaryByType(UTIL_CustomSettingsFacade.getRecurringDonationsSettings());
 
-            return
-                summaryByType.containsKey(summaryType)
-                ? JSON.serialize(summaryByType.get(summaryType))
-                : null;
+            UTIL_BatchJobService.JobSummary summary = summaryByType.get(summaryType);
+
+            if (summary != null && summary.batchId != batchId) {
+                summary = null;
+            }
+            
+            return summary;
         }
 
         /***

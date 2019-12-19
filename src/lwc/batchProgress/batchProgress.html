@@ -69,23 +69,23 @@
                                 </lightning-formatted-number>
                             </dd>
 
-                            <template if:true={batchJobSummary}>
+                            <template if:true={batchJob.summary}>
                                 <dt class="slds-dl_horizontal__label slds-medium-size_4-of-12">
                                     {labels.labelTotalRecords}</dt>
                                 <dd class="slds-dl_horizontal__detail slds-medium-size_8-of-12">
-                                    <lightning-formatted-number value={batchJobSummary.total}>
+                                    <lightning-formatted-number value={batchJob.summary.total}>
                                     </lightning-formatted-number>
                                 </dd>
                                 <dt class="slds-dl_horizontal__label slds-medium-size_4-of-12">
                                     {labels.labelTotalRecordsProcessed}</dt>
                                 <dd class="slds-dl_horizontal__detail slds-medium-size_8-of-12">
-                                    <lightning-formatted-number value={batchJobSummary.processed}>
+                                    <lightning-formatted-number value={batchJob.summary.processed}>
                                     </lightning-formatted-number>
                                 </dd>
                                 <dt class="slds-dl_horizontal__label slds-medium-size_4-of-12">
                                     {labels.labelTotalRecordsFailed}</dt>
                                 <dd class="slds-dl_horizontal__detail slds-medium-size_8-of-12">
-                                    <lightning-formatted-number value={batchJobSummary.failed}>
+                                    <lightning-formatted-number value={batchJob.summary.failed}>
                                     </lightning-formatted-number>
                                 </dd>
                             </template>

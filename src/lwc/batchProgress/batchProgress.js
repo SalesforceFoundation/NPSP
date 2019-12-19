@@ -25,14 +25,12 @@ import labelStatusSuccess from '@salesforce/label/c.BatchProgressStatusSuccess';
 import labelUnknownError from '@salesforce/label/c.stgUnknownError';
 
 import loadBatchJob from '@salesforce/apex/UTIL_BatchJobProgress_CTRL.loadBatchJob';
-import loadBatchJobSummary from '@salesforce/apex/UTIL_BatchJobProgress_CTRL.loadBatchJobSummary';
 
 export default class BatchProgress extends LightningElement {
     @api title;
     @api className;
 
     @track batchJob;
-    @track batchJobSummary;
     prevBatchJob;
 
     pollingTimeout = 10000;
@@ -66,7 +64,7 @@ export default class BatchProgress extends LightningElement {
                 this.prevBatchJob = this.batchJob;
                 this.batchJob = JSON.parse(data);
 
-                this.handleLoadBatchJobSummary();
+                this.notifyOnStatusChange();
 
                 if (this.batchJob && this.batchJob.isInProgress === true) {
                     this.refreshBatchJob();
@@ -87,41 +85,6 @@ export default class BatchProgress extends LightningElement {
             self.handleLoadBatchJob();
 
         }, this.pollingTimeout, self);
-    }
-
-    /***
-    * @description Loads batch job summary
-    */
-    @api
-    handleLoadBatchJobSummary() {
-        loadBatchJobSummary({ className: this.className })
-            .then((data) => {
-                this.batchJobSummary = null;
-
-                if (isNull(this.batchJob)) {
-                    return;
-                }
-
-                if (!isNull(data)) {
-                    const summary = JSON.parse(data);
-
-                    if (summary && this.batchJob.batchId === summary.batchId) {
-                        this.batchJobSummary = summary;
-
-                        if (this.batchJob.numberOfErrors === 0) {
-                            this.batchJob.numberOfErrors = isNull(this.batchJobSummary.failed)
-                                ? 0
-                                : this.batchJobSummary.failed;
-                        }
-                    }
-                }
-
-                this.notifyOnStatusChange();
-
-            })
-            .catch((error) => {
-                this.handleError(error);
-            });
     }
 
     /***

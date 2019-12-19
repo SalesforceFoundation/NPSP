@@ -288,7 +288,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /****
-    * @description Verifies migration enabled flag is set when user skips dry run
+    * @description Verifies migration enabled flag is checked when user skips dry run
     */
     @isTest
     private static void shouldEnableMigrationWhenUserSkipsOptionalDryRun() {
@@ -302,6 +302,25 @@ public with sharing class RD2_EnablementDelegate_TEST {
         RD2_EnablementDelegate_CTRL.skipDryRun();
 
         expectedState.isMigrationEnabled = true;
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies migration enabled flag is unchecked when user skips migration 
+    * and goes back to the validation
+    */
+    @isTest
+    private static void shouldDisableMigrationWhenUserNavigatesBackToDryRun() {
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isEnabled = true;
+        setEnablementState(JSON.serialize(expectedState));
+        
+        stubRD2ReadyAndEnabled();
+
+        RD2_EnablementDelegate_CTRL.skipMigration();
+
+        expectedState.isMigrationEnabled = false;
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
     }
 

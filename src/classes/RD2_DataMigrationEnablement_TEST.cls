@@ -35,19 +35,12 @@
 *
 */
 @isTest(IsParallel=true)
-public with sharing class RD2_DataMigrationEnablement_TEST {
+private with sharing class RD2_DataMigrationEnablement_TEST {
 
     private static final RD2_DataMigrationEnablement.BatchJob batchJob = new RD2_DataMigrationEnablement.BatchJob();
     private static final String DRY_RUN_MIGRATION_BATCH_CLASS = batchJob.DRY_RUN_MIGRATION_BATCH_CLASS;
     private static final String MIGRATION_BATCH_CLASS = batchJob.MIGRATION_BATCH_CLASS;
-
-    /****
-    * @description Creates data required for unit tests
-    */
-    @TestSetup
-    private static void setUp() {
-        insert UTIL_UnitTestData_TEST.getContact();
-    }
+    private static final Id BATCH_ID = UTIL_BatchJobService_TEST.MOCK_BATCH_ID;
 
     /**
      * @description Verifies Enhanced Recurring Donations migration batch job summary is returned
@@ -56,17 +49,19 @@ public with sharing class RD2_DataMigrationEnablement_TEST {
     private static void shouldSaveMigrationBatchJobSummary() {
         Boolean isDryRunMode = false;
         UTIL_BatchJobService.JobSummary summary =
-            new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            new UTIL_BatchJobService.JobSummary(BATCH_ID)
             .withTotalRecords(2)
             .withTotalRecordsProcessed(2);
         
         batchJob.saveSummary(summary, isDryRunMode);
 
-        summary = RD2_DataMigrationEnablement_TEST.getJobSummary(MIGRATION_BATCH_CLASS);
-        System.assertEquals(UTIL_BatchJobService_TEST.MOCK_BATCH_ID, summary.batchId, 'Batch Id should match: ' + summary);
+        summary = batchJob.getSummary(BATCH_ID, MIGRATION_BATCH_CLASS);
+        System.assertNotEquals(null, summary, 'Summary should be returned');
+        System.assertEquals(BATCH_ID, summary.batchId, 'Batch Id should match: ' + summary);
+        System.assertEquals(2, summary.total, 'Total records should match: ' + summary);
 
-        summary = RD2_DataMigrationEnablement_TEST.getJobSummary(DRY_RUN_MIGRATION_BATCH_CLASS);
-        System.assertEquals(null, summary, 'No dry run Job Summary instance should be returned');
+        summary = batchJob.getSummary(BATCH_ID, DRY_RUN_MIGRATION_BATCH_CLASS);
+        System.assertEquals(null, summary, 'Summary should not exist for dry run');
     }
 
     /**
@@ -76,17 +71,19 @@ public with sharing class RD2_DataMigrationEnablement_TEST {
     private static void shouldSaveDryRunBatchJobSummary() {
         Boolean isDryRunMode = true;
         UTIL_BatchJobService.JobSummary summary =
-            new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            new UTIL_BatchJobService.JobSummary(BATCH_ID)
             .withTotalRecords(2)
             .withTotalRecordsProcessed(2);
         
         batchJob.saveSummary(summary, isDryRunMode);
 
-        summary = RD2_DataMigrationEnablement_TEST.getJobSummary(DRY_RUN_MIGRATION_BATCH_CLASS);
-        System.assertEquals(UTIL_BatchJobService_TEST.MOCK_BATCH_ID, summary.batchId, 'Batch Id should match: ' + summary);
+        summary = batchJob.getSummary(BATCH_ID, DRY_RUN_MIGRATION_BATCH_CLASS);
+        System.assertNotEquals(null, summary, 'Summary should be returned');
+        System.assertEquals(BATCH_ID, summary.batchId, 'Batch Id should match: ' + summary);
+        System.assertEquals(2, summary.total, 'Total records should match: ' + summary);
 
-        summary = RD2_DataMigrationEnablement_TEST.getJobSummary(MIGRATION_BATCH_CLASS);
-        System.assertEquals(null, summary, 'No migration Job Summary instance should be returned');
+        summary = batchJob.getSummary(BATCH_ID, MIGRATION_BATCH_CLASS);
+        System.assertEquals(null, summary, 'Summary should not exist for migration');
     }
 
     /**
@@ -104,65 +101,29 @@ public with sharing class RD2_DataMigrationEnablement_TEST {
             false
         );
 
-        UTIL_BatchJobService.JobSummary summary = RD2_DataMigrationEnablement_TEST.getJobSummary(DRY_RUN_MIGRATION_BATCH_CLASS);
+        UTIL_BatchJobService.JobSummary summary = batchJob.getSummary(ids[0], DRY_RUN_MIGRATION_BATCH_CLASS);
+        System.assertNotEquals(null, summary, 'Summary should be returned');
         System.assertEquals(ids[0], summary.batchId, 'Dry run batch Id should match: ' + summary);
 
-        summary = RD2_DataMigrationEnablement_TEST.getJobSummary(MIGRATION_BATCH_CLASS);
+        summary = batchJob.getSummary(ids[1], MIGRATION_BATCH_CLASS);
+        System.assertNotEquals(null, summary, 'Summary should be returned');
         System.assertEquals(ids[1], summary.batchId, 'Migration batch Id should match: ' + summary);
 
-
+        //overwrite the summary for the migration
         batchJob.saveSummary(
             new UTIL_BatchJobService.JobSummary(ids[2]), 
             false
         );
-        summary = RD2_DataMigrationEnablement_TEST.getJobSummary(DRY_RUN_MIGRATION_BATCH_CLASS);
+        summary = batchJob.getSummary(ids[0], DRY_RUN_MIGRATION_BATCH_CLASS);
+        System.assertNotEquals(null, summary, 'Summary should be returned');
         System.assertEquals(ids[0], summary.batchId, 'Dry run batch Id should not change: ' + summary);
 
-        summary = RD2_DataMigrationEnablement_TEST.getJobSummary(MIGRATION_BATCH_CLASS);
+        summary = batchJob.getSummary(ids[1], MIGRATION_BATCH_CLASS);
+        System.assertEquals(null, summary, 'Summary should not exist for the old batch Id');
+
+        summary = batchJob.getSummary(ids[2], MIGRATION_BATCH_CLASS);
+        System.assertNotEquals(null, summary, 'Summary should be returned');
         System.assertEquals(ids[2], summary.batchId, 'Migration batch Id should change: ' + summary);
     }
-
-
-
-
-    // Helpers
-    ////////////////
-
-    /****
-    * @description Returns contact record
-    * @return Contact
-    */
-    private static Contact getContact() {
-        return [
-            SELECT FirstName, LastName, AccountId
-            FROM Contact
-            LIMIT 1
-        ];
-    }
-
-    /**
-     * @description Returns batch job summary
-     * @param isDryRunMode Indicates if the dry run mode is turned on 
-     * @return UTIL_BatchJobService.JobSummary
-     */
-    public static UTIL_BatchJobService.JobSummary getJobSummary(Boolean isDryRunMode) {
-        String className = isDryRunMode ? DRY_RUN_MIGRATION_BATCH_CLASS : MIGRATION_BATCH_CLASS;
-
-        return getJobSummary(className);
-    }
-
-    /**
-     * @description Returns batch job summary for the specified class name
-     * @param className Class name
-     * @return UTIL_BatchJobService.JobSummary
-     */
-    public static UTIL_BatchJobService.JobSummary getJobSummary(String className) {
-        String jsonSummary = UTIL_BatchJobProgress_CTRL.loadBatchJobSummary(className);
-
-        return String.isBlank(jsonSummary)
-            ? null
-            : (UTIL_BatchJobService.JobSummary) JSON.deserialize(jsonSummary, UTIL_BatchJobService.JobSummary.class);
-    }
-
 
 }
