@@ -1,6 +1,5 @@
 import { LightningElement, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import SEARCH_PLACEHOLDER from '@salesforce/label/c.GE_Search_Placeholder';
 
 const COMBO_BOX_CLASS = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
 const INPUT_CLASS = 'slds-input slds-combobox__input';
