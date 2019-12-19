@@ -110,15 +110,15 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     /*******************************************************************************************************
     * @description return singleton instance of the class
     *
-    * @param includeUnmappedFields: Determines whether or not to include simulated field mappings
+    * @param includeUtilityFields: Determines whether or not to include simulated field mappings
     * e.g. DataImport__c.Donation_Donor__c field or the various Data_Import_Object_Mapping__mdt
     * Imported_Record_Field_Name__c fields.
     */
-    public static BDI_MappingServiceAdvanced getInstance(Boolean includeUnmappedFields) {
+    public static BDI_MappingServiceAdvanced getInstance(Boolean includeUtilityFields) {
         if (fieldMappingInstance == null) {
             fieldMappingInstance = new BDI_MappingServiceAdvanced();
             fieldMappingInstance.setFieldMappingSetName(null);
-            fieldMappingInstance.retrieveCustMetadata(includeUnmappedFields);
+            fieldMappingInstance.retrieveCustMetadata(includeUtilityFields);
         }
         return fieldMappingInstance;
     }
@@ -126,17 +126,18 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     /*******************************************************************************************************
     * @description return singleton instance of the class using specified field mapping set dev name
     *
-    * @param includeUnmappedFields: Determines whether or not to include simulated field mappings
+    * @param fieldMappingSetDevName: Developer Name of the Data_Import_Field_Mapping_Set__mdt to use.
+    * @param includeUtilityFields: Determines whether or not to include simulated field mappings
     * e.g. DataImport__c.Donation_Donor__c field or the various Data_Import_Object_Mapping__mdt
     * Imported_Record_Field_Name__c fields.
     */
     public static BDI_MappingServiceAdvanced getInstance(String fieldMappingSetDevName,
-        Boolean includeUnmappedFields) {
+        Boolean includeUtilityFields) {
 
         if (fieldMappingInstance == null) {
             fieldMappingInstance = new BDI_MappingServiceAdvanced();
             fieldMappingInstance.setFieldMappingSetName(fieldMappingSetDevName);
-            fieldMappingInstance.retrieveCustMetadata(includeUnmappedFields);
+            fieldMappingInstance.retrieveCustMetadata(includeUtilityFields);
         } else if (fieldMappingInstance.diFieldMappingSet.DeveloperName != fieldMappingSetDevName) {
             throw new MappingServiceException('Error: Field Mapping Set may not be changed after '+ 
                                                 'initial instantiation');
@@ -195,7 +196,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         }
     }
 
-    private void retrieveCustMetadata(Boolean includeUnmappedFields) {
+    private void retrieveCustMetadata(Boolean includeUtilityFields) {
         //If the code is not in the npsp namespace, then the npsp field prefixes will need to be systematically removed.
         Map<String,Data_Import_Object_Mapping__mdt> objMappingsByDevName =
             new Map<String,Data_Import_Object_Mapping__mdt>();
@@ -284,8 +285,8 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
             }
         }
 
-        if (includeUnmappedFields) {
-            addUnmappedFields(fieldMappingInstance.objectMappingByDevName,
+        if (includeUtilityFields) {
+            addUtilityFields(fieldMappingInstance.objectMappingByDevName,
                 fieldMappingInstance.fieldMappingByDevName,
                 fieldMappingInstance.fieldMappingsByObjMappingDevName);
         }
@@ -306,9 +307,9 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     */
     @AuraEnabled
     public static BDI_FieldMappingSet getFieldMappingSet(String fieldMappingSetName,
-        Boolean includeUnmappedFields) {
+        Boolean includeUtilityFields) {
 
-        getInstance(fieldMappingSetName, includeUnmappedFields);
+        getInstance(fieldMappingSetName, includeUtilityFields);
         return fieldMappingInstance.fieldMappingSet;
     }
 
@@ -320,7 +321,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     * @param fieldMappingByDevName: Map of field mappings by developer name.
     * @param fieldMappingsByObjMappingDevName: Map of field mappings by object mapping by developer name.
     */
-    private static void addUnmappedFields(Map<String,BDI_ObjectMapping> objectMappingByDevName,
+    private static void addUtilityFields(Map<String,BDI_ObjectMapping> objectMappingByDevName,
         Map<String,BDI_FieldMapping> fieldMappingByDevName,
         Map<String,BDI_FieldMapping[]> fieldMappingsByObjMappingDevName) {
 
@@ -342,7 +343,7 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
 
     /*******************************************************************************************************
     * @description Method constructs an instance of BDI_ObjectMapping with the bare minimum required
-    * fields for use in the addUnmappedFields method. This is to support adding in fields that aren't
+    * fields for use in the addUtilityFields method. This is to support adding in fields that aren't
     * Field Mappings, but need to look like Field Mappings such as the DataImport__c.Donation_Donor__c field.
     *
     * @param developerName: Object Mapping developer name.
@@ -354,16 +355,16 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
         String objectApiName) {
 
         BDI_ObjectMapping objectMapping = new BDI_ObjectMapping();
-        objectMapping.DeveloperName     = developerName;
-        objectMapping.MasterLabel       = masterLabel;
-        objectMapping.Object_API_Name   = objectApiName;
+        objectMapping.DeveloperName = developerName;
+        objectMapping.MasterLabel = masterLabel;
+        objectMapping.Object_API_Name = objectApiName;
 
         return objectMapping;
     }
 
     /*******************************************************************************************************
     * @description Method constructs an instance of BDI_FieldMapping with the bare minimum required
-    * fields for use in the addUnmappedFields method. This is to support adding in fields that aren't
+    * fields for use in the addUtilityFields method. This is to support adding in fields that aren't
     * Field Mappings, but need to look like Field Mappings such as the DataImport__c.Donation_Donor__c field.
     *
     * @param fieldDescribe: Describe info of the field we need a Field Mapping for.
@@ -372,18 +373,18 @@ public with sharing class BDI_MappingServiceAdvanced implements BDI_MappingServi
     private static BDI_FieldMapping constructSimulatedFieldMapping(Schema.DescribeFieldResult fieldDescribe,
         BDI_ObjectMapping parentObjectMapping) {
 
-        BDI_FieldMapping fieldMapping   = new BDI_FieldMapping();
-        String apiName                  = fieldDescribe.getName();
-        String label                    = fieldDescribe.getLabel();
+        BDI_FieldMapping fieldMapping = new BDI_FieldMapping();
+        String apiName = fieldDescribe.getName();
+        String label = fieldDescribe.getLabel();
 
-        fieldMapping.DeveloperName                  = apiName;
-        fieldMapping.MasterLabel                    = label;
-        fieldMapping.Source_Field_API_Name          = apiName;
-        fieldMapping.Source_Field_Required          = false;
-        fieldMapping.Target_Field_API_Name          = apiName;
-        fieldMapping.Target_Field_Data_Type         = String.valueOf(fieldDescribe.getType());
-        fieldMapping.Target_Field_Label             = label;
-        fieldMapping.Target_Object_API_Name         = parentObjectMapping.Object_API_Name;
+        fieldMapping.DeveloperName = apiName;
+        fieldMapping.MasterLabel = label;
+        fieldMapping.Source_Field_API_Name = apiName;
+        fieldMapping.Source_Field_Required = false;
+        fieldMapping.Target_Field_API_Name = apiName;
+        fieldMapping.Target_Field_Data_Type = String.valueOf(fieldDescribe.getType());
+        fieldMapping.Target_Field_Label    = label;
+        fieldMapping.Target_Object_API_Name = parentObjectMapping.Object_API_Name;
         fieldMapping.Target_Object_Mapping_Dev_Name = parentObjectMapping.DeveloperName;
 
         return fieldMapping;
