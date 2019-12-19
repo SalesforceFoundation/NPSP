@@ -10,7 +10,8 @@
         </lightning-input>
     </template>
     <template if:true={isLookup}>
-        <c-ge-form-field-lookup field-api-name={fieldApiName}
+        <c-ge-form-field-lookup data-id='inputComponent'
+                                field-api-name={fieldApiName}
                                 object-api-name={objectApiName}
                                 onchange={handleValueChange}
                                 default-value={element.defaultValue}
