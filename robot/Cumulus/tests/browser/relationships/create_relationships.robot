@@ -31,31 +31,31 @@ Create Relationships for contacts
     ...                                  Open contact2 record and create a new relationship with contact 1.
     ...                                  Verify the parent-child relationship is correctly established.
 
-    [tags]                               W-037650                                             feature:Relationships
+    [tags]                               W-037650                                                      feature:Relationships
 
-    Go To Page                           Details                                              Contact                                               object_id=&{contact2}[Id]
+    Go To Page                           Details                                                       Contact                                               object_id=&{contact2}[Id]
     Select Tab                           Related
     Wait Until Loading Is Complete
-    Click Related List Button            Relationships                                        New
-    Wait For Modal                       New                                                  Relationship
+    Click Related List Button            Relationships                                                 New
+    Wait For Modal                       New                                                           Relationship
 
     Populate Modal Form
     ...                                  Related Contact=&{contact1}[FirstName] &{contact1}[LastName]
-    Select Value From Dropdown           Type                                                 Parent
+    ...                                  Type=Parent
     Click Modal Button                   Save
-    Current Page Should Be               Details                                              Relationship
-    Validate Relation Status Message     &{contact1}[FirstName] &{contact1}[LastName]         &{contact2}[FirstName] &{contact2}[LastName]          Parent
+    Current Page Should Be               Details                                                       Relationship
+    Validate Relation Status Message     &{contact1}[FirstName] &{contact1}[LastName]                  &{contact2}[FirstName] &{contact2}[LastName]          Parent
     Click Link                           link=Show more actions
     Click Link                           link=Relationships Viewer
     Wait Until Loading Is Complete
     Capture Page Screenshot
-    Go To Page                           Details                                              Contact                                               object_id=&{contact1}[Id]
+    Go To Page                           Details                                                       Contact                                               object_id=&{contact1}[Id]
 
     Select Tab                           Related
     Load Related List                    Relationships
 
-    Current Page Should Be               Details                                              Relationship
-    Validate Relation Status Message     &{contact2}[FirstName] &{contact2}[LastName]         &{contact1}[FirstName] &{contact1}[LastName]          Child
+    Current Page Should Be               Details                                                       Relationship
+    Validate Relation Status Message     &{contact2}[FirstName] &{contact2}[LastName]                  &{contact1}[FirstName] &{contact1}[LastName]          Child
     ${id}                                Get Current Record Id
     Save Current Record ID For Deletion  npe4__Relationship__c
 
