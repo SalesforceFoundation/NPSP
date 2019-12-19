@@ -1269,7 +1269,8 @@ class NPSP(SalesforceRobotLibraryBase):
             else:
                 raise Exception("Locator for {} is not found on the page".format(key))   
      
-    def verify_toast_message(self,value):       
+    def verify_toast_message(self,value):
+        """Verifies that toast contains specified value"""       
         locator=npsp_lex_locators["toast-msg"]
         ele=self.selenium.get_webelements(locator)
         found=False
@@ -1279,4 +1280,17 @@ class NPSP(SalesforceRobotLibraryBase):
                 found=True
                 print("Toast message verified")
                 break
-        assert found, "Expected Toast message not found on page"
+        assert found, "Expected Toast message {} not found on page".format(value)
+
+    def enter_field_value(self,field,value):
+        """"""
+        self.selenium.scroll_element_into_view("Description")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        self.selenium.wait_until_page_contains_element("//div[@class='footer active']")
+        self.salesforce.populate_lookup_field(field,value)
+        self.click_record_button("Save")
+        self.selenium.wait_until_page_does_not_contain_element("//div[@class='footer active']")
+        
+        
+        
