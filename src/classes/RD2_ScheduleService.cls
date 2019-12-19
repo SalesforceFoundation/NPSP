@@ -194,7 +194,6 @@ public without sharing class RD2_ScheduleService {
         return isNeeded;
     }
 
-
     /***
     * @description Calculates the dates of the next n donations for a single RD
     * @param rd Recurring Donation record
@@ -535,6 +534,79 @@ public without sharing class RD2_ScheduleService {
         return schedulesByRdId;
     }
 
+    public List<ActiveSchedule> getCurrentAndFutureSchedules(npe03__Recurring_Donation__c rd) {
+        List<ActiveSchedule> activeSchedules = new List<ActiveSchedule>();
+
+        if (rd == null) {
+            return activeSchedules;
+        }
+
+        Boolean first1stAnd15thFound = false;
+        for (RecurringDonationSchedule__c schedule : getExistingSchedules(rd)) {
+
+            // This block collapses 1st and 15th schedules into a single row and nulls out day of month
+            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+                if (first1stAnd15thFound) {
+                    first1stAnd15thFound = false;
+                    continue;
+                }
+                first1stAnd15thFound = true;
+                schedule.DayOfMonth__c = null;
+            }
+
+            ActiveSchedule activeSched = new ActiveSchedule(schedule);
+            if (schedule.StartDate__c <= currentDate) {
+                activeSched.isCurrent = true;
+            }
+            activeSchedules.add(activeSched);
+        }
+
+        return activeSchedules;
+    }
+
+    public class ActiveSchedule {
+
+        public Boolean  isCurrent {get;set;}
+        public Id       campaignId {get; set;}
+        public String   campaignName {get; set;}
+        public String   dayOfMonth {get; set;}
+        public Date     endDate {get; set;}
+        public Decimal  installmentAmount {get; set;}
+        public Decimal  installmentFrequency {get; set;}
+        public String   installmentPeriod {get; set;}
+        public String   paymentMethod {get; set;}
+        public String   recurringDonationId {get; set;}
+        public Id       scheduleId {get; set;}
+        public Date     startDate {get; set;}
+
+        ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
+            isCurrent =             false;
+            campaignId =            rdSchedule.Campaign__c;
+            campaignName =          rdSchedule.Campaign__r.Name;
+            dayOfMonth =            rdSchedule.DayOfMonth__c;
+            endDate =               rdSchedule.EndDate__c;
+            installmentAmount =     rdSchedule.InstallmentAmount__c;
+            installmentFrequency =  rdSchedule.InstallmentFrequency__c;
+            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
+            paymentMethod =         rdSchedule.PaymentMethod__c;
+            recurringDonationId =   rdSchedule.RecurringDonation__c;
+            scheduleId =            rdSchedule.Id;
+            startDate =             rdSchedule.StartDate__c;
+        }
+    }
+
+    /***
+    * @description Retrieves recurring donation schedules associated with a single recurring donation
+    * @param rd npe03__Recurring_Donation__c
+    */
+    public List<RecurringDonationSchedule__c> getExistingSchedules(npe03__Recurring_Donation__c rd) {
+        if (rd == null) {
+            return null;
+        }
+
+        return getExistingSchedules(new List<npe03__Recurring_Donation__c> {rd}).get(rd.Id);
+    }
+
     /***
     * @description Retrieves recurring donation schedules associated with recurring donation list
     * @param rds List<npe03__Recurring_Donation__c>
@@ -558,6 +630,7 @@ public without sharing class RD2_ScheduleService {
                 FROM RecurringDonationSchedule__c
                 WHERE RecurringDonation__c IN :rds
                 AND Active__c = true
+                ORDER BY StartDate__c
         ]) {
             if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
                 oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
