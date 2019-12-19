@@ -31,6 +31,7 @@ export default class BatchProgress extends LightningElement {
     @api className;
 
     @track batchJob;
+    @track hasSummary;
     prevBatchJob;
 
     pollingTimeout = 10000;
@@ -64,9 +65,17 @@ export default class BatchProgress extends LightningElement {
                 this.prevBatchJob = this.batchJob;
                 this.batchJob = JSON.parse(data);
 
+                if (isNull(this.batchJob)) {
+                    return;
+                }
+
+                this.hasSummary = !isNull(this.batchJob.summary);
+
                 this.notifyOnStatusChange();
 
-                if (this.batchJob && this.batchJob.isInProgress === true) {
+                if (this.batchJob.isInProgress === true
+                    || (this.batchJob.status === 'Completed' && this.hasSummary !== true)
+                ) {
                     this.refreshBatchJob();
                 }
             })
@@ -97,6 +106,7 @@ export default class BatchProgress extends LightningElement {
 
         if (isNull(this.prevBatchJob)
             || this.prevBatchJob.isInProgress !== this.batchJob.isInProgress
+            || this.prevBatchJob.summary !== this.batchJob.summary
         ) {
             const isSuccess = this.batchJob.numberOfErrors === 0;
 
