@@ -1470,8 +1470,6 @@
         <members>EPTaskTemplate</members>
         <members>EPTo</members>
         <members>ErrorEmailMessage</members>
-        <members>GE_Remove_Selected_Option</members>
-        <members>GE_Search_Placeholder</members>
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
         <members>NameRequired</members>
@@ -1872,6 +1870,7 @@
         <members>geAssistiveFormFieldsRemoveField</members>
         <members>geAssistiveFormFieldsSectionEdit</members>
         <members>geAssistiveModalCancelAndDiscard</members>
+        <members>geAssistiveRemoveSelectedOption</members>
         <members>geAssistiveSectionDown</members>
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveSpinner</members>
@@ -1920,6 +1919,7 @@
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
+        <members>geSearchPlaceholder</members>
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>

@@ -19,6 +19,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @track value;
     @track targetObjectApiName;
     @track queryFields;
+    @track showError = false;
 
     /**
      * Retrieve information about the object the lookup points to.
@@ -39,6 +40,20 @@ export default class GeFormFieldLookup extends LightningElement {
                 this.displayValue = data.fields.Name.value;
             }
         }
+    }
+
+    @api
+    reportValidity() {
+        const isValid = this.checkValidity();
+        this.showError = !isValid;
+    }
+
+    @api
+    checkValidity() {
+        if(this.required) {
+            return typeof this.value !== 'undefined' && this.value !== null && this.value !== '';
+        }
+        return true;
     }
 
     /**

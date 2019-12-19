@@ -25,6 +25,7 @@ import geAssistiveFormFieldsExpandAll from '@salesforce/label/c.geAssistiveFormF
 import geAssistiveFormFieldsRemoveField from '@salesforce/label/c.geAssistiveFormFieldsRemoveField';
 import geAssistiveFormFieldsSectionEdit from '@salesforce/label/c.geAssistiveFormFieldsSectionEdit';
 import geAssistiveModalCancelAndDiscard from '@salesforce/label/c.geAssistiveModalCancelAndDiscard';
+import geAssistiveRemoveSelectedOption from '@salesforce/label/c.geAssistiveRemoveSelectedOption';
 import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
@@ -73,6 +74,7 @@ import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextF
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
+import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
@@ -165,6 +167,8 @@ class GeLabelService {
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
+        geAssistiveRemoveSelectedOption,
+        geSearchPlaceholder,
         geTabBatchHeader,
         geTabFormFields,
         geTabTemplateInfo,
