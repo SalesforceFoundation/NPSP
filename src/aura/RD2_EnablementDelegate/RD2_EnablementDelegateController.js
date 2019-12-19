@@ -37,6 +37,9 @@
     handleMigrationStop: function (component, event, helper) {
         helper.stopMigration(component);
     },
+    handleMigrationSkip: function (component, event, helper) {
+        helper.skipMigration(component);
+    },
     handleMigrationStatusChange: function (component, event, helper) {
         helper.handleBatchEvent(component, event, 'v.migrationBatch');
         helper.refreshMigration(component);

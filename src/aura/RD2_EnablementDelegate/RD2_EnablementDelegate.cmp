@@ -145,12 +145,11 @@
                                 </div>
                             </lightning:layoutItem>
 
-                            <lightning:layoutItem size="9" padding="horizontal-medium" class="slds-p-top_medium">
+                            <lightning:layoutItem size="12" padding="horizontal-medium" class="slds-p-top_medium">
                                 <c:batchProgress aura:id="dryRunJob" title="{!$Label.c.RD2_EnablementDryRunBatchTitle}"
                                     className="RD2_DataMigrationDryRun_BATCH"
                                     onstatuschange="{!c.handleDryRunStatusChange}" onerror="{!c.handleDryRunError}" />
                             </lightning:layoutItem>
-                            <lightning:layoutItem size="3" />
                         </lightning:layout>
                     </aura:if>
 
@@ -388,33 +387,9 @@
                             </span>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="3" />
-
                     </lightning:layout>
 
-                    <aura:if isTrue="{!and(!v.state.isMetaConfirmed, equals(v.migrationProgress, 'dryRunStep'))}">
-                        <lightning:layout horizontalAlign="spread" multipleRows="true">
-                            <lightning:layoutItem size="12" flexibility="auto">
-                                <div class="slds-grid slds-grid_align-spread">
-                                    <div
-                                        class="slds-size_2-of-4 slds-grid_vertical-align-center slds-p-right_small slds-p-bottom_medium">
-                                        (Optional) Start with a migration validation.
-                                    </div>
-                                    <div class="slds-grid slds-grid_align-end slds-size_2-of-4 slds-p-right_x-small">
-                                        <span>
-                                            <lightning:button class="styleButton"
-                                                label="{!$Label.c.RD2_EnablementDryRunSkipButton}" variant="neutral"
-                                                title="{!$Label.c.RD2_EnablementDryRunSkipButton}" disabled="true" />
-                                            <lightning:button class="styleButton"
-                                                label="{!$Label.c.RD2_EnablementDryRunButton}" variant="brand"
-                                                title="{!$Label.c.RD2_EnablementDryRunButton}" disabled="true" />
-                                        </span>
-                                    </div>
-                                </div>
-                            </lightning:layoutItem>
-                        </lightning:layout>
-                    </aura:if>
-
-                    <aura:if isTrue="{!and(v.state.isMetaConfirmed, equals(v.migrationProgress, 'dryRunStep'))}">
+                    <aura:if isTrue="{!equals(v.migrationProgress, 'dryRunStep')}">
                         <lightning:layout horizontalAlign="spread" multipleRows="true">
                             <lightning:layoutItem size="12" flexibility="auto">
                                 <div class="slds-grid slds-grid_align-spread">
@@ -430,26 +405,31 @@
                                                     isTrue="{! and(v.state.isDryRunInProgress, v.state.isDryRunStopped) }">
                                                     <lightning:spinner aura:id="dryRun2Spinner" size="small"
                                                         variant="brand"
-                                                        alternativeText="{!$Label.c.labelMessageLoading}" />
+                                                        alternativeText="{!$Label.c.labelMessageLoading}"
+                                                        class="{!if(v.state.isMetaConfirmed, '', 'slds-hide')}" />
                                                 </aura:if>
                                             </div>
                                             <span>
                                                 <aura:if
-                                                    isTrue="{! and(!v.state.isDryRunInProgress, !v.state.isDryRun2) }">
+                                                    isTrue="{! or(!v.state.isMetaConfirmed, and(!v.state.isDryRunInProgress, !v.state.isDryRun2)) }">
                                                     <lightning:button class="styleButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunSkipButton}"
                                                         variant="neutral"
                                                         title="{!$Label.c.RD2_EnablementDryRunSkipButton}"
-                                                        onclick="{!c.handleDryRunSkip}" />
+                                                        onclick="{!c.handleDryRunSkip}"
+                                                        disabled="{! !v.state.isMetaConfirmed }" />
                                                 </aura:if>
-                                                <aura:if isTrue="{! !v.state.isDryRunInProgress }">
+                                                <aura:if
+                                                    isTrue="{! or(!v.state.isMetaConfirmed, !v.state.isDryRunInProgress) }">
                                                     <lightning:button class="styleButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunButton}"
                                                         variant="{!if(v.state.isDryRun2Completed, 'neutral', 'brand')}"
                                                         title="{!$Label.c.RD2_EnablementDryRunButton}"
-                                                        onclick="{!c.handleDryRun}" />
+                                                        onclick="{!c.handleDryRun}"
+                                                        disabled="{! !v.state.isMetaConfirmed }" />
                                                 </aura:if>
-                                                <aura:if isTrue="{! v.state.isDryRunInProgress }">
+                                                <aura:if
+                                                    isTrue="{! and(v.state.isMetaConfirmed, v.state.isDryRunInProgress) }">
                                                     <lightning:button class="styleButton" aura:id="dryRunStopButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunStopButton}"
                                                         variant="neutral"
@@ -457,7 +437,8 @@
                                                         onclick="{!c.handleDryRunStop}"
                                                         disabled="{!v.state.isDryRunStopped}" />
                                                 </aura:if>
-                                                <aura:if isTrue="{! v.state.isDryRun2Completed }">
+                                                <aura:if
+                                                    isTrue="{! and(v.state.isMetaConfirmed, v.state.isDryRun2Completed) }">
                                                     <lightning:button class="styleButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunNextButton}"
                                                         variant="brand"
@@ -469,17 +450,6 @@
                                     </div>
                                 </div>
                             </lightning:layoutItem>
-
-                            <lightning:layoutItem size="9" padding="horizontal-medium">
-                                <aura:if isTrue="{! and(v.state.isMetaConfirmed, v.state.isDryRun2) }">
-                                    <c:batchProgress aura:id="dryRun2Job"
-                                        title="{!$Label.c.RD2_EnablementDryRunBatchTitle}"
-                                        className="RD2_DataMigrationDryRun_BATCH"
-                                        onstatuschange="{!c.handleDryRunStatusChange}"
-                                        onerror="{!c.handleDryRunError}" />
-                                </aura:if>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="3" />
                         </lightning:layout>
                     </aura:if>
 
@@ -503,6 +473,14 @@
                                                 </aura:if>
                                             </div>
                                             <span>
+                                                <aura:if
+                                                    isTrue="{! and(!v.state.isMigrationInProgress, v.state.isMigrationCompleted) }">
+                                                    <lightning:button class="styleButton"
+                                                        label="{!$Label.c.RD2_EnablementMigrationSkipButton}"
+                                                        variant="neutral"
+                                                        title="{!$Label.c.RD2_EnablementMigrationSkipButton}"
+                                                        onclick="{!c.handleMigrationSkip}" />
+                                                </aura:if>
                                                 <aura:if isTrue="{! !v.state.isMigrationInProgress }">
                                                     <lightning:button class="slds-no-flex styleButton"
                                                         label="{!$Label.c.RD2_EnablementMigrationButton}"
@@ -523,17 +501,34 @@
                                     </div>
                                 </div>
                             </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
 
-                            <lightning:layoutItem size="9" padding="horizontal-medium">
+                    <lightning:layout horizontalAlign="spread" multipleRows="true">
+                        <lightning:layoutItem size="12" padding="horizontal-medium" class="slds-p-top_medium">
+                            <aura:if isTrue="{! v.state.isLoading }">
+                                <lightning:spinner aura:id="loadingSpinner" size="small" variant="brand"
+                                    alternativeText="{!$Label.c.labelMessageLoading}" />
+                            </aura:if>
+
+                            <aura:if
+                                isTrue="{! and(equals(v.migrationProgress, 'dryRunStep'), and(v.state.isMetaConfirmed, v.state.isDryRun2)) }">
+                                <c:batchProgress aura:id="dryRun2Job" title="{!$Label.c.RD2_EnablementDryRunBatchTitle}"
+                                    className="RD2_DataMigrationDryRun_BATCH"
+                                    onstatuschange="{!c.handleDryRunStatusChange}" onerror="{!c.handleDryRunError}" />
+                            </aura:if>
+
+                            <aura:if isTrue="{! equals(v.migrationProgress, 'runMigrationStep') }">
                                 <c:batchProgress aura:id="migrationJob"
                                     title="{!$Label.c.BatchProgressTitleRD2DataMigration}"
                                     className="RD2_DataMigration_BATCH"
                                     onstatuschange="{!c.handleMigrationStatusChange}"
                                     onerror="{!c.handleMigrationError}" />
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="3" />
+                            </aura:if>
+                        </lightning:layoutItem>
 
-                            <lightning:layoutItem size="9" class="slds-p-top_medium">
+                        <lightning:layoutItem size="9" class="slds-p-top_medium">
+                            <aura:if isTrue="equals(v.migrationProgress, 'runMigrationStep')">
                                 <aura:if isTrue="{!v.state.isMigrationCompleted}">
                                     <lightning:formattedRichText
                                         value="{!$Label.c.RD2_EnablementMigrationCompleteMessage}" />
@@ -544,13 +539,10 @@
                                     <lightning:formattedRichText
                                         value="{!$Label.c.RD2_EnablementMigrationErrorMessage}" />
                                 </aura:if>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="3" />
-                        </lightning:layout>
-                    </aura:if>
+                            </aura:if>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="3" />
 
-
-                    <lightning:layout>
                         <lightning:layoutItem size="9" class="slds-p-left_medium">
                             <aura:if isTrue="{!equals(v.errorSection, 'migration')}">
                                 <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />

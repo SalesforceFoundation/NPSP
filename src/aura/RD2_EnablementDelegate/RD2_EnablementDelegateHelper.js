@@ -187,7 +187,6 @@
     * @description Starts data migration batch in dry run mode
     */
     runDryRun: function (component) {
-        component.set('v.state.dryRunBatch', null);
         component.set('v.state.isDryRunInProgress', true);
         component.set('v.state.isDryRun2Completed', false);
         this.clearError(component);
@@ -253,7 +252,7 @@
     * @description Skips dry run migration run before actual migration
     */
     skipDryRun: function (component) {
-        component.set('v.state.dryRunBatch', null);
+        component.set('v.state.isLoading', true);
         component.set('v.state.isMigrationEnabled', false);
         component.set('v.state.isMigrationInProgress', false);
         this.clearError(component);
@@ -272,6 +271,7 @@
             } else if (state === 'ERROR') {
                 this.handleError(component, response.getError(), 'migration');
             }
+            component.set('v.state.isLoading', false);
         });
 
         $A.enqueueAction(action);
@@ -325,6 +325,34 @@
                 component.set('v.state.isMigrationStopped', false);
                 this.handleError(component, response.getError(), 'migration');
             }
+        });
+
+        $A.enqueueAction(action);
+    },
+    /****
+    * @description Skips migration and goes back to validation
+    */
+    skipMigration: function (component) {
+        component.set('v.state.isLoading', true);
+        component.set('v.state.isMigrationEnabled', false);
+        this.clearError(component);
+
+        var action = component.get("c.skipMigration");
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            const state = response.getState();
+
+            if (state === 'SUCCESS') {
+                component.set('v.state.isMigrationEnabled', false);
+                component.set('v.migrationProgress', 'dryRunStep');
+
+            } else if (state === 'ERROR') {
+                component.set('v.state.isMigrationEnabled', true);
+                this.handleError(component, response.getError(), 'migration');
+            }
+            component.set('v.state.isLoading', false);
         });
 
         $A.enqueueAction(action);

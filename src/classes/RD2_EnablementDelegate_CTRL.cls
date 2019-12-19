@@ -246,13 +246,25 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Skips dry run and moves straight to migration
+    * @description Skips dry run and moves straight to the migration
     * @return void
     */
     @AuraEnabled
     public static void skipDryRun() {
         EnablementState state = getEnablementState();
         state.isMigrationEnabled = true;
+
+        saveEnablementState(state);
+    }
+
+    /***
+    * @description Skips migration and moves back to the dry run
+    * @return void
+    */
+    @AuraEnabled
+    public static void skipMigration() {
+        EnablementState state = getEnablementState();
+        state.isMigrationEnabled = false;
 
         saveEnablementState(state);
     }
