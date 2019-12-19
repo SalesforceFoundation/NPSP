@@ -39,7 +39,8 @@ Create Relationships for contacts
     Click Related List Button            Relationships                                        New
     Wait For Modal                       New                                                  Relationship
 
-    Populate Lookup Field                Related Contact                                      &{contact1}[FirstName] &{contact1}[LastName]
+    Populate Modal Form
+    ...                                  Related Contact=&{contact1}[FirstName] &{contact1}[LastName]
     Select Value From Dropdown           Type                                                 Parent
     Click Modal Button                   Save
     Current Page Should Be               Details                                              Relationship
@@ -56,5 +57,5 @@ Create Relationships for contacts
     Current Page Should Be               Details                                              Relationship
     Validate Relation Status Message     &{contact2}[FirstName] &{contact2}[LastName]         &{contact1}[FirstName] &{contact1}[LastName]          Child
     ${id}                                Get Current Record Id
-    Store Session Record                 npe4__Relationship__c                                ${id}
+    Save Current Record ID For Deletion  npe4__Relationship__c
 
