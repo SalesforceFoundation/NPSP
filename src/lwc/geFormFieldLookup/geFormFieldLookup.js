@@ -19,7 +19,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @track value;
     @track targetObjectApiName;
     @track queryFields;
-    @track showError = false;
+    @track valid = true;
 
     /**
      * Retrieve information about the object the lookup points to.
@@ -42,12 +42,18 @@ export default class GeFormFieldLookup extends LightningElement {
         }
     }
 
+    /**
+     * Check validity, then update the field with a message if field is invalid.
+     */
     @api
     reportValidity() {
-        const isValid = this.checkValidity();
-        this.showError = !isValid;
+        this.valid = this.checkValidity();
     }
 
+    /**
+     * Check validity without updating the UI
+     * @returns {boolean}
+     */
     @api
     checkValidity() {
         if(this.required) {

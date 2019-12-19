@@ -17,11 +17,6 @@ export default class GeAutocomplete extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    @api
-    reportValidity() {
-
-    }
-
     /**
      * Handle changes in the value being searched for.
      * @param event
@@ -71,6 +66,7 @@ export default class GeAutocomplete extends LightningElement {
     }
 
     get invalid() {
+        // necessary for aria attributes
         return !this.valid;
     }
 
