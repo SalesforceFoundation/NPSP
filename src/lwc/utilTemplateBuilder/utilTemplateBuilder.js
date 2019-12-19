@@ -223,6 +223,17 @@ const isObject = (obj) => {
 }
 
 /*******************************************************************************
+* @description Checks to see if the passed parameter is a primative.
+*
+* @param {any} value: Thing to check
+*
+* @return {boolean}: True if the provided obj is a primative.
+*/
+const isPrimitive = (value) => {
+    return (value !== Object(value));
+}
+
+/*******************************************************************************
 * @description Loop through provided array or object properties. Recursively check
 * if the current value is an object or an array and copy accordingly.
 *
@@ -232,6 +243,10 @@ const isObject = (obj) => {
 */
 const deepClone = (src) => {
     let clone = null;
+    
+    if (isPrimitive(src)) {
+        return src;        
+    }
 
     if (isObject(src)) {
         clone = {};

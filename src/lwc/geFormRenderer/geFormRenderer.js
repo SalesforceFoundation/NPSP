@@ -74,7 +74,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         alert(element.label);
                         if (element.label === 'Contact 1: First Name') {
                             element.recordValue = 'Bart';
-                            element.dataImportFieldMappingDevNames = ['Contact1_First_Name_3fac9de77'];
+                            //element.dataImportFieldMappingDevNames = ['Contact1_First_Name_3fac9de77'];
                         } else {
                             element.recordValue = '';
                         }
