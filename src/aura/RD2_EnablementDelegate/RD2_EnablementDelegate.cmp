@@ -393,11 +393,11 @@
                         <lightning:layout horizontalAlign="spread" multipleRows="true">
                             <lightning:layoutItem size="12" flexibility="auto">
                                 <div class="slds-grid slds-grid_align-spread">
-                                    <div class="slds-size_8-of-12 slds-grid_vertical-align-center slds-p-right_small">
+                                    <div class="slds-size_7-of-12 slds-grid_vertical-align-center slds-p-right_small">
                                         <lightning:formattedRichText
                                             value="{!$Label.c.RD2_EnablementMigrationStepDryRun}" />
                                     </div>
-                                    <div class="slds-size_4-of-12">
+                                    <div class="slds-size_5-of-12">
                                         <div class="slds-grid slds-grid_align-end">
                                             <div class="slds-is-relative slds-m-right_large">
                                                 <aura:if
