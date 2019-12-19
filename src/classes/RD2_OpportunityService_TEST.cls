@@ -113,10 +113,13 @@ private with sharing class RD2_OpportunityService_TEST {
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
         insert campaign;
 
+        Date future = System.today() + 2;
+        String dateOfMonth = String.valueOf(future.day());
+
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withAccount(acc.Id)
             .withInstallmentPeriodMonthly()
-            .withDayOfMonth('20')
+            .withDayOfMonth(dateOfMonth)
             .withPaymentMethod(PAYMENT_CREDIT_CARD)
             .withDateEstablished(Date.newInstance(2019, 11, 15))
             .withAmount(415)
@@ -266,7 +269,7 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verify RD is created while opportunity is not created when NPSP setting Opp Record Type is not valid
+    * @description Verify opp is updated with installment fields if close date is in the future
     */
     @isTest
     private static void shouldUpdateOppWhenCloseDateIsInFuture() {
@@ -305,8 +308,137 @@ private with sharing class RD2_OpportunityService_TEST {
 
     }
 
+    /***
+    * @description Verify opportunity is not updated with installment fields when close date is in the past
+    */
     @isTest
-    private static void test() {
+    private static void shouldNotUpdateOppWhenCloseDateInThePast() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        insert campaign;
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>{
+            rd =>  new List<Date>{Date.today()-2 }
+        };
+
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
+
+
+        rd.npe03__Amount__c = 100;
+        rd.npe03__Recurring_Donation_Campaign__c = campaign.id;
+        update rd;
+
+        List<Opportunity> opps = getOpportunities();
+        System.assertEquals(1, opps.size(), 'one opportunity should be created: ' + opps);
+        rd = mockRecurringDonationFullQueryResult(rd, opps, scheduleService.getNewSchedules(rd));
+        rds.add(rd);
+
+        Test.startTest();
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
+        service.updateInstallmentOpportunities(rds, vizMap);
+        Test.stopTest();
+
+        List<Opportunity> oppUpdates = getOpportunities();
+        System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
+        System.assertEquals(415, oppUpdates[0].amount,'Amount should not be updated to 100');
+        System.assertNotEquals(campaign.id, oppUpdates[0].campaignid,'Campaign should not match');
+    }
+
+    /***
+    * @description Verify Opportunity's campaign is updated when there is update to the campaign on the RD
+    * and add campaign is enabled in RD custom settings
+    */
+    @isTest
+    private static void shouldUpdateCampaignInOppWhenSettingsEnabled() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        insert campaign;
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>{
+            rd =>  new List<Date>{Date.today()+2 }
+        };
+        Test.startTest();
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
+        Test.stopTest();
+
+        rd.npe03__Recurring_Donation_Campaign__c = campaign.id;
+        update rd;
+
+        List<Opportunity> opps = getOpportunities();
+        System.assertEquals(1, opps.size(), 'one opportunity should be created: ' + opps);
+        rd = mockRecurringDonationFullQueryResult(rd, opps, scheduleService.getNewSchedules(rd));
+        rds.add(rd);
+
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
+        service.updateInstallmentOpportunities(rds, vizMap);
+
+        List<Opportunity> oppUpdates = getOpportunities();
+        System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
+        System.assertEquals(campaign.id, oppUpdates[0].campaignid,'Campaign should match');
+    }
+
+    /***
+    * @description Verify Opportunity's campaign is not updated when there is update to the campaign on the RD
+    * and add campaign is disabled in RD custom settings
+    */
+    @isTest
+    private static void shouldNotUpdateCampaignInOppWhenSettingsDisabled() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        insert campaign;
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>{
+            rd =>  new List<Date>{Date.today()+2 }
+        };
+
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
+
+        updateRdSettings();
+
+        rd.npe03__Recurring_Donation_Campaign__c = campaign.id;
+        update rd;
+
+        List<Opportunity> opps = getOpportunities();
+        System.assertEquals(1, opps.size(), 'one opportunity should be created: ' + opps);
+        rd = mockRecurringDonationFullQueryResult(rd, opps, scheduleService.getNewSchedules(rd));
+        rds.add(rd);
+
+        Test.startTest();
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
+        service.updateInstallmentOpportunities(rds, vizMap);
+        Test.stopTest();
+
+        List<Opportunity> oppUpdates = getOpportunities();
+        System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
+        System.assertNotEquals(campaign.id, oppUpdates[0].campaignid,'Campaign should not match');
+    }
+
+    /***
+    * @description Verify if the updates to the opportunity do not give error message
+    * when no opportunity records are passed.
+    */
+    @isTest
+    private static void shouldReturnNoErrorWhenZeroOpportunityIsPassed() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
         RD2_OpportunityService service = new RD2_OpportunityService();
@@ -324,9 +456,8 @@ private with sharing class RD2_OpportunityService_TEST {
         Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
         service.updateInstallmentOpportunities(rds, vizMap);
 
-
-
     }
+
     // Helper Methods
     //////////////////
 
@@ -339,6 +470,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void testAndAssertOppService(npe03__Recurring_Donation__c rd, String expectedOppName) {
         Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
         rdsWithCloseDates.put(rd, closeDates);
+
 
         Test.startTest();
         RD2_OpportunityService service = new RD2_OpportunityService();
@@ -367,11 +499,13 @@ private with sharing class RD2_OpportunityService_TEST {
     private static List<npe03__Recurring_Donation__c> createRecurringDonations(Integer size) {
         Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
         insert campaign;
+        Date future = System.today() + 2;
+        String dateOfMonth = String.valueOf(future.day());
 
         List<npe03__Recurring_Donation__c> rds = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(getContact().Id)
             .withInstallmentPeriodMonthly()
-            .withDayOfMonth('20')
+            .withDayOfMonth(dateOfMonth)
             .withDateEstablished(Date.newInstance(2019, 9, 15))
             .withAmount(415)
             .withPaymentMethod(PAYMENT_CREDIT_CARD)
@@ -411,6 +545,20 @@ private with sharing class RD2_OpportunityService_TEST {
         }
         UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
+    }
+
+    /***
+    * @description Update the Recurring Donations setting's Add campaign to false
+    * @return void
+    */
+    private static void updateRdSettings() {
+        npe03__Recurring_Donations_Settings__c rds = new npe03__Recurring_Donations_Settings__c(
+            npe03__Add_Campaign_to_All_Opportunites__c = false,
+            IsRecurringDonations2Enabled__c = true,
+            npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
+        );
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rds);
     }
 
     /***

@@ -122,6 +122,7 @@ public with sharing class RD2_OpportunityService {
 
         oppsToUpdate = buildInstallmentFieldsOnOpportunities(rdsForFutureOpps, rdsWithInstallments);
 
+        //Not logging errors for success/errors in the updates as in creation, if necessary, can add it
         List<Database.SaveResult> saveResults = Database.update(oppsToUpdate, false);
 
         updatedOppIds = extractIds(oppsToUpdate);
@@ -203,20 +204,6 @@ public with sharing class RD2_OpportunityService {
     }
 
     /***
-    * @description Constructs the opportunity name in a specific format.
-    * @param rd Recurring donation
-    * @param opp The new Opportunity on the recurring donation.
-    * @return String The Opportunity Name
-    */
-    private String buildOpportunityName(npe03__Recurring_Donation__c rd, Opportunity opp) {
-        return
-            rd.npe03__Donor_Name__c + ' ' +
-            System.Label.npe03.RecurringDonationPrefix + ' (' +
-            opp.Recurring_Donation_Installment_Number__c.format() +  ') ' +
-            opp.CloseDate.format();
-    }
-
-    /***
     * @description Builds Opportunities for the specified Recurring Donation and Close Dates
     * @param rdsWithCloseDates the Map of Recurring Donations with various close dates
     * @return List<Opportunity>
@@ -226,7 +213,6 @@ public with sharing class RD2_OpportunityService {
 
         for (npe03__Recurring_Donation__c rd: rdsForFutureOpps) {
             RD2_ScheduleService.Installment installment = rdsWithInstallments.get(rd.id)[0];
-            System.debug('Installment info:' + installment);
             oppsToUpdate.add(buildInstallmentFieldsOnOpportunity(rd, installment));
         }
 
@@ -241,7 +227,7 @@ public with sharing class RD2_OpportunityService {
     private Opportunity buildInstallmentFieldsOnOpportunity(npe03__Recurring_Donation__c rd,  RD2_ScheduleService.Installment installment) {
         if (rd.npe03__Donations__r.size() > 0) {
             Opportunity opp = rd.npe03__Donations__r[0];
-
+            //This not equal to check is to determine if its modified or not
             if (opp.Amount != installment.installmentAmount) {
                 opp.Amount = installment.installmentAmount;
             }
@@ -256,10 +242,25 @@ public with sharing class RD2_OpportunityService {
         }
         return null;
     }
+
+    /***
+    * @description Constructs the opportunity name in a specific format.
+    * @param rd Recurring donation
+    * @param opp The new Opportunity on the recurring donation.
+    * @return String The Opportunity Name
+    */
+    private String buildOpportunityName(npe03__Recurring_Donation__c rd, Opportunity opp) {
+        return
+            rd.npe03__Donor_Name__c + ' ' +
+            System.Label.npe03.RecurringDonationPrefix + ' (' +
+            opp.Recurring_Donation_Installment_Number__c.format() +  ') ' +
+            opp.CloseDate.format();
+    }
+
     /***
     * @description Updates payment method on the payment records for the created opportunities.
     * @param oppIds Opportunity Ids
-    * @param rds Recurring Donations
+    * @param rdsWithInstallments RD2_ScheduleService.Installments with rdids
     * @return void
     */
     private void updatePaymentRecords(Set<Id> oppIds, Map<Id, List<RD2_ScheduleService.Installment>> rdsWithInstallments) {
