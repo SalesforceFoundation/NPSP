@@ -21,7 +21,5 @@ class RelationshipDetailPage(BaseNPSPPage, DetailPage):
         """
         self.builtin.log_to_console(contact1)
         expectedstatus = ("{} is {}'s {}".format(contact1,contact2,relation))
-        self.builtin.log_to_console(expectedstatus)
         id,actualstatus = self.npsp.check_status(contact1)
-        self.builtin.log_to_console(actualstatus)
         self.builtin.should_be_equal_as_strings(actualstatus,expectedstatus)
