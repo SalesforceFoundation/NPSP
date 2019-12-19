@@ -5,7 +5,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import { showToast, getQueryParameters, getRecordFieldNames, addRecordValuesToTemplate } from 'c/utilTemplateBuilder';
+import { showToast, getQueryParameters, getRecordFieldNames, isEmpty, deepClone } from 'c/utilTemplateBuilder';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api recordId = '';
@@ -62,9 +62,44 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.version = formTemplate.layout.version;
             if (typeof formTemplate.layout !== 'undefined'
                 && Array.isArray(formTemplate.layout.sections)) {
-                this.sections = formTemplate.layout.sections;
+
+                // TODO - vm
+                //this.sections = formTemplate.layout.sections;
+                let sections = deepClone(formTemplate.layout.sections);
+                console.log(sections);
+                sections.forEach(section => {
+                    const elements = section.elements;
+                    elements.forEach(element => {
+                        //alert(JSON.stringify(element));
+                        alert(element.label);
+                        if (element.label === 'Contact 1: First Name') {
+                            element.recordValue = 'Bart';
+                            element.dataImportFieldMappingDevNames = ['Contact1_First_Name_3fac9de77'];
+                        } else {
+                            element.recordValue = '';
+                        }
+                        
+                    });                 
+                });
+                this.sections = sections;
             }
         }
+
+        // TODO - vm
+        // const sections = this.template.querySelectorAll('c-ge-form-section');
+        // if (!isEmpty(sections)) {
+        //     alert(JSON.stringify(sections));
+        //     sections.forEach(section => {
+        //         alert(JSON.stringify(section));
+        //         const fields = section.querySelectorAll('c-ge-form-field');
+        //         alert(JSON.stringify(fields));
+        //         if (!isEmpty(fields)) {
+        //             fields.forEach(field => {
+        //                 alert(JSON.stringify(field));
+        //             });
+        //         }              
+        //     });
+        // }
     }
 
     handleCancel() {

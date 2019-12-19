@@ -461,31 +461,7 @@ const getRecordFieldNames = (formTemplate, fieldMappings) => {
     return fieldNames;
 };
 
-const addRecordValuesToTemplate = (formTemplate, fieldMappings, record) => {
-    for (const section of formTemplate.layout.sections) {
-        for (const element of section.elements) {
-            let recordValue = '';
-            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
-                let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-                let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
 
-                if (fieldName === 'Firstname') { fieldName = 'FirstName'; }
-                if (fieldName === 'Lastname') { fieldName = 'LastName'; }
-                if (fieldName === 'name') { fieldName = 'Name'; }
-                        
-                // get the value
-                // if (record.apiName.toLowerCase() === objectName.toLowerCase()) {
-                //     recordValue = record.fields[fieldName].value;
-                // }    
-
-                // alert(recordValue);
-                //element.recordValue = recordValue;
-            } 
-        
-        alert(JSON.stringify(element.label));   
-        }
-    }
-};
 
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -509,6 +485,5 @@ export {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     format,
-    getRecordFieldNames,
-    addRecordValuesToTemplate
+    getRecordFieldNames
 }
