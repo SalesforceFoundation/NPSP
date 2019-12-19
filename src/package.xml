@@ -1507,6 +1507,7 @@
         <members>RD2_EnablementMigrationCompleteMessage</members>
         <members>RD2_EnablementMigrationErrorMessage</members>
         <members>RD2_EnablementMigrationIntro</members>
+        <members>RD2_EnablementMigrationSkipButton</members>
         <members>RD2_EnablementMigrationStepDryRun</members>
         <members>RD2_EnablementMigrationStepFinal</members>
         <members>RD2_EnablementMigrationStopButton</members>
