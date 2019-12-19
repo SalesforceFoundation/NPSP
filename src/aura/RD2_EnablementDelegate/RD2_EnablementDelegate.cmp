@@ -394,11 +394,11 @@
                             <lightning:layoutItem size="12" flexibility="auto">
                                 <div class="slds-grid slds-grid_align-spread">
                                     <div
-                                        class="slds-size_2-of-4 slds-grid_vertical-align-center slds-p-right_small slds-p-bottom_medium">
+                                        class="slds-size_3-of-4 slds-grid_vertical-align-center slds-p-right_small slds-p-bottom_medium">
                                         <lightning:formattedRichText
                                             value="{!$Label.c.RD2_EnablementMigrationStepDryRun}" />
                                     </div>
-                                    <div class="slds-size_2-of-4 slds-p-right_x-small">
+                                    <div class="slds-size_1-of-4 slds-p-right_x-small">
                                         <div class="slds-grid slds-grid_align-end">
                                             <div class="slds-is-relative slds-m-right_large">
                                                 <aura:if
@@ -473,8 +473,7 @@
                                                 </aura:if>
                                             </div>
                                             <span>
-                                                <aura:if
-                                                    isTrue="{! and(!v.state.isMigrationInProgress, v.state.isMigrationCompleted) }">
+                                                <aura:if isTrue="{! !v.state.isMigrationInProgress }">
                                                     <lightning:button class="styleButton"
                                                         label="{!$Label.c.RD2_EnablementMigrationSkipButton}"
                                                         variant="neutral"
@@ -494,7 +493,7 @@
                                                         variant="neutral"
                                                         title="{!$Label.c.RD2_EnablementMigrationStopButton}"
                                                         onclick="{!c.handleMigrationStop}"
-                                                        disabled="{!v.state.isMigrationStopped}" />
+                                                        disabled="{! v.state.isMigrationStopped }" />
                                                 </aura:if>
                                             </span>
                                         </div>
