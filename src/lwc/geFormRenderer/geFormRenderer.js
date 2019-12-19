@@ -15,9 +15,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track version = '';
     @api showSpinner = false;
     @api hasPageLevelError = false;
-    @api pageLevelErrorMessage = '';
     label = { messageLoading, geSave, geCancel };
     erroredFields = [];
+    @api pageLevelErrorMessageList = [];
 
     connectedCallback() {
         GeFormService.getFormTemplate().then(response => {
@@ -64,16 +64,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             
             // Show on top if it is a page level
             this.hasPageLevelError = true;
-            let exceptionWrapper = JSON.parse(error.body.message);
+            const exceptionWrapper = JSON.parse(error.body.message);
             const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
 
-            if (exceptionWrapper.exceptionType != null && exceptionWrapper.exceptionType != '') {
+            if (exceptionWrapper.exceptionType !== null && exceptionWrapper.exceptionType !== '') {
 
                 // Check to see if there are any field level errors
-                if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length == undefined || Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
+                if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined || Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
                     
                     // If there are no specific fields the error has to go to, put it on the page level error message. 
-                    this.setPageLevelError(Object.values(exceptionWrapper.DMLErrorMessageMapping).join(', '));
+                    for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
+                        this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
+                    }
                 } else {
                     // If there is a specific field that each error is supposed to go to, show it on the field on the page. 
                     // If it is not on the page to show, display it on the page level.
@@ -88,34 +90,31 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         // Errored fields that are not displayed
                         let hiddenFieldList = [];
 
-                        for (var i = 0; i < fieldList.length; i++) {
-                            const fieldWithError = fieldList[i];
-
+                        fieldList.forEach(fieldWithError => {
                             // Go to the field and set the error message using setCustomValidity 
                             if (fieldWithError in allDisplayedFields) {
-                                var fieldInput = allDisplayedFields[fieldWithError];
+                                let fieldInput = allDisplayedFields[fieldWithError];
                                 this.erroredFields.push(fieldInput);
 
                                 fieldInput.setCustomValidity(errorMessage);
-                                
                             } else {
 
                                 // Keep track of errored fields that are not displayed.  
                                 hiddenFieldList.push(fieldWithError);
                             }
-                        }
+                        });
 
                         // If there are hidden fields, display the error message at the page level. 
                         // With the fields noted. 
                         if (hiddenFieldList.length > 0) {
-                            var combinedFields = hiddenFieldList.join(', ');
+                            let combinedFields = hiddenFieldList.join(', ');
 
-                            this.addToPageLevelError(errorMessage + ' [' + combinedFields + ']');
+                            this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: key, errorMessage: errorMessage + ' [' + combinedFields + ']'}];
                         }
                     }
                 }
             } else {
-                this.setPageLevelError(exceptionWrapper.errorMessage);
+                pageLevelErrorMessageList = [...pageLevelErrorMessageList, {index: 0, errorMessage: exceptionWrapper.errorMessage}];
             }
 
             // focus either the page level or field level error messsage somehow
@@ -167,25 +166,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     clearErrors() {
 
         // Clear the page level error
-        this.pageLevelErrorMessage = '';
+        this.pageLevelErrorMessageList = [];
 
         // Clear the field level errors
         if (this.erroredFields.length > 0) {
-            for (var field in this.erroredFields) {
-                var fieldToReset = this.erroredFields[field];
-
+            this.erroredFields.forEach(fieldToReset => {
                 fieldToReset.setCustomValidity('');
-            }
+            });
         }
 
         this.erroredFields = [];
-    }
-
-    setPageLevelError(errorMessage) {
-        this.pageLevelErrorMessage = errorMessage;
-    }
-
-    addToPageLevelError(errorMessage) {
-        this.pageLevelErrorMessage += '\n' + errorMessage;
     }
 }
