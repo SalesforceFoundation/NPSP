@@ -5,11 +5,12 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import { showToast, getQueryParameters, getRecordFieldNames } from 'c/utilTemplateBuilder';
+import { showToast, getQueryParameters, getRecordFieldNames, addRecordValuesToTemplate } from 'c/utilTemplateBuilder';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api recordId = '';
-    @track apiName = '';
+    @api record;
+    apiName = '';
     fieldNames = [];
 
     @track sections = [];
@@ -22,11 +23,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     label = { messageLoading, geSave, geCancel };
 
     //@wire(getRecord, { recordId: '$recordId', optionalFields: ['Account.Name', 'Contact.Name']})
-    @wire(getRecord, { recordId: '$recordId', fields: '$fieldNames'})
+    @wire(getRecord, { recordId: '$recordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
         if (data) {
-            alert(JSON.stringify(data));
             this.apiName = data.apiName;
+            this.record = data;
+            alert(JSON.stringify(this.record));
             this.handleGetTemplate();
         } else if (error) {
             console.error(JSON.stringify(error));
@@ -43,8 +45,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 const { formTemplate } = response;
                 let fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
+                // get the target field names to be used by getRecord
                 this.fieldNames = getRecordFieldNames(formTemplate, fieldMappings);
-                alert(JSON.stringify(this.fieldNames));
             }
         });
     }

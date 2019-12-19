@@ -450,14 +450,41 @@ const getRecordFieldNames = (formTemplate, fieldMappings) => {
                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
                 if (objectName.toLowerCase() === CONTACT || objectName.toLowerCase() === ACCOUNT) {
                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
-                    //fieldNames.push(`${objectName}.${fieldName}`);
+                    fieldNames.push(`${objectName}.${fieldName}`);
                 }              
             }     
         }
     }
-    fieldNames.push('Contact.FirstName');
-    fieldNames.push('Contact.LastName');
+    // fieldNames.push('Contact.FirstName');
+    // fieldNames.push('Contact.LastName');
+    // fieldNames.push('Account.Name');
     return fieldNames;
+};
+
+const addRecordValuesToTemplate = (formTemplate, fieldMappings, record) => {
+    for (const section of formTemplate.layout.sections) {
+        for (const element of section.elements) {
+            let recordValue = '';
+            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+
+                if (fieldName === 'Firstname') { fieldName = 'FirstName'; }
+                if (fieldName === 'Lastname') { fieldName = 'LastName'; }
+                if (fieldName === 'name') { fieldName = 'Name'; }
+                        
+                // get the value
+                // if (record.apiName.toLowerCase() === objectName.toLowerCase()) {
+                //     recordValue = record.fields[fieldName].value;
+                // }    
+
+                // alert(recordValue);
+                //element.recordValue = recordValue;
+            } 
+        
+        alert(JSON.stringify(element.label));   
+        }
+    }
 };
 
 export {
@@ -482,5 +509,6 @@ export {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     format,
-    getRecordFieldNames
+    getRecordFieldNames,
+    addRecordValuesToTemplate
 }

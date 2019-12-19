@@ -162,7 +162,7 @@ public with sharing class GE_FormRendererService {
         //Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(apiName);
 
         sObject record = getRecord(recordId, apiName);
-        system.debug('record = '  + record);
+        //system.debug('record = '  + record );
         
 
         /*system.debug('fields = ' + fields);
