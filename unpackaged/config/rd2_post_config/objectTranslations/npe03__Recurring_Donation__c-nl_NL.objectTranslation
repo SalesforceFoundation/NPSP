@@ -25,7 +25,7 @@
         <name>%%%NAMESPACE%%%Day_of_Month__c</name>
         <picklistValues>
             <masterLabel>Last_Day</masterLabel>
-            <translation><!-- Last Day Of Month --></translation>
+            <translation>Laatste dag van de maand</translation>
         </picklistValues>
     </fields>
 </CustomObjectTranslation>
