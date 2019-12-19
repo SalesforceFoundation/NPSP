@@ -42,6 +42,7 @@ Create Relationships for contacts
     Populate Modal Form
     ...                                  Related Contact=&{contact1}[FirstName] &{contact1}[LastName]
     ...                                  Type=Parent
+    
     Click Modal Button                   Save
     Current Page Should Be               Details                                                       Relationship
     Validate Relation Status Message     &{contact1}[FirstName] &{contact1}[LastName]                  &{contact2}[FirstName] &{contact2}[LastName]          Parent
