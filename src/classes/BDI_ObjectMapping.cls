@@ -89,8 +89,8 @@ public virtual with sharing class BDI_ObjectMapping {
         this.Imported_Record_Status_Field_Name = UTIL_Describe.getFieldName(SObjectType.DataImport__c.Name, 
                                                                     objectMapping.Imported_Record_Status_Field_Name__c);
         this.Object_API_Name = UTIL_Describe.getObjectName(objectMapping.Object_API_Name__c);
-        this.Relationship_Field = UTIL_Describe.getFieldName(this.Object_API_Name, 
-                                                                objectMapping.Relationship_Field__c);
+        this.Relationship_Field = objectMapping.Relationship_Field__c;
+
         this.Is_Deleted = objectMapping.Is_Deleted__c;
         this.Predecessor = objectMapping.Predecessor__c;
         this.Relationship_To_Predecessor = objectMapping.Relationship_To_Predecessor__c;

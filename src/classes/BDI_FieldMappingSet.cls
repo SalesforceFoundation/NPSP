@@ -65,5 +65,18 @@ public with sharing class BDI_FieldMappingSet {
         this.objectMappingByDevName = objectMappingByDevName;
         this.fieldMappingByDevName = fieldMappingByDevName;
         this.fieldMappingsByObjMappingDevName = fieldMappingsByObjMappingDevName;
+
+        //Make sure relationship fields are correctly cased.  Other FieldMapping and ObjectMapping fields
+        //have already been validated in their constructors.
+        if(objectMappingByDevName != null){
+            for (BDI_ObjectMapping om : objectMappingByDevName.values()) {
+                if (om.Relationship_To_Predecessor == 'Child') {
+                    om.Relationship_Field = UTIL_Describe.getFieldName(om.Object_API_Name, om.Relationship_Field);
+                } else if (om.Relationship_To_Predecessor == 'Parent') {
+                    BDI_ObjectMapping predOm = objectMappingByDevName.get(om.Predecessor);
+                    om.Relationship_Field = UTIL_Describe.getFieldName(predOm.Object_API_Name, om.Relationship_Field);
+                }
+            }
+        }
     }
 }
