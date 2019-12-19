@@ -410,22 +410,30 @@
                                             </div>
                                             <span class="slds-grid slds-grid_align-end slds-p-right_x-small">
                                                 <aura:if
+                                                    isTrue="{! or(!v.state.isMetaConfirmed, !v.state.isDryRunInProgress) }">
+                                                    <lightning:button class="slds-no-flex styleButton"
+                                                        label="{!$Label.c.RD2_EnablementDryRunButton}"
+                                                        variant="{!if(or(v.state.isDryRun2Completed, !v.state.isDryRun2), 'neutral', 'brand')}"
+                                                        title="{!$Label.c.RD2_EnablementDryRunButton}"
+                                                        onclick="{!c.handleDryRun}"
+                                                        disabled="{! !v.state.isMetaConfirmed }" />
+                                                </aura:if>
+                                                <aura:if
                                                     isTrue="{! or(!v.state.isMetaConfirmed, and(!v.state.isDryRunInProgress, !v.state.isDryRun2)) }">
                                                     <lightning:button class="slds-no-flex styleButton"
                                                         label="{!$Label.c.RD2_EnablementDryRunSkipButton}"
-                                                        variant="neutral"
+                                                        variant="brand"
                                                         title="{!$Label.c.RD2_EnablementDryRunSkipButton}"
                                                         onclick="{!c.handleDryRunSkip}"
                                                         disabled="{! !v.state.isMetaConfirmed }" />
                                                 </aura:if>
                                                 <aura:if
-                                                    isTrue="{! or(!v.state.isMetaConfirmed, !v.state.isDryRunInProgress) }">
+                                                    isTrue="{! and(v.state.isMetaConfirmed, v.state.isDryRun2Completed) }">
                                                     <lightning:button class="slds-no-flex styleButton"
-                                                        label="{!$Label.c.RD2_EnablementDryRunButton}"
-                                                        variant="{!if(v.state.isDryRun2Completed, 'neutral', 'brand')}"
-                                                        title="{!$Label.c.RD2_EnablementDryRunButton}"
-                                                        onclick="{!c.handleDryRun}"
-                                                        disabled="{! !v.state.isMetaConfirmed }" />
+                                                        label="{!$Label.c.RD2_EnablementDryRunNextButton}"
+                                                        variant="brand"
+                                                        title="{!$Label.c.RD2_EnablementDryRunNextButton}"
+                                                        onclick="{!c.handleDryRunSkip}" />
                                                 </aura:if>
                                                 <aura:if
                                                     isTrue="{! and(v.state.isMetaConfirmed, v.state.isDryRunInProgress) }">
@@ -436,14 +444,6 @@
                                                         title="{!$Label.c.RD2_EnablementDryRunStopButton}"
                                                         onclick="{!c.handleDryRunStop}"
                                                         disabled="{! v.state.isDryRunStopped }" />
-                                                </aura:if>
-                                                <aura:if
-                                                    isTrue="{! and(v.state.isMetaConfirmed, v.state.isDryRun2Completed) }">
-                                                    <lightning:button class="slds-no-flex styleButton"
-                                                        label="{!$Label.c.RD2_EnablementDryRunNextButton}"
-                                                        variant="brand"
-                                                        title="{!$Label.c.RD2_EnablementDryRunNextButton}"
-                                                        onclick="{!c.handleDryRunSkip}" />
                                                 </aura:if>
                                             </span>
                                         </div>
