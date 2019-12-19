@@ -15,6 +15,9 @@ export default class GeFormField extends LightningElement {
     @track picklistValues = [];
     @track objectDescribeInfo;
     @track richTextValid = true;
+    @track richTextFormats = [
+        'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
+    ];
     @api element;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     changeTimeout;
