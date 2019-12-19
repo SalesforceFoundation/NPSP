@@ -470,9 +470,7 @@ const getRecordFieldNames = (formTemplate, fieldMappings) => {
             }     
         }
     }
-    // fieldNames.push('Contact.FirstName');
-    // fieldNames.push('Contact.LastName');
-    // fieldNames.push('Account.Name');
+    
     return fieldNames;
 };
 

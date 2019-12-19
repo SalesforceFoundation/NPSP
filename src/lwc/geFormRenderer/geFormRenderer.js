@@ -22,13 +22,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api showSpinner = false;
     label = { messageLoading, geSave, geCancel };
 
-    //@wire(getRecord, { recordId: '$recordId', optionalFields: ['Account.Name', 'Contact.Name']})
     @wire(getRecord, { recordId: '$recordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
         if (data) {
             this.apiName = data.apiName;
             this.record = data;
-            alert(JSON.stringify(this.record));
             this.handleGetTemplate();
         } else if (error) {
             console.error(JSON.stringify(error));
@@ -65,41 +63,37 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 // TODO - vm
                 //this.sections = formTemplate.layout.sections;
-                let sections = deepClone(formTemplate.layout.sections);
-                console.log(sections);
-                sections.forEach(section => {
-                    const elements = section.elements;
-                    elements.forEach(element => {
-                        //alert(JSON.stringify(element));
-                        alert(element.label);
-                        if (element.label === 'Contact 1: First Name') {
-                            element.recordValue = 'Bart';
-                            //element.dataImportFieldMappingDevNames = ['Contact1_First_Name_3fac9de77'];
-                        } else {
-                            element.recordValue = '';
-                        }
-                        
-                    });                 
-                });
-                this.sections = sections;
+                let sectionsWithValues = this.setRecordValuesOnTemplate(formTemplate.layout.sections);
+                this.sections = sectionsWithValues;
             }
         }
+    }
 
-        // TODO - vm
-        // const sections = this.template.querySelectorAll('c-ge-form-section');
-        // if (!isEmpty(sections)) {
-        //     alert(JSON.stringify(sections));
-        //     sections.forEach(section => {
-        //         alert(JSON.stringify(section));
-        //         const fields = section.querySelectorAll('c-ge-form-field');
-        //         alert(JSON.stringify(fields));
-        //         if (!isEmpty(fields)) {
-        //             fields.forEach(field => {
-        //                 alert(JSON.stringify(field));
-        //             });
-        //         }              
-        //     });
-        // }
+    // adds the record values to the template elements so they can be rendered
+    setRecordValuesOnTemplate(templateSections) {
+        if (isEmpty(this.record)) {
+            return templateSections;
+        }
+
+        // we have a contact or account record
+        let sections = deepClone(templateSections);
+
+        sections.forEach(section => {
+            const elements = section.elements;
+            elements.forEach(element => {
+                //alert(JSON.stringify(element));
+                alert(element.label);
+                if (element.label === 'Contact 1: First Name') {
+                    element.recordValue = 'Bart';
+                    //element.dataImportFieldMappingDevNames = ['Contact1_First_Name_3fac9de77'];
+                } else {
+                    element.recordValue = '';
+                }
+                
+            });                 
+        });
+
+        return sections;
     }
 
     handleCancel() {
