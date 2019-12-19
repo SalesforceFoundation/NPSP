@@ -190,10 +190,13 @@ public with sharing class RD2_OpportunityService {
         List<npe03__Recurring_Donation__c> rdsForOpps = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rdWithOpenOpps) {
-            Opportunity opp = rd.npe03__Donations__r;
-            if (opp.CloseDate > Date.Today()) {
-                rdsForOpps.add(rd);
+            if (rd.npe03__Donations__r.size() > 0) {
+                Opportunity opp = rd.npe03__Donations__r[0];
+                if (opp.CloseDate > Date.Today()) {
+                    rdsForOpps.add(rd);
+                }
             }
+
         }
 
         return rdsForOpps;
@@ -209,7 +212,7 @@ public with sharing class RD2_OpportunityService {
         return
             rd.npe03__Donor_Name__c + ' ' +
             System.Label.npe03.RecurringDonationPrefix + ' (' +
-            opp.Recurring_Donation_Installment_Number__c +  ') ' +
+            opp.Recurring_Donation_Installment_Number__c.format() +  ') ' +
             opp.CloseDate.format();
     }
 
@@ -223,7 +226,7 @@ public with sharing class RD2_OpportunityService {
 
         for (npe03__Recurring_Donation__c rd: rdsForFutureOpps) {
             RD2_ScheduleService.Installment installment = rdsWithInstallments.get(rd.id)[0];
-
+            System.debug('Installment info:' + installment);
             oppsToUpdate.add(buildInstallmentFieldsOnOpportunity(rd, installment));
         }
 
@@ -236,19 +239,22 @@ public with sharing class RD2_OpportunityService {
     * @return Opportunity
     */
     private Opportunity buildInstallmentFieldsOnOpportunity(npe03__Recurring_Donation__c rd,  RD2_ScheduleService.Installment installment) {
-        Opportunity opp = rd.npe03__Donations__r;
+        if (rd.npe03__Donations__r.size() > 0) {
+            Opportunity opp = rd.npe03__Donations__r[0];
 
-        if (opp.Amount != installment.installmentAmount) {
-            opp.Amount = installment.installmentAmount;
+            if (opp.Amount != installment.installmentAmount) {
+                opp.Amount = installment.installmentAmount;
+            }
+            if (opp.CloseDate != installment.nextDonationDate) {
+                opp.CloseDate = installment.nextDonationDate;
+                opp.name = buildOpportunityName(rd, opp);
+            }
+            if (installment.campaignId != null && opp.CampaignId != installment.campaignId && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
+                opp.CampaignId = installment.campaignId;
+            }
+            return opp;
         }
-        if (opp.CloseDate != installment.nextDonationDate) {
-            opp.CloseDate = installment.nextDonationDate;
-            opp.name = buildOpportunityName(rd, opp);
-        }
-        if (installment.campaignId != null && opp.CampaignId != installment.campaignId && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
-            opp.CampaignId = installment.campaignId;
-        }
-        return opp;
+        return null;
     }
     /***
     * @description Updates payment method on the payment records for the created opportunities.

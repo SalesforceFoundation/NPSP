@@ -142,7 +142,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (isNewRecurringDonation(rd)) {
                 newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
                 continue;
-            } else if (isExistingRecurringDonation(rd)) {
+            }
+            if (hasOpportunities(rd)) {
                 rdWithOpenOpps.add(rd);
                 continue;
             }
@@ -192,7 +193,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     @TestVisible
-    private Boolean isExistingRecurringDonation(npe03__Recurring_Donation__c rd) {
+    private Boolean hasOpportunities(npe03__Recurring_Donation__c rd) {
         return
 
             rd.Status__c == RD2_Constants.STATUS_ACTIVE

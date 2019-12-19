@@ -43,7 +43,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static final String PLEDGED_STAGENAME = 'Pledged';
     private static final String PROMISED_STAGENAME = 'Promised';
     private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
-    
+
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final List<Date> closeDates = new List<Date>{
@@ -74,7 +74,7 @@ private with sharing class RD2_OpportunityService_TEST {
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
         String expectedOppName = getExpectedSpecializedOppName(rd, closeDates[0]);
-        
+
         testAndAssertOppService(rd, expectedOppName);
 
         List<Opportunity> opps = getOpportunities();
@@ -93,7 +93,7 @@ private with sharing class RD2_OpportunityService_TEST {
      * Installment Opportunity Stage Name in settings is Promised
      */
     @isTest
-    private static void shouldCreateOppWhenRDinsertedWithAccountAndAffiliation() {        
+    private static void shouldCreateOppWhenRDinsertedWithAccountAndAffiliation() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         createRdSettingsWithStage(PROMISED_STAGENAME);
@@ -127,7 +127,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         String expectedOppName = getExpectedSpecializedOppName(rd, closeDates[0]);
-        
+
         testAndAssertOppService(rd, expectedOppName);
 
         List<Opportunity> opps = getOpportunities();
@@ -152,13 +152,13 @@ private with sharing class RD2_OpportunityService_TEST {
     @isTest
     private static void shouldCreateOppWithSpecialFormatWhenNoOppNamingSpecified() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        
+
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
         String expectedOppName = getExpectedSpecializedOppName(rd, closeDates[0]);
-        
+
         testAndAssertOppService(rd, expectedOppName);
     }
 
@@ -177,7 +177,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         //blank out cached version so the inserted setting takes effect
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
-        
+
         createRdSettingsWithStage(PLEDGED_STAGENAME);
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
@@ -255,7 +255,7 @@ private with sharing class RD2_OpportunityService_TEST {
         createRecurringDonation();
         Test.stopTest();
 
-        System.assertEquals(0, getOpportunities().size(), 
+        System.assertEquals(0, getOpportunities().size(),
             'No installment opportunity should be created when the default record type on the setting is invalid');
 
         List<Error__c> errors = errorGateway.getRecords();
@@ -265,6 +265,68 @@ private with sharing class RD2_OpportunityService_TEST {
             'The error message should be related to the invalid record type Id: ' + errors[0]);
     }
 
+    /***
+    * @description Verify RD is created while opportunity is not created when NPSP setting Opp Record Type is not valid
+    */
+    @isTest
+    private static void shouldUpdateOppWhenCloseDateIsInFuture() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>{
+            rd =>  new List<Date>{Date.today()+2 }
+        };
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
+
+
+        rd.Day_Of_Month__c = '25';
+        rd.npe03__Amount__c = 100;
+        update rd;
+
+        List<Opportunity> opps = getOpportunities();
+        System.assertEquals(1, opps.size(), 'one opportunity should be created: ' + opps);
+        rd = mockRecurringDonationFullQueryResult(rd, opps, scheduleService.getNewSchedules(rd));
+        rds.add(rd);
+        String expectedNameFormat = getExpectedSpecializedOppName(rd,Date.newInstance(2019,12,25));
+
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
+        service.updateInstallmentOpportunities(rds, vizMap);
+
+        List<Opportunity> oppUpdates = getOpportunities();
+        System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
+        System.assertEquals(100, oppUpdates[0].amount,'Amount should match');
+        System.assertEquals(Date.newInstance(Date.today().year(),Date.today().month(),25), oppUpdates[0].CloseDate);
+        System.assertEquals(expectedNameFormat, oppUpdates[0].Name);
+
+    }
+
+    @isTest
+    private static void test() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        RD2_OpportunityService service = new RD2_OpportunityService();
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        rd.Day_Of_Month__c = '25';
+        rd.npe03__Amount__c = 100;
+        update rd;
+        rd = mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), scheduleService.getNewSchedules(rd));
+        rds.add(rd);
+
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
+        service.updateInstallmentOpportunities(rds, vizMap);
+
+
+
+    }
     // Helper Methods
     //////////////////
 
@@ -323,7 +385,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
     /***
     * @description Creates Recurring Donation settings
-    * @param stageName Installment Opportunity Stage 
+    * @param stageName Installment Opportunity Stage
     * @return void
     */
     private static void createRdSettingsWithStage(String stageName) {
@@ -339,9 +401,9 @@ private with sharing class RD2_OpportunityService_TEST {
         npe03__Recurring_Donations_Settings__c rdSetting = new npe03__Recurring_Donations_Settings__c(
             npe03__Add_Campaign_to_All_Opportunites__c = true,
             IsRecurringDonations2Enabled__c = true,
-            npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name() 
+            npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
         );
-        
+
         if (fieldMap != null) {
             for (String field : fieldMap.keySet()) {
                 rdSetting.put(field, fieldMap.get(field));
@@ -391,12 +453,12 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Retrieves Opportunities 
+    * @description Retrieves Opportunities
     * @return List<Opportunity>
     */
     private static List<Opportunity> getOpportunities() {
         return [
-            SELECT Id, Name, npe03__Recurring_Donation__c, Amount, CampaignId, StageName,
+            SELECT Id, Name, npe03__Recurring_Donation__c, Amount, CampaignId, StageName, Recurring_Donation_Installment_Number__c,
             CloseDate, AccountId, npe01__Contact_Id_for_Role__c, Primary_Contact__c, RecordTypeId
             FROM Opportunity
             WHERE CreatedDate = Today AND CampaignId != null
@@ -415,6 +477,38 @@ private with sharing class RD2_OpportunityService_TEST {
             FROM npe01__OppPayment__c
             WHERE npe01__Opportunity__c IN :opps
         ];
+    }
+
+    /**
+     * @description Builds a fully mocked RecurringDonation record with subqueries on Opportunities and Schedules. This is
+     * used to support mocked tests against the RD2_EvaluationService without having to insert any records.
+     * @param rd Mocked Recurring Donation using TEST_RecurringDonationBuilder
+     * @param opps Mocked Related Opportunties (or an empty collection)
+     * @param schedules Mockked RecurringDonationSchedule records (can be built using the RD2_ScheduleService)
+     * @return RecurringDonation with the Subqueries fully populated.
+     */
+    private static npe03__Recurring_Donation__c mockRecurringDonationFullQueryResult(npe03__Recurring_Donation__c rd,
+        List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
+
+        if (opps == null) {
+            opps = new List<Opportunity>();
+        }
+
+        if (schedules == null) {
+            schedules = new List<RecurringDonationSchedule__c>();
+        }
+
+        Contact contact = new Contact(
+            Id = rd.npe03__Contact__c,
+            AccountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
+            LastName = UTIL_UnitTestData_TEST.getUniqueString()
+        );
+
+        rd = TEST_RecurringDonationBuilder.addForeignKey(rd, 'npe03__Contact__r', contact);
+        rd = TEST_RecurringDonationBuilder.addRelatedList(rd, 'npe03__Donations__r', opps);
+        rd = TEST_RecurringDonationBuilder.addRelatedList(rd, UTIL_Namespace.StrTokenNSPrefix('RecurringDonationSchedules__r'), schedules);
+
+        return rd;
     }
 
 }
