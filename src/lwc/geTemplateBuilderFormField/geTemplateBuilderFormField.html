@@ -46,8 +46,10 @@
                         </template>
 
                         <template if:true={isLightningCombobox}>
-                            <c-ge-form-field-picklist field-name={targetFieldApiName}
+                            <c-ge-form-field-picklist class-name="slds-m-around_none"
+                                                      field-name={targetFieldApiName}
                                                       object-name={targetObjectApiName}
+                                                      object-describe-info={objectDescribeInfo}
                                                       onchange={handleChangeCombobox}
                                                       value={field.defaultValue}
                                                       variant="label-stacked">
