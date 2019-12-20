@@ -36,7 +36,7 @@ class GeFormService {
      */
     getFormTemplate() {
         return new Promise((resolve, reject) => {
-            getRenderWrapper()
+            getRenderWrapper({})
                 .then((result) => {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
