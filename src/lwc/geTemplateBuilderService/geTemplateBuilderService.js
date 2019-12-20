@@ -33,7 +33,7 @@ class GeTemplateBuilderService {
     */
     handleGetFieldMappingSet = (fieldMappingSetName) => {
         return new Promise((resolve, reject) => {
-            getFieldMappingSet({ fieldMappingSetName: fieldMappingSetName })
+            getFieldMappingSet({ fieldMappingSetName: fieldMappingSetName, includeUtilityFields: true })
                 .then(data => {
                     this.fieldMappingByDevName = data.fieldMappingByDevName;
                     this.objectMappingByDevName = data.objectMappingByDevName;
