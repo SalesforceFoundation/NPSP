@@ -32,6 +32,7 @@ public with sharing class GE_FormRendererService {
 
     /**
      * This method creates a wrapper which contains the default SGE template and a field mapping set.
+     *
      * @return  A FORM_RenderWrapper containing the default template JSON.
      */
     public static FORM_RenderWrapper getDefaultSGERenderWrapper() {
@@ -55,6 +56,7 @@ public with sharing class GE_FormRendererService {
         FORM_Template defaultTemplate = formService.retrieveDefaultBGEFormTemplate();
 
         FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
+
 
         return renderWrapper;
     }
@@ -80,7 +82,6 @@ public with sharing class GE_FormRendererService {
             return null;
         }
     }
-
 
     /*******************************************************************************************************
     * @description Takes the template and field mappings and updates the template so that the required fields are set
