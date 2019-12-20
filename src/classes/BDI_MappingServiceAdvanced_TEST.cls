@@ -120,12 +120,17 @@ private class BDI_MappingServiceAdvanced_TEST {
         //Set the custom setting for Data import to use Data Import Field Mappings (eg Custom Metadata Type Mapping)
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
-        dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         //Retrieve a mapping service instance
-        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
-        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME,
+            true);
+        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME,
+            true);
 
         System.assert(fms != null);
         System.assert(fms.objectMappingByDevName.size() > 0);
@@ -148,9 +153,11 @@ private class BDI_MappingServiceAdvanced_TEST {
 
         //Retrieve a mapping service instance
         BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(
-            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME,
+            true);
         BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(
-            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME,
+            true);
 
         // Confirm that we have the Donation_Donor__c field from DataImport__c as a Field Mapping
         Boolean hasDonationDonorFieldMapping = false;
