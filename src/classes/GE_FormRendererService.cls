@@ -1,6 +1,4 @@
 public with sharing class GE_FormRendererService {
-    private static final String CONTACT_TYPE = 'Contact';
-    private static final String ACCOUNT_TYPE = 'Account';
 
     @AuraEnabled
     public static FORM_RenderWrapper getRenderWrapperById(Id templateId) {
@@ -34,16 +32,14 @@ public with sharing class GE_FormRendererService {
 
     /**
      * This method creates a wrapper which contains the default SGE template and a field mapping set.
-     * @param String recordId - id of the contact or account
-     * @param String apiName - sObject type for the record
      * @return  A FORM_RenderWrapper containing the default template JSON.
      */
-    public static FORM_RenderWrapper getDefaultSGERenderWrapper(String recordId, String apiName) {
+    public static FORM_RenderWrapper getDefaultSGERenderWrapper() {
         FORM_Service formService = new FORM_Service();
 
         FORM_Template defaultTemplate = formService.retrieveDefaultSGEFormTemplate();
 
-        FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate, recordId, apiName);
+        FORM_RenderWrapper renderWrapper = wrapTemplate(defaultTemplate);
 
         return renderWrapper;
     }
@@ -85,32 +81,6 @@ public with sharing class GE_FormRendererService {
         }
     }
 
-    /**
-     * This method builds the wrapper given the template and the field mapping set. 
-     * sets the record field values to the default values on the template
-     *
-     * @return  A FORM_RenderWrapper containing the default template JSON.
-     */
-    private static FORM_RenderWrapper wrapTemplate(FORM_Template template, String recordId, String apiName) {
-        if (template != null) {
-            // Get the mapping service which will retrieve all the mappings
-            BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
-
-            updateTemplateWithRequired(template, mappingService.fieldMappingSet);
-
-            // display record values if contact or account
-            if (!String.isBlank(recordId) && !String.isEmpty(apiName)) {
-                updateTemplateWithValues(template, mappingService.fieldMappingSet, recordId, apiName);
-            }
-
-            // Create the wrapper which will hold the template and field mapping set.
-            FORM_RenderWrapper renderWrapper = new FORM_RenderWrapper(template, mappingService.fieldMappingSet);
-
-            return renderWrapper;
-        } else {
-            return null;
-        }
-    }
 
     /*******************************************************************************************************
     * @description Takes the template and field mappings and updates the template so that the required fields are set
@@ -140,92 +110,6 @@ public with sharing class GE_FormRendererService {
             }
         }
     }
-
-    /*******************************************************************************************************
-    * @description updates the default values on the template fields with the contact or account record field values
-    * as required. 
-    * @param template - The deserailized template that is stored. 
-    * @param fieldMappingSet The field mapping set which determines what DI field is mapped to what target field. 
-    * @param recordId - id of the contact or account
-    * @param apiName - sobject type for the record, contact or account
-    */
-    private static void updateTemplateWithValues(FORM_Template template, BDI_FieldMappingSet fieldMappingSet, 
-                                                String recordId, String apiName) {
-
-        List<FORM_Section> sectionList = template.layout.sections;
-        
-        // system.debug('fieldMappingSet = ' + fieldMappingSet);
-        // system.debug('recordId = ' + recordId);
-        // system.debug('apiName = ' + apiName);
-
-        //UTIL_Describe describeService = UTIL_Describe.getInstance();
-
-        //Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(apiName);
-
-        sObject record = getRecord(recordId, apiName);
-        //system.debug('record = '  + record );
-        
-
-        /*system.debug('fields = ' + fields);
-        system.debug('field count = ' + fields.keySet().size());
-        for(String fieldName : fields.keySet()) {
-            system.debug('field = ' + fieldName);
-        }
-
-        for (FORM_Section section : sectionList) {
-            for (FORM_Element element : section.elements) {
-                //system.debug('element = ' + element.value);
-            }
-        }*/
-    }
-
-     /*******************************************************************************************************
-    * @description selects a contact or account by record id
-     * @param recordId - id of the contact or account
-    * @param apiName - sobject type for the record, contact or account
-    */
-    private static sObject getRecord(String recordId, String apiName) {
-        String soql = buildSoql(recordId, apiName);
-
-        List<sObject> sObjectList = Database.query(soql);
-        if (!sObjectList.isEmpty()) {
-            return sObjectList[0];
-        }
-
-        return null;
-    }
-
-    /*******************************************************************************************************
-    * @description builds the soql to retrieve all fields for contact or account record
-     * @param recordId - id of the contact or account
-    * @param apiName - sobject type for the record, contact or account
-    */
-    private static string buildSoql(String recordId, String apiName) {
-        Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe(apiName);
-        List<String> selectFields = new List<String>(fields.keySet());
-
-        return new UTIL_Query()
-            .withSelectFields(selectFields)
-            .withFrom(apiName)
-            .withWhere('Id = :recordId')
-            .build();
-    }
-
-    private static String buildContactSoql(String recordId) {
-        Map<String, Schema.DescribeFieldResult> fields = UTIL_Describe.getAllFieldsDescribe('Contact');
-        List<String> selectFields = new List<String>(fields.keySet());
-
-        return new UTIL_Query()
-            .withSelectFields(selectFields)
-            .withFrom(String.valueOf(Contact.SObjectType))
-            .withWhere('Id = :recordId')
-            .build();
-    }
-
-    private static sObject getObject(String recordId, String apiName) {
-        return null;
-    }
-
 
     /*******************************************************************************************************
     * @description Takes a Data Import record from the Gift Entry form and saves it to the database.

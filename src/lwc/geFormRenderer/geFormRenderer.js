@@ -37,7 +37,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // check if there is a record id in the url
         this.recordId = getQueryParameters().c__recordId;
 
-        GeFormService.getFormTemplate(this.recordId, this.apiName).then(response => {
+        GeFormService.getFormTemplate().then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
                 const { formTemplate } = response;
@@ -50,7 +50,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleGetTemplate = async () => {
-        let response = await GeFormService.getFormTemplate(this.recordId, this.apiName);
+        let response = await GeFormService.getFormTemplate();
 
         if (response !== null && typeof response !== 'undefined') {
             const { formTemplate } = response;

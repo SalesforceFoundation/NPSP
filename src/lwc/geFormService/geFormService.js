@@ -34,9 +34,9 @@ class GeFormService {
      * Retrieve the default form render wrapper.
      * @returns {Promise<FORM_RenderWrapper>}
      */
-    getFormTemplate(recordId, apiName) {
+    getFormTemplate() {
         return new Promise((resolve, reject) => {
-            getRenderWrapper({recordId: recordId, apiName: apiName})
+            getRenderWrapper()
                 .then((result) => {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;

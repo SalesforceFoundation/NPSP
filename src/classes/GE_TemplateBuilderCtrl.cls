@@ -52,9 +52,8 @@ public with sharing class GE_TemplateBuilderCtrl {
      * @return      A render wrapper containing a template and information about the object/field mappings.
      */
     @AuraEnabled(cacheable=true)
-    public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper(String recordId, String apiName) {
-        system.debug('recordId = ' + recordId + '; apiName = ' + apiName);
-        return GE_FormRendererService.getDefaultSGERenderWrapper(recordId, apiName);
+    public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
+        return GE_FormRendererService.getDefaultSGERenderWrapper();
     }
 
     /**

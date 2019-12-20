@@ -66,7 +66,7 @@ private with sharing class GE_FormRendererService_TEST {
         
         insert defaultTemplate;
 
-        FORM_RenderWrapper frw = GE_FormRendererService.getDefaultSGERenderWrapper(null, null);
+        FORM_RenderWrapper frw = GE_FormRendererService.getDefaultSGERenderWrapper();
         System.assert(frw.formTemplate != null);
         System.assert(frw.formTemplate.name == template.name);
 
