@@ -31,9 +31,19 @@
                 <lightning-tab value="Batches"
                                label="Batches"
                                class="slds-p-around_none">
-                    <c-util-stencil row-count="5"
-                                    column-count="5">
-                    </c-util-stencil>
+                    <template if:false={isLoading}>
+                        <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
+                            <div class="slds-size_1-of-1 slds-p-around_medium">
+                                <div class="slds-card slds-card_extension">
+                                    <c-util-list-view data-id='batchesListView'
+                                                      object-name={dataImportBatchObjectApiName}
+                                                      show-standard-footer="true"
+                                                      limit="50">
+                                    </c-util-list-view>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </lightning-tab>
 
                 <lightning-tab value="Templates"

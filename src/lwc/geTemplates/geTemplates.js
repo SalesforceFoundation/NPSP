@@ -9,6 +9,7 @@ import { showToast, format } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
+import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
@@ -59,6 +60,10 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     get formTemplateObjectApiName() {
         return FORM_TEMPLATE_INFO.objectApiName;
+    }
+
+    get dataImportBatchObjectApiName() {
+        return DATA_IMPORT_BATCH_INFO.objectApiName;
     }
 
     get sortTemplatesBy() {
