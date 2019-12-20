@@ -43,6 +43,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static final String PLEDGED_STAGENAME = 'Pledged';
     private static final String PROMISED_STAGENAME = 'Promised';
     private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
+    private static final String PAYMENT_CHECK = 'Check';
 
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
@@ -269,10 +270,11 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verify opp is updated with installment fields if close date is in the future
+    * @description Verify opp is updated with installment fields and payment method in payment object
+    * if close date is in the future
     */
     @isTest
-    private static void shouldUpdateOppWhenCloseDateIsInFuture() {
+    private static void shouldUpdateOppInstallmentFieldsWhenCloseDateIsInFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
@@ -289,6 +291,8 @@ private with sharing class RD2_OpportunityService_TEST {
 
         rd.Day_Of_Month__c = '25';
         rd.npe03__Amount__c = 100;
+        rd.PaymentMethod__c = PAYMENT_CHECK;
+
         update rd;
 
         List<Opportunity> opps = getOpportunities();
@@ -305,6 +309,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(100, oppUpdates[0].amount,'Amount should match');
         System.assertEquals(Date.newInstance(Date.today().year(),Date.today().month(),25), oppUpdates[0].CloseDate);
         System.assertEquals(expectedNameFormat, oppUpdates[0].Name);
+        System.assertEquals(getPayments(oppUpdates)[0].npe01__Payment_Method__c, PAYMENT_CHECK);
 
     }
 
@@ -315,7 +320,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldNotUpdateOppWhenCloseDateInThePast() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        Campaign campaign = new Campaign(Name = 'ChildrenCampaign', IsActive = true);
         insert campaign;
 
         createRdSettingsWithStage(PLEDGED_STAGENAME);
@@ -359,7 +364,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        Campaign campaign = new Campaign(Name = 'ChildrenCampaign', IsActive = true);
         insert campaign;
 
         createRdSettingsWithStage(PLEDGED_STAGENAME);
@@ -399,7 +404,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        Campaign campaign = new Campaign(Name = 'TeaCampaign', IsActive = true);
+        Campaign campaign = new Campaign(Name = 'ChildrenCampaign', IsActive = true);
         insert campaign;
 
         createRdSettingsWithStage(PLEDGED_STAGENAME);
@@ -432,6 +437,94 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
         System.assertNotEquals(campaign.id, oppUpdates[0].campaignid,'Campaign should not match');
     }
+
+    /***
+    * @description Verify Opportunity's campaign is not updated when there is update to the campaign on the RD
+    * and the opportunity's status is closed
+    */
+    @isTest
+    private static void shouldNotUpdateCampaignInClosedOpportunity() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+
+        Campaign campaign = new Campaign(Name = 'ChildrenCampaign', IsActive = true);
+        insert campaign;
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>{
+            rd =>  new List<Date>{Date.today()+2 }
+        };
+
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
+
+        List<Opportunity> opps = getOpportunities();
+        opps[0].StageName = 'Closed Won';
+        opps[0].CloseDate = System.today();
+        update opps[0];
+
+        rd.npe03__Recurring_Donation_Campaign__c = campaign.id;
+        update rd;
+
+        rd = mockRecurringDonationFullQueryResult(rd, opps, scheduleService.getNewSchedules(rd));
+        rds.add(rd);
+
+        Test.startTest();
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
+        service.updateInstallmentOpportunities(rds, vizMap);
+        Test.stopTest();
+
+        List<Opportunity> oppUpdates = getOpportunities();
+        System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
+        System.assertNotEquals(campaign.id, oppUpdates[0].campaignid,'Campaign should not match: ' + oppUpdates);
+    }
+
+     /***
+    * @description Verify Opportunity's campaign is not updated when there start date on the RD
+    * is greater than close date on the opportunity
+    */
+    @isTest
+    private static void shouldNotUpdateCampaignIfRDStartDateIsGreaterToOppCloseDate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+
+        Campaign campaign = new Campaign(Name = 'ChildrenCampaign', IsActive = true);
+        insert campaign;
+
+        createRdSettingsWithStage(PLEDGED_STAGENAME);
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        Map<npe03__Recurring_Donation__c, List<Date>> rdsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>{
+            rd =>  new List<Date>{Date.today()+2 }
+        };
+
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        service.createInstallmentOpportunities(rdsWithCloseDates);
+
+        List<Opportunity> opps = getOpportunities();
+
+        rd.StartDate__c = Date.today()+5;
+        rd.npe03__Recurring_Donation_Campaign__c = campaign.id;
+        update rd;
+
+        rd = mockRecurringDonationFullQueryResult(rd, opps, scheduleService.getNewSchedules(rd));
+        rds.add(rd);
+
+        Test.startTest();
+        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
+        service.updateInstallmentOpportunities(rds, vizMap);
+        Test.stopTest();
+
+        List<Opportunity> oppUpdates = getOpportunities();
+        System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
+        System.assertNotEquals(campaign.id, oppUpdates[0].campaignid,'Campaign should not match: ' + oppUpdates);
+
+    }
+
 
     /***
     * @description Verify if the updates to the opportunity do not give error message
@@ -527,7 +620,7 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Genenric version of creating Recurring Donations Settings
+    * @description Generic version of creating Recurring Donations Settings
     * @param fieldMap a map of field name to value
     * @return void
      */
