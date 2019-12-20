@@ -1511,14 +1511,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
     </labels>
     <labels>
-        <fullName>RD2_DisableCustomizableRollupWarning</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Not disable customizable rollups when RD2 is enabled</shortDescription>
-        <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
-    </labels>
-    <labels>
         <fullName>RD2_DataMigrationInvalidOpenEndedStatus</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1541,6 +1533,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Validate RD data if day of month is blank when installment is monthly</shortDescription>
         <value>You must enter a value for Day of Month when Installment Period is Monthly.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DisableCustomizableRollupWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning displayed on Customizable Rollups page when enhanced RDs are enabled</shortDescription>
+        <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledHeader</fullName>
@@ -1623,14 +1623,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>In this step, NPSP will simulate migrating your existing data to the Enhanced Recurring Donations model and will identify any errors. If there are errors, go to NPSP Settings | System Tools | Error Log. After you fix the errors, return here and validate the migration again. Once the validation completes without errors, you can proceed to the next step.&lt;br/&gt;&lt;br/&gt;The validation process may take some time to complete. You can leave this page and return later to check the progress.</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementEnableTitle</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Enablement section title</shortDescription>
-        <value>Enable Enhanced Recurring Donations</value>
-    </labels>
-    <labels>
         <fullName>RD2_EnablementEnableConfirm</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1653,6 +1645,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Enablement section enable guidelines</shortDescription>
         <value>Enable the Enhanced Recurring Donations functionality.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementEnableTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enablement section title</shortDescription>
+        <value>Enable Enhanced Recurring Donations</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableWarning</fullName>
@@ -1719,14 +1719,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Install Enhanced Recurring Donations Metadata</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementMigrationIntro</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Migration section introduction and guidelines</shortDescription>
-        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
-    </labels>
-    <labels>
         <fullName>RD2_EnablementMigrationButton</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1749,6 +1741,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Message displayed on a migration error</shortDescription>
         <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration section introduction and guidelines</shortDescription>
+        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationSkipButton</fullName>
@@ -1863,6 +1863,46 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Message displayed indicating data is not available when enhanced RDs are enabled</shortDescription>
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerColumnDate</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Date Column Header</shortDescription>
+        <value>Date</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerErrorEnhancedRDNot</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Enhanced RD is not enabled</shortDescription>
+        <value>This component must be used on a Recurring Donations record page.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerErrorInvalidUsage</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when the component is used on a Non-Recurring Donations page</shortDescription>
+        <value>You must enable Enhanced Recurring Donations to use this component.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerMessageNoSchedule</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when there is no future schedule to render</shortDescription>
+        <value>There are no scheduled installment Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the Schedule Visualizer Component</shortDescription>
+        <value>Upcoming Schedule</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
