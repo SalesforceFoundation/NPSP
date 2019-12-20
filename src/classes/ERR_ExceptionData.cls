@@ -99,7 +99,6 @@ public with sharing class ERR_ExceptionData {
     * @return The JSON serialized string of the exception wrapper. 
     */
     public static String createExceptionWrapperJSONString(Exception e) {
-        DmlException dmlException = (DmlException)e;
         ERR_ExceptionData exceptionWrapper = new ERR_ExceptionData(e);
         String JSONExceptionData = JSON.serialize(exceptionWrapper);
 
