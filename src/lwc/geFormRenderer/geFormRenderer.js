@@ -5,7 +5,8 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import { showToast, getQueryParameters, getRecordFieldNames, isEmpty, deepClone } from 'c/utilTemplateBuilder';
+import { showToast, getQueryParameters, getRecordFieldNames, 
+    setRecordValuesOnTemplate, isEmpty } from 'c/utilTemplateBuilder';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api recordId = '';
@@ -41,7 +42,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
                 const { formTemplate } = response;
-                let fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+                const fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
                 // get the target field names to be used by getRecord
                 this.fieldNames = getRecordFieldNames(formTemplate, fieldMappings);
@@ -54,6 +55,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (response !== null && typeof response !== 'undefined') {
             const { formTemplate } = response;
+            const fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
             this.ready = true;
             this.name = formTemplate.name;
             this.description = formTemplate.description;
@@ -61,39 +63,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (typeof formTemplate.layout !== 'undefined'
                 && Array.isArray(formTemplate.layout.sections)) {
 
-                // TODO - vm
-                //this.sections = formTemplate.layout.sections;
-                let sectionsWithValues = this.setRecordValuesOnTemplate(formTemplate.layout.sections);
+                // add record data to the template fields
+                let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections, fieldMappings, this.record);
                 this.sections = sectionsWithValues;
             }
         }
-    }
-
-    // adds the record values to the template elements so they can be rendered
-    setRecordValuesOnTemplate(templateSections) {
-        if (isEmpty(this.record)) {
-            return templateSections;
-        }
-
-        // we have a contact or account record
-        let sections = deepClone(templateSections);
-
-        sections.forEach(section => {
-            const elements = section.elements;
-            elements.forEach(element => {
-                //alert(JSON.stringify(element));
-                alert(element.label);
-                if (element.label === 'Contact 1: First Name') {
-                    element.recordValue = 'Bart';
-                    //element.dataImportFieldMappingDevNames = ['Contact1_First_Name_3fac9de77'];
-                } else {
-                    element.recordValue = '';
-                }
-                
-            });                 
-        });
-
-        return sections;
     }
 
     handleCancel() {

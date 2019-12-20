@@ -470,11 +470,47 @@ const getRecordFieldNames = (formTemplate, fieldMappings) => {
             }     
         }
     }
-    
     return fieldNames;
 };
 
+/*******************************************************************************
+* @description returns a copy of the form template that has record values on the element
+* stored in the recordValue attribute
+* in the format objectName.fieldName
+* @param formTemplate: the form template
+* @param fieldMappings: the field mappings dev names
+* @param record: the contact or account record
+*/
+const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
+    // check if we have a contact or account record
+    if (isEmpty(record)) {
+        return templateSections;
+    }
 
+    // create a copy of the sections
+    // so we can add the record value to the elements
+    let sections = deepClone(templateSections);
+
+    sections.forEach(section => {
+        const elements = section.elements;
+        elements.forEach(element => {
+            // set an empty default value
+            element.recordValue = '';
+
+            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                 if (objectName === record.apiName) {
+                     // field name from the mappings
+                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+
+                     // get the record value and store it in the element
+                     element.recordValue = record.fields[fieldName].value;
+                }
+             }
+        });                 
+    });
+    return sections;
+};
 
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -498,5 +534,6 @@ export {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     format,
-    getRecordFieldNames
+    getRecordFieldNames,
+    setRecordValuesOnTemplate
 }

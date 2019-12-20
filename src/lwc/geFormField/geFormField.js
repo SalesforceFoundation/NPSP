@@ -29,7 +29,6 @@ export default class GeFormField extends LightningElement {
     }
 
     connectedCallback() {
-        alert(this.element.recordValue);
         this.value = this.element.recordValue;
     }
 
