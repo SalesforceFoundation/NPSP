@@ -68,8 +68,9 @@ public with sharing class GE_FormRendererService {
      */
     private static FORM_RenderWrapper wrapTemplate(FORM_Template template) {
         if (template != null) {
+            Boolean includeUnmappedFields = true;
             // Get the mapping service which will retrieve all the mappings
-            BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+            BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance(includeUnmappedFields);
 
             updateTemplateWithRequired(template, mappingService.fieldMappingSet);
 
