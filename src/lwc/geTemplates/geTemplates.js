@@ -17,8 +17,8 @@ const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 const SUCCESS = 'success';
 const IS_LOADING = 'isLoading';
-const TEMPLATE_BUILDER_TAB_NAME = '{0}GE_Template_Builder';
-const TEMPLATES_LIST_VIEW_NAME = '{0}Templates';
+const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
+const TEMPLATES_LIST_VIEW_NAME = 'Templates';
 
 const TEMPLATES_LIST_VIEW_ICON = 'standard:visit_templates';
 const TEMPLATES_TABLE_ACTIONS = [
@@ -36,22 +36,13 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     @track templatesTableActions = TEMPLATES_TABLE_ACTIONS;
     @track isAccessible = true;
     @track isLoading = true;
-    currentNamespace;
 
     get templateBuilderCustomTabApiName() {
-        const namespacePrefix = `${this.currentNamespace}__`;
-
-        return this.currentNamespace ?
-            format(TEMPLATE_BUILDER_TAB_NAME, [namespacePrefix])
-            : format(TEMPLATE_BUILDER_TAB_NAME, ['']);
+        return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
     }
 
     get templatesListViewApiName() {
-        const namespacePrefix = `${this.currentNamespace}__`;
-
-        return this.currentNamespace ?
-            format(TEMPLATES_LIST_VIEW_NAME, [namespacePrefix])
-            : format(TEMPLATES_LIST_VIEW_NAME, ['']);
+        return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATES_LIST_VIEW_NAME);
     }
 
     get templatesListViewIcon() {
@@ -83,7 +74,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
         if (this.isAccessible) {
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
-            this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
             this.templates = await getAllFormTemplates();
             this.isLoading = false;
         }

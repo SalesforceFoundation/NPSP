@@ -10,7 +10,7 @@ import GeLabelService from 'c/geLabelService';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 
-const TEMPLATE_BUILDER_TAB_NAME = '{0}GE_Template_Builder';
+const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
 const SLDS_ICON_CATEGORY_STANDARD = 'standard';
 const DEFAULT_INCREMENT_BY = 10;
 const DEFAULT_LIMIT = 10;
@@ -355,12 +355,8 @@ export default class utilListView extends NavigationMixin(LightningElement) {
         let url;
 
         if (this.objectName === FORM_TEMPLATE_INFO.objectApiName) {
-            const currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
-            const namespacePrefix = `${currentNamespace}__`;
-
-            const builderTabApiName = currentNamespace ?
-                format(TEMPLATE_BUILDER_TAB_NAME, [namespacePrefix])
-                : format(TEMPLATE_BUILDER_TAB_NAME, ['']);
+            const builderTabApiName =
+                TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
 
             url = `/lightning/n/${builderTabApiName}?c__recordId={0}`;
         } else {
