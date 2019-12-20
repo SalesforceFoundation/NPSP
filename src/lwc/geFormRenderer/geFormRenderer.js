@@ -10,7 +10,6 @@ import { showToast, getQueryParameters, getRecordFieldNames, setRecordValuesOnTe
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api recordId = '';
     @api record;
-    apiName = '';
     fieldNames = [];
 
     @track sections = [];
@@ -25,7 +24,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @wire(getRecord, { recordId: '$recordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
         if (data) {
-            this.apiName = data.apiName;
             this.record = data;
             this.handleGetTemplate();
         } else if (error) {
