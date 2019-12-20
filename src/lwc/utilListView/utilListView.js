@@ -478,7 +478,6 @@ export default class utilListView extends NavigationMixin(LightningElement) {
     */
     setDatatableRecordsForImperativeCall(dataRecords) {
         this.records = [];
-        //let records = deepClone(dataRecords);
         let recordUrl = this.getRecordUrl();
 
         dataRecords.forEach(record => {
@@ -569,6 +568,7 @@ export default class utilListView extends NavigationMixin(LightningElement) {
         const columnEntry = this.columnEntriesByName[fieldName];
 
         this.sortedDirection = event.detail.sortDirection;
+
         // Set sortedBy to correct fieldName if a URL type column.
         this.sortedBy =
             columnEntry.typeAttributes ? columnEntry.typeAttributes.label.fieldName : fieldName;
