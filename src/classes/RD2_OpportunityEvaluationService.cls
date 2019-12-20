@@ -282,6 +282,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         String scheduleSubquery = 
             '(SELECT Id, InstallmentAmount__c, ' +
             'Campaign__c, ' +
+            'Campaign__r.Name, ' +
             'InstallmentFrequency__c, ' +
             'InstallmentPeriod__c, ' +
             'DayOfMonth__c, ' +
