@@ -46,10 +46,11 @@
                     </template>
 
                     <template if:false={isLoading}>
-                        <div class="slds-grid slds-wrap">
+                        <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
                             <div class="slds-size_1-of-1 slds-p-around_medium">
                                 <div class="slds-card slds-card_extension">
-                                    <c-util-list-view title={CUSTOM_LABELS.commonTemplates}
+                                    <c-util-list-view data-id='templatesListView'
+                                                      title={CUSTOM_LABELS.commonTemplates}
                                                       custom-icon={templatesListViewIcon}
                                                       description={CUSTOM_LABELS.geBodyTemplatesTabDescription}
                                                       list-view-api-name={templatesListViewApiName}

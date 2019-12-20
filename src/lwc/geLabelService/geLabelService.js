@@ -92,6 +92,7 @@ import geTextListViewUpdatedAgo from '@salesforce/label/c.geTextListViewUpdatedA
 import geToastSaveFailed from '@salesforce/label/c.geToastSaveFailed';
 import geToastSelectActiveSection from '@salesforce/label/c.geToastSelectActiveSection';
 import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCreateSuccess';
+import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDeleteSuccess';
 import geToastTemplateTabError from '@salesforce/label/c.geToastTemplateTabError';
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
@@ -197,6 +198,7 @@ class GeLabelService {
         geToastSaveFailed,
         geToastSelectActiveSection,
         geToastTemplateCreateSuccess,
+        geToastTemplateDeleteSuccess,
         geToastTemplateTabError,
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,

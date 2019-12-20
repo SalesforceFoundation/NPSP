@@ -221,6 +221,17 @@ const isObject = (obj) => {
 }
 
 /*******************************************************************************
+* @description Checks to see if the passed parameter is a primative.
+*
+* @param {any} value: Thing to check
+*
+* @return {boolean}: True if the provided obj is a primative.
+*/
+const isPrimative = (value) => {
+    return (value !== Object(value));
+}
+
+/*******************************************************************************
 * @description Loop through provided array or object properties. Recursively check
 * if the current value is an object or an array and copy accordingly.
 *
@@ -230,6 +241,10 @@ const isObject = (obj) => {
 */
 const deepClone = (src) => {
     let clone = null;
+
+    if (isPrimative(src)) {
+        return src;
+    }
 
     if (isObject(src)) {
         clone = {};
@@ -275,22 +290,53 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 * @param {array} list: List to be sorted
 * @param {string} property: Property to sort by
 * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
+* @param {boolean} isNullsLast: If truthy, orders by NULLS LAST using isEmpty(value)
 *
 * @return {list} data: Sorted instance of list.
 */
-const sort = (list, property, sortDirection) => {
-    const data = mutable(list);
-    const key = (a) => a[property];
-    const reverse = sortDirection === ASC ? 1 : -1;
+const sort = (objects, attribute, direction = "desc", isNullsLast) => {
+    objects = mutable(objects);
 
-    data.sort((a, b) => {
-        let valueA = key(a) ? key(a) : '';
-        let valueB = key(b) ? key(b) : '';
-        return reverse * ((valueA > valueB) - (valueB > valueA));
-    });
+    if (objects && attribute) {
+        let aBeforeB, bBeforeA;
+        {
+            let sortDirectionMultiplier = direction.toLowerCase() === "asc" ? -1 : 1;
 
-    return data;
-}
+            aBeforeB = -1 * sortDirectionMultiplier;
+            bBeforeA = 1 * sortDirectionMultiplier;
+        }
+
+        return objects.sort((a, b) => {
+            if (isEmpty(a)) {
+                if (isEmpty(b)) {
+                    return 0;
+                }
+                return isNullsLast ? bBeforeA : aBeforeB;
+            }
+            if (isEmpty(b)) {
+                return isNullsLast ? aBeforeB : bBeforeA;
+            }
+            if (isEmpty(a[attribute])) {
+                if (isEmpty(b[attribute])) {
+                    return 0;
+                }
+                return isNullsLast ? bBeforeA : aBeforeB;
+            }
+            if (isEmpty(b[attribute])) {
+                return isNullsLast ? aBeforeB : bBeforeA;
+            }
+            if (a[attribute] < b[attribute]) {
+                return aBeforeB;
+            }
+            if (b[attribute] < a[attribute]) {
+                return bBeforeA;
+            }
+            return 0;
+        });
+    }
+
+    return objects;
+};
 
 /*******************************************************************************
 * @description Creates and dispatches a ShowToastEvent
@@ -452,7 +498,8 @@ export {
     debouncify,
     isEmpty,
     isFunction,
+    isPrimative,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
-    format
+    format,
 }

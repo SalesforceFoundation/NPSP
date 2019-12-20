@@ -5,7 +5,7 @@ import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFo
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { findIndexByProperty } from 'c/utilTemplateBuilder';
+import { showToast, format } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
@@ -14,6 +14,10 @@ import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
+const SUCCESS = 'success';
+const IS_LOADING = 'isLoading';
+const TEMPLATE_BUILDER_TAB_NAME = '{0}GE_Template_Builder';
+const TEMPLATES_LIST_VIEW_NAME = '{0}Templates';
 
 const TEMPLATES_LIST_VIEW_ICON = 'standard:visit_templates';
 const TEMPLATES_TABLE_ACTIONS = [
@@ -34,13 +38,19 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     currentNamespace;
 
     get templateBuilderCustomTabApiName() {
+        const namespacePrefix = `${this.currentNamespace}__`;
+
         return this.currentNamespace ?
-            `${this.currentNamespace}__GE_Template_Builder`
-            : 'GE_Template_Builder';
+            format(TEMPLATE_BUILDER_TAB_NAME, [namespacePrefix])
+            : format(TEMPLATE_BUILDER_TAB_NAME, ['']);
     }
 
     get templatesListViewApiName() {
-        return this.currentNamespace ? `${this.currentNamespace}__Templates` : 'Templates';
+        const namespacePrefix = `${this.currentNamespace}__`;
+
+        return this.currentNamespace ?
+            format(TEMPLATES_LIST_VIEW_NAME, [namespacePrefix])
+            : format(TEMPLATES_LIST_VIEW_NAME, ['']);
     }
 
     get templatesListViewIcon() {
@@ -53,6 +63,10 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     get sortTemplatesBy() {
         return TEMPLATE_LAST_MODIFIED_DATE_INFO.fieldApiName;
+    }
+
+    get templatesListViewComponent() {
+        return this.template.querySelector('c-util-list-view[data-id="templatesListView"]');
     }
 
     connectedCallback() {
@@ -98,24 +112,31 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     handleTemplatesTableRowAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
-        this.isLoading = true;
 
         switch (actionName) {
             case 'edit':
                 this.navigateToTemplateBuilder(row.Id);
                 break;
             case 'clone':
+                this.templatesListViewComponent.setProperty(IS_LOADING, true);
+
                 cloneFormTemplate({ id: row.Id }).then((clonedTemplate) => {
                     this.templates = [...this.templates, clonedTemplate];
-                    this.isLoading = false;
+                    this.templatesListViewComponent.refreshImperativeQuery();
+                    this.templatesListViewComponent.setProperty(IS_LOADING, false);
                 });
                 break;
             case 'delete':
-                deleteFormTemplates({ ids: [row.Id] }).then(() => {
-                    const index = findIndexByProperty(this.templates, 'Id', row.Id);
-                    this.templates.splice(index, 1);
-                    this.templates = [...this.templates];
-                    this.isLoading = false;
+                this.templatesListViewComponent.setProperty(IS_LOADING, true);
+
+                deleteFormTemplates({ ids: [row.Id] }).then((formTemplateNames) => {
+                    this.templatesListViewComponent.refreshImperativeQuery();
+                    this.templatesListViewComponent.setProperty(IS_LOADING, false);
+                    const toastMessage = GeLabelService.format(
+                        this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
+                        formTemplateNames);
+
+                    showToast(toastMessage, '', SUCCESS);
                 });
                 break;
             default:

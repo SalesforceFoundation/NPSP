@@ -48,8 +48,11 @@ export default class utilListView extends NavigationMixin(LightningElement) {
     @track options = [];
     @track records = [];
     @track columns = [];
-    @track columnLabelsByName = {};
+    @track columnEntriesByName = {};
     @track selectedListView;
+    @track orderedByInfo;
+
+    @track sortedByLabel;
 
     get hasCustomTitle() {
         return this.title ? true : false;
@@ -79,14 +82,6 @@ export default class utilListView extends NavigationMixin(LightningElement) {
             : GeLabelService.format(this.CUSTOM_LABELS.geTextListViewItemCount, ITEM_COUNT);
     }
 
-    get sortedByLabel() {
-        if (this.columnLabelsByName && this.sortedBy) {
-            const SORTED_BY = [this.columnLabelsByName[this.sortedBy]];
-            return GeLabelService.format(this.CUSTOM_LABELS.geTextListViewSortedBy, SORTED_BY);
-        }
-        return '';
-    }
-
     get lastUpdatedOn() {
         const isMomentLoaded = CumulusStaticResources && CumulusStaticResources.moment;
         const hasRecords = this.records && this.records.length > 0;
@@ -112,6 +107,34 @@ export default class utilListView extends NavigationMixin(LightningElement) {
 
     get hasRecords() {
         return this.records && this.records.length > 0 ? true : false;
+    }
+
+    @api
+    setProperty(property, value) {
+        this[property] = value;
+    }
+
+    @api
+    refreshImperativeQuery() {
+        this.handleImperativeRefresh();
+    }
+
+    handleImperativeRefresh = async () => {
+        try {
+            let queryObject = this.buildSoqlQuery();
+            let formTemplates = await retrieveRecords({
+                selectFields: queryObject.selectFields,
+                sObjectApiName: queryObject.sObjectApiName,
+                whereClauses: queryObject.whereClauses,
+                orderByClause: queryObject.orderByClause,
+                limitClause: queryObject.limitClause,
+            });
+
+            this.setDatatableRecordsForImperativeCall(formTemplates);
+            this.setDatatableOrder(this.orderedByInfo);
+        } catch (e) {
+            handleError(e);
+        }
     }
 
     connectedCallback() {
@@ -202,12 +225,20 @@ export default class utilListView extends NavigationMixin(LightningElement) {
         }
     }
 
+    /*******************************************************************************
+    * @description Method handles parsing the list view metadata and collecting
+    * sobject records.
+    *
+    * @param {string} data: List View describe data
+    */
     handleDatatableRecords = async (data) => {
+        this.orderedByInfo = deepClone(data.info.orderedByInfo);
+
         if (this.useImperativeQuery === false) {
             this.setDatatableColumns(data.info.displayColumns);
             this.setDatatableActions();
             this.setDatatableRecords(data.records.records);
-            this.setDatatableOrder(data.info.orderedByInfo);
+            this.setDatatableOrder(this.orderedByInfo);
         } else {
             this.setDatatableColumns(data.info.displayColumns);
             this.setDatatableActions();
@@ -216,13 +247,13 @@ export default class utilListView extends NavigationMixin(LightningElement) {
             let formTemplates = await retrieveRecords({
                 selectFields: queryObject.selectFields,
                 sObjectApiName: queryObject.sObjectApiName,
-                whereClause: queryObject.whereClause,
+                whereClauses: queryObject.whereClauses,
                 orderByClause: queryObject.orderByClause,
                 limitClause: queryObject.limitClause,
             });
 
             this.setDatatableRecordsForImperativeCall(formTemplates);
-            this.setDatatableOrder(data.info.orderedByInfo);
+            this.setDatatableOrder(this.orderedByInfo);
         }
 
         this.isLoading = false;
@@ -271,7 +302,7 @@ export default class utilListView extends NavigationMixin(LightningElement) {
             }
 
             this.columns = [...this.columns, columnEntry];
-            this.columnLabelsByName[columnEntry.fieldName] = columnEntry.label;
+            this.columnEntriesByName[columnEntry.fieldName] = columnEntry;
         });
     }
 
@@ -369,25 +400,25 @@ export default class utilListView extends NavigationMixin(LightningElement) {
         const sObjectApiName = this.selectedListView.listReference.objectApiName;
 
         // Get where clause
-        let whereClause;
+        let whereClauses;
         let filters = this.selectedListView.filteredByInfo;
         if (filters && filters.length > 0) {
-            whereClause = filters.map((filter) => {
+            whereClauses = filters.map((filter) => {
                 return this.createFilterEntry(filter);
             });
         }
 
-        // Get oreder by clause
+        // Get order by clause
         let orderByClause;
-        let orderedBy = this.selectedListView.orderedByInfo;
-        if (orderedBy && orderedBy.length === 1) {
-            orderByClause = `${orderedBy[0].fieldApiName} ${orderedBy[0].isAscending ? 'ASC' : 'DESC'}`;
+        if (this.orderedByInfo && this.orderedByInfo.length === 1) {
+            orderByClause =
+                `${this.orderedByInfo[0].fieldApiName} ${this.orderedByInfo[0].isAscending ? 'ASC' : 'DESC'}`;
         }
 
         // Get limit
         const limitClause = `${this.limit}`;
 
-        return { selectFields, sObjectApiName, whereClause, orderByClause, limitClause };
+        return { selectFields, sObjectApiName, whereClauses, orderByClause, limitClause };
     }
 
     /*******************************************************************************
@@ -534,9 +565,28 @@ export default class utilListView extends NavigationMixin(LightningElement) {
     * @param {object} event: Event holding column details of the action
     */
     handleColumnSorting(event) {
-        this.sortedBy = event.detail.fieldName;
+        const fieldName = event.detail.fieldName;
+        const columnEntry = this.columnEntriesByName[fieldName];
+
         this.sortedDirection = event.detail.sortDirection;
-        this.records = sort(this.records, this.sortedBy, this.sortedDirection);
+        // Set sortedBy to correct fieldName if a URL type column.
+        this.sortedBy =
+            columnEntry.typeAttributes ? columnEntry.typeAttributes.label.fieldName : fieldName;
+
+        // Keep orderByInfo in sync so we maintain list order on imperative refreshes.
+        this.orderedByInfo = [{
+            fieldApiName: this.sortedBy,
+            isAscending: this.sortDirection === 'asc' ? true : false,
+            label: columnEntry.label
+        }];
+
+        this.records = sort(this.records, this.sortedBy, this.sortedDirection, true);
+
+        // Reset sortedBy to column header name for lightning-datatable.
+        // Workaround for sorting URL/hyperlink type columns.
+        this.sortedBy = fieldName;
+        this.sortedByLabel =
+            GeLabelService.format(this.CUSTOM_LABELS.geTextListViewSortedBy, [columnEntry.label]);
     }
 
     /*******************************************************************************

@@ -51,7 +51,7 @@ public with sharing class FORM_ServiceGiftEntry {
             .withLimit(limitClause)
             .build();
 
-        return Database.query(String.escapeSingleQuotes(queryString));
+        return Database.query(queryString);
     }
 
     /*******************************************************************************************************
@@ -118,12 +118,21 @@ public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
     * @description Method deletes a Form_Template__c record by id.
+    *
     * @param id: Form_Template__c record id
+    *
+    * @return list: List of deleted Form_Template__c names
     */
     @AuraEnabled
-    public static void deleteFormTemplates(String[] ids) {
-        Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id IN :ids];
+    public static String[] deleteFormTemplates(String[] ids) {
+        Form_Template__c[] templates = [SELECT Id, Name FROM Form_Template__c WHERE Id IN :ids];
         delete templates;
+
+        String[] formTemplateNames = new String[] {};
+        for (Form_Template__c template : templates) {
+            formTemplateNames.add(template.Name);
+        }
+        return formTemplateNames;
     }
 
     /*******************************************************************************************************

@@ -5001,7 +5001,16 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Template successfully created</shortDescription>
         <!-- {0} is a string. Name of the template that was created. -->
-        <value>The {0} template was created.</value>
+        <value>The "{0}" template was created.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateDeleteSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully deleted</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The "{0}" template was deleted.</value>
     </labels>
     <labels>
         <fullName>geToastTemplateTabsError</fullName>
@@ -5028,7 +5037,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Template successfully updated</shortDescription>
         <!-- {0} is a string. Name of the template that was created. -->
-        <value>The {0} template was updated.</value>
+        <value>The "{0}" template was updated.</value>
     </labels>
     <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>
