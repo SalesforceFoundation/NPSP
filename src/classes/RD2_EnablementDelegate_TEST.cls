@@ -38,6 +38,7 @@
 public with sharing class RD2_EnablementDelegate_TEST {
 
     private static final TEST_SObjectGateway.AsyncApexJobGateway jobGateway = new TEST_SObjectGateway.AsyncApexJobGateway();
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     /****
     * @description Creates data required for unit tests
@@ -269,19 +270,24 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         insert getLegacyRecurringDonationBuilder(getContact().Id).build();
 
+        RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
+        stubRD2ReadyAndEnabled();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isReady = true;
+        expectedState.isConfirmed = true;
         expectedState.isEnabled = true;
         expectedState.isMetaLaunched = true;
         expectedState.isMetaConfirmed = true;
-        setEnablementState(JSON.serialize(expectedState));
-        
-        stubRD2ReadyAndEnabled();
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        setEnablementState(JSON.serialize(expectedState));        
 
         Test.startTest();
         Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
         Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
         expectedState.isDryRun2 = true;
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
@@ -384,11 +390,11 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @return void
     */
     private static void assertEnablementState(RD2_EnablementDelegate_CTRL.EnablementState expectedState, RD2_EnablementDelegate_CTRL.EnablementState state) {
-        System.assertEquals(expectedState.isReady, state.isReady, 'isReady should match');
-        System.assertEquals(expectedState.isConfirmed, state.isConfirmed, 'isConfirmed should match');
-        System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match');
-        System.assertEquals(expectedState.isMetaLaunched, state.isMetaLaunched, 'isMetaLaunched should match');
-        System.assertEquals(expectedState.isMetaConfirmed, state.isMetaConfirmed, 'isMetaConfirmed should match');
+        System.assertEquals(expectedState.isReady, state.isReady, 'isReady should match: ' + state);
+        System.assertEquals(expectedState.isConfirmed, state.isConfirmed, 'isConfirmed should match: ' + state);
+        System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match: ' + state);
+        System.assertEquals(expectedState.isMetaLaunched, state.isMetaLaunched, 'isMetaLaunched should match: ' + state);
+        System.assertEquals(expectedState.isMetaConfirmed, state.isMetaConfirmed, 'isMetaConfirmed should match: ' + state);
     }
 
     /****
