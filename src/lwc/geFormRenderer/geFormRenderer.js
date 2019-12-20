@@ -5,8 +5,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import { showToast, getQueryParameters, getRecordFieldNames, 
-    setRecordValuesOnTemplate, isEmpty } from 'c/utilTemplateBuilder';
+import { showToast, getQueryParameters, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api recordId = '';
