@@ -9,6 +9,7 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api required;
     @api value;
     @api objectDescribeInfo;
+    @api className;
 
     @track picklistValues;
 

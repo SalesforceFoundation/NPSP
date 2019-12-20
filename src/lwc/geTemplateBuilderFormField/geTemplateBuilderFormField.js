@@ -1,4 +1,4 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -26,7 +26,24 @@ export default class geTemplateBuilderFormField extends LightningElement {
     @api isLast;
     @api objectApiName;
     @api field;
+
+    @track objectDescribeInfo;
+
     isBatchHeaderField = false;
+
+
+    /*******************************************************************************
+    * @description Retrieves the target object's describe data. Used to get the
+    * picklist options for picklist fields. See component geFormFieldPicklist.
+    *
+    * @param {string} targetObjectApiName: Field's object api name.
+    */
+    @wire(getObjectInfo, { objectApiName: '$targetObjectApiName' })
+    wiredObjectInfo(response) {
+        if (response.data) {
+            this.objectDescribeInfo = response.data;
+        }
+    }
 
     get name() {
         if (this.field.elementType === WIDGET) {
