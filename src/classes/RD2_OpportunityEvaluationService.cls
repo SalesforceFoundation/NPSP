@@ -57,7 +57,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private List<npe03__Recurring_Donation__c> rds {
         get {
             if (rds == null && rdIds != null) {
-                rds = getRecurringDonationRecords(this.rdIds);
+                rds = getRecurringDonations(this.rdIds);
             }
             return rds;
         } set;
@@ -70,16 +70,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 oppService = new RD2_OpportunityService();
             }
             return oppService;
-        } set;
-    }
-
-    @TestVisible
-    private RD2_ScheduleService scheduleService {
-        get {
-            if (scheduleService == null) {
-                scheduleService = new RD2_ScheduleService();
-            }
-            return scheduleService;
         } set;
     }
 
@@ -126,47 +116,36 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return RD2_OpportunityEvaluationService The service instance
      */
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
-
         Map<npe03__Recurring_Donation__c, List<Date>> newRDsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
-        List<npe03__Recurring_Donation__c> updatedRDs = new List<npe03__Recurring_Donation__c>();
         List<Opportunity> openOppsToVoid = new List<Opportunity>();
-        List<npe03__Recurring_Donation__c> rdWithOpenOpps = new List<npe03__Recurring_Donation__c>();
-
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
+        List<npe03__Recurring_Donation__c> rdsWithOpenOpps = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
 
             // TODO Recalculate NextDonationDate before doing anything
 
-            // Collect the list of Opps that require a new Installment Opp
-            if (isNewRecurringDonation(rd)) {
+            if (isNew(rd)) {
                 newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
                 continue;
             }
-            if (hasOpportunities(rd)) {
-                rdWithOpenOpps.add(rd);
-                continue;
+
+            if (isActive(rd) && hasOpportunities(rd)) {
+                rdsWithOpenOpps.add(rd);
+
+            } else if (isClosed(rd)) {
+                handleClosedRecurringDonation(rd, openOppsToVoid);
             }
 
-            // TODO Handle Open Installments on Closed Opp
             // TODO Schedule Visualizer
-            // TODO Update the Future Installment Opportunity if needed
             // TODO Handle Past Due Installment
-
-            handleClosedRecurringDonation(rd, openOppsToVoid);
         }
 
-        // TODO Disable Customizable Rollups before DML
-
-        // Create the next installment opportunity where needed
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createInstallmentOpportunities(newRDsWithCloseDates);
 
-        voidOpportunities(openOppsToVoid);
+        oppService.updateInstallmentOpportunities(rdsWithOpenOpps);
 
-        if (rdWithOpenOpps.size() > 0) {
-            oppService.updateInstallmentOpportunities(rdWithOpenOpps, vizMap);
-        }
+        voidOpportunities(openOppsToVoid);
 
         return this;
     }
@@ -174,52 +153,63 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /**
      * @description Is this a new Recurring Donation that was just inserted and
      * has not yet had an Installment Opportunity created?
+     * Schedules are inserted upon the Recurring Donation insert.
      * @param rd Recurring Donation
      * @return Boolean
      */
     @TestVisible
-    private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
+    private Boolean isNew(npe03__Recurring_Donation__c rd) {
         return
-            rd.npe03__Next_Payment_Date__c != null
-            && rd.Status__c == RD2_Constants.STATUS_ACTIVE
+            isActive(rd)
+            && rd.npe03__Next_Payment_Date__c != null
             && rd.npe03__Donations__r.isEmpty()
             && !rd.RecurringDonationSchedules__r.isEmpty();
     }
 
-     /**
-     * @description Is this a new Recurring Donation that was just inserted and
-     * has not yet had an Installment Opportunity created?
+    /**
+     * @description Indicates if the Recurring Donation is active
+     * @param rd Recurring Donation
+     * @return Boolean
+     */
+    @TestVisible
+    private Boolean isActive(npe03__Recurring_Donation__c rd) {
+        return rd.Status__c == RD2_Constants.STATUS_ACTIVE;
+    }
+
+    /**
+     * @description Indicates if the Recurring Donation is closed
+     * @param rd Recurring Donation
+     * @return Boolean
+     */
+    @TestVisible
+    private Boolean isClosed(npe03__Recurring_Donation__c rd) {
+        return rd.Status__c == RD2_Constants.STATUS_CLOSED;
+    }
+
+    /**
+     * @description Is this a new Recurring Donation that has not yet had an Installment Opp created?
      * @param rd Recurring Donation
      * @return Boolean
      */
     @TestVisible
     private Boolean hasOpportunities(npe03__Recurring_Donation__c rd) {
         return
-
-            rd.Status__c == RD2_Constants.STATUS_ACTIVE
-            && !rd.npe03__Donations__r.isEmpty()
+            !rd.npe03__Donations__r.isEmpty()
             && !rd.RecurringDonationSchedules__r.isEmpty();
     }
 
     /**
-     * @description Disable Customizable Rollups before DML to reduce performance implications.
-     */
-    private void disableRollups() {
-        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
-    }
-
-    /**
-     * @description It will eventually be possible to create more than one installment opportunity
-     * for a recurring donation. This method returns a list of CloseDates to create installment
-     * opportunities for based on the RD schedule and existing Installment Opps.
-     * @param rd
+     * @description Returns a list of CloseDates to create installment Opps for 
+     * based on the RD schedule and existing installment Opps.
+     * It will eventually be possible to create more than one installment Opp for a recurring donation.
+     * @param rd Recurring Donation
      * @return List<Date>
      */
     @TestVisible
     private List<Date> getInstallmentOppCloseDates(npe03__Recurring_Donation__c rd) {
-        return new List<Date>{ rd.npe03__Next_Payment_Date__c != null ? rd.npe03__Next_Payment_Date__c : Date.Today() };
+        return new List<Date>{ 
+            rd.npe03__Next_Payment_Date__c != null ? rd.npe03__Next_Payment_Date__c : Date.Today() 
+        };
     }
 
     /**
@@ -229,8 +219,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return void
      */
     private void handleClosedRecurringDonation(npe03__Recurring_Donation__c rd, List<Opportunity> openOppsToVoid) {
-
-        if (rd.Status__c != RD2_Constants.STATUS_CLOSED || overrideVoidOfOpenOpps) {
+        if (overrideVoidOfOpenOpps) {
             return;
         }
 
@@ -277,7 +266,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
     @TestVisible
-    private List<npe03__Recurring_Donation__c> getRecurringDonationRecords(Set<Id> rdIds) {
+    private List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
         final String parentAccountField = 'npe03__Contact__r.AccountId';
 
         Map<String, Schema.DescribeFieldResult> allRdFields =

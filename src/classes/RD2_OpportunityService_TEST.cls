@@ -301,8 +301,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rds.add(rd);
         String expectedNameFormat = getExpectedSpecializedOppName(rd,Date.newInstance(2019,12,25));
 
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
-        service.updateInstallmentOpportunities(rds, vizMap);
+        service.updateInstallmentOpportunities(rds);
 
         List<Opportunity> oppUpdates = getOpportunities();
         System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
@@ -345,8 +344,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rds.add(rd);
 
         Test.startTest();
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
-        service.updateInstallmentOpportunities(rds, vizMap);
+        service.updateInstallmentOpportunities(rds);
         Test.stopTest();
 
         List<Opportunity> oppUpdates = getOpportunities();
@@ -387,8 +385,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rd = mockRecurringDonationFullQueryResult(rd, opps, scheduleService.getNewSchedules(rd));
         rds.add(rd);
 
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
-        service.updateInstallmentOpportunities(rds, vizMap);
+        service.updateInstallmentOpportunities(rds);
 
         List<Opportunity> oppUpdates = getOpportunities();
         System.assertEquals(1, oppUpdates.size(), 'one opportunity should be created: ' + oppUpdates);
@@ -429,8 +426,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rds.add(rd);
 
         Test.startTest();
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
-        service.updateInstallmentOpportunities(rds, vizMap);
+        service.updateInstallmentOpportunities(rds);
         Test.stopTest();
 
         List<Opportunity> oppUpdates = getOpportunities();
@@ -473,8 +469,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rds.add(rd);
 
         Test.startTest();
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
-        service.updateInstallmentOpportunities(rds, vizMap);
+        service.updateInstallmentOpportunities(rds);
         Test.stopTest();
 
         List<Opportunity> oppUpdates = getOpportunities();
@@ -515,8 +510,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rds.add(rd);
 
         Test.startTest();
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
-        service.updateInstallmentOpportunities(rds, vizMap);
+        service.updateInstallmentOpportunities(rds);
         Test.stopTest();
 
         List<Opportunity> oppUpdates = getOpportunities();
@@ -546,8 +540,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rd = mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), scheduleService.getNewSchedules(rd));
         rds.add(rd);
 
-        Map<Id, List<RD2_ScheduleService.Installment>> vizMap = scheduleService.getVisualizedInstallments(rds, Date.Today(), 1, null);
-        service.updateInstallmentOpportunities(rds, vizMap);
+        service.updateInstallmentOpportunities(rds);
 
     }
 
