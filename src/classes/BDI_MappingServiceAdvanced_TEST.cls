@@ -143,7 +143,8 @@ private class BDI_MappingServiceAdvanced_TEST {
     * simulated Field Mapping.
     */
     @isTest static void shouldAddDonationDonorFieldToMapsAsSimulatedFieldMapping() {
-        //Set the custom setting for Data import to use Data Import Field Mappings (eg Custom Metadata Type Mapping)
+        //Set the custom setting for Data import to use Data Import Field Mappings
+        // (eg Custom Metadata Type Mapping)
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c =
@@ -168,5 +169,44 @@ private class BDI_MappingServiceAdvanced_TEST {
             null,
             donationDonorFieldMapping,
             'DataImport__c.Donation_Donor__c not found as a simulated Field Mapping.');
+    }
+
+    /*******************************************************************************************************
+    * @description Tests that the various 'Imported' lookup fields from Object Mappings have been added as a
+    * simulated Field Mappings.
+    */
+    @isTest static void shouldAddObjetMappingImportedFieldsToMapsAsSimulatedFieldMappings() {
+        //Set the custom setting for Data import to use Data Import Field Mappings
+        // (eg Custom Metadata Type Mapping)
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        //Retrieve a mapping service instance
+        BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+        BDI_FieldMappingSet fms = BDI_MappingServiceAdvanced.getFieldMappingSet(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+
+        // Confirm that we have at least one DataImport__c.*Imported__c field as a Field Mapping
+        Boolean hasImportedFieldMapping = false;
+        for (String fieldMappingDevName : fms.fieldMappingByDevName.keySet()) {
+            String targetFieldApiName =
+                fms.fieldMappingByDevName.get(fieldMappingDevName).Target_Field_API_Name.toLowerCase();
+            String sourceFieldApiName =
+                fms.fieldMappingByDevName.get(fieldMappingDevName).Source_Field_API_Name.toLowerCase();
+
+            if (targetFieldApiName == sourceFieldApiName && targetFieldApiName.contains('imported')) {
+                hasImportedFieldMapping = true;
+                break;
+            }
+        }
+
+        System.assertEquals(
+            true,
+            hasImportedFieldMapping,
+            'Could not find at least one Imported_Record_Field_Name__c field as a simulated Field Mapping.');
     }
 }
