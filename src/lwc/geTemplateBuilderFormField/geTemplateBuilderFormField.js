@@ -66,13 +66,17 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     get labelHelpText() {
         if (this.fieldMapping && this.fieldMapping.Target_Object_Mapping_Dev_Name) {
-            const objectMapping = TemplateBuilderService.objectMappingByDevName[this.fieldMapping.Target_Object_Mapping_Dev_Name];
+            const objectMapping =
+                TemplateBuilderService.objectMappingByDevName[this.fieldMapping.Target_Object_Mapping_Dev_Name];
+            const targetObjectApiName =
+                this.fieldMapping.Target_Object_API_Name || objectMapping.Object_API_Name;
+
             return GeLabelService.format(
                 this.CUSTOM_LABELS.geHelpTextFormFieldsFieldCustomLabel,
                 [
                     objectMapping.MasterLabel,
                     this.fieldMapping.Target_Field_API_Name,
-                    objectMapping.Object_API_Name
+                    targetObjectApiName
                 ]);
         }
         return null;
