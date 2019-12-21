@@ -3,12 +3,32 @@ import { findIndexByProperty, mutable, generateId, dispatch, showToast } from 'c
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 
-// Import source field names for required Field Mappings
+// Import schema for default form field element objects
+import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
+import OPPORTUNITY_INFO from '@salesforce/schema/Opportunity';
+import PAYMENT_INFO from '@salesforce/schema/npe01__OppPayment__c';
+
+// Import schema info for default form field elements
 import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
+import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 
 const WARNING = 'warning';
+
+// Default form fields to add to new templates
+const DEFAULT_FORM_FIELDS = {
+    [DONATION_DONOR_INFO.fieldApiName]: DATA_IMPORT_INFO.objectApiName,
+    [ACCOUNT1_IMPORTED_INFO.fieldApiName]: ACCOUNT1_IMPORTED_INFO.objectApiName,
+    [CONTACT1_IMPORTED_INFO.fieldApiName]: CONTACT1_IMPORTED_INFO.objectApiName,
+    [DONATION_AMOUNT_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
+    [DONATION_DATE_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
+    [PAYMENT_CHECK_REF_NUM_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
+    [PAYMENT_METHOD_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
+}
 
 export default class geTemplateBuilderFormFields extends LightningElement {
 
@@ -140,33 +160,52 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Creates a default section and adds required fields.
+    * @description Creates a default section and adds default form fields defined
+    * in constant DEFAULT_FORM_FIELDS.
     */
     handleRequiredFields() {
         if (this.formSections && this.formSections.length === 0) {
-            const REQUIRED_FIELDS = [
-                DONATION_AMOUNT_INFO.fieldApiName,
-                DONATION_DATE_INFO.fieldApiName,
-                PAYMENT_CHECK_REF_NUM_INFO.fieldApiName
-            ];
-
             let sectionId = this.addSection(this.CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName);
 
-            for (let fieldMappingDevName in TemplateBuilderService.fieldMappingByDevName) {
-                if (TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName]) {
-                    const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDevName];
-                    const objectMapping = TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
+            let fieldMappingBySourceFieldAndTargetObject = this.getFieldMappingBySourceFieldAndTargetObject();
 
-                    if (REQUIRED_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
+            Object.keys(DEFAULT_FORM_FIELDS).forEach(sourceFieldApiName => {
+                if (DEFAULT_FORM_FIELDS[sourceFieldApiName]) {
+                    const key = `${sourceFieldApiName}.${DEFAULT_FORM_FIELDS[sourceFieldApiName]}`;
+
+                    if (fieldMappingBySourceFieldAndTargetObject[key]) {
+                        const fieldMapping = fieldMappingBySourceFieldAndTargetObject[key];
+                        const objectMapping = TemplateBuilderService
+                            .objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
+
                         let formField = this.constructFormField(objectMapping, fieldMapping, sectionId);
                         this.addFieldToSection(sectionId, formField);
                         this.catalogSelectedField(fieldMapping.DeveloperName, sectionId);
                     }
                 }
-            }
+            });
 
             this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
         }
+    }
+
+    /*******************************************************************************
+    * @description Builds a map of Field Mappings by their Source Field and Target
+    * Object api names i.e. npsp__Account1_Street__c.Account.
+    */
+    getFieldMappingBySourceFieldAndTargetObject() {
+        let map = {};
+        Object.keys(TemplateBuilderService.fieldMappingByDevName).forEach(key => {
+            const fieldMapping = TemplateBuilderService.fieldMappingByDevName[key];
+            if (fieldMapping.Source_Field_API_Name && fieldMapping.Target_Object_API_Name) {
+                const newKey =
+                    `${fieldMapping.Source_Field_API_Name}.${fieldMapping.Target_Object_API_Name}`;
+                    map[newKey] =
+                    TemplateBuilderService.fieldMappingByDevName[key];
+            }
+        });
+
+        return map;
     }
 
     /*******************************************************************************
