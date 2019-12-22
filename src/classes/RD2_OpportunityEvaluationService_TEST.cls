@@ -138,9 +138,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
 
-        System.assertEquals(false, evalService.isNewRecurringDonation(rd1), 'Closed RD should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.isNewRecurringDonation(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.isNewRecurringDonation(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNew(rd1), 'Closed RD should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNew(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNew(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
     }
 
     /**
@@ -181,10 +181,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
 
-        System.assertEquals(true, evalService.isNewRecurringDonation(rdNew), 
+        System.assertEquals(true, evalService.isNew(rdNew), 
             'RD having Schedules and no related Opp should be eligible for an Installment Opp');
 
-        System.assertEquals(false, evalService.isNewRecurringDonation(rdOld), 
+        System.assertEquals(false, evalService.isNew(rdOld), 
             'RD having Schedules and a related Opp should not be eligible for an Installment Opp');
     }
 
@@ -203,8 +203,8 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         System.assertEquals(oldOpps.size(), oppById.size(), 'The number of Opps should match');
         System.assertEquals(true, oppById.get(oldOpps[0].Id).isWon, 'The closed Opp should stay won');
-        System.assertEquals(true, oppById.get(oldOpps[1].Id).isClosed, 'Open Opp should be closed now');
-        System.assertEquals(false, oppById.get(oldOpps[1].Id).isWon, 'Open Opp should be lost won now');
+        System.assertEquals(true, oppById.get(oldOpps[1].Id).isClosed && !oppById.get(oldOpps[1].Id).isWon, 
+            'The Open Opp should be Closed Lost now');
     }
 
     /**

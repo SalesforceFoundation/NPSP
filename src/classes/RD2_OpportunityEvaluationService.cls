@@ -116,7 +116,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return RD2_OpportunityEvaluationService The service instance
      */
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
-        Map<npe03__Recurring_Donation__c, List<Date>> newRDsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
+        List<npe03__Recurring_Donation__c> newRDs = new List<npe03__Recurring_Donation__c>();
         List<Opportunity> openOppsToVoid = new List<Opportunity>();
         List<npe03__Recurring_Donation__c> rdsWithOpenOpps = new List<npe03__Recurring_Donation__c>();
 
@@ -125,7 +125,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             // TODO Recalculate NextDonationDate before doing anything
 
             if (isNew(rd)) {
-                newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
+                newRDs.add(rd);
                 continue;
             }
 
@@ -141,7 +141,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
-        oppService.createInstallmentOpportunities(newRDsWithCloseDates);
+        oppService.createInstallmentOpportunities(newRDs);
 
         oppService.updateInstallmentOpportunities(rdsWithOpenOpps);
 
@@ -196,20 +196,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return
             !rd.npe03__Donations__r.isEmpty()
             && !rd.RecurringDonationSchedules__r.isEmpty();
-    }
-
-    /**
-     * @description Returns a list of CloseDates to create installment Opps for 
-     * based on the RD schedule and existing installment Opps.
-     * It will eventually be possible to create more than one installment Opp for a recurring donation.
-     * @param rd Recurring Donation
-     * @return List<Date>
-     */
-    @TestVisible
-    private List<Date> getInstallmentOppCloseDates(npe03__Recurring_Donation__c rd) {
-        return new List<Date>{ 
-            rd.npe03__Next_Payment_Date__c != null ? rd.npe03__Next_Payment_Date__c : Date.Today() 
-        };
     }
 
     /**
