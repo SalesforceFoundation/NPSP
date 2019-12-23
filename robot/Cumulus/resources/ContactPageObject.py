@@ -34,12 +34,9 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.salesforce.populate_lookup_field(field_name,new_value)
 
     def validate_relation_status_message(self, contact1, contact2, relation):
-        """Obtains the status message displayed on the relationship details page
+        """Obtains the status message displayed on the relationships section of contact details page
            Validates it against the expected status message
         """
-        self.builtin.log_to_console(relation)
         expectedstatus = ("{} is {}'s {}".format(contact1,contact2,relation))
-        self.builtin.log_to_console(expectedstatus)
         id,actualstatus = self.npsp.check_status(contact1)
-        self.builtin.log_to_console(id)
         self.builtin.should_be_equal_as_strings(actualstatus,expectedstatus)
