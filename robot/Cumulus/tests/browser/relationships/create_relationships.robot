@@ -42,21 +42,24 @@ Create Relationships for contacts
     Populate Modal Form
     ...                                  Related Contact=&{contact1}[FirstName] &{contact1}[LastName]
     ...                                  Type=Parent
-    
     Click Modal Button                   Save
-    Current Page Should Be               Details                                                       Relationship
+    Current Page Should Be               Details                                                       Contact
     Validate Relation Status Message     &{contact1}[FirstName] &{contact1}[LastName]                  &{contact2}[FirstName] &{contact2}[LastName]          Parent
+
     Click Link                           link=Show more actions
     Click Link                           link=Relationships Viewer
     Wait Until Loading Is Complete
     Capture Page Screenshot
     Go To Page                           Details                                                       Contact                                               object_id=&{contact1}[Id]
+    Current Page Should Be               Details                                                       Contact
 
     Select Tab                           Related
+    Validate Relation Status Message     &{contact2}[FirstName] &{contact2}[LastName]                  &{contact1}[FirstName] &{contact1}[LastName]          Child
+
     Load Related List                    Relationships
+    Click Related Item Link              Relationships                                                 &{contact2}[FirstName] &{contact2}[LastName]
 
     Current Page Should Be               Details                                                       Relationship
-    Validate Relation Status Message     &{contact2}[FirstName] &{contact2}[LastName]                  &{contact1}[FirstName] &{contact1}[LastName]          Child
     ${id}                                Get Current Record Id
     Save Current Record ID For Deletion  npe4__Relationship__c
 

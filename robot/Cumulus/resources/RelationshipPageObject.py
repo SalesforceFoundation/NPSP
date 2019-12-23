@@ -14,12 +14,4 @@ class RelationshipDetailPage(BaseNPSPPage, DetailPage):
             by verifying that the url contains '/view'
         """
         self.selenium.wait_until_location_contains("/view")
-
-    def validate_relation_status_message(self, contact1, contact2, relation):
-        """Obtains the status message displayed on the relationship details page
-           Validates it against the expected status message
-        """
-        self.builtin.log_to_console(contact1)
-        expectedstatus = ("{} is {}'s {}".format(contact1,contact2,relation))
-        id,actualstatus = self.npsp.check_status(contact1)
-        self.builtin.should_be_equal_as_strings(actualstatus,expectedstatus)
+        self.selenium.location_should_contain("/lightning/r/npe4__Relationship__c/",message="Current page is not relationship detail view")
