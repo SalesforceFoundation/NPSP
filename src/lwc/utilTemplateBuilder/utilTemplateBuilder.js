@@ -20,6 +20,8 @@ import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 const OBJECT = 'object';
 const FUNCTION = 'function';
 const ASC = 'asc';
+const CONTACT1 = 'Contact1';
+const ACCOUNT1 = 'Account1';
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
@@ -543,5 +545,7 @@ export {
     ACCOUNT_INFO,
     DI_CONTACT1_IMPORTED_INFO,
     DI_ACCOUNT1_IMPORTED_INFO,
-    DI_DONATION_DONOR_INFO
+    DI_DONATION_DONOR_INFO,
+    CONTACT1,
+    ACCOUNT1
 }

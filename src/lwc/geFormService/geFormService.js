@@ -2,7 +2,7 @@ import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDe
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 import { CONTACT_INFO, ACCOUNT_INFO, 
          DI_CONTACT1_IMPORTED_INFO, DI_ACCOUNT1_IMPORTED_INFO, 
-         DI_DONATION_DONOR_INFO } from 'c/utilTemplateBuilder';
+         DI_DONATION_DONOR_INFO, CONTACT1, ACCOUNT1 } from 'c/utilTemplateBuilder';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -127,10 +127,10 @@ class GeFormService {
         // set the bdi imported fields for contact or account
         if (record.apiName === CONTACT_INFO.objectApiName) {
             diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
-            diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = 'Contact1';
+            diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = CONTACT1;
         } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
             diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
-            diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = 'Account1';
+            diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = ACCOUNT1;
         }
 
         for (let key in fieldData) {
