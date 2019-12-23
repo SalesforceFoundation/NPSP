@@ -9,14 +9,17 @@ import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportB
 import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
 import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
 import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
+import DI_CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DI_ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DI_DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import CONTACT_INFO from '@salesforce/schema/Contact';
+import ACCOUNT_INFO from '@salesforce/schema/Account';
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
 const OBJECT = 'object';
 const FUNCTION = 'function';
 const ASC = 'asc';
-const ACCOUNT = 'account';
-const CONTACT = 'contact';
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
@@ -458,12 +461,12 @@ const format = (string, replacements) => {
 */
 const getRecordFieldNames = (formTemplate, fieldMappings) => {
     let fieldNames = [];
-    
+
     for (const section of formTemplate.layout.sections) {
         for (const element of section.elements) {
             for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-                if (objectName.toLowerCase() === CONTACT || objectName.toLowerCase() === ACCOUNT) {
+                if (objectName === CONTACT_INFO.objectApiName || objectName === ACCOUNT_INFO.objectApiName) {
                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
                     fieldNames.push(`${objectName}.${fieldName}`);
                 }              
@@ -535,5 +538,10 @@ export {
     findMissingRequiredBatchFields,
     format,
     getRecordFieldNames,
-    setRecordValuesOnTemplate
+    setRecordValuesOnTemplate,
+    CONTACT_INFO,
+    ACCOUNT_INFO,
+    DI_CONTACT1_IMPORTED_INFO,
+    DI_ACCOUNT1_IMPORTED_INFO,
+    DI_DONATION_DONOR_INFO
 }

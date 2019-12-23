@@ -1,6 +1,8 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
-
+import { CONTACT_INFO, ACCOUNT_INFO, 
+         DI_CONTACT1_IMPORTED_INFO, DI_ACCOUNT1_IMPORTED_INFO, 
+         DI_DONATION_DONOR_INFO } from 'c/utilTemplateBuilder';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -108,7 +110,7 @@ class GeFormService {
      * @param sectionList
      * @returns opportunityId
      */
-    handleSave(sectionList) {
+    handleSave(sectionList, record) {
         
         // Gather all the data from the input
         let fieldData = {};
@@ -122,6 +124,15 @@ class GeFormService {
         // Build the DI Record
         let diRecord = {};
 
+        // set the bdi imported fields for contact or account
+        if (record.apiName === CONTACT_INFO.objectApiName) {
+            diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
+            diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = 'Contact1';
+        } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
+            diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
+            diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = 'Account1';
+        }
+
         for (let key in fieldData) {
             if (fieldData.hasOwnProperty(key)) {
                 let value = fieldData[key];
@@ -134,7 +145,7 @@ class GeFormService {
         }
         
         // console.log(widgetValues); 
-        const opportunityID =this.createOpportunityFromDataImport(diRecord, widgetValues);
+        const opportunityID = this.createOpportunityFromDataImport(diRecord, widgetValues);
         
         return opportunityID;
     }

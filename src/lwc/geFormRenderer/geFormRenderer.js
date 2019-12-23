@@ -85,7 +85,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // show the spinner
         this.toggleSpinner();
         
-        GeFormService.handleSave(sectionsList).then(opportunityId => {
+        GeFormService.handleSave(sectionsList, this.record).then(opportunityId => {
             this.navigateToRecordPage(opportunityId);
         });
     }
