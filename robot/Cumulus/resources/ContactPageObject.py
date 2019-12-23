@@ -36,6 +36,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
     def validate_relation_status_message(self, contact1, contact2, relation):
         """Obtains the status message displayed on the relationships section of contact details page
            Validates it against the expected status message
+           Note: Pass contact1,contact2, relation in a way to format as contact1 is contact2's relation
         """
         expectedstatus = ("{} is {}'s {}".format(contact1,contact2,relation))
         id,actualstatus = self.npsp.check_status(contact1)
