@@ -55,14 +55,25 @@ private with sharing class UTIL_BatchJobProgress_TEST {
         Database.executeBatch(telemetryBatch);
         Test.stopTest();
 
-        String className = 'UTIL_OrgTelemetry_SObject_BATCH';
+        UTIL_BatchJobService.BatchJob batchJob = getBatchJob('UTIL_OrgTelemetry_SObject_BATCH');
+        System.assertNotEquals(null, batchJob, 'Batch Job should be returned');
+    }
 
+
+    // HELPER METHODS
+    //////////////////////
+
+    /**
+     * @description Returns batch job wrapper
+     * @param className Class name
+     * @return UTIL_BatchJobService.BatchJob
+     */
+    private static UTIL_BatchJobService.BatchJob getBatchJob(String className) {
         String jsonBatchJob = UTIL_BatchJobProgress_CTRL.loadBatchJob(className);
         System.assert(String.isNotBlank(jsonBatchJob), 'Batch job details should be retrieved');
 
-        UTIL_BatchJobService.BatchJob batchJob = (UTIL_BatchJobService.BatchJob) JSON.deserialize(
+        return (UTIL_BatchJobService.BatchJob) JSON.deserialize(
             jsonBatchJob, UTIL_BatchJobService.BatchJob.class
         );
-        System.assertNotEquals(null, batchJob, 'BatchJob instance should be returned');
     }
 }
