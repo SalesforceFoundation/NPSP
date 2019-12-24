@@ -37,7 +37,19 @@
 public with sharing class RD2_OpportunityService {
 
     private static Date TODAY = Date.today();
-    private static npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+
+    /***
+    * @description Recurring Donation custom settings
+    */
+    private npe03__Recurring_Donations_Settings__c rdSettings {
+        get {
+            if (rdSettings == null) {
+                rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+            } 
+            return rdSettings;
+        }
+        set;
+    }
 
     /***
     * @description The installment Opportunity Stage

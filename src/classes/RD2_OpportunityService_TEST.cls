@@ -286,17 +286,17 @@ private with sharing class RD2_OpportunityService_TEST {
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
 
-        System.assertEquals(RD_NEW_AMOUNT, opps[0].amount, 'Amount should match');
-        System.assertEquals(newCloseDate, opps[0].CloseDate);
-        System.assertEquals(getExpectedOppName(rd, newCloseDate), opps[0].Name);
-        System.assertEquals(getPayments(opps)[0].npe01__Payment_Method__c, PAYMENT_CHECK);
+        System.assertEquals(RD_NEW_AMOUNT, opps[0].amount, 'Amount should be updated');
+        System.assertEquals(newCloseDate, opps[0].CloseDate, 'Close Date should be updated');
+        System.assertEquals(getExpectedOppName(rd, newCloseDate), opps[0].Name, 'Opportunity name should contain new Close Date');
+        System.assertEquals(PAYMENT_CHECK, getPayments(opps)[0].npe01__Payment_Method__c, 'Payment method should be updated on Payment');
     }
 
     /***
     * @description Verify opportunity is not updated with installment fields when close date is in the past
     */
     @isTest
-    private static void shouldNotUpdateInstallmentOppWhenCloseDateInThePast() {
+    private static void shouldNotUpdateOppWhenCloseDateInThePast() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         createRdSettings();
@@ -320,6 +320,157 @@ private with sharing class RD2_OpportunityService_TEST {
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
         System.assertEquals(RD_AMOUNT, opps[0].amount, 'Amount should be unchanged: ' + opps[0]);
+    }
+
+    /***
+    * @description Verify opportunity is not updated with installment fields when close date is today
+    */
+    @isTest
+    private static void shouldNotUpdateOppWhenCloseDateIsToday() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        createRdSettings();
+        
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(getContact().Id)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1)
+            .withCloseDate(TODAY)
+            .withOpenStage()
+            .build();
+
+        Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(TODAY.day());
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
+        System.assertEquals(RD_AMOUNT, opps[0].amount, 'Amount should be unchanged: ' + opps[0]);
+    }
+
+    /***
+    * @description Verify future open opp is updated with installment fields when Opp with Close Date = today exists as well.
+    * This test verifies that Opps are matched correctly with the RD Schedule installments since
+    */
+    @isTest
+    private static void shouldUpdateOppWhenCloseDateIsInFutureAndTodayCloseDateOppExists() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+
+        createRdSettings();
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(getContact().Id)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withOpenStage();
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withInstallmentNumber(1)
+                .withCloseDate(TODAY)
+                .build(),
+            oppBuilder
+                .withInstallmentNumber(1)
+                .withCloseDate(TODAY.addMonths(1))
+                .build()
+        };
+        insert opps;
+
+        Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(TODAY.day());
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        rd.PaymentMethod__c = PAYMENT_CHECK;
+        update rd;
+        Test.stopTest();
+        
+        Map<Id, Opportunity> actualOppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size(), actualOppById.size(), 'Opportunity number should match: ' + actualOppById);
+
+        System.assertEquals(RD_AMOUNT, actualOppById.get(opps[0].Id).amount, 'Amount should be unchanged on the Opp with Close Date = today');
+        System.assertEquals(RD_NEW_AMOUNT, actualOppById.get(opps[1].Id).amount, 'Amount should be updated on the future Opp');
+
+        List<npe01__OppPayment__c> payments = getPayments(opps);
+        System.assertEquals(opps.size(), payments.size(), 'Payment should exist for each Opp: ' + payments);
+        for (npe01__OppPayment__c payment : payments) {
+            if (payment.npe01__Opportunity__c == opps[0].Id) {
+                System.assertNotEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c, 
+                    'Payment method should not be updated for the Close Date = today Opp');
+            } else {
+                System.assertEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c, 
+                    'Payment method should match for the future Opp');
+            }
+        }
+    }
+
+    /***
+    * @description Verify Opportunity's campaign is not updated when there is update to the campaign on the RD
+    * and the opportunity's status is closed
+    */
+    @isTest
+    private static void shouldNotUpdateOppWhenFutureOppIsClosed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        createRdSettings();
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(getContact().Id)
+            .withRecurringDonation(rd.Id)
+            .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(CLOSE_DATE)
+            .withClosedWonStage()
+            .build();
+  
+        Test.startTest();        
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
+        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Opp Amount should be unchanged');
+    }
+
+     /***
+    * @description Verify Opportunity's campaign is not updated when there start date on the RD
+    * is greater than close date on the opportunity
+    */
+    @isTest
+    private static void shouldNotUpdateOppWhenOppCloseDateIsBeforeRDStartDate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        createRdSettings();
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(getContact().Id)
+            .withRecurringDonation(rd.Id)
+            .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+
+        Test.startTest();
+        rd.StartDate__c = CLOSE_DATE.addDays(2);
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
+        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Opp Amount should be unchanged');
     }
 
     /***
@@ -397,69 +548,6 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verify Opportunity's campaign is not updated when there is update to the campaign on the RD
-    * and the opportunity's status is closed
-    */
-    @isTest
-    private static void shouldNotUpdateOppWhenOppIsClosed() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        createRdSettings();
-
-        npe03__Recurring_Donation__c rd = createRecurringDonation();
-
-        insert new TEST_OpportunityBuilder()
-            .withContact(getContact().Id)
-            .withRecurringDonation(rd.Id)
-            .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
-            .withAmount(rd.npe03__Amount__c)
-            .withCloseDate(CLOSE_DATE)
-            .withClosedWonStage()
-            .build();
-  
-        Test.startTest();        
-        rd.npe03__Amount__c = RD_NEW_AMOUNT;
-        update rd;
-        Test.stopTest();
-
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
-        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Opp Amount should be unchanged');
-    }
-
-     /***
-    * @description Verify Opportunity's campaign is not updated when there start date on the RD
-    * is greater than close date on the opportunity
-    */
-    @isTest
-    private static void shouldNotUpdateOppWhenOppCloseDateIsBeforeRDStartDate() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        createRdSettings();
-
-        npe03__Recurring_Donation__c rd = createRecurringDonation();
-
-        insert new TEST_OpportunityBuilder()
-            .withContact(getContact().Id)
-            .withRecurringDonation(rd.Id)
-            .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
-            .withAmount(rd.npe03__Amount__c)
-            .withCloseDate(CLOSE_DATE)
-            .withOpenStage()
-            .build();
-
-        Test.startTest();
-        rd.StartDate__c = CLOSE_DATE.addDays(2);
-        rd.npe03__Amount__c = RD_NEW_AMOUNT;
-        update rd;
-        Test.stopTest();
-
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
-        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Opp Amount should be unchanged');
-    }
-
-    /***
     * @description Verify if the updates to the opportunity do not give error message
     * when no opportunity records are passed.
     */
@@ -534,7 +622,6 @@ private with sharing class RD2_OpportunityService_TEST {
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)
             .withDayOfMonth(DAY_OF_MONTH);
-            //.withCalculateNextDonationDate();
 
         if (contact != null) {
             builder.withContact(contact.Id);

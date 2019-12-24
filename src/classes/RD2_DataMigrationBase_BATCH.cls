@@ -132,15 +132,19 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
         setBatchJobId(context);
 
-        RD2_OpportunityEvaluationService.overrideVoidOfOpenOpps = true;
-
+        //enable enhanced Recurring Donations during the batch transaction
         if (!RD2_EnablementService.isRecurringDonations2Enabled && isDryRunMode) {
             RD2_EnablementService.isRecurringDonations2EnabledOverride = true;
         }
 
+        //ensure enhanced RD enablement flag is enabled
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new MigrationException(System.Label.RD2_ErrorDataMigrationJobCannotBeRun);
         }
+
+        //do not evaluate Opportunities from the RD trigger during migration
+        //migration batch itself will take care of outstanding Opps
+        RD2_OpportunityEvaluationService.isOverride = true;
 
         Logger logger = new Logger(logContext);
         Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);

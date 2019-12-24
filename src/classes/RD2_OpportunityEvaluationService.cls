@@ -74,10 +74,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Indicates if Recurring Donation Settings close action on Open Opportunities
-     * is overriden when Recurring Donation is Closed
+     * @description Indicates if Opp evaluation service will be skipped.
+     * The flag is currently applicable to migration since Opp evaluation service should not be executed on migration.
+     * For example, if an active RD has no Opp, no new Opp should be created during migration.
+     * Moreover, if the RD is closed, close action on Open Opps should not be applied.
      */
-    public static Boolean overrideVoidOfOpenOpps = false;
+    public static Boolean isOverride = false;
 
 
     /**
@@ -123,10 +125,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         for (npe03__Recurring_Donation__c rd : rds) {            
             if (isNew(rd)) {
                 newRDs.add(rd);
-                continue;
-            }
-
-            if (isActive(rd) && hasOpportunities(rd)) {
+                
+            } else if (isActive(rd) && hasOpportunities(rd)) {
                 rdsWithOpenOpps.add(rd);
 
             } else if (isClosed(rd)) {
@@ -201,10 +201,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return void
      */
     private void handleClosedRecurringDonation(npe03__Recurring_Donation__c rd, List<Opportunity> openOppsToVoid) {
-        if (overrideVoidOfOpenOpps) {
-            return;
-        }
-
         for (Opportunity opp : rd.npe03__Donations__r) {
             if (opp.IsClosed == false) {
                 openOppsToVoid.add(opp);
