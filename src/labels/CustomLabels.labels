@@ -1539,7 +1539,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Not disable customizable rollups when RD2 is enabled</shortDescription>
+        <shortDescription>Warning displayed on Customizable Rollups page when enhanced RDs are enabled</shortDescription>
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
@@ -1547,7 +1547,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementDisabledHeader</shortDescription>
+        <shortDescription>Enablement page header displayed due to missing prerequisites</shortDescription>
         <value>Enhanced Recurring Donations cannot be enabled</value>
     </labels>
     <labels>
@@ -1555,15 +1555,79 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementDisabledMessage</shortDescription>
+        <shortDescription>Enablement page message displayed due to missing prerequisites</shortDescription>
         <value>You must enable both Customizable Rollups and Lightning Experience in order to enable Enhanced Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunBatchTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation batch job title</shortDescription>
+        <value>Validate Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation button label</shortDescription>
+        <value>Validate Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunComplete</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation section message displayed on a successful validation</shortDescription>
+        <value>Validation completed successfully.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunNextButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed to enable the migration context</shortDescription>
+        <value>Ready to Migrate</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunSkipButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed when validation can be skipped</shortDescription>
+        <value>Skip Validation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunStopButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed when validation batch can be stopped</shortDescription>
+        <value>Stop Validation</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation section title</shortDescription>
+        <value>Validate Migration</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation section introduction and guidelines</shortDescription>
+        <value>In this step, NPSP will simulate migrating your existing data to the Enhanced Recurring Donations model and will identify any errors. If there are errors, go to NPSP Settings | System Tools | Error Log. After you fix the errors, return here and validate the migration again. Once the validation completes without errors, you can proceed to the next step.&lt;br/&gt;&lt;br/&gt;The validation process may take some time to complete. You can leave this page and return later to check the progress.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableConfirm</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementEnableConfirm</shortDescription>
+        <shortDescription>Enablement section confirmation message</shortDescription>
         <value>I confirm that I have completed the Preparation Tasks above and I understand that enabling Enhanced Recurring Donations is irreversible.</value>
     </labels>
     <labels>
@@ -1571,7 +1635,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementEnableIntro</shortDescription>
+        <shortDescription>Enablement section introduction and details</shortDescription>
         <value>This step changes your Recurring Donations processing logic to use Enhanced Recurring Donations instead. Recurring Donations will not function the same way as before.</value>
     </labels>
     <labels>
@@ -1579,7 +1643,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementEnableMessage</shortDescription>
+        <shortDescription>Enablement section enable guidelines</shortDescription>
         <value>Enable the Enhanced Recurring Donations functionality.</value>
     </labels>
     <labels>
@@ -1587,7 +1651,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementEnableTitle</shortDescription>
+        <shortDescription>Enablement section title</shortDescription>
         <value>Enable Enhanced Recurring Donations</value>
     </labels>
     <labels>
@@ -1595,7 +1659,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementEnableWarning</shortDescription>
+        <shortDescription>Enablement section warning</shortDescription>
         <value>&lt;b&gt;WARNING: This is an irreversible process!&lt;/b&gt;</value>
     </labels>
     <labels>
@@ -1603,7 +1667,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementIntro</shortDescription>
+        <shortDescription>Enablement page introduction and guidelines</shortDescription>
         <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.</value>
     </labels>
     <labels>
@@ -1611,7 +1675,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMetaDeployConfirm</shortDescription>
+        <shortDescription>MetaDeploy section confirmation message</shortDescription>
         <value>Confirm that you have installed the Enhanced Recurring Donations metadata.</value>
     </labels>
     <labels>
@@ -1619,7 +1683,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMetaDeployConfirmError</shortDescription>
+        <shortDescription>Error message on confirmation check when org does not have metadata deployed</shortDescription>
         <value>You have not yet installed the Enhanced Recurring Donations metadata. Click Launch MetaDeploy and follow the instructions.</value>
     </labels>
     <labels>
@@ -1627,7 +1691,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMetaDeployIntro</shortDescription>
+        <shortDescription>MetaDeploy section introduction and guidelines</shortDescription>
         <value>Use our MetaDeploy service to install the Enhanced Recurring Donations metadata. The metadata includes: new picklist values, updated help text, and a new page layout. MetaDeploy is a service that exists outside of your Salesforce org.</value>
     </labels>
     <labels>
@@ -1635,7 +1699,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMetaDeployLaunch</shortDescription>
+        <shortDescription>MetaDeploy section launch guidelines</shortDescription>
         <value>Install the Enhanced Recurring Donations metadata using the MetaDeploy service.</value>
     </labels>
     <labels>
@@ -1643,7 +1707,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMetaDeployLaunchLinkLabel</shortDescription>
+        <shortDescription>MetaDeploy link label</shortDescription>
         <value>Launch MetaDeploy</value>
     </labels>
     <labels>
@@ -1651,7 +1715,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMetaDeployTitle</shortDescription>
+        <shortDescription>MetaDeploy section title</shortDescription>
         <value>Install Enhanced Recurring Donations Metadata</value>
     </labels>
     <labels>
@@ -1659,7 +1723,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationButton</shortDescription>
+        <shortDescription>Migration button label</shortDescription>
         <value>Run Migration</value>
     </labels>
     <labels>
@@ -1667,7 +1731,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationCompleteMessage</shortDescription>
+        <shortDescription>Message displayed on a successful migration</shortDescription>
         <value>Your migration was successful with no errors. All set up steps are now complete. You're ready to begin using Enhanced Recurring Donations.</value>
     </labels>
     <labels>
@@ -1675,7 +1739,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationErrorMessage</shortDescription>
+        <shortDescription>Message displayed on a migration error</shortDescription>
         <value>Your migration run has errors, these will need to be fixed to complete a successful Migration. See the errors by going to NPSP Settings > System Tools > Error Logs. Consult the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt; for help. Fix the errors then return and try again.</value>
     </labels>
     <labels>
@@ -1683,15 +1747,47 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationIntro</shortDescription>
+        <shortDescription>Migration section introduction and guidelines</shortDescription>
         <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationSkipButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed enabling move back to the validation context</shortDescription>
+        <value>Back to Validate</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStepDryRun</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration section validation context guidelines</shortDescription>
+        <value>You may validate the data migration again by clicking Validate Migration. If you're all set to run the actual migration, click Skip Validation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStepFinal</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Migration section migration context guidelines</shortDescription>
+        <value>Click Run Migration to begin the data migration process.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMigrationStopButton</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button label displayed when migration can be stopped</shortDescription>
+        <value>Stop Migration</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationTitle</shortDescription>
+        <shortDescription>Migration section title</shortDescription>
         <value>Run Data Migration</value>
     </labels>
     <labels>
@@ -1699,7 +1795,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementMigrationWarning</shortDescription>
+        <shortDescription>Migration section warning</shortDescription>
         <value>&lt;b&gt;WARNING: This process rearranges existing Recurring Donation data to match the Enhanced Recurring Donations model. This process may take some time. You can leave this page and return later to check the progress.&lt;/b&gt;</value>
     </labels>
     <labels>
@@ -1707,7 +1803,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementPrepIntro</shortDescription>
+        <shortDescription>Enablement preparation task introduction and guidelines</shortDescription>
         <value>Before you enable Enhanced Recurring Donations, you should complete the following tasks:</value>
     </labels>
     <labels>
@@ -1715,7 +1811,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementPrepTasks</shortDescription>
+        <shortDescription>Enablement preparation tasks introduction and guidelines</shortDescription>
         <value>&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
 &lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;
 &lt;li&gt;Read the Enhanced Recurring Donations &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</value>
@@ -1725,7 +1821,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_EnablementPrepTitle</shortDescription>
+        <shortDescription>Enablement preparation tasks title</shortDescription>
         <value>Preparation Tasks</value>
     </labels>
     <labels>
@@ -1757,7 +1853,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_PageNotAvailableHeader</shortDescription>
+        <shortDescription>Header displayed indicating data is not available when enhanced RDs are enabled</shortDescription>
         <value>Page Not Available</value>
     </labels>
     <labels>
@@ -1765,7 +1861,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>RD2_PageNotAvailableMessage</shortDescription>
+        <shortDescription>Message displayed indicating data is not available when enhanced RDs are enabled</shortDescription>
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
     </labels>
     <labels>

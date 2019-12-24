@@ -222,7 +222,7 @@ public with sharing class RD2_EnablementService_TEST {
 
     /****
     * @description Verifies enhanced Recurring Donations are not ready for enablement
-    * when PilotEnabled feature paramenter is false
+    * when PilotEnabled feature parameter is false
     */
     @isTest
     private static void shouldNotActivateEnhancementWhenPilotEnabledIsFalse() {
@@ -253,8 +253,21 @@ public with sharing class RD2_EnablementService_TEST {
     }
 
     /****
+    * @description Verifies enhanced Recurring Donations are enabled
+    * when enablement override is set
+    */
+    @isTest
+    private static void shouldEnableEnhancementWhenOverrideIsTrue() {
+        RD2_EnablementService.isRecurringDonations2EnabledOverride = true;
+
+        setPilotEnabledFeatureParameter(false);
+
+        System.assertEquals(true, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should be enabled');
+    }
+
+    /****
     * @description Verifies enhanced Recurring Donations are not enabled
-    * when PilotEnabled feature paramenter is false
+    * when PilotEnabled feature parameter is false
     */
     @isTest
     private static void shouldNotEnableEnhancementWhenPilotEnabledIsFalse() {
