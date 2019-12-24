@@ -543,6 +543,7 @@
         <members>UTIL_RecordTypes_TEST</members>
         <members>UTIL_SalesforceID</members>
         <members>UTIL_SalesforceID_TEST</members>
+        <members>UTIL_SObject</members>
         <members>UTIL_SoqlListView_CTRL</members>
         <members>UTIL_String</members>
         <members>UTIL_String_TEST</members>
