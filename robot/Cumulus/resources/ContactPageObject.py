@@ -33,6 +33,14 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.get_webelement(locator).click() 
         self.salesforce.populate_lookup_field(field_name,new_value)
 
+    def waitfor_actions_dropdown_and_click_option(self,option):
+        """Wait for the Action dropdown menu to load from the contact details page
+           Click on the desired option passed as a parameter
+        """
+        loc=npsp_lex_locators['contacts_actions_dropdown_menu']
+        self.selenium.wait_until_element_is_visible(loc)
+        self.selenium.click_link(option)
+
     def validate_relation_status_message(self, contact1, contact2, relation):
         """Obtains the status message displayed on the relationships section of contact details page
            Validates it against the expected status message
