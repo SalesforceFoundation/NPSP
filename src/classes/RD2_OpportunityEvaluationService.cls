@@ -120,10 +120,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<Opportunity> openOppsToVoid = new List<Opportunity>();
         List<npe03__Recurring_Donation__c> rdsWithOpenOpps = new List<npe03__Recurring_Donation__c>();
 
-        for (npe03__Recurring_Donation__c rd : rds) {
-
-            // TODO Recalculate NextDonationDate before doing anything
-
+        for (npe03__Recurring_Donation__c rd : rds) {            
             if (isNew(rd)) {
                 newRDs.add(rd);
                 continue;
@@ -136,7 +133,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 handleClosedRecurringDonation(rd, openOppsToVoid);
             }
 
-            // TODO Schedule Visualizer
             // TODO Handle Past Due Installment
         }
 
@@ -187,7 +183,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Is this a new Recurring Donation that has not yet had an Installment Opp created?
+     * @description Is this a new Recurring Donation that has not yet had an Installment Opp created for?
      * @param rd Recurring Donation
      * @return Boolean
      */

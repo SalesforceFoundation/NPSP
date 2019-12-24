@@ -274,8 +274,10 @@ private with sharing class RD2_OpportunityService_TEST {
             .withOpenStage()
             .build();
 
+        Date newCloseDate = CLOSE_DATE.addDays(2);
+
         Test.startTest();
-        rd.Day_Of_Month__c = '25';///TODO!
+        rd.Day_Of_Month__c = String.valueOf(newCloseDate.day());
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         rd.PaymentMethod__c = PAYMENT_CHECK;
         update rd;
@@ -284,7 +286,6 @@ private with sharing class RD2_OpportunityService_TEST {
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
 
-        Date newCloseDate = Date.newInstance(2019, 12, 25);///TODO!
         System.assertEquals(RD_NEW_AMOUNT, opps[0].amount, 'Amount should match');
         System.assertEquals(newCloseDate, opps[0].CloseDate);
         System.assertEquals(getExpectedOppName(rd, newCloseDate), opps[0].Name);
@@ -474,10 +475,16 @@ private with sharing class RD2_OpportunityService_TEST {
 
         delete new TEST_SObjectGateway.OpportunityGateway().getRecords(rd);
 
+        RD2_OpportunityService service = new RD2_OpportunityService();
+        List<npe03__Recurring_Donation__c> rds = new RD2_OpportunityEvaluationService().getRecurringDonations(
+            new Set<Id>{ rd.Id }
+        );
+
         Exception actualException;
         try {
             rd.npe03__Amount__c = RD_NEW_AMOUNT;
-            update rd;
+            service.updateInstallmentOpportunities(rds);
+
         } catch (Exception e) {
             actualException = e;
         }
@@ -487,6 +494,8 @@ private with sharing class RD2_OpportunityService_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
+
+
 
     // Helper Methods
     //////////////////

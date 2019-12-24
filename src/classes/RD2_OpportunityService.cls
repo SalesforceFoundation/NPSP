@@ -40,7 +40,7 @@ public with sharing class RD2_OpportunityService {
     private static npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
     /***
-    * @description Determines the installment Opportunity Stage
+    * @description The installment Opportunity Stage
     */
     @TestVisible
     private String oppStageName {
@@ -54,6 +54,9 @@ public with sharing class RD2_OpportunityService {
         } set;
     }
 
+    /***
+    * @description Recurring Donation Schedule service
+    */
     @TestVisible
     private RD2_ScheduleService scheduleService {
         get {
@@ -94,7 +97,7 @@ public with sharing class RD2_OpportunityService {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             for (RD2_ScheduleService.Installment installment : installmentsByRDId.get(rd.Id)) {
-                opps.add(buildOpportunity(rd, installment.nextDonationDate));
+                opps.add(buildOpportunity(rd, installment));
             }
         }
 
@@ -103,9 +106,7 @@ public with sharing class RD2_OpportunityService {
         }
 
         List<Database.SaveResult> saveResults = Database.insert(opps, false);
-
-        ERR_Handler.Errors errors = ERR_Handler.getErrors(saveResults, opps);
-        ERR_Handler.processErrorsOnly(errors, ERR_Handler_API.Context.RD.name());
+        handleErrors(saveResults, opps);
 
         return getSuccessRecordIds(saveResults);
     }
@@ -113,16 +114,16 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Builds the opportunity and populates its fields from the recurring donation.
     * @param rd Recurring donation
-    * @param closeDate The next donation date on the recurring donation.
+    * @param installment Recurring Donation Schedule installment
     * @return Opportunity
     */
-    private Opportunity buildOpportunity(npe03__Recurring_Donation__c rd, Date closeDate) {
+    private Opportunity buildOpportunity(npe03__Recurring_Donation__c rd, RD2_ScheduleService.Installment installment) {
         Opportunity opp = new Opportunity(
             AccountId = rd.npe03__Organization__c,
             Primary_Contact__c = rd.npe03__Contact__c,
-            CloseDate = closeDate,
+            CloseDate = installment.nextDonationDate,
             StageName = oppStageName,
-            Amount = rd.npe03__Amount__c,
+            Amount = installment.installmentAmount,
             npe03__Recurring_Donation__c = rd.Id
         );
         opp.Recurring_Donation_Installment_Number__c = rd.npe03__Total_Paid_Installments__c != null
@@ -135,46 +136,68 @@ public with sharing class RD2_OpportunityService {
         }
 
         if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
-            opp.CampaignId = rd.npe03__Recurring_Donation_Campaign__c;
+            opp.CampaignId = installment.campaignId;
         }
 
         return opp;
     }
 
-
-
+    /***
+    * @description Updates related future open installment Opps
+    * Assumptions:
+    * - A Recurring Donation should have *at most one* installment Opp with Close Date >= today
+    * - The installment Opp can be either open or closed 
+    * - If the Close Date = today, then the Opp can be closed or open
+    * - If the Close Date > today, the Opp would most probably be open
+    *
+    * @param rds Recurring Donations
+    * @return void
+    */
     public void updateInstallmentOpportunities(List<npe03__Recurring_Donation__c> rds) {
         if (rds.isEmpty()) {
             return;
         }
 
-        Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = scheduleService.getVisualizedInstallments(rds, TODAY, 1, null);    //TODO    
-
-        List<Opportunity> opps = getModifiedOpps(rds, installmentsByRDId);
-        List<Database.SaveResult> saveResults = Database.update(opps, false);
-
-        updatePaymentRecords(extractIds(opps), installmentsByRDId);
-    }
-
-    private List<Opportunity> getModifiedOpps(List<npe03__Recurring_Donation__c> rds, Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId) {
-        List<Opportunity> opps = new List<Opportunity>();
+        List<Opportunity> oppsToUpdate = new List<Opportunity>();
+        Integer numberOfInstallments = 1;
+        Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = 
+            scheduleService.getVisualizedInstallments(rds, TODAY, numberOfInstallments, null);   
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            for (Opportunity opp : getFutureOpenOpps(rd)) {
+            List<Opportunity> rdOpps = getCurrentOpps(rd);
+            if (rdOpps.isEmpty()) {
+                continue;
+            }
+            //verify at most one Opp exists//TODO
 
-                RD2_ScheduleService.Installment installment = getMatchingInstallment(opp, installmentsByRDId.get(rd.id));
-                syncOppWithSchedule(opp, installment, rd.npe03__Donor_Name__c, opps);
+            //update future open Opp only
+            if (rdOpps[0].CloseDate <= TODAY) {
+                continue;
+            }
+            if (installmentsByRDId.get(rd.Id).isEmpty()) {
+                //throw new exception 
+            }
+
+            RD2_ScheduleService.Installment installment = installmentsByRDId.get(rd.Id)[0];
+            Boolean isChanged = syncOppWithSchedule(rdOpps[0], installment, rd.npe03__Donor_Name__c);
+            if (isChanged) {
+                oppsToUpdate.add(rdOpps[0]);
             }
         }
 
-        return opps;
+        List<Database.SaveResult> saveResults = Database.update(oppsToUpdate, false);
+        handleErrors(saveResults, oppsToUpdate);
+
+        //update payments for all Opps regardless if they were updated in the step above
+        updatePaymentRecords(UTIL_SObject.extractIds(oppsToUpdate), installmentsByRDId);
     }
 
-    private RD2_ScheduleService.Installment getMatchingInstallment(Opportunity opp, List<RD2_ScheduleService.Installment> installments) {  
-        return installments[0];//TODO
-    }
-    
-    private List<Opportunity> getFutureOpenOpps(npe03__Recurring_Donation__c rd) {
+    /***
+    * @description Returns Opp with Close Date = today (if any) and all future open Opps
+    * @param rd Recurring Donation
+    * @return List<Opportunity>
+    */
+    private List<Opportunity> getCurrentOpps(npe03__Recurring_Donation__c rd) {
         List<Opportunity> opps = new List<Opportunity>();
 
         if (rd.npe03__Donations__r.isEmpty()) {
@@ -182,7 +205,7 @@ public with sharing class RD2_OpportunityService {
         }
         
         for (Opportunity opp : rd.npe03__Donations__r) {
-            if (opp.IsClosed == false && opp.CloseDate > TODAY) {
+            if ((opp.IsClosed == false && opp.CloseDate > TODAY) || opp.CloseDate == TODAY) {
                 opps.add(opp);
             }
         }
@@ -190,9 +213,16 @@ public with sharing class RD2_OpportunityService {
         return opps;
     }
 
-    private void syncOppWithSchedule(Opportunity opp,  RD2_ScheduleService.Installment installment, String donorName, List<Opportunity> opps) {  
+    /***
+    * @description Updates Opportunity if the related Recurring Donation Schedule installment has been changed
+    * @param opp Opportunity
+    * @param installment Recurring Donation Schedule installment
+    * @param donorName Recurring Donation donor name
+    * @return Boolean
+    */
+    private Boolean syncOppWithSchedule(Opportunity opp,  RD2_ScheduleService.Installment installment, String donorName) {  
         if (installment == null) {
-            return;
+            return false;
         }    
 
         Boolean isChanged = false;
@@ -213,9 +243,7 @@ public with sharing class RD2_OpportunityService {
             isChanged = true;
         }
 
-        if (isChanged) {
-            opps.add(opp);
-        }
+        return isChanged;
     }
 
     /***
@@ -233,12 +261,15 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Updates payment method on the payment records for the created opportunities.
     * @param oppIds Opportunity Ids
-    * @param installmentsByRDId RD2_ScheduleService.Installments with rdids
+    * @param installmentsByRDId Schedule installments by a Recurring Donation Id
     * @return void
     */
     private void updatePaymentRecords(Set<Id> oppIds, Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId) {
-        List<npe01__OppPayment__c> payments = new List <npe01__OppPayment__c>();
+        if (oppIds.isEmpty()) {
+            return;
+        }
 
+        List<npe01__OppPayment__c> payments = new List <npe01__OppPayment__c>();
         for (npe01__OppPayment__c payment : [
             SELECT
                 npe01__Payment_Method__c,
@@ -249,7 +280,9 @@ public with sharing class RD2_OpportunityService {
             WHERE npe01__Opportunity__c IN :oppIds
         ]) {
             Id rdId = payment.npe01__Opportunity__r.npe03__Recurring_Donation__c;
-            String paymentMethod = installmentsByRDId.get(rdId)[0].paymentMethod;//TODO no matching installment!
+            //if the Opportunity has been updated or created, 
+            //the first schedule installment exists and it is the matching installment
+            String paymentMethod = installmentsByRDId.get(rdId)[0].paymentMethod;
 
             if (!String.isBlank(paymentMethod) 
                 && payment.npe01__Payment_Method__c != paymentMethod
@@ -261,14 +294,24 @@ public with sharing class RD2_OpportunityService {
 
         if (!payments.isEmpty()) {
             Database.SaveResult[] saveResults = Database.update(payments, false);
-            //errors are not logged//TODO
+            handleErrors(saveResults, payments);
         }
     }
 
+    /***
+    * @description Logs errors
+    * @param saveResults Database save results upon insert/update DML
+    * @param records SObject records attempted to save
+    * @return void
+    */
+    private void handleErrors(List<Database.SaveResult> saveResults, List<SObject> records) {
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(saveResults, records);
+        ERR_Handler.processErrorsOnly(errors, ERR_Handler_API.Context.RD.name());
+    }
 
     /***
     * @description Return Ids of records that have been inserted/updated successfully
-    * @param saveResults
+    * @param saveResults Database save results
     * @return Set<Id>
     */
     private Set<Id> getSuccessRecordIds(List<Database.SaveResult> saveResults) {
@@ -279,20 +322,11 @@ public with sharing class RD2_OpportunityService {
                 ids.add(result.getId());
             }
         }
-
         return ids;
     }
 
-    /***
-    * @description Extracts record Ids from a list of SObject records.
-    * @param records
-    * @return Set<Id>
+    /**
+    * @description Custom Opportunity service exception
     */
-    private Set<Id> extractIds(List<SObject> records) {
-        if (records == null || records.isEmpty()) {
-            return new Set<Id>();
-        }
-        return new Map<Id, SObject>(records).keySet();
-    }
-
+    private class ServiceException extends Exception { }
 }

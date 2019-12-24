@@ -1284,7 +1284,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @return List<OpportunityContactRole> OCRs assigned to provided Opportunities
     */
     private static List<OpportunityContactRole> getOppContactRoles(List<Opportunity> opps) {
-        return getOppContactRoles(extractIds(opps));
+        return getOppContactRoles(UTIL_SObject.extractIds(opps));
     }
 
     /*******************************************************************************************************
@@ -1356,7 +1356,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @return List<Opportunity> Opportunities
     */
     private static List<Opportunity> getOpportunities(List<Opportunity> opps) {
-        return getOpportunities(extractIds(opps));
+        return getOpportunities(UTIL_SObject.extractIds(opps));
     }
 
     /*******************************************************************************************************
@@ -1404,13 +1404,5 @@ private class OPP_OpportunityContactRoles_TEST {
         ];
     }
 
-    /*******************************************************************************************************
-    * @description Extracts Ids from sObject list
-    * @param sObjects SObject List
-    * @return Set<Id> SObject Ids
-    */
-    private static Set<Id> extractIds(List<SObject> sObjects) {
-        return new Map<Id, SObject>(sObjects).keySet();
-    }
 
 }
