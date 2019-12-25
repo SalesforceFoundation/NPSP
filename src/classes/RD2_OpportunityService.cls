@@ -36,8 +36,6 @@
 */
 public with sharing class RD2_OpportunityService {
 
-    private static Date TODAY = Date.today();
-
     /***
     * @description Recurring Donation custom settings
     */
@@ -79,6 +77,20 @@ public with sharing class RD2_OpportunityService {
         } set;
     }
 
+    /**
+    * @description Date to treat as current date in calculation of schedules
+    */
+    @TestVisible
+    private static Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = Date.today();
+            }
+            RD2_ScheduleService.currentDate = currentDate;
+            return currentDate;
+        } set;
+    }
+
     /***
     * @description Creates Opportunities and updates payment records for specified Recurring Donations
     * @param rds Recurring Donations
@@ -92,8 +104,9 @@ public with sharing class RD2_OpportunityService {
         List<Opportunity> oppsToCreate = new List<Opportunity>();
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
         Integer numberOfInstallments = 1;
+
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = 
-            scheduleService.getVisualizedInstallments(rds, TODAY, numberOfInstallments, null);
+            scheduleService.getVisualizedInstallments(rds, currentDate, numberOfInstallments, null);
 
         for (npe03__Recurring_Donation__c rd : rds) {
             for (RD2_ScheduleService.Installment installment : installmentsByRDId.get(rd.Id)) {
@@ -178,7 +191,7 @@ public with sharing class RD2_OpportunityService {
 
         //Get Recurring Donation Schedule installments where Schedule installment Close Date >= today
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = 
-            scheduleService.getVisualizedInstallments(rds, TODAY, numberOfInstallments, null);  
+            scheduleService.getVisualizedInstallments(rds, currentDate, numberOfInstallments, null);  
 
         //Synchronize Opps with matching Schedule installments
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -191,7 +204,7 @@ public with sharing class RD2_OpportunityService {
             for (Integer i = 0, size = rdOpps.size(); i < size; i++) {
                 Opportunity opp = rdOpps[i];
                 //update future open Opp only
-                if (opp.CloseDate <= TODAY) {
+                if (opp.CloseDate <= currentDate) {
                     continue;
                 }
 
@@ -227,7 +240,7 @@ public with sharing class RD2_OpportunityService {
         }
         
         for (Opportunity opp : rd.npe03__Donations__r) {
-            if ((opp.IsClosed == false && opp.CloseDate > TODAY) || opp.CloseDate == TODAY) {
+            if ((opp.IsClosed == false && opp.CloseDate > currentDate) || opp.CloseDate == currentDate) {
                 opps.add(opp);
             }
         }

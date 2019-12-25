@@ -1739,8 +1739,6 @@ private class RD2_DataMigration_TEST {
             .withDefaultValues()
             .withContact(contactId)
             .withAmount(AMOUNT_VALUE)
-            .withInstallmentPeriodMonthly()
-            .withInstallmentFrequency(1)
             .withDayOfMonth('1');
     }
 
@@ -1776,7 +1774,6 @@ private class RD2_DataMigration_TEST {
     private static npe03__Custom_Installment_Settings__c createCustomInstallmentSettings(
         String installmentIncrement, Integer installmentFrequency
     ) {
-
         npe03__Custom_Installment_Settings__c installment = new npe03__Custom_Installment_Settings__c(
             npe03__Increment__c = installmentIncrement,
             npe03__Value__c = installmentFrequency,

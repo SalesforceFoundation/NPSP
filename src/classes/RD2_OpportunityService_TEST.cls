@@ -259,6 +259,11 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
+        Date closeDate = START_DATE.addDays(1);
+        Date newCloseDate = closeDate.addDays(1);
+        RD2_OpportunityService.currentDate = START_DATE;
+        RD2_ScheduleService.currentDate = START_DATE;
+
         createRdSettings();
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
@@ -270,11 +275,10 @@ private with sharing class RD2_OpportunityService_TEST {
             .withRecurringDonation(rd.Id)
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1)
-            .withCloseDate(CLOSE_DATE)
+            .withCloseDate(closeDate)
             .withOpenStage()
             .build();
 
-        Date newCloseDate = CLOSE_DATE.addDays(2);
 
         Test.startTest();
         rd.Day_Of_Month__c = String.valueOf(newCloseDate.day());
