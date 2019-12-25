@@ -39,6 +39,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
 
@@ -47,19 +48,17 @@ private class RD2_OpportunityEvaluationService_TEST {
     */
     @TestSetup
     private static void setUp() {
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
+        insert UTIL_UnitTestData_TEST.getContact();
     }
 
     /**
      * @description Verifies that creating a new Open Recurring Donation creates an Installment Opportunity
      */
     @IsTest
-    private static void shouldCreateAnInstallmentOpportunity() {
-        Contact contact = getContact();
+    private static void shouldCreateAnInstallmentOppWhenActiveRDIsCreated() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact)
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
@@ -81,11 +80,10 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @description Verifies that inserting a Closed Recurring Donation does not create an Installment Opportunity
      */
     @IsTest
-    private static void shouldNotCreateAnInstallmentOpportunityIfClosedWhenCreated() {
-        Contact contact = getContact();
+    private static void shouldNotCreateAnInstallmentOppWhenClosedRDIsCreated() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact)
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withStatusClosed()
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
@@ -105,7 +103,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @description Verify that the Recurring Donations are NOT eligible to have an installment opportunity created
      */
     @IsTest
-    private static void shouldNotBeEligibleForNewInstallmentOpp() {
+    private static void shouldFilterOutRDsNotEligibleForNewInstallmentOpp() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
@@ -193,7 +191,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * Recurring Donation settings Open Opportunity Behaviour is set to mark open Opps as Closed Lost
      */
     @IsTest
-    private static void shouldMarkOpenOppsAsClosedLostWhenRDIsClosed() {        
+    private static void shouldMarkOpenOppsAsClosedLostWhenRDIsClosedAndCloseActionIsClosedLost() {        
         String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
         npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
@@ -201,7 +199,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
 
-        System.assertEquals(oldOpps.size(), oppById.size(), 'The number of Opps should match');
+        System.assertEquals(oldOpps.size(), oppById.size(), 'The number of Opps should be unchanged');
         System.assertEquals(true, oppById.get(oldOpps[0].Id).isWon, 'The closed Opp should stay won');
         System.assertEquals(true, oppById.get(oldOpps[1].Id).isClosed && !oppById.get(oldOpps[1].Id).isWon, 
             'The Open Opp should be Closed Lost now');
@@ -212,7 +210,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * Recurring Donation settings Open Opportunity Behaviour is set to delete open Opps
      */
     @IsTest
-    private static void shouldDeleteOpenOppsWhenRDIsClosed() {
+    private static void shouldDeleteOpenOppsWhenRDIsClosedAndCloseActionIsDeletion() {
         String closeAction = RD2_Constants.CloseActions.Delete_Open_Opportunities.name();
 
         npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
@@ -220,7 +218,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
 
-        System.assertEquals(1, opps.size(), 'The number of Opps should match');
+        System.assertEquals(1, opps.size(), 'Only closed won Opp should exist: ' + opps);
         System.assertEquals(oldOpps[0].Name, opps[0].Name, 'The closed won Opp should not be deleted');
         System.assertEquals(true, opps[0].isWon, 'The closed won Opp should be unchanged');
     }
@@ -230,7 +228,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * Recurring Donation settings Open Opportunity Behaviour is set to not change open Opps
      */
     @IsTest
-    private static void shouldNotChangeOpenOppsWhenRDIsClosed() {        
+    private static void shouldNotChangeOpenOppsWhenRDIsClosedAndCloseActionIsNoAction() {        
         String closeAction = RD2_Constants.CloseActions.No_Action.name();
 
         npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
@@ -306,7 +304,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * has no Opportunities
      */
     @IsTest
-    private static void shouldNotThrowExceptionWhenRDWithoutOppsIsClosed() { 
+    private static void shouldNotThrowExceptionWhenRDIsClosedAndHasNoOpp() { 
         Exception actualException;
         String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
@@ -335,6 +333,91 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.stopTest();
 
         System.assertEquals(null, actualException, 'No exception should be thrown when closed RD has no Opps');
+    }
+
+    /**
+     * @description Verifies Opps are not processed when override is set
+     */
+    @IsTest
+    private static void shouldNotEvaluateOppsWhenOverrideIsSet() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_OpportunityEvaluationService.isOverride = true;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(0, opps.size(), 'No Installment Opp should be created if override is checked: ' + opps);
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /**
+     * @description Verifies Opps are processed when override is not set
+     */
+    @IsTest
+    private static void shouldEvaluateOppsWhenOverrideIsNotSet() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        System.assertEquals(false, RD2_OpportunityEvaluationService.isOverride, 'Override should be false by default');
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Installment Opp should be created: ' + opps);
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /**
+     * @description Verifies Opps are updated when an active RD is updated
+     */
+    @IsTest
+    private static void shouldUpdateFutureOppWhenRDIsUpdated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)        
+            .withCalculateNextDonationDate()
+            .build();
+        insert rd;
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(contact.Id)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1)
+            .withCloseDate(Date.today().addDays(1))
+            .withOpenStage()
+            .build();
+
+        Date newCloseDate = Date.today().addDays(2);
+        Decimal newAmount = rd.npe03__Amount__c + 100;
+
+        Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(newCloseDate.day());
+        rd.npe03__Amount__c = newAmount;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Installment Opp should exist: ' + opps);
+        System.assertEquals(newAmount, opps[0].amount, 'Amount should be updated');
+        System.assertEquals(newCloseDate, opps[0].CloseDate, 'Close Date should be updated');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
 
 

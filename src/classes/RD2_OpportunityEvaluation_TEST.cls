@@ -43,17 +43,10 @@ private class RD2_OpportunityEvaluation_TEST {
      * job throws an exception
      */
     @IsTest
-    private static void shouldThrowExceptionForEnhancedRDJobIfEnhancedRDIsNotEnabled() {
+    private static void shouldThrowExceptionForEnhancedRDJobIfEnhancedRDIsNotEnabled() {        
+        Exception actuaException = runBatch(new RD2_OpportunityEvaluation_BATCH());
 
-        Exception actuaException;
-        try {
-            Test.startTest();
-            Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
-            Test.stopTest();
-        } catch (Exception ex) {
-            actuaException = ex;
-        }
-        System.assert(actuaException != null, 'An exception should have been thrown because Enhanced RD is not enabled');
+        System.assertNotEquals(null, actuaException, 'An exception should have been thrown because Enhanced RD is not enabled');
         System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun),
             'The exception should have indicated that the job cannot be executed because Enhanced RD is not enabled ' + actuaException.getMessage());
     }
@@ -66,15 +59,9 @@ private class RD2_OpportunityEvaluation_TEST {
     private static void shouldNotThrowExceptionForEnhancedRDJobIfEnhancedRDIsEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Exception actuaException;
-        try {
-            Test.startTest();
-            Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
-            Test.stopTest();
-        } catch (Exception ex) {
-            actuaException = ex;
-        }
-        System.assert(actuaException == null, 'An exception should not have been thrown because Enhanced RD is enabled');
+        Exception actuaException = runBatch(new RD2_OpportunityEvaluation_BATCH());
+
+        System.assertEquals(null, actuaException, 'An exception should not have been thrown because Enhanced RD is enabled');
     }
 
     /**
@@ -83,16 +70,31 @@ private class RD2_OpportunityEvaluation_TEST {
      */
     @IsTest
     private static void shouldNotThrowExceptionForLegacyRDJobIfEnhancedRDIsNotEnabled() {
+        Exception actuaException = runBatch(new RD_RecurringDonations_BATCH());
 
+        System.assertEquals(null, actuaException, 'An exception should not have been thrown because Enhanced RD is not enabled');
+    }
+    
+
+    // Helpers
+    //////////////
+
+    /**
+     * @description Executes batch
+     * @param batch Batch instance
+     * @return Exception An Exception generated in the batch (if any)
+     */
+    private static Exception runBatch(Database.Batchable<SObject> batch) {
         Exception actuaException;
         try {
             Test.startTest();
-            Database.executeBatch(new RD_RecurringDonations_BATCH());
+            Database.executeBatch(batch);
             Test.stopTest();
+
         } catch (Exception ex) {
             actuaException = ex;
         }
-        System.assert(actuaException == null, 'An exception should not have been thrown because Enhanced RD is not enabled');
+        return actuaException;
     }
 
 }
