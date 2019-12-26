@@ -33,14 +33,15 @@
 * @group ErrorHandling
 * @description Tests exception wrapper
 */
-@isTest
+@IsTest
 public with sharing class ERR_ExceptionData_TEST {
 
     /*********************************************************************************************************
     * @description Tests to make sure DML Exceptions have the correct wrapper created. The DML Exception
     * related fields should be filled in properly and the other fields should not be used. 
     */
-    static testMethod void testExceptionWrapperCreationForDMLException() {
+    @IsTest
+    static void testExceptionWrapperCreationForDMLException() {
         try {
 
             // Do something that will throw a DML exception. 
@@ -64,7 +65,8 @@ public with sharing class ERR_ExceptionData_TEST {
     * @description Tests to make sure that non-DML Exceptions have the error message recorded in the correct
     * variable and the DML Exception variables are not set. 
     */
-    static testMethod void testExceptionWrapperCreationForNonDMLException() {
+    @IsTest
+    static void testExceptionWrapperCreationForNonDMLException() {
         String divideByZeroError = 'Divide by 0';
         try {
 
@@ -84,7 +86,8 @@ public with sharing class ERR_ExceptionData_TEST {
     * @description Tests to make sure that a correct wrapper is created for situations where the 
     * wrapper is not created with an Exception. This is used for displaying BDI Processing failures. 
     */
-    static testMethod void testExceptionWrapperCreationForErrorMessage() {
+    @IsTest
+    static void testExceptionWrapperCreationForErrorMessage() {
         String errorMessage = 'This is a test error string.';
 
         String JSONString = ERR_ExceptionData.createExceptionWrapperJSONString(errorMessage);
