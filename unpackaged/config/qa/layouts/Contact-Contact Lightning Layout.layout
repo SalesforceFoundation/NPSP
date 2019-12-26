@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>%%%NAMESPACE%%%New_Gift</customButtons>
-    <customButtons>%%%NAMESPACE%%%New_Gift_Comp</customButtons>
     <customButtons>%%%NAMESPACE%%%Recalculate_Rollups</customButtons>
     <customButtons>Relationships_Viewer</customButtons>
     <excludeButtons>Clone</excludeButtons>
