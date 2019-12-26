@@ -19,7 +19,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track mappingSet = '';
     @track version = '';
     @api showSpinner = false;
+    @api hasPageLevelError = false;
     label = { messageLoading, geSave, geCancel };
+    erroredFields = [];
+    @api pageLevelErrorMessageList = [];
 
     @wire(getRecord, { recordId: '$recordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
@@ -72,7 +75,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleSave() {
-        console.log('Form Save button clicked');
+        this.clearErrors();
 
         // TODO: Pass the actual Data Import record, and navigate to the new Opportunity
         // const OpportunityId = GeFormService.createOpportunityFromDataImport(dataImport);
@@ -87,7 +90,69 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         
         GeFormService.handleSave(sectionsList, this.record).then(opportunityId => {
             this.navigateToRecordPage(opportunityId);
-        });
+        })
+        .catch(error => {
+
+            this.toggleSpinner();
+            
+            // Show on top if it is a page level
+            this.hasPageLevelError = true;
+            const exceptionWrapper = JSON.parse(error.body.message);
+            const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
+
+            if (exceptionWrapper.exceptionType !== null && exceptionWrapper.exceptionType !== '') {
+
+                // Check to see if there are any field level errors
+                if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined || Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
+                    
+                    // If there are no specific fields the error has to go to, put it on the page level error message. 
+                    for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
+                        this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
+                    }
+                } else {
+                    // If there is a specific field that each error is supposed to go to, show it on the field on the page. 
+                    // If it is not on the page to show, display it on the page level.
+                    for (const key in exceptionWrapper.DMLErrorFieldNameMapping) {
+                        
+                        // List of fields with this error
+                        let fieldList = exceptionWrapper.DMLErrorFieldNameMapping[key];
+                        
+                        // Error message for the field. 
+                        let errorMessage = exceptionWrapper.DMLErrorMessageMapping[key];
+
+                        // Errored fields that are not displayed
+                        let hiddenFieldList = [];
+
+                        fieldList.forEach(fieldWithError => {
+                            // Go to the field and set the error message using setCustomValidity 
+                            if (fieldWithError in allDisplayedFields) {
+                                let fieldInput = allDisplayedFields[fieldWithError];
+                                this.erroredFields.push(fieldInput);
+
+                                fieldInput.setCustomValidity(errorMessage);
+                            } else {
+
+                                // Keep track of errored fields that are not displayed.  
+                                hiddenFieldList.push(fieldWithError);
+                            }
+                        });
+
+                        // If there are hidden fields, display the error message at the page level. 
+                        // With the fields noted. 
+                        if (hiddenFieldList.length > 0) {
+                            let combinedFields = hiddenFieldList.join(', ');
+
+                            this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: key, errorMessage: errorMessage + ' [' + combinedFields + ']'}];
+                        }
+                    }
+                }
+            } else {
+                pageLevelErrorMessageList = [...pageLevelErrorMessageList, {index: 0, errorMessage: exceptionWrapper.errorMessage}];
+            }
+
+            // focus either the page level or field level error messsage somehow
+            window.scrollTo(0,0);
+        }) ;
     }
 
     isFormValid(sectionsList){
@@ -118,5 +183,31 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     // change showSpinner to the opposite of its current value
     toggleSpinner() {
         this.showSpinner = !this.showSpinner;
+    }
+
+    getDisplayedFieldsMappedByAPIName(sectionsList) {
+        let allFields = {};
+        sectionsList.forEach(section => {
+            const fields = section.getAllFieldsByAPIName();
+
+            allFields = Object.assign(allFields, fields);
+        });
+
+        return allFields;
+    }
+
+    clearErrors() {
+
+        // Clear the page level error
+        this.pageLevelErrorMessageList = [];
+
+        // Clear the field level errors
+        if (this.erroredFields.length > 0) {
+            this.erroredFields.forEach(fieldToReset => {
+                fieldToReset.setCustomValidity('');
+            });
+        }
+
+        this.erroredFields = [];
     }
 }

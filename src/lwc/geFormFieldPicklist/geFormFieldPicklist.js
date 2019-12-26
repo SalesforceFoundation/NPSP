@@ -47,4 +47,15 @@ export default class GeFormFieldPicklist extends LightningElement {
         return picklistField.checkValidity();
     }
 
+    @api
+    setCustomValidity(errorMessage) {
+        const picklistField = this.template.querySelector('lightning-combobox');
+        return picklistField.setCustomValidity(errorMessage);
+    }
+
+    @api
+    resetCustomValidity() {
+        this.setCustomValidity('');
+    }
+
 }

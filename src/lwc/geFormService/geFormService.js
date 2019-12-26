@@ -101,6 +101,7 @@ class GeFormService {
                 })
                 .catch(error => {
                     console.error(JSON.stringify(error));
+                    reject(error);
                 });
         });
     }
