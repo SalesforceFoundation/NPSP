@@ -1038,7 +1038,7 @@ IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Perio
         <linkType>url</linkType>
         <masterLabel>New Gift</masterLabel>
         <openType>sidebar</openType>
-        <url>/lightning/n/{!$Setup.npsp__Package_Settings__c.npsp__Namespace_Prefix__c}GE_Form_Renderer?c__recordId={!Account.Id}</url>
+        <url>/lightning/n/npsp__GE_Form_Renderer?c__recordId={!Account.Id}</url>
         <protected>false</protected>
     </webLinks>
     <webLinks>
