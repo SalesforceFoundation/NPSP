@@ -3,7 +3,6 @@ import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
 
-const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
 const TEXT_AREA_TYPE = 'TEXTAREA';
