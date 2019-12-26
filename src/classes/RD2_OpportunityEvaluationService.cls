@@ -120,7 +120,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
         //do not evaluate Opps when override is set
         if (isOverride) {
-            return;
+            return this;
         }
 
         List<npe03__Recurring_Donation__c> newRDs = new List<npe03__Recurring_Donation__c>();
@@ -154,7 +154,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /**
      * @description Is this a new Recurring Donation that was just inserted and
      * has not yet had an Installment Opportunity created?
-     * Schedules are inserted upon the Recurring Donation insert.
+     * Schedules are inserted upon the Recurring Donation insert and before Opp evaluation is done.
      * @param rd Recurring Donation
      * @return Boolean
      */
@@ -266,6 +266,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             queryFields.add(fld);
         }
 
+        //Return all open Opps regardless of the Close Date
+        //and all Opps with Close Date >= TODAY regardless of the stage.
         String oppSubquery =
             '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
             'npe03__Recurring_Donation__c, ' +
@@ -277,6 +279,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'OR CloseDate >= TODAY ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
+        //Return all schedules for the RD Schedule visualization.
+        //The RD Schedule will filter them out if not applicable within the time period.
         String scheduleSubquery =
             '(SELECT Id, InstallmentAmount__c, ' +
             'Campaign__c, ' +
@@ -287,8 +291,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'PaymentMethod__c, ' +
             'StartDate__c, ' +
             'EndDate__c ' +
-            'FROM RecurringDonationSchedules__r ' +
-            'WHERE Active__c = true)';
+            'FROM RecurringDonationSchedules__r)';
 
         queryFields.add(parentAccountField);
         queryFields.add(oppSubquery);

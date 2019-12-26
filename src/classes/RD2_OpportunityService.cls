@@ -103,10 +103,15 @@ public with sharing class RD2_OpportunityService {
 
         List<Opportunity> oppsToCreate = new List<Opportunity>();
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
-        Integer numberOfInstallments = 1;
 
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRDId = new Map<Id, List<RecurringDonationSchedule__c>>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            schedulesByRDId.put(rd.Id, rd.RecurringDonationSchedules__r);
+        }
+
+        Integer numberOfInstallments = 1;
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = 
-            scheduleService.getVisualizedInstallments(rds, currentDate, numberOfInstallments, null);
+            scheduleService.getVisualizedInstallments(rds, currentDate, numberOfInstallments, schedulesByRDId);
 
         for (npe03__Recurring_Donation__c rd : rds) {
             for (RD2_ScheduleService.Installment installment : installmentsByRDId.get(rd.Id)) {
@@ -175,11 +180,13 @@ public with sharing class RD2_OpportunityService {
         Integer numberOfInstallments = 1;
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         Map<Id, List<Opportunity>> oppsByRDId = new Map<Id, List<Opportunity>>();
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRDId = new Map<Id, List<RecurringDonationSchedule__c>>();
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
 
         //Collect Opps with Close Date equal to today and open Opps with Close Date > today
         for (npe03__Recurring_Donation__c rd : rds) {
             oppsByRDId.put(rd.Id, getCurrentOpps(rd));
+            schedulesByRDId.put(rd.Id, rd.RecurringDonationSchedules__r);
             
             //If there is a Recurring Donation with more than one related installment Opp,
             //get that specific number of Schedule installments for each RD
@@ -191,7 +198,7 @@ public with sharing class RD2_OpportunityService {
 
         //Get Recurring Donation Schedule installments where Schedule installment Close Date >= today
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = 
-            scheduleService.getVisualizedInstallments(rds, currentDate, numberOfInstallments, null);  
+            scheduleService.getVisualizedInstallments(rds, currentDate, numberOfInstallments, schedulesByRDId);  
 
         //Synchronize Opps with matching Schedule installments
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -204,7 +211,7 @@ public with sharing class RD2_OpportunityService {
             for (Integer i = 0, size = rdOpps.size(); i < size; i++) {
                 Opportunity opp = rdOpps[i];
                 //update future open Opp only
-                if (opp.CloseDate <= currentDate || opp.CloseDate < rd.StartDate__c) {
+                if (opp.CloseDate <= currentDate) {
                     continue;
                 }
 

@@ -279,7 +279,11 @@ public without sharing class RD2_ScheduleService {
             filteredSchedules = new List<RecurringDonationSchedule__c>();
 
             for (RecurringDonationSchedule__c schedule : schedules) {
-                if (schedule.EndDate__c == null || schedule.EndDate__c >= referenceDate) {
+                //ensure the passed in schedules are active within the time period
+                Boolean isActive = schedule.EndDate__c == null
+                    || (schedule.EndDate__c >= referenceDate && !(schedule.StartDate__c > schedule.EndDate__c));
+
+                if (isActive) {
                     filteredSchedules.add(schedule);
                 }
             }
