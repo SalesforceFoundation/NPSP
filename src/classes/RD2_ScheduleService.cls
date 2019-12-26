@@ -251,7 +251,7 @@ public without sharing class RD2_ScheduleService {
                 continue;
             }
 
-            installmentsByRd.put(rd.Id, doVisualization(startDate, numInstallments, schedulesByRd.get(rd.Id)));
+            installmentsByRd.put(rd.Id, getVisualizedInstallments(startDate, numInstallments, schedulesByRd.get(rd.Id)));
         }
 
         return installmentsByRd;
@@ -264,7 +264,7 @@ public without sharing class RD2_ScheduleService {
     * @param schedules List of active RecurringDonationSchedule__c records
     * @return List<Installment>
     */
-    private List<Installment> doVisualization(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
+    public List<Installment> getVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
         List<Installment> installments = new List<Installment>();
         List <RecurringDonationSchedule__c> filteredSchedules;
 
