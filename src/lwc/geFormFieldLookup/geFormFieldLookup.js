@@ -108,10 +108,6 @@ export default class GeFormFieldLookup extends LightningElement {
         }
     }
 
-    get fieldLabel() {
-        return this.fieldInfo ? this.fieldInfo.label : null;
-    }
-
     /**
      * Gets the SObject icon for the object that we're looking up to.
      * @returns {string}
