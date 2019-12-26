@@ -13,6 +13,7 @@ Enable Advanced Mapping
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Data Import Advanced Mapping
+    Verify Advanced Mapping Is Not Enabled
     Click Toggle Button                       DataImportAdvancedMapping
     Wait Until Advanced Mapping Is Enabled
 
