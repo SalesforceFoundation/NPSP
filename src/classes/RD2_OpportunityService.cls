@@ -263,8 +263,10 @@ public with sharing class RD2_OpportunityService {
     * @return Boolean
     */
     private Boolean syncOppWithSchedule(Opportunity opp,  RD2_ScheduleService.Installment installment, String donorName) {  
+        //An installment Opportunity should always have a matching RD Schedule installment.
+        //If the installment is null, this is most probably a programatic error.
         if (installment == null) {
-            opp.addError('The Opportunity cannot be matched with the Schedule installment');
+            opp.addError(System.Label.RD2_ScheduleInstallmentIsRequired);
             return true;
         }    
 
@@ -281,7 +283,10 @@ public with sharing class RD2_OpportunityService {
             isChanged = true;
         }
 
-        if (opp.CampaignId != installment.campaignId && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c) {
+        if (installment.campaignId != null 
+            && opp.CampaignId != installment.campaignId 
+            && rdSettings.npe03__Add_Campaign_to_All_Opportunites__c
+        ) {
             opp.CampaignId = installment.campaignId;
             isChanged = true;
         }
