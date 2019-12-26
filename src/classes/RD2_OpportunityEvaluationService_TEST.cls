@@ -380,10 +380,15 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-     * @description Verifies Opps are updated when an active RD is updated
+     * @description Verifies future open Opp is updated when an active RD is updated
      */
     @IsTest
     private static void shouldUpdateFutureOppWhenRDIsUpdated() {
+        //set current date override
+        final Date today = START_DATE.addDays(1);
+        RD2_ScheduleService.currentDate = today;
+        RD2_OpportunityService.currentDate = today;
+
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
@@ -398,11 +403,11 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withRecurringDonation(rd.Id)
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1)
-            .withCloseDate(Date.today().addDays(1))
+            .withCloseDate(today.addDays(1))
             .withOpenStage()
             .build();
 
-        Date newCloseDate = Date.today().addDays(2);
+        Date newCloseDate = today.addDays(2);
         Decimal newAmount = rd.npe03__Amount__c + 100;
 
         Test.startTest();

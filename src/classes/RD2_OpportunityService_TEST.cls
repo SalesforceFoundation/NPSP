@@ -45,9 +45,9 @@ private with sharing class RD2_OpportunityService_TEST {
     private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
     private static final String PAYMENT_CHECK = 'Check';
 
-    private static final Date TODAY = Date.today();
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
-    private static final Date CLOSE_DATE = TODAY.addDays(2);
+    private static final Date TODAY = START_DATE.addDays(1);
+    private static final Date CLOSE_DATE = TODAY.addDays(1);
     private static final String DAY_OF_MONTH = String.valueOf(CLOSE_DATE.day());
     private static final Decimal RD_AMOUNT = 400;
     private static final Decimal RD_NEW_AMOUNT = 100;
@@ -73,7 +73,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldCreateOppWhenRDHasContact() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettingsWithStage(STAGE_NAME_PLEDGED);
+        setUpConfiguration(STAGE_NAME_PLEDGED);
 
         Test.startTest();
         npe03__Recurring_Donation__c rd = createRecurringDonation();
@@ -100,7 +100,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldCreateOppWhenRDHasOrgAffiliation() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettingsWithStage(STAGE_NAME_PROMISED);
+        setUpConfiguration(STAGE_NAME_PROMISED);
 
         Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert acc;
@@ -140,7 +140,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldCreateOppWithSpecialFormatWhenNoOppNamingSpecified() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
 
         Test.startTest();
         npe03__Recurring_Donation__c rd = createRecurringDonation();
@@ -167,7 +167,7 @@ private with sharing class RD2_OpportunityService_TEST {
         //blank out cached version so the newly created setting takes effect
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
 
-        createRdSettings();
+        setUpConfiguration();
         
         Test.startTest();
         npe03__Recurring_Donation__c rd = createRecurringDonation();
@@ -176,8 +176,8 @@ private with sharing class RD2_OpportunityService_TEST {
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
 
-        String formattedDate = CLOSE_DATE.year() + '.' + CLOSE_DATE.month() + '.' + CLOSE_DATE.day();    
-        System.assertEquals(rd.npe03__Donor_Name__c + ' ' + formattedDate, opps[0].Name, 'Opportunity Name should match');
+        DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
+        System.assertEquals(rd.npe03__Donor_Name__c + ' ' + closeDatetime.format('yyyy.MM.dd'), opps[0].Name, 'Opportunity Name should match');
     }
 
     /***
@@ -189,7 +189,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         Id rdSettingRecordTypeId = UTIL_RecordTypes_TEST.getRandomRecordTypeId(Opportunity.SObjectType);
 
-        createRdSettings(new Map<String, Object>{
+        setUpConfiguration(new Map<String, Object>{
             'npe03__Record_Type__c' => rdSettingRecordTypeId
         });
 
@@ -212,7 +212,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldSetOppRecordTypeToDefaultWhenSettingsNotConfigured() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
 
         Test.startTest();
         npe03__Recurring_Donation__c rd = createRecurringDonation();
@@ -233,7 +233,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldNotCreateOppWhenSettingRecordTypeIsInvalid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings(new Map<String, Object>{
+        setUpConfiguration(new Map<String, Object>{
             'npe03__Record_Type__c' => UTIL_RecordTypes_TEST.MOCK_ID
         });
 
@@ -259,12 +259,9 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
-        Date closeDate = START_DATE.addDays(1);
-        Date newCloseDate = closeDate.addDays(1);
-        RD2_OpportunityService.currentDate = START_DATE;
-        RD2_ScheduleService.currentDate = START_DATE;
+        Date newCloseDate = CLOSE_DATE.addDays(1);
 
-        createRdSettings();
+        setUpConfiguration();
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
@@ -275,10 +272,9 @@ private with sharing class RD2_OpportunityService_TEST {
             .withRecurringDonation(rd.Id)
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1)
-            .withCloseDate(closeDate)
+            .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
-
 
         Test.startTest();
         rd.Day_Of_Month__c = String.valueOf(newCloseDate.day());
@@ -303,7 +299,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldNotUpdateOppWhenCloseDateInThePast() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
         
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
@@ -333,7 +329,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldNotUpdateOppWhenCloseDateIsToday() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
         
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
@@ -366,7 +362,7 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
-        createRdSettings();
+        setUpConfiguration();
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
@@ -422,7 +418,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldNotUpdateOppWhenFutureOppIsClosed() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
@@ -434,11 +430,19 @@ private with sharing class RD2_OpportunityService_TEST {
             .withCloseDate(CLOSE_DATE)
             .withClosedWonStage()
             .build();
-  
-        Test.startTest();        
+
+        System.assert(TODAY < CLOSE_DATE, 'Opp Close Date should be in future');
+        
+        //cannot execute the update in the Test.start/stopTest() because
+        //the Opp is closed, so all async jobs from the RD *insert* will 
+        //execute when Test.stopTest() is executed. 
+        //This would result in a new Opp creation since there are no *open* Opps.
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         update rd;
-        Test.stopTest();
+
+        new RD2_OpportunityService().updateInstallmentOpportunities(
+            new List<npe03__Recurring_Donation__c>{ rd }
+        );
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
@@ -453,7 +457,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldNotUpdateOppWhenOppCloseDateIsBeforeRDStartDate() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
@@ -466,15 +470,22 @@ private with sharing class RD2_OpportunityService_TEST {
             .withOpenStage()
             .build();
 
+        Date newStartDate = CLOSE_DATE.addDays(2);
+        System.assertEquals(START_DATE, rd.StartDate__c, 'RD Start Date should be set');
+        System.assert(START_DATE < TODAY && TODAY < newStartDate, 'New Start Date should be in future and greater than old Start Date');
+        System.assert(TODAY < CLOSE_DATE && CLOSE_DATE < newStartDate, 'Close Date should be in future but less than new Start Date');
+
         Test.startTest();
-        rd.StartDate__c = CLOSE_DATE.addDays(2);
+        rd.StartDate__c = newStartDate;
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         update rd;
         Test.stopTest();
 
+        System.assertEquals(newStartDate, rdGateway.getRecord(rd.Id).StartDate__c, 'RD Start Date should match');
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
-        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Opp Amount should be unchanged');
+        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Opp Amount should be unchanged: ' + opps);
     }
 
     /***
@@ -485,7 +496,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldUpdateOppCampaignWhenSettingsEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
@@ -519,7 +530,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldNotUpdateOppCampaignWhenSettingsDisabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
         Id rdCampaignId = rd.npe03__Recurring_Donation_Campaign__c;
@@ -534,7 +545,7 @@ private with sharing class RD2_OpportunityService_TEST {
             .withOpenStage()
             .build();
 
-        createRdSettings(new Map<String, Object>{
+        setUpConfiguration(new Map<String, Object>{
             'npe03__Add_Campaign_to_All_Opportunites__c' => false
         });
   
@@ -559,7 +570,7 @@ private with sharing class RD2_OpportunityService_TEST {
     private static void shouldReturnNoErrorWhenUpdatedRDHasNoOpp() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        createRdSettings();
+        setUpConfiguration();
 
         Test.startTest();
         npe03__Recurring_Donation__c rd = createRecurringDonation();
@@ -644,8 +655,8 @@ private with sharing class RD2_OpportunityService_TEST {
     * @description Generic version of creating Recurring Donations Settings
     * @return void
     */
-    private static void createRdSettings() {
-        createRdSettingsWithStage(STAGE_NAME_PLEDGED);
+    private static void setUpConfiguration() {
+        setUpConfiguration(STAGE_NAME_PLEDGED);
     }
 
     /***
@@ -653,16 +664,19 @@ private with sharing class RD2_OpportunityService_TEST {
     * @param stageName Installment Opportunity Stage
     * @return void
     */
-    private static void createRdSettingsWithStage(String stageName) {
-        createRdSettings(new Map<String, Object>{ 'InstallmentOppStageName__c' => stageName });
+    private static void setUpConfiguration(String stageName) {
+        setUpConfiguration(new Map<String, Object>{ 'InstallmentOppStageName__c' => stageName });
     }
 
     /***
     * @description Generic version of creating Recurring Donations Settings
+    * Apply current date override for the Opp service.
+    *
     * @param valueByField A map of field name to value
     * @return void
     */
-    private static void createRdSettings(Map<String, Object> valueByField) {
+    private static void setUpConfiguration(Map<String, Object> valueByField) {
+        //create RD settings
         npe03__Recurring_Donations_Settings__c rdSetting = new npe03__Recurring_Donations_Settings__c(
             npe03__Add_Campaign_to_All_Opportunites__c = true,//default
             IsRecurringDonations2Enabled__c = true,
@@ -675,6 +689,10 @@ private with sharing class RD2_OpportunityService_TEST {
 
         UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
+
+        //set current date override
+        RD2_ScheduleService.currentDate = TODAY;
+        RD2_OpportunityService.currentDate = TODAY;
     }
 
     /***

@@ -78,7 +78,7 @@ public with sharing class RD2_OpportunityService {
     }
 
     /**
-    * @description Date to treat as current date in calculation of schedules
+    * @description Current reference date to calculate schedules and compare Opps with matching installments
     */
     @TestVisible
     private static Date currentDate {
@@ -204,7 +204,7 @@ public with sharing class RD2_OpportunityService {
             for (Integer i = 0, size = rdOpps.size(); i < size; i++) {
                 Opportunity opp = rdOpps[i];
                 //update future open Opp only
-                if (opp.CloseDate <= currentDate) {
+                if (opp.CloseDate <= currentDate || opp.CloseDate < rd.StartDate__c) {
                     continue;
                 }
 
