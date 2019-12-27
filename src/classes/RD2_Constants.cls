@@ -45,6 +45,15 @@ public inherited sharing class RD2_Constants {
     }
 
     /**
+    * @description Enum to specify behavior of how to handle installment opportunity auto-creation
+    */
+    public enum InstallmentCreation {
+        Always_Create_Next_Installment,
+        Disable_First_Installment,
+        Disable_All_Installments 
+    }
+
+    /**
     * @description Recurring Donation "Installment Period" picklist API values
     */
     public static final String INSTALLMENT_PERIOD_YEARLY = 'Yearly';

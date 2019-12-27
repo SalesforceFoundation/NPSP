@@ -8319,6 +8319,14 @@ This process may take some time, but you can close this page and the process wil
         <value>The Opportunity record type assigned to the Recurring Donation's child Opportunities.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRDOpCeation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRDOpCeation</shortDescription>
+        <value>Tell NPSP how to behave on creating Recurring Donation's child opportunities.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -8685,7 +8693,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgInstallmentOppEnableAll</shortDescription>
-        <value>ALways Create Next Installment</value>
+        <value>Always Create Next Installment</value>
     </labels>
     <labels>
         <fullName>stgInstallScriptError</fullName>
