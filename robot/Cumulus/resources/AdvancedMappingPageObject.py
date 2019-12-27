@@ -1,5 +1,6 @@
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
@@ -14,7 +15,8 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         """
         self.selenium.wait_until_location_contains("BDI_ManageAdvancedMapping", timeout=60, 
                                                    message="Manage Advanced Mapping page did not open in 1 min")
-        
+    
+    @capture_screenshot_on_error   
     def create_new_field_mapping(self,src_fld,tgt_fld):
         """Click on Create New Field Mapping button on the page 
            select 'src_fld' arg in Source Field Label box
@@ -42,6 +44,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
                                                                error="New Field Mapping Modal did not close in 15 seconds")
         self.selenium.wait_until_page_contains("Success", timeout=180)
     
+    @capture_screenshot_on_error
     def view_field_mappings_of_the_object(self,obj):
         """Click the dropdwon for obj and select View Field Mappings and verify that field mappings page is open"""
         self.selenium.wait_until_page_contains("Object Groups", timeout=60)
@@ -51,7 +54,8 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains("View Field Mappings", timeout=60)
         self.selenium.click_link("View Field Mappings")
         self.selenium.wait_until_page_contains("Field Mappings", timeout=60)
-        
+    
+    @capture_screenshot_on_error    
     def edit_field_mappings(self,fld_name,tgt_field):
         """Click the dropdown for fieldname and select edit and wait for model is open. 
            Once modal is open click on Target field to open a dropdown and select 'target_field' from available options"""
@@ -72,7 +76,8 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_does_not_contain_element(mdl_open, timeout=15, 
                                                                error="Edit Field Mapping Modal did not close in 15 seconds")
         self.selenium.wait_until_page_contains("Success", timeout=180)
-        
+    
+    @capture_screenshot_on_error    
     def delete_field_mapping(self,fld_name):
         """Click the dropdown for fld_name and select Delete and wait for field mapping to not present on the page."""
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(fld_name)    
@@ -82,7 +87,8 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         self.selenium.click_link("Delete")
         self.selenium.wait_until_page_contains("Success", timeout=180)
         self.selenium.wait_until_page_does_not_contain(fld_name, timeout=60)
-        
+    
+    @capture_screenshot_on_error    
     def delete_mapping_if_mapping_exists(self,fld_label):
         """Checks if mapping with fld_label exists and if exists deletes the mapping. If not then does nothing"""
         locator=npsp_lex_locators['adv_mappings']['field-label'].format(fld_label)
