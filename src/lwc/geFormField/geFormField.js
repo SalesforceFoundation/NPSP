@@ -56,13 +56,11 @@ export default class GeFormField extends LightningElement {
     }
 
     getValueFromChangeEvent(event) {
-        if(this.isLookup) {
-            return event.detail.value;
-        } else if(this.fieldType === BOOLEAN_TYPE) {
-            return event.target.checked.toString();
+        if(this.fieldType === BOOLEAN_TYPE) {
+            return event.detail.checked.toString();
         }
 
-        return event.target.value;
+        return event.detail.value;
     }
 
     /**
