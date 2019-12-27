@@ -32,5 +32,20 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         locator=npsp_lex_locators['delete_icon'].format(field_name,old_value)
         self.selenium.get_webelement(locator).click() 
         self.salesforce.populate_lookup_field(field_name,new_value)
-        
-    
+
+    def waitfor_actions_dropdown_and_click_option(self,option):
+        """Wait for the Action dropdown menu to load from the contact details page
+           Click on the desired option passed as a parameter
+        """
+        loc=npsp_lex_locators['contacts_actions_dropdown_menu']
+        self.selenium.wait_until_element_is_visible(loc)
+        self.selenium.click_link(option)
+
+    def validate_relation_status_message(self, contact1, contact2, relation):
+        """Obtains the status message displayed on the relationships section of contact details page
+           Validates it against the expected status message
+           Note: Pass contact1,contact2, relation in a desired pattern to format as contact1 is contact2's relation
+        """
+        expectedstatus = ("{} is {}'s {}".format(contact1,contact2,relation))
+        id,actualstatus = self.npsp.check_status(contact1)
+        self.builtin.should_be_equal_as_strings(actualstatus,expectedstatus)
