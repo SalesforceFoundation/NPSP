@@ -56,4 +56,15 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
         self.selenium.click_element(locator)
         self.pageobjects.current_page_should_be("Custom", "BDI_ManageAdvancedMapping")
-                
+    
+    def verify_advanced_mapping_is_not_enabled(self):
+        """Verifies that advanced mapping is not enabled by default 
+           By checking 'Configure Advanced Mapping' is not visible on the page"""
+        locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
+        if self.npsp.check_if_element_exists(locator):
+            ele=self.selenium.get_webelement(locator)
+            classname=ele.get_attribute("class") 
+            if 'slds-hide' in classname:
+                self.builtin.log("As expected Advanced Mapping is not enabled by default")
+            else:
+                raise Exception("Advanced Mapping is already enabled. Org should not have this enabled by default")                  
