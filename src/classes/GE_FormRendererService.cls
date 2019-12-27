@@ -150,7 +150,9 @@ public with sharing class GE_FormRendererService {
         try {
             objNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
         } catch(Exception e) {
-            throw returnAuraException(e.getMessage());
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+            
+            throw returnAuraException(JSONExceptionData);
         }
 
         // Create a map of sobject type to sobject list for processing
@@ -195,7 +197,9 @@ public with sharing class GE_FormRendererService {
             insert diRecord;
             return diRecord;
         } catch(Exception e) {
-            throw returnAuraException(e.getMessage());
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+
+            throw returnAuraException(JSONExceptionData);
         }
     }
 
@@ -230,11 +234,15 @@ public with sharing class GE_FormRendererService {
                     WHERE Id = :diRecordId
             ];
             if(di.FailureInformation__c != null) {
-                throw returnAuraException(di.FailureInformation__c);
+                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(di.FailureInformation__c);
+
+                throw returnAuraException(JSONExceptionData);
             }
             return di.DonationImported__c;
         } catch(Exception e) {
-            throw returnAuraException(e.getMessage());
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+
+            throw returnAuraException(JSONExceptionData);
         }
     }
 
