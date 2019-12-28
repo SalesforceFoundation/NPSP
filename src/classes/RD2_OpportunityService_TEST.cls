@@ -433,16 +433,10 @@ private with sharing class RD2_OpportunityService_TEST {
 
         System.assert(TODAY < CLOSE_DATE, 'Opp Close Date should be in future');
         
-        //cannot execute the update in the Test.start/stopTest() because
-        //the Opp is closed, so all async jobs from the RD *insert* will 
-        //execute when Test.stopTest() is executed. 
-        //This would result in a new Opp creation since there are no *open* Opps.
+        Test.startTest();
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         update rd;
-
-        new RD2_OpportunityService().updateInstallmentOpportunities(
-            new List<npe03__Recurring_Donation__c>{ rd }
-        );
+        Test.stopTest();
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
@@ -578,7 +572,6 @@ private with sharing class RD2_OpportunityService_TEST {
 
         delete new TEST_SObjectGateway.OpportunityGateway().getRecords(rd);
 
-        RD2_OpportunityService service = new RD2_OpportunityService();
         List<npe03__Recurring_Donation__c> rds = new RD2_OpportunityEvaluationService().getRecurringDonations(
             new Set<Id>{ rd.Id }
         );
@@ -586,7 +579,7 @@ private with sharing class RD2_OpportunityService_TEST {
         Exception actualException;
         try {
             rd.npe03__Amount__c = RD_NEW_AMOUNT;
-            service.updateInstallmentOpportunities(rds);
+            new RD2_OpportunityService().updateOpportunities(rds);
 
         } catch (Exception e) {
             actualException = e;
@@ -692,7 +685,6 @@ private with sharing class RD2_OpportunityService_TEST {
 
         //set current date override
         RD2_ScheduleService.currentDate = TODAY;
-        RD2_OpportunityService.currentDate = TODAY;
     }
 
     /***

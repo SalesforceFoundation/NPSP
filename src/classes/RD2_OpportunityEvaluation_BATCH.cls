@@ -95,6 +95,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         Set<Id> rdIds = (new Map<Id, npe03__Recurring_Donation__c>(rds)).keySet();
 
         RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService()
+            .withBatchContext()
             .withRds(rdIds);
         oppEvalService.evaluateOpportunities();
 
@@ -123,15 +124,11 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     public void finish(Database.BatchableContext context) {
         AsyncApexJob job = new UTIL_BatchJobService().getAsyncApexJob(context.getJobId());
 
-        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        rdSettings.npe03__Last_Batch_Run__c = job.completedDate;
-        rdSettings.npe03__Number_of_Successes__c = numberRDsProcessed - numberOfFailures;
-        rdSettings.npe03__Number_of_Failures__c = numberOfFailures;
-
-        if (!Test.isRunningTest()) {
-            upsert rdSettings;
-        }
+        new RD2_Settings().saveLatestBatchResults(job.completedDate, numberRDsProcessed, numberOfFailures);
     }
 
+    /**
+    * @description Custom batch exception
+    */
     private class BatchException extends Exception { }
 }

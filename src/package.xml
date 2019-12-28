@@ -359,6 +359,7 @@
         <members>RD2_RecurringDonations_TEST</members>
         <members>RD2_ScheduleService</members>
         <members>RD2_ScheduleService_TEST</members>
+        <members>RD2_Settings</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
         <members>RD2_VisualizeScheduleController</members>

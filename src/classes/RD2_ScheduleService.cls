@@ -279,11 +279,7 @@ public without sharing class RD2_ScheduleService {
             filteredSchedules = new List<RecurringDonationSchedule__c>();
 
             for (RecurringDonationSchedule__c schedule : schedules) {
-                //ensure the passed in schedules are active within the time period
-                Boolean isActive = schedule.EndDate__c == null
-                    || (schedule.EndDate__c >= referenceDate && !(schedule.StartDate__c > schedule.EndDate__c));
-
-                if (isActive) {
+                if (isActive(schedule, referenceDate)) {
                     filteredSchedules.add(schedule);
                 }
             }
@@ -298,6 +294,18 @@ public without sharing class RD2_ScheduleService {
         }
 
         return installments;
+    }
+
+    /***
+    * @description Indicates if the schedule is active starting from the reference date
+    * @param schedule Recurring Donation schedule
+    * @param referenceDate Reference Date
+    * @return Boolean
+    */
+    public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
+        //ensure the passed in schedules are active within the time period
+        return schedule.EndDate__c == null
+            || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
     }
 
     /***
@@ -378,20 +386,22 @@ public without sharing class RD2_ScheduleService {
     * @return Date
     */
     public Date getNextDonationDate(List<RecurringDonationSchedule__c> rdSchedules) {
-        Date nextDate;
-        Date previousDate;
-
         if (rdSchedules == null) {
-            return nextDate;
+            return null;
         }
 
+        Date nextDate;
+        Date previousDate;
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            if (!isActive(schedule, currentDate)) {
+                continue;
+            }
+
             nextDate = getNextDonationDateGreaterThan(schedule, currentDate);
 
             if (previousDate < nextDate) {
                 nextDate = previousDate;
             }
-
             previousDate = nextDate;
         }
 

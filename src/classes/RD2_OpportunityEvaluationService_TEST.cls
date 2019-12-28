@@ -387,7 +387,6 @@ private class RD2_OpportunityEvaluationService_TEST {
         //set current date override
         final Date today = START_DATE.addDays(1);
         RD2_ScheduleService.currentDate = today;
-        RD2_OpportunityService.currentDate = today;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 

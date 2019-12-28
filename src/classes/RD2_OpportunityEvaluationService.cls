@@ -36,7 +36,56 @@
 */
 public inherited sharing class RD2_OpportunityEvaluationService {
 
-    private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+    /***
+    * @description Recurring Donation custom settings
+    */
+    private RD2_Settings rdSettings {
+        get {
+            if (rdSettings == null) {
+                rdSettings = new RD2_Settings();
+            } 
+            return rdSettings;
+        }
+        set;
+    }
+
+    /**
+     * @description Indicates if Opp evaluation service will be skipped.
+     * The flag is currently applicable to migration since Opp evaluation service should not be executed on migration.
+     * For example, if an active RD has no Opp, no new Opp should be created during migration.
+     * Moreover, if the RD is closed, close action on Open Opps should not be applied.
+     */
+    public static Boolean isOverride = false;
+
+    /**
+    * @description Current reference date to calculate schedules and compare Opps with matching installments
+    */   
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = RD2_ScheduleService.currentDate;
+            }
+            return currentDate;
+        } set;
+    }
+
+    /**
+    * @description Indicates if the Opportunity evaluation is invoked from a nightly batcj job
+    */   
+    private Boolean isBatchContext = false;
+
+    /***
+    * @description Recurring Donation Schedule service
+    */
+    @TestVisible
+    private RD2_ScheduleService scheduleService {
+        get {
+            if (scheduleService == null) {
+                scheduleService = new RD2_ScheduleService();
+            }
+            return scheduleService;
+        } set;
+    }
 
     /**
      * @description Recurring Donation Id's to be processed
@@ -63,24 +112,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         } set;
     }
 
-    @TestVisible
-    private RD2_OpportunityService oppService {
-        get {
-            if (oppService == null) {
-                oppService = new RD2_OpportunityService();
-            }
-            return oppService;
-        } set;
-    }
-
     /**
-     * @description Indicates if Opp evaluation service will be skipped.
-     * The flag is currently applicable to migration since Opp evaluation service should not be executed on migration.
-     * For example, if an active RD has no Opp, no new Opp should be created during migration.
-     * Moreover, if the RD is closed, close action on Open Opps should not be applied.
+     * @description Sets batch context
+     * @return RD2_OpportunityEvaluationService The service instance
      */
-    public static Boolean isOverride = false;
-
+    public RD2_OpportunityEvaluationService withBatchContext() {
+        isBatchContext = true;
+        return this;
+    }
 
     /**
      * @description Pass the set of Recurring Donation Id's to be processed
@@ -123,28 +162,36 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return this;
         }
 
-        List<npe03__Recurring_Donation__c> newRDs = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<Opportunity> openOppsToVoid = new List<Opportunity>();
-        List<npe03__Recurring_Donation__c> rdsWithOpenOpps = new List<npe03__Recurring_Donation__c>();
 
-        for (npe03__Recurring_Donation__c rd : rds) {            
-            if (isNew(rd)) {
-                newRDs.add(rd);
-                
-            } else if (isActive(rd) && hasOpportunities(rd)) {
-                rdsWithOpenOpps.add(rd);
-
-            } else if (isClosed(rd)) {
+        for (npe03__Recurring_Donation__c rd : rds) {  
+            rd.npe03__Next_Payment_Date__c = 
+                scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
+            
+            if (isClosed(rd)) {
                 handleClosedRecurringDonation(rd, openOppsToVoid);
-            }
+
+            } else if (isNew(rd)) {
+                newOppRDs.add(rd);
+                
+            } else if (isBatchContext) {
+                newOppRDs.add(rd);
+            
+            } else if (isUpdateContext(rd)) {
+                updateOppRDs.add(rd);
+            } 
 
             // TODO Handle Past Due Installment
         }
 
-        // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
-        oppService.createInstallmentOpportunities(newRDs);
+        RD2_OpportunityService oppService = new RD2_OpportunityService();
 
-        oppService.updateInstallmentOpportunities(rdsWithOpenOpps);
+        // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
+        oppService.createOpportunities(newOppRDs);
+
+        oppService.updateOpportunities(updateOppRDs);
 
         voidOpportunities(openOppsToVoid);
 
@@ -172,7 +219,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation
      * @return Boolean
      */
-    @TestVisible
     private Boolean isActive(npe03__Recurring_Donation__c rd) {
         return rd.Status__c == RD2_Constants.STATUS_ACTIVE;
     }
@@ -182,21 +228,39 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation
      * @return Boolean
      */
-    @TestVisible
     private Boolean isClosed(npe03__Recurring_Donation__c rd) {
         return rd.Status__c == RD2_Constants.STATUS_CLOSED;
     }
 
     /**
-     * @description Is this a new Recurring Donation that has not yet had an Installment Opp created for?
+     * @description Determines if the Recurring Donation open Opportunity should be evaluated
      * @param rd Recurring Donation
      * @return Boolean
      */
-    @TestVisible
-    private Boolean hasOpportunities(npe03__Recurring_Donation__c rd) {
+    private Boolean isUpdateContext(npe03__Recurring_Donation__c rd) {
         return
-            !rd.npe03__Donations__r.isEmpty()
-            && !rd.RecurringDonationSchedules__r.isEmpty();
+            isActive(rd)
+            && !rd.RecurringDonationSchedules__r.isEmpty()
+            && hasOpenCurrentOpportunity(rd);
+    }
+
+    /**
+     * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
+     * @param rd Recurring Donation
+     * @return Boolean
+     */
+    private Boolean hasOpenCurrentOpportunity(npe03__Recurring_Donation__c rd) {
+        if (rd.npe03__Donations__r.isEmpty()) {
+            return false;
+        }
+        
+        for (Opportunity opp : rd.npe03__Donations__r) {
+            if (!opp.IsClosed && opp.CloseDate >= currentDate) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -223,10 +287,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return;
         }
 
-        if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Delete_Open_Opportunities.name()) {
+        if (rdSettings.isCloseActionDeletion()) {
             UTIL_DMLService.deleteRecordsAndLogErrors(opps, ERR_Handler_API.Context.RD.name());
 
-        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
+        } else if (rdSettings.isCloseActionClosedLost()) {
             List<Opportunity> oppsToUpdate = new List<Opportunity>();
 
             for (Opportunity opp : opps) {
@@ -266,8 +330,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             queryFields.add(fld);
         }
 
-        //Return all open Opps regardless of the Close Date
-        //and all Opps with Close Date >= TODAY regardless of the stage.
+        //Return all Opps for Recurring Donations
         String oppSubquery =
             '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
             'npe03__Recurring_Donation__c, ' +
@@ -275,8 +338,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'StageName, IsClosed, IsWon, ' +
             'CampaignId, Recurring_Donation_Installment_Number__c ' +
             'FROM npe03__Donations__r ' +
-            'WHERE IsClosed = false ' +
-            'OR CloseDate >= TODAY ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
         //Return all schedules for the RD Schedule visualization.
