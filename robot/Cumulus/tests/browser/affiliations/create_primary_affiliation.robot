@@ -19,15 +19,17 @@ Setup Test Data
  
 *** Test Cases ***    
 Create Primary Affiliation for Contact
-    Go To Page                           Details               Contact                                object_id=&{contact}[Id]
+    [Documentation]                      Creates a contact and organization account via API and open contact 
+    ...                                  Edit Primary Affiliation field and add affiliation to organization account.     
+    ...                                  Verifies that affiliation to account shows under organization affiliation related list as current
+    [tags]                               W-037651    feature:Affiliations
+
+    Go To Page                           Details                      Contact                     object_id=&{contact}[Id]
     Select Tab                           Details
-    Enter Field Value                    Primary Affiliation    &{account}[Name]
-    # Scroll Element Into View  text:Description
-    # Click Button  title:Edit Primary Affiliation
-    # Wait For Locator  record.edit_form
-    # Populate Lookup Field    Primary Affiliation    &{account}[Name]
-    # Click Record Button    Save    
+    Edit Record Field Value              Primary Affiliation          &{account}[Name]
+    Save Record        
     Select Tab                           Related
-    Verify Affiliated Contact    Organization Affiliations    &{account}[Name]    Y  
-    Click Related Item Link      Organization Affiliations    &{account}[Name]
-    Save Current Record ID For Deletion    npe5__Affiliation__c    
+    Verify Occurrence                    Organization Affiliations    1
+    Verify Allocations                   Organization Affiliations    &{account}[Name]=Current 
+    Click Related Item Link              Organization Affiliations    &{account}[Name]
+    Save Current Record ID For Deletion  npe5__Affiliation__c    

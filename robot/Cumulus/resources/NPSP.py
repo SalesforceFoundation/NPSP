@@ -1282,15 +1282,23 @@ class NPSP(SalesforceRobotLibraryBase):
                 break
         assert found, "Expected Toast message {} not found on page".format(value)
 
-    def enter_field_value(self,field,value):
-        """"""
-        self.selenium.scroll_element_into_view("Description")
+    def edit_record_field_value(self,field,value):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field and enters a value into the field"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
         self.selenium.click_button(btn)
-        self.selenium.wait_until_page_contains_element("//div[@class='footer active']")
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
         self.salesforce.populate_lookup_field(field,value)
+        
+        
+    def save_record(self): 
+        """Saves record by clicking on footer button 'Save'"""
+        footer=npsp_lex_locators["record"]["footer"]
         self.click_record_button("Save")
-        self.selenium.wait_until_page_does_not_contain_element("//div[@class='footer active']")
-        
-        
+        self.selenium.wait_until_page_does_not_contain_element(footer)
+        self.selenium.execute_javascript("window.scrollTo(0,0)")   
         

@@ -16,6 +16,7 @@ npsp_lex_locators={
     },
     "record": {
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
+        'footer':"//div[@class='footer active']",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//span[text()='{}']",
         'month_pick':"//div[@class='dateBar']//a[@title='{}']",
         'edit_button':'//*[@title="{}"]',
