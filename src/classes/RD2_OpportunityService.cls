@@ -127,7 +127,7 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Indicates if the Opportunity already exists
     * @param newOpp Opportunity just built but not created yet
-    * @param existingOpps Recurring Donation existing Opportunities
+    * @param existingOpps Existing Opportunities on the Recurring Donation
     * @return Boolean
     */
     private Boolean isNewOpportunity(Opportunity newOpp, List<Opportunity> existingOpps) {
@@ -328,6 +328,46 @@ public with sharing class RD2_OpportunityService {
         if (!payments.isEmpty()) {
             Database.SaveResult[] saveResults = Database.update(payments, false);
             handleErrors(saveResults, payments);
+        }
+    }
+
+    /**
+     * @description Updates or deletes closed RD open Installment Opportunities based on the settings
+     * @param opps Opportunities
+     * @return void
+     */
+    public void voidOpportunities(List<npe03__Recurring_Donation__c> rds) {
+        if (rds.isEmpty() || rdSettings.isCloseActionNoAction()) {
+            return;
+        }
+
+        List<Opportunity> openOppsToVoid = new List<Opportunity>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            for (Opportunity opp : rd.npe03__Donations__r) {
+                if (opp.IsClosed == false) {
+                    openOppsToVoid.add(opp);
+                }
+            }
+        }
+
+        if (openOppsToVoid.isEmpty()) {
+            return;
+        }
+
+        if (rdSettings.isCloseActionDeletion()) {
+            UTIL_DMLService.deleteRecordsAndLogErrors(openOppsToVoid, ERR_Handler_API.Context.RD.name());
+
+        } else if (rdSettings.isCloseActionClosedLost()) {
+            List<Opportunity> oppsToUpdate = new List<Opportunity>();
+
+            for (Opportunity opp : openOppsToVoid) {
+                oppsToUpdate.add(new Opportunity(
+                    Id = opp.Id,
+                    StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage
+                ));
+            }
+
+            UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
         }
     }
 

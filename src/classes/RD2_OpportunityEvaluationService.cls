@@ -164,20 +164,24 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
-        List<Opportunity> openOppsToVoid = new List<Opportunity>();
+        List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {  
             rd.npe03__Next_Payment_Date__c = 
                 scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
             
             if (isClosed(rd)) {
-                handleClosedRecurringDonation(rd, openOppsToVoid);
+                closedRDs.add(rd);
 
             } else if (isNew(rd)) {
-                newOppRDs.add(rd);
+                if (isFirstInstallmentEnabled()) {
+                    newOppRDs.add(rd);
+                }
                 
             } else if (isBatchContext) {
-                newOppRDs.add(rd);
+                if (rdSettings.isNextInstallmentEnabled) {
+                    newOppRDs.add(rd);
+                }
             
             } else if (isUpdateContext(rd)) {
                 updateOppRDs.add(rd);
@@ -190,12 +194,25 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createOpportunities(newOppRDs);
-
         oppService.updateOpportunities(updateOppRDs);
-
-        voidOpportunities(openOppsToVoid);
+        oppService.voidOpportunities(closedRDs);
 
         return this;
+    }
+
+    /**
+     * @description Indicates if the first installment Opportunity on a Recurring Donation should be created.
+     * If Opportunities are created from a batch, "Disable First Installment" is ignored and 
+     * the first installment is not created only if the setting is "Disable All Installments".
+     * @return Boolean
+     */
+    private Boolean isFirstInstallmentEnabled() {
+        if (isBatchContext) {
+            return rdSettings.isDisableAllInstallments ? false : true;
+
+        } else {
+            return rdSettings.isFirstInstallmentEnabled;
+        }
     }
 
     /**
@@ -241,7 +258,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return
             isActive(rd)
             && !rd.RecurringDonationSchedules__r.isEmpty()
-            && hasOpenCurrentOpportunity(rd);
+            && hasOpenOpportunity(rd);
     }
 
     /**
@@ -249,59 +266,18 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation
      * @return Boolean
      */
-    private Boolean hasOpenCurrentOpportunity(npe03__Recurring_Donation__c rd) {
+    private Boolean hasOpenOpportunity(npe03__Recurring_Donation__c rd) {
         if (rd.npe03__Donations__r.isEmpty()) {
             return false;
         }
         
         for (Opportunity opp : rd.npe03__Donations__r) {
-            if (!opp.IsClosed && opp.CloseDate >= currentDate) {
+            if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    /**
-     * @description Extracts open installment Opportunities for the specified Recurring Donation
-     * @param rd Recurring donation containing list of all related Opportunities
-     * @param openOppsToVoid Open Opportunities to void from other Recurring Donations
-     * @return void
-     */
-    private void handleClosedRecurringDonation(npe03__Recurring_Donation__c rd, List<Opportunity> openOppsToVoid) {
-        for (Opportunity opp : rd.npe03__Donations__r) {
-            if (opp.IsClosed == false) {
-                openOppsToVoid.add(opp);
-            }
-        }
-    }
-
-    /**
-     * @description Updates or deletes closed RD open Installment Opportunities based on the settings
-     * @param opps Opportunities
-     * @return void
-     */
-    private void voidOpportunities(List<Opportunity> opps) {
-        if (opps.isEmpty()) {
-            return;
-        }
-
-        if (rdSettings.isCloseActionDeletion()) {
-            UTIL_DMLService.deleteRecordsAndLogErrors(opps, ERR_Handler_API.Context.RD.name());
-
-        } else if (rdSettings.isCloseActionClosedLost()) {
-            List<Opportunity> oppsToUpdate = new List<Opportunity>();
-
-            for (Opportunity opp : opps) {
-                oppsToUpdate.add(new Opportunity(
-                    Id = opp.Id,
-                    StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage
-                ));
-            }
-
-            UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
-        }
     }
 
     /**

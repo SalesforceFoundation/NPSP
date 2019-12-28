@@ -111,8 +111,7 @@ public with sharing class RD2_Settings {
     public Boolean isFirstInstallmentEnabled {
         get {
             if (isFirstInstallmentEnabled == null) {
-                isFirstInstallmentEnabled = true;
-                //isFirstInstallmentEnabled = Disable First Installment || Disable All Installments ? false : true;
+                isFirstInstallmentEnabled = true; //Disable First Installment ? false : true;
             }
             return isFirstInstallmentEnabled;
         } 
@@ -125,10 +124,22 @@ public with sharing class RD2_Settings {
     public Boolean isNextInstallmentEnabled {
         get {
             if (isNextInstallmentEnabled == null) {
-                isNextInstallmentEnabled = true;
-                //isNextInstallmentEnabled = Disable All Installments ? false : true;
+                isNextInstallmentEnabled = true; //Disable All Installments ? false : true;
             }
             return isNextInstallmentEnabled;
+        } 
+        private set;
+    }
+
+    /***
+    * @description Indicates if any installment creation on a Recurring Donation is disabled
+    */
+    public Boolean isDisableAllInstallments {
+        get {
+            if (isDisableAllInstallments == null) {
+                isDisableAllInstallments = false; //Disable All Installments ? true : false;
+            }
+            return isDisableAllInstallments;
         } 
         private set;
     }
