@@ -23,7 +23,7 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
                         if (isNameUnique) {
                             nameInput.setCustomValidity('');
                         } else {
-                            nameInput.setCustomValidity('Name is already in use.');
+                            nameInput.setCustomValidity(this.CUSTOM_LABELS.geErrorExistingTemplateName);
                         }
 
                         nameInput.reportValidity();
