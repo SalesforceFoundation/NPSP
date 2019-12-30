@@ -9,7 +9,7 @@
         <div slot="actions"
              class="slds-button-group"
              role="group">
-            <lightning-button label="New Batch"
+            <lightning-button label="New Batch" if:true={isAdvancedMappingEnabled}
                               title="New Batch"
                               variant="neutral"
                               class="slds-float_right"
@@ -25,6 +25,16 @@
             <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
         </template>
 
+        <div if:false={isAdvancedMappingEnabled} class=slds-p-top_x-large>
+            <c-util-illustration title='Enable Advanced Mapping'
+                                 size='large'
+                                 variant='lake-mountain'
+                                 message='This feature requires Advance Mapping. Please enable it in NPSP Settings.'>
+            </c-util-illustration>
+
+        </div>
+
+        <div if:true={isAdvancedMappingEnabled}>
         <lightning-tabset active-tab-value="Templates"
                           class="extension_test">
 
@@ -64,6 +74,7 @@
             </lightning-tab>
 
         </lightning-tabset>
+        </div>
     </div>
 
 </template>

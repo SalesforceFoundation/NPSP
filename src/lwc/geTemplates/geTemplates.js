@@ -3,6 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
 import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
+import advancedMappingEnabled from '@salesforce/apex/FORM_ServiceGiftEntry.advancedMappingEnabled';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { findIndexByProperty } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
@@ -31,6 +32,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     @track columns = columns;
     @track isLoading = true;
     currentNamespace;
+    @track isAdvancedMappingEnabled = false;
 
     get templateBuilderCustomTabApiName() {
         return this.currentNamespace ? `${this.currentNamespace}__GE_Template_Builder` : 'GE_Template_Builder';
@@ -41,9 +43,12 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     init = async () => {
-        await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
-        this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
-        this.templates = await getAllFormTemplates();
+        this.isAdvancedMappingEnabled = await advancedMappingEnabled();
+        if(this.isAdvancedMappingEnabled){
+            await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
+            this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+            this.templates = await getAllFormTemplates();
+        }
         this.isLoading = false;
     }
 

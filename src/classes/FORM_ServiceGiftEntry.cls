@@ -215,4 +215,13 @@ public with sharing class FORM_ServiceGiftEntry {
         }
         return template;
     }
+
+    @AuraEnabled(Cacheable = true)
+    public static Boolean advancedMappingEnabled(){
+        Data_Import_Settings__c dataImportSettings = Data_Import_Settings__c.getInstance();
+        if (dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING) {
+            return true;
+        }
+        return false;
+    }
 }
