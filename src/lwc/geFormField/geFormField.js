@@ -1,4 +1,5 @@
 import {LightningElement, api, track, wire} from 'lwc';
+import {isNotEmpty} from 'c/commonUtil';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
@@ -73,10 +74,7 @@ export default class GeFormField extends LightningElement {
         let fieldIsValid = this.checkFieldValidity();
 
         if(this.element.required) {
-            return this.value !== null
-                && typeof this.value !== 'undefined'
-                && this.value !== ''
-                && fieldIsValid;
+            return isNotEmpty(this.value) && fieldIsValid;
         }
 
         return fieldIsValid;
@@ -109,7 +107,7 @@ export default class GeFormField extends LightningElement {
 
     checkRichTextValidity() {
         if(this.element.required) {
-            const isValid = typeof this.value !== 'undefined' && this.value !== null && this.value.length > 0;
+            const isValid = isNotEmpty(this.value) && this.value.length > 0;
             this.richTextValid = isValid;
             return isValid;
         }

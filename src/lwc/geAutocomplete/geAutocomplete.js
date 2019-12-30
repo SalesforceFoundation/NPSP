@@ -1,5 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
+import { isNotEmpty } from 'c/commonUtil';
 
 const COMBO_BOX_CLASS = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
 const INPUT_CLASS = 'slds-input slds-combobox__input';
@@ -62,7 +63,7 @@ export default class GeAutocomplete extends LightningElement {
      * @returns {boolean} TRUE when an option is selected for this lookup
      */
     get hasOptionSelected() {
-        return !this.hasOptions && (typeof this.value !== 'undefined' && this.value !== null);
+        return !this.hasOptions && isNotEmpty(this.value);
     }
 
     get invalid() {
