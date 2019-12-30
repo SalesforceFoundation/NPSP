@@ -361,16 +361,21 @@ class NPSP(SalesforceRobotLibraryBase):
                 self.salesforce._populate_field(locator, value)
      
          
-    def verify_details_address(self,field,npsp_street, npsp_city, npsp_country):   
+    def verify_address_details(self,field,value,**kwargs):
         """Validates if the details page address field has specified value"""   
         locator= npsp_lex_locators['detail_page']['address'].format(field)
         street, city, country = self.selenium.get_webelements(locator)
-        if street.text ==  npsp_street and city.text == npsp_city and country.text == npsp_country:
-            return "pass"
-        else:
-            return "fail"
-   
-    def validate_checkbox(self,name,checkbox_title):   
+
+        status = None
+        for key, value in kwargs.items():
+            if street.text == kwargs.get("street")  and  city.text == kwargs.get("city") and country.text == kwargs.get("country"):
+                status = "pass"
+            else:
+                status = "fail"
+        if value == "contains":
+            assert status == "pass", "Expected value to be  but found "
+
+    def validate_checkbox(self,name,checkbox_title):
         """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""   
           
         locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
