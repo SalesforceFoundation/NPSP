@@ -3210,7 +3210,6 @@
         <members>bdiFieldMappings</members>
         <members>bdiObjectMappingModal</members>
         <members>bdiObjectMappings</members>
-        <members>commonUtil</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
         <members>geFormField</members>
@@ -3234,6 +3233,7 @@
         <members>geTemplates</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>utilCommon</members>
         <members>utilDedicatedListener</members>
         <members>utilIllustration</members>
         <members>utilPageHeader</members>

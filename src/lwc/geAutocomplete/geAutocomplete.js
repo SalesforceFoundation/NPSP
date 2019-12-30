@@ -1,6 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import { isNotEmpty } from 'c/commonUtil';
+import { isNotEmpty } from 'c/utilCommon';
 
 const COMBO_BOX_CLASS = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
 const INPUT_CLASS = 'slds-input slds-combobox__input';

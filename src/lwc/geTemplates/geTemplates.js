@@ -4,7 +4,7 @@ import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFo
 import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { findIndexByProperty } from 'c/utilTemplateBuilder';
+import { findIndexByProperty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
 const actions = [

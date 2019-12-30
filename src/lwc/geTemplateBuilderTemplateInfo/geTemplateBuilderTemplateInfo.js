@@ -1,5 +1,6 @@
 import { LightningElement, api } from 'lwc';
-import { dispatch, isEmpty, isFunction } from 'c/utilTemplateBuilder';
+import { dispatch } from 'c/utilTemplateBuilder';
+import { isEmpty, isFunction } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {

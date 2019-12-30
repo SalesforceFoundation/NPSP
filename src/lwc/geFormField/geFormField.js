@@ -1,5 +1,5 @@
 import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty} from 'c/commonUtil';
+import {isNotEmpty, debouncify} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
@@ -22,7 +22,7 @@ export default class GeFormField extends LightningElement {
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    changeTimeout;
+    handleValueChange = debouncify(this.handleValueChangeSync, DELAY);
 
 
     /**
@@ -40,11 +40,6 @@ export default class GeFormField extends LightningElement {
         if(defaultValue) {
             this.value = defaultValue;
         }
-    }
-
-    handleValueChange(event) {
-        window.clearTimeout(this.changeTimeout);
-        this.changeTimeout = setTimeout(() => this.handleValueChangeSync(event), DELAY);
     }
 
     handleValueChangeSync(event) {
