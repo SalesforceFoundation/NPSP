@@ -108,13 +108,14 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     */
     @TestVisible
     private String getRDBatchQuery() {
-        Set<String> rdFields = new Set<String>{
-            'Id'
-        };
-
         return new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(rdFields)
+            .withSelectFields(
+                new Set<String>{ 'Id' }
+            )
+            .withWhere(
+                String.valueOf(npe03__Recurring_Donation__c.Status__c) + ' = \'' + RD2_Constants.STATUS_ACTIVE + '\''
+            )
             .build();
     }
 
