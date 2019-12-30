@@ -1,5 +1,6 @@
 import { LightningElement, api } from 'lwc';
-import { dispatch, isEmpty, isFunction } from 'c/utilTemplateBuilder';
+import { dispatch, isEmpty, isFunction, handleError } from 'c/utilTemplateBuilder';
+import checkNameUniqueness from '@salesforce/apex/FORM_ServiceGiftEntry.isNameUnique';
 import GeLabelService from 'c/geLabelService';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
@@ -12,16 +13,31 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
 
     @api
     validate() {
-        const nameInput = this.template.querySelector('lightning-input');
-        let isValid = false;
+        return new Promise(async (resolve, reject) => {
+            const nameInput = this.template.querySelector('lightning-input');
+            let isValid = false;
 
-        if (isFunction(nameInput.reportValidity) && !isEmpty(nameInput)) {
-            nameInput.reportValidity();
-            isValid = nameInput.checkValidity();
-        }
+            if (isFunction(nameInput.reportValidity) && !isEmpty(nameInput)) {
+                checkNameUniqueness({ name: nameInput.value })
+                    .then(isNameUnique => {
+                        if (isNameUnique) {
+                            nameInput.setCustomValidity('');
+                        } else {
+                            nameInput.setCustomValidity('Name is already in use.');
+                        }
 
-        dispatch(this, 'updatevalidity', { property: 'hasTemplateInfoTabError', hasError: !isValid });
-        return isValid;
+                        nameInput.reportValidity();
+                        isValid = nameInput.checkValidity();
+
+                        dispatch(this, 'updatevalidity', { property: 'hasTemplateInfoTabError', hasError: !isValid });
+                        resolve(isValid);
+                    })
+                    .catch(error => {
+                        handleError(error);
+                        reject(error);
+                    });
+            }
+        });
     }
 
     /*******************************************************************************
