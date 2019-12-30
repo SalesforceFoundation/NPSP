@@ -1670,8 +1670,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Enablement page introduction and guidelines</shortDescription>
         <value>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
-        &lt;br/&gt;Since there's already a Recurring Donations feature in NPSP, you'll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We've outlined the required tasks for you below.
-        &lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href="https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot" target="_blank"&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
+        &lt;br/&gt;&lt;br/&gt;Since there's already a Recurring Donations feature in NPSP, you'll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We've outlined the required tasks for you below.
+        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href="https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot" target="_blank"&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployConfirm</fullName>
