@@ -50,4 +50,4 @@ Remove Primary Affiliation for Contact2
     Select Tab    Related
     Load Related List    Affiliated Contacts
     Get Id
-    Confirm Value    Status    Former    Y
+    Confirm Field Value    Status    contains    Former    

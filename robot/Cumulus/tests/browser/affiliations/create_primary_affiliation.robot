@@ -16,5 +16,4 @@ Create Primary Affiliation for Contact
     Select Tab    Related
     Verify Affiliated Contact    Affiliated Contacts    &{contact}[FirstName]    &{contact}[LastName]    Y  
     Click Related Item Link      Affiliated Contacts    &{contact}[FirstName] &{contact}[LastName]
-    ${id}    Get Current Record Id
-    Store Session Record    npe5__Affiliation__c    ${id}
+    Save Current Record ID For Deletion    npe5__Affiliation__c    
