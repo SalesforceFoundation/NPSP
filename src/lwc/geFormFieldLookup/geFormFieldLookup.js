@@ -2,6 +2,7 @@ import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
+import { isNotEmpty } from 'c/commonUtil';
 
 const DELAY = 300;
 
@@ -57,7 +58,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @api
     checkValidity() {
         if(this.required) {
-            return typeof this.value !== 'undefined' && this.value !== null && this.value !== '';
+            return isNotEmpty(this.value);
         }
         return true;
     }
