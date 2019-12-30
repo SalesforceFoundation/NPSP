@@ -4,7 +4,7 @@
  * @returns {boolean}   TRUE when the given value is undefined, null or blank string.
  */
 const isEmpty = value => {
-    return typeof value === 'undefined' || value === null || value === '';
+    return isUndefined(value) || value === null || value === '';
 };
 
 /**
@@ -16,4 +16,14 @@ const isNotEmpty = value => {
     return !isEmpty(value);
 };
 
-export { isEmpty, isNotEmpty };
+/**
+ * Check if a value is undefined.
+ * @param value         Value to check
+ * @returns {boolean}   TRUE when value is undefined.
+ */
+const isUndefined = value => {
+    // void(0) allows us to safely obtain undefined to compare with the passed-in value
+    return value === void(0);
+};
+
+export { isEmpty, isNotEmpty, isUndefined };
