@@ -191,7 +191,8 @@ public with sharing class FORM_ServiceGiftEntry {
                                             String description,
                                             String formatVersion,
                                             String templateJSON) {
-        if (templateJSON != null) {
+        Boolean isNameUnique = isNameUnique(name);
+        if (templateJSON != null && isNameUnique) {
             FORM_Template template = (FORM_Template)JSON.deserialize(templateJSON, FORM_Template.class);
             Form_Template__c templateObj = new Form_Template__c(Id = id, 
                                                             Name = name,
@@ -200,8 +201,21 @@ public with sharing class FORM_ServiceGiftEntry {
                                                             Format_Version__c = formatVersion);
             upsert templateObj;
             return templateObj.id;
+
+        } else if (isNameUnique == false) {
+            throw new TemplateBuilderException(Label.geErrorExistingTemplateName);
         }
+
         return null;
+    }
+
+    @AuraEnabled
+    public static Boolean isNameUnique(String name) {
+        Integer formTemplatesRecordCount = [SELECT count() FROM Form_Template__c WHERE Name = :name];
+        if (formTemplatesRecordCount == 0) {
+            return true;
+        }
+        return false;
     }
 
     /*******************************************************************************************************
@@ -215,4 +229,6 @@ public with sharing class FORM_ServiceGiftEntry {
         }
         return template;
     }
+
+    public class TemplateBuilderException extends Exception {}
 }
