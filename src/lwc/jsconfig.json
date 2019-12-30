@@ -34,6 +34,9 @@
             ],
             "c/utilStencil": [
                 "utilStencil/utilStencil.js"
+            ],
+            "c/rdScheduleVisualizer": [
+                "rdScheduleVisualizer/rdScheduleVisualizer.js"
             ]
         },
         "experimentalDecorators": true
