@@ -40,7 +40,7 @@ public with sharing class RP_Constants {
     public static final String RP_YOUTUBE_CHANNEL_NAME = 'SalesforceFoundation';
     public static final String RP_YOUTUBE_PLAYLIST_ID = 'PLU8xqF8ZASbXWAHIF0SB1P9_3G4vvRMXI';
 
-    // Configuration for the GitHub component.
+    // Configuration for the GitHub component. Remains a Cumulus link for now.
     public static final String RP_GITHUB_SALESFORCE_ORG_ENDPOINT = 'https://sfdo-status.herokuapp.com/api/repository/SalesforceFoundation/Cumulus?format=json';
 
     // Configuration for the Getting Started page links
