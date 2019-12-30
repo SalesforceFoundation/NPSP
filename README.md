@@ -14,10 +14,6 @@ The Nonprofit Success Pack is released under the open source BSD license (see li
 For information on contributing code, see our <a href="http://www.salesforce.org/help/nonprofitstarterpack/contribute/" target="_blank">code contributor's guide</a> and our <a href="http://developer.salesforcefoundation.org/Cumulus/ApexDocumentation/" target="_blank">NPSP 3 codebase documentation</a>.
 Please see the <a href="https://github.com/SalesforceFoundation/NPSP/wiki" target="_blank">project wiki</a> for additional information.
 
-#### Why "Cumulus"?
-
-Project Cumulus was the codename for version 3 of the Nonprofit Success Pack, the most recent update and enhancement.
-
 #### Meta
 
 The Nonprofit Success Pack (“NPSP”) is an open-source package licensed by Salesforce.org (“SFDO”) under the BSD-3 Clause License, found at https://opensource.org/licenses/BSD-3-Clause. ANY MASTER SUBSCRIPTION AGREEMENT YOU OR YOUR ENTITY MAY HAVE WITH SFDO DOES NOT APPLY TO YOUR USE OF NPSP. NPSP IS PROVIDED “AS IS” AND AS AVAILABLE, AND SFDO MAKES NO WARRANTY OF ANY KIND REGARDING NPSP, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, FREEDOM FROM DEFECTS OR NON-INFRINGEMENT, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.
