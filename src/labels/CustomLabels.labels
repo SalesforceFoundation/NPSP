@@ -9583,7 +9583,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgNavRD2Enablement</shortDescription>
-        <value>Enable Enhanced Recurring Donations</value>
+        <value>Upgrade to Enhanced Recurring Donations</value>
     </labels>
     <labels>
         <fullName>stgNavRDBatch</fullName>
