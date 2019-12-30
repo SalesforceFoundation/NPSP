@@ -1735,7 +1735,13 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed on a successful migration</shortDescription>
-        <value>Your migration was successful with no errors. All set up steps are now complete. You're ready to begin using Enhanced Recurring Donations.</value>
+        <value>You're now finished with the Enhanced Recurring Donations upgrade process. You've enabled the new functionality, installed metadata, and migrated your existing data.
+        &lt;br/&gt;There's a few things you might need to do before your organization starts using Enhanced Recurring Donations:
+        &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to conversion.&lt;/li&gt;
+        &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles. You should also remove the old Recurring Donations page layout from all profiles.&lt;/li&gt;
+        &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your custom profiles and permission sets.&lt;/li&gt;
+        &lt;li&gt;Adjust existing Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
+        &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationErrorMessage</fullName>
