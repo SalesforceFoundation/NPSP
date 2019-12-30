@@ -34,14 +34,16 @@ npsp_lex_locators={
             'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
             'link':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//table[contains(@class,'forceRecordLayout')]/tbody/tr[.//th/div/a[contains(@class,'textUnderline')]][.//td//span[text()='{}']]/th//a",
             'dd-link':'//div[contains(@class,"actionMenu")]//a[@title="{}"]',
-            'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/td[2]/span[text()='{}']",
+            'allocations':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tbody/tr[./td/a[text()='{}']]/td/span[text()='{}']",
          },
     },
     "alert": "//span[contains(@class,'toastMessage')]/a",
     "alert-text":"//span[contains(@class,'toastMessage')]",
+    'batch_status':'//div[contains(@class,"slds-tile__title")][.//*[text()="{}"]]/div[contains(@class,"slds-col")]//span[text()="{}"]',
     'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'flexipage-popup':"//div[contains(@class, 'slds-is-open')][contains(@class, 'slds-combobox')]",
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
+    "toast-msg":"//span[@class='toastMessage slds-text-heading--small forceActionsText']",
     "toast-close":"//button[contains(@class,'toastClose')]",
     'frame_new':'//iframe[contains(@name, "{}") or contains(@title, "{}")]',
     'frame':'//iframe[@title= "{}"]',
@@ -64,6 +66,7 @@ npsp_lex_locators={
     },
     'desktop_rendered': 'css: div.desktop.container.oneOne.oneAppLayoutHost[data-aura-rendered-by]',
     'loading_box': 'css: div.auraLoadingBox.oneLoadingBox',
+    'contacts_actions_dropdown_menu': 'css: a.slds-grid--align-center[aria-expanded="true"]',
     'spinner': 'css: div.slds-spinner',
     'modal_field':"//div[contains(@class, 'lookupInput')][./label[contains(text(), '{}')]]/div//span[@class='lookupInput']/input",
     'name':'//tbody/tr/th/span/a',
@@ -75,6 +78,7 @@ npsp_lex_locators={
     'delete_icon':'//span[contains(text() ,"{}")]/following::span[. = "{}"]/following-sibling::a/child::span[@class = "deleteIcon"]',
     'aff_list':'//div[@role="tablist"]/following::div[@class = "container forceRelatedListSingleContainer"][7]/article/div[@class="slds-card__body"]/div/div/div/div/div/div/div/table/tbody/tr/td[1]',
     'aff_status':'//table[contains(@class,"forceRecordLayout")]/tbody/tr[.//th/div/a[contains(@class,"textUnderline")]][.//td/a[@title="{}"]]/td[3]',
+    'relationship_status':'//lightning-formatted-text[contains(text(),"is")]',
     'aff_id':'//table[contains(@class,"forceRecordLayout")]/tbody/tr[.//th/div/a[contains(@class,"textUnderline")]][.//td/a[@title="{}"]]/th//a',
     'click_aff_id':'//table[contains(@class,"forceRecordLayout")]/tbody/tr/th/div/a[text()="{}"]',
     'confirm': {
@@ -123,6 +127,7 @@ npsp_lex_locators={
     },
     'object':{
         'record':'//tbody//a[text()= "{}"]',
+        "field": "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//*[self::input or self::textarea]",
         'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
         'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
         'field-value':'//tbody/tr[./th//a[text()="{}"]]/td[.//span[text()="{}"]]',
@@ -170,7 +175,8 @@ npsp_lex_locators={
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
-        'checkbox':'//tr[./th//a[@title="{}"]]/td//span[@class="slds-checkbox--faux"]'
+        'checkbox':'//tr[./th//a[@title="{}"]]/td//span[@class="slds-checkbox--faux"]',
+        'actions_dd':'//a[contains(@title,"more actions")and @aria-expanded="true"]',
         },
     'bge':{
         'checkbox':'//label/span[text()="{}"]//parent::label/span[@class="slds-checkbox_faux"]',
@@ -225,12 +231,16 @@ npsp_lex_locators={
         'button':"//button[text()='Create New Field Mapping']",
         'field-label':'//lightning-formatted-text[text()="{}"]',
         },
+    'modal-form':{
+        'label':'//div[./*/*[text()="{}"]]',
+        },
     
 }
     
 
 extra_locators={
     'related_list_items1':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "Relationships"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]',
+    
 }
 dnd={ ""
     }

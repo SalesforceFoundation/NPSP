@@ -9,7 +9,7 @@ project:
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
-        repo_url: https://github.com/SalesforceFoundation/Cumulus
+        repo_url: https://github.com/SalesforceFoundation/NPSP
         prefix_beta: uat/
         prefix_release: rel/
     apexdoc:
@@ -132,7 +132,7 @@ tasks:
 
     robot_libdoc:
         options:
-            path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot
+            path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot,robot/Cumulus/resources/*PageObject.py
             output: robot/Cumulus/doc/Keywords.html
 
     update_admin_profile:
@@ -330,6 +330,14 @@ tasks:
                 %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
                 errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
                 upsert errSettings;
+
+    run_tests:
+        options:
+            retry_failures:
+                - "unable to obtain exclusive access to this record"
+                - "UNABLE_TO_LOCK_ROW"
+                - "connection was cancelled here"
+            retry_always: True
 
 flows:
     config_dev:

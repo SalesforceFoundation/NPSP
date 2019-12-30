@@ -42,6 +42,10 @@
                 <behavior>Edit</behavior>
                 <field>npe03__Recurring_Donation_Campaign__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%ClosedReason__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>

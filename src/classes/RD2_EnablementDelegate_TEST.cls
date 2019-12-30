@@ -117,6 +117,12 @@ public with sharing class RD2_EnablementDelegate_TEST {
         RD2_EnablementDelegate_CTRL.enableEnhancement();
 
         System.assertEquals(true, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'Custom Settings field should be set');
+
+        List<AsyncApexJob> asyncJobs = [SELECT Id
+            FROM AsyncApexJob
+            WHERE ApexClass.Name = 'RD2_EnablementDelegate_CTRL'
+            LIMIT 1];
+        System.assert(!asyncJobs.isEmpty(), 'Expected to find a Queueable job after enabling Enhanced Recurring Donations');
     }
 
     /****
@@ -161,11 +167,8 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
 
-        List<AsyncApexJob> asyncJobs = [SELECT Id
-            FROM AsyncApexJob
-            WHERE ApexClass.Name = 'RD2_EnablementDelegate_CTRL'
-            LIMIT 1];
-        System.assert(!asyncJobs.isEmpty(), 'Expected to find a Queueable job after clicking the MetaDeploy link');
+        AsyncApexJob enablementJob = new TEST_SObjectGateway.AsyncApexJobGateway().getRecord('RD2_EnablementDelegate_CTRL');
+        System.assertNotEquals(null, enablementJob, 'Expected to find a Queueable job after clicking the MetaDeploy link');
     }
 
     /****
@@ -251,7 +254,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 RecurringDonations2EnablementState__c = state,
-                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
             )
         );
     }

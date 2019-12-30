@@ -132,7 +132,9 @@ public with sharing class RD2_EnablementService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100)
+            .withDefaultValues()
             .build();
+
         insert rd;
 
         insert buildOpportunity(rd.Id, contact.AccountId);
@@ -178,6 +180,7 @@ public with sharing class RD2_EnablementService_TEST {
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100)
+            .withDefaultValues()
             .build();
 
         Test.startTest();
@@ -376,7 +379,7 @@ public with sharing class RD2_EnablementService_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
-                npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
             )
         );
     }
