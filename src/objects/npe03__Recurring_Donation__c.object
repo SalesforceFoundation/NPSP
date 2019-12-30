@@ -299,10 +299,10 @@
     <fields>
         <fullName>StartDate__c</fullName>
         <defaultValue>Today()</defaultValue>
-        <description>The date of the first installment Opportunity for this Recurring Donation. Changes made to this field after the schedule has started will not impact future installment Opportunities or the schedule. The default is the current date.</description>
+        <description>The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation should take effect. The default is the current date.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date of the first installment Opportunity for this Recurring Donation. Changes made to this field after the schedule has started will not impact future installment Opportunities or the schedule. The default is the current date.</inlineHelpText>
-        <label>Start Date</label>
+        <inlineHelpText>The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation should take effect. The default is the current date.</inlineHelpText>
+        <label>Effective Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
