@@ -300,7 +300,7 @@ const sort = (objects, attribute, direction = "desc", isNullsLast) => {
     if (objects && attribute) {
         let aBeforeB, bBeforeA;
         {
-            let sortDirectionMultiplier = direction.toLowerCase() === "asc" ? -1 : 1;
+            let sortDirectionMultiplier = direction.toLowerCase() === "asc" ? 1 : -1;
 
             aBeforeB = -1 * sortDirectionMultiplier;
             bBeforeA = 1 * sortDirectionMultiplier;

@@ -292,10 +292,10 @@ export default class utilListView extends NavigationMixin(LightningElement) {
             // Turn fields in the 'Name' column into URLs
             if (fieldApiName === 'Name') {
                 columnEntry.type = 'url';
-                columnEntry.fieldName = 'URL';
+                columnEntry.fieldName = fieldApiName;
                 columnEntry.typeAttributes = {
                     label: {
-                        fieldName: 'Name'
+                        fieldName: fieldApiName
                     },
                     target: '_self'
                 }
