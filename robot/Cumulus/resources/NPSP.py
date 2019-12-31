@@ -325,13 +325,13 @@ class NPSP(SalesforceRobotLibraryBase):
         locator= npsp_lex_locators['header'].format(value)
         self.selenium.page_should_contain_element(locator)    
         
-    def Verify_affiliated_contact(self,list_name,first_name,last_name, y):   
-        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case"""
-        name = first_name + ' ' + last_name
+    def verify_related_list(self,list_name,status,name):   
+        """If status is 'contains' then the specified related list should contain name
+                        'does not contain' then the specified related list should not contain name"""
         locator = self.salesforce.get_locator('record.related.link', list_name, name)
-        if y.upper()=="Y":
+        if status=="contains":
             self.selenium.page_should_contain_element(locator)
-        elif y.upper()=="N":
+        elif status=="does not contain":
             self.selenium.page_should_not_contain_element(locator)
         
     def fill_address_form(self, **kwargs):

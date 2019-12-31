@@ -40,7 +40,7 @@ Remove Primary Affiliation for Contact
     Click Modal Button                Delete
     Go To Page                        Details                      Account                 object_id=&{account1}[Id]
     Select Tab                        Related
-    Page Should not Contain Link     &{contact1}[FirstName]
+    Verify Related List               Affiliated Contacts          does not contain        &{contact1}[FirstName] &{contact1}[LastName] 
     
 Remove Primary Affiliation for Contact2
     [Documentation]                   Creates a contact, organization account and primary affiliation via API. Open Contact 
