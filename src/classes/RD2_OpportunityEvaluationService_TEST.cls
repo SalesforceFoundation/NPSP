@@ -244,16 +244,126 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+    * @description When Installment Auto Creation Setting is set to Disable First Installment, 
+    * the installment should be created on existing RD when the nightly batch job run
+    */
+    @IsTest
+    private static void shouldCreateSecondInstallmentWhenBatchRunWhenAutoCreationIsDisableFirst() {
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Disable_First_Installment.name());
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+        insert rd;
+        
+        Opportunity pastInstallment = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(Date.today().addDays(-10))
+            .withClosedLostStage()
+            .build();
+
+        insert pastInstallment;
+
+        rd.npe03__Next_Payment_Date__c = Date.today().addDays(10);
+        update rd;
+
+        Test.startTest();
+        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
+        Test.stopTest();
+
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        System.assertEquals(2, installments.size(),
+            'The next installment should be created when Installment Auto Creation setting is set to Disable First Installment');
+    }
+
+    /**
+    * @description When Installment Auto Creation Setting is set to Disable All Installments, 
+    * no installment should be created on inserted of RD and during nightly batch job
+    */
+    @IsTest
+    private static void shouldNotCreateInstallmentWhenInstallmentAutoCreationIsDiableAll() {
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Disable_All_Installments.name());
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+        
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, installments.size(),
+            'The installment opportunity should not be created when the Auto Creation Setting is set to disalbe all Installments');
+    }
+
+    /**
+    * @description When Installment Auto Creation Setting is set to Always Create Next Installment, 
+    * the installment should be created on inserted of RD and during nightly batch job
+    */
+    @IsTest
+    private static void shouldCreateInstallmentWhenInstallmentAutoCreationIsAlwaysCreate() {
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name());
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+        
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, installments.size(),
+            'The installment opportunity should be created when the Auto Creation Setting is set to always create installments');
+    }
+
+    /**
+    * @description When Installment Auto Creation Setting is set to Disabled First Installment, 
+    * the installment should not be created if there is no existing opportunity in the system
+    */
+    @IsTest
+    private static void shouldNotCreateInstallmentOnRDInsertWhenInstallmentAutoCreationIsDisableFirst() {
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Disable_First_Installment.name());
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, installments.size(),
+            'The installment opportunity should be created when the Auto Creation Setting is set to disalbe first installment');
+    }
+
+    @IsTest
+    private static void shouldNotCreateInstallmentWhenBatchRunWhenAutoCreationIsDisableAll() {
+         setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Disable_All_Installments.name());
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+        insert rd;
+
+        Test.startTest();
+        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
+        Test.stopTest();
+        
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, installments.size(),
+            'The installment opportunity should not be created when the Auto Creation Setting is set to disalbe all Installments');
+    }
+
+    /**
      * @description Sets up data to test open Installment Opportunity behaviour on RD close
      * @param closeAction Recurring Donation settings Open Opportunity Behaviour close action
      * @return npe03__Recurring_Donation__c Created Recurring Donation with related Opps
      */
     private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                npe03__Open_Opportunity_Behavior__c = closeAction
-            )
-        );
+        Map<String, Object> rdSettingFieldMap = new Map<String, Object> {
+            'npe03__Open_Opportunity_Behavior__c' => closeAction
+        };
+        
+        setUpConfiguration(rdSettingFieldMap);
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -308,13 +418,12 @@ private class RD2_OpportunityEvaluationService_TEST {
     @IsTest
     private static void shouldNotThrowExceptionWhenRDWithoutOppsIsClosed() { 
         Exception actualException;
-        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                npe03__Open_Opportunity_Behavior__c = closeAction
-            )
-        );
+        Map<String, Object> rdSettingFieldMap = new Map<String, Object> {
+            'npe03__Open_Opportunity_Behavior__c' => RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
+        };
+        
+        setUpConfiguration(rdSettingFieldMap);
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -417,6 +526,37 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = TEST_RecurringDonationBuilder.addRelatedList(rd, UTIL_Namespace.StrTokenNSPrefix('RecurringDonationSchedules__r'), schedules);
 
         return rd;
+    }
+
+    private static void setUpRD2AndInstallmentAutoCreation(String autoCreationSettingString) {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Map<String, Object> rdSettingMap = new Map<String, Object> {
+            'Installment_Opportunity_Auto_Creation__c' => autoCreationSettingString
+        };
+        setUpConfiguration(rdSettingMap);
+    }
+    /***
+    * @description Generic version of creating Recurring Donations Settings
+    * Apply current date override for the Opp service.
+    *
+    * @param valueByField A map of field name to value
+    * @return void
+    */
+    private static void setUpConfiguration(Map<String, Object> valueByField) {
+        //create RD settings
+        npe03__Recurring_Donations_Settings__c rdSetting = new npe03__Recurring_Donations_Settings__c(
+            npe03__Add_Campaign_to_All_Opportunites__c = true,//default
+            IsRecurringDonations2Enabled__c = true,
+            npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
+        );
+
+        for (String field : valueByField.keySet()) {
+            rdSetting.put(field, valueByField.get(field));
+        }
+
+        UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
     }
 
 }

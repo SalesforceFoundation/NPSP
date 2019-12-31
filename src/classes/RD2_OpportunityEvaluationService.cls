@@ -126,17 +126,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return RD2_OpportunityEvaluationService The service instance
      */
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
-
         Map<npe03__Recurring_Donation__c, List<Date>> newRDsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
         List<npe03__Recurring_Donation__c> updatedRDs = new List<npe03__Recurring_Donation__c>();
         List<Opportunity> openOppsToVoid = new List<Opportunity>();
-
         for (npe03__Recurring_Donation__c rd : rds) {
 
             // TODO Recalculate NextDonationDate before doing anything
 
             // Collect the list of Opps that require a new Installment Opp
-            if (isNewRecurringDonation(rd)) {
+            if (isNewRecurringDonation(rd) && evaluteInstallmentAutoCreationSetting(rd)) {
                 newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
                 continue;
             }
@@ -160,6 +158,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return this;
     }
 
+    private Boolean evaluteInstallmentAutoCreationSetting(npe03__Recurring_Donation__c rd) {
+        if (rdSettings.Installment_Opportunity_Auto_Creation__c == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name() ||
+            String.isBlank(rdSettings.Installment_Opportunity_Auto_creation__c)) {
+            return true;
+        }
+        else if (rdSettings.Installment_Opportunity_Auto_Creation__c == RD2_Constants.InstallmentCreation.Disable_First_Installment.name()) {
+            return !rd.npe03__Donations__r.isEmpty();
+        }
+        else if (rdSettings.Installment_Opportunity_Auto_Creation__c == RD2_Constants.InstallmentCreation.Disable_All_Installments.name()) {
+            return false;
+        }
+        return false;
+    }
     /**
      * @description Is this a new Recurring Donation that was just inserted and 
      * has not yet had an Installment Opportunity created?
@@ -168,10 +179,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     @TestVisible
     private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
+        Boolean noOpenOpp = true;
+
+        for (Opportunity opp : rd.npe03__Donations__r) {
+            if (opp.IsClosed == false || opp.CloseDate >= Date.today()) {
+                noOpenOpp = false;
+                break;
+            }
+        }
+
         return
             rd.npe03__Next_Payment_Date__c != null
             && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
-            && rd.npe03__Donations__r.isEmpty()
+            && noOpenOpp
             && !rd.RecurringDonationSchedules__r.isEmpty();
     }
 
@@ -275,8 +295,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'StageName, IsClosed, IsWon, ' +
             'CampaignId ' +
             'FROM npe03__Donations__r ' +
-            'WHERE IsClosed = false ' +
-            'OR CloseDate >= TODAY ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
         String scheduleSubquery = 
