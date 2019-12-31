@@ -15,12 +15,13 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     validate() {
         return new Promise(async (resolve, reject) => {
             const nameInput = this.template.querySelector('lightning-input');
+            const isCurrentFormTemplateName = this.templateName === nameInput.value;
             let isValid = false;
 
             if (isFunction(nameInput.reportValidity) && !isEmpty(nameInput)) {
                 checkNameUniqueness({ name: nameInput.value })
                     .then(isNameUnique => {
-                        if (isNameUnique) {
+                        if (isNameUnique || isCurrentFormTemplateName) {
                             nameInput.setCustomValidity('');
                         } else {
                             nameInput.setCustomValidity(this.CUSTOM_LABELS.geErrorExistingTemplateName);

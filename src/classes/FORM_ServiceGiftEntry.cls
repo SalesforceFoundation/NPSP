@@ -191,8 +191,7 @@ public with sharing class FORM_ServiceGiftEntry {
                                             String description,
                                             String formatVersion,
                                             String templateJSON) {
-        Boolean isNameUnique = isNameUnique(name);
-        if (templateJSON != null && isNameUnique) {
+        if (templateJSON != null) {
             FORM_Template template = (FORM_Template)JSON.deserialize(templateJSON, FORM_Template.class);
             Form_Template__c templateObj = new Form_Template__c(Id = id, 
                                                             Name = name,
@@ -201,9 +200,6 @@ public with sharing class FORM_ServiceGiftEntry {
                                                             Format_Version__c = formatVersion);
             upsert templateObj;
             return templateObj.id;
-
-        } else if (isNameUnique == false) {
-            throw new TemplateBuilderException(Label.geErrorExistingTemplateName);
         }
 
         return null;
