@@ -1,21 +1,36 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
+
+***Keywords***
+Setup Test Data
+    &{account} =                      API Create Organization Account 
+    Set suite variable                &{account}  
+    &{contact} =                      API Create Contact                 Email=automation@example.com 
+    Set suite variable                &{contact}
+    Store Session Record              Account                            &{contact}[AccountId]
+    API Create Secondary Affiliation  &{account}[Id]                     &{contact}[Id]
+    
 
 *** Test Cases ***
 
 Create Secondary Affiliation for Contact
     [tags]  unstable
-    &{account} =  API Create Organization Account
-    &{contact} =  API Create Contact    Email=skristem@robot.com 
-    Store Session Record    Account    &{contact}[AccountId]   
-    API Create Secondary Affiliation    &{account}[Id]    &{contact}[Id]
-    Go To Record Home  &{contact}[Id]
-    Page Should Contain    &{contact}[LastName]
-    Select Tab  Related
-    Click Related Item Link  Organization Affiliations  &{account}[Name]
+    [Documentation]                   Creates a contact, organization account and secondary affiliation via API 
+    ...                               Open contact and delete affiliation from organization affiliation related list     
+    ...                               Verifies that contact does not show under affiliated contacts in the account page
+    [tags]                            W-037651                     feature:Affiliations     
+    Go To Page                        Details                      Contact                 object_id=&{contact}[Id]
+    Select Tab                        Related
+    Click Related Item Link           Organization Affiliations    &{account}[Name]
     # To make sure the field we want to edit has rendered,
     # scroll to the one below it
     Scroll Element Into View  text:Primary
@@ -23,7 +38,6 @@ Create Secondary Affiliation for Contact
     Wait For Locator  checkbox.model-checkbox  Primary
     Select Lightning Checkbox    Primary
     Click Button    Save
-    #Sleep    5
-    Go To Object Home    Contact
-    Click link    link=&{contact}[FirstName] &{contact}[LastName]
-    Verify Field Value    Primary Affiliation    &{account}[Name]    Y
+    Go To Page                        Details                      Contact                 object_id=&{contact}[Id]
+    Select Tab                        Details
+    Verify Field Value                Primary Affiliation          contains                &{account}[Name]    
