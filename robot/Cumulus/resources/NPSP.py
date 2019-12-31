@@ -236,10 +236,7 @@ class NPSP(SalesforceRobotLibraryBase):
 #                 self.selenium.get_webelement(drop_down).click()
 #                 self.selenium.get_webelement(drop_down).click()      
                 
-    def delete_icon(self, field_name,value):  
-        """To click on x """
-        locator=npsp_lex_locators['delete_icon'].format(field_name,value)
-        self.selenium.get_webelement(locator).click() 
+
 
     def click_id(self, title):  
         locator=npsp_lex_locators['aff_id'].format(title)
@@ -1301,4 +1298,16 @@ class NPSP(SalesforceRobotLibraryBase):
         self.click_record_button("Save")
         self.selenium.wait_until_page_does_not_contain_element(footer)
         self.selenium.execute_javascript("window.scrollTo(0,0)")   
-        
+    
+    def Delete_record_field_value(self,field,value):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field and delete the value by clicking on 'X'"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
+        locator=npsp_lex_locators['delete_icon'].format(field,value)
+        self.selenium.get_webelement(locator).click()    
