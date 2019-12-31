@@ -1,6 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import { dispatch, isEmpty, isFunction, handleError } from 'c/utilTemplateBuilder';
-import checkNameUniqueness from '@salesforce/apex/FORM_ServiceGiftEntry.isNameUnique';
+import checkNameUniqueness from '@salesforce/apex/FORM_ServiceGiftEntry.checkNameUniqueness';
 import GeLabelService from 'c/geLabelService';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
@@ -8,6 +8,7 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api isLoading;
+    @api templateId;
     @api templateName;
     @api templateDescription;
 
@@ -15,13 +16,12 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     validate() {
         return new Promise(async (resolve, reject) => {
             const nameInput = this.template.querySelector('lightning-input');
-            const isCurrentFormTemplateName = this.templateName === nameInput.value;
             let isValid = false;
 
             if (isFunction(nameInput.reportValidity) && !isEmpty(nameInput)) {
-                checkNameUniqueness({ name: nameInput.value })
-                    .then(isNameUnique => {
-                        if (isNameUnique || isCurrentFormTemplateName) {
+                checkNameUniqueness({ name: nameInput.value, id: this.templateId })
+                    .then(isNameValid => {
+                        if (isNameValid) {
                             nameInput.setCustomValidity('');
                         } else {
                             nameInput.setCustomValidity(this.CUSTOM_LABELS.geErrorExistingTemplateName);

@@ -205,13 +205,27 @@ public with sharing class FORM_ServiceGiftEntry {
         return null;
     }
 
+    /*******************************************************************************************************
+    * @description Method checks if the provided name is in use by another existing Form Template.
+    *
+    * @param String name: Name of a Form_Template__c record.
+    * @param String id: Id of a Form_Template__c record.
+    */
     @AuraEnabled
-    public static Boolean isNameUnique(String name) {
-        Integer formTemplatesRecordCount = [SELECT count() FROM Form_Template__c WHERE Name = :name];
-        if (formTemplatesRecordCount == 0) {
-            return true;
+    public static Boolean checkNameUniqueness(String name, String id) {
+        Form_Template__c[] formTemplates = [SELECT Id FROM Form_Template__c WHERE Name = :name];
+        Boolean isNameValid = formTemplates.size() > 0 ? false : true;
+
+        if (id != null) {
+            for (Form_Template__c formTemplate : formTemplates) {
+                if (formTemplate.Id == id) {
+                    isNameValid = true;
+                    break;
+                }
+            }
         }
-        return false;
+
+        return isNameValid;
     }
 
     /*******************************************************************************************************
