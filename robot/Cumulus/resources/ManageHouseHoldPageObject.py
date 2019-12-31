@@ -11,8 +11,8 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         """
         Waits for the current page to be a Data Import list view
         """
-        self.selenium.wait_until_location_contains("/list",timeout=60, message="Records list view did not load in 1 min")
-        self.selenium.location_should_contain("DataImport__c",message="Current page is not a DataImport List view")
+        self.selenium.wait_until_location_contains("/one",timeout=60, message="Manage Household page did not load in 1 min")
+        self.selenium.location_should_contain("Manage Household",message="Current page is not ManageHousehold")
 
 
     def _go_to_page(self, filter_name=None):
@@ -20,10 +20,8 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         """
         Verifies that current page is Manage Household
         """
-        self.selenium.wait_until_location_contains("/one",timeout=60, message="Records list view did not load in 1 min")
+        self.selenium.wait_until_location_contains("/one",timeout=60, message="Manage Household page did not load in 1 min")
         self.npsp.wait_for_locator("frame","Manage Household")
-        #self.npsp.choose_frame("Manage Household")
-        #self.npsp.select_frame_and_click_element("Manage Household", "span_button", "change Address")
 
     def change_address_using(self, option, **kwargs):
         """
