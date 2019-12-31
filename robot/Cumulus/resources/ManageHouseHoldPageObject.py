@@ -9,7 +9,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
 
     def _is_current_page(self):
         """
-        Waits for the current page to be a Data Import list view
+        Waits for the current page to be a Manage Household page
         """
         self.selenium.wait_until_location_contains("/one",timeout=60, message="Manage Household page did not load in 1 min")
         self.selenium.location_should_contain("Manage Household",message="Current page is not ManageHousehold")
