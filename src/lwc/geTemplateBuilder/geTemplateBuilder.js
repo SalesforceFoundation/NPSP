@@ -55,6 +55,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     });
 
     formTemplateRecordId;
+    existingFormTemplateName;
     currentNamespace;
     @track isLoading = true;
     @track isAccessible = true;
@@ -94,7 +95,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get templateBuilderHeader() {
-        return this.formTemplateRecordId ? this.formTemplate.name : this.CUSTOM_LABELS.geHeaderNewTemplate;
+        return this.existingFormTemplateName ? this.existingFormTemplateName : this.CUSTOM_LABELS.geHeaderNewTemplate;
     }
 
     get mode() {
@@ -139,6 +140,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 if (this.formTemplateRecordId) {
                     let formTemplate = await retrieveFormTemplateById({ templateId: this.formTemplateRecordId });
 
+                    this.existingFormTemplateName = formTemplate.name;
                     this.formTemplate = formTemplate;
                     this.batchHeaderFields = formTemplate.batchHeaderFields;
                     this.formLayout = formTemplate.layout;
