@@ -69,7 +69,7 @@ public with sharing class RP_GitHubTestMock implements HttpCalloutMock {
         bodyLatestDataMap.put('name', '3.101');
         bodyLatestDataMap.put('version', '3.101');
         bodyLatestDataMap.put('release_notes_html', '<h1>Issues Closed</h1>');
-        bodyLatestDataMap.put('url', 'https://github.com/SalesforceFoundation/Cumulus/releases/tag/rel%2F3.101');
+        bodyLatestDataMap.put('url', 'https://github.com/SalesforceFoundation/NPSP/releases/tag/rel%2F3.101');
         bodyLatestDataMap.put('time_created', '2017-07-05T12:00:00Z');
 
         bodyMap.put('product_name', 'Nonprofit Success Pack');
