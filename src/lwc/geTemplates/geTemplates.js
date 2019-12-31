@@ -61,16 +61,14 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
      */
     checkPageAccess = async () => {
         const dataImportSettings = await getDataImportSettings();
-        console.log('DataImportSetting '+ dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName]);
-
         const isAdvancedMappingOn =
             dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
         let hasPageAccess = false;
-        console.log('isAdvancedMappingOn ' +isAdvancedMappingOn);
+
         if (isAdvancedMappingOn) {
             hasPageAccess = true;
         } else {
-            this.isLoading = hasPageAccess =false;
+            this.isLoading = hasPageAccess = false;
         }
         return hasPageAccess;
     }
