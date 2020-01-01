@@ -1556,7 +1556,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement page message displayed due to missing prerequisites</shortDescription>
-        <value>(1) If you're not already using Lightning Experience, click Switch to Lightning Experience at the top of your screen. (2) Enable Customizable Rollups by going to NPSP Settings|Donations|Customizable Rollups. Then return here to the Upgrade to Enhanced Recurring Donations page.</value>
+        <value>(1) If you're not already using Lightning Experience, click Switch to Lightning Experience at the top of your screen.&lt;br/&gt;(2) Enable Customizable Rollups by going to NPSP Settings|Donations|Customizable Rollups. Then return here to the Upgrade to Enhanced Recurring Donations page.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDryRunBatchTitle</fullName>
