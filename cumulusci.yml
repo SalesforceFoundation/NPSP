@@ -9,7 +9,7 @@ project:
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
-        repo_url: https://github.com/SalesforceFoundation/Cumulus
+        repo_url: https://github.com/SalesforceFoundation/NPSP
         prefix_beta: uat/
         prefix_release: rel/
     apexdoc:
