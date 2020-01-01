@@ -36,6 +36,20 @@
 public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
+    * @description Enablement service
+    */
+    @TestVisible
+    private static RD2_EnablementService service {
+        get {
+            if (service == null) {
+                service = new RD2_EnablementService();
+            }
+            return service;
+        }
+        set;
+    }
+
+    /***
     * @description Returns Day of Month field picklist value specific to enhanced Recurring Donations
     */
     @TestVisible
@@ -70,19 +84,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         
     }
 
-    /***
-    * @description Enablement service
-    */
-    @TestVisible
-    private static RD2_EnablementService service {
-        get {
-            if (service == null) {
-                service = new RD2_EnablementService();
-            }
-            return service;
-        }
-        set;
-    }
 
     /***
     * @description Loads the enablement state so the current completed and pending options can be displayed
@@ -113,11 +114,11 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
             if (String.isBlank(jsonState)) {
                 state.isConfirmed = false;
-                state.isMetaDeployLaunched = false;
-                state.isMetaDeployConfirmed = false;
+                state.isMetaLaunched = false;
+                state.isMetaConfirmed = false;
             } else {
-                state.isMetaDeployLaunched = state.isMetaDeployLaunched && state.isEnabled;
-                state.isMetaDeployConfirmed = state.isMetaDeployConfirmed && state.isMetaDeployLaunched && hasMetaDeployCompleted();
+                state.isMetaLaunched = state.isMetaLaunched && state.isEnabled;
+                state.isMetaConfirmed = state.isMetaConfirmed && state.isMetaLaunched && hasMetaDeployCompleted();
             }
 
         } catch (Exception e) {
@@ -190,7 +191,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     @AuraEnabled
     public static void launchMetaDeploy() {
         EnablementState state = getEnablementState();
-        state.isMetaDeployLaunched = true;
+        state.isMetaLaunched = true;
 
         saveEnablementState(state);
 
@@ -208,8 +209,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
 
         EnablementState state = getEnablementState();
-        state.isMetaDeployConfirmed = true;
-
+        state.isMetaConfirmed = true;
         saveEnablementState(state);
     }
 
@@ -232,18 +232,76 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Starts the data migration batch
+    * @description Skips dry run and moves straight to the migration
     * @return void
     */
     @AuraEnabled
-    public static void runMigration() {
+    public static void skipDryRun() {
+        setMigrationEnabled(true);
+    }
+
+    /***
+    * @description Skips migration and moves back to the dry run
+    * @return void
+    */
+    @AuraEnabled
+    public static void skipMigration() {
+        setMigrationEnabled(false);
+    }
+
+    /***
+    * @description Sets migration enabled state
+    * @param isMigrationEnabled Indicates if migration is enabled
+    * @return void
+    */
+    private static void setMigrationEnabled(Boolean isMigrationEnabled) {
+        EnablementState state = getEnablementState();
+        state.isMigrationEnabled = isMigrationEnabled;
+
+        saveEnablementState(state);
+    }
+
+    /***
+    * @description Starts the dry run data migration
+    * @return Id Batch Job Id
+    */
+    @AuraEnabled
+    public static Id runDryRun() {
+        Id jobId;
+        
         try {
-            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
-            Database.executeBatch(batch, batch.batchSize);
+            EnablementState state = getEnablementState();
+            if (state.isMetaConfirmed) {
+                state.isDryRun2 = true;
+                saveEnablementState(state);
+            } 
+
+            RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
+            jobId = Database.executeBatch(batch, batch.batchSize);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
+        
+        return jobId;
+    }
+
+    /***
+    * @description Starts the data migration batch
+    * @return Id Batch Job Id
+    */
+    @AuraEnabled
+    public static Id runMigration() {
+        Id jobId;
+        try {
+            RD2_DataMigration_BATCH batch = new RD2_DataMigration_BATCH();
+            jobId = Database.executeBatch(batch, batch.batchSize);
+
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+
+        return jobId;
     }
 
     /***
@@ -270,6 +328,23 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Stops the archive batch process
+    */
+    @AuraEnabled
+    public static void stopProcessing(Id batchId) {
+        if (batchId == null) {
+            return;
+        }
+
+        try {            
+            System.abortJob(batchId);
+
+        } catch (Exception e) {
+            throwAuraHandledException(e.getMessage());
+        }
+    }
+
+    /***
     * @description Throws AuraHandledException
     * @param errMessage
     * @return void
@@ -280,6 +355,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         throw e;
     }
 
+
+
     /***
     * @description Represents enhanced Recurring Donation options and status
     */
@@ -287,9 +364,10 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         public Boolean isReady = false;
         public Boolean isConfirmed = false;
         public Boolean isEnabled = false;
-        public Boolean isMetaDeployLaunched = false;
-        public Boolean isMetaDeployConfirmed = false;
-        public Boolean isMigrationCompleted = false;
+        public Boolean isMetaLaunched = false;
+        public Boolean isMetaConfirmed = false;
+        public Boolean isDryRun2 = false;
+        public Boolean isMigrationEnabled = false;
     }
 
     /**
@@ -373,6 +451,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
             CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(changeHandler, changeHandler.params);
         }
-
     }
+
+    
+
 }

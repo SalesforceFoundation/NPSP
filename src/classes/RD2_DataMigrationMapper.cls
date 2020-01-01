@@ -37,9 +37,19 @@
 public class RD2_DataMigrationMapper {
 
     /**
+    * @description Defines mock "Day of Month" last day value for dry run data migration
+    */
+    private static final String DRY_RUN_DAY_OF_MONTH_LAST_DAY = '28';
+
+    /**
     * @description Recurring Donation to convert to enhanced format
     */
     private npe03__Recurring_Donation__c rd;
+
+    /**
+    * @description Indicates data migration mode
+    */
+    private Boolean isDryRunMode = false;
 
     /**
     * @description All Opportunities related to the Recurring Donation
@@ -62,8 +72,17 @@ public class RD2_DataMigrationMapper {
     /**
      * @description Constructor
      */
-    public RD2_DataMigrationMapper(npe03__Recurring_Donation__c rd) {
+    public RD2_DataMigrationMapper(npe03__Recurring_Donation__c rd, Boolean isDryRunMode) {
         this.rd = rd;
+        this.isDryRunMode = isDryRunMode;
+    }
+
+    /**
+     * @description Constructor, used in test for the data migration mapping tests
+     */
+    @TestVisible
+    private RD2_DataMigrationMapper(npe03__Recurring_Donation__c rd) {
+        this(rd, false);
     }
 
     /**
@@ -225,7 +244,9 @@ public class RD2_DataMigrationMapper {
         if (rd.Always_Use_Last_Day_Of_Month__c == true
             || lastDaysOfMonth.contains(rd.Day_of_Month__c)
         ) {
-            rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
+            rd.Day_of_Month__c = isDryRunMode
+                ? DRY_RUN_DAY_OF_MONTH_LAST_DAY
+                : RD2_Constants.DAY_OF_MONTH_LAST_DAY;
         }
     }
 

@@ -66,14 +66,15 @@ public with sharing class UTIL_BatchJobService {
     }
 
     /***
-    * @description Loads the latest batch job for the specified job Id
-    * @param jobId BatchJobId
-    * @return BatchJob
+    * @description Returns the latest batch job for the specified job Id
+    * @param jobId Batch job Id 
+    * @return AsyncApexJob
     */
-    public BatchJob getBatchJob(Id jobId) {
+    public AsyncApexJob getAsyncApexJob(Id jobId) {
         List<AsyncApexJob> apexJobs = [
             SELECT
-                Status, ExtendedStatus, NumberOfErrors,
+                Status, ApexClass.Name,
+                ExtendedStatus, NumberOfErrors,
                 TotalJobItems, JobItemsProcessed,
                 CreatedDate, CompletedDate
             FROM AsyncApexJob
@@ -81,7 +82,7 @@ public with sharing class UTIL_BatchJobService {
             LIMIT 1
         ];
 
-        return apexJobs.isEmpty() ? null : new BatchJob(apexJobs[0]);
+        return apexJobs.isEmpty() ? null : apexJobs[0];
     }
 
 
@@ -95,7 +96,8 @@ public with sharing class UTIL_BatchJobService {
 
         List<AsyncApexJob> apexJobs = [
             SELECT
-                Status, ExtendedStatus, NumberOfErrors,
+                Status, ApexClass.Name,
+                ExtendedStatus, NumberOfErrors,
                 TotalJobItems, JobItemsProcessed,
                 CreatedDate, CompletedDate
             FROM AsyncApexJob
@@ -108,7 +110,6 @@ public with sharing class UTIL_BatchJobService {
 
         return apexJobs.isEmpty() ? null : new BatchJob(apexJobs[0]);
     }
-
 
     /***
     * @description Batch job descriptor
@@ -128,6 +129,7 @@ public with sharing class UTIL_BatchJobService {
         public String timeElapsed;
         public Long percentComplete = 0;
         public Boolean isInProgress = false;
+        public JobSummary summary;
 
         /***
         * @description Constructor
@@ -148,9 +150,36 @@ public with sharing class UTIL_BatchJobService {
             createdDate = job.CreatedDate;
             completedDate = job.CompletedDate;
 
+            isInProgress = isInProgress(status);
+            summary = getSummary(batchId, job.ApexClass.Name);
+
             timeElapsed = calcTimeElapsed(createdDate, completedDate);
             percentComplete = calcPercentComplete(jobItemsProcessed, totalJobItems, status);
-            isInProgress = isInProgress(status);
+        }
+
+        /***
+        * @description Loads the batch job summary
+        * @param batchId Batch job Id
+        * @param className Batch job class name
+        * @return JobSummary
+        */
+        @TestVisible
+        private JobSummary getSummary(Id batchId, String className) {
+            if (isInProgress) {
+                return null; //the summary is available for the completed batch only
+            }
+
+            JobSummary summary;
+            switch on className {
+                when 'RD2_DataMigration_BATCH', 'RD2_DataMigrationDryRun_BATCH' {
+                    summary = new RD2_DataMigrationEnablement.BatchJob().getSummary(batchId, className);
+                }
+            }
+            if (summary != null && numberOfErrors == 0 && summary.failed > 0) {
+                numberOfErrors = summary.failed;
+            }
+
+            return summary;
         }
 
         /***
@@ -238,50 +267,47 @@ public with sharing class UTIL_BatchJobService {
     /***
     * @description Represents batch job summary
     */
-    public class BatchJobSummary {
+    public class JobSummary {
         public Id batchId;
-        public String context;
-        public Integer totalRecords = 0;
-        public Integer totalRecordsProcessed = 0;
-        public Integer totalRecordsFailed = 0;
+        public Integer total = 0;
+        public Integer processed = 0;
+        public Integer failed = 0;
 
         /**
         * @description Contructor
         * @param batchId Batch job Id
-        * @param context Log context
         */
-        public BatchJobSummary(Id batchId, String context) {
+        public JobSummary(Id batchId) {
             this.batchId = batchId;
-            this.context = context;
         }
 
         /**
         * @description Sets number of records selected
-        * @param totalRecords Number of records selected
-        * @return BatchJobSummary
+        * @param total Number of records selected
+        * @return JobSummary
         */
-        public BatchJobSummary withTotalRecords(Integer totalRecords) {
-            this.totalRecords = totalRecords;
+        public JobSummary withTotalRecords(Integer total) {
+            this.total = total;
             return this;
         }
 
         /**
         * @description Sets number of records processed
-        * @param totalRecordsProcessed Number of records processed
-        * @return BatchJobSummary
+        * @param processed Number of records processed
+        * @return JobSummary
         */
-        public BatchJobSummary withTotalRecordsProcessed(Integer totalRecordsProcessed) {
-            this.totalRecordsProcessed = totalRecordsProcessed;
+        public JobSummary withTotalRecordsProcessed(Integer processed) {
+            this.processed = processed;
             return this;
         }
 
         /**
         * @description Sets number of records failed
-        * @param totalRecordsFailed Number of records failed
-        * @return BatchJobSummary
+        * @param failed Number of records failed
+        * @return JobSummary
         */
-        public BatchJobSummary withTotalRecordsFailed(Integer totalRecordsFailed) {
-            this.totalRecordsFailed = totalRecordsFailed;
+        public JobSummary withTotalRecordsFailed(Integer failed) {
+            this.failed = failed;
             return this;
         }
     }
