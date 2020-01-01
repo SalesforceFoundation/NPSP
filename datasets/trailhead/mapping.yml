@@ -472,7 +472,6 @@ Insert CampaignMemberStatus:
     HasResponded: HasResponded
     IsDefault: IsDefault
     Label: Label
-    SortOrder: SortOrder
   lookups:
     CampaignId:
       table: Campaign
@@ -504,7 +503,6 @@ Insert npe03__Recurring_Donation__c:
 Insert Opportunity:
   sf_object: Opportunity
   table: Opportunity
-  bulk_mode: Serial
   fields:
     Id: sf_id
     Name: Name
@@ -607,24 +605,24 @@ Insert npsp__Engagement_Plan__c:
       table: Opportunity
     npsp__Recurring_Donation__c:
       table: npe03__Recurring_Donation__c
-#Insert npe01__OppPayment__c:
-#  sf_object: npe01__OppPayment__c
-#  table: npe01__OppPayment__c
-#  fields:
-#    Id: sf_id
-#    npe01__Check_Reference_Number__c: npe01__Check_Reference_Number__c
-#    npe01__Custom_Payment_Field__c: npe01__Custom_Payment_Field__c
-#    npe01__Paid__c: npe01__Paid__c
-#    npe01__Payment_Amount__c: npe01__Payment_Amount__c
-#    npe01__Payment_Date__c: npe01__Payment_Date__c
-#    npe01__Payment_Method__c: npe01__Payment_Method__c
-#    npe01__Scheduled_Date__c: npe01__Scheduled_Date__c
-#    npe01__Written_Off__c: npe01__Written_Off__c
-#    npsp__Payment_Acknowledged_Date__c: npsp__Payment_Acknowledged_Date__c
-#    npsp__Payment_Acknowledgment_Status__c: npsp__Payment_Acknowledgment_Status__c
-#  lookups:
-#    npe01__Opportunity__c:
-#      table: Opportunity
+Insert npe01__OppPayment__c:
+  sf_object: npe01__OppPayment__c
+  table: npe01__OppPayment__c
+  fields:
+    Id: sf_id
+    npe01__Check_Reference_Number__c: npe01__Check_Reference_Number__c
+    npe01__Custom_Payment_Field__c: npe01__Custom_Payment_Field__c
+    npe01__Paid__c: npe01__Paid__c
+    npe01__Payment_Amount__c: npe01__Payment_Amount__c
+    npe01__Payment_Date__c: npe01__Payment_Date__c
+    npe01__Payment_Method__c: npe01__Payment_Method__c
+    npe01__Scheduled_Date__c: npe01__Scheduled_Date__c
+    npe01__Written_Off__c: npe01__Written_Off__c
+    npsp__Payment_Acknowledged_Date__c: npsp__Payment_Acknowledged_Date__c
+    npsp__Payment_Acknowledgment_Status__c: npsp__Payment_Acknowledgment_Status__c
+  lookups:
+    npe01__Opportunity__c:
+      table: Opportunity
 Insert npsp__Partial_Soft_Credit__c:
   sf_object: npsp__Partial_Soft_Credit__c
   table: npsp__Partial_Soft_Credit__c
@@ -665,171 +663,18 @@ Insert npsp__Allocation__c:
       table: Opportunity
     npsp__Recurring_Donation__c:
       table: npe03__Recurring_Donation__c
-#Insert npsp__DataImport__c:
-#  sf_object: npsp__DataImport__c
-#  table: npsp__DataImport__c
- # fields:
- #   Id: sf_id
- #   npsp__Account1ImportStatus__c: npsp__Account1ImportStatus__c
- #   npsp__Account1_City__c: npsp__Account1_City__c
- #   npsp__Account1_Country__c: npsp__Account1_Country__c
-#    npsp__Account1_Name__c: npsp__Account1_Name__c
-#    npsp__Account1_Phone__c: npsp__Account1_Phone__c
-#    npsp__Account1_State_Province__c: npsp__Account1_State_Province__c
- #   npsp__Account1_Street__c: npsp__Account1_Street__c
- #   npsp__Account1_Website__c: npsp__Account1_Website__c
- #   npsp__Account1_Zip_Postal_Code__c: npsp__Account1_Zip_Postal_Code__c
- #   npsp__Account2ImportStatus__c: npsp__Account2ImportStatus__c
- #   npsp__Account2_City__c: npsp__Account2_City__c
- #   npsp__Account2_Country__c: npsp__Account2_Country__c
-  #  npsp__Account2_Name__c: npsp__Account2_Name__c
-   # npsp__Account2_Phone__c: npsp__Account2_Phone__c
-   # npsp__Account2_State_Province__c: npsp__Account2_State_Province__c
-   # npsp__Account2_Street__c: npsp__Account2_Street__c
-   # npsp__Account2_Website__c: npsp__Account2_Website__c
-   # npsp__Account2_Zip_Postal_Code__c: npsp__Account2_Zip_Postal_Code__c
-   # npsp__ApexJobId__c: npsp__ApexJobId__c
-   # npsp__Campaign_Member_Status__c: npsp__Campaign_Member_Status__c
-   # npsp__Contact1ImportStatus__c: npsp__Contact1ImportStatus__c
-   # npsp__Contact1_Alternate_Email__c: npsp__Contact1_Alternate_Email__c
-   # npsp__Contact1_Birthdate__c: npsp__Contact1_Birthdate__c
-   # npsp__Contact1_Firstname__c: npsp__Contact1_Firstname__c
-   # npsp__Contact1_Home_Phone__c: npsp__Contact1_Home_Phone__c
-   # npsp__Contact1_Lastname__c: npsp__Contact1_Lastname__c
-   # npsp__Contact1_Mobile_Phone__c: npsp__Contact1_Mobile_Phone__c
-   # npsp__Contact1_Other_Phone__c: npsp__Contact1_Other_Phone__c
-    #npsp__Contact1_Personal_Email__c: npsp__Contact1_Personal_Email__c
-    #npsp__Contact1_Preferred_Email__c: npsp__Contact1_Preferred_Email__c
-  #  npsp__Contact1_Preferred_Phone__c: npsp__Contact1_Preferred_Phone__c
-  #  npsp__Contact1_Salutation__c: npsp__Contact1_Salutation__c
-  #  npsp__Contact1_Title__c: npsp__Contact1_Title__c
-  #  npsp__Contact1_Work_Email__c: npsp__Contact1_Work_Email__c
-  #  npsp__Contact1_Work_Phone__c: npsp__Contact1_Work_Phone__c
-  #  npsp__Contact2ImportStatus__c: npsp__Contact2ImportStatus__c
-   # npsp__Contact2_Alternate_Email__c: npsp__Contact2_Alternate_Email__c
-  #  npsp__Contact2_Birthdate__c: npsp__Contact2_Birthdate__c
-  #  npsp__Contact2_Firstname__c: npsp__Contact2_Firstname__c
-  #  npsp__Contact2_Home_Phone__c: npsp__Contact2_Home_Phone__c
-  #  npsp__Contact2_Lastname__c: npsp__Contact2_Lastname__c
-  #  npsp__Contact2_Mobile_Phone__c: npsp__Contact2_Mobile_Phone__c
-  #  npsp__Contact2_Other_Phone__c: npsp__Contact2_Other_Phone__c
-  #  npsp__Contact2_Personal_Email__c: npsp__Contact2_Personal_Email__c
-  #  npsp__Contact2_Preferred_Email__c: npsp__Contact2_Preferred_Email__c
-  #  npsp__Contact2_Preferred_Phone__c: npsp__Contact2_Preferred_Phone__c
-  #  npsp__Contact2_Salutation__c: npsp__Contact2_Salutation__c
-  #  npsp__Contact2_Title__c: npsp__Contact2_Title__c
-  #  npsp__Contact2_Work_Email__c: npsp__Contact2_Work_Email__c
-  #  npsp__Contact2_Work_Phone__c: npsp__Contact2_Work_Phone__c
-  #  npsp__DonationCampaignImportStatus__c: npsp__DonationCampaignImportStatus__c
-  #  npsp__DonationImportStatus__c: npsp__DonationImportStatus__c
-  #  npsp__Donation_Amount__c: npsp__Donation_Amount__c
-  #  npsp__Donation_Campaign_Name__c: npsp__Donation_Campaign_Name__c
-  #  npsp__Donation_Date__c: npsp__Donation_Date__c
-  #  npsp__Donation_Description__c: npsp__Donation_Description__c
-  #  npsp__Donation_Donor__c: npsp__Donation_Donor__c
-  #  npsp__Donation_Member_Level__c: npsp__Donation_Member_Level__c
-  #  npsp__Donation_Membership_End_Date__c: npsp__Donation_Membership_End_Date__c
-  #  npsp__Donation_Membership_Origin__c: npsp__Donation_Membership_Origin__c
-  #  npsp__Donation_Membership_Start_Date__c: npsp__Donation_Membership_Start_Date__c
-  #  npsp__Donation_Name__c: npsp__Donation_Name__c
-  #  npsp__Donation_Possible_Matches__c: npsp__Donation_Possible_Matches__c
-  #  npsp__Donation_Record_Type_Name__c: npsp__Donation_Record_Type_Name__c
-  #  npsp__Donation_Stage__c: npsp__Donation_Stage__c
-  #  npsp__Donation_Type__c: npsp__Donation_Type__c
-  #  npsp__FailureInformation__c: npsp__FailureInformation__c
-  #  npsp__GAU_Allocation_1_Amount__c: npsp__GAU_Allocation_1_Amount__c
-  #  npsp__GAU_Allocation_1_Import_Status__c: npsp__GAU_Allocation_1_Import_Status__c
-  #  npsp__GAU_Allocation_1_Percent__c: npsp__GAU_Allocation_1_Percent__c
-  #  npsp__GAU_Allocation_2_Amount__c: npsp__GAU_Allocation_2_Amount__c
-  #  npsp__GAU_Allocation_2_Import_Status__c: npsp__GAU_Allocation_2_Import_Status__c
-   # npsp__GAU_Allocation_2_Percent__c: npsp__GAU_Allocation_2_Percent__c
-   # npsp__HomeAddressImportStatus__c: npsp__HomeAddressImportStatus__c
-  #  npsp__Home_City__c: npsp__Home_City__c
-  #  npsp__Home_Country__c: npsp__Home_Country__c
-   # npsp__Home_State_Province__c: npsp__Home_State_Province__c
-  #  npsp__Home_Street__c: npsp__Home_Street__c
-  #  npsp__Home_Zip_Postal_Code__c: npsp__Home_Zip_Postal_Code__c
-  #  npsp__Household_Phone__c: npsp__Household_Phone__c
-  #  npsp__ImportedDate__c: npsp__ImportedDate__c
-  #  npsp__Opportunity_Contact_Role_1_ImportStatus__c: npsp__Opportunity_Contact_Role_1_ImportStatus__c
-  #  npsp__Opportunity_Contact_Role_1_Imported__c: npsp__Opportunity_Contact_Role_1_Imported__c
-  #  npsp__Opportunity_Contact_Role_1_Role__c: npsp__Opportunity_Contact_Role_1_Role__c
-  #  npsp__Opportunity_Contact_Role_2_ImportStatus__c: npsp__Opportunity_Contact_Role_2_ImportStatus__c
-  #  npsp__Opportunity_Contact_Role_2_Imported__c: npsp__Opportunity_Contact_Role_2_Imported__c
-  #  npsp__Opportunity_Contact_Role_2_Role__c: npsp__Opportunity_Contact_Role_2_Role__c
-  #  npsp__PaymentImportStatus__c: npsp__PaymentImportStatus__c
-  #  npsp__Payment_Check_Reference_Number__c: npsp__Payment_Check_Reference_Number__c
-  #  npsp__Payment_Method__c: npsp__Payment_Method__c
-  #  npsp__Payment_Possible_Matches__c: npsp__Payment_Possible_Matches__c
-  #  npsp__Status__c: npsp__Status__c
-  #lookups:
-  #  npsp__Account1Imported__c:
-  #    table: Account
-  #  npsp__Account2Imported__c:
-  #    table: Account
-  #  npsp__Contact1Imported__c:
-  #    table: Contact
-  #  npsp__Contact2Imported__c:
-  #    table: Contact
-  #  npsp__DonationCampaignImported__c:
-  #    table: Campaign
-  #  npsp__DonationImported__c:
-  #    table: Opportunity
-  #  npsp__GAU_Allocation_1_GAU__c:
-  #    table: npsp__General_Accounting_Unit__c
-  #  npsp__GAU_Allocation_1_Imported__c:
-  #    table: npsp__Allocation__c
-  #  npsp__GAU_Allocation_2_GAU__c:
-  #    table: npsp__General_Accounting_Unit__c
-  #  npsp__GAU_Allocation_2_Imported__c:
-  #    table: npsp__Allocation__c
-  #  npsp__HomeAddressImported__c:
-  #    table: npsp__Address__c
-  #  npsp__HouseholdAccountImported__c:
-  #    table: Account
-  #  npsp__NPSP_Data_Import_Batch__c:
-  #    table: npsp__DataImportBatch__c
-  #  npsp__PaymentImported__c:
-  #    table: npe01__OppPayment__c
-#Task:
-#  sf_object: Task
-#  table: Task
-#  fields:
-#    ActivityDate: ActivityDate
-#    Description: Description
-#    Type: Type
-#    WhoId: WhoId
-#    Subject: Subject
-#    OwnerId: OwnerId
-#    WhatId: WhatId
-#    Priority: Priority
 Event:
   sf_object: Event
   table: Event
   fields:
     ActivityDate: ActivityDate
     Description: Description
-   # Type: Type
-#    WhoId: WhoId
     StartDateTime: StartDateTime
     EndDateTime: EndDateTime
     Subject: Subject
     Location: Location
-#    OwnerId: OwnerId
   lookups:
     WhoId:
       table: Contact
       key_field: WhoId
-#    WhatId: WhatId
-#User:
-#  sf_object: User
-#  table: User
-#  fields:
-#    Name: Name
-#    Alias: Alias
-#    Email: Email
-#    Username: Username
-#    CommunityNickname: CommunityNickname
-#    Title: Title
-#    UserType: UserType
-#    ProfileId: ProfileId
+

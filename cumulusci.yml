@@ -587,7 +587,9 @@ flows:
                         - ALLO_Allocations_TDTM
                         - REL_Relationships_TDTM
                         - REL_Relationships_Con_TDTM
-                        - PMT_Payment_TDTM
+                        - Opportunity
+                        - npe01__OppPayment__c
+                        - npe03__Recurring_Donation__c
             10:
                 task: load_dataset
                 options:
@@ -830,6 +832,8 @@ plans:
                         name: NPSP Trial Experience
                     test_data_relationships:
                         name: Set Default Relationship Settings
+                    config_trailhead_relationships:
+                        name: Add Relationships for Trailhead
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
@@ -837,6 +841,23 @@ plans:
                         name: Trailhead Playground Configuration
                     deploy_trailhead_delete_config:
                         name: Remove Default Metadata
+                    update_admin_profile:
+                        name: Update Administrator Profile
+                    disable_triggers:
+                        name: Prepare for Data Load
+                    load_dataset:
+                        name: Load Trailhead Data Set
+                    restore_triggers:
+                        name: Finalize Data Load
+                    dx:
+                        name: Create User
+                    config_trailhead_task_ownership_sunil:
+                        name: Assign Task Ownership
+                    config_trailhead_deactivate_user:
+                        name: Configure Users
+                    config_trailhead_task_ownership_marco:
+                        name: Assign Event Ownership
+                    
     rd2:
         slug: npsp-rd2-pilot
         title: Enhanced Recurring Donations Metadata Updates
