@@ -288,6 +288,42 @@ tasks:
                 };
                 insert thRelationships;
 
+    config_trailhead_create_user_sunil:
+        description: 'Runs Anonymous Apex to create user for Trailhead'
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                insert new User(
+                    FirstName = 'Sunil',
+                    LastName = 'Divani',
+                    Alias = 'sunil',
+                    Email = 'sunil@example.com',
+                    UserName = 'sunil-' + DateTime.now().getTime() + String.valueOf(Math.random()) + '@example-th.com',
+                    TimeZoneSidKey = 'America/Los_Angeles',
+                    LocaleSidKey = 'en_US',
+                    EmailEncodingKey = 'UTF-8',
+                    LanguageLocaleKey = 'en_US',
+                    ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id
+                );
+
+    config_trailhead_create_user_marco:
+        description: 'Runs Anonymous Apex to create user for Trailhead'
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                insert new User(
+                    FirstName = 'Marco',
+                    LastName = 'Forster',
+                    Alias = 'marco',
+                    Email = 'marco@example.com',
+                    UserName = 'marco-' + DateTime.now().getTime() + String.valueOf(Math.random()) + '@example-th.com',
+                    TimeZoneSidKey = 'America/Los_Angeles',
+                    LocaleSidKey = 'en_US',
+                    EmailEncodingKey = 'UTF-8',
+                    LanguageLocaleKey = 'en_US',
+                    ProfileId = [SELECT Id FROM Profile WHERE Name = 'Fundraising and Development'].Id
+                );
+
     config_trailhead_task_ownership_marco:
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
@@ -598,17 +634,13 @@ flows:
             11:
                 task: restore_triggers
             12:
-                task: dx
-                options:
-                    command: "force:user:create --definitionfile datasets/trailhead/sunil.json"
+                task: config_trailhead_create_user_sunil
             13:
                 task: config_trailhead_task_ownership_sunil
             14:
                 task: config_trailhead_deactivate_user
             15:
-                task: dx
-                options:
-                    command: "force:user:create --definitionfile datasets/trailhead/marco.json"
+                task: config_trailhead_create_user_marco
             16:
                 task: config_trailhead_task_ownership_marco
 
@@ -849,7 +881,9 @@ plans:
                         name: Load Trailhead Data Set
                     restore_triggers:
                         name: Finalize Data Load
-                    dx:
+                    config_trailhead_create_user_marco:
+                        name: Create User
+                    config_trailhead_create_user_sunil:
                         name: Create User
                     config_trailhead_task_ownership_sunil:
                         name: Assign Task Ownership

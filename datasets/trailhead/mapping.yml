@@ -24,32 +24,6 @@ Insert npsp__Batch__c:
     npsp__Description__c: npsp__Description__c
     npsp__Number_of_Items__c: npsp__Number_of_Items__c
     npsp__Object_Name__c: npsp__Object_Name__c
-Insert npsp__DataImportBatch__c:
-  sf_object: npsp__DataImportBatch__c
-  table: npsp__DataImportBatch__c
-  fields:
-    Id: sf_id
-    Name: Name
-    npsp__Account_Custom_Unique_ID__c: npsp__Account_Custom_Unique_ID__c
-    npsp__Active_Fields__c: npsp__Active_Fields__c
-    npsp__Batch_Description__c: npsp__Batch_Description__c
-    npsp__Batch_Process_Size__c: npsp__Batch_Process_Size__c
-    npsp__Contact_Custom_Unique_ID__c: npsp__Contact_Custom_Unique_ID__c
-    npsp__Contact_Matching_Rule__c: npsp__Contact_Matching_Rule__c
-    npsp__Donation_Date_Range__c: npsp__Donation_Date_Range__c
-    npsp__Donation_Matching_Behavior__c: npsp__Donation_Matching_Behavior__c
-    npsp__Donation_Matching_Implementing_Class__c: npsp__Donation_Matching_Implementing_Class__c
-    npsp__Donation_Matching_Rule__c: npsp__Donation_Matching_Rule__c
-    npsp__Expected_Count_of_Gifts__c: npsp__Expected_Count_of_Gifts__c
-    npsp__Expected_Total_Batch_Amount__c: npsp__Expected_Total_Batch_Amount__c
-    npsp__GiftBatch__c: npsp__GiftBatch__c
-    npsp__Last_Processed_On__c: npsp__Last_Processed_On__c
-    npsp__Post_Process_Implementing_Class__c: npsp__Post_Process_Implementing_Class__c
-    npsp__Process_Using_Scheduled_Job__c: npsp__Process_Using_Scheduled_Job__c
-    npsp__Records_Failed__c: npsp__Records_Failed__c
-    npsp__Records_Successfully_Processed__c: npsp__Records_Successfully_Processed__c
-    npsp__RequireTotalMatch__c: npsp__RequireTotalMatch__c
-    npsp__Run_Opportunity_Rollups_while_Processing__c: npsp__Run_Opportunity_Rollups_while_Processing__c
 Insert npsp__General_Accounting_Unit__c:
   sf_object: npsp__General_Accounting_Unit__c
   table: npsp__General_Accounting_Unit__c
