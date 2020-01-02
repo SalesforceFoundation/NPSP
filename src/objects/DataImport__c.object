@@ -68,6 +68,7 @@
         <externalId>false</externalId>
         <label>Account1 Imported</label>
         <referenceTo>Account</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Account1 Imported)</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -171,6 +172,7 @@
         <externalId>false</externalId>
         <label>Account2 Imported</label>
         <referenceTo>Account</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Account2 Imported)</relationshipLabel>
         <relationshipName>Data_Imports1</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -296,6 +298,7 @@
         <externalId>false</externalId>
         <label>Contact1 Imported</label>
         <referenceTo>Contact</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Contact1 Imported)</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -499,6 +502,7 @@
         <externalId>false</externalId>
         <label>Contact2 Imported</label>
         <referenceTo>Contact</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Contact2 Imported)</relationshipLabel>
         <relationshipName>Data_Imports1</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -702,6 +706,7 @@
         <externalId>false</externalId>
         <label>Donation Imported</label>
         <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Opportunity1 Imported)</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -725,6 +730,7 @@
         <inlineHelpText>Opportunity.CampaignId</inlineHelpText>
         <label>Donation Campaign Source</label>
         <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -1048,6 +1054,7 @@
         <externalId>false</externalId>
         <label>Home Address Imported</label>
         <referenceTo>Address__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -1112,7 +1119,7 @@
         <externalId>false</externalId>
         <label>Household Account Imported</label>
         <referenceTo>Account</referenceTo>
-        <relationshipLabel>NPSP Data Imports (Household Account Imported)</relationshipLabel>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
         <relationshipName>NPSP_Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>

@@ -14,17 +14,17 @@
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The contact&apos;s full name. --></help>
+        <help><!-- The full name of the Contact who gets this soft credit (read only). --></help>
         <label><!-- Contact Name --></label>
         <name>Contact_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The OpportunityContactRole this soft credit applies to. --></help>
+        <help><!-- The Opportunity Contact Role this soft credit applies to. --></help>
         <label><!-- Contact Role ID --></label>
         <name>Contact_Role_ID__c</name>
     </fields>
     <fields>
-        <help><!-- The contact who gets this soft credit. --></help>
+        <help><!-- Lookup to the Contact who gets this soft credit. --></help>
         <label><!-- Contact --></label>
         <name>Contact__c</name>
         <relationshipLabel><!-- Partial Soft Credits --></relationshipLabel>
