@@ -4,6 +4,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/AffiliationPageObject.py
 ...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
@@ -23,21 +24,16 @@ Setup Test Data
 *** Test Cases ***
 
 Create Secondary Affiliation for Contact
-    [tags]  unstable
     [Documentation]                   Creates a contact, organization account and secondary affiliation via API 
-    ...                               Open contact and delete affiliation from organization affiliation related list     
-    ...                               Verifies that contact does not show under affiliated contacts in the account page
+    ...                               Open contact and open affiliation record. Edit affiliation record to select Primary checkbox and save. 
+    ...                               Verify that Affiliation now shows under Primary affiliation field.
     [tags]                            W-037651                     feature:Affiliations     
     Go To Page                        Details                      Contact                 object_id=&{contact}[Id]
     Select Tab                        Related
     Click Related Item Link           Organization Affiliations    &{account}[Name]
-    # To make sure the field we want to edit has rendered,
-    # scroll to the one below it
-    Scroll Element Into View  text:Primary
-    Click Button  title:Edit Primary
-    Wait For Locator  checkbox.model-checkbox  Primary
-    Select Lightning Checkbox    Primary
-    Click Button    Save
+    Current Page Should be            Details                      Affiliation
+    Edit Record Checkbox              Primary                      checked
+    Click Button                      Save
     Go To Page                        Details                      Contact                 object_id=&{contact}[Id]
     Select Tab                        Details
-    Verify Field Value                Primary Affiliation          contains                &{account}[Name]    
+    Confirm Field Value                Primary Affiliation          contains                &{account}[Name]    

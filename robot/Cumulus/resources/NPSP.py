@@ -279,20 +279,20 @@ class NPSP(SalesforceRobotLibraryBase):
         assert list_found, "locator not found"  
  
             
-    def verify_field_value(self, field,status,value):
-        """If status is 'contains' then the specified value should be present in the field
-                        'does not contain' then the specified value should not be present in the field
-        """
-        locator=npsp_lex_locators['check_field'].format(field)
-        actual_value=self.selenium.get_webelement(locator).text
-        if status == "contains":
-            assert value == actual_value, "Expected value to be {} but found {}".format(
-                value, actual_value
-            )
-        elif status == "does not contain":
-             assert value != actual_value, "Expected value {} and actual value {} should not match".format(
-                value, actual_value
-            )         
+#     def verify_field_value(self, field,status,value):
+#         """If status is 'contains' then the specified value should be present in the field
+#                         'does not contain' then the specified value should not be present in the field
+#         """
+#         locator=npsp_lex_locators['check_field'].format(field)
+#         actual_value=self.selenium.get_webelement(locator).text
+#         if status == "contains":
+#             assert value == actual_value, "Expected value to be {} but found {}".format(
+#                 value, actual_value
+#             )
+#         elif status == "does not contain":
+#              assert value != actual_value, "Expected value {} and actual value {} should not match".format(
+#                 value, actual_value
+#             )         
     
     
     def verify_record(self, name):
@@ -413,15 +413,21 @@ class NPSP(SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['manage_hh_page']['address_link'].format(title)
         self.selenium.get_webelement(locator).click()      
     
-    def select_lightning_checkbox(self,title):
-        """Clicks on a checkbox using field name"""
+    def set_checkbutton_to(self,title,status):
+        """If status is 'checked' then checks the box if its not already checked. Prints a warning msg if already checked
+          'unchecked' then unchecks the box if its not already checked. Prints a warning msg if already unchecked
+        """
         cb_found=False
         locators = npsp_lex_locators["checkbox"].values()
 
         for i in locators:
             locator = i.format(title)
             if self.check_if_element_exists(locator):
-                self.selenium.get_webelement(locator).click()
+                checkbox=self.selenium.get_webelement(locator)
+                if (status == 'checked' and checkbox.is_selected() == False) or (status == 'unchecked' and checkbox.is_selected() == True):
+                    self.selenium.click_element(checkbox)
+                else:
+                    self.builtin.log("This checkbox is already in the expected status", "WARN")     
                 cb_found = True
                 break
 
@@ -1293,7 +1299,20 @@ class NPSP(SalesforceRobotLibraryBase):
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
         self.salesforce.populate_lookup_field(field,value)
-        
+    
+    def edit_record_checkbox(self,field,status):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field
+           checks if status is 'checked' 
+           unchecks if status in 'unchecked'"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
+        self.set_checkbutton_to(field,status)    
         
     def save_record(self): 
         """Saves record by clicking on footer button 'Save'"""
