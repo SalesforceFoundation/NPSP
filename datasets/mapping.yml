@@ -24,7 +24,7 @@ Address__c:
         Seasonal_End_Month__c: Seasonal_End_Month__c
         Seasonal_End_Day__c: Seasonal_End_Day__c
     lookups:
-        Household_Account__c: 
+        Household_Account__c:
             table: Account
 Contact:
     sf_object: Contact
@@ -39,8 +39,13 @@ Contact:
     lookups:
         AccountId:
             table: Account
-        Primary_Affiliation__c: 
+        Primary_Affiliation__c:
             table: Account
+Campaign:
+    sf_object: Campaign
+    table: Campaign
+    fields:
+        Name: name
 npe03__Recurring_Donation__c:
     sf_object: npe03__Recurring_Donation__c
     table: npe03__Recurring_Donation__c
@@ -50,6 +55,14 @@ npe03__Recurring_Donation__c:
         npe03__Date_Established__c: npe03__Date_Established__c
         npe03__Schedule_Type__c: npe03__Schedule_Type__c
         npe03__Open_Ended_Status__c: npe03__Open_Ended_Status__c
+        npe03__Last_Payment_Date__c: npe03__Last_Payment_Date__c
+        npe03__Next_Payment_Date__c: npe03__Next_Payment_Date__c
+        Day_of_Month__c: Day_of_Month__c
+        InstallmentFrequency__c: InstallmentFrequency__c
+        StartDate__c: StartDate__c
+        PaymentMethod__c: PaymentMethod__c
+        RecurringType__c: RecurringType__c
+        Status__c: Status__c
     lookups:
         npe03__Contact__c:
             table: Contact
@@ -63,12 +76,14 @@ Opportunity:
         CloseDate: close_date
         npe01__Do_Not_Automatically_Create_Payment__c: dont_create_payments
     lookups:
-        AccountId: 
+        AccountId:
             table: Account
-        Primary_Contact__c: 
+        Primary_Contact__c:
             table: Contact
-        npe03__Recurring_Donation__c: 
+        npe03__Recurring_Donation__c:
             table: npe03__Recurring_Donation__c
+        CampaignId:
+            table: Campaign
 OpportunityContactRole:
     sf_object: OpportunityContactRole
     table: OpportunityContactRole
@@ -76,18 +91,9 @@ OpportunityContactRole:
         Role: Role
         IsPrimary: IsPrimary
     lookups:
-        ContactId: 
+        ContactId:
             table: Contact
         OpportunityId:
-            table: Opportunity
-npe01__OppPayment__c:
-    sf_object: npe01__OppPayment__c
-    table: npe01__OppPayment__c
-    fields:
-        npe01__Payment_Amount__c: npe01__Payment_Amount__c
-        npe01__Payment_Date__c: npe01__Payment_Date__c
-    lookups:
-        npe01__Opportunity__c:
             table: Opportunity
 Partial_Soft_Credit__c:
     sf_object: Partial_Soft_Credit__c
@@ -100,6 +106,18 @@ Partial_Soft_Credit__c:
             table: Contact
         Opportunity__c:
             table: Opportunity
+npe01__OppPayment__c:
+    sf_object: npe01__OppPayment__c
+    table: npe01__OppPayment__c
+    fields:
+        npe01__Payment_Amount__c: npe01__Payment_Amount__c
+        npe01__Payment_Date__c: npe01__Payment_Date__c
+        npe01__Scheduled_Date__c: npe01__Scheduled_Date__c
+        npe01__Paid__c: npe01__Paid__c
+        npe01__Written_Off__c: npe01__Written_Off__c
+    lookups:
+        npe01__Opportunity__c:
+            table: Opportunity
 General_Accounting_Unit__c:
     sf_object: General_Accounting_Unit__c
     table: General_Accounting_Unit__c
@@ -110,11 +128,14 @@ Allocation__c:
     table: Allocation__c
     fields:
         Percent__c: Percent__c
+        Amount__c: Amount__c
     lookups:
         Opportunity__c:
             table: Opportunity
         General_Accounting_Unit__c:
             table: General_Accounting_Unit__c
+        Recurring_Donation__c:
+            table: npe03__Recurring_Donation__c
 npe4__Relationship__c:
     sf_object: npe4__Relationship__c
     table: npe4__Relationship__c
@@ -125,11 +146,6 @@ npe4__Relationship__c:
             table: Contact
         npe4__RelatedContact__c:
             table: Contact
-Campaign:
-    sf_object: Campaign
-    table: Campaign
-    fields:
-        Name: name
 CampaignMember:
     sf_object: CampaignMember
     table: CampaignMember
@@ -140,3 +156,16 @@ CampaignMember:
             table: Contact
         CampaignId:
             table: Campaign
+Level__c:
+    sf_object: Level__c
+    table: Level__c
+    fields:
+        Name: Name
+        Active__c: Active__c
+        Description__c: Description__c
+        Level_Field__c: Level_Field__c
+        Maximum_Amount__c: Maximum_Amount__c
+        Minimum_Amount__c: Minimum_Amount__c
+        Previous_Level_Field__c: Previous_Level_Field__c
+        Source_Field__c: Source_Field__c
+        Target__c: Target__c
