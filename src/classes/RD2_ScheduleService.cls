@@ -534,7 +534,7 @@ public without sharing class RD2_ScheduleService {
         return schedulesByRdId;
     }
 
-    public List<ActiveSchedule> getCurrentAndFutureSchedules(npe03__Recurring_Donation__c rd) {
+    public List<ActiveSchedule> getVisualizedSchedules(npe03__Recurring_Donation__c rd) {
         List<ActiveSchedule> activeSchedules = new List<ActiveSchedule>();
 
         if (rd == null) {

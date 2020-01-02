@@ -35,7 +35,7 @@
 *
 */
 @IsTest(IsParallel=true)
-private with sharing class RD2_VisualizeScheduleControllerTest {
+private with sharing class RD2_ScheduleControllerTest {
 
     /****
     * @description Creates data required for unit tests
