@@ -207,8 +207,8 @@ private class RD2_OpportunityEvaluation_TEST {
     private static void shouldCreateNextOppWhenCloseDateIsInFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        final Date yesterday = START_DATE.addMonths(1);
-        final Date today = yesterday.addDays(1);
+        final Date prevCloseDate = START_DATE.addMonths(1);
+        final Date today = prevCloseDate.addDays(1);
         final Date nextCloseDate = START_DATE.addMonths(2);
         RD2_ScheduleService.currentDate = today;
 
@@ -217,7 +217,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         insert getOpportunityBuilder(rd)
             .withOpenStage()
-            .withCloseDate(yesterday)
+            .withCloseDate(prevCloseDate)
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
@@ -228,7 +228,7 @@ private class RD2_OpportunityEvaluation_TEST {
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
 
-        System.assertEquals(yesterday, oppById.remove(opps[0].Id).CloseDate, 
+        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
             'Close Date should be unchanged for the existing Opp');
         System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate, 
             'Close Date on the new Opp should match next Close Date');
@@ -242,8 +242,8 @@ private class RD2_OpportunityEvaluation_TEST {
     private static void shouldCreateNextOppWhenInstallmentPeriodIs1stAnd15th() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        final Date yesterday = START_DATE.addMonths(1);
-        final Date today = yesterday.addDays(1);
+        final Date prevCloseDate = START_DATE.addMonths(1);
+        final Date today = prevCloseDate.addDays(1);
         final Date nextCloseDate = START_DATE.addMonths(2).toStartOfMonth();
         RD2_ScheduleService.currentDate = today;
 
@@ -255,7 +255,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         insert getOpportunityBuilder(rd)
             .withClosedWonStage()
-            .withCloseDate(yesterday)
+            .withCloseDate(prevCloseDate)
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
@@ -266,7 +266,7 @@ private class RD2_OpportunityEvaluation_TEST {
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
 
-        System.assertEquals(yesterday, oppById.remove(opps[0].Id).CloseDate, 
+        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
             'Close Date should be unchanged for the existing Opp');
         System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate, 
             'Close Date on the new Opp should match next Close Date');
@@ -387,9 +387,14 @@ private class RD2_OpportunityEvaluation_TEST {
         ];
     }
 
+    /****
+    * @description Verifies batch has run
+    * @param itemsProcessed Number of batch iterations
+    * @return void
+    */
     private static void assertBatchJobIteration(Integer itemsProcessed) {
         AsyncApexJob job = jobGateway.getRecord('RD2_OpportunityEvaluation_BATCH');
-        System.assertEquals(itemsProcessed, job.JobItemsProcessed, 'The batch should process one batch iteration');
+        System.assertEquals(itemsProcessed, job.JobItemsProcessed, 'The number of batch iteration should match');
     }
 
 
