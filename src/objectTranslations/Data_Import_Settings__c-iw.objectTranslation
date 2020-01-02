@@ -36,6 +36,17 @@
         <name>Batch_Size__c</name>
     </fields>
     <fields>
+        <help><!-- JSON for the CMT deployment result
+{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
+        <label><!-- CMT API Deployment Result --></label>
+        <name>CMT_API_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- ID of Custom Metadata deployment --></help>
+        <label><!-- CMT Deployment ID --></label>
+        <name>CMT_Deployment_ID__c</name>
+    </fields>
+    <fields>
         <help>שדה אופציונלי של מזהה ייחודי, המשמש להתאמת אנשי קשר</help>
         <label>מזהה איש קשר ייחודי ומותאם אישית</label>
         <name>Contact_Custom_Unique_ID__c</name>
@@ -44,6 +55,11 @@
         <help>מציין איזה כלל יש ליישם בעת ניסיון להתאים אנשי קשר ברשומות יבוא נתונים, לאנשי קשר קיימים.</help>
         <label>כלל התאמת אנשי קשר</label>
         <name>Contact_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help><!-- The custom metadata api name of the Data Import Field Mapping Set record that should be used by default. --></help>
+        <label><!-- Default Data Import Field Mapping Set --></label>
+        <name>Default_Data_Import_Field_Mapping_Set__c</name>
     </fields>
     <fields>
         <help><!-- Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date. --></help>
@@ -64,6 +80,11 @@
         <help><!-- Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field. --></help>
         <label><!-- Donation Matching Rule --></label>
         <name>Donation_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help><!-- Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping. --></help>
+        <label><!-- Field Mapping Method --></label>
+        <name>Field_Mapping_Method__c</name>
     </fields>
     <fields>
         <help><!-- The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records. --></help>

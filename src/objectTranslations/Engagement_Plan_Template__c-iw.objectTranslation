@@ -20,6 +20,10 @@
         <plural>true</plural>
         <value><!-- הEngagement Plan Template --></value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage EP Template FS --></label>
+        <name>ManageEPTemplateFS</name>
+    </fieldSets>
     <fields>
         <help>חישוב מחדש של תאריך היעד של משימת צאצא לפי המועד שבו משימת האב הושלמה בפועל.</help>
         <label>עדכן אוטומטית תאריך יעד של משימת צאצא</label>

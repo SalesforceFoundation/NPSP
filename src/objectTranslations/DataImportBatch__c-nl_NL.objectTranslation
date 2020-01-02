@@ -2,80 +2,103 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Data Import Batch --></value>
+        <value>NPSP-Gegevensimportbatch</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- NPSP Data Import Batch --></value>
+        <value>NPSP-Gegevensimportbatches</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Batch Gift Entry Tab Columns --></label>
+        <name>BatchGiftEntryTabColumns</name>
+    </fieldSets>
     <fields>
-        <help>Een optioneel Uniek Id veld voor het gebruik van Organisatie Account matching.</help>
-        <label>Account Aangepast Uniek ID</label>
+        <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Organisatieaccounts</help>
+        <label>Aangepast Uniek ID voor Account</label>
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help>Een optionele omschrijving voor deze Batch.</help>
-        <label>Batch Omschrijving</label>
+        <label>Actieve Velden</label>
+        <name>Active_Fields__c</name>
+    </fields>
+    <fields>
+        <help>Een optionele beschrijving van deze batch.</help>
+        <label>Batchomschrijving</label>
         <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <help>Het aantal NPSP Data Import records om in één keer te verwerken in elke Batch.</help>
-        <label>Batch Verwerkingsgrootte</label>
+        <help>Het aantal records om tegelijkertijd te verwerken in elke batch.</help>
+        <label>Verwerkingsgrootte van Batch</label>
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <help>Een optioneel Uniek Id veld voor het gebruik van Contactpersoon matching.</help>
-        <label>Contactpersoon Aangepast Uniek ID</label>
+        <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Contactpersonen</help>
+        <label>Aangepast Uniek ID voor Contactpersoon</label>
         <name>Contact_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help>Bepaalt welke Regel gevolgd moet worden bij het matchen van Contactpersonen met Data Import Records.</help>
-        <label>Contactpersoon Matching Regel</label>
+        <help>Geeft aan welke regel moet worden gevolgd wanneer er geprobeerd wordt overeenkomsten te vinden tussen Contactpersonen in Gegevensimportrecords en bestaande Contactpersonen.</help>
+        <label>Contactpersoonovereenkomstregel</label>
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help>Voer het aantal dagen in vanaf de Donatiedatum om een reeks te bepalen bij het zoeken naar een matchende Opp of Betaling. De Data Import kiest een matchende Opp of Betaling die in de reeks valt en het dichtst ligt in de buurt van de Donatiedatum.</help>
+        <help>Voer het aantal dagen vanaf de Donatiedatum in dat moet worden overwogen bij het zoeken naar een overeenk. Opp. of Betaling. NPSP kiest de overeenk. Opp. of Betaling waarvan de datum binnen het aantal dagen valt EN die het dichtst bij de Donatiedatum is.</help>
         <label>Aantal Dagen vanaf Donatiedatum</label>
         <name>Donation_Date_Range__c</name>
     </fields>
     <fields>
-        <help>Bepaalt hoe de Data Import omgaat met een Matching Gift. Er moet een waarde gekozen worden.</help>
-        <label>Donatie Matching Gedrag</label>
+        <help>Definieert hoe NPSP moet omgaan met overeenkomende Donaties.</help>
+        <label>Overeenkomstenpatroon voor donatie</label>
         <name>Donation_Matching_Behavior__c</name>
         <picklistValues>
             <masterLabel>Best Match</masterLabel>
-            <translation>Beste Match</translation>
+            <translation>Beste Overeenkomst</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Best Match or Create</masterLabel>
-            <translation>Beste Match of Creëer</translation>
+            <translation>Beste Overeenkomst of Maken</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Do Not Match</masterLabel>
-            <translation>Niet Matchen</translation>
+            <translation>Niet Laten Overeenkomen</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>No Match</masterLabel>
-            <translation>Geen Match</translation>
+            <translation>Geen Overeenkomst</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Single Match</masterLabel>
-            <translation>Eén Match</translation>
+            <translation>Enkelvoudige Overeenkomst</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Single Match or Create</masterLabel>
-            <translation>Eén Match of Creëer</translation>
+            <translation>Enkelvoudige Overeenkomst of Maken</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help>De developer naam van een Apex Klasse dat de BDI_IMatching interface implementeert voor Donaties. Leeg laten om het over te laten aan NPSP.</help>
-        <label>Donatie Matching Implementatie Klasse</label>
+        <help>De developernaam van een Apex-klasse die de BDI_IMatching-interface voor Donaties implementeert. Laat dit leeg om overeenkomst over te laten aan NPSP.</help>
+        <label>Implementatieklasse Overeenkomst Donatie</label>
         <name>Donation_Matching_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help>Bepaalt op welke velden gematcht moet worden bij het matchen van Donaties (Opportunities en Betalingen) met Data import records. Klik op Control of Command om meerdere velden te selecteren.</help>
-        <label>Donatie Matching Regel</label>
+        <help>Geeft aan welke velden moeten overeenkomen wanneer wordt geprobeerd Donaties in batchrecords te laten overeenkomen met bestaande Opportunities en Betalingen.</help>
+        <label>Donatieovereenkomstregel</label>
         <name>Donation_Matching_Rule__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
+        <label>Verwachte telling van giften</label>
+        <name>Expected_Count_of_Gifts__c</name>
+    </fields>
+    <fields>
+        <help>Het verwachte totale bedrag van alle giften ingevoerd in deze Batch.</help>
+        <label>Verwachte totale bedrag van batch</label>
+        <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Deze batch is bedoeld voor gebruik met Batchgiftinvoer. Batches worden automatisch gemarkeerd als giftbatches wanneer ze via het tabblad Batchgiftinvoer worden ingesteld. Dit veld handmatig wijzigen, kan onbedoelde gevolgen hebben.</help>
+        <label>Giftbatch</label>
+        <name>GiftBatch__c</name>
     </fields>
     <fields>
         <help>De datum en tijd van de laatste verwerking van de Batch.</help>
@@ -83,35 +106,40 @@
         <name>Last_Processed_On__c</name>
     </fields>
     <fields>
-        <help>De developer naam van een Apex Klasse dat de BDI__PostProcess interface implementeert voor NPSP Data Import records.</help>
-        <label>Na Verwerking Implementatie Klasse</label>
+        <help>De developernaam van een Apex-klasse die de BDI__PostProcess-interface voor NPSP-batchrecords implementeert.</help>
+        <label>Implementatieklasse Na Verwerking</label>
         <name>Post_Process_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help>Indien aangevinkt wordt de NPSP Data Import Batch automatisch verwerkt tijdens de bijbehorende geplande opdracht.</help>
-        <label>Verwerking in Geplande Opdracht</label>
+        <help>Indien aangevinkt, wordt de batch automatisch verwerkt in overeenkomst met de planning voor de gekoppelde opdracht.</help>
+        <label>Verwerken met Geplande Opdracht</label>
         <name>Process_Using_Scheduled_Job__c</name>
     </fields>
     <fields>
-        <help>Laat het aantal records zien die niet succesvol zijn verwerkt op de datum in het Laatst Verwerkt Op veld.</help>
+        <help>Laat het aantal records zien die niet succesvol zijn verwerkt op de datum in het veld Laatst Verwerkt Op.</help>
         <label>Records Mislukt</label>
         <name>Records_Failed__c</name>
     </fields>
     <fields>
-        <help>Laat het aantal records zien die succesvol zijn verwerkt op de datum in het Laatst Verwerkt Op veld.</help>
+        <help>Laat het aantal records zien die succesvol zijn verwerkt op de datum in het veld Laatst Verwerkt Op.</help>
         <label>Records Succesvol Verwerkt</label>
         <name>Records_Successfully_Processed__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch. --></help>
-        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <help>Wanneer aangevinkt, moet het totale aantal giften en het totale bedrag overeenkomen met de verwachte totalen die voor de batch zijn opgegeven.</help>
+        <label>Overeenkomst Verwachte Totalen vereisen</label>
+        <name>RequireTotalMatch__c</name>
+    </fields>
+    <fields>
+        <help>Wanneer aangevinkt, berekent NPSP donortotaliseringen bij verwerking van donaties. Wanneer niet aangevinkt, worden donortotaliseringen berekend tijdens de standaard nachtelijke Geplande Opdracht. Deze selectie kan de verwerking van deze batch vertragen.</help>
+        <label>Donatietotalisering met Batch berekenen</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
-            <label>Contactpersoon en Account Matching</label>
+            <label>Overeenkomst Contactpersoon en Account</label>
             <section>Contact &amp; Account Matching</section>
         </sections>
         <sections>
@@ -119,17 +147,17 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label>Donatie Matching</label>
+            <label>Donatieovereenkomst</label>
             <section>Donation Matching</section>
         </sections>
         <sections>
-            <label>Rekbaarheid</label>
+            <label>Uitbreidbaarheid</label>
             <section>Extensibility</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+    <nameFieldLabel>Batchnaam</nameFieldLabel>
     <webLinks>
-        <label>Verwerk Batch</label>
+        <label>Batch verwerken</label>
         <name>Process_Batch</name>
     </webLinks>
 </CustomObjectTranslation>
