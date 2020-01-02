@@ -9,12 +9,12 @@
         <value><!-- Batch Data Entry Settings --></value>
     </caseValues>
     <fields>
-        <help>Si coché, la saisie de données par lot ne nommera pas les opportunités, même si les noms sont vides (non inclus sur la page BDE).</help>
-        <label>Permettre des noms d’opportunités vides</label>
+        <help>Si cette option est activée, la saisie de données par lots ne nommera jamais les opportunités, même si les noms sont vides (non inclus sur la page BDE).</help>
+        <label>Autoriser les noms d’opportunités vides</label>
         <name>Allow_Blank_Opportunity_Names__c</name>
     </fields>
     <fields>
-        <help>Ce paramètre génère automatiquement le nom de l’enregistrement pour les enregistrements d’opportunités saisis par lot en fonction de la valeur des champs saisis.</help>
+        <help>Ce paramètre génère automatiquement le nom de l’enregistrement pour les enregistrements d’opportunités saisis par lots en fonction de la valeur des champs saisis.</help>
         <label>Dénomination des opportunités</label>
         <name>Opportunity_Naming__c</name>
     </fields>

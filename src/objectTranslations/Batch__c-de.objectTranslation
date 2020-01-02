@@ -3,43 +3,47 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Batch --></value>
+        <value>Batch</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Batch --></value>
+        <value>Batches</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Batch --></value>
+        <value>Batch</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Batch --></value>
+        <value>Batches</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Batch --></value>
+        <value>Batches</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Batch --></value>
+        <value>Batches</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Batch --></value>
+        <value>Batch</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Batch --></value>
+        <value>Batches</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- BatchDetailView --></label>
+        <name>BatchDetailView</name>
+    </fieldSets>
     <fields>
         <label>Batchstatus</label>
         <name>Batch_Status__c</name>
@@ -61,11 +65,11 @@
         <name>Number_of_Items__c</name>
     </fields>
     <fields>
-        <help>API-Name des Objekts, von dem dies ein Batch ist</help>
+        <help>API-Name des Objekts, von dem dies ein Batch ist.</help>
         <label>Objektname</label>
         <name>Object_Name__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Batch Layout</layout>
         <sections>
@@ -73,5 +77,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+    <nameFieldLabel>Batchname</nameFieldLabel>
 </CustomObjectTranslation>
