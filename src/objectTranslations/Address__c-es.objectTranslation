@@ -2,15 +2,15 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Address --></value>
+        <value>Dirección</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Address --></value>
+        <value>Direcciones</value>
     </caseValues>
     <fields>
-        <help>Contiene la respuesta cruda o un mensaje de error.</help>
-        <label>Respuesta API</label>
+        <help>Contiene la respuesta sin procesar o un mensaje de error.</help>
+        <label>Respuesta de API</label>
         <name>API_Response__c</name>
     </fields>
     <fields>
@@ -34,464 +34,464 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Dependiendo del país y área, puede ser una ciudad, municipalidad o otra región cívica asociada a esta dirección.</help>
+        <help>Dependiendo del país y área, puede ser una ciudad, un municipio u otra región cívica asociada a esta dirección.</help>
         <label>Área administrativa</label>
         <name>Administrative_Area__c</name>
     </fields>
     <fields>
-        <help>Indica si se encontró más de una dirección valida al intentar validarlo con un servicio externo.</help>
+        <help>Indica si se encontró más de una dirección valida al intentar validarla con un servicio externo.</help>
         <label>Ambiguo</label>
         <name>Ambiguous__c</name>
     </fields>
     <fields>
-        <help><!-- The congressional district to which the address belongs pertains. --></help>
-        <label><!-- Congressional District --></label>
+        <help>El distrito electoral de la dirección</help>
+        <label>Distrito electoral</label>
         <name>Congressional_District__c</name>
     </fields>
     <fields>
-        <help><!-- Name of the county the address is located at. --></help>
-        <label><!-- County Name --></label>
+        <help>El nombre de la provincia o comarca en que se encuentra la dirección.</help>
+        <label>Nombre de provincia/comarca</label>
         <name>County_Name__c</name>
     </fields>
     <fields>
-        <help>Es esta la dirección por defecto a utilizar para esta familia y sus contactos?</help>
-        <label>Dirección por defecto</label>
+        <help>Indica si esta es la dirección predeterminada a utilizar para este hogar y sus contactos.</help>
+        <label>Dirección predeterminada</label>
         <name>Default_Address__c</name>
     </fields>
     <fields>
-        <label>Dirección de correo</label>
+        <label>Dirección de postal</label>
         <name>Formula_MailingAddress__c</name>
     </fields>
     <fields>
-        <label>Número de calle de correo</label>
+        <label>Número postal de calle</label>
         <name>Formula_MailingStreetAddress__c</name>
     </fields>
     <fields>
-        <help>Locación expresada en latitud y longitud.</help>
+        <help>La dirección expresada como latitud y longitud.</help>
         <label>Geolocalización</label>
         <name>Geolocation__c</name>
     </fields>
     <fields>
-        <help>La cuenta a la que pertenece esta dirección</help>
+        <help>Consulta de la cuenta asociada a esta dirección.</help>
         <label>Cuenta</label>
         <name>Household_Account__c</name>
         <relationshipLabel>Direcciones</relationshipLabel>
     </fields>
     <fields>
-        <help>La fecha de fin más reciente cuando esta dirección fue usada en esta familia.</help>
-        <label>Último día de fin</label>
+        <help>La fecha de finalización más reciente en la que se utilizó esta dirección. Normalmente se utiliza con la fecha de inicio más reciente para realizar un seguimiento de un intervalo de fechas de una dirección que no se está utilizando.</help>
+        <label>Fecha de finalización más reciente</label>
         <name>Latest_End_Date__c</name>
     </fields>
     <fields>
-        <help>La fecha de inicio más reciente cuando esta dirección fue usada en esta familia.</help>
-        <label>Último día de inicio</label>
+        <help>La fecha de inicio más reciente en la que se utilizó esta dirección. Normalmente se utiliza con la fecha de finalización más reciente para realizar un seguimiento de un intervalo de fechas de una dirección que no se está utilizando.</help>
+        <label>Fecha de inicio más reciente</label>
         <name>Latest_Start_Date__c</name>
     </fields>
     <fields>
-        <label>Ciudad de correo</label>
+        <label>Ciudad postal</label>
         <name>MailingCity__c</name>
     </fields>
     <fields>
-        <label>País</label>
+        <label>País postal</label>
         <name>MailingCountry__c</name>
     </fields>
     <fields>
-        <label>Código postal de correo</label>
+        <label>Código postal</label>
         <name>MailingPostalCode__c</name>
     </fields>
     <fields>
-        <label>Estado o provincia de correo</label>
+        <label>Estado/Provincia postal</label>
         <name>MailingState__c</name>
     </fields>
     <fields>
-        <label>Calle2 de correo</label>
+        <label>Calle2 postal</label>
         <name>MailingStreet2__c</name>
     </fields>
     <fields>
-        <label>Calle de correo</label>
+        <label>Calle postal</label>
         <name>MailingStreet__c</name>
     </fields>
     <fields>
-        <help>Guarda la dirección como fue completada antes de la verificación con un servicio remoto, en caso de que alguna información se pierda en el proceso de verificación.</help>
-        <label>Dirección antes de verificación</label>
+        <help>Guarda la dirección como estaba antes de la verificación con un servicio remoto, en caso de que se pierda alguna información en el proceso de verificación.</help>
+        <label>Dirección previa a la verificación</label>
         <name>Pre_Verification_Address__c</name>
     </fields>
     <fields>
-        <help>El día del mes cuando esta dirección deja de reemplazar a la dirección por defecto.</help>
-        <label>Día de inicio de estación</label>
+        <help>El día del mes en el que esta dirección deja de reemplazar a la dirección predeterminada.</help>
+        <label>Día de finalización de estación</label>
         <name>Seasonal_End_Day__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
-            <translation><!-- 1 --></translation>
+            <translation>1</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>10</masterLabel>
-            <translation><!-- 10 --></translation>
+            <translation>10</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>11</masterLabel>
-            <translation><!-- 11 --></translation>
+            <translation>11</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>12</masterLabel>
-            <translation><!-- 12 --></translation>
+            <translation>12</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>13</masterLabel>
-            <translation><!-- 13 --></translation>
+            <translation>13</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>14</masterLabel>
-            <translation><!-- 14 --></translation>
+            <translation>14</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>15</masterLabel>
-            <translation><!-- 15 --></translation>
+            <translation>15</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>16</masterLabel>
-            <translation><!-- 16 --></translation>
+            <translation>16</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>17</masterLabel>
-            <translation><!-- 17 --></translation>
+            <translation>17</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>18</masterLabel>
-            <translation><!-- 18 --></translation>
+            <translation>18</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>19</masterLabel>
-            <translation><!-- 19 --></translation>
+            <translation>19</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>2</masterLabel>
-            <translation><!-- 2 --></translation>
+            <translation>2</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>20</masterLabel>
-            <translation><!-- 20 --></translation>
+            <translation>20</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>21</masterLabel>
-            <translation><!-- 21 --></translation>
+            <translation>21</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>22</masterLabel>
-            <translation><!-- 22 --></translation>
+            <translation>22</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>23</masterLabel>
-            <translation><!-- 23 --></translation>
+            <translation>23</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>24</masterLabel>
-            <translation><!-- 24 --></translation>
+            <translation>24</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>25</masterLabel>
-            <translation><!-- 25 --></translation>
+            <translation>25</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>26</masterLabel>
-            <translation><!-- 26 --></translation>
+            <translation>26</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>27</masterLabel>
-            <translation><!-- 27 --></translation>
+            <translation>27</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>28</masterLabel>
-            <translation><!-- 28 --></translation>
+            <translation>28</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>29</masterLabel>
-            <translation><!-- 29 --></translation>
+            <translation>29</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>3</masterLabel>
-            <translation><!-- 3 --></translation>
+            <translation>3</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>30</masterLabel>
-            <translation><!-- 30 --></translation>
+            <translation>30</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>31</masterLabel>
-            <translation><!-- 31 --></translation>
+            <translation>31</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
-            <translation><!-- 4 --></translation>
+            <translation>4</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>5</masterLabel>
-            <translation><!-- 5 --></translation>
+            <translation>5</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>6</masterLabel>
-            <translation><!-- 6 --></translation>
+            <translation>6</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>7</masterLabel>
-            <translation><!-- 7 --></translation>
+            <translation>7</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>8</masterLabel>
-            <translation><!-- 8 --></translation>
+            <translation>8</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>9</masterLabel>
-            <translation><!-- 9 --></translation>
+            <translation>9</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help>El mes del año cuando esta dirección deja de reemplazar a la dirección por defecto.</help>
-        <label>Mes de fin de estación</label>
+        <help>El mes del año en el que esta dirección deja de reemplazar a la dirección predeterminada.</help>
+        <label>Mes de finalización de estación</label>
         <name>Seasonal_End_Month__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
-            <translation><!-- 1 --></translation>
+            <translation>1</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>10</masterLabel>
-            <translation><!-- 10 --></translation>
+            <translation>10</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>11</masterLabel>
-            <translation><!-- 11 --></translation>
+            <translation>11</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>12</masterLabel>
-            <translation><!-- 12 --></translation>
+            <translation>12</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>2</masterLabel>
-            <translation><!-- 2 --></translation>
+            <translation>2</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>3</masterLabel>
-            <translation><!-- 3 --></translation>
+            <translation>3</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
-            <translation><!-- 4 --></translation>
+            <translation>4</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>5</masterLabel>
-            <translation><!-- 5 --></translation>
+            <translation>5</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>6</masterLabel>
-            <translation><!-- 6 --></translation>
+            <translation>6</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>7</masterLabel>
-            <translation><!-- 7 --></translation>
+            <translation>7</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>8</masterLabel>
-            <translation><!-- 8 --></translation>
+            <translation>8</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>9</masterLabel>
-            <translation><!-- 9 --></translation>
+            <translation>9</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help>El día del mes cuando esta dirección reemplaza a la dirección por defecto.</help>
+        <help>El día del mes en el que esta dirección reemplaza a la dirección predeterminada.</help>
         <label>Día de inicio de estación</label>
         <name>Seasonal_Start_Day__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
-            <translation><!-- 1 --></translation>
+            <translation>1</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>10</masterLabel>
-            <translation><!-- 10 --></translation>
+            <translation>10</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>11</masterLabel>
-            <translation><!-- 11 --></translation>
+            <translation>11</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>12</masterLabel>
-            <translation><!-- 12 --></translation>
+            <translation>12</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>13</masterLabel>
-            <translation><!-- 13 --></translation>
+            <translation>13</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>14</masterLabel>
-            <translation><!-- 14 --></translation>
+            <translation>14</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>15</masterLabel>
-            <translation><!-- 15 --></translation>
+            <translation>15</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>16</masterLabel>
-            <translation><!-- 16 --></translation>
+            <translation>16</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>17</masterLabel>
-            <translation><!-- 17 --></translation>
+            <translation>17</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>18</masterLabel>
-            <translation><!-- 18 --></translation>
+            <translation>18</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>19</masterLabel>
-            <translation><!-- 19 --></translation>
+            <translation>19</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>2</masterLabel>
-            <translation><!-- 2 --></translation>
+            <translation>2</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>20</masterLabel>
-            <translation><!-- 20 --></translation>
+            <translation>20</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>21</masterLabel>
-            <translation><!-- 21 --></translation>
+            <translation>21</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>22</masterLabel>
-            <translation><!-- 22 --></translation>
+            <translation>22</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>23</masterLabel>
-            <translation><!-- 23 --></translation>
+            <translation>23</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>24</masterLabel>
-            <translation><!-- 24 --></translation>
+            <translation>24</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>25</masterLabel>
-            <translation><!-- 25 --></translation>
+            <translation>25</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>26</masterLabel>
-            <translation><!-- 26 --></translation>
+            <translation>26</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>27</masterLabel>
-            <translation><!-- 27 --></translation>
+            <translation>27</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>28</masterLabel>
-            <translation><!-- 28 --></translation>
+            <translation>28</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>29</masterLabel>
-            <translation><!-- 29 --></translation>
+            <translation>29</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>3</masterLabel>
-            <translation><!-- 3 --></translation>
+            <translation>3</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>30</masterLabel>
-            <translation><!-- 30 --></translation>
+            <translation>30</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>31</masterLabel>
-            <translation><!-- 31 --></translation>
+            <translation>31</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
-            <translation><!-- 4 --></translation>
+            <translation>4</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>5</masterLabel>
-            <translation><!-- 5 --></translation>
+            <translation>5</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>6</masterLabel>
-            <translation><!-- 6 --></translation>
+            <translation>6</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>7</masterLabel>
-            <translation><!-- 7 --></translation>
+            <translation>7</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>8</masterLabel>
-            <translation><!-- 8 --></translation>
+            <translation>8</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>9</masterLabel>
-            <translation><!-- 9 --></translation>
+            <translation>9</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help>El mes del año cuando esta dirección reemplaza a la dirección por defecto.</help>
+        <help>El mes del año en el que esta dirección reemplaza a la dirección predeterminada.</help>
         <label>Mes de inicio de estación</label>
         <name>Seasonal_Start_Month__c</name>
         <picklistValues>
             <masterLabel>1</masterLabel>
-            <translation><!-- 1 --></translation>
+            <translation>1</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>10</masterLabel>
-            <translation><!-- 10 --></translation>
+            <translation>10</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>11</masterLabel>
-            <translation><!-- 11 --></translation>
+            <translation>11</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>12</masterLabel>
-            <translation><!-- 12 --></translation>
+            <translation>12</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>2</masterLabel>
-            <translation><!-- 2 --></translation>
+            <translation>2</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>3</masterLabel>
-            <translation><!-- 3 --></translation>
+            <translation>3</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>4</masterLabel>
-            <translation><!-- 4 --></translation>
+            <translation>4</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>5</masterLabel>
-            <translation><!-- 5 --></translation>
+            <translation>5</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>6</masterLabel>
-            <translation><!-- 6 --></translation>
+            <translation>6</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>7</masterLabel>
-            <translation><!-- 7 --></translation>
+            <translation>7</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>8</masterLabel>
-            <translation><!-- 8 --></translation>
+            <translation>8</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>9</masterLabel>
-            <translation><!-- 9 --></translation>
+            <translation>9</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The state lower district (such as a state assembly district) this address belongs to. --></help>
-        <label><!-- State Lower District --></label>
+        <help>El distrito inferior estatal (como un distrito de asamblea estatal) al que pertenece esta dirección.</help>
+        <label>Distrito inferior estatal</label>
         <name>State_Lower_District__c</name>
     </fields>
     <fields>
-        <help><!-- The state upper district (such as state senate district) this address belongs to. --></help>
-        <label><!-- State Upper District --></label>
+        <help>El distrito superior estatal (como un distrito de senado estatal) al que pertenece esta dirección.</help>
+        <label>Distrito superior estatal</label>
         <name>State_Upper_District__c</name>
     </fields>
     <fields>
-        <help>Si la dirección requiere verificación, hacer click en el botón de Verificar Dirección. Consultar los documentos de ayuda en el Power of Us Hub para más información.</help>
+        <help>Si la dirección requiere verificación, haga clic en la flecha de Mostrar más acciones en la esquina superior derecha y en Verificar dirección. Consulte la documentación de Power of Us Hub para más información sobre la verificación de direcciones.</help>
         <label>Estado de verificación</label>
         <name>Verification_Status__c</name>
     </fields>
@@ -500,7 +500,7 @@
         <label>Verificada</label>
         <name>Verified__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Address Layout</layout>
         <sections>
@@ -512,7 +512,7 @@
             <section>Seasonal Information</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Address ID --></nameFieldLabel>
+    <nameFieldLabel>Id. de Dirección</nameFieldLabel>
     <quickActions>
         <label>Actualizar dirección</label>
         <name>Update_Address</name>
