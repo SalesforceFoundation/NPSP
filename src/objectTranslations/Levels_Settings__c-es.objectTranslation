@@ -9,8 +9,16 @@
         <value><!-- Levels Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating levels. --></help>
-        <label><!-- Level Assignment Batch Size --></label>
+        <label>Hora de inicio de último trabajo: Cuenta</label>
+        <name>LastJobStartTimeAccount__c</name>
+    </fields>
+    <fields>
+        <label>Hora de inicio último trabajo: Contacto</label>
+        <name>LastJobStartTimeContact__c</name>
+    </fields>
+    <fields>
+        <help>Número de registros por lote para procesar cuando se vuelven a calcular los niveles.</help>
+        <label>Tamaño de lote de asignación de niveles</label>
         <name>Level_Assignment_Batch_Size__c</name>
     </fields>
     <gender><!-- Feminine --></gender>
