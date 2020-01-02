@@ -664,7 +664,7 @@ public with sharing class STG_SettingsManager_TEST {
         String displayedAutoCreationLabel = panel.installmentAutoCreationLabel;
 
         String installmentautoCreationSettingLabel = panel.installmentAutoCreationLabelMap.get(
-            Stg_Panel.stgService.stgRD.Installment_Opportunity_Auto_Creation__c);
+            Stg_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
         
         System.assertEquals(installmentautoCreationSettingLabel, displayedAutoCreationLabel,
             'The installment opp displayed label should matches the one stored in the NPSP setting');

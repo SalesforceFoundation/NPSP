@@ -201,7 +201,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
 
     public String installmentAutoCreationLabel {
         get {
-            installmentAutoCreationLabel = installmentAutoCreationLabelMap.get(STG_Panel.stgService.stgRD.Installment_Opportunity_Auto_Creation__c);
+            installmentAutoCreationLabel = installmentAutoCreationLabelMap.get(STG_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
             return installmentAutoCreationLabel;
         }
         private set;

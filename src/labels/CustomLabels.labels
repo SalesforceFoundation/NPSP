@@ -8324,7 +8324,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOpCeation</shortDescription>
-        <value>Tell NPSP how to behave on creating Recurring Donation's child opportunities.</value>
+        <value>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>

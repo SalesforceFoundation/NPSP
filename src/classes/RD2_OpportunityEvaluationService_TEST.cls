@@ -532,7 +532,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingMap = new Map<String, Object> {
-            'Installment_Opportunity_Auto_Creation__c' => autoCreationSettingString
+            'InstallmentOppAutoCreateOption__c' => autoCreationSettingString
         };
         setUpConfiguration(rdSettingMap);
     }

@@ -62,11 +62,11 @@
                 </div>
             </div>
             <div class="slds-form-element" style="{!IF(!isRD2Enabled, 'display:none', 'display:block')}">
-                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.Installment_Opportunity_Auto_Creation__c.Label}" for="IOAC" styleClass="slds-form-element__label" />
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.InstallmentOppAutoCreateOption__c.Label}" for="IOAC" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <div class="slds-form-element__control">
                         <apex:outputText value="{!installmentAutoCreationLabel}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                        <apex:selectList value="{!stgService.stgRD.Installment_Opportunity_Auto_Creation__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="IOAC" html-aria-describedby="{!$Component.IOACHelp}" styleClass="slds-select" >
+                        <apex:selectList value="{!stgService.stgRD.InstallmentOppAutoCreateOption__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="IOAC" html-aria-describedby="{!$Component.IOACHelp}" styleClass="slds-select" >
                             <apex:selectOptions value="{!listInstallmentCreationOptions}" />
                         </apex:selectList>
                         <apex:outputPanel id="IOACHelp" layout="block">

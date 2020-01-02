@@ -588,7 +588,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Opportunity_Forecast_Months__c = 12;
             settings.npe03__Update_Check_Interval__c = 90;
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
-            settings.Installment_Opportunity_Auto_Creation__c = RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name();
+            settings.InstallmentOppAutoCreateOption__c = RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name();
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;
 
@@ -847,7 +847,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
         recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
         recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
-        recurringDonationsSettings.Installment_Opportunity_Auto_creation__c = settings.Installment_Opportunity_Auto_creation__c;
+        recurringDonationsSettings.InstallmentOppAutoCreateOption__c = settings.InstallmentOppAutoCreateOption__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 

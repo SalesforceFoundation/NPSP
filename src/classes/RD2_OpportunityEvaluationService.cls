@@ -159,14 +159,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     private Boolean evaluteInstallmentAutoCreationSetting(npe03__Recurring_Donation__c rd) {
-        if (rdSettings.Installment_Opportunity_Auto_Creation__c == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name() ||
-            String.isBlank(rdSettings.Installment_Opportunity_Auto_creation__c)) {
+        if (rdSettings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name() ||
+            String.isBlank(rdSettings.InstallmentOppAutoCreateOption__c)) {
             return true;
         }
-        else if (rdSettings.Installment_Opportunity_Auto_Creation__c == RD2_Constants.InstallmentCreation.Disable_First_Installment.name()) {
+        else if (rdSettings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_First_Installment.name()) {
             return !rd.npe03__Donations__r.isEmpty();
         }
-        else if (rdSettings.Installment_Opportunity_Auto_Creation__c == RD2_Constants.InstallmentCreation.Disable_All_Installments.name()) {
+        else if (rdSettings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_All_Installments.name()) {
             return false;
         }
         return false;

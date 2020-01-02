@@ -49,10 +49,10 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Installment_Opportunity_Auto_Creation__c</fullName>
-        <description>Controll the installment opportunity auto creation behavior</description>
+        <fullName>InstallmentOppAutoCreateOption__c</fullName>
+        <description>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Controll the installment opportunity auto creation behavior</inlineHelpText>
+        <inlineHelpText>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</inlineHelpText>
         <label>Installment Opportunity Auto-Creation</label>
         <length>50</length>
         <required>false</required>
