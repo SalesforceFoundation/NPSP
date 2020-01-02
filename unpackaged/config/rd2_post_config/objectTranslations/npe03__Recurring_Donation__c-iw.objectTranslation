@@ -20,4 +20,12 @@
         <label>Deprecated-סך הכול</label>
         <name>npe03__Total__c</name>
     </fields>
+    <fields>
+        <label><!-- Day Of Month --></label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last_Day</masterLabel>
+            <translation>היום האחרון של החודש</translation>
+        </picklistValues>
+    </fields>
 </CustomObjectTranslation>
