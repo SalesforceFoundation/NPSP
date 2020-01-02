@@ -5,8 +5,16 @@
         <value><!-- Levels Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating levels. --></help>
-        <label><!-- Level Assignment Batch Size --></label>
+        <label>前回のジョブ開始時間 : 団体</label>
+        <name>LastJobStartTimeAccount__c</name>
+    </fields>
+    <fields>
+        <label>前回のジョブ開始時間 : 個人</label>
+        <name>LastJobStartTimeContact__c</name>
+    </fields>
+    <fields>
+        <help>レベルの再計算時のバッチあたりの処理対象レコード数。</help>
+        <label>レベル割り当てバッチサイズ</label>
         <name>Level_Assignment_Batch_Size__c</name>
     </fields>
 </CustomObjectTranslation>

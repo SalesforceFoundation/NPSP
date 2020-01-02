@@ -3,56 +3,56 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Engagementplan-Aufgabe</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Engagementplan-Aufgaben</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Engagementplan-Aufgabe</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Engagementplan-Aufgaben</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Engagementplan-Aufgabe</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Engagementplan-Aufgaben</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Engagementplan-Aufgabe</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Engagementplan-Aufgaben</value>
     </caseValues>
     <fields>
-        <help>Dieses Feld ist dem Feld &quot;Zugewiesen zu&quot; der Aufgabe zugeordnet. Wenn es leer gelassen wird, wird die Aufgabe abhängig von der Leerzuweisungsregel der Vorlage zugewiesen.</help>
+        <help>Nachschlageassistent zu dem Benutzer, dem Sie die Aufgabe zuweisen wollen. Wenn dieses Feld leer gelassen wird, weist NPSP die Aufgabe basierend auf dem Standard-Empfänger der Engagementplan-Vorlage zu.</help>
         <label>Zugewiesen zu</label>
         <name>Assigned_To__c</name>
-        <relationshipLabel>Engagementplan-Aufgaben</relationshipLabel>
+        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
     </fields>
     <fields>
-        <help>Kommentare zur Aufgabe.</help>
+        <help>Zum Eingeben weitere Informationen zu der Aufgabe.</help>
         <label>Kommentare</label>
         <name>Comments__c</name>
     </fields>
     <fields>
-        <help>Die Anzahl der Tage für die Fälligkeit der Aufgabe ab dem Erstellungsdatum des Engagementplans oder dem Fälligkeitsdatum der übergeordneten Aufgabe.</help>
+        <help>Die Anzahl der Tage nach dem Erstellungsdatum des Engagementplans, an dem diese Aufgabe fällig ist. Bei abhängigen Aufgaben die Anzahl der Tage nach dem Fälligkeitsdatum der übergeordneten Aufgabe, an dem diese Aufgabe fällig ist.</help>
         <label>Tage nach</label>
         <name>Days_After__c</name>
     </fields>
@@ -102,11 +102,11 @@
     </fields>
     <fields>
         <help>Der Status einer Aufgabe. Abhängige Aufgaben erhalten den Status &quot;Auf übergeordnete Aufgabe warten&quot;, bis die übergeordnete Aufgabe abgeschlossen ist.</help>
-        <label><!-- Status --></label>
+        <label>Status</label>
         <name>Status__c</name>
         <picklistValues>
             <masterLabel>Completed</masterLabel>
-            <translation>Abgeleistet</translation>
+            <translation>Abgeschlossen</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Deferred</masterLabel>
@@ -146,7 +146,7 @@
             <translation>Sonstige</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Engagement Plan Task Layout</layout>
         <sections>
@@ -154,5 +154,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Subject --></nameFieldLabel>
+    <nameFieldLabel>Betreff</nameFieldLabel>
 </CustomObjectTranslation>
