@@ -5,64 +5,104 @@
         <value><!-- Customizable Rollup Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- JSON for the CMT deployment result
-{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
-        <label><!-- CMT API Deployment Result --></label>
+        <help>オンにすると、団体ハードクレジット (スキューでない) 夜間ジョブは、これらの団体の最近更新された支援を探し、再計算で選択される団体の数を制限します。これにより、カスタマイズ可能な積み上げ集計の夜間ジョブのパフォーマンスが向上します。</help>
+        <label>スキューでない増分団体ハードクレジット</label>
+        <name>AccountHardCreditNonSkew_Incremental__c</name>
+    </fields>
+    <fields>
+        <help>CMT 開発結果用の JSON
+{ &quot;jobId&quot;: &quot;repsonse&quot; }</help>
+        <label>CMT API 開発結果</label>
         <name>CMT_API_Status__c</name>
     </fields>
     <fields>
-        <help><!-- Check this box to enable the new NPSP Customizable Rollup Engine --></help>
-        <label><!-- Enable Customizable Rollups --></label>
+        <help>LDV 団体のみ対象。SFDO ガイダンス併用。たくさんの団体が登録された組織団体の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される団体の最大数を指定します。</help>
+        <label>LDV: 団体ハードクレジットチャンクサイズ</label>
+        <name>ChunkSize_Account_HardCredit__c</name>
+    </fields>
+    <fields>
+        <help>LDV 団体のみ対象。SFDO ガイダンス併用。たくさんの個人が登録された組織団体の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される個人の最大数を指定します。</help>
+        <label>LDV: 個人ハードクレジットチャンクサイズ</label>
+        <name>ChunkSize_Contact_HardCredit__c</name>
+    </fields>
+    <fields>
+        <help>LDV 団体のみ対象。SFDO ガイダンス併用。たくさんの個人が登録された組織団体の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される個人の最大数を指定します。</help>
+        <label>LDV: 個人ソフトクレジットチャンクサイズ</label>
+        <name>ChunkSize_Contact_SoftCredit__c</name>
+    </fields>
+    <fields>
+        <help>オンにすると、個人ハードクレジット (スキューでない) 夜間ジョブは、これらの個人の最近更新された支援を探し、再計算で選択される個人の数を制限します。これにより、カスタマイズ可能な積み上げ集計の夜間ジョブのパフォーマンスが向上します。</help>
+        <label>スキューでない増分個人ハードクレジット</label>
+        <name>ContactHardCreditNonSkew_Incremental__c</name>
+    </fields>
+    <fields>
+        <help>このボックスをオンにすると、新しい NPSP のカスタマイズ可能な積み上げ集計エンジンが有効になります。</help>
+        <label>カスタマイズ可能な積み上げ集計の有効化</label>
         <name>Customizable_Rollups_Enabled__c</name>
     </fields>
     <fields>
-        <help><!-- Check this box to prevent hard credit and soft credit rollups on Accounts and Contacts from only processing Account and Contact records that have existing related Opportunity or Opportunity Contact Role records. --></help>
-        <label><!-- Disable Related Records Filter --></label>
+        <help>このボックスをオンにすると、団体と個人のハードクレジットおよびソフトクレジット積み上げ集計が、既存の関連支援または支援個人の役割レコードを含む個人レコードおよび団体レコードだけを処理しないようになります。</help>
+        <label>関連レコード絞り込みの無効化</label>
         <name>Disable_Related_Records_Filter__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor rollups to the Account object. --></help>
-        <label><!-- Account Hard Credit Batch Size --></label>
+        <help>団体オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+        <label>団体ハードクレジットバッチサイズ</label>
         <name>Rollups_Account_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor rollups to the Account object using Skew Mode. --></help>
-        <label><!-- Account Skew Mode Batch Size --></label>
+        <help>スキューモードを使用する団体オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+        <label>団体スキューモードバッチサイズ</label>
         <name>Rollups_Account_SkewMode_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating soft credit donor rollups to the Account object. --></help>
-        <label><!-- Contact Soft Credit to Acct Batch Size --></label>
+        <help>団体オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+        <label>団体ソフトクレジットバッチサイズ</label>
         <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating hard credit donor rollups to the Contact object. --></help>
-        <label><!-- Contact Hard Credit Batch Size --></label>
+        <help>団体オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+        <label>団体への個人ソフトクレジットバッチサイズ</label>
+        <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>個人オブジェクトへのハードクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+        <label>個人ハードクレジットバッチサイズ</label>
         <name>Rollups_Contact_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor rollups to the Contact object using Skew Mode. --></help>
-        <label><!-- Contact Skew Mode Batch Size --></label>
+        <help>スキューモードを使用する個人オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+        <label>個人スキューモードバッチサイズ</label>
         <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating soft credit donor rollups to the Contact object. --></help>
-        <label><!-- Contact Soft Credit Batch Size --></label>
+        <help>個人オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+        <label>個人ソフトクレジットバッチサイズ</label>
         <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor rollups to the General Accounting Unit object. --></help>
-        <label><!-- GAU Batch Size --></label>
+        <help>一般団体単位オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+        <label>GAU バッチサイズ</label>
         <name>Rollups_GAU_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- The maximum number of related Opportunities on an Account or Contact allowed in non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode. --></help>
-        <label><!-- Skew Mode Threshold --></label>
+        <help>増分積み上げ集計上書きにしか使用しません。この値は関連支援を絞り込むために使用される項目を上書きし、どの団体、個人、GAU または RD が夜間のスケジュール済みジョブ時に再計算されるかを決定します。デフォルトは SystemModStamp です。</help>
+        <label>増分: 過去 N 日間の項目上書き</label>
+        <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
+    </fields>
+    <fields>
+        <help>増分積み上げ集計上書きにしか使用しません。この値は、関連支援を絞り込むための計算された日数を上書きし、どの団体、個人、GAU または RD が夜間のスケジュール済みジョブ時に再計算されるかを決定します。</help>
+        <label>増分: 過去 N 日間の値上書き</label>
+        <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+    </fields>
+    <fields>
+        <help>スキューモードでない積み上げ集計バッチジョブで許可する、団体または個人の関連支援の最大数。関連支援数がこれを上回る団体または個人は、常にスキューモードで積み上げ集計されます。</help>
+        <label>スキューモードしきい値</label>
         <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
     </fields>
     <fields>
-        <help><!-- Number of Account, Contact, or GAU records per batch to select for Skew Mode processing. --></help>
-        <label><!-- Skew Mode Dispatcher Batch Size --></label>
+        <help>スキューモード処理で選択されるバッチあたりの団体、個人、または GAU レコードの数。</help>
+        <label>スキューモードディスパッチャーバッチサイズ</label>
         <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
 </CustomObjectTranslation>
