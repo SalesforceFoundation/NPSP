@@ -129,6 +129,7 @@ tasks:
             suites: robot/Cumulus/tests
             options:
                 outputdir: robot/Cumulus/results
+                tagstatlink: W-*:https://foundation.my.salesforce.com/search/SearchResults?asPhrase=1&searchType=1&sen=a2x&str=%1&search=Search:work item
 
     robot_libdoc:
         options:
