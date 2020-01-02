@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <recordTypes>
+    <name>HH_Account</name>
+    <label>世帯団体</label>
+    <description>1 人以上の個人を含む世帯を表す団体</description>
+  </recordTypes>
+  <recordTypes>
+    <name>Organization</name>
+    <label>団体</label>
+    <description>組織団体を表す団体</description>
+  </recordTypes>
+</CustomObjectTranslation>
