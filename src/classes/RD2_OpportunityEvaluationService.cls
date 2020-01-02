@@ -44,6 +44,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public static Boolean isOverride = false;
 
+    /**
+    * @description Indicates if the Opportunity evaluation is invoked from a nightly batch job
+    */   
+    private Boolean isBatchContext = false;
+
     /***
     * @description Recurring Donation custom settings
     */
@@ -62,25 +67,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     */   
     private Date currentDate {
         get {
-            return RD2_ScheduleService.currentDate;
-        } set;
-    }
-
-    /**
-    * @description Indicates if the Opportunity evaluation is invoked from a nightly batcj job
-    */   
-    private Boolean isBatchContext = false;
-
-    /***
-    * @description Recurring Donation Schedule service
-    */
-    @TestVisible
-    private RD2_ScheduleService scheduleService {
-        get {
-            if (scheduleService == null) {
-                scheduleService = new RD2_ScheduleService();
+            if (currentDate == null) {
+                currentDate = RD2_ScheduleService.currentDate;
             }
-            return scheduleService;
+            return currentDate;
         } set;
     }
 
@@ -90,7 +80,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     public RD2_OpportunityService oppService {
         get {
             if (oppService == null) {
-                oppService = new RD2_OpportunityService();
+                oppService = new RD2_OpportunityService(currentDate);
             }
             return oppService;
         } 
@@ -128,6 +118,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public RD2_OpportunityEvaluationService withBatchContext() {
         isBatchContext = true;
+        return this;
+    }
+
+    /**
+     * @description Sets current date
+     * @param currentDate Date considered as the current date
+     * @return RD2_OpportunityEvaluationService The service instance
+     */
+    public RD2_OpportunityEvaluationService withCurrentDate(Date currentDate) {
+        this.currentDate = currentDate;
+        RD2_ScheduleService.currentDate = currentDate;
         return this;
     }
 
@@ -171,7 +172,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         if (isOverride) {
             return this;
         }
-
+        
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();

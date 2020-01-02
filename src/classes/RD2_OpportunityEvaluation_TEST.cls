@@ -125,14 +125,14 @@ private class RD2_OpportunityEvaluation_TEST {
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
+        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         assertBatchJobIteration(1);
 
         opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'No new opportunity should be created: ' + opps);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
         System.assertEquals(today, opps[0].CloseDate, 'Close Date should be unchanged: ' + opps);
     }
 
@@ -156,14 +156,14 @@ private class RD2_OpportunityEvaluation_TEST {
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
+        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         assertBatchJobIteration(1);
 
         opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'No new opportunity should be created: ' + opps);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
         System.assertEquals(nextCloseDate, opps[0].CloseDate, 'Close Date should be unchanged: ' + opps);
     }
 
@@ -187,9 +187,9 @@ private class RD2_OpportunityEvaluation_TEST {
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
+        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
@@ -221,9 +221,9 @@ private class RD2_OpportunityEvaluation_TEST {
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
+        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
@@ -259,9 +259,9 @@ private class RD2_OpportunityEvaluation_TEST {
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
+        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
@@ -292,10 +292,10 @@ private class RD2_OpportunityEvaluation_TEST {
         rdSchedules[0].EndDate__c = START_DATE.addMonths(2).addDays(-1);
         update rdSchedules[0];
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(0, opps.size(), 'No new Opportunity should be created: ' + opps);
+        System.assertEquals(0, opps.size(), 'No new Opp should be created: ' + opps);
     }
 
     /**
@@ -318,7 +318,7 @@ private class RD2_OpportunityEvaluation_TEST {
         rdSchedules[0].EndDate__c = START_DATE.addMonths(2);
         update rdSchedules[0];
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'A new Opportunity should be created: ' + opps);
@@ -340,7 +340,7 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        RD2_OpportunityEvaluation_BATCH batch = executeAndFinishBatch(rd.Id);
+        RD2_OpportunityEvaluation_BATCH batch = executeAndFinishBatch(rd.Id, today);
 
         assertRecordsFailed(batch, 0);
 
@@ -367,12 +367,12 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        RD2_OpportunityEvaluation_BATCH batch = executeAndFinishBatch(rd.Id);
+        RD2_OpportunityEvaluation_BATCH batch = executeAndFinishBatch(rd.Id, today);
 
         assertRecordsFailed(batch, 1);
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(0, opps.size(), 'No new Opportunity should be created: ' + opps);
+        System.assertEquals(0, opps.size(), 'No new Opp should be created: ' + opps);
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'An error should be created: ' + errors);
@@ -402,11 +402,13 @@ private class RD2_OpportunityEvaluation_TEST {
 
     /**
      * @description Executes execute() and finish() methods
+     * @param rdId Recurring Donation Id
+     * @param today Date representing today
      * @return RD2_OpportunityEvaluation_BATCH Batch instance
      */
-    private static RD2_OpportunityEvaluation_BATCH executeAndFinishBatch(Id rdId) {
+    private static RD2_OpportunityEvaluation_BATCH executeAndFinishBatch(Id rdId, Date today) {
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
-        RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH();
+        RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH(today);
 
         batch.execute(batchContext, rdGateway.getRecords(new Set<Id>{ rdId }));
         batch.finish(batchContext);
@@ -429,7 +431,7 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-     * @description Instantiate an Opportunity builder for the specified Recurring Donation
+     * @description Instantiate an Opp builder for the specified Recurring Donation
      * @param rd Recurring Donation
      * @return TEST_OpportunityBuilder New Opportunity builder
      */

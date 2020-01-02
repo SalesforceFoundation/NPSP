@@ -71,6 +71,35 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     private Integer recordsFailed = 0;
 
     /**
+     * @description Contains current date value
+     */
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = Date.today();
+            }
+            return currentDate;
+        }
+        set;
+    }
+
+    /**
+     * @description Default constructor
+     */
+    public RD2_OpportunityEvaluation_BATCH() {
+        //Do not set the current date in constructor, Date.today() will be used by default.
+    }
+
+    /**
+     * @description Constructor setting the current date to the specified date.
+     * The constructor is mainly used for testing.
+     * @param currentDate Date considered as today
+     */
+    public RD2_OpportunityEvaluation_BATCH(Date currentDate) {
+        this.currentDate = currentDate;
+    }
+
+    /**
      * @description Schedulable Execute Method to launch the Batch Job
      */
     public void execute(SchedulableContext context) {
@@ -97,6 +126,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService()
             .withBatchContext()
             .withRds(UTIL_SObject.extractIds(rds))
+            .withCurrentDate(currentDate)
             .evaluateOpportunities();
         
         recordsFailed += evalService.oppService.recordsFailed;

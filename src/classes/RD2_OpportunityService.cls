@@ -62,14 +62,6 @@ public with sharing class RD2_OpportunityService {
         } set;
     }
 
-    /**
-    * @description Current reference date to calculate schedules and compare Opps with matching installments
-    */
-    private Date currentDate {
-        get {
-            return RD2_ScheduleService.currentDate;
-        } set;
-    }
 
     /***
     * @description Tracks number of Opportunities that failed to be processed
@@ -82,6 +74,18 @@ public with sharing class RD2_OpportunityService {
             return recordsFailed;
         }
         private set;
+    }
+
+    /**
+    * @description Current reference date to calculate schedules and compare Opps with matching installments
+    */
+    private Date currentDate;
+
+    /***
+    * @description Constructor
+    */
+    public RD2_OpportunityService(Date currentDate) {
+        this.currentDate = currentDate;
     }
 
     /***
