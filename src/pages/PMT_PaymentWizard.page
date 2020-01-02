@@ -30,7 +30,7 @@
             <c:UTIL_NavigateBack recordId="{!currentOpp.id}" redirect="{!redirect}"/>
 
             <!-- Page Header -->
-            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
+            <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!$ObjectType.Opportunity.label}"
                                parentAction="/006" parentRecordName="{!currentOpp.Name}"
                                parentRecordAction="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
                                header="{!IF(NOT(isWriteoffWizard), $Label.pmtWizardSubtitle, $Label.pmtWizardSectionWriteoff)}"

@@ -20,6 +20,10 @@
         <plural>true</plural>
         <value><!-- הLevel --></value>
     </caseValues>
+    <fieldSets>
+        <label><!-- LevelEdit --></label>
+        <name>LevelEdit</name>
+    </fieldSets>
     <fields>
         <help>האם רמה זו נמצאת כעת בשימוש.</help>
         <label>פעיל</label>

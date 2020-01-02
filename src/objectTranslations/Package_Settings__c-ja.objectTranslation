@@ -5,8 +5,8 @@
         <value><!-- NPSP Package Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- The active package namespace prefix for NPSP. Do not edit manually. --></help>
-        <label><!-- Namespace Prefix --></label>
+        <help>NPSP の有効なパッケージ名前空間プレフィックス。手動で編集しないでください。</help>
+        <label>名前空間プレフィックス</label>
         <name>Namespace_Prefix__c</name>
     </fields>
 </CustomObjectTranslation>

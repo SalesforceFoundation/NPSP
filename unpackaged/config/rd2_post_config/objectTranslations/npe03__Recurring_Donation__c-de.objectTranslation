@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>Anzahl der Raten</help>
+        <help>Anzahl der Raten (Spenden), mit deren Eingang Sie rechnen. Nur für wiederkehrende Spenden mit fester Dauer.</help>
         <label>Deprecated-Raten</label>
         <name>npe03__Installments__c</name>
     </fields>
     <fields>
-        <help><!-- Choose Open for an Open-Ended Recurring Donation.  Choose None for a Fixed Length Recurring Donation.  Choose Closed to close a Recurring Donation. --></help>
+        <help>Wählen Sie bei einer Wiederkehrenden Spende mit offenem Ende &quot;Offen&quot;. Wählen Sie &quot;Keine&quot; bei einer Wiederkehrenden Spende mit fester Dauer. Wählen Sie &quot;Geschlossen&quot;, um eine wiederkehrende Spende zu schließen.</help>
         <label>Deprecated-Status &quot;Unbefristet&quot;</label>
         <name>npe03__Open_Ended_Status__c</name>
     </fields>
     <fields>
-        <help>Gibt an, ob der Betrag für die einzelnen Raten verwendet (multipliziert) wird oder ob er durch die Raten geteilt (dividiert) wird  Wird nur für befristete wiederkehrende Spenden verwendet</help>
+        <help>Gibt Salesforce an, wie der Betrag für die einzelnen untergeordneten Opportunities auf der Grundlage dessen, was Sie in das Betragsfeld eingegeben haben, berechnet werden soll. Nur für Wiederkehrende Spenden mit fester Dauer.</help>
         <label>Deprecated-Zeitplantyp</label>
         <name>npe03__Schedule_Type__c</name>
     </fields>
     <fields>
         <help>Die Summe aller Opportunities für befristete wiederkehrende Spenden</help>
-        <label>Deprecated-Summe</label>
+        <label>Deprecated-Gesamt</label>
         <name>npe03__Total__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
-    <nameFieldLabel><!-- Recurring Donation Name --></nameFieldLabel>
+    <fields>
+        <label>Tag des Monats</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last_Day</masterLabel>
+            <translation>Letzter Tag des Monats</translation>
+        </picklistValues>
+    </fields>
 </CustomObjectTranslation>

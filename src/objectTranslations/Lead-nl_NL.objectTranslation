@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
     <fields>
-        <help>De Batch waar deze Lead vandaan komt.</help>
-        <label><!-- Batch --></label>
+        <help>De batch waar deze lead werd gemaakt.</help>
+        <label>Batch</label>
         <name>Batch__c</name>
-        <relationshipLabel><!-- Leads --></relationshipLabel>
+        <relationshipLabel>Leads</relationshipLabel>
     </fields>
     <fields>
-        <label>Bedrijf Stad</label>
+        <label>Stad van Bedrijf</label>
         <name>CompanyCity__c</name>
     </fields>
     <fields>
-        <label>Bedrijf Land</label>
+        <label>Land van Bedrijf</label>
         <name>CompanyCountry__c</name>
     </fields>
     <fields>
-        <label>Bedrijf Postcode</label>
+        <label>Postcode van Bedrijf</label>
         <name>CompanyPostalCode__c</name>
     </fields>
     <fields>
-        <label>Bedrijf Provincie</label>
+        <label>Staat/Provincie van Bedrijf</label>
         <name>CompanyState__c</name>
     </fields>
     <fields>
-        <label>Bedrijf Straat</label>
+        <label>Straat van Bedrijf</label>
         <name>CompanyStreet__c</name>
     </fields>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>
