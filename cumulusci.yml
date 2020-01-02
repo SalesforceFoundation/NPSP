@@ -343,7 +343,7 @@ tasks:
 
     cleanup_translation_metadata:
         description: Delete extraneous and translation-excluded metadata from translation files after using retrieve_unpackaged to pull down cleaned translations from a scratch org.
-        class_path: tasks.modify.RemoveElementsXPath
+        class_path: cumulusci.tasks.metadata.modify.RemoveElementsXPath
         options:
             output_style: salesforce
             elements:
