@@ -1735,7 +1735,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Message displayed on a successful migration</shortDescription>
         <value>&lt;b&gt;Upgrade process complete!&lt;/b&gt;&lt;br/&gt;
-        &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:
+        &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:&lt;br/&gt;
         &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to conversion.&lt;/li&gt;
         &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles. You should also remove the old Recurring Donations page layout from all profiles.&lt;/li&gt;
         &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your custom profiles and permission sets.&lt;/li&gt;
