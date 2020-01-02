@@ -41,22 +41,22 @@
         <value><!-- Opportunity Naming Settings --></value>
     </caseValues>
     <fields>
-        <help>Ob diese Einstellung für einzelne Opportunities, Organisation-Opportunities oder beides gilt</help>
+        <help>Gibt an, Ob diese Einstellung für einzelne Opportunities, Organisation-Opportunities oder beides gilt.</help>
         <label>Zuschreibung</label>
         <name>Attribution__c</name>
     </fields>
     <fields>
-        <help>Das Format für Datumsangaben, die in diesem Opportunity-Namen enthalten sind</help>
+        <help>Das Format für Datumsangaben, die in diesem Opportunity-Namen enthalten sind.</help>
         <label>Datumsformat</label>
         <name>Date_Format__c</name>
     </fields>
     <fields>
-        <help>Das Format für die Benennung der Opportunity</help>
+        <help>Das Format für die Benennung der Opportunity.</help>
         <label>Format des Opportunity-Namens</label>
         <name>Opportunity_Name_Format__c</name>
     </fields>
     <fields>
-        <help>Gibt den Opportunity-Datensatztyp an, für den dieses Benennungschema gilt</help>
+        <help>Gibt den Opportunity-Datensatztyp an, für den dieses Benennungschema gilt.</help>
         <label>Opportunity-Datensatztypen</label>
         <name>Opportunity_Record_Types__c</name>
     </fields>
