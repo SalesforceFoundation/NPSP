@@ -2,13 +2,13 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- DEPRECATED-Fund --></value>
+        <value>DÉPRÉCIÉ-Fonds</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- DEPRECATED-Fund --></value>
+        <value>DÉPRÉCIÉ-Fonds</value>
     </caseValues>
-    <gender><!-- Masculine --></gender>
-    <nameFieldLabel><!-- DEPRECATED-Fund Name --></nameFieldLabel>
-    <startsWith><!-- Consonant --></startsWith>
+    <gender>Masculine</gender>
+    <nameFieldLabel>DÉPRÉCIÉ-Nom du fonds</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
