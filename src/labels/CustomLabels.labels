@@ -1556,7 +1556,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement page message displayed due to missing prerequisites</shortDescription>
-        <value>&lt;ol&gt;&lt;li&gt;If you're not already using Lightning Experience, click Switch to Lightning Experience at the top of your screen.&lt;/li&gt;&lt;li&gt; Enable Customizable Rollups by going to NPSP Settings | Donations | Customizable Rollups.&lt;/li&gt;&lt;/ol&gt; Return here to the Upgrade to Enhanced Recurring Donations page.</value>
+        <value>(1) If you're not already using Lightning Experience, click Switch to Lightning Experience at the top of your screen.&lt;br/&gt;(2) Enable Customizable Rollups by going to NPSP Settings | Donations | Customizable Rollups.&lt;br/&gt;&lt;br/&gt;Return here to the Upgrade to Enhanced Recurring Donations page.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDryRunBatchTitle</fullName>
@@ -1734,7 +1734,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed on a successful migration</shortDescription>
-        <value>&lt;b&gt;Upgrade process complete!&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;
+        <value>&lt;b&gt;Upgrade process complete!&lt;/b&gt;&lt;br/&gt;
         &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:
         &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to conversion.&lt;/li&gt;
         &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles. You should also remove the old Recurring Donations page layout from all profiles.&lt;/li&gt;
