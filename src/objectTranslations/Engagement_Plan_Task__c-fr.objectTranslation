@@ -2,20 +2,20 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Tâche du plan d&apos;engagement</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Tâches du plan d&apos;engagement</value>
     </caseValues>
     <fields>
-        <help>Ce champ est lié au champ Attribué à de la tâche. Si laissé vide, la tâche sera attribuée selon la règle d’attribution vide du modèle.</help>
+        <help>Recherche de l&apos;utilisateur auquel vous souhaitez attribuer la tâche. Si vous laissez ce champ vide, NPSP attribuera la tâche en fonction du destinataire par défaut du modèle de plan d’engagement.</help>
         <label>Attribué à</label>
         <name>Assigned_To__c</name>
-        <relationshipLabel>Tâches du plan d’engagement</relationshipLabel>
+        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
     </fields>
     <fields>
-        <help>Commentaires sur la tâche.</help>
+        <help>Informations supplémentaires sur la tâche.</help>
         <label>Commentaires</label>
         <name>Comments__c</name>
     </fields>
@@ -95,7 +95,7 @@
     </fields>
     <fields>
         <help>Le type de tâche.</help>
-        <label><!-- Type --></label>
+        <label>Type</label>
         <name>Type__c</name>
         <picklistValues>
             <masterLabel>Call</masterLabel>
@@ -114,14 +114,14 @@
             <translation>Autre</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Masculine --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Engagement Plan Task Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Liens personnalisés</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Subject --></nameFieldLabel>
-    <startsWith><!-- Consonant --></startsWith>
+    <nameFieldLabel>Sujet</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

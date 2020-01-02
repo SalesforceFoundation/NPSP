@@ -8,8 +8,12 @@
         <plural>true</plural>
         <value>Levels</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- LevelEdit --></label>
+        <name>LevelEdit</name>
+    </fieldSets>
     <fields>
-        <help><!-- Whether this Level is currently in use. --></help>
+        <help><!-- Indicates whether this Level is currently in use. --></help>
         <label><!-- Active --></label>
         <name>Active__c</name>
     </fields>
@@ -25,22 +29,22 @@
         <relationshipLabel><!-- Levels --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The field (developer name) on the Target object to store the lookup to the current Level.  Note that this field implicitly defines the “Ladder” that this Level is part of. --></help>
+        <help><!-- Indicates which field to use on the target object to store the current Level. --></help>
         <label><!-- Level Field --></label>
         <name>Level_Field__c</name>
     </fields>
     <fields>
-        <help><!-- The maximum amount the value must be below to be assigned this Level.  If empty, then any amount greater than or equal to this Level&apos;s Minimum Amount will assign this Level. --></help>
+        <help><!-- The amount the value must be below for NPSP to assign this Level. If this field is empty, NPSP will assign this Level for any amount greater than or equal to this Level&apos;s Minimum Amount. --></help>
         <label><!-- Maximum Amount (&lt;) --></label>
         <name>Maximum_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The minimum amount to be assigned this Level.  If empty, then any amount less than this Level&apos;s Maximum Amount will assign this Level. --></help>
+        <help><!-- The minimum amount needed for NPSP to assign this Level. If this field is empty, then NPSP will assign this Level to any amount less than this Level&apos;s Maximum Amount. --></help>
         <label><!-- Minimum Amount (&gt;=) --></label>
         <name>Minimum_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The field (developer name) on the Target object to store the lookup to the previous Level the object had.  Optional. --></help>
+        <help><!-- Indicates which field to use on the target object to store the previous Level. --></help>
         <label><!-- Previous Level Field --></label>
         <name>Previous_Level_Field__c</name>
     </fields>
