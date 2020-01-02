@@ -25,6 +25,11 @@
         <name>Excluded_Opp_Types__c</name>
     </fields>
     <fields>
+        <help>割り当てを支払レベルで設定できるかどうかを示します。支払レベルの割り当てに関するドキュメントを確認してから、この設定を変更してください。</help>
+        <label>支払の割り当ての有効化</label>
+        <name>Payment_Allocations_Enabled__c</name>
+    </fields>
+    <fields>
         <help>この値は、N 日間の割り当て積み上げ集計項目でカウントされる日数に影響します。</help>
         <label>N 日間の積み上げ集計値</label>
         <name>Rollup_N_Day_Value__c</name>

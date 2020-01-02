@@ -150,11 +150,63 @@
         <name>Address_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <label><!-- AssistiveTextActive --></label>
+        <name>AssistiveTextActive</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- AssistiveTextComplete --></label>
+        <name>AssistiveTextComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- AssistiveTextError --></label>
+        <name>AssistiveTextError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- AssistiveTextNewWindow --></label>
+        <name>AssistiveTextNewWindow</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- AssistiveTextWarning --></label>
+        <name>AssistiveTextWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressCompletedDate --></label>
+        <name>BatchProgressCompletedDate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressExtendedStatus --></label>
+        <name>BatchProgressExtendedStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressJobItemsProcessed --></label>
+        <name>BatchProgressJobItemsProcessed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatus --></label>
+        <name>BatchProgressStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressTimeElapsed --></label>
+        <name>BatchProgressTimeElapsed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressTimeElapsedDays --></label>
+        <name>BatchProgressTimeElapsedDays</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressTitleRD2DataMigration --></label>
+        <name>BatchProgressTitleRD2DataMigration</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressTotalJobItems --></label>
+        <name>BatchProgressTotalJobItems</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Confirmation message when a user wants to delete something. --></label>
         <name>CMT_DeleteConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- Help text for the active rollups tree --></label>
+        <label><!-- Help text for the rollups tree --></label>
         <name>CMT_FilterGroupActiveRollupsHelpText</name>
     </customLabels>
     <customLabels>
@@ -382,6 +434,14 @@
         <name>CRLP_AvailableRollupType</name>
     </customLabels>
     <customLabels>
+        <label><!-- Displays on page when &quot;Recalculate Rollups&quot; button is hit on Acc/Con/GAU/RD. --></label>
+        <name>CRLP_BatchCalculating</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error logged when a scheduled batch is skipped b/c yesterday&apos;s still running. --></label>
+        <name>CRLP_BatchSkipped</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Tooltip help text for the active flag. --></label>
         <name>CRLP_CreateRollupActiveHelpText</name>
     </customLabels>
@@ -416,6 +476,10 @@
     <customLabels>
         <label><!-- Help text for user adding a summary object, field, and a description. --></label>
         <name>CRLP_CreateRollupIntroHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for name. --></label>
+        <name>CRLP_CreateRollupNameHelpText</name>
     </customLabels>
     <customLabels>
         <label><!-- Tooltip help text for operation. --></label>
@@ -474,6 +538,10 @@
         <name>CRLP_DisabledTitle</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error loading Customizable Rollup data --></label>
+        <name>CRLP_DisplayError</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error when user tries to save a Rollup with a duplicate Target Field. --></label>
         <name>CRLP_DuplicateTargetField</name>
     </customLabels>
@@ -498,6 +566,14 @@
         <name>CRLP_PleaseWait</name>
     </customLabels>
     <customLabels>
+        <label><!-- Header for interstitial page on rollup recalc buttons --></label>
+        <name>CRLP_RecalculatingRollups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning before complete reset of Customizable Rollups --></label>
+        <name>CRLP_ResetRollupsWarning</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Breadcrumb text to return to the specified location. --></label>
         <name>CRLP_Return</name>
     </customLabels>
@@ -518,7 +594,7 @@
         <name>CRLP_RollupsByFilterGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error Deploying Customizable Rollup data --></label>
+        <label><!-- Error deploying Customizable Rollup data --></label>
         <name>CRLP_SaveError</name>
     </customLabels>
     <customLabels>
@@ -536,6 +612,18 @@
     <customLabels>
         <label><!-- Soft Credit --></label>
         <name>CRLP_SoftCredit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- CallableApi Method Not Implemented --></label>
+        <name>CallableApiMethodNotImplemented</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error parsing/type casting a parameter --></label>
+        <name>CallableApiParameterError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error completing the specified API call --></label>
+        <name>CallableApiProcessingError</name>
     </customLabels>
     <customLabels>
         <label>השמט</label>
@@ -642,8 +730,160 @@
         <name>PageMessagesInfo</name>
     </customLabels>
     <customLabels>
+        <label><!-- Processing --></label>
+        <name>PageMessagesProcessing</name>
+    </customLabels>
+    <customLabels>
         <label>אזהרה</label>
         <name>PageMessagesWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- ProgressMarkerAssistiveTextProgress --></label>
+        <name>ProgressMarkerAssistiveTextProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validate Recurring Donations data if value on the amount is valid or not --></label>
+        <name>RD2_AmountMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Installment Period cannot be converted to enhanced Recurring Donation format --></label>
+        <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Open Ended Status cannot be converted to enhanced Recurring Donation format --></label>
+        <name>RD2_DataMigrationInvalidOpenEndedStatus</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validate RD data if day of month is blank when installment is monthly --></label>
+        <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validate Recurring Donations data if it is valid day of month --></label>
+        <name>RD2_DayOfMonthMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementDisabledHeader --></label>
+        <name>RD2_EnablementDisabledHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementDisabledMessage --></label>
+        <name>RD2_EnablementDisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementEnableConfirm --></label>
+        <name>RD2_EnablementEnableConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementEnableIntro --></label>
+        <name>RD2_EnablementEnableIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementEnableMessage --></label>
+        <name>RD2_EnablementEnableMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementEnableTitle --></label>
+        <name>RD2_EnablementEnableTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementEnableWarning --></label>
+        <name>RD2_EnablementEnableWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementIntro --></label>
+        <name>RD2_EnablementIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMetaDeployConfirm --></label>
+        <name>RD2_EnablementMetaDeployConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMetaDeployConfirmError --></label>
+        <name>RD2_EnablementMetaDeployConfirmError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMetaDeployIntro --></label>
+        <name>RD2_EnablementMetaDeployIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMetaDeployLaunch --></label>
+        <name>RD2_EnablementMetaDeployLaunch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMetaDeployLaunchLinkLabel --></label>
+        <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMetaDeployTitle --></label>
+        <name>RD2_EnablementMetaDeployTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMigrationButton --></label>
+        <name>RD2_EnablementMigrationButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMigrationCompleteMessage --></label>
+        <name>RD2_EnablementMigrationCompleteMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMigrationIntro --></label>
+        <name>RD2_EnablementMigrationIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMigrationTitle --></label>
+        <name>RD2_EnablementMigrationTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementMigrationWarning --></label>
+        <name>RD2_EnablementMigrationWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementPrepIntro --></label>
+        <name>RD2_EnablementPrepIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementPrepTasks --></label>
+        <name>RD2_EnablementPrepTasks</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2_EnablementPrepTitle --></label>
+        <name>RD2_EnablementPrepTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The job can only be executed when Enhanced RD is enabled in the org --></label>
+        <name>RD2_ErrorDataMigrationJobCannotBeRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The RD2 Batch job can only be executed when Enhanced RD is enabled --></label>
+        <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validate Recurring Donations data if it is valid install period --></label>
+        <name>RD2_InstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validate Recurring Donations data if contact is not found with HH Account --></label>
+        <name>RD_ContactMustBelongToAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validate Recurring Donations data if contact and account are missing --></label>
+        <name>RD_DonorIsRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Refresh Opportunities --></label>
+        <name>RD_ErrorAddDonationHeaderText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation ID missing --></label>
+        <name>RD_ErrorAddDonationMissingId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- You do not have permission to create a donation record --></label>
+        <name>RD_ErrorAddDonationPermissionDenied</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The legacy RD Batch job cannot be executed when Enhanced RD is enabled --></label>
+        <name>RD_ErrorLegacyBatchJobCannotBeRun</name>
     </customLabels>
     <customLabels>
         <label><!-- More ClosedWon donations than Installments --></label>
@@ -758,7 +998,7 @@
         <name>RP_UsSubtitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- Resources Page - Youtube Videos --></label>
+        <label><!-- Nonprofit Success Pack (NPSP) Resources Page - Youtube Videos --></label>
         <name>RP_Videos</name>
     </customLabels>
     <customLabels>
@@ -772,6 +1012,10 @@
     <customLabels>
         <label>עבור תרומות חוזרות, ניתן לציין רק ארגון או איש קשר, לא שניהם.</label>
         <name>RecurringDonationAccountAndContactError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Recurring Donation Name Suffix --></label>
+        <name>RecurringDonationNameSuffix</name>
     </customLabels>
     <customLabels>
         <label>נשמר.</label>
@@ -800,6 +1044,14 @@
     <customLabels>
         <label>יש לציין את המפתח של Cicero API בהגדרה של אסימון האימות בהגדרות אימות הכתובת.</label>
         <name>addrCiceroMissingAPIKey</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message that appears to confirm the address copy action. --></label>
+        <name>addrCopyConAddBtnConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label that appears when user does not pass FLS check to copy the address --></label>
+        <name>addrCopyConAddBtnFls</name>
     </customLabels>
     <customLabels>
         <label>לחצן זה תומך באנשי קשר עם אובייקטי משק בית בלבד, לא בחשבונות משק בית.</label>
@@ -872,6 +1124,10 @@
         <name>alloDefaultGAUMissing</name>
     </customLabels>
     <customLabels>
+        <label><!-- You must enable Default Allocations in order to allocate at the payment level. --></label>
+        <name>alloDefaultNotEnabled</name>
+    </customLabels>
+    <customLabels>
         <label>הקצאת ברירת המחדל לא יכולה להתבסס על אחוזים.</label>
         <name>alloDefaultNotPercent</name>
     </customLabels>
@@ -884,12 +1140,20 @@
         <name>alloExceedsOppAmount</name>
     </customLabels>
     <customLabels>
+        <label><!-- The Allocations for this Payment are greater than the amount of the Payment. --></label>
+        <name>alloExceedsPmtAmount</name>
+    </customLabels>
+    <customLabels>
         <label>נהל הקצאות מבצע</label>
         <name>alloManageCampaignAllocations</name>
     </customLabels>
     <customLabels>
         <label>נהל הקצאות הזדמנות</label>
         <name>alloManageOppAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloManagePaymentAllocations --></label>
+        <name>alloManagePaymentAllocations</name>
     </customLabels>
     <customLabels>
         <label>נהל הקצאות תרומה חוזרת</label>
@@ -912,12 +1176,36 @@
         <name>alloObjectUnsupported</name>
     </customLabels>
     <customLabels>
+        <label><!-- alloPaidPmtsExceedsOpp --></label>
+        <name>alloPaidPmtsExceedsOpp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Payment-level allocations are not enabled. --></label>
+        <name>alloPaymentNotEnabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloPaymentOverallocatedError --></label>
+        <name>alloPaymentOverallocatedError</name>
+    </customLabels>
+    <customLabels>
         <label>הקצאות המבוססות על אחוזים לא יכולות לחרוג מ-100%.</label>
         <name>alloPercentExceed100</name>
     </customLabels>
     <customLabels>
+        <label><!-- alloPmtOppSingleTransaction --></label>
+        <name>alloPmtOppSingleTransaction</name>
+    </customLabels>
+    <customLabels>
         <label>תזכורת:</label>
         <name>alloRemainder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloRemoveOppWithPmt --></label>
+        <name>alloRemoveOppWithPmt</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Sign on Payment and Allocation amount must match(Both positive or both negative) --></label>
+        <name>alloSignMistmatch</name>
     </customLabels>
     <customLabels>
         <label>לכל הקצאה חייב להיות אובייקט הורה אחד: הזדמנות, תרומה חוזרת או מבצע.</label>
@@ -938,6 +1226,22 @@
     <customLabels>
         <label>לשדה ההגדרה {0} של המזהה הייחודי והמותאם אישית של החשבון חייבים להיות שדות תואמים באובייקט של ייבוא נתוני NPSP ששמות ה-API שלו הם {1} ו-{2}.</label>
         <name>bdiAccountCustomIdError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiAdditionalObjChildNotUpdated --></label>
+        <name>bdiAdditionalObjChildNotUpdated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiAdditionalObjPredNotFound --></label>
+        <name>bdiAdditionalObjPredNotFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiAdditionalObjRequiredFieldsNull --></label>
+        <name>bdiAdditionalObjRequiredFieldsNull</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Data Import Advanced Mapping Summary --></label>
+        <name>bdiAdvancedMapping</name>
     </customLabels>
     <customLabels>
         <label>אירעה שגיאה במהלך ביצוע התהליך.  המצב הבא היה השגיאה הראשונה שדווחה:</label>
@@ -1052,6 +1356,10 @@
         <name>bdiDataImporterTitle</name>
     </customLabels>
     <customLabels>
+        <label><!-- bdiDeploymentInProgress --></label>
+        <name>bdiDeploymentInProgress</name>
+    </customLabels>
+    <customLabels>
         <label>תרומה</label>
         <name>bdiDonation</name>
     </customLabels>
@@ -1068,7 +1376,7 @@
         <name>bdiDryRunMatched</name>
     </customLabels>
     <customLabels>
-        <label><!-- status on a bdi object to specify it was matched from an ambiguous set in Dry Rn --></label>
+        <label><!-- Status on bdi object to specify it was matched from an ambiguous set in Dry Run --></label>
         <name>bdiDryRunMatchedBest</name>
     </customLabels>
     <customLabels>
@@ -1094,6 +1402,18 @@
     <customLabels>
         <label><!-- error when a batch is missing a name --></label>
         <name>bdiErrorBatchNameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error when updating data import custom settings --></label>
+        <name>bdiErrorDataImportCustomSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- error deploying metadata during migration from help text to metadata mapping --></label>
+        <name>bdiErrorDeploymentFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- link to the deployment status page --></label>
+        <name>bdiErrorDeploymentFailedLink</name>
     </customLabels>
     <customLabels>
         <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
@@ -1136,12 +1456,124 @@
         <name>bdiErrorNonHHAccountContact</name>
     </customLabels>
     <customLabels>
+        <label><!-- bdiErrorNonHHAccountContactWithAdv --></label>
+        <name>bdiErrorNonHHAccountContactWithAdv</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiErrorOneToOneMultiContact --></label>
+        <name>bdiErrorOneToOneMultiContact</name>
+    </customLabels>
+    <customLabels>
         <label><!-- error message if the donation matched multiple pmts --></label>
         <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
+        <label><!-- bdiFMUIBackToMapGroup --></label>
+        <name>bdiFMUIBackToMapGroup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUIDataType --></label>
+        <name>bdiFMUIDataType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUIDatatableMapsTo --></label>
+        <name>bdiFMUIDatatableMapsTo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUIDescription1 --></label>
+        <name>bdiFMUIDescription1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUIDescription2 --></label>
+        <name>bdiFMUIDescription2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUIFieldAPIName --></label>
+        <name>bdiFMUIFieldAPIName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUIFieldLabel --></label>
+        <name>bdiFMUIFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUILongDeployment --></label>
+        <name>bdiFMUILongDeployment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUILongDeploymentLink --></label>
+        <name>bdiFMUILongDeploymentLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUILongDeploymentMessage --></label>
+        <name>bdiFMUILongDeploymentMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUINewFieldMapping --></label>
+        <name>bdiFMUINewFieldMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUINoFieldMappings --></label>
+        <name>bdiFMUINoFieldMappings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUISearchSourceInputLabel --></label>
+        <name>bdiFMUISearchSourceInputLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUISearchTargetInputLabel --></label>
+        <name>bdiFMUISearchTargetInputLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUISourceFieldDataTypeHelp --></label>
+        <name>bdiFMUISourceFieldDataTypeHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUISourceFieldLabelHelp --></label>
+        <name>bdiFMUISourceFieldLabelHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUISourceObject --></label>
+        <name>bdiFMUISourceObject</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUISuccessful --></label>
+        <name>bdiFMUISuccessful</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUITarget --></label>
+        <name>bdiFMUITarget</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUITargetFieldDataTypeHelp --></label>
+        <name>bdiFMUITargetFieldDataTypeHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUITargetFieldLabelHelp --></label>
+        <name>bdiFMUITargetFieldLabelHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUITryAgain --></label>
+        <name>bdiFMUITryAgain</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUIUnsuccessful --></label>
+        <name>bdiFMUIUnsuccessful</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFMUIUpdate --></label>
+        <name>bdiFMUIUpdate</name>
+    </customLabels>
+    <customLabels>
         <label>נכשל</label>
         <name>bdiFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFieldMapping --></label>
+        <name>bdiFieldMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bdiFieldMappings --></label>
+        <name>bdiFieldMappings</name>
     </customLabels>
     <customLabels>
         <label>כלי יבוא נתוני NPSP פועל רק עם מודל חשבון משק הבית.</label>
@@ -1164,20 +1596,164 @@
         <name>bdiInvalidDonationMatchingBehavior</name>
     </customLabels>
     <customLabels>
+        <label><!-- BDI Confirm Mass Delete Button --></label>
+        <name>bdiMassDelete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning for Mass Delete Buttons --></label>
+        <name>bdiMassDeleteWarning</name>
+    </customLabels>
+    <customLabels>
         <label>הותאמו</label>
         <name>bdiMatched</name>
     </customLabels>
     <customLabels>
-        <label><!-- status on a bdi object to specify it was matched from an ambiguous set --></label>
+        <label><!-- status on BDI object when user selected opp in BGE interface for new payment --></label>
+        <name>bdiMatchedApplyNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status on a bdi object to specify it was matched from an ambiguous set --></label>
         <name>bdiMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status on a BDI object when user has selected matching record in BGE interface --></label>
+        <name>bdiMatchedByUser</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status on a BDI object when user chose to create a new Opportunity in BGE --></label>
+        <name>bdiMatchedByUserNewOpp</name>
     </customLabels>
     <customLabels>
         <label><!-- BDI status when matching an object by its Salesforce ID --></label>
         <name>bdiMatchedId</name>
     </customLabels>
     <customLabels>
-        <label><!-- status on a bdi object when no matching record found --></label>
+        <label><!-- Status on a bdi object when no matching record found --></label>
         <name>bdiMatchedNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message for long deployment --></label>
+        <name>bdiMigrationLongDeployment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Is Child/Parent Help Text --></label>
+        <name>bdiOMUIChildParentHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Is Child/Parent Field Label/Column Name --></label>
+        <name>bdiOMUIChildParentLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for the Create Object Group modal. --></label>
+        <name>bdiOMUICreateModalTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Create New Object Group button --></label>
+        <name>bdiOMUICreateNewObjectGroup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for the Edit Object Group modal. --></label>
+        <name>bdiOMUIEditModalTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error displayed when Group name is duplicate --></label>
+        <name>bdiOMUIErrorDupeName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Basic error which any modal field is missing or invalid. --></label>
+        <name>bdiOMUIErrorInvalidValues</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error displayed when Group Name is too long. --></label>
+        <name>bdiOMUIErrorLabelNameTooLong</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- First part of error displayed when there are no unmapped fields. --></label>
+        <name>bdiOMUIErrorNoUnmappedFieldsPt1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Second part of error displayed when there are no unmapped fields. --></label>
+        <name>bdiOMUIErrorNoUnmappedFieldsPt2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error displayed when there are no valid options for &quot;Through This Field&quot; --></label>
+        <name>bdiOMUIErrorNoValidThroughThisField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Object Group Name Help Text --></label>
+        <name>bdiOMUIGroupNameHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Object Group Name Label/Column Name --></label>
+        <name>bdiOMUIGroupNameLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for the Import Details section of the modal --></label>
+        <name>bdiOMUIImportDetailsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Import Status Helptext --></label>
+        <name>bdiOMUIImportStatusHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Import Status Field Label/Column Name --></label>
+        <name>bdiOMUIImportStatusLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link to Record Helptext --></label>
+        <name>bdiOMUILinkToRecordHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link to Record Label/Column Name --></label>
+        <name>bdiOMUILinkToRecordLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message for long deployment --></label>
+        <name>bdiOMUILongDeployment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Object Groups Title --></label>
+        <name>bdiOMUIObjectGroupsTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Object Name Helptext --></label>
+        <name>bdiOMUIObjectNameHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Object Name Label/Column Name --></label>
+        <name>bdiOMUIObjectNameLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Of This Object Group Helptext --></label>
+        <name>bdiOMUIOfGroupHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Of This Object Group Label/Column --></label>
+        <name>bdiOMUIOfGroupLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Object groups description part 1 --></label>
+        <name>bdiOMUIPageDescriptionPt1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Object groups description part 2 --></label>
+        <name>bdiOMUIPageDescriptionPt2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Object groups description part 3 --></label>
+        <name>bdiOMUIPageDescriptionPt3</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Through This Field Helptext --></label>
+        <name>bdiOMUIThroughFieldHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Through this field Label/Column Name --></label>
+        <name>bdiOMUIThroughFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- View Field Mappings action --></label>
+        <name>bdiOMUIViewFieldMappingsLabel</name>
     </customLabels>
     <customLabels>
         <label><!-- error when numeric settings set to negative number --></label>
@@ -1228,6 +1804,278 @@
         <name>bdiTime</name>
     </customLabels>
     <customLabels>
+        <label><!-- bdiUpdated --></label>
+        <name>bdiUpdated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Delete action for Batch Gift Entry --></label>
+        <name>bgeActionDelete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- View action for Batch Gift Entry --></label>
+        <name>bgeActionView</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bgeBatchAvailableFields --></label>
+        <name>bgeBatchAvailableFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used as field help text since help text is not upgradeable. --></label>
+        <name>bgeBatchBatchProcessSizeHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used as field help text since help text is not upgradeable. --></label>
+        <name>bgeBatchDonationDateRangeHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used as field help text since help text is not upgradeable. --></label>
+        <name>bgeBatchDonationMatchingBehaviorHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used as field help text since help text is not upgradeable. --></label>
+        <name>bgeBatchDonationMatchingClassHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used as field help text since help text is not upgradeable. --></label>
+        <name>bgeBatchDonationMatchingRuleHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Explanation text for hidden lookup fields. --></label>
+        <name>bgeBatchDonorLookupInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text for batch dry run in BGE. --></label>
+        <name>bgeBatchDryRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error shown when required fields are missing. --></label>
+        <name>bgeBatchErrorRequiredFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for Batch Info in Wizard prompting user entry --></label>
+        <name>bgeBatchInfoWizard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for Batch Info in View Mode --></label>
+        <name>bgeBatchOverview</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for Batch Info in Wizard --></label>
+        <name>bgeBatchOverviewWizard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used as field help text since help text is not upgradeable. --></label>
+        <name>bgeBatchPostProcessClassHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used as field help text since help text is not upgradeable. --></label>
+        <name>bgeBatchProcessUsingScheduledJobHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Used as field help text since help text is not upgradeable. --></label>
+        <name>bgeBatchRunOpportunityRollupsWhileProcessingHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header and text for Field Selection --></label>
+        <name>bgeBatchSelectFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- bgeBatchActiveFields --></label>
+        <name>bgeBatchSelectedFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for Batch Options --></label>
+        <name>bgeBatchSetBatchOptions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for Batch Field Options --></label>
+        <name>bgeBatchSetFieldOptions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button text for copying existing Batch setup to a new Batch. --></label>
+        <name>bgeCopyBatchSetupBatchNameAppend</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button text for copying existing Batch setup to a new Batch. --></label>
+        <name>bgeCopyBatchSetupButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text to appear in Donation Selector modal in BGE. --></label>
+        <name>bgeDonationSelectorHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Success message when batch dry run completes in BGE. --></label>
+        <name>bgeDryRunComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message for Field Options step of BGE Config Wizard --></label>
+        <name>bgeEditBatchFieldOptionsWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message for Select Fields step of BGE Config Wizard --></label>
+        <name>bgeEditBatchFieldSelectionWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message for Batch Options step of BGE Config Wizard --></label>
+        <name>bgeEditBatchOptionsWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label that appears when user does not pass FLS check in BGE --></label>
+        <name>bgeFLSError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header text to prompt user to select a donation to update --></label>
+        <name>bgeFormMatchingModalText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text to indicate user is creating a new opportunity --></label>
+        <name>bgeFormNewDonationHelptext</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text to indicate user is applying a new payment to an opportunity --></label>
+        <name>bgeFormNewPaymentHelptext</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link to create a new opportunity --></label>
+        <name>bgeFormNoneLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Denotes donation selected in the BGE UI entry form. --></label>
+        <name>bgeFormSelectedOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Denotes donation selected in the BGE UI entry form will receive a new payment. --></label>
+        <name>bgeFormSelectedOpportunityApplyNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Denotes donation selected in the BGE UI entry form. --></label>
+        <name>bgeFormSelectedPayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Link text to change selected donation --></label>
+        <name>bgeFormUpdateDonation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text to indicate that user has selected a donation --></label>
+        <name>bgeFormUpdateHelptext</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button text to select an opportunity to update in BGE --></label>
+        <name>bgeFormUpdateOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button text to select a payment to update in BGE --></label>
+        <name>bgeFormUpdatePayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Gift Entry Grid --></label>
+        <name>bgeGridAllGifts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Donor Type picklist --></label>
+        <name>bgeGridDonorType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message preventing user from processing batch if there are conflicting gifts. --></label>
+        <name>bgeGridErrorConflictingGifts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message preventing user from processing batch if there are errors. --></label>
+        <name>bgeGridErrorFromDryRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message preventing user from processing batch if totals don&apos;t match expected --></label>
+        <name>bgeGridErrorRequiredTotalsExpected</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label to give context to the progress bar. --></label>
+        <name>bgeGridGiftCountHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Success message when gift is deleted. --></label>
+        <name>bgeGridGiftDeleted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Success message when gift is saved. --></label>
+        <name>bgeGridGiftSaved</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Success message when gift is updated. --></label>
+        <name>bgeGridGiftUpdated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body message when no gifts are associated with batch. --></label>
+        <name>bgeGridNoGiftsBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header message when no gifts are associated with batch. --></label>
+        <name>bgeGridNoGiftsHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Total amount matching expected amount. --></label>
+        <name>bgeGridTotalAmount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Total count versus expected count. --></label>
+        <name>bgeGridTotalCount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message warning user if totals don&apos;t match expected --></label>
+        <name>bgeGridWarningRequiredTotalsExpected</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alerts user that there are matched donations --></label>
+        <name>bgeMatchingAlert</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Select Open Donation text and modal header --></label>
+        <name>bgeMatchingSelect</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to create a new batch. --></label>
+        <name>bgeNewBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Gift Entry Form --></label>
+        <name>bgeNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to process a batch. --></label>
+        <name>bgeProcessBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header used for Batch Gift Entry tab --></label>
+        <name>bgeTabHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header used for the Batch Gift Entry tab unmapped fields notice. --></label>
+        <name>bgeUnmappedFieldsNoticeHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message for Batch Gift Entry unmapped fields when Advanced Mapping enabled. --></label>
+        <name>bgeUnmappedFieldsNoticeMessageAdvancedMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message for Batch Gift Entry unmapped fields when Advanced Mapping disabled. --></label>
+        <name>bgeUnmappedFieldsNoticeMessageHelpTextMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title used for the Batch Gift Entry tab unmapped fields notice. --></label>
+        <name>bgeUnmappedFieldsNoticeTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for link to hide advanced options in the Wizard --></label>
+        <name>bgeWizardHideAdvancedOptions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for link to show advanced options in the Wizard --></label>
+        <name>bgeWizardShowAdvancedOptions</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- button label to Continue an action --></label>
+        <name>btnContinue</name>
+    </customLabels>
+    <customLabels>
         <label>הסר</label>
         <name>btnRemove</name>
     </customLabels>
@@ -1256,6 +2104,14 @@
         <name>conMergeErrNoPersonAccounts</name>
     </customLabels>
     <customLabels>
+        <label><!-- Delete permission on the Contact object is required to for merging --></label>
+        <name>conMergeErrorNoDeleteObjPermission</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Record sharing permission on the Contact object is required to for merging --></label>
+        <name>conMergeErrorNoDeleteRecAccess</name>
+    </customLabels>
+    <customLabels>
         <label><!-- conMergeFoundContacts --></label>
         <name>conMergeFoundContacts</name>
     </customLabels>
@@ -1266,6 +2122,10 @@
     <customLabels>
         <label><!-- conMergePageTitleDetail --></label>
         <name>conMergePageTitleDetail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Is Portal/Community User --></label>
+        <name>conMergePortalUser</name>
     </customLabels>
     <customLabels>
         <label><!-- conMergeSearchPlaceholder --></label>
@@ -1296,12 +2156,36 @@
         <name>engagementPlanCantEdit</name>
     </customLabels>
     <customLabels>
+        <label><!-- engagementPlanMissingField --></label>
+        <name>engagementPlanMissingField</name>
+    </customLabels>
+    <customLabels>
         <label>יש למלא חיפוש אובייקט אחד עבור כל תוכנית מעורבות.</label>
         <name>engagementPlanNoLookups</name>
     </customLabels>
     <customLabels>
         <label>ניתן למלא חיפוש אובייקט אחד בלבד לכל תוכנית מעורבות.</label>
         <name>engagementPlanTwoLookups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- errErrorNoContext --></label>
+        <name>errErrorNoContext</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- errErrorTypeOther --></label>
+        <name>errErrorTypeOther</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- errErrorTypeRequiredFieldMissing --></label>
+        <name>errErrorTypeRequiredFieldMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- errErrorTypeValidationFailed --></label>
+        <name>errErrorTypeValidationFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- errErrorUnsupportedDMLType --></label>
+        <name>errErrorUnsupportedDMLType</name>
     </customLabels>
     <customLabels>
         <label><!-- exceptionDeletePermission --></label>
@@ -1318,6 +2202,10 @@
     <customLabels>
         <label>אין לך הרשאות לשנות את {0}.</label>
         <name>flsError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- flsReadAccessError --></label>
+        <name>flsReadAccessError</name>
     </customLabels>
     <customLabels>
         <label><!-- Gift Processing account model error --></label>
@@ -1462,6 +2350,10 @@
     <customLabels>
         <label>מזהה Recordtype {0} לא חוקי.</label>
         <name>healthDetailsInvalidRecordtypeId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsInvalidRecordtypeName --></label>
+        <name>healthDetailsInvalidRecordtypeName</name>
     </customLabels>
     <customLabels>
         <label>הרשומה {0} באובייקט Schedulable__c לא חוקית.</label>
@@ -1936,6 +2828,10 @@
         <name>lblDeleteContactPrompt</name>
     </customLabels>
     <customLabels>
+        <label><!-- Notify user component has been deprecated. --></label>
+        <name>lblDeprecated</name>
+    </customLabels>
+    <customLabels>
         <label><!-- lblExtendedStatus --></label>
         <name>lblExtendedStatus</name>
     </customLabels>
@@ -2014,6 +2910,10 @@
     <customLabels>
         <label>רחוב</label>
         <name>lblStreet</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblToday --></label>
+        <name>lblToday</name>
     </customLabels>
     <customLabels>
         <label><!-- lblYouAreHere --></label>
@@ -2216,6 +3116,14 @@
         <name>pmtModifyCurrency</name>
     </customLabels>
     <customLabels>
+        <label><!-- pmtPaidPaymentDateRequired --></label>
+        <name>pmtPaidPaymentDateRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtUnpaidPaymentScheduledDateRequired --></label>
+        <name>pmtUnpaidPaymentScheduledDateRequired</name>
+    </customLabels>
+    <customLabels>
         <label>חשב תשלומים</label>
         <name>pmtWizardBtnCalcPayments</name>
     </customLabels>
@@ -2242,6 +3150,18 @@
     <customLabels>
         <label>מרווח זמן</label>
         <name>pmtWizardInterval</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardIntervalNumber --></label>
+        <name>pmtWizardIntervalNumber</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardIntervalPeriod --></label>
+        <name>pmtWizardIntervalPeriod</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardInvalidRecords --></label>
+        <name>pmtWizardInvalidRecords</name>
     </customLabels>
     <customLabels>
         <label><!-- pmtWizardMonth --></label>
@@ -2276,6 +3196,18 @@
         <name>pmtWizardPaymentsDisabledTitle</name>
     </customLabels>
     <customLabels>
+        <label><!-- Message displayed when the user has no permission to manage payments --></label>
+        <name>pmtWizardPaymentsNoAccessMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardScheduleInvalidRecords --></label>
+        <name>pmtWizardScheduleInvalidRecords</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardNoAmount --></label>
+        <name>pmtWizardScheduleNoAmount</name>
+    </customLabels>
+    <customLabels>
         <label>פרטי הזדמנות נוכחית</label>
         <name>pmtWizardSectionTitle</name>
     </customLabels>
@@ -2304,6 +3236,14 @@
         <name>pmtWizardWeek</name>
     </customLabels>
     <customLabels>
+        <label><!-- pmtWizardWriteOffInvalidRecords --></label>
+        <name>pmtWizardWriteOffInvalidRecords</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardNoAmount --></label>
+        <name>pmtWizardWriteOffNoAmount</name>
+    </customLabels>
+    <customLabels>
         <label>באיזה תאריך ברצונך להשתמש?</label>
         <name>pmtWizardWriteoffDate</name>
     </customLabels>
@@ -2312,8 +3252,20 @@
         <name>pmtWizardWriteoffMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- Message displayed when the user has no permission to apply the Write Off --></label>
+        <name>pmtWizardWriteoffNoAccessMessage</name>
+    </customLabels>
+    <customLabels>
         <label><!-- pmtWizardYear --></label>
         <name>pmtWizardYear</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWriteOffPaidPayment --></label>
+        <name>pmtWriteOffPaidPayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWrittenOffPaymentDateRequired --></label>
+        <name>pmtWrittenOffPaymentDateRequired</name>
     </customLabels>
     <customLabels>
         <label>מחק שורה</label>
@@ -2338,6 +3290,10 @@
     <customLabels>
         <label>לא ניתן לשנות מטבעות של קרדיט חלקי באופן ישיר. מטבע של קרדיט חלקי מתעדכן כאשר מתבצע שינוי במטבע של הזדמנות האב.</label>
         <name>pscManageSoftCreditsCantChangeCurrency</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pscManageSoftCreditsContactMissing --></label>
+        <name>pscManageSoftCreditsContactMissing</name>
     </customLabels>
     <customLabels>
         <label>מלא</label>
@@ -2366,6 +3322,10 @@
     <customLabels>
         <label>אחוז</label>
         <name>pscManageSoftCreditsPercent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- You do not have permission to manage soft credits --></label>
+        <name>pscManageSoftCreditsPermissionDenied</name>
     </customLabels>
     <customLabels>
         <label>תורם ראשי</label>
@@ -2416,6 +3376,10 @@
         <name>sendAcknowledgmentNoneSelected</name>
     </customLabels>
     <customLabels>
+        <label><!-- sendAcknowledgmentNumberAlreadySent --></label>
+        <name>sendAcknowledgmentNumberAlreadySent</name>
+    </customLabels>
+    <customLabels>
         <label>{0} אישורים לא נשלחו.</label>
         <name>sendAcknowledgmentNumberNoEmail</name>
     </customLabels>
@@ -2448,6 +3412,10 @@
         <name>statusNotStarted</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgActive --></label>
+        <name>stgActive</name>
+    </customLabels>
+    <customLabels>
         <label><!-- To add to a list --></label>
         <name>stgAdd</name>
     </customLabels>
@@ -2458,6 +3426,22 @@
     <customLabels>
         <label>עליך לבחור שירות אימות כדי להפעיל אימות אוטומטי.</label>
         <name>stgAddrMustChooseClass</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Permission Denied on Address Verification Panel --></label>
+        <name>stgAddrPermissionDenied</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgAllocationLevel --></label>
+        <name>stgAllocationLevel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBDIGoToSetup --></label>
+        <name>stgBDIGoToSetup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to go back to a previous page --></label>
+        <name>stgBtnBack</name>
     </customLabels>
     <customLabels>
         <label>ביטול</label>
@@ -2502,6 +3486,10 @@
     <customLabels>
         <label>רענן את כל שמות משק הבית</label>
         <name>stgBtnHHAutoName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnNew --></label>
+        <name>stgBtnNew</name>
     </customLabels>
     <customLabels>
         <label>קשר אוטומטי חדש</label>
@@ -2576,6 +3564,10 @@
         <name>stgCRLPNonAdminError</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgCRLPReset --></label>
+        <name>stgCRLPReset</name>
+    </customLabels>
+    <customLabels>
         <label><!-- For alternative text when a boolean is not selected. --></label>
         <name>stgCheckboxFalse</name>
     </customLabels>
@@ -2584,12 +3576,44 @@
         <name>stgCheckboxTrue</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error shown when errors must be removed before something else can occur. --></label>
+        <name>stgClearErrors</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgCountOf --></label>
         <name>stgCountOf</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgCreatedBy --></label>
+        <name>stgCreatedBy</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDIFMNonAdminError --></label>
+        <name>stgDIFMNonAdminError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDefaultValue --></label>
+        <name>stgDefaultValue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentCustomMetadataMappingEnabled --></label>
+        <name>stgDeploymentCustomMetadataMappingEnabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentHasInvalidHelpTextMappings --></label>
+        <name>stgDeploymentHasInvalidHelpTextMappings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentHelpTextMappingEnabled --></label>
+        <name>stgDeploymentHelpTextMappingEnabled</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgDeploymentInProgress --></label>
         <name>stgDeploymentInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentInProgress --></label>
+        <name>stgDeploymentTimedOut</name>
     </customLabels>
     <customLabels>
         <label><!-- stgDeploymentTryAgain --></label>
@@ -2625,6 +3649,14 @@
         <name>stgErrorInvalidNameFormat</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgErrorMissingDefaultGauRecord --></label>
+        <name>stgErrorMissingDefaultGauRecord</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgErrorMissingDefaultGauRecordWithPmtAllocEnabled --></label>
+        <name>stgErrorMissingDefaultGauRecordWithPmtAllocEnabled</name>
+    </customLabels>
+    <customLabels>
         <label>רענן את שמות משק הבית</label>
         <name>stgHHNameRefreshTitle</name>
     </customLabels>
@@ -2633,12 +3665,44 @@
         <name>stgHelpAccountModel</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpAdvancedMapping1 --></label>
+        <name>stgHelpAdvancedMapping1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAdvancedMapping2 --></label>
+        <name>stgHelpAdvancedMapping2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAdvancedMapping3 --></label>
+        <name>stgHelpAdvancedMapping3</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAdvancedMapping4 --></label>
+        <name>stgHelpAdvancedMapping4</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAdvancedMappingInvalidHelpText --></label>
+        <name>stgHelpAdvancedMappingInvalidHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAdvancedMappingTableHeader1 --></label>
+        <name>stgHelpAdvancedMappingTableHeader1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAdvancedMappingTableHeader2 --></label>
+        <name>stgHelpAdvancedMappingTableHeader2</name>
+    </customLabels>
+    <customLabels>
         <label>כשאפשרות זו מסומנת, היא מפעילה את ההגדרות של שנת הכספים, במקום הגדרות השנה הקלנדרית, עבור סיכומים כוללים של הקצאות. כדי להגדיר פרטי שנת כספים, עבור אל &apos;הגדרה | פרופיל חברה | שנת כספים&apos;. הערה: &apos;ערכת ההצלחה למלכ&quot;רים&apos; אינה תומכת בהגדרות מותאמות אישית של שנת כספים.</label>
         <name>stgHelpAlloFiscalYearRollups</name>
     </customLabels>
     <customLabels>
         <label>הגדרת הערך עבור סיכומי &apos;N יום&apos;, כאשר N הוא מספר הימים שלפני היום הנוכחי. ערך ברירת המחדל הוא סיכום של 365 הימים האחרונים.</label>
         <name>stgHelpAlloNDayValue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpAllocationLevel --></label>
+        <name>stgHelpAllocationLevel</name>
     </customLabels>
     <customLabels>
         <label>כאשר אפשרות זו מסומנת, היא מנחה את Salesforce ליצור או לעדכן השתייכויות עבור אנשי קשר הקשורים לחשבונות ארגוניים (סוג רשומת חשבון = &apos;ארגון&apos;) בכל פעם שחל שינוי בשדה החשבון או ההשתייכות הראשית של איש הקשר.</label>
@@ -2751,11 +3815,11 @@
         <name>stgHelpCreateMissingPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <label><!-- stgHelpCustomizableRollupsEnable1 --></label>
         <name>stgHelpCustomizableRollupsEnable1</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <label><!-- stgHelpCustomizableRollupsEnable2 --></label>
         <name>stgHelpCustomizableRollupsEnable2</name>
     </customLabels>
     <customLabels>
@@ -2948,6 +4012,10 @@
         <name>stgHelpOrgAccountAddressMgmt</name>
     </customLabels>
     <customLabels>
+        <label><!-- Help text for Contact Role for Organizational Opps --></label>
+        <name>stgHelpOrgOCRDefaultRole</name>
+    </customLabels>
+    <customLabels>
         <label>מספר אנשי הקשר ש-Salesforce תעניק להם שם באופן מפורש בשמות וברכות של משק בית. לאחר מספר זה, Salesforce תשתמש בערך של גלישת השמות לצורת מתן שמות.</label>
         <name>stgHelpOverrunCount</name>
     </customLabels>
@@ -3117,6 +4185,10 @@
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpRollupBatchSize --></label>
+        <name>stgHelpRollupBatchSize</name>
+    </customLabels>
+    <customLabels>
         <label>הזדמנויות עם סוגי הרשומות שנבחרו לא ייכללו בסיכומים אל החשבון. כדי לבחור יותר מסוג רשומה אחד, לחץ על לחצן העכבר ועל מקש Control או Command.</label>
         <name>stgHelpRollupExcludeAccountOppRT</name>
     </customLabels>
@@ -3247,6 +4319,10 @@
         <name>stgLabelAlloBatchProgress</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelAllocationsRollupSettings --></label>
+        <name>stgLabelAllocationBehaviorSettings</name>
+    </customLabels>
+    <customLabels>
         <label>הגדרות סיכום הקצאות GAU</label>
         <name>stgLabelAllocationsRollupSettings</name>
     </customLabels>
@@ -3311,6 +4387,10 @@
         <name>stgLabelExamplesIGFormat</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelField --></label>
+        <name>stgLabelField</name>
+    </customLabels>
+    <customLabels>
         <label>הגדרות כלליות</label>
         <name>stgLabelHHGeneral</name>
     </customLabels>
@@ -3333,6 +4413,10 @@
     <customLabels>
         <label>הגדרות משק בית</label>
         <name>stgLabelHHSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelHidden --></label>
+        <name>stgLabelHidden</name>
     </customLabels>
     <customLabels>
         <label>צור אוטומטית תפקידי איש קשר בהזדמנות עבור אנשי קשר של מקבל הוקרה ונמען הודעות</label>
@@ -3393,6 +4477,10 @@
     <customLabels>
         <label>הגדרות שם הזדמנות</label>
         <name>stgLabelONS</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelObject --></label>
+        <name>stgLabelObject</name>
     </customLabels>
     <customLabels>
         <label>התקדמות אצוות סיכום תרומות</label>
@@ -3547,6 +4635,10 @@
         <name>stgLabelYearPicklistYearsAgo</name>
     </customLabels>
     <customLabels>
+        <label><!-- Last Modified By --></label>
+        <name>stgLastModifiedBy</name>
+    </customLabels>
+    <customLabels>
         <label>מחק</label>
         <name>stgLinkDelete</name>
     </customLabels>
@@ -3651,6 +4743,10 @@
         <name>stgNavPeople</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgNavRD2Enablement --></label>
+        <name>stgNavRD2Enablement</name>
+    </customLabels>
+    <customLabels>
         <label>אצוות תרומות חוזרות</label>
         <name>stgNavRDBatch</name>
     </customLabels>
@@ -3687,6 +4783,14 @@
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgNavRollups --></label>
+        <name>stgNavRollups</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavSchedule --></label>
+        <name>stgNavSchedule</name>
+    </customLabels>
+    <customLabels>
         <label>כלי מערכת</label>
         <name>stgNavSystem</name>
     </customLabels>
@@ -3715,24 +4819,64 @@
         <name>stgPowerOfUsHub</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgReset --></label>
+        <name>stgReset</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgSelectOne --></label>
         <name>stgSelectOne</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgStatusDisabled --></label>
+        <name>stgStatusDisabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgStatusEnabled --></label>
+        <name>stgStatusEnabled</name>
     </customLabels>
     <customLabels>
         <label>כלים</label>
         <name>stgTools</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgUnknownError --></label>
+        <name>stgUnknownError</name>
+    </customLabels>
+    <customLabels>
         <label>מודל החשבון מוגדר כ&apos;חשבון משק בית&apos;, המחייב להגדיר את כללי משק הבית כ&apos;ללא אנשי קשר&apos;.   בעת שימוש בחשבונות משק בית, אין צורך באובייקט משק בית נוסף.</label>
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
+    <customPageWebLinks>
+        <label><!-- Nonprofit Edition Reports --></label>
+        <name>Nonprofit_Edition_Reports</name>
+    </customPageWebLinks>
+    <customTabs>
+        <label><!-- Affiliations Settings --></label>
+        <name>Affiliations_Settings</name>
+    </customTabs>
     <customTabs>
         <label>הזנת נתונים באצווה</label>
         <name>Batch_Data_Entry</name>
     </customTabs>
     <customTabs>
+        <label><!-- Batch Gift Entry --></label>
+        <name>Batch_Gift_Entry</name>
+    </customTabs>
+    <customTabs>
         <label>מיזוג אנשי קשר</label>
         <name>Contact_Merge</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Contact Merge (OLD) --></label>
+        <name>Contact_Merge</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Contacts Settings --></label>
+        <name>Contacts_Settings</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Households Settings --></label>
+        <name>Households_Settings</name>
     </customTabs>
     <customTabs>
         <label>תחילת העבודה</label>
@@ -3741,6 +4885,22 @@
     <customTabs>
         <label>הגדרות NPSP</label>
         <name>NPSP_Settings</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Opportunity Rollups --></label>
+        <name>Opportunity_Rollups</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Payment Mapping --></label>
+        <name>Payment_Mapping</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Relationships Settings --></label>
+        <name>Relationships_Settings</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- User Rollups --></label>
+        <name>User_Rollups</name>
     </customTabs>
     <quickActions>
         <label><!-- LogACall --></label>
@@ -3751,8 +4911,28 @@
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
+        <label><!-- NewCase --></label>
+        <name>NewCase</name>
+    </quickActions>
+    <quickActions>
         <label><!-- New Contact --></label>
         <name>NewContact</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewEvent --></label>
+        <name>NewEvent</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewGroup --></label>
+        <name>NewGroup</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- NewLead --></label>
+        <name>NewLead</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Note --></label>
+        <name>NewNote</name>
     </quickActions>
     <quickActions>
         <label><!-- NewNote --></label>
@@ -3761,6 +4941,10 @@
     <quickActions>
         <label><!-- New Opportunity --></label>
         <name>NewOpportunity</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- New Task --></label>
+        <name>NewTask</name>
     </quickActions>
     <quickActions>
         <label><!-- NewTask --></label>
@@ -3773,6 +4957,10 @@
     <quickActions>
         <label>תרומה חוזרת חדשה</label>
         <name>New_Recurring_Donation</name>
+    </quickActions>
+    <quickActions>
+        <label><!-- SendEmail --></label>
+        <name>SendEmail</name>
     </quickActions>
     <reportTypes>
         <description>אנשי קשר מבלי לקשר כל אובייקט אחר</description>
