@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value>一般会計単位</value>
     </caseValues>
     <fields>
         <help>有効な一般会計単位は割り当ての選択で使用できます。無効な一般会計単位には新しい割り当てを適用できません。</help>
@@ -45,7 +45,7 @@
         <name>Number_of_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help>今年の成立フェーズにある支援の割り当ての総数。</help>
+        <help>今年の成立フェーズにある支援の割り当ての総数。夜間スケジュール済みジョブ時に更新されます。</help>
         <label>今年の割り当て数</label>
         <name>Number_of_Allocations_This_Year__c</name>
     </fields>
@@ -104,7 +104,7 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- General Accounting Unit Name --></nameFieldLabel>
+    <nameFieldLabel>一般会計単位名</nameFieldLabel>
     <webLinks>
         <label>積み上げ集計の再計算</label>
         <name>Recalculate_Rollups</name>
