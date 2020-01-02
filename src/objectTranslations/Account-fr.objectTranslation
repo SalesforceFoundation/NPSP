@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Manage Household Custom --></label>
+        <name>Manage_Household_Custom</name>
+    </fieldSets>
     <fields>
         <help>Le lot dans lequel ce compte a été créé.</help>
         <label>Lot</label>
@@ -51,12 +63,12 @@
     </fields>
     <fields>
         <help>Le montant maximal offert par l’entreprise pour un don jumelé.</help>
-        <label>Montant maximal de don jumelé</label>
+        <label>Montant maximal de dons jumelés</label>
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
     <fields>
         <help>Le montant de don jumelé le plus faible accepté par l’entreprise.</help>
-        <label>Montant minimal de don jumelé</label>
+        <label>Montant minimal de dons jumelés</label>
         <name>Matching_Gift_Amount_Min__c</name>
     </fields>
     <fields>
@@ -70,7 +82,7 @@
         <name>Matching_Gift_Comments__c</name>
     </fields>
     <fields>
-        <help>Cette entreprise offre-t-elle des dons jumelés ?</help>
+        <help>Indique que cette entreprise propose des dons jumelés.</help>
         <label>Entreprise à dons jumelés</label>
         <name>Matching_Gift_Company__c</name>
     </fields>
@@ -80,8 +92,8 @@
         <name>Matching_Gift_Email__c</name>
     </fields>
     <fields>
-        <help>La date à laquelle les informations de dons jumelés ont été mises à jour la dernière fois.</help>
-        <label>Mise à jour des infos de dons jumelés</label>
+        <help>La date de la dernière mise à jour des informations de dons jumelés.</help>
+        <label>Mise à jour des infor. de dons jumelés</label>
         <name>Matching_Gift_Info_Updated__c</name>
     </fields>
     <fields>
@@ -90,27 +102,27 @@
         <name>Matching_Gift_Percent__c</name>
     </fields>
     <fields>
-        <help>Numéro de téléphone du bureau d’administration des dons jumelés.</help>
+        <help>Numéro de téléphone de l’administrateur responsable des dons jumelés de l’entreprise.</help>
         <label>Téléphone des dons jumelés</label>
         <name>Matching_Gift_Phone__c</name>
     </fields>
     <fields>
-        <help>Toutes les restrictions sur l’éligibilité des dons passés pour le jumelage.</help>
+        <help>Utilisez ce champ pour mentionner les restrictions d’âge sur l’éligibilité des dons jumelés.</help>
         <label>Échéance des requêtes de dons jumelés</label>
         <name>Matching_Gift_Request_Deadline__c</name>
     </fields>
     <fields>
-        <help>Formule : Le nombre d’années pour lesquelles ce foyer a contenu un membre.</help>
+        <help>Le nombre d’années d’adhésion d’un membre de ce foyer (lecture seule).</help>
         <label>Durée d’adhésion</label>
         <name>Membership_Span__c</name>
     </fields>
     <fields>
-        <help>Formule : Actuel, expiré ou en période de grâce.  Période de grâce par défaut définie dans les paramètres de foyer.</help>
+        <help>Le statut d’adhésion du foyer : Actuel, expiré ou en période de grâce. La valeur est basée sur la date de fin de l’adhésion et la période de grâce. La période de grâce par défaut est définie dans les param. NSPS, sous Param. de foyer (lecture seule).</help>
         <label>Statut d’adhésion</label>
         <name>Membership_Status__c</name>
     </fields>
     <fields>
-        <help>Pour les comptes de foyer, le nombre de contacts dans le foyer.</help>
+        <help>Le nombre de contacts qui sont membres de ce foyer.</help>
         <label>Nombre de membres du foyer</label>
         <name>Number_of_Household_Members__c</name>
     </fields>
@@ -121,11 +133,11 @@
             <section>Address</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Liens personnalisés</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Description --></label>
+            <label>Descriptif</label>
             <section>Description</section>
         </sections>
         <sections>
@@ -152,11 +164,11 @@
             <section>Address</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Liens personnalisés</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Description --></label>
+            <label>Descriptif</label>
             <section>Description</section>
         </sections>
         <sections>
@@ -176,11 +188,11 @@
             <section>Grantmaking Information</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Comments --></label>
+            <label>Commentaires sur les dons jumelés</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Information --></label>
+            <label>Informations sur les dons jumelés</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -209,7 +221,7 @@
         <name>Manage_Household</name>
     </webLinks>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label>Recalculer des cumuls</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>

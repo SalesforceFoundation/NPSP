@@ -1840,7 +1840,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Resources Page - Title</shortDescription>
-        <value>Welcome to Salesforce and the</value>
+        <value>Welcome to Salesforce and the Nonprofit Success Pack (NPSP)!</value>
     </labels>
     <labels>
         <fullName>RP_TrailheadLinkLabel</fullName>
@@ -1888,7 +1888,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <fullName>RP_Videos</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources Page - Youtube Videos</shortDescription>
+        <shortDescription>Nonprofit Success Pack (NPSP) Resources Page - Youtube Videos</shortDescription>
         <value>How-To videos</value>
     </labels>
     <labels>
@@ -7018,7 +7018,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgCRLPReset</shortDescription>
-        <value>Reset Customizable Rollups</value>
+        <value>Reset to Defaults</value>
     </labels>
     <labels>
         <fullName>stgDefaultValue</fullName>
