@@ -51,7 +51,7 @@
         <name>Disable_Error_Handling__c</name>
     </fields>
     <fields>
-        <help>Wenn diese Option aktiviert wird, plant NPSP wiederkehrende Standardaufträge nicht automatisch. Mit diesen wiederkehrenden Auftr. werden Rollups berechnet, wiederkehrende Spenden und saisonale Adressen aktualisiert sowie die Fehlerbehandlung durchgeführt.</help>
+        <help>Wenn diese Option aktiviert wird, plant NPSP wiederkehrende Stand‘aufträge nicht autom. Mit diesen wiederkehrenden Auftr. werden Rollups berechnet, wiederkehrende Spenden und saisonale Adressen aktualisiert sowie die Fehlerbehandlung durchgeführt.</help>
         <label>Keine autom. Plan. v. NPSP-Stand.-Auftr.</label>
         <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     </fields>
@@ -71,8 +71,13 @@
         <name>Error_Notifications_To__c</name>
     </fields>
     <fields>
-        <help><!-- Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved. --></help>
-        <label><!-- Respect Duplicate Rule Settings --></label>
+        <help><!-- Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product License in the LMO. --></help>
+        <label><!-- Scratch Org Override: Pilot Enabled --></label>
+        <name>OverrideFeature_PilotEnabled__c</name>
+    </fields>
+    <fields>
+        <help>Berücks. Sie die Einst‘en in einer Dupl‘regel zur Festleg., ob dopp. Datens. zulässig sind. Um die vorhand. Einstell‘n zu überpr., zu &quot;Setup&quot; &gt; &quot;Duplikatsregeln&quot; gehen. Wenn &quot;Aktion beim Erstellen&quot; o. &quot;Aktion b. Bearbeiten&quot; = &quot;Zulassen&quot;, Dupl. speichern.</help>
+        <label>Duplikatsregeleinst. berücksichtigen</label>
         <name>Respect_Duplicate_Rule_Settings__c</name>
     </fields>
     <fields>
