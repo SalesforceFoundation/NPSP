@@ -653,19 +653,7 @@ private with sharing class RD2_OpportunityService_TEST {
     * @return void
     */
     private static void setUpConfiguration(Map<String, Object> valueByField) {
-        //create RD settings
-        npe03__Recurring_Donations_Settings__c rdSetting = new npe03__Recurring_Donations_Settings__c(
-            npe03__Add_Campaign_to_All_Opportunites__c = true,//default
-            IsRecurringDonations2Enabled__c = true,
-            npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
-        );
-
-        for (String field : valueByField.keySet()) {
-            rdSetting.put(field, valueByField.get(field));
-        }
-
-        UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
+        RD2_Settings_TEST.setUpConfiguration(valueByField);
 
         //set current date override
         RD2_ScheduleService.currentDate = TODAY;

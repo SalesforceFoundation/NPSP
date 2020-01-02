@@ -340,10 +340,9 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        RD2_OpportunityEvaluation_BATCH batch = runBatchExecuteMethod(rd.Id);
+        RD2_OpportunityEvaluation_BATCH batch = executeAndFinishBatch(rd.Id);
 
-        System.assertEquals(1, batch.recordsProcessed, 'Records Processed should be tracked');
-        System.assertEquals(0, batch.recordsFailed, 'No record should fail');
+        assertRecordsFailed(batch, 0);
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'A new Opportunity should be created: ' + opps);
@@ -368,10 +367,9 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        RD2_OpportunityEvaluation_BATCH batch = runBatchExecuteMethod(rd.Id);
+        RD2_OpportunityEvaluation_BATCH batch = executeAndFinishBatch(rd.Id);
 
-        System.assertEquals(1, batch.recordsProcessed, 'Records Processed should be tracked');
-        System.assertEquals(1, batch.recordsFailed, 'Record should fail');
+        assertRecordsFailed(batch, 1);
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(0, opps.size(), 'No new Opportunity should be created: ' + opps);
@@ -403,14 +401,15 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-     * @description Executes execute() method
+     * @description Executes execute() and finish() methods
      * @return RD2_OpportunityEvaluation_BATCH Batch instance
      */
-    private static RD2_OpportunityEvaluation_BATCH runBatchExecuteMethod(Id rdId) {
+    private static RD2_OpportunityEvaluation_BATCH executeAndFinishBatch(Id rdId) {
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH();
 
         batch.execute(batchContext, rdGateway.getRecords(new Set<Id>{ rdId }));
+        batch.finish(batchContext);
 
         return batch;
     }
@@ -462,6 +461,25 @@ private class RD2_OpportunityEvaluation_TEST {
     private static void assertBatchJobIteration(Integer itemsProcessed) {
         AsyncApexJob job = jobGateway.getRecord('RD2_OpportunityEvaluation_BATCH');
         System.assertEquals(itemsProcessed, job.JobItemsProcessed, 'The number of batch iteration should match');
+    }
+
+    /****
+    * @description Verifies records failed
+    * @param batch The batch instance
+    * @param recordsFailed Records failed
+    * @return void
+    */
+    private static void assertRecordsFailed(RD2_OpportunityEvaluation_BATCH batch, Integer recordsFailed) {
+        Integer recordsProcessed = 1;
+
+        System.assertEquals(recordsProcessed, batch.recordsProcessed, 'Records Processed should be tracked');
+        System.assertEquals(recordsFailed, batch.recordsFailed, 'Record Failed should match');
+
+        npe03__Recurring_Donations_Settings__c settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        System.assertEquals(recordsProcessed - recordsFailed, settings.npe03__Number_of_Successes__c, 
+            'Settings Number of Successes should be updated');
+        System.assertEquals(recordsFailed, settings.npe03__Number_of_Failures__c, 
+            'Settings Records Failed should be updated');
     }
 
     /****

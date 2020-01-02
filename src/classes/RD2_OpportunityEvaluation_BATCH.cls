@@ -123,11 +123,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Finish Method
     */
     public void finish(Database.BatchableContext context) {
-        AsyncApexJob job = new UTIL_BatchJobService().getAsyncApexJob(context.getJobId());
-
-        if (job != null) {
-            new RD2_Settings().saveLatestBatchResults(job.completedDate, recordsProcessed, recordsFailed);
-        }
+        new RD2_Settings()
+            .saveLatestBatchResults(context.getJobId(), recordsProcessed, recordsFailed);
     }
 
     /**

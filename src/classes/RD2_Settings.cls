@@ -147,8 +147,10 @@ public with sharing class RD2_Settings {
     /***
     * @description Saves latest Recurring Donation batch results
     */
-    public void saveLatestBatchResults(Datetime completedDate, Integer recordsProcessed, Integer recordsFailed) {
-        settings.npe03__Last_Batch_Run__c = completedDate;
+    public void saveLatestBatchResults(Id jobId, Integer recordsProcessed, Integer recordsFailed) {
+        AsyncApexJob job = new UTIL_BatchJobService().getAsyncApexJob(jobId);
+
+        settings.npe03__Last_Batch_Run__c = job == null ? Datetime.now() : job.CompletedDate;
         settings.npe03__Number_of_Successes__c = recordsProcessed - recordsFailed;
         settings.npe03__Number_of_Failures__c = recordsFailed;
 
