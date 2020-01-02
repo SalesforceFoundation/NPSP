@@ -9,38 +9,38 @@
         <value><!-- Household Naming Settings --></value>
     </caseValues>
     <fields>
-        <help>Het aantal Contactpersonen dat opgenomen wordt in een naam. Na dit aantal zal de Naamsoverschrijding worden gebruikt.</help>
-        <label>Contactpersoon Overschrijdingstelling</label>
+        <help>Specificeert het aantal Contactpersonen die expliciet moeten worden opgenomen in een naam. Na dat aantal wordt de Naamoverschrijding gebruikt.</help>
+        <label>Telling Overschrijding Contactpersoon</label>
         <name>Contact_Overrun_Count__c</name>
     </fields>
     <fields>
-        <help>Het formaat wat gebruikt wordt voor Formele Begroeting van het Huishouden</help>
-        <label>Formele Begroeting Formaat</label>
+        <help>Het formaat dat gebruikt wordt voor de Formele Begroeting voor Huishouden.</help>
+        <label>Formaat van Formele Begroeting</label>
         <name>Formal_Greeting_Format__c</name>
     </fields>
     <fields>
-        <help>Het formaat wat gebruikt wordt voor de naam van het Huishouden.</help>
-        <label>Naam Huishouden Formaat</label>
+        <help>Het formaat dat gebruikt wordt voor de Huishoudennaam.</help>
+        <label>Formaat Huishoudennaam</label>
         <name>Household_Name_Format__c</name>
     </fields>
     <fields>
-        <help>De naam van de klasse die HH_INaming interface implementeert voor de naamgeving van Huishoudens.</help>
-        <label>Klasse implementeren</label>
+        <help>De naam van een Klasse die de HH_INaming-interface implementeert voor Benoeming van Huishoudens.</help>
+        <label>Implementatieklasse</label>
         <name>Implementing_Class__c</name>
     </fields>
     <fields>
-        <help>Het formaat wat gebruikt wordt voor Informele Begroeting van het Huishouden</help>
-        <label>Informele Begroeting Formaat</label>
+        <help>Het formaat dat gebruikt wordt voor de Informele Begroeting voor Huishoudens.</help>
+        <label>Formaat van Informele Begroeting</label>
         <name>Informal_Greeting_Format__c</name>
     </fields>
     <fields>
-        <help>De tekst die paren verbindt in een naam. Bijvoorbeeld, Jan &amp; Jannie, of Jan en Jannie.</help>
-        <label>Verbinder Namen</label>
+        <help>De te gebruiken tekenreeks om paren te verbinden in een naam. Bijvoorbeeld, John &amp; Jane, of John en Jane.</help>
+        <label>Naamconnector</label>
         <name>Name_Connector__c</name>
     </fields>
     <fields>
-        <help>De tekst die gebruikt wordt bij vervangen van lange lijsten met namen.</help>
-        <label>Overschrijvingsnaam</label>
+        <help>De te gebruiken tekenreeks bij het vervangen van lange lijsten van namen.</help>
+        <label>Naamoverschrijding</label>
         <name>Name_Overrun__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

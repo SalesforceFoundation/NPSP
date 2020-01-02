@@ -9,8 +9,16 @@
         <value><!-- Levels Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating levels. --></help>
-        <label><!-- Level Assignment Batch Size --></label>
+        <label>Begintijd Laatste Taak: Account</label>
+        <name>LastJobStartTimeAccount__c</name>
+    </fields>
+    <fields>
+        <label>Begintijd Laatste Taak: Contactpersoon</label>
+        <name>LastJobStartTimeContact__c</name>
+    </fields>
+    <fields>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van niveaus.</help>
+        <label>Batchgrootte Toewijzing van Niveau</label>
         <name>Level_Assignment_Batch_Size__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

@@ -9,43 +9,48 @@
         <value><!-- Error Settings --></value>
     </caseValues>
     <fields>
-        <help>Wordt gebruikt om de meest recente uitvoer van de Async Opdracht Fout Logboek bij te houden</help>
-        <label>Async Fout Controleer Laatste Verwerking</label>
+        <help>Wordt gebruikt om de meest recente uitvoering van het foutenlogboek voor Asynchrone taken bij te houden</help>
+        <label>Laatste Uitvoering Async Foutencontrole</label>
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
-        <help>Indien aangevinkt, NPSP&apos;s foutafhandeling framework is uitgeschakeld.</help>
-        <label>Uitschakelen Foutafhandeling</label>
+        <help>Indien aangevinkt, wordt het NPSP-raamwerk voor foutafhandeling uitgeschakeld.</help>
+        <label>Foutafhandeling uitschakelen</label>
         <name>Disable_Error_Handling__c</name>
     </fields>
     <fields>
-        <help>Indien ingeschakeld, zal NPSP niet automatisch terugkerende opdrachten uitvoeren. Deze opdrachten bevatten Rollups, adreswijzigingen, bijwerken van teugkerende donaties en foutafhandeling.</help>
-        <label>Plan geen Standaard NPSP Opdrachten</label>
+        <help>Indien aangevinkt, zal NPSP standaard terugkerende taken niet automatisch plannen. Deze terugkerende taken berekenen totaliseringen, werken terugkerende donaties en seizoenadressen bij en voeren foutenafhandeling uit.</help>
+        <label>Standaard NPSP-Taken niet Auto. Plannen</label>
         <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     </fields>
     <fields>
-        <help>Vink dit aan om debug statements in code van een beheerd pakket in te schakelen.</help>
-        <label>Inschakelen Debug</label>
+        <help>Vink dit aan om debug-instructies in beheerde pakketcode in te schakelen.</help>
+        <label>Debug Inschakelen</label>
         <name>Enable_Debug__c</name>
     </fields>
     <fields>
-        <help>Vink aan wanneer je wilt dat het systeem notificaties plaatst voor bepaalde type fouten.</help>
-        <label>Fout Notificaties</label>
+        <help>Vink aan wanneer u wilt dat het systeem meldingen plaatst voor bepaalde soorten fouten.</help>
+        <label>Foutmeldingen</label>
         <name>Error_Notifications_On__c</name>
     </fields>
     <fields>
-        <help>Selecteer het type gebruiker waar de notificatie naar gestuurd moet worden</help>
-        <label>Fout Notificatie Ontvangers</label>
+        <help>Selecteer het type gebruiker dat meldingen moet ontvangen.</help>
+        <label>Ontvangers Foutmeldingen</label>
         <name>Error_Notifications_To__c</name>
     </fields>
     <fields>
-        <help><!-- Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved. --></help>
-        <label><!-- Respect Duplicate Rule Settings --></label>
+        <help><!-- Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product License in the LMO. --></help>
+        <label><!-- Scratch Org Override: Pilot Enabled --></label>
+        <name>OverrideFeature_PilotEnabled__c</name>
+    </fields>
+    <fields>
+        <help>Respecteer de Duplicaatregelinstellingen die regelen of duplicaatrecords toegestaan zijn. Controleer instellingen onder Set-up en Duplicaatregels. Wanneer Actie bij Aanmaken of Actie bij Bewerken ingesteld zijn op &apos;Toestaan&apos;, worden duplicaten bewaard.</help>
+        <label>Duplicaatregelinstellingen respecteren</label>
         <name>Respect_Duplicate_Rule_Settings__c</name>
     </fields>
     <fields>
-        <help>Vink aan wanneer je fouten wilt opslaan in de database.</help>
-        <label>Opslag Fouten</label>
+        <help>Vink aan wanneer u fouten wilt bewaren in de database.</help>
+        <label>Fouten bewaren</label>
         <name>Store_Errors_On__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
