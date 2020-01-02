@@ -31,12 +31,13 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Unit tests for the Enhanced RD Batch Job
+* @description Unit tests for the Enhanced RD Opportunity Evaluation Batch Job
 *
 */
 @IsTest(IsParallel=true)
 private class RD2_OpportunityEvaluation_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final TEST_SObjectGateway.RecurringDonationScheduleGateway scheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
     private static final TEST_SObjectGateway.AsyncApexJobGateway jobGateway = new TEST_SObjectGateway.AsyncApexJobGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
@@ -61,7 +62,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         System.assertNotEquals(null, actuaException, 'An exception should have been thrown because Enhanced RD is not enabled');
         System.assert(actuaException.getMessage().containsIgnoreCase(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun),
-            'The exception should have indicated that the job cannot be executed because Enhanced RD is not enabled ' + actuaException.getMessage());
+            'The job cannot be executed because Enhanced RD is not enabled: ' + actuaException.getMessage());
     }
 
     /**
@@ -74,7 +75,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         Exception actuaException = runBatch(new RD2_OpportunityEvaluation_BATCH());
 
-        System.assertEquals(null, actuaException, 'An exception should not have been thrown because Enhanced RD is enabled');
+        System.assertEquals(null, actuaException, 'No exception is expected because Enhanced RD is enabled');
     }
 
     /**
@@ -85,11 +86,11 @@ private class RD2_OpportunityEvaluation_TEST {
     private static void shouldNotThrowExceptionForLegacyRDJobIfEnhancedRDIsNotEnabled() {
         Exception actuaException = runBatch(new RD_RecurringDonations_BATCH());
 
-        System.assertEquals(null, actuaException, 'An exception should not have been thrown because Enhanced RD is not enabled');
+        System.assertEquals(null, actuaException, 'An exception is expected because Enhanced RD is not enabled');
     }
 
     /**
-     * @description 
+     * @description Verifies closed Recurring Donations are not processed in the Opp evaluation batch
      */
     @IsTest
     private static void shouldNotProcessClosedRDs() {
@@ -98,17 +99,15 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withStatusClosed()
             .build();
-
         insert rd;
 
         runBatch(new RD2_OpportunityEvaluation_BATCH());
 
-        AsyncApexJob job = jobGateway.getRecord('RD2_OpportunityEvaluation_BATCH');
-        System.assertEquals(0, job.JobItemsProcessed, 'The batch should not process any batch iteration');
+        assertBatchJobIteration(0);
     }
 
     /**
-     * @description 
+     * @description Verifies an Opp with Close Date today is not created if it already exists
      */
     @IsTest
     private static void shouldNotCreateDuplicateOppWhenCloseDateIsToday() {
@@ -120,22 +119,17 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert new TEST_OpportunityBuilder()
-            .withContact(getContact().Id)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1)
+        insert getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(today)
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
+        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
 
         runBatch(new RD2_OpportunityEvaluation_BATCH());
 
-        AsyncApexJob job = jobGateway.getRecord('RD2_OpportunityEvaluation_BATCH');
-        System.assertEquals(1, job.JobItemsProcessed, 'The batch should process one batch iteration');
+        assertBatchJobIteration(1);
 
         opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'No new opportunity should be created: ' + opps);
@@ -143,7 +137,7 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-     * @description 
+     * @description Verifies an Opp with Close Date in future is not created if it already exists
      */
     @IsTest
     private static void shouldNotCreateDuplicateOppWhenCloseDateIsInFuture() {
@@ -156,22 +150,17 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert new TEST_OpportunityBuilder()
-            .withContact(getContact().Id)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1)
+        insert getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(nextCloseDate)
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
+        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
 
         runBatch(new RD2_OpportunityEvaluation_BATCH());
 
-        AsyncApexJob job = jobGateway.getRecord('RD2_OpportunityEvaluation_BATCH');
-        System.assertEquals(1, job.JobItemsProcessed, 'The batch should process one batch iteration');
+        assertBatchJobIteration(1);
 
         opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'No new opportunity should be created: ' + opps);
@@ -179,46 +168,163 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-     * @description 
+     * @description Verifies an Opp with Close Date equal to today is created if it already does not exist
      */
     @IsTest
-    private static void shouldCreateNextOpp() {
+    private static void shouldCreateNextOppWhenCloseDateIsToday() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date prevCloseDate = START_DATE.addMonths(1);
+        final Date today = START_DATE.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(prevCloseDate)
+            .build();
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH());
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
+
+        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
+            'Close Date should be unchanged for the existing Opp');
+        System.assertEquals(today, oppById.values()[0].CloseDate, 
+            'Close Date on the new Opp should match next Close Date');
+    }
+
+    /**
+     * @description Verifies an Opp with Close Date equal to the Recurring Donation Next Donation Date is created
+     */
+    @IsTest
+    private static void shouldCreateNextOppWhenCloseDateIsInFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         final Date yesterday = START_DATE.addMonths(1);
-        final Date today = START_DATE.addMonths(1).addDays(1);
+        final Date today = yesterday.addDays(1);
         final Date nextCloseDate = START_DATE.addMonths(2);
         RD2_ScheduleService.currentDate = today;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert new TEST_OpportunityBuilder()
-            .withContact(getContact().Id)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1)
+        insert getOpportunityBuilder(rd)
             .withOpenStage()
             .withCloseDate(yesterday)
             .build();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
+        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
 
         runBatch(new RD2_OpportunityEvaluation_BATCH());
-
-        AsyncApexJob job = jobGateway.getRecord('RD2_OpportunityEvaluation_BATCH');
-        System.assertEquals(1, job.JobItemsProcessed, 'The batch should process one batch iteration');
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
 
         System.assertEquals(yesterday, oppById.remove(opps[0].Id).CloseDate, 
-            'Close Date should be unchanged for existing opp');
+            'Close Date should be unchanged for the existing Opp');
         System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate, 
-            'New opp Close Date should match next Close Date');
+            'Close Date on the new Opp should match next Close Date');
     }
 
+    /**
+     * @description Verifies an Opp with Close Date equal to the Recurring Donation Next Donation Date is created
+     * when Installment Period is "1st and 15th"
+     */
+    @IsTest
+    private static void shouldCreateNextOppWhenInstallmentPeriodIs1stAnd15th() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date yesterday = START_DATE.addMonths(1);
+        final Date today = yesterday.addDays(1);
+        final Date nextCloseDate = START_DATE.addMonths(2).toStartOfMonth();
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
+            .withDayOfMonth(null)
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(yesterday)
+            .build();
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Opportunity should exist: ' + opps);
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH());
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
+
+        System.assertEquals(yesterday, oppById.remove(opps[0].Id).CloseDate, 
+            'Close Date should be unchanged for the existing Opp');
+        System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate, 
+            'Close Date on the new Opp should match next Close Date');
+    }
+
+    /**
+     * @description Verifies an Opp is not created when next Close Date is the after RD Schedule End Date
+     */
+    @IsTest
+    private static void shouldNotCreateNextOppWhenScheduleEndDateIsPassed() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date today = START_DATE.addMonths(1).addDays(1);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+        
+        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);  
+        System.assertEquals(1, rdSchedules.size(), 'An RD Schedule should exist: ' + rdSchedules);   
+
+        //Set Schedule End Date to date before the next Close Date
+        rdSchedules[0].EndDate__c = START_DATE.addMonths(2).addDays(-1);
+        update rdSchedules[0];
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH());
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(0, opps.size(), 'No new Opportunity should be created: ' + opps);
+    }
+
+    /**
+     * @description Verifies an Opp is created when next Close Date is the RD Schedule End Date
+     */
+    @IsTest
+    private static void shouldCreateNextOppWhenScheduleEndDateIsNextCloseDate() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date today = START_DATE.addMonths(1).addDays(1);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+        
+        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);  
+        System.assertEquals(1, rdSchedules.size(), 'An RD Schedule should exist: ' + rdSchedules);   
+
+        //Set Schedule End Date to the next Close Date
+        rdSchedules[0].EndDate__c = START_DATE.addMonths(2);
+        update rdSchedules[0];
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH());
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'A new Opportunity should be created: ' + opps);
+        System.assertEquals(rdSchedules[0].EndDate__c, opps[0].CloseDate, 
+            'Close Date on the new Opp should match next Close Date');
+    }
     
 
     // Helpers
@@ -256,6 +362,19 @@ private class RD2_OpportunityEvaluation_TEST {
             .withAmount(100);
     }
 
+    /**
+     * @description Instantiate an Opportunity builder for the specified Recurring Donation
+     * @param rd Recurring Donation
+     * @return TEST_OpportunityBuilder New Opportunity builder
+     */
+    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
+        return new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1);
+    }
+
     /****
     * @description Returns contact record
     * @return Contact
@@ -266,6 +385,11 @@ private class RD2_OpportunityEvaluation_TEST {
             FROM Contact
             LIMIT 1
         ];
+    }
+
+    private static void assertBatchJobIteration(Integer itemsProcessed) {
+        AsyncApexJob job = jobGateway.getRecord('RD2_OpportunityEvaluation_BATCH');
+        System.assertEquals(itemsProcessed, job.JobItemsProcessed, 'The batch should process one batch iteration');
     }
 
 
