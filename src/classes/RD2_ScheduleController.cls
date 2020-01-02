@@ -52,7 +52,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @return List<Schedule>
      */
     @AuraEnabled
-    public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
+    public static List<Installment> getInstallments(Id recordId, Integer displayNum) {
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
@@ -81,6 +81,40 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
+     * @description Retrieves the current schedule of future donations to render in the UI
+     * @param recordId
+     * @return List<Schedule>
+     */
+    @AuraEnabled
+    public static List<Schedule> getSchedules(Id recordId, Integer displayNum) {
+
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
+        }
+
+        if (recordId == null || recordId.getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
+        }
+
+        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+
+        List<Schedule> activeSchedules = new List<Schedule>();
+        if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+            List<RD2_ScheduleService.ActiveSchedule> schedules = scheduleService.getVisualizedSchedules(rd);
+            Integer num = 1;
+            for (RD2_ScheduleService.ActiveSchedule schedule : schedules) {
+                activeSchedules.add(new Schedule(num++, rd, schedule));
+            }
+        }
+
+        if (activeSchedules.isEmpty()) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
+        }
+
+        return activeSchedules;
+    }
+
+    /**
      * @description Retrieves the currency code to use for the display
      * @param recordId
      * @return CurrencyIsoCode
@@ -92,7 +126,6 @@ public with sharing class RD2_VisualizeScheduleController {
             return UserInfo.getDefaultCurrency();
         }
     }
-
 
     /**
      * @description Inner Class of Future Donations for a given Recurring Donation
@@ -111,6 +144,35 @@ public with sharing class RD2_VisualizeScheduleController {
             this.campaign = installment.campaignName;
             this.donationDate = installment.nextDonationDate;
             this.amount = installment.installmentAmount;
+            this.currencyIsoCode = getCurrencyCode(rd);
+        }
+    }
+
+    /**
+     * @description Inner Class of Future Donations for a given Recurring Donation
+     */
+    public class Schedule {
+        @AuraEnabled public Integer scheduleNumber;
+        @AuraEnabled public Decimal amount;
+        @AuraEnabled public String paymentMethod;
+        @AuraEnabled public String campaign;
+        @AuraEnabled public Date startDate;
+        @AuraEnabled public Date endDate;
+        @AuraEnabled public String period;
+        @AuraEnabled public Integer frequency;
+        @AuraEnabled public String dayOfMonth;
+        @AuraEnabled public String currencyIsoCode;
+
+        public Schedule(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.ActiveSchedule schedule) {
+            this.scheduleNumber = num;
+            this.amount = schedule.installmentAmount;
+            this.paymentMethod = schedule.paymentMethod;
+            this.campaign = schedule.campaignName;
+            this.startDate = schedule.startDate;
+            this.endDate = schedule.endDate;
+            this.period = schedule.installmentPeriod;
+            this.frequency = schedule.installmentFrequency;
+            this.dayOfMonth = schedule.dayOfMonth;
             this.currencyIsoCode = getCurrencyCode(rd);
         }
     }

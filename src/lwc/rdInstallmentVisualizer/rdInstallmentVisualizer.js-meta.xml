@@ -3,7 +3,7 @@
     <apiVersion>46.0</apiVersion>
     <description>Displays a list of the next 12 donations when Enhanced Recurring Donations is enabled</description>
     <isExposed>true</isExposed>
-    <masterLabel>Recurring Donations Schedule</masterLabel>
+    <masterLabel>Recurring Donation Installments</masterLabel>
     <targets>
         <target>lightning__RecordPage</target>
     </targets>

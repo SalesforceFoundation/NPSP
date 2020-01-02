@@ -572,7 +572,7 @@ public without sharing class RD2_ScheduleService {
         public String   dayOfMonth {get; set;}
         public Date     endDate {get; set;}
         public Decimal  installmentAmount {get; set;}
-        public Decimal  installmentFrequency {get; set;}
+        public Integer  installmentFrequency {get; set;}
         public String   installmentPeriod {get; set;}
         public String   paymentMethod {get; set;}
         public String   recurringDonationId {get; set;}
@@ -586,7 +586,7 @@ public without sharing class RD2_ScheduleService {
             dayOfMonth =            rdSchedule.DayOfMonth__c;
             endDate =               rdSchedule.EndDate__c;
             installmentAmount =     rdSchedule.InstallmentAmount__c;
-            installmentFrequency =  rdSchedule.InstallmentFrequency__c;
+            installmentFrequency =  Integer.valueOf(rdSchedule.InstallmentFrequency__c);
             installmentPeriod =     rdSchedule.InstallmentPeriod__c;
             paymentMethod =         rdSchedule.PaymentMethod__c;
             recurringDonationId =   rdSchedule.RecurringDonation__c;

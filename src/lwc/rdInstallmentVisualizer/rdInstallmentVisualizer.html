@@ -10,13 +10,13 @@
             <span class="slds-text-color_error">{error}</span>
         </div>
 
-        <div class="slds-m-around_medium" if:true={schedule}>
+        <div class="slds-m-around_medium" if:true={installments}>
             <lightning-datatable
                 title={lblScheduleTitle}
                 key-field="installmentNumber"
-                data={schedule}
+                data={installments}
                 columns={columns}
-                class="visualized-schedule"
+                class="visualized-installments"
                 hide-checkbox-column>
             </lightning-datatable>
         </div>
