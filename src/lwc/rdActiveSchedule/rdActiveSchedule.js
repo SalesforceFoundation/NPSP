@@ -14,7 +14,7 @@
     TODO: Add descriptions
  */
 
-import labelScheduleTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
+import labelScheduleTitle from '@salesforce/label/c.RD2_ActiveSchedulesTitle';
 import labelColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 
 import { LightningElement, api, wire, track } from 'lwc';
@@ -29,53 +29,83 @@ import FIELD_RD_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.
 import FIELD_RD_DAYOFMONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 import FIELD_RD_STARTDATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
+import FIELD_RD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c';
 
-import getSchedules from '@salesforce/apex/RD2_ScheduleController.getInstallments';
+import getSchedules from '@salesforce/apex/RD2_ScheduleController.getSchedules';
 
 const SCHEDULE_COLS = [
-    { label: '$DATE', fieldName: 'donationDate', type: 'date-local', sortable: false,
+    { label: '$AMOUNT', fieldName: 'amount', type: 'currency', sortable: false,
+        typeAttributes: { currencyCode: '$CURRENCYISOCODE' } },
+    { label: '$PAYMENT_METHOD', fieldName: 'paymentMethod', type: 'text', sortable: false },
+    { label: '$START_DATE', fieldName: 'startDate', type: 'date-local', sortable: false,
         typeAttributes:{
             month: "2-digit",
             day: "2-digit"
         } },
+    { label: '$PERIOD', fieldName: 'period', type: 'text', sortable: false }
+];
+
+/*
+    -- Work in progress on SCHEDULE_COLS --
+
     { label: '$AMOUNT', fieldName: 'amount', type: 'currency', sortable: false,
         typeAttributes: { currencyCode: '$CURRENCYISOCODE' } },
-    { label: '$PAYMENT_METHOD', fieldName: 'paymentMethod', type: 'text', sortable: false }
-];
+    { label: '$PAYMENT_METHOD', fieldName: 'paymentMethod', type: 'text', sortable: false },
+    { label: '$CAMPAIGN', fieldName: 'campaign', type: 'text', sortable: false },
+    { label: '$START_DATE', fieldName: 'startDate', type: 'date-local', sortable: false,
+        typeAttributes:{
+            month: "2-digit",
+            day: "2-digit"
+        } },
+    { label: '$END_DATE', fieldName: 'endDate', type: 'date-local', sortable: false,
+        typeAttributes:{
+            month: "2-digit",
+            day: "2-digit"
+        } },
+    { label: '$PERIOD', fieldName: 'period', type: 'text', sortable: false },
+    { label: '$FREQUENCY', fieldName: 'frequency', type: 'number', sortable: false },
+    { label: '$DAY_OF_MONTH', fieldName: 'dayOfMonth', type: 'text', sortable: false }
+
+ */
 
 export default class RdScheduleVisualizer extends LightningElement {
 
     @api recordId;
     @api displayNum;
 
-    @track schedule;
+    @track schedules;
     @track error;
     @track columns = SCHEDULE_COLS;
     @track currencyIsoCode;
     @track lblScheduleTitle = labelScheduleTitle;
-    @track lblCloseDate = labelColumnDate;
     @track lblAmount;
     @track lblPmtMethod;
-    @track fldAmount;
+    @track lblCampaign;
+    @track lblStartDate;
+    @track lblEndDate;
+    @track lblPeriod;
+    @track lblFrequency;
+    @track lblDayOfMonth;
 
     /*******************************************************************************
      * @description Whenever the related RD record is updated, this is called to force
      * a refresh of the table and component.
      */
     @wire(getRecord, { recordId: '$recordId',
-        fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD, FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD] })
+        fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD,
+                 FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD, FIELD_RD_CAMPAIGN] })
     wireRecordChange() {
         if (this.recordId) {
             getSchedules({ recordId: this.recordId, displayNum: this.displayNum })
                 .then(data => {
                     this.handleCurrencyIsoCode(data);
                     this.handleColumns();
-                    this.schedule = data;
+                    this.schedules = data;
                     this.error = null;
 
                 })
                 .catch(error => {
-                    this.schedule = null;
+                    this.schedules = null;
                     this.error = this.handleError(error);
                 });
         }
@@ -84,9 +114,9 @@ export default class RdScheduleVisualizer extends LightningElement {
     /*******************************************************************************
      * @description Call Apex to retrieve the Currency Code to use in the UI
      */
-    handleCurrencyIsoCode(schedule) {
-        if (schedule) {
-            this.currencyIsoCode = schedule[0].currencyIsoCode;
+    handleCurrencyIsoCode(schedules) {
+        if (schedules) {
+            this.currencyIsoCode = schedules[0].currencyIsoCode;
         } else {
             this.currencyIsoCode = 'USD';
         }
@@ -98,17 +128,31 @@ export default class RdScheduleVisualizer extends LightningElement {
     @wire(getObjectInfo, { objectApiName: SOBJECT_RECURRING_DONATION })
     wireGetRDObjectInfo({error, data}) {
         if (data) {
-            this.lblCloseDate = this.lblCloseDate
             this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
             this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+            this.lblStartDate = data.fields[FIELD_RD_STARTDATE.fieldApiName].label;
+            this.lblPeriod = data.fields[FIELD_RD_PERIOD.fieldApiName].label;
+
+/*
+    -- Work in progress on RD wire
+
+                    this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
+                    this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+                    this.lblCampaign = data.fields[FIELD_RD_CAMPAIGN.fieldApiName].label;
+                    this.lblStartDate = data.fields[FIELD_RD_STARTDATE.fieldApiName].label;
+                    this.lblPeriod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+                    this.lblFrequency = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+                    this.lblDayOfMonth = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+
+ */
         }
     }
 
     /*******************************************************************************
      * @description Called by the HTML to retrieve the schedule to render
      */
-    get schedule() {
-        return this.schedule;
+    get schedules() {
+        return this.schedules;
     }
 
     /*******************************************************************************
@@ -133,10 +177,26 @@ export default class RdScheduleVisualizer extends LightningElement {
      */
     handleColumns() {
         const labelConversions = [
-            { label: '$DATE', value: this.lblCloseDate },
             { label: '$AMOUNT', value: this.lblAmount },
-            { label: '$PAYMENT_METHOD', value: this.lblPmtMethod }
+            { label: '$PAYMENT_METHOD', value: this.lblPmtMethod },
+            { label: '$START_DATE', value: this.lblStartDate },
+            { label: '$PERIOD', value: this.lblPeriod }
         ];
+
+        /*
+            -- Work in progress on labelConversions
+
+                    this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
+                    this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+                    this.lblCampaign = data.fields[FIELD_RD_CAMPAIGN.fieldApiName].label;
+                    this.lblStartDate = data.fields[FIELD_RD_STARTDATE.fieldApiName].label;
+                    this.lblEndDate = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+                    this.lblPeriod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+                    this.lblFrequency = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+                    this.lblDayOfMonth = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+
+         */
+
         const currencyIsoCode = this.currencyIsoCode;
 
         this.columns = SCHEDULE_COLS;

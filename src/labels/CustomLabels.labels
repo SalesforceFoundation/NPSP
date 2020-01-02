@@ -1902,7 +1902,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of the Schedule Visualizer Component</shortDescription>
-        <value>Upcoming Schedule</value>
+        <value>Upcoming Installments</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ActiveSchedulesTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the Active Schedules Component</shortDescription>
+        <value>Active Schedules</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>

@@ -1,4 +1,4 @@
-import labelScheduleTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
+import labelInstallmentTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
 import labelColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 
 import { LightningElement, api, wire, track } from 'lwc';
@@ -36,7 +36,7 @@ export default class RdInstallmentVisualizer extends LightningElement {
     @track error;
     @track columns = INSTALLMENT_COLS;
     @track currencyIsoCode;
-    @track lblScheduleTitle = labelScheduleTitle;
+    @track lblInstallmentTitle = labelInstallmentTitle;
     @track lblCloseDate = labelColumnDate;
     @track lblAmount;
     @track lblPmtMethod;
