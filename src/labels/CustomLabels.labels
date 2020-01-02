@@ -8319,11 +8319,11 @@ This process may take some time, but you can close this page and the process wil
         <value>The Opportunity record type assigned to the Recurring Donation's child Opportunities.</value>
     </labels>
     <labels>
-        <fullName>stgHelpRDOpCeation</fullName>
+        <fullName>stgHelpRDInstallmentOppAutoCreateAction</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>stgHelpRDOpCeation</shortDescription>
+        <shortDescription>stgHelpRDInstallmentOppAutoCreateAction</shortDescription>
         <value>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</value>
     </labels>
     <labels>

@@ -35,8 +35,18 @@
 *
 */
 public inherited sharing class RD2_OpportunityEvaluationService {
-
-    private npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+    /***
+    * @description Recurring Donation custom settings
+    */
+    private RD2_Settings rdSettings {
+        get {
+            if (rdSettings == null) {
+                rdSettings = new RD2_Settings();
+            } 
+            return rdSettings;
+        }
+        set;
+    }
 
     /**
      * @description Recurring Donation Id's to be processed
@@ -134,7 +144,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             // TODO Recalculate NextDonationDate before doing anything
 
             // Collect the list of Opps that require a new Installment Opp
-            if (isNewRecurringDonation(rd) && evaluteInstallmentAutoCreationSetting(rd)) {
+            if (needNewInstallment(rd) && rdSettings.evaluteInstallmentAutoCreationOption(rd)) {
                 newRDsWithCloseDates.put(rd, getInstallmentOppCloseDates(rd) );
                 continue;
             }
@@ -158,41 +168,34 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return this;
     }
 
-    private Boolean evaluteInstallmentAutoCreationSetting(npe03__Recurring_Donation__c rd) {
-        if (rdSettings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name() ||
-            String.isBlank(rdSettings.InstallmentOppAutoCreateOption__c)) {
-            return true;
-        }
-        else if (rdSettings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_First_Installment.name()) {
-            return !rd.npe03__Donations__r.isEmpty();
-        }
-        else if (rdSettings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_All_Installments.name()) {
-            return false;
-        }
-        return false;
-    }
     /**
-     * @description Is this a new Recurring Donation that was just inserted and 
-     * has not yet had an Installment Opportunity created?
+     * @description Determine if the recurring donation needs to have a new installment opp created
      * @param rd Recurring Donation
      * @return Boolean 
      */
     @TestVisible
-    private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
-        Boolean noOpenOpp = true;
+    private Boolean needNewInstallment(npe03__Recurring_Donation__c rd) {
+        return rd.npe03__Next_Payment_Date__c != null
+            && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
+            && !hasOpenOpportunity(rd)
+            && !rd.RecurringDonationSchedules__r.isEmpty();
+    }
 
+    /**
+    * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
+    * @param currentDate Current Date to compare the Close Date to
+    * @return Boolean
+    */
+    public Boolean hasOpenOpportunity(npe03__Recurring_Donation__c rd) {
+        Boolean hasOpenOpportunity = false;
+        
         for (Opportunity opp : rd.npe03__Donations__r) {
-            if (opp.IsClosed == false || opp.CloseDate >= Date.today()) {
-                noOpenOpp = false;
-                break;
+            if (opp.IsClosed == false && opp.CloseDate >= Date.today()) {
+                hasOpenOpportunity = true;
             }
         }
 
-        return
-            rd.npe03__Next_Payment_Date__c != null
-            && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
-            && noOpenOpp
-            && !rd.RecurringDonationSchedules__r.isEmpty();
+        return hasOpenOpportunity;
     }
 
     /**
@@ -245,10 +248,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return;
         }
 
-        if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Delete_Open_Opportunities.name()) {
+        if (rdSettings.isCloseActionDeletion()) {
             UTIL_DMLService.deleteRecordsAndLogErrors(opps, ERR_Handler_API.Context.RD.name());
 
-        } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
+        } else if (rdSettings.isCloseActionClosedLost()) {
             List<Opportunity> oppsToUpdate = new List<Opportunity>();
 
             for (Opportunity opp : opps) {

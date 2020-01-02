@@ -34,14 +34,14 @@
 * @description test code for all of Settings
 */
 @isTest
-public with sharing class STG_SettingsManager_TEST {
+private with sharing class STG_SettingsManager_TEST {
 
     /*********************************************************************************************************
     * @description Tests the Settings Manager page
     * @return void
     */
     @isTest
-    public static void testSettingsManager() {
+    private static void testSettingsManager() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
         system.assertEquals('idPanelHome', STG_SettingsManager_CTRL.idPanelCurrent);
         system.assertEquals(null, ctrl.setPanelCurrent());
@@ -603,7 +603,7 @@ public with sharing class STG_SettingsManager_TEST {
         panel.init();
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
-        system.assertNotEquals(null, panel.listInstallmentCreationOptions);
+        
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 10;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(10, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
@@ -614,6 +614,21 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(15, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
         system.assertEquals(15, UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings().npe03__Opportunity_Forecast_Months__c);
+
+       
+        List<RD2_Constants.InstallmentCreation> creationOptions = RD2_Constants.InstallmentCreation.values();
+
+        List<String> stringInstallmentCreationOption = new List<String>();
+
+        for (RD2_Constants.InstallmentCreation option : creationOptions) {
+            stringInstallmentCreationOption.add(option.name());
+        }
+
+        List<SelectOption> installmentCreationOptions = panel.listInstallmentCreationOptions;
+
+        for (SelectOption option : installmentCreationOptions) {
+            System.assert(stringInstallmentCreationOption.contains(option.getValue()), 'When initialize the controller, installment creation option should be construct correctly');
+        }
     }
 
     /*********************************************************************************************************
@@ -675,7 +690,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelRDBatch() {
+    private static void testPanelRDBatch() {
         STG_PanelRDBatch_CTRL panel = new STG_PanelRDBatch_CTRL();
         system.assertEquals('idPanelRDBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -688,7 +703,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelRDCustomFieldMapping() {
+    private static void testPanelRDCustomFieldMapping() {
         STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
         system.assertEquals('idPanelRDFieldMap', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -725,7 +740,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelRDCustomInstallment() {
+    private static void testPanelRDCustomInstallment() {
         STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
         system.assertEquals('idPanelRDInstPd', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -764,7 +779,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelRel() {
+    private static void testPanelRel() {
         STG_PanelRel_CTRL panel = new STG_PanelRel_CTRL();
         system.assertEquals('idPanelRel', panel.idPanel());
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = true;
@@ -810,7 +825,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelRelAuto() {
+    private static void testPanelRelAuto() {
         STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
         system.assertEquals('idPanelRelAuto', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -853,7 +868,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelRelReciprocal() {
+    private static void testPanelRelReciprocal() {
         STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
         system.assertEquals('idPanelRelReciprocal', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -892,7 +907,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelUserRollup() {
+    private static void testPanelUserRollup() {
         STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
         system.assertEquals('idPanelUserRollup', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -955,7 +970,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void TEST_userRollupSettings() {
+    private static void TEST_userRollupSettings() {
         Test.setCurrentPageReference(new PageReference('Page.STG_SettingsManager'));
 
         //pass the controller into the extension
@@ -1062,7 +1077,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelCRLP() {
+    private static void testPanelCRLP() {
         STG_PanelCustomizableRollup_CTRL panel = new STG_PanelCustomizableRollup_CTRL();
         System.assertEquals('idPanelCustomizableRollup', panel.idPanel());
         System.assertEquals(true, panel.isAdmin);
@@ -1109,7 +1124,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelSchedule() {
+    private static void testPanelSchedule() {
         STG_PanelSchedule_CTRL panel = new STG_PanelSchedule_CTRL();
         system.assertEquals('idPanelSchedule', panel.idPanel());
         STG_Panel.stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = true;
@@ -1125,7 +1140,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelTDTM() {
+    private static void testPanelTDTM() {
         STG_PanelTDTM_CTRL panel = new STG_PanelTDTM_CTRL();
         system.assertEquals('idPanelTDTM', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -1166,7 +1181,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelErrorLog() {
+    private static void testPanelErrorLog() {
         STG_PanelErrorLog_CTRL panel = new STG_PanelErrorLog_CTRL();
         system.assertEquals('idPanelErrorLog', panel.idPanel());
         UTIL_SoqlListView_CTRL slv = new UTIL_SoqlListView_CTRL();
@@ -1203,7 +1218,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelHealthCheck() {
+    private static void testPanelHealthCheck() {
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
         system.assertEquals('idPanelHealthCheck', panel.idPanel());
         system.assertEquals(null, panel.runDetector());
@@ -1214,7 +1229,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelLvlAssignBatch() {
+    private static void testPanelLvlAssignBatch() {
         STG_PanelLvlAssignBatch_CTRL panel = new STG_PanelLvlAssignBatch_CTRL();
         system.assertEquals('idPanelLvlAssignBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -1227,7 +1242,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelPanelPrimaryContactRoleMergeBatch() {
+    private static void testPanelPanelPrimaryContactRoleMergeBatch() {
         STG_PanelPrimaryContactRoleMerge_CTRL panel = new STG_PanelPrimaryContactRoleMerge_CTRL();
         system.assertEquals('idPanelPrimaryContactRoleMergeBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);

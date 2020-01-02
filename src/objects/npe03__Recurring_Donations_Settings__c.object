@@ -54,7 +54,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</inlineHelpText>
         <label>Installment Opportunity Auto-Creation</label>
-        <length>50</length>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

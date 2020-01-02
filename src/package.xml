@@ -2320,7 +2320,7 @@
         <members>stgHelpRDFieldMapRDField</members>
         <members>stgHelpRDLastRun</members>
         <members>stgHelpRDMaxDonations</members>
-        <members>stgHelpRDOpCeation</members>
+        <members>stgHelpRDInstallmentOppAutoCreateAction</members>
         <members>stgHelpRDOpenOppBehavior</members>
         <members>stgHelpRDOppForecastMonths</members>
         <members>stgHelpRDOppRT</members>
