@@ -16,7 +16,7 @@ import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donatio
 
 import getInstallments from '@salesforce/apex/RD2_ScheduleController.getInstallments';
 
-const SCHEDULE_COLS = [
+const INSTALLMENT_COLS = [
     { label: '$DATE', fieldName: 'donationDate', type: 'date-local', sortable: false,
         typeAttributes:{
             month: "2-digit",
@@ -34,7 +34,7 @@ export default class RdInstallmentVisualizer extends LightningElement {
 
     @track installments;
     @track error;
-    @track columns = SCHEDULE_COLS;
+    @track columns = INSTALLMENT_COLS;
     @track currencyIsoCode;
     @track lblScheduleTitle = labelScheduleTitle;
     @track lblCloseDate = labelColumnDate;
@@ -123,7 +123,7 @@ export default class RdInstallmentVisualizer extends LightningElement {
         ];
         const currencyIsoCode = this.currencyIsoCode;
 
-        this.columns = SCHEDULE_COLS;
+        this.columns = INSTALLMENT_COLS;
         this.columns.forEach(function(col){
             if (col.label === '$AMOUNT') {
                 col.typeAttributes.currencyCode = currencyIsoCode;
