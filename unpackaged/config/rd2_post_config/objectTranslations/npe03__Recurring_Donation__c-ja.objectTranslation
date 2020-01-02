@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>回数。</help>
+        <help>予定されている (支援) 回数。固定期間の継続支援でのみ使用されます。</help>
         <label>Deprecated-回数</label>
         <name>npe03__Installments__c</name>
     </fields>
     <fields>
-        <help><!-- Choose Open for an Open-Ended Recurring Donation.  Choose None for a Fixed Length Recurring Donation.  Choose Closed to close a Recurring Donation. --></help>
+        <help>無期限の継続支援には [Open] を選択します。固定期間の継続支援には [なし] を選択します。継続支援を終了する場合は [Closed] を選択します。</help>
         <label>Deprecated-状況</label>
         <name>npe03__Open_Ended_Status__c</name>
     </fields>
@@ -19,5 +19,13 @@
         <help>固定期間の継続支援での、すべての支援の総額。</help>
         <label>Deprecated-合計</label>
         <name>npe03__Total__c</name>
+    </fields>
+    <fields>
+        <label>日付</label>
+        <name>%%%NAMESPACE%%%Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>Last_Day</masterLabel>
+            <translation>月の最終日</translation>
+        </picklistValues>
     </fields>
 </CustomObjectTranslation>
