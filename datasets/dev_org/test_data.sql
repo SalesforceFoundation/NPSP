@@ -436,16 +436,16 @@ INSERT INTO "Allocation__c" VALUES(47,'10.0','','164','41','');
 INSERT INTO "Allocation__c" VALUES(48,'10.0','','164','50','');
 INSERT INTO "Allocation__c" VALUES(49,'10.0','','164','1','');
 INSERT INTO "Allocation__c" VALUES(50,'10.0','','164','12','');
-INSERT INTO "Allocation__c" VALUES(51,'10.0','','','19','');
-INSERT INTO "Allocation__c" VALUES(52,'10.0','','','26','');
-INSERT INTO "Allocation__c" VALUES(53,'10.0','','','27','');
-INSERT INTO "Allocation__c" VALUES(54,'10.0','','','36','');
-INSERT INTO "Allocation__c" VALUES(55,'10.0','','','47','');
-INSERT INTO "Allocation__c" VALUES(56,'10.0','','','47','');
-INSERT INTO "Allocation__c" VALUES(57,'10.0','','','2','');
-INSERT INTO "Allocation__c" VALUES(58,'10.0','','','24','');
-INSERT INTO "Allocation__c" VALUES(59,'10.0','','','10','');
-INSERT INTO "Allocation__c" VALUES(60,'10.0','','','11','');
+INSERT INTO "Allocation__c" VALUES(51,'10.0','','89','19','');
+INSERT INTO "Allocation__c" VALUES(52,'10.0','','89','26','');
+INSERT INTO "Allocation__c" VALUES(53,'10.0','','89','27','');
+INSERT INTO "Allocation__c" VALUES(54,'10.0','','89','36','');
+INSERT INTO "Allocation__c" VALUES(55,'10.0','','89','47','');
+INSERT INTO "Allocation__c" VALUES(56,'10.0','','89','47','');
+INSERT INTO "Allocation__c" VALUES(57,'10.0','','89','2','');
+INSERT INTO "Allocation__c" VALUES(58,'10.0','','89','24','');
+INSERT INTO "Allocation__c" VALUES(59,'10.0','','89','10','');
+INSERT INTO "Allocation__c" VALUES(60,'10.0','','89','11','');
 INSERT INTO "Allocation__c" VALUES(61,'10.0','','199','14','');
 INSERT INTO "Allocation__c" VALUES(62,'10.0','','199','16','');
 INSERT INTO "Allocation__c" VALUES(63,'10.0','','199','21','');
@@ -1080,18 +1080,18 @@ INSERT INTO "Opportunity" VALUES(207,'Joseph Lane: $892','892.0','Closed Won','2
 INSERT INTO "Opportunity" VALUES(208,'Joseph Lane: $85','85.0','Closed Won','2018-06-30','true','63','70','','');
 INSERT INTO "Opportunity" VALUES(209,'Joseph Lane: $830','830.0','Closed Won','2017-01-05','false','63','70','','');
 INSERT INTO "Opportunity" VALUES(210,'Joseph Lane: $656','656.0','Closed Won','2018-01-15','false','63','70','','');
-INSERT INTO "Opportunity" VALUES(211,'Carl Harvey Donation (1) 1/15/2020','75.0','Pledged','2020-01-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(212,'Carl Harvey Donation (2) 2/15/2020','75.0','Pledged','2020-02-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(213,'Carl Harvey Donation (3) 3/15/2020','75.0','Pledged','2020-03-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(214,'Carl Harvey Donation (4) 4/15/2020','75.0','Pledged','2020-04-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(215,'Carl Harvey Donation (8) 8/15/2020','75.0','Pledged','2020-08-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(216,'Carl Harvey Donation (9) 9/15/2020','75.0','Pledged','2020-09-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(217,'Carl Harvey Donation (10) 10/15/2020','75.0','Pledged','2020-10-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(218,'Carl Harvey Donation (11) 11/15/2020','75.0','Pledged','2020-11-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(219,'Carl Harvey Donation (5) 5/15/2020','75.0','Pledged','2020-05-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(220,'Carl Harvey Donation (6) 6/15/2020','75.0','Pledged','2020-06-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(221,'Carl Harvey Donation (7) 7/15/2020','75.0','Pledged','2020-07-15','false','6','66','1','');
-INSERT INTO "Opportunity" VALUES(222,'Carl Harvey Donation (1) 12/15/2019','75.0','Closed Won','2019-12-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(211,'Carl Harvey Donation (1) 1/15/2019','75.0','Closed Won','2019-01-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(212,'Carl Harvey Donation (2) 2/15/2019','75.0','Closed Won','2019-02-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(213,'Carl Harvey Donation (3) 3/15/2019','75.0','Closed Won','2019-03-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(214,'Carl Harvey Donation (4) 4/15/2019','75.0','Closed Won','2019-04-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(219,'Carl Harvey Donation (5) 5/15/2019','75.0','Closed Won','2019-05-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(220,'Carl Harvey Donation (6) 6/15/2019','75.0','Closed Won','2019-06-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(221,'Carl Harvey Donation (7) 7/15/2019','75.0','Closed Won','2019-07-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(215,'Carl Harvey Donation (8) 8/15/2019','75.0','Closed Won','2019-08-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(216,'Carl Harvey Donation (9) 9/15/2019','75.0','Closed Won','2019-09-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(217,'Carl Harvey Donation (10) 10/15/2019','75.0','Closed Won','2019-10-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(218,'Carl Harvey Donation (11) 11/15/2019','75.0','Closed Won','2019-11-15','false','6','66','1','');
+INSERT INTO "Opportunity" VALUES(222,'Carl Harvey Donation (12) 12/15/2019','75.0','Closed Won','2019-12-15','false','6','66','1','');
 CREATE TABLE "OpportunityContactRole" (
 	id INTEGER NOT NULL, 
 	"Role" VARCHAR(255), 
@@ -2030,6 +2030,7 @@ CREATE TABLE "npe03__Recurring_Donation__c" (
 	"npe03__Open_Ended_Status__c" VARCHAR(255), 
 	"npe03__Last_Payment_Date__c" VARCHAR(255), 
 	"npe03__Next_Payment_Date__c" VARCHAR(255), 
+	"npe03__Installment_Period__c" VARCHAR(255),
 	"Day_of_Month__c" VARCHAR(255), 
 	"InstallmentFrequency__c" VARCHAR(255), 
 	"StartDate__c" VARCHAR(255), 
@@ -2039,7 +2040,7 @@ CREATE TABLE "npe03__Recurring_Donation__c" (
 	npe03__contact__c VARCHAR(255), 
 	PRIMARY KEY (id)
 );
-INSERT INTO "npe03__Recurring_Donation__c" VALUES(1,'Carl Harvey: $75 Monthly','75.0','2019-02-04','','Open','2019-12-15','2020-01-15','15','','2020-01-02','','Open','Active','66');
+INSERT INTO "npe03__Recurring_Donation__c" VALUES(1,'Carl Harvey: $75 Monthly','75.0','2018-02-04','','Open','2019-12-15','2020-01-15','Monthly','15','','2020-01-02','','Open','Active','66');
 CREATE TABLE "npe4__Relationship__c" (
 	id INTEGER NOT NULL, 
 	"npe4__Type__c" VARCHAR(255), 
