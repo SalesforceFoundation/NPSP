@@ -49,6 +49,16 @@
         <name>Record_URL__c</name>
     </fields>
     <fields>
+        <help><!-- The Salesforce ID of the record associated with this error. --></help>
+        <label><!-- Related Record ID --></label>
+        <name>Related_Record_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- When selected, indicates that the record specified in Related Record ID will be reprocessed in the next scheduled process. If reprocessing succeeds, this field is then deselected. Applies to specific types of errors that occur during scheduled processes. --></help>
+        <label><!-- Retry Pending? --></label>
+        <name>Retry_Pending__c</name>
+    </fields>
+    <fields>
         <help><!-- Stack trace for the thrown error, if available at runtime. --></help>
         <label><!-- Stack Trace --></label>
         <name>Stack_Trace__c</name>
