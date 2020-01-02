@@ -26,9 +26,9 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
     def change_address_using(self, option, **kwargs):
         """
          Changes address setting based on the type of options chosen
-         provided options (Select An Existing Address/Enter A new Address)
+         Supported options are (Select An Existing Address/Enter A new Address)
         """
-        if option == "Enter a new address":
+        if option.lower() == "enter a new address":
            self.npsp.click_managehh_link("Enter a new address")
            self.npsp.populate_modal_form(**kwargs)
            self.npsp.click_span_button("Set Address")
@@ -38,20 +38,22 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
     def add_contact(self, option, value):
         """
          Performs a lookup of the contact provided as parameter and adds the contact to the hold based on the option
-         provided options (New/Existing)
+         Supported options are (New/Existing)
         """
         self.npsp.choose_frame("Manage Household")
         self.npsp.search_field_by_value("Find a Contact or add a new Contact to the Household", value)
         lookup_ele=npsp_lex_locators['household_lookup_dropdown_menu']
         self.selenium.wait_until_element_is_visible(lookup_ele)
 
-        if option == "Existing":
+        if option.lower() == "existing":
             self.selenium.click_button("Add")
 
-        if option == "New":
+        elif option.lower() == "new":
             self.selenium.click_button("New Contact")
             self.npsp.wait_for_locator("span_button", "New Contact")
             self.npsp.click_span_button("New Contact")
+        else:
+            print("Invalid option")
 
         self.selenium.wait_until_element_is_not_visible(lookup_ele)
         self.selenium.click_button("Save")
@@ -63,7 +65,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
          provided options (Household Name/ Formal Greeting/Informal Greeting)
         """
         self.npsp.choose_frame("Manage Household")
-        loc=self.npsp.validate_checkbox(contact,option)
+        loc=self.npsp.validate_checkboxes(contact,option)
         self.selenium.double_click_element(loc)
         self.selenium.unselect_frame()
 

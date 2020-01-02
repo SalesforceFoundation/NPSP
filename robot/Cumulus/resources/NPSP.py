@@ -375,7 +375,7 @@ class NPSP(SalesforceRobotLibraryBase):
         if value == "contains":
             assert status == "pass", "Expected value to be  but found "
 
-    def validate_checkbox(self,name,checkbox_title):
+    def validate_checkboxes(self,name,checkbox_title):
         """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""   
           
         locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
