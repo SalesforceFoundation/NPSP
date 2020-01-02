@@ -143,12 +143,16 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             formTemplates[0].Name,
             null);
 
-        Boolean someUniqueName = FORM_ServiceGiftEntry.checkNameUniqueness(
+        Boolean isUniqueName = FORM_ServiceGiftEntry.checkNameUniqueness(
             'New Form Template Sample Name',
             null);
 
-        System.assertEquals(isExistingName, false);
-        System.assertEquals(someUniqueName, true);
+        System.assertEquals(false,
+            isExistingName,
+            'Existing template names should return false from `FORM_ServiceGiftEntry.checkNameUniqueness`');
+        System.assertEquals(true,
+            isUniqueName,
+            'New template names should return true from `FORM_ServiceGiftEntry.checkNameUniqueness`');
     }
 
     //Utility method for creating a sample template.

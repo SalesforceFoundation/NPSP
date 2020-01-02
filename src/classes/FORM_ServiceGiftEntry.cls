@@ -239,6 +239,4 @@ public with sharing class FORM_ServiceGiftEntry {
         }
         return template;
     }
-
-    public class TemplateBuilderException extends Exception {}
 }
