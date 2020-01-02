@@ -58,15 +58,17 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         private set;
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Count of RD's processed by the batch
     */
-    private Integer numberRDsProcessed = 0;
+    @TestVisible
+    private Integer recordsProcessed = 0;
 
-    /*******************************************************************************************************
+    /***
     * @description Count of RD's that hit errors while processing
     */
-    private Integer numberOfFailures = 0;
+    @TestVisible
+    private Integer recordsFailed = 0;
 
     /**
      * @description Schedulable Execute Method to launch the Batch Job
@@ -74,7 +76,6 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     public void execute(SchedulableContext context) {
         Database.executeBatch(new RD2_OpportunityEvaluation_BATCH(), batchSize);
     }
-
 
     /**
     * @description Batch Start Method
@@ -91,15 +92,14 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Execute Method
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
+        recordsProcessed += rds.size();
 
-        Set<Id> rdIds = (new Map<Id, npe03__Recurring_Donation__c>(rds)).keySet();
-
-        RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService()
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService()
             .withBatchContext()
-            .withRds(rdIds);
-        oppEvalService.evaluateOpportunities();
-
-        numberRDsProcessed += rds.size();
+            .withRds(UTIL_SObject.extractIds(rds))
+            .evaluateOpportunities();
+        
+        recordsFailed += evalService.oppService.recordsFailed;
     }
 
     /**
@@ -125,7 +125,9 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     public void finish(Database.BatchableContext context) {
         AsyncApexJob job = new UTIL_BatchJobService().getAsyncApexJob(context.getJobId());
 
-        new RD2_Settings().saveLatestBatchResults(job.completedDate, numberRDsProcessed, numberOfFailures);
+        if (job != null) {
+            new RD2_Settings().saveLatestBatchResults(job.completedDate, recordsProcessed, recordsFailed);
+        }
     }
 
     /**

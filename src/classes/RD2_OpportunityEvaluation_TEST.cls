@@ -325,6 +325,60 @@ private class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(rdSchedules[0].EndDate__c, opps[0].CloseDate, 
             'Close Date on the new Opp should match next Close Date');
     }
+
+    /**
+     * @description Verifies number of failed Opps is zero on Opp DML success
+     */
+    @IsTest
+    private static void shouldReturnZeroRecordsFailedWhenOppDMLSucceeds() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date today = START_DATE.addMonths(1).addDays(1);
+        final Date nextCloseDate = START_DATE.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        RD2_OpportunityEvaluation_BATCH batch = runBatchExecuteMethod(rd.Id);
+
+        System.assertEquals(1, batch.recordsProcessed, 'Records Processed should be tracked');
+        System.assertEquals(0, batch.recordsFailed, 'No record should fail');
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'A new Opportunity should be created: ' + opps);
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /**
+     * @description Verifies number of failed Opps is tracked on Opp DML fail
+     */
+    @IsTest
+    private static void shouldReturnRecordsFailedWhenOppDMLFails() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        configInvalidOppRecordTypeId();
+
+        final Date today = START_DATE.addMonths(1).addDays(1);
+        final Date nextCloseDate = START_DATE.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        RD2_OpportunityEvaluation_BATCH batch = runBatchExecuteMethod(rd.Id);
+
+        System.assertEquals(1, batch.recordsProcessed, 'Records Processed should be tracked');
+        System.assertEquals(1, batch.recordsFailed, 'Record should fail');
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(0, opps.size(), 'No new Opportunity should be created: ' + opps);
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be created: ' + errors);
+    }
     
 
     // Helpers
@@ -346,6 +400,19 @@ private class RD2_OpportunityEvaluation_TEST {
             actuaException = ex;
         }
         return actuaException;
+    }
+
+    /**
+     * @description Executes execute() method
+     * @return RD2_OpportunityEvaluation_BATCH Batch instance
+     */
+    private static RD2_OpportunityEvaluation_BATCH runBatchExecuteMethod(Id rdId) {
+        UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
+        RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH();
+
+        batch.execute(batchContext, rdGateway.getRecords(new Set<Id>{ rdId }));
+
+        return batch;
     }
 
     /**
@@ -395,6 +462,20 @@ private class RD2_OpportunityEvaluation_TEST {
     private static void assertBatchJobIteration(Integer itemsProcessed) {
         AsyncApexJob job = jobGateway.getRecord('RD2_OpportunityEvaluation_BATCH');
         System.assertEquals(itemsProcessed, job.JobItemsProcessed, 'The number of batch iteration should match');
+    }
+
+    /****
+    * @description Sets up RD settings with invalid Opp Record Type Id
+    * @return void
+    */
+    private static void configInvalidOppRecordTypeId() {
+        npe03__Recurring_Donations_Settings__c rdSetting = new npe03__Recurring_Donations_Settings__c(
+            IsRecurringDonations2Enabled__c = true,
+            npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+            npe03__Record_Type__c = UTIL_RecordTypes_TEST.MOCK_ID
+        );
+        UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(rdSetting);
     }
 
 

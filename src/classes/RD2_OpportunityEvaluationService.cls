@@ -36,6 +36,14 @@
 */
 public inherited sharing class RD2_OpportunityEvaluationService {
 
+    /**
+     * @description Indicates if Opp evaluation service will be skipped.
+     * The flag is currently applicable to migration since Opp evaluation service should not be executed on migration.
+     * For example, if an active RD has no Opp, no new Opp should be created during migration.
+     * Moreover, if the RD is closed, close action on Open Opps should not be applied.
+     */
+    public static Boolean isOverride = false;
+
     /***
     * @description Recurring Donation custom settings
     */
@@ -50,22 +58,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Indicates if Opp evaluation service will be skipped.
-     * The flag is currently applicable to migration since Opp evaluation service should not be executed on migration.
-     * For example, if an active RD has no Opp, no new Opp should be created during migration.
-     * Moreover, if the RD is closed, close action on Open Opps should not be applied.
-     */
-    public static Boolean isOverride = false;
-
-    /**
     * @description Current reference date to calculate schedules and compare Opps with matching installments
     */   
     private Date currentDate {
         get {
-            if (currentDate == null) {
-                currentDate = RD2_ScheduleService.currentDate;
-            }
-            return currentDate;
+            return RD2_ScheduleService.currentDate;
         } set;
     }
 
@@ -85,6 +82,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
             return scheduleService;
         } set;
+    }
+
+    /***
+    * @description Recurring Donation Opportunity service
+    */
+    public RD2_OpportunityService oppService {
+        get {
+            if (oppService == null) {
+                oppService = new RD2_OpportunityService();
+            }
+            return oppService;
+        } 
+        private set;
     }
 
     /**
@@ -154,7 +164,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
      * @description Primary processor
-     * @return RD2_OpportunityEvaluationService The service instance
+     * @return RD2_OpportunityEvaluationService This service instance
      */
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
         //do not evaluate Opps when override is set
@@ -170,27 +180,20 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rd.npe03__Next_Payment_Date__c = 
                 scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
             
-            if (isClosed(rd)) {
+            RecurringDonation rdRecord = new RecurringDonation(rd); 
+            
+            if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
 
-            } else if (isNew(rd)) {
-                if (isFirstInstallmentEnabled()) {
-                    newOppRDs.add(rd);
-                }
-                
-            } else if (isBatchContext) {
-                if (rdSettings.isNextInstallmentEnabled) {
-                    newOppRDs.add(rd);
-                }
+            } else if (needNextInstallment(rdRecord)) {
+                newOppRDs.add(rd);
             
-            } else if (isUpdateContext(rd)) {
+            } else if (isUpdateContext(rdRecord)) {
                 updateOppRDs.add(rd);
             } 
 
             // TODO Handle Past Due Installment
         }
-
-        RD2_OpportunityService oppService = new RD2_OpportunityService();
 
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createOpportunities(newOppRDs);
@@ -198,6 +201,41 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         oppService.voidOpportunities(closedRDs);
 
         return this;
+    }
+
+    /**
+     * @description Indicates if the Recurring Donation require a new installment Opp to be created.
+     * @param rd Recurring Donation SObject
+     * @return Boolean
+     */
+    @TestVisible
+    private Boolean needNextInstallment(npe03__Recurring_Donation__c rd) {
+        return needNextInstallment(new RecurringDonation(rd));
+    }
+
+    /**
+     * @description Indicates if the Recurring Donation require a new installment Opp to be created.
+     * Schedules are inserted upon the Recurring Donation insert and before Opp evaluation is done.
+     * @param rd Recurring Donation record
+     * @return Boolean
+     */
+    private Boolean needNextInstallment(RecurringDonation rd) {
+        Boolean hasMandatoryConditions = rd.isActive()
+            && rd.hasNextDonationDate()
+            && rd.hasSchedule();
+        
+        if (!hasMandatoryConditions) {
+            return false;
+        }
+
+        if (rd.isNew()) {
+            return isFirstInstallmentEnabled();
+
+        } else if (isBatchContext || !rd.hasOpenOpportunity(currentDate)) {
+            return rdSettings.isNextInstallmentEnabled;
+        }
+
+        return false;
     }
 
     /**
@@ -216,69 +254,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Is this a new Recurring Donation that was just inserted and
-     * has not yet had an Installment Opportunity created?
-     * Schedules are inserted upon the Recurring Donation insert and before Opp evaluation is done.
-     * @param rd Recurring Donation
+     * @description Determines if the Recurring Donation open Opportunity should be updated
+     * @param rd Recurring Donation record
      * @return Boolean
      */
-    @TestVisible
-    private Boolean isNew(npe03__Recurring_Donation__c rd) {
-        return
-            isActive(rd)
-            && rd.npe03__Next_Payment_Date__c != null
-            && rd.npe03__Donations__r.isEmpty()
-            && !rd.RecurringDonationSchedules__r.isEmpty();
+    private Boolean isUpdateContext(RecurringDonation rd) {
+        return !isBatchContext
+            && rd.isActive()
+            && rd.hasSchedule()
+            && rd.hasOpenOpportunity(currentDate);
     }
 
-    /**
-     * @description Indicates if the Recurring Donation is active
-     * @param rd Recurring Donation
-     * @return Boolean
-     */
-    private Boolean isActive(npe03__Recurring_Donation__c rd) {
-        return rd.Status__c == RD2_Constants.STATUS_ACTIVE;
-    }
-
-    /**
-     * @description Indicates if the Recurring Donation is closed
-     * @param rd Recurring Donation
-     * @return Boolean
-     */
-    private Boolean isClosed(npe03__Recurring_Donation__c rd) {
-        return rd.Status__c == RD2_Constants.STATUS_CLOSED;
-    }
-
-    /**
-     * @description Determines if the Recurring Donation open Opportunity should be evaluated
-     * @param rd Recurring Donation
-     * @return Boolean
-     */
-    private Boolean isUpdateContext(npe03__Recurring_Donation__c rd) {
-        return
-            isActive(rd)
-            && !rd.RecurringDonationSchedules__r.isEmpty()
-            && hasOpenOpportunity(rd);
-    }
-
-    /**
-     * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
-     * @param rd Recurring Donation
-     * @return Boolean
-     */
-    private Boolean hasOpenOpportunity(npe03__Recurring_Donation__c rd) {
-        if (rd.npe03__Donations__r.isEmpty()) {
-            return false;
-        }
-        
-        for (Opportunity opp : rd.npe03__Donations__r) {
-            if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
@@ -343,4 +329,80 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return Database.query(soql);
     }
 
+
+    /**
+     * @description Recurring Donation SObject wrapper
+     */
+    public class RecurringDonation {
+        npe03__Recurring_Donation__c rd;
+        private Boolean hasOpenOpportunity;
+
+        /**
+        * @description Constructor
+        */
+        public RecurringDonation(npe03__Recurring_Donation__c rd) {
+            this.rd = rd;
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation is active
+        * @return Boolean
+        */
+        public Boolean isActive() {
+            return rd.Status__c == RD2_Constants.STATUS_ACTIVE;
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation is closed
+        * @return Boolean
+        */
+        public Boolean isClosed() {
+            return rd.Status__c == RD2_Constants.STATUS_CLOSED;
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation Next Donation Date is determined
+        * @return Boolean
+        */
+        public Boolean hasNextDonationDate() {
+            return rd.npe03__Next_Payment_Date__c != null;
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation has a Schedule
+        * @return Boolean
+        */
+        public Boolean hasSchedule() {
+            return !rd.RecurringDonationSchedules__r.isEmpty();
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation is new, ie the RD has no installment Opp
+        * @return Boolean
+        */
+        public Boolean isNew() {
+            return rd.npe03__Donations__r.isEmpty();
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
+        * @param currentDate Current Date to compare the Close Date to
+        * @return Boolean
+        */
+        public Boolean hasOpenOpportunity(Date currentDate) {
+            if (hasOpenOpportunity != null) {
+                return hasOpenOpportunity;
+            }
+
+            hasOpenOpportunity = false;
+            
+            for (Opportunity opp : rd.npe03__Donations__r) {
+                if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
+                    hasOpenOpportunity = true;
+                }
+            }
+
+            return hasOpenOpportunity;
+        }
+    }
 }

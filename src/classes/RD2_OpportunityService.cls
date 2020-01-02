@@ -67,11 +67,21 @@ public with sharing class RD2_OpportunityService {
     */
     private Date currentDate {
         get {
-            if (currentDate == null) {
-                currentDate = RD2_ScheduleService.currentDate;
-            }
-            return currentDate;
+            return RD2_ScheduleService.currentDate;
         } set;
+    }
+
+    /***
+    * @description Tracks number of Opportunities that failed to be processed
+    */
+    public Integer recordsFailed {
+        get {
+            if (recordsFailed == null) {
+                recordsFailed = 0;
+            }
+            return recordsFailed;
+        }
+        private set;
     }
 
     /***
@@ -354,12 +364,12 @@ public with sharing class RD2_OpportunityService {
             return;
         }
 
+        ERR_Handler.Errors errors;
         if (rdSettings.isCloseActionDeletion()) {
-            UTIL_DMLService.deleteRecordsAndLogErrors(openOppsToVoid, ERR_Handler_API.Context.RD.name());
+            errors = UTIL_DMLService.deleteRecordsAndLogErrors(openOppsToVoid, ERR_Handler_API.Context.RD.name());
 
         } else if (rdSettings.isCloseActionClosedLost()) {
             List<Opportunity> oppsToUpdate = new List<Opportunity>();
-
             for (Opportunity opp : openOppsToVoid) {
                 oppsToUpdate.add(new Opportunity(
                     Id = opp.Id,
@@ -367,8 +377,10 @@ public with sharing class RD2_OpportunityService {
                 ));
             }
 
-            UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
+            errors = UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
         }
+
+        recordsFailed += errors == null ? 0 : errors.errorRecords.size();
     }
 
     /***
@@ -378,7 +390,15 @@ public with sharing class RD2_OpportunityService {
     * @return void
     */
     private void handleErrors(List<Database.SaveResult> saveResults, List<SObject> records) {
+        if (records == null || records.isEmpty()) {
+            return;
+        }
+
         ERR_Handler.Errors errors = ERR_Handler.getErrors(saveResults, records);
         ERR_Handler.processErrorsOnly(errors, ERR_Handler_API.Context.RD.name());
+
+        if (records[0].getSObjectType() == Opportunity.SObjectType) {
+            recordsFailed += errors.errorRecords.size();
+        }
     }
 }
