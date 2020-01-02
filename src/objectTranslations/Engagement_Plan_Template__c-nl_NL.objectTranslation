@@ -2,28 +2,32 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Betrokkenheidsplansjabloon</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Engagement Plan Template --></value>
+        <value>Betrokkenheidsplansjablonen</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage EP Template FS --></label>
+        <name>ManageEPTemplateFS</name>
+    </fieldSets>
     <fields>
-        <help>Herberekent een onderliggende taak zijn vervaldatum wanneer de bovenliggende taak wordt voltooid.</help>
-        <label>Wijziging vervaldatum onderliggende Taak</label>
+        <help>Berekent de vervaldatum van een onderliggende Taak opnieuw op basis van wanneer de bovenliggende Taak daadwerkelijk werd voltooid.</help>
+        <label>Vervaldatum Onderl. Taak auto. bijwerken</label>
         <name>Automatically_Update_Child_Task_Due_Date__c</name>
     </fields>
     <fields>
-        <help>Wanneer het Activiteitenplan Taakveld &quot;Toegewezen aan&quot; leeg is gelaten,  aan wie moet de Taak dan worden toegewezen?</help>
+        <help>Als het veld Toegewezen aan van een Betrokkenheidsplantaak wordt leeggelaten, aan wie moet de Taak dan worden toegewezen?</help>
         <label>Standaard Toegewezen Persoon</label>
         <name>Default_Assignee__c</name>
         <picklistValues>
             <masterLabel>Owner of Object for Engagement Plan</masterLabel>
-            <translation>Eigenaar van Object voor Activiteitenplan</translation>
+            <translation>Eigenaar van Object voor Betrokkenheidsplan</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>User Creating Engagement Plan</masterLabel>
-            <translation>Gebruiker maakt Activiteitenplan</translation>
+            <translation>Gebruiker Maakt Betrokkenheidsplan</translation>
         </picklistValues>
     </fields>
     <fields>
@@ -31,8 +35,8 @@
         <name>Description__c</name>
     </fields>
     <fields>
-        <help>Moeten taken met een vervaldatum in het weekend worden verschoven naar de vrijdag voor of de maandag na het weekend?</help>
-        <label>Herplan naar</label>
+        <help>Moeten Taken met een Vervaldatum in het weekend gepland worden voor vrijdag vóór het weekend of voor maandag erna? Dit is enkel van toepassing als Weekend overslaan is geselecteerd.</help>
+        <label>Opnieuw plannen voor</label>
         <name>Reschedule_To__c</name>
         <picklistValues>
             <masterLabel>Friday</masterLabel>
@@ -44,19 +48,19 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Indien ingeschakeled hebben Taken in dit Activiteitenplan geen vervaldatum op een zaterdag of zondag.</help>
-        <label>Sla weekenden over</label>
+        <help>Indien geselecteerd, hebben Taken die gecreëerd zijn in dit Betrokkenheidsplan geen Vervaldatum die op een zaterdag of zondag vallen.</help>
+        <label>Weekend overslaan.</label>
         <name>Skip_Weekends__c</name>
     </fields>
     <fields>
-        <label>Totaal Aantal Activiteitenplannen</label>
+        <label>Totale Aantal Betrokkenheidsplannen</label>
         <name>Total_Engagement_Plans__c</name>
     </fields>
     <fields>
-        <label>Totaal Aantal Taken</label>
+        <label>Totale Aantal Taken</label>
         <name>Total_Tasks__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Engagement Plan Template Layout</layout>
         <sections>
@@ -64,9 +68,9 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Engagement Plan Template Name --></nameFieldLabel>
+    <nameFieldLabel>Sjabloonnaam van Betrokkenheidsplan</nameFieldLabel>
     <webLinks>
-        <label>Beheer Sjabloon</label>
+        <label>Sjabloon beheren</label>
         <name>Manage_Template</name>
     </webLinks>
 </CustomObjectTranslation>

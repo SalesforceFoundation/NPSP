@@ -2,15 +2,15 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Error --></value>
+        <value>Fout</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Error --></value>
+        <value>Fouten</value>
     </caseValues>
     <fields>
         <help>Context die de fout gegenereerde, indien bekend.</help>
-        <label><!-- Context Type --></label>
+        <label>Contexttype</label>
         <name>Context_Type__c</name>
     </fields>
     <fields>
@@ -19,7 +19,7 @@
         <name>Datetime__c</name>
     </fields>
     <fields>
-        <help>Geeft aan of een e-mailnotificatie is verzonden met betrekking tot deze fout.</help>
+        <help>Geeft aan of een e-mailnotificatie met betrekking tot deze fout is verzonden.</help>
         <label>E-mail Verzonden</label>
         <name>Email_Sent__c</name>
     </fields>
@@ -29,31 +29,41 @@
         <name>Error_Type__c</name>
     </fields>
     <fields>
-        <help>Volledige Tekst van het foutbericht</help>
-        <label>Volledige Bericht</label>
+        <help>Volledige tekst van het foutbericht</help>
+        <label>Volledig Bericht</label>
         <name>Full_Message__c</name>
     </fields>
     <fields>
-        <help>Type object waar de fout is opgetreden, indien bekend.</help>
+        <help>Type object waarop de fout is opgetreden, indien bekend.</help>
         <label>Type Object</label>
         <name>Object_Type__c</name>
     </fields>
     <fields>
-        <help>Geeft aan of de fout is geplaatst in Chatter.</help>
+        <help>Geeft aan of de fout is gepost in Chatter.</help>
         <label>Geplaatst in Chatter</label>
         <name>Posted_in_Chatter__c</name>
     </fields>
     <fields>
-        <help>Een link naar het record die de fout veroorzaakte, indien beschikbaar.</help>
-        <label><!-- Record URL --></label>
+        <help>Een koppeling naar de record die de fout veroorzaakte, indien beschikbaar.</help>
+        <label>Record-URL</label>
         <name>Record_URL__c</name>
     </fields>
     <fields>
-        <help>Stack trace voor de thrown error, indien beschikbaar tijdens runtime.</help>
-        <label><!-- Stack Trace --></label>
+        <help><!-- The Salesforce ID of the record associated with this error. --></help>
+        <label><!-- Related Record ID --></label>
+        <name>Related_Record_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- When selected, indicates that the record specified in Related Record ID will be reprocessed in the next scheduled process. If reprocessing succeeds, this field is then deselected. Applies to specific types of errors that occur during scheduled processes. --></help>
+        <label><!-- Retry Pending? --></label>
+        <name>Retry_Pending__c</name>
+    </fields>
+    <fields>
+        <help>Stack-tracering voor de geworpen fout, indien beschikbaar bij run-time.</help>
+        <label>Stack-tracering</label>
         <name>Stack_Trace__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Error Layout</layout>
         <sections>
@@ -61,5 +71,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Error Number --></nameFieldLabel>
+    <nameFieldLabel>Foutnummer</nameFieldLabel>
 </CustomObjectTranslation>
