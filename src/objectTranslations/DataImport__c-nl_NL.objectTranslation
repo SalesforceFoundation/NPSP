@@ -2,171 +2,146 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Data Import --></value>
+        <value>NPSP-Gegevensimport</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- NPSP Data Import --></value>
+        <value>NPSP-Gegevensimports</value>
     </caseValues>
     <fields>
-        <label><!-- Account1 Import Status --></label>
+        <label>Account1 Importstatus</label>
         <name>Account1ImportStatus__c</name>
     </fields>
     <fields>
         <label>Account1 Geïmporteerd</label>
         <name>Account1Imported__c</name>
-        <relationshipLabel>NPSP Data Import (Account1 Geïmporteerd)</relationshipLabel>
+        <relationshipLabel><!-- NPSP Data Imports (Account1 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Account1.BillingCity --></help>
         <label>Account1 Stad</label>
         <name>Account1_City__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.BillingCountry --></help>
         <label>Account1 Land</label>
         <name>Account1_Country__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.Name --></help>
         <label>Account1 Naam</label>
         <name>Account1_Name__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.Phone --></help>
         <label>Account1 Telefoon</label>
         <name>Account1_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.BillingState --></help>
-        <label>Account1 Provincie</label>
+        <label>Account1 Staat/Provincie</label>
         <name>Account1_State_Province__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.BillingStreet --></help>
         <label>Account1 Straat</label>
         <name>Account1_Street__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.Website --></help>
-        <label><!-- Account1 Website --></label>
+        <label>Account1 Website</label>
         <name>Account1_Website__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.BillingPostalCode --></help>
         <label>Account1 Postcode</label>
         <name>Account1_Zip_Postal_Code__c</name>
     </fields>
     <fields>
-        <label><!-- Account2 Import Status --></label>
+        <label>Account2 Importstatus</label>
         <name>Account2ImportStatus__c</name>
     </fields>
     <fields>
         <label>Account2 Geïmporteerd</label>
         <name>Account2Imported__c</name>
-        <relationshipLabel>NPSP Data Import (Account2 Geïmporteerd)</relationshipLabel>
+        <relationshipLabel><!-- NPSP Data Imports (Account2 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Account2.BillingCity --></help>
         <label>Account2 Stad</label>
         <name>Account2_City__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.BillingCountry --></help>
         <label>Account2 Land</label>
         <name>Account2_Country__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.Name --></help>
         <label>Account2 Naam</label>
         <name>Account2_Name__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.Phone --></help>
         <label>Account2 Telefoon</label>
         <name>Account2_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.BillingState --></help>
-        <label>Account2 Provincie</label>
+        <label>Account2 Staat/Provincie</label>
         <name>Account2_State_Province__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.BillingStreet --></help>
         <label>Account2 Straat</label>
         <name>Account2_Street__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.Website --></help>
-        <label><!-- Account2 Website --></label>
+        <label>Account2 Website</label>
         <name>Account2_Website__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.BillingPostalCode --></help>
         <label>Account2 Postcode</label>
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
     <fields>
-        <help>De ApexOpdrachtId van de Batch Opdracht die het record heeft verwerkt.</help>
-        <label>ApexOpdrachtId</label>
+        <help>De ApexJobID van de Batchtaak die de record verwerkt heeft.</help>
+        <label>ApexJobId</label>
         <name>ApexJobId__c</name>
     </fields>
     <fields>
-        <label>Campagnelid Status</label>
+        <label>Status van Campagnelid</label>
         <name>Campaign_Member_Status__c</name>
     </fields>
     <fields>
-        <label>Contactpersoon1 Import Status</label>
+        <label>Contact1 Importstatus</label>
         <name>Contact1ImportStatus__c</name>
     </fields>
     <fields>
         <label>Contact1 Geïmporteerd</label>
         <name>Contact1Imported__c</name>
-        <relationshipLabel>NPSP Data Import (Contact1 Geïmporteerd)</relationshipLabel>
+        <relationshipLabel><!-- NPSP Data Imports (Contact1 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__AlternateEmail__c --></help>
         <label>Contact1 Alternatieve E-mail</label>
         <name>Contact1_Alternate_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.Birthdate --></help>
         <label>Contact1 Geboortedatum</label>
         <name>Contact1_Birthdate__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.Firstname --></help>
         <label>Contact1 Voornaam</label>
         <name>Contact1_Firstname__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.HomePhone --></help>
-        <label>Contact1 Thuis Telefoon</label>
+        <label>Contact1 Thuistelefoon</label>
         <name>Contact1_Home_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.Lastname --></help>
-        <label>Contact1 Achternaam</label>
+        <label>Contact1 Familienaam</label>
         <name>Contact1_Lastname__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.MobilePhone --></help>
-        <label>Contact1 Mobiel</label>
+        <label>Contact1 Mobiele telefoon</label>
         <name>Contact1_Mobile_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.OtherPhone --></help>
-        <label>Contact1 Telefoon Anders</label>
+        <label>Contact1 Andere Telefoon</label>
         <name>Contact1_Other_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__HomeEmail__c --></help>
         <label>Contact1 Persoonlijke E-mail</label>
         <name>Contact1_Personal_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__Preferred_Email__c --></help>
-        <label>Contact1 Voorkeur E-mail</label>
+        <label>Contact1 Voorkeurs-e-mail</label>
         <name>Contact1_Preferred_Email__c</name>
         <picklistValues>
             <masterLabel>Alternate</masterLabel>
@@ -182,12 +157,11 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__PreferredPhone__c --></help>
-        <label>Contact1 Voorkeur Telefoon</label>
+        <label>Contact1 Voorkeurstelefoon</label>
         <name>Contact1_Preferred_Phone__c</name>
         <picklistValues>
             <masterLabel>Home</masterLabel>
-            <translation>Huis</translation>
+            <translation>Thuis</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Mobile</masterLabel>
@@ -203,77 +177,64 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Contact1.Salutation --></help>
         <label>Contact1 Aanhef</label>
         <name>Contact1_Salutation__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.Title --></help>
         <label>Contact1 Titel</label>
         <name>Contact1_Title__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__WorkEmail__c --></help>
-        <label>Contact1 Werk E-mail</label>
+        <label>Contact1 Werk-e-mail</label>
         <name>Contact1_Work_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__WorkPhone__c --></help>
-        <label>Contact1 Werk Telefoon</label>
+        <label>Contact1 Werktelefoon</label>
         <name>Contact1_Work_Phone__c</name>
     </fields>
     <fields>
-        <label>Contactpersoon2 Import Status</label>
+        <label>Contact2 Importstatus</label>
         <name>Contact2ImportStatus__c</name>
     </fields>
     <fields>
         <label>Contact2 Geïmporteerd</label>
         <name>Contact2Imported__c</name>
-        <relationshipLabel>NPSP Data Import (Contact2 Geïmporteerd)</relationshipLabel>
+        <relationshipLabel><!-- NPSP Data Imports (Contact2 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__AlternateEmail__c --></help>
-        <label>Contact2 Alternatieve E-Mail</label>
+        <label>Contact2 Alternatieve E-mail</label>
         <name>Contact2_Alternate_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.Birthdate --></help>
         <label>Contact2 Geboortedatum</label>
         <name>Contact2_Birthdate__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.Firstname --></help>
         <label>Contact2 Voornaam</label>
         <name>Contact2_Firstname__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.HomePhone --></help>
-        <label>Contact2 Thuis Telefoon</label>
+        <label>Contact2 Thuistelefoon</label>
         <name>Contact2_Home_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.Lastname --></help>
-        <label>Contact2 Achternaam</label>
+        <label>Contact2 Familienaam</label>
         <name>Contact2_Lastname__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.MobilePhone --></help>
-        <label>Contact2 Mobiel</label>
+        <label>Contact2 Mobiele telefoon</label>
         <name>Contact2_Mobile_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.OtherPhone --></help>
-        <label>Contact2 Telefoon Anders</label>
+        <label>Contact2 Andere Telefoon</label>
         <name>Contact2_Other_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__HomeEmail__c --></help>
-        <label>Contact2 Persoonlijke E-mail</label>
+        <label>Contact2 Persoonlijke e-mail</label>
         <name>Contact2_Personal_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__Preferred_Email__c --></help>
-        <label>Contact2 Voorkeur E-mail</label>
+        <label>Contact2 Voorkeurs-e-mail</label>
         <name>Contact2_Preferred_Email__c</name>
         <picklistValues>
             <masterLabel>Alternate</masterLabel>
@@ -289,12 +250,11 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__PreferredPhone__c --></help>
-        <label>Contact2 Voorkeur Telefoon</label>
+        <label>Contact2 Voorkeurstelefoon</label>
         <name>Contact2_Preferred_Phone__c</name>
         <picklistValues>
             <masterLabel>Home</masterLabel>
-            <translation>Huis</translation>
+            <translation>Thuis</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Mobile</masterLabel>
@@ -310,206 +270,276 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Contact2.Salutation --></help>
         <label>Contact2 Aanhef</label>
         <name>Contact2_Salutation__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.Title --></help>
         <label>Contact2 Titel</label>
         <name>Contact2_Title__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__WorkEmail__c --></help>
-        <label>Contact2 Werk E-mail</label>
+        <label>Contact2 Werk-e-mail</label>
         <name>Contact2_Work_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__WorkPhone__c --></help>
-        <label>Contact2 Werk Telefoon</label>
+        <label>Contact2 Werktelefoon</label>
         <name>Contact2_Work_Phone__c</name>
     </fields>
     <fields>
-        <label>Donatie Import Status</label>
+        <label>Importstatus van Donatiecampagne</label>
+        <name>DonationCampaignImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Bron van Donatiecampagne</label>
+        <name>DonationCampaignImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <label>Importstatus van Donatie</label>
         <name>DonationImportStatus__c</name>
     </fields>
     <fields>
         <label>Donatie Geïmporteerd</label>
         <name>DonationImported__c</name>
-        <relationshipLabel>NPSP Data Import</relationshipLabel>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.Amount --></help>
-        <label>Donatie Bedrag</label>
-        <name>Donation_Amount__c</name>
-    </fields>
-    <fields>
-        <label>Campagne Naam</label>
-        <name>Donation_Campaign_Name__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.CloseDate --></help>
-        <label>Donatie Datum</label>
-        <name>Donation_Date__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.Description --></help>
-        <label>Donatie Beschrijving</label>
-        <name>Donation_Description__c</name>
-    </fields>
-    <fields>
-        <help>Specificeert of de donatie komt van Contact1, of van Account1</help>
-        <label>Donatie Donor</label>
-        <name>Donation_Donor__c</name>
-        <picklistValues>
-            <masterLabel>Account1</masterLabel>
-            <translation><!-- Account1 --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Contact1</masterLabel>
-            <translation>Contactpersoon1</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.npe01__Member_Level__c --></help>
-        <label>Donatie Lidmaatschap Niveau</label>
-        <name>Donation_Member_Level__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.npe01__Membership_End_Date__c --></help>
-        <label>Donatie Lidmaatschap Einddatum</label>
-        <name>Donation_Membership_End_Date__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.npe01__Membership_Origin__c --></help>
-        <label>Donatie Lidmaatschap Herkomst</label>
-        <name>Donation_Membership_Origin__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.npe01__Membership_Start_Date__c --></help>
-        <label>Donatie Lidmaatschap Startdatum</label>
-        <name>Donation_Membership_Start_Date__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.Name --></help>
-        <label>Donatie Naam</label>
-        <name>Donation_Name__c</name>
-    </fields>
-    <fields>
-        <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Opportunity matches voor een Donatie.</help>
-        <label>Donatie Mogelijke Matches</label>
-        <name>Donation_Possible_Matches__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.RecordTypeId --></help>
-        <label>Donatie Recordtype Naam</label>
-        <name>Donation_Record_Type_Name__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.StageName --></help>
-        <label>Donatie Fase</label>
-        <name>Donation_Stage__c</name>
-    </fields>
-    <fields>
-        <help><!-- Opportunity.Type --></help>
-        <label>Donatie Type</label>
-        <name>Donation_Type__c</name>
-    </fields>
-    <fields>
-        <help>Beschrijving van de reden waarom het importeren van dit record mislukt is.</help>
-        <label>Mislukking Informatie</label>
-        <name>FailureInformation__c</name>
-    </fields>
-    <fields>
-        <label>Thuis Adres Import Status</label>
-        <name>HomeAddressImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>Thuis Adres Geïmporteerd</label>
-        <name>HomeAddressImported__c</name>
-        <relationshipLabel>NPSP Data Import</relationshipLabel>
-    </fields>
-    <fields>
-        <help><!-- Address.npsp__MailingCity__c --></help>
-        <label>Thuis Stad</label>
-        <name>Home_City__c</name>
-    </fields>
-    <fields>
-        <help><!-- Address.npsp__MailingCountry__c --></help>
-        <label>Thuis Land</label>
-        <name>Home_Country__c</name>
-    </fields>
-    <fields>
-        <help><!-- Address.npsp__MailingState__c --></help>
-        <label>Thuis Provincie</label>
-        <name>Home_State_Province__c</name>
-    </fields>
-    <fields>
-        <help><!-- Address.npsp__MailingStreet__c --></help>
-        <label>Thuis Straat</label>
-        <name>Home_Street__c</name>
-    </fields>
-    <fields>
-        <help><!-- Address.npsp__MailingPostalCode__c --></help>
-        <label>Thuis Postcode</label>
-        <name>Home_Zip_Postal_Code__c</name>
-    </fields>
-    <fields>
-        <label>Huishouden Account Geïmporteerd</label>
-        <name>HouseholdAccountImported__c</name>
-        <relationshipLabel>NPSP Data Import (Huishouden Account Geïmporteerd)</relationshipLabel>
-    </fields>
-    <fields>
-        <help><!-- Household.Phone --></help>
-        <label>Huishouden Telefoon</label>
-        <name>Household_Phone__c</name>
-    </fields>
-    <fields>
-        <help>Wanneer het Data Import record succesvol is geïmporteerd.</help>
-        <label>Import Datum</label>
-        <name>ImportedDate__c</name>
-    </fields>
-    <fields>
-        <help>Een optionele NPSP Data Import Batch waar dit record bij hoort</help>
-        <label><!-- NPSP Data Import Batch --></label>
-        <name>NPSP_Data_Import_Batch__c</name>
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
-        <label>Betaling Import Status</label>
+        <label>Donatiebedrag</label>
+        <name>Donation_Amount__c</name>
+    </fields>
+    <fields>
+        <label>Campagnenaam</label>
+        <name>Donation_Campaign_Name__c</name>
+    </fields>
+    <fields>
+        <label>Donatiedatum</label>
+        <name>Donation_Date__c</name>
+    </fields>
+    <fields>
+        <label>Donatiebeschrijving</label>
+        <name>Donation_Description__c</name>
+    </fields>
+    <fields>
+        <help>Specificeert of de donatie een individuele donatie is van Contact1, of een organisatiedonatie is van Account1.</help>
+        <label>Donatiedonor</label>
+        <name>Donation_Donor__c</name>
+        <picklistValues>
+            <masterLabel>Account1</masterLabel>
+            <translation>Account1</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Contact1</masterLabel>
+            <translation>Contact1</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <label>Niveau van Donatielid</label>
+        <name>Donation_Member_Level__c</name>
+    </fields>
+    <fields>
+        <label>Einddatum van Donatielidmaatschap</label>
+        <name>Donation_Membership_End_Date__c</name>
+    </fields>
+    <fields>
+        <label>Herkomst van Donatielidmaatschap</label>
+        <name>Donation_Membership_Origin__c</name>
+    </fields>
+    <fields>
+        <label>Begindatum van Donatielidmaatschap</label>
+        <name>Donation_Membership_Start_Date__c</name>
+    </fields>
+    <fields>
+        <label>Donatienaam</label>
+        <name>Donation_Name__c</name>
+    </fields>
+    <fields>
+        <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Opportunityovereenkomsten voor een Donatie.</help>
+        <label>Mogelijke Overeenkomsten van Donatie</label>
+        <name>Donation_Possible_Matches__c</name>
+    </fields>
+    <fields>
+        <label>Naam van Recordtype van Donatie</label>
+        <name>Donation_Record_Type_Name__c</name>
+    </fields>
+    <fields>
+        <label>Donatiefase</label>
+        <name>Donation_Stage__c</name>
+    </fields>
+    <fields>
+        <label>Donatietype</label>
+        <name>Donation_Type__c</name>
+    </fields>
+    <fields>
+        <help>Beschrijving van de reden waarom de Gegevensimportrecord niet is geïmporteerd.</help>
+        <label>Informatie over Mislukking</label>
+        <name>FailureInformation__c</name>
+    </fields>
+    <fields>
+        <help><!-- The monetary amount attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 1: Amount --></label>
+        <name>GAU_Allocation_1_Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the GAU to be used for the first allocation. --></help>
+        <label><!-- GAU Allocation 1: GAU --></label>
+        <name>GAU_Allocation_1_GAU__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the first GAU Allocation. --></help>
+        <label><!-- GAU Allocation 1: Import Status --></label>
+        <name>GAU_Allocation_1_Import_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
+        <label><!-- GAU Allocation 1: Imported --></label>
+        <name>GAU_Allocation_1_Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 1: Percent --></label>
+        <name>GAU_Allocation_1_Percent__c</name>
+    </fields>
+    <fields>
+        <help><!-- The monetary amount attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 2: Amount --></label>
+        <name>GAU_Allocation_2_Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the GAU to be used for the second GAU allocation. --></help>
+        <label><!-- GAU Allocation 2: GAU --></label>
+        <name>GAU_Allocation_2_GAU__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the second GAU Allocation. --></help>
+        <label><!-- GAU Allocation 2: Import Status --></label>
+        <name>GAU_Allocation_2_Import_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
+        <label><!-- GAU Allocation 2: Imported --></label>
+        <name>GAU_Allocation_2_Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The percent attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 2: Percent --></label>
+        <name>GAU_Allocation_2_Percent__c</name>
+    </fields>
+    <fields>
+        <label>Importstatus van Thuisadres</label>
+        <name>HomeAddressImportStatus__c</name>
+    </fields>
+    <fields>
+        <label>Thuisadres Geïmporteerd</label>
+        <name>HomeAddressImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <label>Thuisstad</label>
+        <name>Home_City__c</name>
+    </fields>
+    <fields>
+        <label>Thuisland</label>
+        <name>Home_Country__c</name>
+    </fields>
+    <fields>
+        <label>Thuisstaat/-provincie</label>
+        <name>Home_State_Province__c</name>
+    </fields>
+    <fields>
+        <label>Thuisstraat</label>
+        <name>Home_Street__c</name>
+    </fields>
+    <fields>
+        <label>Thuispostcode</label>
+        <name>Home_Zip_Postal_Code__c</name>
+    </fields>
+    <fields>
+        <label>Huishoudenaccount Geïmporteerd</label>
+        <name>HouseholdAccountImported__c</name>
+        <relationshipLabel>NPSP-Gegevensimports (Huishoudenaccount Geïmporteerd)</relationshipLabel>
+    </fields>
+    <fields>
+        <label>Telefoon van Huishouden</label>
+        <name>Household_Phone__c</name>
+    </fields>
+    <fields>
+        <help>De datum en tijd waarop de Gegevensimportrecord succesvol werd geïmporteerd.</help>
+        <label>Importdatum</label>
+        <name>ImportedDate__c</name>
+    </fields>
+    <fields>
+        <help>Opzoeking van de Batch voor NPSP-Gegevensimport waar deze record bij hoort.</help>
+        <label>Batch voor NPSP-Gegevensimport</label>
+        <name>NPSP_Data_Import_Batch__c</name>
+        <relationshipLabel>NPSP-Gegevensimports</relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the first Opportunity Contact Role. --></help>
+        <label><!-- Opportunity Contact Role 1: ImportStatus --></label>
+        <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 1: Imported --></label>
+        <name>Opportunity_Contact_Role_1_Imported__c</name>
+    </fields>
+    <fields>
+        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 1: Role --></label>
+        <name>Opportunity_Contact_Role_1_Role__c</name>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the second Opportunity Contact Role. --></help>
+        <label><!-- Opportunity Contact Role 2: ImportStatus --></label>
+        <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 2: Imported --></label>
+        <name>Opportunity_Contact_Role_2_Imported__c</name>
+    </fields>
+    <fields>
+        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 2: Role --></label>
+        <name>Opportunity_Contact_Role_2_Role__c</name>
+    </fields>
+    <fields>
+        <label>Importstatus van Betaling</label>
         <name>PaymentImportStatus__c</name>
     </fields>
     <fields>
         <label>Betaling Geïmporteerd</label>
         <name>PaymentImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP-Gegevensimports</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
-        <label>Betaling Cheque/ Referentie Nummer</label>
+        <label>Betalingscheque/referentienummer</label>
         <name>Payment_Check_Reference_Number__c</name>
     </fields>
     <fields>
-        <help><!-- Payment.npe01__Payment_Method__c --></help>
         <label>Betalingsmethode</label>
         <name>Payment_Method__c</name>
     </fields>
     <fields>
-        <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Betaling matches voor een Donatie.</help>
-        <label>Betaling Mogelijke Matches</label>
+        <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Betalingsovereenkomsten voor een Donatie.</help>
+        <label>Mogelijke Overeenkomsten Betaling</label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help>De status van het importeren van het Data Import record.</help>
-        <label><!-- Status --></label>
+        <help>De importstatus van deze record, bijvoorbeeld Geïmporteerd of Mislukt.</help>
+        <label>Status</label>
         <name>Status__c</name>
         <picklistValues>
             <masterLabel>Dry Run - Error</masterLabel>
-            <translation><!-- Dry Run - Error --></translation>
+            <translation>Testuitvoering - Fout</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Dry Run - Validated</masterLabel>
-            <translation><!-- Dry Run - Validated --></translation>
+            <translation>Testuitvoering - Gevalideerd</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Failed</masterLabel>
@@ -520,19 +550,19 @@
             <translation>Geïmporteerd</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Data Import Layout</layout>
         <sections>
-            <label>Account1 Organisatie Informatie</label>
+            <label>Account1 Organisatie-informatie</label>
             <section>Account1 Organization Information</section>
         </sections>
         <sections>
-            <label>Account2 Organisatie Informatie</label>
+            <label>Account2 Organisatie-informatie</label>
             <section>Account2 Organization Information</section>
         </sections>
         <sections>
-            <label>Campagne Informatie</label>
+            <label>Campagne-informatie</label>
             <section>Campaign Information</section>
         </sections>
         <sections>
@@ -548,29 +578,49 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label>Donatie Informatie</label>
-            <section>Donation Information</section>
+            <label><!-- GAU Allocation 1 Information --></label>
+            <section>GAU Allocation 1 Information</section>
         </sections>
         <sections>
-            <label>Huisadres</label>
+            <label><!-- GAU Allocation 2 Information --></label>
+            <section>GAU Allocation 2 Information</section>
+        </sections>
+        <sections>
+            <label>Thuisadres</label>
             <section>Home Address</section>
         </sections>
         <sections>
-            <label>Huishouden Account Informatie</label>
+            <label>Informatie van Huishoudenaccount</label>
             <section>Household Account Information</section>
         </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role 1 Information --></label>
+            <section>Opportunity Contact Role 1 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role 2 Information --></label>
+            <section>Opportunity Contact Role 2 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Information --></label>
+            <section>Opportunity Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
+        </sections>
     </layouts>
-    <nameFieldLabel><!-- Data Import ID --></nameFieldLabel>
+    <nameFieldLabel>ID van Gegevensimport</nameFieldLabel>
     <webLinks>
-        <label>Verwijder Alle Data Import Records</label>
+        <label>Alle Gegevensimportrecords verwijderen</label>
         <name>Delete_All_Data_Import_Records</name>
     </webLinks>
     <webLinks>
-        <label>Verwijder Geïmporteerde Data Import Records</label>
+        <label>Geïmporteerde Gegevensimportrecords verwijderen</label>
         <name>Delete_Imported_Data_Import_Records</name>
     </webLinks>
     <webLinks>
-        <label><!-- Process_Data_Import --></label>
+        <label>Gegevensimport starten</label>
         <name>Process_Data_Import</name>
     </webLinks>
 </CustomObjectTranslation>

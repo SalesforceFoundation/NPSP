@@ -1,20 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Donación recurrente</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Donaciones recurrentes</value>
-    </caseValues>
     <fields>
-        <help><!-- When checked, all future monthly or quarterly donation installments will be set to the last day of the month, regardless of the actual date in the &quot;Next Donation Date&quot; field. This is ignored when the installment period is not set to Monthly or Quarterly. --></help>
-        <label><!-- Always use last day of month --></label>
+        <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
+        <label>Utilizar siempre último día del mes</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
     <fields>
-        <help><!-- Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
+        <help><!-- The reason this Recurring Donation was closed. --></help>
+        <label><!-- Closed Reason --></label>
+        <name>ClosedReason__c</name>
+        <picklistValues>
+            <masterLabel>Card Expired</masterLabel>
+            <translation><!-- Card Expired --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Deceased Donor</masterLabel>
+            <translation><!-- Deceased Donor --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Financial Difficulty</masterLabel>
+            <translation><!-- Financial Difficulty --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>No Longer Interested</masterLabel>
+            <translation><!-- No Longer Interested --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Unknown</masterLabel>
+            <translation><!-- Unknown --></translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. NOTA: Si se selecciona Utilizar siempre último día del mes, anula el valor de Día del mes.</help>
+        <label>Día del mes</label>
+        <name>Day_of_Month__c</name>
+        <picklistValues>
+            <masterLabel>1</masterLabel>
+            <translation>1</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>10</masterLabel>
+            <translation>10</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>11</masterLabel>
+            <translation>11</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>12</masterLabel>
+            <translation>12</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>13</masterLabel>
+            <translation>13</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>14</masterLabel>
+            <translation>14</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>15</masterLabel>
+            <translation>15</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>16</masterLabel>
+            <translation>16</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>17</masterLabel>
+            <translation>17</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>18</masterLabel>
+            <translation>18</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>19</masterLabel>
+            <translation>19</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>2</masterLabel>
+            <translation>2</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>20</masterLabel>
+            <translation>20</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>21</masterLabel>
+            <translation>21</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>22</masterLabel>
+            <translation>22</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>23</masterLabel>
+            <translation>23</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>24</masterLabel>
+            <translation>24</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>25</masterLabel>
+            <translation>25</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>26</masterLabel>
+            <translation>26</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>27</masterLabel>
+            <translation>27</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>28</masterLabel>
+            <translation>28</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>29</masterLabel>
+            <translation>29</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>3</masterLabel>
+            <translation>3</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>30</masterLabel>
+            <translation>30</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>31</masterLabel>
+            <translation>31</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>4</masterLabel>
+            <translation>4</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>5</masterLabel>
+            <translation>5</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>6</masterLabel>
+            <translation>6</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>7</masterLabel>
+            <translation>7</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>8</masterLabel>
+            <translation>8</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>9</masterLabel>
+            <translation>9</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help><!-- The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
         <label><!-- Installment Frequency --></label>
         <name>InstallmentFrequency__c</name>
     </fields>
@@ -66,61 +212,6 @@
             <translation><!-- Lapsed --></translation>
         </picklistValues>
     </fields>
-        <fields>
-        <help><!-- Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
-        <label><!-- Installment Frequency --></label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
-        <label><!-- Payment Method --></label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH/EFT</masterLabel>
-            <translation><!-- ACH/EFT --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation><!-- Check --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation><!-- Credit Card --></translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help><!-- Default value is Open, meaning a recurring donation with no end date. --></help>
-        <label><!-- Recurring Type --></label>
-        <name>RecurringType__c</name>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation><!-- Open --></translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help><!-- The date of the first installment Opportunity for this Recurring Donation. Changes made to this field after the schedule has started will not impact future installment Opportunities or the schedule. The default is the current date. --></help>
-        <label><!-- Start Date --></label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help><!-- Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed. --></help>
-        <label><!-- Status --></label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation><!-- Active --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation><!-- Closed --></translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation><!-- Lapsed --></translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <nameFieldLabel>Nombre Donación recurrente</nameFieldLabel>
     <quickActions>
         <label>Nueva oportunidad</label>
         <name>New_Opportunity</name>
@@ -129,4 +220,8 @@
         <label>Actualización rápida</label>
         <name>Quick_Update</name>
     </quickActions>
-</CustomObjectTranslation>
+    <webLinks>
+        <label>Volver a calcular totales</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+    </CustomObjectTranslation>
