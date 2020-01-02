@@ -2,134 +2,162 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Data Import Batch --></value>
+        <value>Lote de importación de datos de NPSP</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- NPSP Data Import Batch --></value>
+        <value>Lotes de importaciones de datos de NPSP</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Batch Gift Entry Tab Columns --></label>
+        <name>BatchGiftEntryTabColumns</name>
+    </fieldSets>
     <fields>
-        <help><!-- An optional Unique Id field to use for Organization Account matching --></help>
-        <label><!-- Account Custom Unique ID --></label>
+        <help>Campo opcional de Id. exclusivo para utilizar en la coincidencia de cuentas de organización.</help>
+        <label>Id. de cuenta exclusivo personalizado</label>
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help><!-- An optional description about this batch. --></help>
-        <label><!-- Batch Description --></label>
+        <label>Campos activos</label>
+        <name>Active_Fields__c</name>
+    </fields>
+    <fields>
+        <help>Una descripción opcional sobre este lote.</help>
+        <label>Descripción de lote</label>
         <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <help><!-- The number of NPSP Data Import records to process at a time in each batch. --></help>
-        <label><!-- Batch Process Size --></label>
+        <help>El número de registros a procesar al mismo tiempo en cada lote.</help>
+        <label>Tamaño de procesamiento de lotes</label>
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <help><!-- An optional Unique Id field to use for Contact matching --></help>
-        <label><!-- Contact Custom Unique ID --></label>
+        <help>Campo opcional de Id. exclusivo para la coincidencia de contactos.</help>
+        <label>Id. de contacto exclusivo personalizado</label>
         <name>Contact_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts. --></help>
-        <label><!-- Contact Matching Rule --></label>
+        <help>Especifica qué regla seguir cuando se intenta hacer coincidir contactos en registros de importación de datos con datos existentes.</help>
+        <label>Regla de coincidencia de contactos</label>
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date. --></help>
-        <label><!-- Number of Days from Donation Date --></label>
+        <help>Introduzca el número de días desde la fecha de la donación cuando se busque una oportunidad o pago coincidente. NPSP elegirá la oportunidad o pago coincidente cuya fecha caiga dentro del número de días Y esté más cercana a la fecha de la donación.</help>
+        <label>Número de días desde fecha de donación</label>
         <name>Donation_Date_Range__c</name>
     </fields>
     <fields>
-        <help><!-- Defines how the Data Importer should handle matching Donations. You must choose a value. --></help>
-        <label><!-- Donation Matching Behavior --></label>
+        <help>Define cómo NPSP debería tratar las donaciones coincidentes.</help>
+        <label>Comportamiento coincidencia donaciones</label>
         <name>Donation_Matching_Behavior__c</name>
         <picklistValues>
             <masterLabel>Best Match</masterLabel>
-            <translation><!-- Best Match --></translation>
+            <translation>Mejor coincidencia</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Best Match or Create</masterLabel>
-            <translation><!-- Best Match or Create --></translation>
+            <translation>Mejor coincidencia o crear</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Do Not Match</masterLabel>
-            <translation><!-- Do Not Match --></translation>
+            <translation>No coincidir</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>No Match</masterLabel>
-            <translation><!-- No Match --></translation>
+            <translation>Sin coincidencia</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Single Match</masterLabel>
-            <translation><!-- Single Match --></translation>
+            <translation>Única coincidencia</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Single Match or Create</masterLabel>
-            <translation><!-- Single Match or Create --></translation>
+            <translation>Única coincidencia o crear</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching. --></help>
-        <label><!-- Donation Matching Implementing Class --></label>
+        <help>El nombre del desarrollador de una clase de Apex que implementa la interfaz BDI_IMatching para donaciones. Deje esta opción en blanco para permitir que NPSP controle las coincidencias.</help>
+        <label>Clase implement. coincidente donaciones</label>
         <name>Donation_Matching_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field. --></help>
-        <label><!-- Donation Matching Rule --></label>
+        <help>Especifica por qué campo buscar coincidencias cuando se intentan hacer coincidir donaciones en registros de lotes con oportunidades y pagos existentes.</help>
+        <label>Regla de coincidencia de donaciones</label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- The date and time when the batch was last processed. --></help>
-        <label><!-- Last Processed On --></label>
+        <help>El número de regalos que se espera que se introduzcan en este lote.</help>
+        <label>Recuento de regalos esperado</label>
+        <name>Expected_Count_of_Gifts__c</name>
+    </fields>
+    <fields>
+        <help>El importe total esperado de todos los regalos introducidos en este lote.</help>
+        <label>Importe de lote total esperado</label>
+        <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <help>Este lote se utilizará con la entrada de regalos en lote. Los lotes se marcan automáticamente como lotes de regalos cuando se configuran a través de la ficha Entrada de regalo en lote. El cambio manual de este campo podría tener consecuencias inesperadas.</help>
+        <label>Lote de regalos</label>
+        <name>GiftBatch__c</name>
+    </fields>
+    <fields>
+        <help>La fecha y la hora cuando se proceso el lote por última vez.</help>
+        <label>Último procesamiento el</label>
         <name>Last_Processed_On__c</name>
     </fields>
     <fields>
-        <help><!-- The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records. --></help>
-        <label><!-- Post Process Implementing Class --></label>
+        <help>El nombre del desarrollador de una clase de Apex que implementa la interfaz BDI_IPostProcess para registros de lotes de NPSP.</help>
+        <label>Clase implementación postprocesamiento</label>
         <name>Post_Process_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job. --></help>
-        <label><!-- Process Using Scheduled Job --></label>
+        <help>Cuando se marca, el lote se procesará automáticamente en base a la programación del trabajo asociado.</help>
+        <label>Proceso que utiliza trabajo programado</label>
         <name>Process_Using_Scheduled_Job__c</name>
     </fields>
     <fields>
-        <help><!-- Shows the number of records that failed to be successfully processed on the date listed in the Last Processed On field. --></help>
-        <label><!-- Records Failed --></label>
+        <help>Muestra el número de registros que no se procesaron correctamente en la fecha enumerada en el campo Último procesamiento el.</help>
+        <label>Registros con fallos</label>
         <name>Records_Failed__c</name>
     </fields>
     <fields>
-        <help><!-- Shows the number of records that were successfully processed on the date listed in the Last Processed On field. --></help>
-        <label><!-- Records Successfully Processed --></label>
+        <help>Muestra el número de registros que se procesaron correctamente en la fecha enumerada en el campo Último procesamiento el.</help>
+        <label>Registros procesados correctamente</label>
         <name>Records_Successfully_Processed__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch. --></help>
-        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <help>Cuando se marca, el número total de regalos y el importe total deben coincidir con los totales esperados introducidos para el lote.</help>
+        <label>Requerir coincidencia totales esperados</label>
+        <name>RequireTotalMatch__c</name>
+    </fields>
+    <fields>
+        <help>Cuando se marca, NPSP calcula las totalizaciones de donantes al procesar donaciones. Si no se marca, las totalizaciones se calculan durante el trabajo nocturno predeterminado. Tenga en cuenta que al seleccionar se ralentizará el procesamiento del lote.</help>
+        <label>Calcular totalizaciones donaciones lote</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
-            <label><!-- Contact &amp; Account Matching --></label>
+            <label>Coincidencia de contactos y cuentas</label>
             <section>Contact &amp; Account Matching</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Vínculos personalizados</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Donation Matching --></label>
+            <label>Coincidencia de donaciones</label>
             <section>Donation Matching</section>
         </sections>
         <sections>
-            <label><!-- Extensibility --></label>
+            <label>Capacidad de ampliación</label>
             <section>Extensibility</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+    <nameFieldLabel>Nombre de lote</nameFieldLabel>
     <webLinks>
-        <label><!-- Process_Batch --></label>
+        <label>Procesar lote</label>
         <name>Process_Batch</name>
     </webLinks>
 </CustomObjectTranslation>
