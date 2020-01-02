@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Manage Household Custom --></label>
+        <name>Manage_Household_Custom</name>
+    </fieldSets>
     <fields>
         <help>Lote en el que la cuenta fue creada.</help>
         <label>Lote</label>
@@ -8,7 +20,7 @@
     </fields>
     <fields>
         <help>Áreas generales de programa que esta organización financia.</help>
-        <label>Foco de financiamiento</label>
+        <label>Foco de financiación</label>
         <name>Funding_Focus__c</name>
         <picklistValues>
             <masterLabel>Animal Welfare</masterLabel>
@@ -40,78 +52,78 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Indica que esta organización es una organización que entrega grants. Puede aplicar a fundaciones, agencias de gobierno, corporaciones, etc.</help>
-        <label><!-- Grantmaker --></label>
+        <help>Indica que esta organización es una organización que entrega becas.</help>
+        <label>Otorgante de becas</label>
         <name>Grantmaker__c</name>
     </fields>
     <fields>
-        <help>El nombre del administrador de la donación complementaria en la empresa.</help>
-        <label>D.C. Administrador</label>
+        <help>El nombre del administrador del regalo que iguala en la empresa.</help>
+        <label>Nombre administrador regalo que iguala</label>
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
-        <help>El monto máximo que la compañía igualará en una sola donación.</help>
-        <label>D.C. Monto máximo</label>
+        <help>El importe máximo que la empresa igualará en un solo regalo.</help>
+        <label>Importe máximo de regalo que iguala</label>
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
     <fields>
-        <help>El monto menor que la compañía igualará.</help>
-        <label>D.C. Monto mínimo</label>
+        <help>El importe más pequeño que la empresa igualará en una sola donación.</help>
+        <label>Importe mínimo de regalo que iguala</label>
         <name>Matching_Gift_Amount_Min__c</name>
     </fields>
     <fields>
-        <help>El monto máximo que la empresa igualará cada año por empleado.</help>
-        <label>D.C. Máximo por empleado</label>
+        <help>El importe máximo que la empresa igualará cada año por empleado.</help>
+        <label>Máximo por empleado de regalo que iguala</label>
         <name>Matching_Gift_Annual_Employee_Max__c</name>
     </fields>
     <fields>
-        <help>Notas adicionales sobre el programa de donación complementaria de la empresa.</help>
-        <label>D.C. Comentarios</label>
+        <help>Notas adicionales sobre el programa de regalos que igualan de la empresa.</help>
+        <label>Comentarios de regalo que iguala</label>
         <name>Matching_Gift_Comments__c</name>
     </fields>
     <fields>
-        <help>Ofrece esta empresa donaciones complementarias?</help>
-        <label>Empresa de donación complementaria</label>
+        <help>Indica que esta empresa ofrece regalos que igualan.</help>
+        <label>Empresa de regalos que igualan</label>
         <name>Matching_Gift_Company__c</name>
     </fields>
     <fields>
-        <help>Correo electrónico del administrador de las donaciones complementarias en la compañía.</help>
-        <label>D.C. Correo electrónico</label>
+        <help>Correo electrónico del administrador de los regalos que igualan en la empresa.</help>
+        <label>Correo electrónico de regalo que iguala</label>
         <name>Matching_Gift_Email__c</name>
     </fields>
     <fields>
-        <help>Fecha en la que la información de la donación complementaria fue actualizada por última vez.</help>
-        <label>D.C. Información actualizada</label>
+        <help>Fecha en la que la información del regalo que iguala fue actualizada por última vez.</help>
+        <label>Info actualizada de regalo que iguala</label>
         <name>Matching_Gift_Info_Updated__c</name>
     </fields>
     <fields>
-        <help>Porcentaje de la donación que la compañía igualará.</help>
-        <label>D.C. Porcentaje</label>
+        <help>Porcentaje de la donación que la empresa igualará.</help>
+        <label>Porcentaje de regalo que iguala</label>
         <name>Matching_Gift_Percent__c</name>
     </fields>
     <fields>
-        <help>Teléfono de la oficina del administrador de la donación complementaria</help>
-        <label>D.C. Teléfono</label>
+        <help>Teléfono de la oficina del administrador del regalo que iguala.</help>
+        <label>Teléfono de regalo que iguala</label>
         <name>Matching_Gift_Phone__c</name>
     </fields>
     <fields>
-        <help>Restricción en cuan antiguos puede ser una donación para ser elegible para igualar.</help>
-        <label>D.C. Fecha límite</label>
+        <help>Utilice este campo para indicar cualquier restricción de edad que esta empresa aplique en la aptitud para los regalos que igualan.</help>
+        <label>Fecha límite de regalo que iguala</label>
         <name>Matching_Gift_Request_Deadline__c</name>
     </fields>
     <fields>
-        <help>Fórmula: La cantidad de años que la Cuenta a tenido una membresía</help>
+        <help>El número de años que este hogar ha tenido una afiliación (solo lectura)</help>
         <label>Duración de la membresía</label>
         <name>Membership_Span__c</name>
     </fields>
     <fields>
-        <help>Fórmula: Actual, Vencido o en período de gracia. Período de gracia por defecto se establece en la configuración del NPSP.</help>
-        <label>Estado de la membresía</label>
+        <help>El estado de afiliación de este hogar, por ej. Actual, Vencido o en período de gracia. El valor se basa en Fecha de finalización de afiliación y Período de gracia. El Período se establece en Configuración de NPSP, parámetros del hogar. Es de solo lectura.</help>
+        <label>Estado de la afiliación</label>
         <name>Membership_Status__c</name>
     </fields>
     <fields>
-        <help>Para Cuentas Familias, el número de contactos en la familia.</help>
-        <label>Cantidad de miembros en la familia</label>
+        <help>El número de contactos que son miembros de este hogar.</help>
+        <label>Cantidad de miembros en el hogar</label>
         <name>Number_of_Household_Members__c</name>
     </fields>
     <layouts>
@@ -129,7 +141,7 @@
             <section>Description</section>
         </sections>
         <sections>
-            <label>Información de las donaciones</label>
+            <label>Información de la donación</label>
             <section>Donation Information</section>
         </sections>
         <sections>
@@ -141,7 +153,7 @@
             <section>Fields</section>
         </sections>
         <sections>
-            <label>Información de las membresías</label>
+            <label>Información de afiliaciones</label>
             <section>Membership Information</section>
         </sections>
     </layouts>
@@ -160,11 +172,11 @@
             <section>Description</section>
         </sections>
         <sections>
-            <label>Información de las donaciones</label>
+            <label>Información de la donación</label>
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>Totales de las donaciones</label>
+            <label>Totales de donaciones</label>
             <section>Donation Totals</section>
         </sections>
         <sections>
@@ -172,19 +184,19 @@
             <section>Fields</section>
         </sections>
         <sections>
-            <label>Información de grantmaking</label>
+            <label>Información de otorgamiento de donaciones</label>
             <section>Grantmaking Information</section>
         </sections>
         <sections>
-            <label>Comentarios donación complementaria</label>
+            <label>Comentarios de regalo que iguala</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
-            <label>Información donación complementraria</label>
+            <label>Información del regalo que iguala</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
-            <label>Información de las membresías</label>
+            <label>Información de afiliaciones</label>
             <section>Membership Information</section>
         </sections>
     </layouts>
@@ -205,11 +217,11 @@
         <name>Quick_Organization_Update</name>
     </quickActions>
     <webLinks>
-        <label>Gestionar familia</label>
+        <label>Gestionar hogar</label>
         <name>Manage_Household</name>
     </webLinks>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label>Volver a calcular totales</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>

@@ -9,13 +9,13 @@
         <value><!-- Data Import Settings --></value>
     </caseValues>
     <fields>
-        <help>Un identifiant unique optionnel utilisé pour identifier un compte</help>
+        <help>Un champ facultatif d&apos;ID unique à utiliser pour la correspondance de comptes d&apos;organisation</help>
         <label>ID unique personnalisé de compte</label>
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
         <help>Indique quelle règle suivre pour mettre en correspondance les comptes des enregistrements d’importation de données avec les comptes existants.</help>
-        <label>Règle de correspondance de compte</label>
+        <label>Règle de correspondance de comptes</label>
         <name>Account_Matching_Rule__c</name>
     </fields>
     <fields>
@@ -24,43 +24,64 @@
         <name>Batch_Size__c</name>
     </fields>
     <fields>
+        <help><!-- JSON for the CMT deployment result
+{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
+        <label><!-- CMT API Deployment Result --></label>
+        <name>CMT_API_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- ID of Custom Metadata deployment --></help>
+        <label><!-- CMT Deployment ID --></label>
+        <name>CMT_Deployment_ID__c</name>
+    </fields>
+    <fields>
         <help>Un identifiant unique optionnel utilisé pour identifier un contact</help>
         <label>ID unique personnalisé de contact</label>
         <name>Contact_Custom_Unique_ID__c</name>
     </fields>
     <fields>
         <help>Indique quelle règle suivre pour mettre en correspondance les contacts des enregistrements d’importation de données avec les contacts existants.</help>
-        <label>Règle de correspondance de contact</label>
+        <label>Règle de correspondance de contacts</label>
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date. --></help>
-        <label><!-- Number of Days from Donation Date --></label>
+        <help><!-- The custom metadata api name of the Data Import Field Mapping Set record that should be used by default. --></help>
+        <label><!-- Default Data Import Field Mapping Set --></label>
+        <name>Default_Data_Import_Field_Mapping_Set__c</name>
+    </fields>
+    <fields>
+        <help>Nbre de jour àpd la date de don à considérer lors de la recherche d’une opp. ou d&apos;un paiement corresp. L’importateur de données choisira l’opp. ou le paiement corresp. dont la date tombe dans le nbre de jours ET se rapproche le plus de la date du don.</help>
+        <label>Nbre de jours à partir de la date du don</label>
         <name>Donation_Date_Range__c</name>
     </fields>
     <fields>
-        <help><!-- Defines how the Data Importer should handle matching Donations. You must choose a value. --></help>
-        <label><!-- Donation Matching Behavior --></label>
+        <help>Définit la manière dont l’importateur de sonnées doit gérer les dons correspondants. Vous devez choisir une valeur.</help>
+        <label>Comportement de correspondance de dons</label>
         <name>Donation_Matching_Behavior__c</name>
     </fields>
     <fields>
-        <help><!-- The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching. --></help>
-        <label><!-- Donation Matching Implementing Class --></label>
+        <help>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</help>
+        <label>Classe d’implém. de corresp. de dons</label>
         <name>Donation_Matching_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field. --></help>
-        <label><!-- Donation Matching Rule --></label>
+        <help>Spécifie les champs à faire correspondre lors de la tentative de corresp. des dons dans les enregistrements d&apos;importation de données avec les opp. et les paiements existants. Pour sélectionner plus d&apos;un champ, cliquez sur Contrôle ou Commande.</help>
+        <label>Règle de correspondance de dons</label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records. --></help>
-        <label><!-- Post Process Implementing Class --></label>
+        <help><!-- Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping. --></help>
+        <label><!-- Field Mapping Method --></label>
+        <name>Field_Mapping_Method__c</name>
+    </fields>
+    <fields>
+        <help>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IPostProcess pour les enregistrements d’importation de données NPSP.</help>
+        <label>Classe d’implém. de traitement de publ.</label>
         <name>Post_Process_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch. --></help>
-        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <help>Si coché, NPSP calcule les stat. de donateurs lorsque les dons sont traités. Si non coché, les stat. de donateurs sont calculés lors de la tâche planifiée de nuit par défaut. La sélection de cette case peut ralentir le traitement de ce lot.</help>
+        <label>Calculer les cumuls de dons par lots</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
