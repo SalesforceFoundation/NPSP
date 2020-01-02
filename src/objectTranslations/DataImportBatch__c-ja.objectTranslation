@@ -2,129 +2,157 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- NPSP Data Import Batch --></value>
+        <value>NPSP データインポートバッチ</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Batch Gift Entry Tab Columns --></label>
+        <name>BatchGiftEntryTabColumns</name>
+    </fieldSets>
     <fields>
-        <help><!-- An optional Unique Id field to use for Organization Account matching --></help>
-        <label><!-- Account Custom Unique ID --></label>
+        <help>組織団体のマッチングに使用する任意の一意の ID 項目</help>
+        <label>一意の団体カスタム ID</label>
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help><!-- An optional description about this batch. --></help>
-        <label><!-- Batch Description --></label>
+        <label>有効な項目</label>
+        <name>Active_Fields__c</name>
+    </fields>
+    <fields>
+        <help>このバッチの説明 (省略可能)。</help>
+        <label>バッチ説明</label>
         <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <help><!-- The number of NPSP Data Import records to process at a time in each batch. --></help>
-        <label><!-- Batch Process Size --></label>
+        <help>各バッチで一度に処理されるレコードの数。</help>
+        <label>バッチサイズ</label>
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
-        <help><!-- An optional Unique Id field to use for Contact matching --></help>
-        <label><!-- Contact Custom Unique ID --></label>
+        <help>個人のマッチングに使用する任意の一意の ID 項目</help>
+        <label>一意の個人カスタム ID</label>
         <name>Contact_Custom_Unique_ID__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts. --></help>
-        <label><!-- Contact Matching Rule --></label>
+        <help>既存の個人に対してデータインポートレコード内の個人を照合するときのルールを指定します。</help>
+        <label>個人マッチングルール</label>
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date. --></help>
-        <label><!-- Number of Days from Donation Date --></label>
+        <help>マッチング支援または支払を探すときの [日付(支援)] からの日数を入力します。NPSP はその日数範囲内で最も近い、マッチングする支援または支払を選択します。</help>
+        <label>日付(支援)からの日数</label>
         <name>Donation_Date_Range__c</name>
     </fields>
     <fields>
-        <help><!-- Defines how the Data Importer should handle matching Donations. You must choose a value. --></help>
-        <label><!-- Donation Matching Behavior --></label>
+        <help>NPSP がマッチング支援をどのように処理するか定義します。</help>
+        <label>支援マッチング動作</label>
         <name>Donation_Matching_Behavior__c</name>
         <picklistValues>
             <masterLabel>Best Match</masterLabel>
-            <translation><!-- Best Match --></translation>
+            <translation>ベストマッチ</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Best Match or Create</masterLabel>
-            <translation><!-- Best Match or Create --></translation>
+            <translation>ベストマッチまたは作成</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Do Not Match</masterLabel>
-            <translation><!-- Do Not Match --></translation>
+            <translation>マッチング不可</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>No Match</masterLabel>
-            <translation><!-- No Match --></translation>
+            <translation>マッチングなし</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Single Match</masterLabel>
-            <translation><!-- Single Match --></translation>
+            <translation>シングルマッチ</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Single Match or Create</masterLabel>
-            <translation><!-- Single Match or Create --></translation>
+            <translation>シングルマッチまたは作成</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching. --></help>
-        <label><!-- Donation Matching Implementing Class --></label>
+        <help>支援の BDI_IMatching インターフェースを実装する Apex クラスの API 参照名。NPSP がマッチングを処理できるように、空のままにします。</help>
+        <label>支援マッチング実装クラス</label>
         <name>Donation_Matching_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help><!-- Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field. --></help>
-        <label><!-- Donation Matching Rule --></label>
+        <help>既存の支援および支払に対してバッチレコードの支援をマッチングするとき、どの項目をマッチングするかを指定します。</help>
+        <label>支援マッチングルール</label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- The date and time when the batch was last processed. --></help>
-        <label><!-- Last Processed On --></label>
+        <help>このバッチで入力が予測されている支援の数。</help>
+        <label>予測支援数</label>
+        <name>Expected_Count_of_Gifts__c</name>
+    </fields>
+    <fields>
+        <help>このバッチで入力が予測されているすべての支援の総額。</help>
+        <label>予測合計バッチ金額</label>
+        <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <help>このバッチは、バッチ支援エントリでの使用を想定しています。[バッチ支援エントリ] タブでバッチを設定すると、自動的に支援バッチとなります。この項目を手動で変更すると、意図しない結果を生むことがあります。</help>
+        <label>支援バッチ</label>
+        <name>GiftBatch__c</name>
+    </fields>
+    <fields>
+        <help>バッチが前回処理された日時。</help>
+        <label>最終処理日時</label>
         <name>Last_Processed_On__c</name>
     </fields>
     <fields>
-        <help><!-- The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records. --></help>
-        <label><!-- Post Process Implementing Class --></label>
+        <help>NPSP バッチレコードの BDI_IPostProcess インターフェースを実装する Apex クラスの API 参照名。</help>
+        <label>ポストプロセス実装クラス</label>
         <name>Post_Process_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job. --></help>
-        <label><!-- Process Using Scheduled Job --></label>
+        <help>オンの場合、関連ジョブのスケジュールに基づき、バッチは自動的に処理されます。</help>
+        <label>スケジュール済みジョブを使用する処理</label>
         <name>Process_Using_Scheduled_Job__c</name>
     </fields>
     <fields>
-        <help><!-- Shows the number of records that failed to be successfully processed on the date listed in the Last Processed On field. --></help>
-        <label><!-- Records Failed --></label>
+        <help>[最終処理日時] 項目の日付で処理に失敗したレコードの数を示します。</help>
+        <label>失敗したレコード</label>
         <name>Records_Failed__c</name>
     </fields>
     <fields>
-        <help><!-- Shows the number of records that were successfully processed on the date listed in the Last Processed On field. --></help>
-        <label><!-- Records Successfully Processed --></label>
+        <help>[最終処理日時] 項目の日付で処理に成功したレコードの数を示します。</help>
+        <label>処理されたレコード</label>
         <name>Records_Successfully_Processed__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch. --></help>
-        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <help>オンの場合、支援の総数と総額は、バッチで入力された予測合計とマッチングしなければなりません。</help>
+        <label>予測合計のマッチが必須</label>
+        <name>RequireTotalMatch__c</name>
+    </fields>
+    <fields>
+        <help>オンの場合、NPSP は支援処理時に支援者の積み上げ集計を計算します。オフの場合、支援者の積み上げ集計はデフォルトの夜間スケジュール済みジョブ時に計算されます。このチェックボックスを選択すると、バッチの処理が遅くなることがあります。</help>
+        <label>バッチでの支援積み上げ集計の計算</label>
         <name>Run_Opportunity_Rollups_while_Processing__c</name>
     </fields>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
-            <label><!-- Contact &amp; Account Matching --></label>
+            <label>個人 &amp; 団体マッチング</label>
             <section>Contact &amp; Account Matching</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>カスタムリンク</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Donation Matching --></label>
+            <label>支援マッチング</label>
             <section>Donation Matching</section>
         </sections>
         <sections>
-            <label><!-- Extensibility --></label>
+            <label>拡張性</label>
             <section>Extensibility</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+    <nameFieldLabel>バッチ名</nameFieldLabel>
     <webLinks>
-        <label><!-- Process_Batch --></label>
+        <label>バッチを処理</label>
         <name>Process_Batch</name>
     </webLinks>
 </CustomObjectTranslation>

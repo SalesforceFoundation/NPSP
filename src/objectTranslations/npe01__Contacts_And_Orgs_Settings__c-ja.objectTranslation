@@ -1,66 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value><!-- Contacts And Orgs Settings --></value>
-    </caseValues>
     <fields>
-        <help><!-- For system use only: Namespace for cross package functionality. --></help>
-        <label><!-- GEM Namespace --></label>
+        <help>システム使用目的のみ: クロスパッケージ機能用の名前空間。</help>
+        <label>GEM 名前空間</label>
         <name>Advancement_Namespace__c</name>
     </fields>
     <fields>
-        <help>主個人と主キャンペーンソースが関連付けられている支援を作成するときに、キャンペーンメンバーを自動的に作成します。</help>
+        <help>選択すると、主個人と主キャンペーンソースを含む支援を作成したり、支援を成立フェーズに更新したりするときに、キャンペーンメンバーレコードが自動的に作成されます。</help>
         <label>キャンペーンメンバーの自動管理</label>
         <name>Automatic_Campaign_Member_Management__c</name>
     </fields>
     <fields>
-        <help>主個人と主キャンペーンソースが関連付けられている支援が進行中または不成立の場合にキャンペーンメンバーに自動的に設定される状況。空白のままにすると、最初のレスポンスなしの状況が使用されます。</help>
+        <help>主個人と主キャンペーンソースがキャンペーンメンバーに関連付けられている支援が進行中または不成立の場合に、キャンペーンメンバーにデフォルトで設定する状況。空白のままにすると、最初のレスポンスなしの状況が使用されます。</help>
         <label>キャンペーンメンバーレスポンスなしの状況</label>
         <name>Campaign_Member_Non_Responded_Status__c</name>
     </fields>
     <fields>
-        <help>主個人と主キャンペーンソースが関連付けられている支援が成立済みの場合にキャンペーンメンバーに自動的に設定される状況。空白のままにした場合、最初のレスポンスありの状況が使用されます。</help>
+        <help>主個人と主キャンペーンソースがキャンペーンメンバーに関連付けられている支援が成立済みの場合に、キャンペーンメンバーにデフォルトで設定する状況。空白のままにすると、最初のレスポンスありの状況が使用されます。</help>
         <label>キャンペーンメンバーレスポンスありの状況</label>
         <name>Campaign_Member_Responded_Status__c</name>
     </fields>
     <fields>
-        <help>この設定に入力すると、支援での個人の役割が名誉会員個人に対して自動作成されます。この項目を空白のままにした場合、名誉会員に対する個人の役割の自動作成は無効になります。</help>
+        <help>デフォルトの個人の役割は、支援の団体が世帯、1 対 1、または個人の団体でない場合に、支援の主個人に自動的に割り当てられます。</help>
+        <label>団体支援の個人の役割</label>
+        <name>Contact_Role_for_Organizational_Opps__c</name>
+    </fields>
+    <fields>
+        <help>会計データが完全であり、一貫性を保つように、支払と支援で複数のルールと自動化を有効にします。</help>
+        <label>会計データの一貫性</label>
+        <name>Enforce_Accounting_Data_Consistency__c</name>
+    </fields>
+    <fields>
+        <help>この設定に入力すると、支援での個人の役割レコードが名誉会員個人に対して自動作成されます。</help>
         <label>名誉会員支援個人の役割</label>
         <name>Honoree_Opportunity_Contact_Role__c</name>
     </fields>
     <fields>
-        <help>選択すると、世帯団体の住所管理が無効になります。</help>
+        <help>選択すると、世帯団体用の住所管理が無効になります。</help>
         <label>世帯団体住所の無効化</label>
         <name>Household_Account_Addresses_Disabled__c</name>
     </fields>
     <fields>
-        <help>支払作成ウィザードで選択可能な支払の最大回数を指定します。</help>
+        <help>支援の支払のスケジュール時に許可する支払の最大回数を決定します。</help>
         <label>最大支払回数</label>
         <name>Max_Payments__c</name>
     </fields>
     <fields>
-        <help>この設定に入力すると、支援での個人の役割が通知受信者個人に対して自動作成されます。この項目を空白のままにした場合、通知受信者に対する個人の役割の自動作成は無効になります。</help>
+        <help>この設定に入力すると、支援での個人の役割レコードが通知受信者個人に対して自動作成されます。</help>
         <label>通知受信者支援個人の役割</label>
         <name>Notification_Recipient_Opp_Contact_Role__c</name>
     </fields>
     <fields>
-        <help>支払の作成から除外する支援レコードタイプの名前。</help>
+        <help>すべてのレコードタイプの支援の支払レコードが自動的に作成されます。自動的に作成しないレコードタイプをこちらで選択します。複数のレコードタイプを選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
         <label>支払から除外する支援レコードタイプ</label>
         <name>Opp_RecTypes_Excluded_for_Payments__c</name>
     </fields>
     <fields>
-        <help>支払の作成から除外する支援種別項目の値。</help>
-        <label>支払から除外する支援種別</label>
+        <help>[種別] 選択リストのあらゆる値を使用する支援に対して、支払レコードが自動的に作成されます。自動的に作成しない種別をこちらで選択します。複数の種別を選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
+        <label>除外する支援種別</label>
         <name>Opp_Types_Excluded_for_Payments__c</name>
     </fields>
     <fields>
-        <help>選択すると、組織団体の住所管理が有効になります。</help>
+        <help>選択すると、組織団体のような、世帯団体以外の住所管理が有効になります。</help>
         <label>組織団体住所の有効化</label>
         <name>Organizational_Account_Addresses_Enabled__c</name>
     </fields>
     <fields>
-        <help>支払総額が支援金額と等しくなったときに支援が自動的に移行される移行先のフェーズを選択します。フェーズが選択されていない場合、支払の完了時に支援のフェーズは自動的に移行されません。</help>
+        <help>受取支払金額が支援金額と同額になると、支援のフェーズは自動的にこの値に設定されます。フェーズが選択されていない場合、支援フェーズは支払完了時に変更されません。</help>
         <label>全額支払時の支援フェーズ</label>
         <name>Payments_Auto_Close_Stage_Name__c</name>
     </fields>
@@ -69,4 +75,4 @@
         <label>1 つの住所の変更を更新として処理</label>
         <name>Simple_Address_Change_Treated_as_Update__c</name>
     </fields>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

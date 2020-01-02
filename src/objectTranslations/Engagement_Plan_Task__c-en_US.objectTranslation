@@ -9,18 +9,18 @@
         <value>Engagement Plan Tasks</value>
     </caseValues>
     <fields>
-        <help><!-- This field maps to the Task&apos;s Assigned To field. If left blank, the task will be assigned based on the template&apos;s Blank Assignment Rule. --></help>
+        <help><!-- Lookup to the User you&apos;d like to assign the task to. If you leave this field blank, NPSP assigns the task based on the Engagement Plan Template&apos;s Default Assignee. --></help>
         <label><!-- Assigned To --></label>
         <name>Assigned_To__c</name>
         <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Comments on the Task. --></help>
+        <help><!-- Use this to enter additional information about the Task. --></help>
         <label><!-- Comments --></label>
         <name>Comments__c</name>
     </fields>
     <fields>
-        <help><!-- The number of days after the Engagement Plan creation date, or the parent Task&apos;s Due Date, that this Task is due. --></help>
+        <help><!-- The number of days after the Engagement Plan creation date that this Task is due. For dependent Tasks, the number of days after the parent Task&apos;s due date that this Task is due. --></help>
         <label><!-- Days After --></label>
         <name>Days_After__c</name>
     </fields>

@@ -2,42 +2,42 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Betrokkenheidsplantaak</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Engagement Plan Task --></value>
+        <value>Betrokkenheidsplantaken</value>
     </caseValues>
     <fields>
-        <help>Dit veld wordt toegewezen aan het &quot;Toegewezen aan&quot; taakveld. Indien leeg gelaten, zal de taak toegewezen worden op basis van de Lege Toewijzingsregel.</help>
+        <help>Opzoeken van de Gebruiker aan wie u de taak wilt toewijzen. Laat u dit veld leeg, wijst NPSP de taak toe op basis van de Standaard Toegewezen persoon van de Sjabloon van het Betrokkenheidsplan.</help>
         <label>Toegewezen aan</label>
         <name>Assigned_To__c</name>
-        <relationshipLabel>Activiteitenplan Taken</relationshipLabel>
+        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
     </fields>
     <fields>
-        <help>Opmerkingen bij de Taak</help>
+        <help>Gebruik dit om bijkomende informatie op te geven over de Taak.</help>
         <label>Opmerkingen</label>
         <name>Comments__c</name>
     </fields>
     <fields>
-        <help>Het aantal dagen na het Activiteitenplan aanmaakdatum, of de bovenliggende vervaldatum, dat de taak is verlopen.</help>
+        <help>Het aantal dagen na de aanmaakdatum van het Betrokkenheidsplan waarop deze Taak klaar moet zijn. Voor afhankelijke Taken, het aantal dagen na de vervaldatum van de bovenliggende Taak waarop deze Taak klaar moet zijn.</help>
         <label>Dagen later</label>
         <name>Days_After__c</name>
     </fields>
     <fields>
-        <help>Het Activiteitenplan kan hier ontworpen worden.</help>
-        <label>Activiteitenplan Ontwerp</label>
+        <help>De Sjabloon voor deze Taak van Betrokkenheidsplan</help>
+        <label>Sjabloon van Betrokkenheidsplan</label>
         <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Activiteitenplan Taken</relationshipLabel>
+        <relationshipLabel>Taken van Betrokkenheidsplan</relationshipLabel>
     </fields>
     <fields>
-        <help>Geeft aan dat dit Activiteitenplan Taak afhankelijk is van een bovenliggende taak.</help>
+        <help>Geeft aan dat deze Taak van Betrokkenheidsplan afhankelijk is van een bovenliggende Taak.</help>
         <label>Bovenliggende Taak</label>
         <name>Parent_Task__c</name>
-        <relationshipLabel>Activiteitenplan Taken</relationshipLabel>
+        <relationshipLabel>Taken van Betrokkenheidsplan</relationshipLabel>
     </fields>
     <fields>
-        <help>De prioriteit van deze Taak</help>
+        <help>De prioriteit van deze Taak.</help>
         <label>Prioriteit</label>
         <name>Priority__c</name>
         <picklistValues>
@@ -54,23 +54,23 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>De tijd op de vervaldag dat een herinnering wordt weergegeven.</help>
+        <help>Het uur van de Vervaldag waarop een herinnering verschijnt.</help>
         <label>Herinneringstijd</label>
         <name>Reminder_Time__c</name>
     </fields>
     <fields>
-        <help>Stelt een herinnering in voor de Taak</help>
+        <help>Stelt een herinnering in voor de Taak.</help>
         <label>Herinnering</label>
         <name>Reminder__c</name>
     </fields>
     <fields>
-        <help>Bepaalt of een e-mail wordt verstuurd naar de gebruiker als het veld Taak &quot;Toegewezen aan&quot; actief wordt. Afhankelijke taken worden actief als de bovenliggende taak is voltooid.</help>
+        <help>Bepaalt of een e-mail wordt verstuurd naar de gebruiker in het veld Toegewezen aan van de Taak wanneer de Taak actief wordt. Afhankelijke Taken zijn actief wanneer hun bovenliggende Taak is voltooid.</help>
         <label>E-mail verzenden</label>
         <name>Send_Email__c</name>
     </fields>
     <fields>
-        <help>De Status van een Taak. Afhankelijke taken worden ingesteld op &quot;Wachten op bovenliggende Taak&quot; tot de bovenliggende Taak is afgerond.</help>
-        <label><!-- Status --></label>
+        <help>De Status van een Taak. Afhankelijke Taken worden ingesteld op &apos;Er wordt gewacht op Bovenliggende Taak&apos; tot de Bovenliggende Taak is voltooid.</help>
+        <label>Status</label>
         <name>Status__c</name>
         <picklistValues>
             <masterLabel>Completed</masterLabel>
@@ -82,7 +82,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>In Progress</masterLabel>
-            <translation>In Behandeling</translation>
+            <translation>In Uitvoering</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Not Started</masterLabel>
@@ -90,12 +90,12 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Waiting on someone else</masterLabel>
-            <translation>Wachten op iemand anders</translation>
+            <translation>Er wordt gewacht op iemand anders</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help>Het Type Taak</help>
-        <label><!-- Type --></label>
+        <help>Het type Taak.</help>
+        <label>Type</label>
         <name>Type__c</name>
         <picklistValues>
             <masterLabel>Call</masterLabel>
@@ -114,7 +114,7 @@
             <translation>Anders</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Engagement Plan Task Layout</layout>
         <sections>
@@ -122,5 +122,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Subject --></nameFieldLabel>
+    <nameFieldLabel>Onderwerp</nameFieldLabel>
 </CustomObjectTranslation>
