@@ -10,11 +10,11 @@
     </caseValues>
     <fields>
         <help>Détermine si ce paramètre s’applique aux opportunités individuelles, organisationnelles, ou les deux.</help>
-        <label><!-- Attribution --></label>
+        <label>Attribution</label>
         <name>Attribution__c</name>
     </fields>
     <fields>
-        <help>Le format des dates inclues dans ce nom d’opportunité.</help>
+        <help>Le format des dates incluses dans ce nom d’opportunité.</help>
         <label>Format de date</label>
         <name>Date_Format__c</name>
     </fields>
