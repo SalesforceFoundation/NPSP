@@ -1,5 +1,5 @@
 // Import utility method
-import { format } from 'c/utilTemplateBuilder';
+import { format } from 'c/utilCommon';
 
 // Import custom labels
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
