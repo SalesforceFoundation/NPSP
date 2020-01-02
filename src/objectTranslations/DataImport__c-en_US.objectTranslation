@@ -18,42 +18,34 @@
         <relationshipLabel><!-- NPSP Data Imports (Account1 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Account1.BillingCity --></help>
         <label><!-- Account1 City --></label>
         <name>Account1_City__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.BillingCountry --></help>
         <label><!-- Account1 Country --></label>
         <name>Account1_Country__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.Name --></help>
         <label><!-- Account1 Name --></label>
         <name>Account1_Name__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.Phone --></help>
         <label><!-- Account1 Phone --></label>
         <name>Account1_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.BillingState --></help>
         <label><!-- Account1 State/Province --></label>
         <name>Account1_State_Province__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.BillingStreet --></help>
         <label><!-- Account1 Street --></label>
         <name>Account1_Street__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.Website --></help>
         <label><!-- Account1 Website --></label>
         <name>Account1_Website__c</name>
     </fields>
     <fields>
-        <help><!-- Account1.BillingPostalCode --></help>
         <label><!-- Account1 Zip/Postal Code --></label>
         <name>Account1_Zip_Postal_Code__c</name>
     </fields>
@@ -67,42 +59,34 @@
         <relationshipLabel><!-- NPSP Data Imports (Account2 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Account2.BillingCity --></help>
         <label><!-- Account2 City --></label>
         <name>Account2_City__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.BillingCountry --></help>
         <label><!-- Account2 Country --></label>
         <name>Account2_Country__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.Name --></help>
         <label><!-- Account2 Name --></label>
         <name>Account2_Name__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.Phone --></help>
         <label><!-- Account2 Phone --></label>
         <name>Account2_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.BillingState --></help>
         <label><!-- Account2 State/Province --></label>
         <name>Account2_State_Province__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.BillingStreet --></help>
         <label><!-- Account2 Street --></label>
         <name>Account2_Street__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.Website --></help>
         <label><!-- Account2 Website --></label>
         <name>Account2_Website__c</name>
     </fields>
     <fields>
-        <help><!-- Account2.BillingPostalCode --></help>
         <label><!-- Account2 Zip/Postal Code --></label>
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
@@ -125,47 +109,38 @@
         <relationshipLabel><!-- NPSP Data Imports (Contact1 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__AlternateEmail__c --></help>
         <label><!-- Contact1 Alternate Email --></label>
         <name>Contact1_Alternate_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.Birthdate --></help>
         <label><!-- Contact1 Birthdate --></label>
         <name>Contact1_Birthdate__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.Firstname --></help>
         <label><!-- Contact1 First Name --></label>
         <name>Contact1_Firstname__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.HomePhone --></help>
         <label><!-- Contact1 Home Phone --></label>
         <name>Contact1_Home_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.Lastname --></help>
         <label><!-- Contact1 Last Name --></label>
         <name>Contact1_Lastname__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.MobilePhone --></help>
         <label><!-- Contact1 Mobile Phone --></label>
         <name>Contact1_Mobile_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.OtherPhone --></help>
         <label><!-- Contact1 Other Phone --></label>
         <name>Contact1_Other_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__HomeEmail__c --></help>
         <label><!-- Contact1 Personal Email --></label>
         <name>Contact1_Personal_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__Preferred_Email__c --></help>
         <label><!-- Contact1 Preferred Email --></label>
         <name>Contact1_Preferred_Email__c</name>
         <picklistValues>
@@ -182,7 +157,6 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__PreferredPhone__c --></help>
         <label><!-- Contact1 Preferred Phone --></label>
         <name>Contact1_Preferred_Phone__c</name>
         <picklistValues>
@@ -203,22 +177,18 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Contact1.Salutation --></help>
         <label><!-- Contact1 Salutation --></label>
         <name>Contact1_Salutation__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.Title --></help>
         <label><!-- Contact1 Title --></label>
         <name>Contact1_Title__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__WorkEmail__c --></help>
         <label><!-- Contact1 Work Email --></label>
         <name>Contact1_Work_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact1.npe01__WorkPhone__c --></help>
         <label><!-- Contact1 Work Phone --></label>
         <name>Contact1_Work_Phone__c</name>
     </fields>
@@ -232,47 +202,38 @@
         <relationshipLabel><!-- NPSP Data Imports (Contact2 Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__AlternateEmail__c --></help>
         <label><!-- Contact2 Alternate Email --></label>
         <name>Contact2_Alternate_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.Birthdate --></help>
         <label><!-- Contact2 Birthdate --></label>
         <name>Contact2_Birthdate__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.Firstname --></help>
         <label><!-- Contact2 First Name --></label>
         <name>Contact2_Firstname__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.HomePhone --></help>
         <label><!-- Contact2 Home Phone --></label>
         <name>Contact2_Home_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.Lastname --></help>
         <label><!-- Contact2 Last Name --></label>
         <name>Contact2_Lastname__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.MobilePhone --></help>
         <label><!-- Contact2 Mobile Phone --></label>
         <name>Contact2_Mobile_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.OtherPhone --></help>
         <label><!-- Contact2 Other Phone --></label>
         <name>Contact2_Other_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__HomeEmail__c --></help>
         <label><!-- Contact2 Personal Email --></label>
         <name>Contact2_Personal_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__Preferred_Email__c --></help>
         <label><!-- Contact2 Preferred Email --></label>
         <name>Contact2_Preferred_Email__c</name>
         <picklistValues>
@@ -289,7 +250,6 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__PreferredPhone__c --></help>
         <label><!-- Contact2 Preferred Phone --></label>
         <name>Contact2_Preferred_Phone__c</name>
         <picklistValues>
@@ -310,24 +270,29 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Contact2.Salutation --></help>
         <label><!-- Contact2 Salutation --></label>
         <name>Contact2_Salutation__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.Title --></help>
         <label><!-- Contact2 Title --></label>
         <name>Contact2_Title__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__WorkEmail__c --></help>
         <label><!-- Contact2 Work Email --></label>
         <name>Contact2_Work_Email__c</name>
     </fields>
     <fields>
-        <help><!-- Contact2.npe01__WorkPhone__c --></help>
         <label><!-- Contact2 Work Phone --></label>
         <name>Contact2_Work_Phone__c</name>
+    </fields>
+    <fields>
+        <label><!-- Donation Campaign Import Status --></label>
+        <name>DonationCampaignImportStatus__c</name>
+    </fields>
+    <fields>
+        <label><!-- Donation Campaign Source --></label>
+        <name>DonationCampaignImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
         <label><!-- Donation Import Status --></label>
@@ -339,7 +304,6 @@
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Opportunity.Amount --></help>
         <label><!-- Donation Amount --></label>
         <name>Donation_Amount__c</name>
     </fields>
@@ -348,12 +312,10 @@
         <name>Donation_Campaign_Name__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.CloseDate --></help>
         <label><!-- Donation Date --></label>
         <name>Donation_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.Description --></help>
         <label><!-- Donation Description --></label>
         <name>Donation_Description__c</name>
     </fields>
@@ -371,47 +333,39 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Opportunity.npe01__Member_Level__c --></help>
         <label><!-- Donation Member Level --></label>
         <name>Donation_Member_Level__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.npe01__Membership_End_Date__c --></help>
         <label><!-- Donation Membership End Date --></label>
         <name>Donation_Membership_End_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.npe01__Membership_Origin__c --></help>
         <label><!-- Donation Membership Origin --></label>
         <name>Donation_Membership_Origin__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.npe01__Membership_Start_Date__c --></help>
         <label><!-- Donation Membership Start Date --></label>
         <name>Donation_Membership_Start_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.Name --></help>
         <label><!-- Donation Name --></label>
         <name>Donation_Name__c</name>
     </fields>
     <fields>
-        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation. --></help>
+        <help><!-- A comma-separated list of Ids for the first 10 possible Opportunity matches for a donation. --></help>
         <label><!-- Donation Possible Matches --></label>
         <name>Donation_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.RecordTypeId --></help>
         <label><!-- Donation Record Type Name --></label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.StageName --></help>
         <label><!-- Donation Stage --></label>
         <name>Donation_Stage__c</name>
     </fields>
     <fields>
-        <help><!-- Opportunity.Type --></help>
         <label><!-- Donation Type --></label>
         <name>Donation_Type__c</name>
     </fields>
@@ -419,6 +373,60 @@
         <help><!-- Description of what caused the Data Import record to fail to be imported. --></help>
         <label><!-- Failure Information --></label>
         <name>FailureInformation__c</name>
+    </fields>
+    <fields>
+        <help><!-- The monetary amount attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 1: Amount --></label>
+        <name>GAU_Allocation_1_Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the GAU to be used for the first allocation. --></help>
+        <label><!-- GAU Allocation 1: GAU --></label>
+        <name>GAU_Allocation_1_GAU__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the first GAU Allocation. --></help>
+        <label><!-- GAU Allocation 1: Import Status --></label>
+        <name>GAU_Allocation_1_Import_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
+        <label><!-- GAU Allocation 1: Imported --></label>
+        <name>GAU_Allocation_1_Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 1: Percent --></label>
+        <name>GAU_Allocation_1_Percent__c</name>
+    </fields>
+    <fields>
+        <help><!-- The monetary amount attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 2: Amount --></label>
+        <name>GAU_Allocation_2_Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the GAU to be used for the second GAU allocation. --></help>
+        <label><!-- GAU Allocation 2: GAU --></label>
+        <name>GAU_Allocation_2_GAU__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the second GAU Allocation. --></help>
+        <label><!-- GAU Allocation 2: Import Status --></label>
+        <name>GAU_Allocation_2_Import_Status__c</name>
+    </fields>
+    <fields>
+        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
+        <label><!-- GAU Allocation 2: Imported --></label>
+        <name>GAU_Allocation_2_Imported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The percent attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+        <label><!-- GAU Allocation 2: Percent --></label>
+        <name>GAU_Allocation_2_Percent__c</name>
     </fields>
     <fields>
         <label><!-- Home Address Import Status --></label>
@@ -430,27 +438,22 @@
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Address.npsp__MailingCity__c --></help>
         <label><!-- Home City --></label>
         <name>Home_City__c</name>
     </fields>
     <fields>
-        <help><!-- Address.npsp__MailingCountry__c --></help>
         <label><!-- Home Country --></label>
         <name>Home_Country__c</name>
     </fields>
     <fields>
-        <help><!-- Address.npsp__MailingState__c --></help>
         <label><!-- Home State/Province --></label>
         <name>Home_State_Province__c</name>
     </fields>
     <fields>
-        <help><!-- Address.npsp__MailingStreet__c --></help>
         <label><!-- Home Street --></label>
         <name>Home_Street__c</name>
     </fields>
     <fields>
-        <help><!-- Address.npsp__MailingPostalCode__c --></help>
         <label><!-- Home Zip/Postal Code --></label>
         <name>Home_Zip_Postal_Code__c</name>
     </fields>
@@ -460,20 +463,49 @@
         <relationshipLabel><!-- NPSP Data Imports (Household Account Imported) --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Household.Phone --></help>
         <label><!-- Household Phone --></label>
         <name>Household_Phone__c</name>
     </fields>
     <fields>
-        <help><!-- When the Data Import record was successfully imported. --></help>
+        <help><!-- The date and time that the Data Import record was successfully imported. --></help>
         <label><!-- Imported Date --></label>
         <name>ImportedDate__c</name>
     </fields>
     <fields>
-        <help><!-- an optional NPSP Data Import Batch this record belongs to --></help>
+        <help><!-- Lookup to the NPSP Data Import Batch this record belongs to. --></help>
         <label><!-- NPSP Data Import Batch --></label>
         <name>NPSP_Data_Import_Batch__c</name>
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the first Opportunity Contact Role. --></help>
+        <label><!-- Opportunity Contact Role 1: ImportStatus --></label>
+        <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 1: Imported --></label>
+        <name>Opportunity_Contact_Role_1_Imported__c</name>
+    </fields>
+    <fields>
+        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 1: Role --></label>
+        <name>Opportunity_Contact_Role_1_Role__c</name>
+    </fields>
+    <fields>
+        <help><!-- The status from attempting to insert the second Opportunity Contact Role. --></help>
+        <label><!-- Opportunity Contact Role 2: ImportStatus --></label>
+        <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 2: Imported --></label>
+        <name>Opportunity_Contact_Role_2_Imported__c</name>
+    </fields>
+    <fields>
+        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
+        <label><!-- Opportunity Contact Role 2: Role --></label>
+        <name>Opportunity_Contact_Role_2_Role__c</name>
     </fields>
     <fields>
         <label><!-- Payment Import Status --></label>
@@ -485,22 +517,20 @@
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
         <label><!-- Payment Check/Reference Number --></label>
         <name>Payment_Check_Reference_Number__c</name>
     </fields>
     <fields>
-        <help><!-- Payment.npe01__Payment_Method__c --></help>
         <label><!-- Payment Method --></label>
         <name>Payment_Method__c</name>
     </fields>
     <fields>
-        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Payment matches to a donation. --></help>
+        <help><!-- A comma-separated list of Ids for the first 10 possible Payment matches for a Donation. --></help>
         <label><!-- Payment Possible Matches --></label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help><!-- The status of importing the Data Import record. --></help>
+        <help><!-- The status of the import for this record, for example, Imported or Failed. --></help>
         <label><!-- Status --></label>
         <name>Status__c</name>
         <picklistValues>
@@ -547,8 +577,12 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Donation Information --></label>
-            <section>Donation Information</section>
+            <label><!-- GAU Allocation 1 Information --></label>
+            <section>GAU Allocation 1 Information</section>
+        </sections>
+        <sections>
+            <label><!-- GAU Allocation 2 Information --></label>
+            <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
             <label><!-- Home Address --></label>
@@ -557,6 +591,22 @@
         <sections>
             <label><!-- Household Account Information --></label>
             <section>Household Account Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role 1 Information --></label>
+            <section>Opportunity Contact Role 1 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role 2 Information --></label>
+            <section>Opportunity Contact Role 2 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Information --></label>
+            <section>Opportunity Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
         </sections>
     </layouts>
     <startsWith>Consonant</startsWith>

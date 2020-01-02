@@ -34,27 +34,27 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Depending on the country and area, could be a city, township, municipality or other civic region associated with this address. --></help>
+        <help><!-- Use this to record the township, municipality, or other civic region associated with this Address. --></help>
         <label><!-- Administrative Area --></label>
         <name>Administrative_Area__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates whether more than on valid address was found when attempting to validate it through an external service. --></help>
+        <help><!-- Indicates whether more than one valid Address was found when attempting to validate it through an external service. --></help>
         <label><!-- Ambiguous --></label>
         <name>Ambiguous__c</name>
     </fields>
     <fields>
-        <help><!-- The congressional district to which the address belongs pertains. --></help>
+        <help><!-- The congressional district the Address is in. --></help>
         <label><!-- Congressional District --></label>
         <name>Congressional_District__c</name>
     </fields>
     <fields>
-        <help><!-- Name of the county the address is located at. --></help>
+        <help><!-- The name of the county the Address is in. --></help>
         <label><!-- County Name --></label>
         <name>County_Name__c</name>
     </fields>
     <fields>
-        <help><!-- Is this the Default Address to use for the Household and its Contacts? --></help>
+        <help><!-- Indicates whether this is the Default Address to use for the Household and its Contacts. --></help>
         <label><!-- Default Address --></label>
         <name>Default_Address__c</name>
     </fields>
@@ -67,23 +67,23 @@
         <name>Formula_MailingStreetAddress__c</name>
     </fields>
     <fields>
-        <help><!-- Location expressed as latitude and longitude. --></help>
+        <help><!-- The Address expressed as latitude and longitude. --></help>
         <label><!-- Geolocation --></label>
         <name>Geolocation__c</name>
     </fields>
     <fields>
-        <help><!-- The Account this Address is for. --></help>
+        <help><!-- Lookup to the Account associated with this Address. --></help>
         <label><!-- Account --></label>
         <name>Household_Account__c</name>
         <relationshipLabel><!-- Addresses --></relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The most recent ending date that this address was used. Generally used with Latest Start Date to track a date range for an address that&apos;s no longer in use. --></help>
+        <help><!-- The most recent ending date that this Address was used. Generally used with Latest Start Date to track a date range for an Address that&apos;s no longer in use. --></help>
         <label><!-- Latest End Date --></label>
         <name>Latest_End_Date__c</name>
     </fields>
     <fields>
-        <help><!-- The most recent starting date that this address was used. Generally used with Latest End Date to track a date range for an address that&apos;s no longer in use. --></help>
+        <help><!-- The most recent starting date that this Address was used. Generally used with Latest End Date to track a date range for an Address that&apos;s no longer in use. --></help>
         <label><!-- Latest Start Date --></label>
         <name>Latest_Start_Date__c</name>
     </fields>
@@ -112,12 +112,12 @@
         <name>MailingStreet__c</name>
     </fields>
     <fields>
-        <help><!-- Stores the address as entered before verification with a remote service, in case any information is lost in the verification process. --></help>
+        <help><!-- Stores the Address as it was before verification with a remote service, in case any information is lost in the verification process. --></help>
         <label><!-- Pre-Verification Address --></label>
         <name>Pre_Verification_Address__c</name>
     </fields>
     <fields>
-        <help><!-- The day of the month when this address no longer replaces the default address. --></help>
+        <help><!-- The day of the month when this Address no longer replaces the Default Address. --></help>
         <label><!-- Seasonal End Day --></label>
         <name>Seasonal_End_Day__c</name>
         <picklistValues>
@@ -246,7 +246,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The month of the year when this address no longer replaces the default address. --></help>
+        <help><!-- The month of the year when this Address no longer replaces the Default Address. --></help>
         <label><!-- Seasonal End Month --></label>
         <name>Seasonal_End_Month__c</name>
         <picklistValues>
@@ -299,7 +299,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The day of the month when this address replaces the default address. --></help>
+        <help><!-- The day of the month when this Address replaces the Default Address. --></help>
         <label><!-- Seasonal Start Day --></label>
         <name>Seasonal_Start_Day__c</name>
         <picklistValues>
@@ -428,7 +428,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The month of the year when this address replaces the default address. --></help>
+        <help><!-- The month of the year when this Address replaces the Default Address. --></help>
         <label><!-- Seasonal Start Month --></label>
         <name>Seasonal_Start_Month__c</name>
         <picklistValues>
@@ -481,22 +481,22 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The state lower district (such as a state assembly district) this address belongs to. --></help>
+        <help><!-- The state lower district (such as a state assembly district) this Address belongs to. --></help>
         <label><!-- State Lower District --></label>
         <name>State_Lower_District__c</name>
     </fields>
     <fields>
-        <help><!-- The state upper district (such as state senate district) this address belongs to. --></help>
+        <help><!-- The state upper district (such as state senate district) this Address belongs to. --></help>
         <label><!-- State Upper District --></label>
         <name>State_Upper_District__c</name>
     </fields>
     <fields>
-        <help><!-- If this address requires verification, click the Verify Address button at the top of this page. Consult the Help documentation in the Power of Us Hub for more information. --></help>
+        <help><!-- If this Address requires verification, click the Show more actions dropdown arrow in the upper right and then click Verify Address. Consult the Power of Us Hub documentation for more information on Address Verification. --></help>
         <label><!-- Verification Status --></label>
         <name>Verification_Status__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates whether the address has been verified by an external address verification service. --></help>
+        <help><!-- Indicates whether the Address has been verified by an external address verification service. --></help>
         <label><!-- Verified --></label>
         <name>Verified__c</name>
     </fields>
