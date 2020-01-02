@@ -244,4 +244,5 @@ export {
     sort,
     shiftToIndex,
     removeByProperty,
+    format
 };
