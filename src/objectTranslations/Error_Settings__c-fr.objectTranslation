@@ -9,17 +9,17 @@
         <value><!-- Error Settings --></value>
     </caseValues>
     <fields>
-        <help>Utilisé pour garder une trace de l’exécution la plus récente de l’enregistreur d’erreur de tâche asynchrone.</help>
+        <help>Utilisé pour garder une trace de l’exécution la plus récente de l’enregistreur d’erreur de tâche asynchrone</help>
         <label>Dernière exéc. vérif. d’erreur async.</label>
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
-        <help>Si coché, le framework de gestion d’erreur de NPSP est désactivé.</help>
+        <help>Si cette option est activée, l&apos;infrastructure de gestion d’erreur de NPSP est désactivée.</help>
         <label>Désactiver la gestion d’erreur</label>
         <name>Disable_Error_Handling__c</name>
     </fields>
     <fields>
-        <help>Si coché, NPSP ne planifiera pas automatiquement les tâches récurrentes par défaut. Ces tâches calculent les cumuls, mettent à jour les dons réguliers et les adresses saisonnières, et effectuent une gestion des erreurs.</help>
+        <help>Lorsque cette option est sélectionnée, NPSP ne planifiera pas automatiquement les tâches récurrentes par défaut. Ces tâches calculent les cumuls, mettent à jour les dons réguliers et les adresses saisonnières, et effectuent une gestion des erreurs.</help>
         <label>Pas de planif. auto. tâches NPSP par déf</label>
         <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     </fields>
@@ -29,7 +29,7 @@
         <name>Enable_Debug__c</name>
     </fields>
     <fields>
-        <help>Cochez si vous souhaitez que le système envoie des notifications pour certains types d’erreurs.</help>
+        <help>Cochez cette case si vous souhaitez que le système envoie des notifications pour certains types d’erreurs.</help>
         <label>Notifications d’erreur</label>
         <name>Error_Notifications_On__c</name>
     </fields>
@@ -39,12 +39,17 @@
         <name>Error_Notifications_To__c</name>
     </fields>
     <fields>
-        <help><!-- Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved. --></help>
-        <label><!-- Respect Duplicate Rule Settings --></label>
+        <help><!-- Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product License in the LMO. --></help>
+        <label><!-- Scratch Org Override: Pilot Enabled --></label>
+        <name>OverrideFeature_PilotEnabled__c</name>
+    </fields>
+    <fields>
+        <help>Param. d’une règle de dupl. qui contrôle si les enreg. en double sont autorisés. Lorsque les champs Action sur créer ou Action sur modifier sont définis sur « Autoriser » (dans Règles de dupl. sous Config.), les doubles seront enregistrés.</help>
+        <label>Respecter paramètres règle duplication</label>
         <name>Respect_Duplicate_Rule_Settings__c</name>
     </fields>
     <fields>
-        <help>Cochez si vous souhaitez que les erreurs soient enregistrées dans la base de données.</help>
+        <help>Cochez cette case si vous souhaitez que les erreurs soient enregistrées dans la base de données.</help>
         <label>Enregistrer les erreurs</label>
         <name>Store_Errors_On__c</name>
     </fields>

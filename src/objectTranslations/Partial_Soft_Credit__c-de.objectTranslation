@@ -3,76 +3,76 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Teilweiser Soft Credit</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Teilweise Soft Credits</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Teilweisen Soft Credit</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Teilweisen Soft Credits</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Teilweisen Soft Credits</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Teilweisen Soft Credits</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Teilweisen Soft Credit</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Teilweisen Soft Credits</value>
     </caseValues>
     <fields>
-        <help>Der Betrag für den weichen Kredit</help>
+        <help>Der Betrag für den Soft Credit.</help>
         <label>Betrag</label>
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>Der vollständige Name des Kontakts</help>
+        <help>Der vollständige Name des Kontakts, der diesen Soft Credit erhält (schreibgeschützt).</help>
         <label>Kontaktname</label>
         <name>Contact_Name__c</name>
     </fields>
     <fields>
-        <help>Die &quot;Opportunity-Kontaktrolle&quot;, für die dieser weiche Kredit gilt</help>
+        <help>Die &quot;Opportunity-Kontaktrolle&quot;, für die dieser Soft Credit gilt.</help>
         <label>Kontaktrollenkennung</label>
         <name>Contact_Role_ID__c</name>
     </fields>
     <fields>
-        <help>Der Kontakt, der diesen weichen Kredit erhält</help>
+        <help>Der Kontakt, der diesen weichen Kredit erhält.</help>
         <label>Kontakt</label>
         <name>Contact__c</name>
-        <relationshipLabel>Teilweise weiche Kredite</relationshipLabel>
+        <relationshipLabel>Teilweise Soft Credits</relationshipLabel>
     </fields>
     <fields>
-        <help>Die Opportunity, für die dieser weiche Kredit gilt</help>
-        <label><!-- Opportunity --></label>
+        <help>Die Opportunity, für die dieser Soft Credit gilt</help>
+        <label>Opportunity</label>
         <name>Opportunity__c</name>
-        <relationshipLabel>Teilweise weiche Kredite</relationshipLabel>
+        <relationshipLabel>Teilweise Soft Credits</relationshipLabel>
     </fields>
     <fields>
-        <help>Die Rolle dieses weichen Kredits</help>
+        <help>Die Rolle dieses Soft Credit</help>
         <label>Rollenname</label>
         <name>Role_Name__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Partial Soft Credit Layout</layout>
         <sections>
@@ -80,9 +80,9 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Partial Soft Credit Name --></nameFieldLabel>
+    <nameFieldLabel>Name des teilweisen Soft Credits</nameFieldLabel>
     <webLinks>
-        <label>Weiche Kredite verwalten</label>
+        <label>Soft Credits verwalten</label>
         <name>Manage_Soft_Credits</name>
     </webLinks>
 </CustomObjectTranslation>
