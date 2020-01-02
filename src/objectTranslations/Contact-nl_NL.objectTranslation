@@ -1,155 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Contact Merge Found FS --></label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
     <fields>
-        <help>Als dit adres verificatie vereist, klik de Verifieer Adres knop bovenin de Adrespagina. Zie de Help documentatie in de &quot;Power of Us Hub&quot; voor meer informatie.</help>
-        <label>Adresverificatie Status</label>
+        <help>De verificatiestatus van het huidige Adres. Als dit Adres verificatie vereist, gaat u naar de huidige Adresrecord en selecteert u Adres verifiëren. Raadpleeg de Power of Us Hub-documentatie voor meer informatie.</help>
+        <label>Status van Adresverificatie</label>
         <name>Address_Verification_Status__c</name>
     </fields>
     <fields>
-        <help>Opzoekrelatie naar de Batch waarin dit Contactpersoon is gemaakt.</help>
-        <label><!-- Batch --></label>
+        <help>Opzoeking van de Batch waarin deze Contactpersoon is gemaakt.</help>
+        <label>Batch</label>
         <name>Batch__c</name>
         <relationshipLabel>Contactpersonen</relationshipLabel>
     </fields>
     <fields>
-        <help>Het huidige Postadres van de Contactpersoon.</help>
+        <help>Opzoeking van het huidige Adres van deze Contactpersoon. NPSP vult het veld Postadres van de Contactpersoon in met straat, stad, staat en postcode van de huidige Adresrecord.</help>
         <label>Huidig Adres</label>
-        <lookupFilter>
-            <informationalMessage>Om alle adressen te zien van de Contactpersoon zijn huishouden, voer in A-&apos; in het zoekvenster.</informationalMessage>
-        </lookupFilter>
         <name>Current_Address__c</name>
         <relationshipLabel>Contactpersonen (Huidig Adres)</relationshipLabel>
     </fields>
     <fields>
-        <help>Indien aangevinkt, deze optie markeert het Contactpersoon als overleden, en sluit deze persoon uit van de Huishouden Naamgeving, e-mails, en telefoongesprekken.</help>
+        <help>Geeft aan of de Contactpersoon overleden is. Wanneer aangevinkt, sluit NPSP deze Contactpersoon uit van Benoeming van Huishouden (tenzij deze Contactpersoon de enige is in het Huishouden) en van standaarde-mail- en telefoonlijsten.</help>
         <label>Overleden</label>
         <name>Deceased__c</name>
     </fields>
     <fields>
-        <help>Indien aangevinkt wordt deze Contactpersoon uitgesloten van e-mails en telefoongesprekken.</help>
-        <label>Neem Geen Contact Op</label>
+        <help>Geeft aan dat de Contactpersoon niet wilt dat uw organisatie belt of e-mailt. Gebruik dit veld om Contactpersonen weg te filteren uit e-mail- en telefoonlijsten. Indien aangevinkt, sluit NPSP deze Contactpersoon uit van Opportunityerkenningen.</help>
+        <label>Geen Contact opnemen</label>
         <name>Do_Not_Contact__c</name>
     </fields>
     <fields>
-        <help>Indien aangevinkt wordt de Contactpersoon uitgesloten van de Formele Begroeting.</help>
-        <label>Uitsluiten Formele Begroeting Huishouden</label>
+        <help>Indien aangevinkt, sluit NPSP deze Contactpersoon uit van de Formele Begroeting voor Huishoudens (ingesteld in NPSP-Instellingen | Mensen | Huishoudens).</help>
+        <label>Uitsluiten van Formele Begr. Huishoudens</label>
         <name>Exclude_from_Household_Formal_Greeting__c</name>
     </fields>
     <fields>
-        <help>Indien aangevinkt wordt de Contactpersoon uitgesloten van de Informele Begroeting.</help>
-        <label>Uitsluiten Inf. Begroeting Huishouden</label>
+        <help>Indien aangevinkt, sluit NPSP deze Contactpersoon uit van de Informele Begroeting voor Huishoudens (ingesteld in NPSP-Instellingen | Mensen | Huishoudens).</help>
+        <label>Uitsluiten van Inform. Begr. Huishoudens</label>
         <name>Exclude_from_Household_Informal_Greeting__c</name>
     </fields>
     <fields>
-        <help>Indien aangevinkt wordt de Contactpersoon uitgesloten van de Naam van het Huishouden.</help>
-        <label>Uitsluiten van Naam van Huishouden</label>
+        <help>Indien aangevinkt, sluit NPSP deze Contactpersoon uit van de Huishoudennaam (ingesteld in NPSP-Instellingen | Mensen | Huishoudens).</help>
+        <label>Uitsluiten van Huishoudennaam</label>
         <name>Exclude_from_Household_Name__c</name>
     </fields>
     <fields>
-        <help>Het bedrag van de eerste Soft Credit.</help>
-        <label>Eerste Soft Credit Bedrag</label>
+        <help>Het bedrag van de eerste soft credit van deze Contactpersoon.</help>
+        <label>Bedrag van Eerste Soft Credit</label>
         <name>First_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>De datum van de eerste Soft Credit.</help>
-        <label>Eerste Soft Credit Datum</label>
+        <help>De datum van de eerste soft credit van deze Contactpersoon.</help>
+        <label>Datum van Eerste Soft Credit</label>
         <name>First_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>Houdt het ID van het huidige huishouden, of het nu een Huishouden Account is of een Huishouden Object.</help>
-        <label><!-- HHId --></label>
+        <help>Bevat het ID van de Huishoudenrecord (Huishoudenaccount of Huishoudenobject) die momenteel gekoppeld is aan deze Contactpersoon (enkel lezen).</help>
+        <label>HHId</label>
         <name>HHId__c</name>
     </fields>
     <fields>
-        <help>Het bedrag van de grootste Soft Credit.</help>
-        <label>Grootste Soft Credit Bedrag</label>
+        <help>Het bedrag van de grootste soft credit van deze Contactpersoon.</help>
+        <label>Bedrag van Grootste Soft Credit</label>
         <name>Largest_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>De datum van de grootste Soft Credit.</help>
-        <label>Grootste Soft Credit Datum</label>
+        <help>De datum van de grootste soft credit van deze Contactpersoon.</help>
+        <label>Datum van Grootste Soft Credit</label>
         <name>Largest_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>Het bedrag van de meest recente Soft Credit.</help>
-        <label>Laatste Soft Credit Bedrag</label>
+        <help>Het bedrag van de meest recente soft credit van deze Contactpersoon.</help>
+        <label>Bedrag van Laatste Soft Credit</label>
         <name>Last_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>De datum van de meest recente Soft Credit</help>
-        <label>Laatste Soft Credit Datum</label>
+        <help>De datum van de meest recente soft credit van deze Contactpersoon.</help>
+        <label>Datum van Laatste Soft Credit</label>
         <name>Last_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>Het totaal aantal Soft Credits die zijn gesloten in de laatste N dagen. De waarde voor N is gedefinieerd in de NPSP Instellingen.</help>
+        <help>Het aantal aan deze Contactpersoon toegekende soft credits die in de laatste N dagen zijn gesloten. De waarde van N is ingesteld in NPSP-instellingen | Donaties | Donorstatistieken.</help>
         <label>Aantal Soft Credits Laatste N Dagen</label>
         <name>Number_of_Soft_Credits_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Het aantal Soft Credits van vorig jaar.</help>
+        <help>Het aantal soft credits die tijdens het vorige kalenderjaar zijn toegekend aan deze Contactpersoon.</help>
         <label>Aantal Soft Credits Vorig Jaar</label>
         <name>Number_of_Soft_Credits_Last_Year__c</name>
     </fields>
     <fields>
-        <help>Het aantal Soft Credits van dit jaar.</help>
-        <label>Aantal Soft Credits Huidig Jaar</label>
+        <help>Het aantal soft credits die dit kalenderjaar zijn toegekend aan deze Contactpersoon.</help>
+        <label>Aantal Soft Credits Dit Jaar</label>
         <name>Number_of_Soft_Credits_This_Year__c</name>
     </fields>
     <fields>
-        <help>Het aantal Soft Credits van twee jaar geleden.</help>
+        <help>Het aantal soft credits die twee kalenderjaren geleden zijn toegekend aan deze Contactpersoon.</help>
         <label>Aantal Soft Credits Twee Jaar Geleden</label>
         <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help>Het aantal Soft Credits.</help>
+        <help>Het totale aantal soft credits die toegekend zijn aan deze Contactpersoon.</help>
         <label>Aantal Soft Credits</label>
         <name>Number_of_Soft_Credits__c</name>
     </fields>
     <fields>
-        <help>Wordt gebruikt om de Primaire Verwante Organisatie te volgen van de desbetreffende Contactpersoon.</help>
-        <label>Primaire Connectie</label>
+        <help>De Account die als Primair is aangeduid in de lijst van Organisatieaffiliaties van deze Contactpersoon.</help>
+        <label>Primair verband</label>
         <name>Primary_Affiliation__c</name>
-        <relationshipLabel>Niet gebruiken. Gebruik Verwante Organisaties.</relationshipLabel>
+        <relationshipLabel>Niet gebruiken. Gebruik Organisatieaffiliatie.</relationshipLabel>
     </fields>
     <fields>
-        <help>Dit is aangevinkt wanneer de gebruiker de Primaire Contactpersoon is op zijn Account. De Primaire Contactpersoon kan gewijzigd worden op het Account.</help>
-        <label>Primaire Contactpersoon</label>
+        <help>Geeft aan of deze Contactpersoon is aangesteld als de Primaire Contactpersoon voor zijn Account (enkel lezen).</help>
+        <label>Primaire contactpersoon</label>
         <name>Primary_Contact__c</name>
     </fields>
     <fields>
-        <help>Het totaalbedrag aan Soft Credit, gesloten in de laatste N dagen. De waarde voor N is gedefinieerd in de NPSP Instellingen.</help>
+        <help>Het totale bedrag van soft credit toegekend aan deze Contactpersoon in de laatste N dagen. De waarde N is ingesteld in NPSP-Instellingen | Donaties | Donorstatistieken.</help>
         <label>Soft Credit Laatste N Dagen</label>
         <name>Soft_Credit_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Indien aangevinkt, dan overschrijft het huidige adres opzoekrelatie van de Contactpersoon het adres van het Huishouden of het seizoensgebonden adres.</help>
+        <help>Indien aangevinkt, zal NPSP het adres van deze Contactpersoon niet synchroniseren met het Standaardadres of het Seizoenadres van het Huishouden. Gebruik dit om een apart Postadres te bewaren voor deze bepaalde Contactpersoon.</help>
         <label>Adresoverschrijving</label>
         <name>is_Address_Override__c</name>
     </fields>
     <layouts>
         <layout>Contact Layout</layout>
         <sections>
-            <label>Contactpersoon Details</label>
+            <label>Contactpersoondetails</label>
             <section>Contact Details</section>
         </sections>
         <sections>
-            <label>Donatie Informatie</label>
+            <label>Donatie-informatie</label>
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>Donatie Totalen</label>
+            <label>Donatietotalen</label>
             <section>Donation Totals</section>
         </sections>
         <sections>
-            <label>Huishouden Adres</label>
+            <label>Huishoudenadres</label>
             <section>Household Address</section>
         </sections>
         <sections>
-            <label>Huishouden Donatie Informatie</label>
+            <label>Donatie-informatie van Huishouden</label>
             <section>Household Donation Info</section>
         </sections>
         <sections>
-            <label>Lidmaatschap Informatie</label>
+            <label>Lidmaatschapsinformatie</label>
             <section>Membership Information</section>
         </sections>
         <sections>
@@ -157,12 +166,12 @@
             <section>Misc</section>
         </sections>
         <sections>
-            <label>Soft Credit Totalen</label>
+            <label>Soft Credit-totalen</label>
             <section>Soft Credit Totals</section>
         </sections>
     </layouts>
     <quickActions>
-        <label>Nieuwe Verwante Organisatie</label>
+        <label>Nieuwe Gelieerde Organisatie</label>
         <name>New_Affiliation</name>
     </quickActions>
     <quickActions>
@@ -182,7 +191,7 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label>Totaliseringen opnieuw berekenen</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

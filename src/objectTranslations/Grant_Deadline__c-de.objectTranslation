@@ -3,62 +3,62 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Deliverable --></value>
+        <value>Lieferung</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Deliverable --></value>
+        <value>Lieferungen</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Deliverable --></value>
+        <value>Lieferung</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Deliverable --></value>
+        <value>Lieferungen</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Deliverable --></value>
+        <value>Lieferung</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Deliverable --></value>
+        <value>Lieferungen</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Deliverable --></value>
+        <value>Lieferung</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Deliverable --></value>
+        <value>Lieferungen</value>
     </caseValues>
     <fields>
-        <help><!-- The date on which this particular Deliverable is due. --></help>
-        <label>Fälligk.dat. d. letzten Unterst.termins</label>
+        <help>Das Datum, an dem diese Lieferung fällig ist.</help>
+        <label>Fälligkeitstermin</label>
         <name>Grant_Deadline_Due_Date__c</name>
     </fields>
     <fields>
-        <help>Das Datum, an dem zustellbare Unterstützung tatsächlich übermittelt wurde.</help>
-        <label>Schlussdatum für zustellb. Unterstützung</label>
+        <help>Das Datum, an dem diese Lieferung tatsächlich übermittelt wurde.</help>
+        <label>Schlusstermin</label>
         <name>Grant_Deliverable_Close_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Description of what is required for this deliverable. --></help>
-        <label>Anforderungen d. zustellb. Unterstützung</label>
+        <help>Beschreibung dessen, was für diese Lieferung erforderlich ist.</help>
+        <label>Anforderungen</label>
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>
     <fields>
-        <label>Unterstützungs-Opportunity</label>
+        <label>Opportunity</label>
         <name>Opportunity__c</name>
-        <relationshipLabel>Unterstützungs-Termine</relationshipLabel>
+        <relationshipLabel>Lieferungen</relationshipLabel>
     </fields>
     <fields>
         <label>Typ</label>
@@ -80,7 +80,7 @@
             <translation>Absichtserklärung</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Grant Deadline Layout</layout>
         <sections>
@@ -88,9 +88,9 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label>Unterstützungsanforderungen</label>
+            <label>Lieferungsanforderungen gewähren</label>
             <section>Grant Deliverable Requirements</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Deliverable Name --></nameFieldLabel>
+    <nameFieldLabel>Lieferungsname</nameFieldLabel>
 </CustomObjectTranslation>
