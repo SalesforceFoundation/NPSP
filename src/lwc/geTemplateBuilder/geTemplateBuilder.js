@@ -643,8 +643,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.hasTemplateInfoTabError = false;
             } else {
                 this.hasTemplateInfoTabError = true;
-                tabsWithErrors.add(this.TabEnums.INFO_TAB);
             }
+        }
+
+        if (this.hasTemplateInfoTabError) {
+            tabsWithErrors.add(this.TabEnums.INFO_TAB);
         }
     }
 
@@ -666,10 +669,13 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
             if (missingRequiredFields && missingRequiredFields.length > 0) {
                 this.hasSelectFieldsTabError = true;
-                tabsWithErrors.add(this.TabEnums.FORM_FIELDS_TAB);
             } else {
                 this.hasSelectFieldsTabError = false;
             }
+        }
+
+        if (this.hasSelectFieldsTabError) {
+            tabsWithErrors.add(this.TabEnums.FORM_FIELDS_TAB);
         }
     }
 
