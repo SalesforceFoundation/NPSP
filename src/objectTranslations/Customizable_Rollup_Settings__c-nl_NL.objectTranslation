@@ -9,64 +9,104 @@
         <value><!-- Customizable Rollup Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- JSON for the CMT deployment result
-{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
-        <label><!-- CMT API Deployment Result --></label>
+        <help>Indien aangevinkt beperkt de nachttaak Account Hard Credits (niet-Versch.) het aantal Accounts die worden geselecteerd voor opnieuw berekenen, door te zoeken naar bijgewerkte Opp. op die Accounts. Ter verbetering van nachttaak Aanpasbare Totalisering.</help>
+        <label>Increm. Account Hard Credit niet-Versch.</label>
+        <name>AccountHardCreditNonSkew_Incremental__c</name>
+    </fields>
+    <fields>
+        <help>JSON voor het resultaat van CMT-uitrol 
+{ &quot;jobId&quot;: &quot;response&quot; }</help>
+        <label>Resultaat CMT API-uitrol</label>
         <name>CMT_API_Status__c</name>
     </fields>
     <fields>
-        <help><!-- Check this box to enable the new NPSP Customizable Rollup Engine --></help>
-        <label><!-- Enable Customizable Rollups --></label>
+        <help>ENKEL VOOR LDV-ORGANISATIES MET BEGELEIDING VAN SFDO. Om een Query-Time-out in de batchtaak totalisering in organisaties met miljoenen Accounts te vermijden, geeft dit het maximale aantal Accounts op die per batch worden verwerkt.</help>
+        <label>LDV: Chunkgrootte Account Hard Credits</label>
+        <name>ChunkSize_Account_HardCredit__c</name>
+    </fields>
+    <fields>
+        <help>ENKEL VOOR LDV-ORGANISATIES MET BEGELEIDING VAN SFDO. Om een Query-Time-out in de batchtaak totalisering in organisaties met miljoenen Contactpersonen te vermijden, geeft dit het maximale aantal Contactpersonen op die per batch worden verwerkt.</help>
+        <label>LDV: Chunkgrootte Contactp. Hard Credits</label>
+        <name>ChunkSize_Contact_HardCredit__c</name>
+    </fields>
+    <fields>
+        <help>ENKEL VOOR LDV-ORGANISATIES MET BEGELEIDING VAN SFDO. Om een Query-Time-out in de batchtaak totalisering in organisaties met miljoenen Contactpersonen te vermijden, geeft dit het maximale aantal Contactpersonen op die per batch worden verwerkt.</help>
+        <label>LDV: Chunkgrootte Contactp. Soft Credits</label>
+        <name>ChunkSize_Contact_SoftCredit__c</name>
+    </fields>
+    <fields>
+        <help>Als aangevinkt, beperkt de nachttaak Contactp. Hard Credits (niet-Versch.) het aantal Contactp. die worden geselecteerd voor opnieuw berekenen, door te zoeken naar bijgewerkte Opp. op die Contactp. Ter verbetering van nachttaak Aanpasbare Totaliseringen.</help>
+        <label>Increm. Contactp. Hard Cred. niet-Versch</label>
+        <name>ContactHardCreditNonSkew_Incremental__c</name>
+    </fields>
+    <fields>
+        <help>Vink dit selectievakje aan om de nieuwe Motor voor NPSP-Aanpasbare Totaliseringen in te schakelen</help>
+        <label>Aanpasbare Totaliseringen inschakelen</label>
         <name>Customizable_Rollups_Enabled__c</name>
     </fields>
     <fields>
-        <help><!-- Check this box to prevent hard credit and soft credit rollups on Accounts and Contacts from only processing Account and Contact records that have existing related Opportunity or Opportunity Contact Role records. --></help>
-        <label><!-- Disable Related Records Filter --></label>
+        <help>Vink dit aan om te voorkomen dat hard- en soft credit-totaliseringen op Accounts en Contactpersonen enkel Account- en Contactpersoonrecords die bestaande gerelateerde records van Opp. of Opportunitycontactpersoonrollen hebben, verwerken.</help>
+        <label>Filter Gerelateerde Records uitschakelen</label>
         <name>Disable_Related_Records_Filter__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor rollups to the Account object. --></help>
-        <label><!-- Account Hard Credit Batch Size --></label>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van donortotaliseringen naar het Accountobject.</help>
+        <label>Batchgrootte Hard Credits van Account</label>
         <name>Rollups_Account_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor rollups to the Account object using Skew Mode. --></help>
-        <label><!-- Account Skew Mode Batch Size --></label>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van donortotaliseringen naar het Accountobject aan de hand van de Verschuivingsmodus.</help>
+        <label>Batchgrootte Account Verschuivingsmodus</label>
         <name>Rollups_Account_SkewMode_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating soft credit donor rollups to the Account object. --></help>
-        <label><!-- Contact Soft Credit to Acct Batch Size --></label>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van soft credit-donortotaliseringen naar het Accountobject.</help>
+        <label>Batchgrootte Soft Credits van Account</label>
         <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating hard credit donor rollups to the Contact object. --></help>
-        <label><!-- Contact Hard Credit Batch Size --></label>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van soft credit-donortotaliseringen naar het Accountobject.</help>
+        <label>Batchgr. Contactp. Soft Credits naar Acc</label>
+        <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van hard credit donortotaliseringen naar het Contactpersoonobject.</help>
+        <label>Batchgrootte Contactp. Hard Credits</label>
         <name>Rollups_Contact_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor rollups to the Contact object using Skew Mode. --></help>
-        <label><!-- Contact Skew Mode Batch Size --></label>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van donortotaliseringen naar het Contactpersoonobject aan de hand van de Verschuivingsmodus.</help>
+        <label>Batchgr. Contactp. Verschuivingsmodus</label>
         <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating soft credit donor rollups to the Contact object. --></help>
-        <label><!-- Contact Soft Credit Batch Size --></label>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van soft credit-donortotaliseringen naar het Contactpersoonobject.</help>
+        <label>Batchgr. Contactpersoon Soft Credits</label>
         <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor rollups to the General Accounting Unit object. --></help>
-        <label><!-- GAU Batch Size --></label>
+        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van donortotaliseringen naar het GAU-object.</help>
+        <label>Batchgrootte GAU</label>
         <name>Rollups_GAU_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- The maximum number of related Opportunities on an Account or Contact allowed in non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode. --></help>
-        <label><!-- Skew Mode Threshold --></label>
+        <help>Enkel voor Overschr. Increm. Totaliseringen. Waarde overschrijft het veld om gerelateerde Opp. te filteren om te bepalen welke Accounts, Contactpersonen, GAU&apos;s of RD&apos;s opnieuw worden berekend tijdens een geplande nachttaak. Standaard SystemModStamp.</help>
+        <label>Increm.: Overschr. Veld Laatste N Dagen</label>
+        <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
+    </fields>
+    <fields>
+        <help>Enkel Overschrijving Increm. totaliseringen. Waarde overschrijft het berekende aantal dagen gebruikt om gerelateerde Opp. te filteren om te bepalen welke Accounts, Contactpersonen, GAU&apos;s of RD&apos;s opnieuw berekend worden tijdens een geplande nachttaak.</help>
+        <label>Increm.: Overschr Waarde Laatste N Dagen</label>
+        <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+    </fields>
+    <fields>
+        <help>Het max. aantal gerelateerde Opp. op een Account of Contactpersoon toegestaan in Batchtaken Totalisering in niet-Verschuivingsmodus. Een Account of Contactpersoon met meer gerelateerde Opp. wordt altijd getotaliseerd aan de hand van de Verschuivingsmodus.</help>
+        <label>Drempelwaarde Verschuivingsmodus</label>
         <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
     </fields>
     <fields>
-        <help><!-- Number of Account, Contact, or GAU records per batch to select for Skew Mode processing. --></help>
-        <label><!-- Skew Mode Dispatcher Batch Size --></label>
+        <help>Aantal te selecteren Account-, Contactpersoon of GAU-records per batch voor verwerking in Verschuivingsmodus.</help>
+        <label>Batchgr. Dispatcher Verschuivingsmodus</label>
         <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

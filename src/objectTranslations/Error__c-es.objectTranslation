@@ -2,11 +2,11 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Error --></value>
+        <value>Error</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Error --></value>
+        <value>Errores</value>
     </caseValues>
     <fields>
         <help>Contexto en el que se generó el error, si se conoce.</help>
@@ -14,8 +14,8 @@
         <name>Context_Type__c</name>
     </fields>
     <fields>
-        <help>Día y hora en el que ocurrió el error.</help>
-        <label>Día y hora</label>
+        <help>Fecha y hora en las que ocurrió el error.</help>
+        <label>Fecha y hora</label>
         <name>Datetime__c</name>
     </fields>
     <fields>
@@ -44,16 +44,26 @@
         <name>Posted_in_Chatter__c</name>
     </fields>
     <fields>
-        <help>Link al registro que causo el error, si esta disponible.</help>
+        <help>Un vínculo al registro que provocó el error, si está disponible.</help>
         <label>URL del registro</label>
         <name>Record_URL__c</name>
     </fields>
     <fields>
-        <help>Stack trace del error, si disponible en tiempo de ejecución</help>
-        <label><!-- Stack Trace --></label>
+        <help><!-- The Salesforce ID of the record associated with this error. --></help>
+        <label><!-- Related Record ID --></label>
+        <name>Related_Record_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- When selected, indicates that the record specified in Related Record ID will be reprocessed in the next scheduled process. If reprocessing succeeds, this field is then deselected. Applies to specific types of errors that occur during scheduled processes. --></help>
+        <label><!-- Retry Pending? --></label>
+        <name>Retry_Pending__c</name>
+    </fields>
+    <fields>
+        <help>Seguimiento de pila del error, si está disponible en tiempo de ejecución.</help>
+        <label>Seguimiento de pila</label>
         <name>Stack_Trace__c</name>
     </fields>
-    <gender><!-- Feminine --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Error Layout</layout>
         <sections>
@@ -61,5 +71,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Error Number --></nameFieldLabel>
+    <nameFieldLabel>Número de error</nameFieldLabel>
 </CustomObjectTranslation>
