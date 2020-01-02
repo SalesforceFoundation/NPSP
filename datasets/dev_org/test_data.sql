@@ -1,14 +1,14 @@
 BEGIN TRANSACTION;
 CREATE TABLE "Account" (
-	id INTEGER NOT NULL, 
-	"Name" VARCHAR(255), 
-	"BillingCountry" VARCHAR(255), 
-	"BillingStreet" VARCHAR(255), 
-	"BillingState" VARCHAR(255), 
-	"BillingCity" VARCHAR(255), 
-	"BillingPostalCode" VARCHAR(255), 
-	"npe01__SYSTEM_AccountType__c" VARCHAR(255), 
-	"RecordTypeId" VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"Name" VARCHAR(255),
+	"BillingCountry" VARCHAR(255),
+	"BillingStreet" VARCHAR(255),
+	"BillingState" VARCHAR(255),
+	"BillingCity" VARCHAR(255),
+	"BillingPostalCode" VARCHAR(255),
+	"npe01__SYSTEM_AccountType__c" VARCHAR(255),
+	"RecordTypeId" VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "Account" VALUES(1,'Patterson Household','Argentina','26 Blackbird Junction','','La Banda','','Household Account','0122a000000PCxAAAW');
@@ -178,24 +178,24 @@ INSERT INTO "Account" VALUES(164,'Yozio','','','','','','','0122a000000PCxBAAW')
 INSERT INTO "Account" VALUES(165,'Zazio','','','','','','','0122a000000PCxBAAW');
 INSERT INTO "Account" VALUES(166,'Zoomlounge','','','','','','','0122a000000PCxBAAW');
 CREATE TABLE "Account_rt_mapping" (
-	record_type_id VARCHAR(18) NOT NULL, 
-	developer_name VARCHAR(255), 
+	record_type_id VARCHAR(18) NOT NULL,
+	developer_name VARCHAR(255),
 	PRIMARY KEY (record_type_id)
 );
 INSERT INTO "Account_rt_mapping" VALUES('0122a000000PCxAAAW','HH_Account');
 INSERT INTO "Account_rt_mapping" VALUES('0122a000000PCxBAAW','Organization');
 CREATE TABLE "Address__c" (
-	id INTEGER NOT NULL, 
-	"MailingCountry__c" VARCHAR(255), 
-	"MailingStreet__c" VARCHAR(255), 
-	"MailingState__c" VARCHAR(255), 
-	"MailingCity__c" VARCHAR(255), 
-	"MailingPostalCode__c" VARCHAR(255), 
-	"Seasonal_Start_Month__c" VARCHAR(255), 
-	"Seasonal_Start_Day__c" VARCHAR(255), 
-	"Seasonal_End_Month__c" VARCHAR(255), 
-	"Seasonal_End_Day__c" VARCHAR(255), 
-	household_account__c VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"MailingCountry__c" VARCHAR(255),
+	"MailingStreet__c" VARCHAR(255),
+	"MailingState__c" VARCHAR(255),
+	"MailingCity__c" VARCHAR(255),
+	"MailingPostalCode__c" VARCHAR(255),
+	"Seasonal_Start_Month__c" VARCHAR(255),
+	"Seasonal_Start_Day__c" VARCHAR(255),
+	"Seasonal_End_Month__c" VARCHAR(255),
+	"Seasonal_End_Day__c" VARCHAR(255),
+	household_account__c VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "Address__c" VALUES(1,'United States','07050 Doe Crossing Plaza','Minnesota','Saint Paul','55108','','','','','33');
@@ -378,12 +378,12 @@ INSERT INTO "Address__c" VALUES(177,'Ukraine','2072 Hayes Plaza','','Rybache',''
 INSERT INTO "Address__c" VALUES(178,'Ukraine','39955 Canary Avenue','','Truskavets','','','','','','33');
 INSERT INTO "Address__c" VALUES(179,'Greece','0 Carpenter Lane','','Markópoulo Oropoú','','','','','','33');
 CREATE TABLE "Allocation__c" (
-	id INTEGER NOT NULL, 
-	"Percent__c" VARCHAR(255), 
-	"Amount__c" VARCHAR(255), 
-	opportunity__c VARCHAR(255), 
-	general_accounting_unit__c VARCHAR(255), 
-	recurring_donation__c VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"Percent__c" VARCHAR(255),
+	"Amount__c" VARCHAR(255),
+	opportunity__c VARCHAR(255),
+	general_accounting_unit__c VARCHAR(255),
+	recurring_donation__c VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "Allocation__c" VALUES(1,'10.0','','19','13','');
@@ -487,8 +487,8 @@ INSERT INTO "Allocation__c" VALUES(98,'10.0','','124','3','');
 INSERT INTO "Allocation__c" VALUES(99,'10.0','','124','12','');
 INSERT INTO "Allocation__c" VALUES(100,'10.0','','199','22','');
 CREATE TABLE "Campaign" (
-	id INTEGER NOT NULL, 
-	name VARCHAR(255), 
+	id INTEGER NOT NULL,
+	name VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "Campaign" VALUES(1,'Jan 2015 Meeting');
@@ -505,10 +505,10 @@ INSERT INTO "Campaign" VALUES(11,'Nov 2015 Meeting');
 INSERT INTO "Campaign" VALUES(12,'Dec 2015 Meeting');
 INSERT INTO "Campaign" VALUES(13,'All Contacts');
 CREATE TABLE "CampaignMember" (
-	id INTEGER NOT NULL, 
-	status VARCHAR(255), 
-	contact_id VARCHAR(255), 
-	campaign_id VARCHAR(255), 
+	id INTEGER NOT NULL,
+	status VARCHAR(255),
+	contact_id VARCHAR(255),
+	campaign_id VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "CampaignMember" VALUES(1,'Sent','1','13');
@@ -677,15 +677,15 @@ INSERT INTO "CampaignMember" VALUES(163,'Sent','83','13');
 INSERT INTO "CampaignMember" VALUES(164,'Sent','84','13');
 INSERT INTO "CampaignMember" VALUES(165,'Sent','85','13');
 CREATE TABLE "Contact" (
-	id INTEGER NOT NULL, 
-	"Salutation" VARCHAR(255), 
-	"FirstName" VARCHAR(255), 
-	"LastName" VARCHAR(255), 
-	"Email" VARCHAR(255), 
-	"Phone" VARCHAR(255), 
-	"Title" VARCHAR(255), 
-	account_id VARCHAR(255), 
-	primary_affiliation__c VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"Salutation" VARCHAR(255),
+	"FirstName" VARCHAR(255),
+	"LastName" VARCHAR(255),
+	"Email" VARCHAR(255),
+	"Phone" VARCHAR(255),
+	"Title" VARCHAR(255),
+	account_id VARCHAR(255),
+	primary_affiliation__c VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "Contact" VALUES(1,'Ms','Alice','Patterson','','1-(266)195-4611','Financial Analyst','1','98');
@@ -789,8 +789,8 @@ INSERT INTO "Contact" VALUES(98,'Dr','Christopher','Austin','','','','86','131')
 INSERT INTO "Contact" VALUES(99,'','Maria','Carr','','2-(078)409-0982','','87','142');
 INSERT INTO "Contact" VALUES(100,'Ms','Gloria','Howell','','','','9','103');
 CREATE TABLE "General_Accounting_Unit__c" (
-	id INTEGER NOT NULL, 
-	name VARCHAR(255), 
+	id INTEGER NOT NULL,
+	name VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "General_Accounting_Unit__c" VALUES(1,'The curabitur convallis Fund');
@@ -843,31 +843,17 @@ INSERT INTO "General_Accounting_Unit__c" VALUES(47,'The felis eu Fund');
 INSERT INTO "General_Accounting_Unit__c" VALUES(48,'The tempus sit Fund');
 INSERT INTO "General_Accounting_Unit__c" VALUES(49,'The lobortis sapien Fund');
 INSERT INTO "General_Accounting_Unit__c" VALUES(50,'The augue quam Fund');
-CREATE TABLE "Level__c" (
-	id INTEGER NOT NULL, 
-	"Name" VARCHAR(255), 
-	"Active__c" VARCHAR(255), 
-	"Description__c" VARCHAR(255), 
-	"Level_Field__c" VARCHAR(255), 
-	"Maximum_Amount__c" VARCHAR(255), 
-	"Minimum_Amount__c" VARCHAR(255), 
-	"Previous_Level_Field__c" VARCHAR(255), 
-	"Source_Field__c" VARCHAR(255), 
-	"Target__c" VARCHAR(255), 
-	PRIMARY KEY (id)
-);
-INSERT INTO "Level__c" VALUES(1,'Gold Donor','true','','Current_Level__c','','10000.0','Previous_Level__c','npo02__TotalOppAmount__c','Contact');
 CREATE TABLE "Opportunity" (
-	id INTEGER NOT NULL, 
-	name VARCHAR(255), 
-	amount VARCHAR(255), 
-	stage_name VARCHAR(255), 
-	close_date VARCHAR(255), 
-	dont_create_payments VARCHAR(255), 
-	account_id VARCHAR(255), 
-	primary_contact__c VARCHAR(255), 
-	npe03__recurring_donation__c VARCHAR(255), 
-	campaign_id VARCHAR(255), 
+	id INTEGER NOT NULL,
+	name VARCHAR(255),
+	amount VARCHAR(255),
+	stage_name VARCHAR(255),
+	close_date VARCHAR(255),
+	dont_create_payments VARCHAR(255),
+	account_id VARCHAR(255),
+	primary_contact__c VARCHAR(255),
+	npe03__recurring_donation__c VARCHAR(255),
+	campaign_id VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "Opportunity" VALUES(1,'Ann Chapman: $502','502.0','Closed Won','2017-12-11','false','34','30','','');
@@ -1093,11 +1079,11 @@ INSERT INTO "Opportunity" VALUES(217,'Carl Harvey Donation (10) 10/15/2019','75.
 INSERT INTO "Opportunity" VALUES(218,'Carl Harvey Donation (11) 11/15/2019','75.0','Closed Won','2019-11-15','false','6','66','1','');
 INSERT INTO "Opportunity" VALUES(222,'Carl Harvey Donation (12) 12/15/2019','75.0','Closed Won','2019-12-15','false','6','66','1','');
 CREATE TABLE "OpportunityContactRole" (
-	id INTEGER NOT NULL, 
-	"Role" VARCHAR(255), 
-	"IsPrimary" VARCHAR(255), 
-	contact_id VARCHAR(255), 
-	opportunity_id VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"Role" VARCHAR(255),
+	"IsPrimary" VARCHAR(255),
+	contact_id VARCHAR(255),
+	opportunity_id VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "OpportunityContactRole" VALUES(1,'Soft Credit','true','66','211');
@@ -1592,11 +1578,11 @@ INSERT INTO "OpportunityContactRole" VALUES(489,'Soft Credit','false','98','94')
 INSERT INTO "OpportunityContactRole" VALUES(490,'Influencer','false','99','13');
 INSERT INTO "OpportunityContactRole" VALUES(491,'Soft Credit','false','99','94');
 CREATE TABLE "Partial_Soft_Credit__c" (
-	id INTEGER NOT NULL, 
-	"Role_Name__c" VARCHAR(255), 
-	"Amount__c" VARCHAR(255), 
-	contact__c VARCHAR(255), 
-	opportunity__c VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"Role_Name__c" VARCHAR(255),
+	"Amount__c" VARCHAR(255),
+	contact__c VARCHAR(255),
+	opportunity__c VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "Partial_Soft_Credit__c" VALUES(1,'Soft Credit','1.0','45','94');
@@ -1700,13 +1686,13 @@ INSERT INTO "Partial_Soft_Credit__c" VALUES(98,'Soft Credit','1.0','42','94');
 INSERT INTO "Partial_Soft_Credit__c" VALUES(99,'Soft Credit','1.0','43','94');
 INSERT INTO "Partial_Soft_Credit__c" VALUES(100,'Soft Credit','1.0','44','94');
 CREATE TABLE "npe01__OppPayment__c" (
-	id INTEGER NOT NULL, 
-	"npe01__Payment_Amount__c" VARCHAR(255), 
-	"npe01__Payment_Date__c" VARCHAR(255), 
-	"npe01__Scheduled_Date__c" VARCHAR(255), 
-	"npe01__Paid__c" VARCHAR(255), 
-	"npe01__Written_Off__c" VARCHAR(255), 
-	npe01__opportunity__c VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"npe01__Payment_Amount__c" VARCHAR(255),
+	"npe01__Payment_Date__c" VARCHAR(255),
+	"npe01__Scheduled_Date__c" VARCHAR(255),
+	"npe01__Paid__c" VARCHAR(255),
+	"npe01__Written_Off__c" VARCHAR(255),
+	npe01__opportunity__c VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "npe01__OppPayment__c" VALUES(1,'75.0','','2020-01-15','false','false','211');
@@ -2022,30 +2008,30 @@ INSERT INTO "npe01__OppPayment__c" VALUES(310,'785.8','2014-09-04','','false','f
 INSERT INTO "npe01__OppPayment__c" VALUES(311,'785.8','2014-10-04','','false','false','19');
 INSERT INTO "npe01__OppPayment__c" VALUES(312,'75.0','2019-12-15','','true','false','222');
 CREATE TABLE "npe03__Recurring_Donation__c" (
-	id INTEGER NOT NULL, 
-	"Name" VARCHAR(255), 
-	"npe03__Amount__c" VARCHAR(255), 
-	"npe03__Date_Established__c" VARCHAR(255), 
-	"npe03__Schedule_Type__c" VARCHAR(255), 
-	"npe03__Open_Ended_Status__c" VARCHAR(255), 
-	"npe03__Last_Payment_Date__c" VARCHAR(255), 
-	"npe03__Next_Payment_Date__c" VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"Name" VARCHAR(255),
+	"npe03__Amount__c" VARCHAR(255),
+	"npe03__Date_Established__c" VARCHAR(255),
+	"npe03__Schedule_Type__c" VARCHAR(255),
+	"npe03__Open_Ended_Status__c" VARCHAR(255),
+	"npe03__Last_Payment_Date__c" VARCHAR(255),
+	"npe03__Next_Payment_Date__c" VARCHAR(255),
 	"npe03__Installment_Period__c" VARCHAR(255),
-	"Day_of_Month__c" VARCHAR(255), 
-	"InstallmentFrequency__c" VARCHAR(255), 
-	"StartDate__c" VARCHAR(255), 
-	"PaymentMethod__c" VARCHAR(255), 
-	"RecurringType__c" VARCHAR(255), 
-	"Status__c" VARCHAR(255), 
-	npe03__contact__c VARCHAR(255), 
+	"Day_of_Month__c" VARCHAR(255),
+	"InstallmentFrequency__c" VARCHAR(255),
+	"StartDate__c" VARCHAR(255),
+	"PaymentMethod__c" VARCHAR(255),
+	"RecurringType__c" VARCHAR(255),
+	"Status__c" VARCHAR(255),
+	npe03__contact__c VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "npe03__Recurring_Donation__c" VALUES(1,'Carl Harvey: $75 Monthly','75.0','2018-02-04','','Open','2019-12-15','2020-01-15','Monthly','15','','2020-01-02','','Open','Active','66');
 CREATE TABLE "npe4__Relationship__c" (
-	id INTEGER NOT NULL, 
-	"npe4__Type__c" VARCHAR(255), 
-	npe4__contact__c VARCHAR(255), 
-	npe4__related_contact__c VARCHAR(255), 
+	id INTEGER NOT NULL,
+	"npe4__Type__c" VARCHAR(255),
+	npe4__contact__c VARCHAR(255),
+	npe4__related_contact__c VARCHAR(255),
 	PRIMARY KEY (id)
 );
 INSERT INTO "npe4__Relationship__c" VALUES(1,'Employee','4','83');

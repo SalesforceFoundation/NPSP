@@ -162,16 +162,3 @@ CampaignMember:
             table: Contact
         CampaignId:
             table: Campaign
-Level__c:
-    sf_object: npsp__Level__c
-    table: Level__c
-    fields:
-        Name: Name
-        npsp__Active__c: Active__c
-        npsp__Description__c: Description__c
-        npsp__Level_Field__c: Level_Field__c
-        npsp__Maximum_Amount__c: Maximum_Amount__c
-        npsp__Minimum_Amount__c: Minimum_Amount__c
-        npsp__Previous_Level_Field__c: Previous_Level_Field__c
-        npsp__Source_Field__c: Source_Field__c
-        npsp__Target__c: Target__c

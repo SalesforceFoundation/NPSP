@@ -157,16 +157,3 @@ CampaignMember:
             table: Contact
         CampaignId:
             table: Campaign
-Level__c:
-    sf_object: Level__c
-    table: Level__c
-    fields:
-        Name: Name
-        Active__c: Active__c
-        Description__c: Description__c
-        Level_Field__c: Level_Field__c
-        Maximum_Amount__c: Maximum_Amount__c
-        Minimum_Amount__c: Minimum_Amount__c
-        Previous_Level_Field__c: Previous_Level_Field__c
-        Source_Field__c: Source_Field__c
-        Target__c: Target__c
