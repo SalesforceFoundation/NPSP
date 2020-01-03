@@ -15,7 +15,7 @@
  */
 
 import labelScheduleTitle from '@salesforce/label/c.RD2_ActiveSchedulesTitle';
-import labelColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
+import labelEndDate from '@salesforce/label/c.RD2_ActiveSchedulesEndDate';
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -67,7 +67,7 @@ export default class RdScheduleVisualizer extends LightningElement {
     @track lblPmtMethod;
     @track lblCampaign;
     @track lblStartDate;
-    @track lblEndDate;
+    @track lblEndDate = labelEndDate;
     @track lblPeriod;
     @track lblFrequency;
     @track lblDayOfMonth;
@@ -117,8 +117,7 @@ export default class RdScheduleVisualizer extends LightningElement {
             this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
             this.lblCampaign = data.fields[FIELD_RD_CAMPAIGN.fieldApiName].label;
             this.lblStartDate = data.fields[FIELD_RD_STARTDATE.fieldApiName].label;
-            this.lblEndDate = 'End Date';
-            // this.lblEndDate = data.fields[FIELD_RD_ENDDATE.fieldApiName].label;
+            this.lblEndDate = labelEndDate;
             this.lblPeriod = data.fields[FIELD_RD_PERIOD.fieldApiName].label;
             this.lblFrequency = data.fields[FIELD_RD_FREQUENCY.fieldApiName].label;
             this.lblDayOfMonth = data.fields[FIELD_RD_DAYOFMONTH.fieldApiName].label;
