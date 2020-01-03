@@ -1,41 +1,71 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/ManageHouseHoldPageObject.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
+
+*** Keywords ***
+Setup Test Data
+    &{contact1} =           API Create Contact
+    ...                     MailingStreet=50 Fremont Street
+    ...                     MailingCity=San Francisco
+    ...                     MailingPostalCode=95320
+    ...                     MailingState=CA
+    ...                     MailingCountry=USA
+
+    Store Session Record  Account                               &{contact1}[AccountId]
+    Set suite variable    &{contact1}
+
+*** Variables ***
+&{Address}       street=123 Dummy Street    city=Tracy, CA 99999        country=US
 
 *** Test Cases ***
 
-Add New Address to Household 
-    &{contact1} =  API Create Contact    MailingStreet=50 Fremont Street    MailingCity=San Francisco    MailingPostalCode=95320    MailingState=CA    MailingCountry=USA
-    Store Session Record    Account    &{contact1}[AccountId]
-    Go To Record Home  &{contact1}[AccountId]    
-    # Click Link    link=Show more actions
-    Click Link    link=Manage Household 
-    Wait For Locator    frame    Manage Household   
-    # Select Frame With Title   Manage Household
-    # Wait For Locator    span_button    Change Address
-    # Click Button    Change Address
-    Select Frame And Click Element    Manage Household    span_button    Change Address    
-    Click ManageHH Link     Enter a new address
-    Fill Address Form
-    ...                       Street=123 Dummy Street
-    ...                       City=Tracy
-    ...                       State=CA
-    ...                       Postal Code=99999
-    ...                       Country=US   
-    Click Span Button    Set Address
-    Click Button       title=Save
-    Unselect Frame
-    Go To Record Home    &{contact1}[Id]
-    Scroll Element Into View    text:Mailing Address
-    #Scroll Page To Location    0    1200
-    ${status}    Verify Details Address    Mailing Address    123 Dummy Street     Tracy, CA 99999     US
-    Should Be Equal as Strings    ${status}    pass
-    Go To Object Home          Account
-    Click Link    link=&{contact1}[LastName] Household
-    Select Tab  Details
-    Scroll Element Into View    text:Billing Address
-    #Scroll Page To Location    0    300
-    ${status}    Verify Details Address    Billing Address    123 Dummy Street     Tracy, CA 99999     US
-    Should Be Equal as Strings    ${status}    pass
+Add New Address to Household
+    [Documentation]                      Create a contact providing the address details using the backend API
+    ...                                  Navigate to the contact's Account details page and update the address
+    ...                                  To a new value from the manage housold page.
+    ...                                  Navigate to contact details and account details page.
+    ...                                  Verify the new address persists under both Mailing and Billing address details
+    ...                                  Verify Same address should be present on Account and Contacts
+
+    [tags]                               W-038348             feature: Manage Households
+
+    Go To Page                           Details
+    ...                                  Account
+    ...                                  object_id=&{contact1}[AccountId]
+
+    Click Link                           link=Manage Household
+    Current Page Should Be               Custom                             ManageHousehold
+    Select Frame And Click Element       Manage Household
+    ...                                  span_button
+    ...                                  Change Address
+    Change Address Using                 Enter a new address               Street=123 Dummy Street
+    ...                                                                    City=Tracy
+    ...                                                                    State=CA
+    ...                                                                    Postal Code=99999
+    ...                                                                    Country=US
+
+    Go To Page                          Details
+    ...                                 Contact
+    ...                                 object_id=&{contact1}[Id]
+
+    Scroll Element Into View            text:Mailing Address
+    Verify Address Details              Mailing Address
+    ...                                 contains
+    ...                                 &{Address}
+
+    Go To Page                          Listing                             Account
+    Click Link                          link=&{contact1}[LastName] Household
+    Select Tab                          Details
+    Scroll Element Into View            text:Billing Address
+
+    verify address details              Billing Address
+    ...                                 contains
+    ...                                 &{Address}
