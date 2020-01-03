@@ -27,6 +27,10 @@
         <name>Batch_Description__c</name>
     </fields>
     <fields>
+        <label><!-- Batch Gift Entry Version --></label>
+        <name>Batch_Gift_Entry_Version__c</name>
+    </fields>
+    <fields>
         <help>Le nombre d’enregistrements à traiter en même temps dans chaque lot.</help>
         <label>Taille de lot</label>
         <name>Batch_Process_Size__c</name>

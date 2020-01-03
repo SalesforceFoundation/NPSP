@@ -90,11 +90,6 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <label><!-- Form Template --></label>
-        <name>Form_Template__c</name>
-        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
-    </fields>
-    <fields>
         <help><!-- The number of gifts that are expected to be entered in this Batch. --></help>
         <label><!-- Expected Count of Gifts --></label>
         <name>Expected_Count_of_Gifts__c</name>
@@ -103,6 +98,11 @@
         <help><!-- The expected total amount of all gifts entered in this Batch. --></help>
         <label><!-- Expected Total Batch Amount --></label>
         <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
     </fields>
     <fields>
         <help><!-- This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift batches when they are set up through the Batch Gift Entry tab. Manually changing this field could have unintended consequences. --></help>

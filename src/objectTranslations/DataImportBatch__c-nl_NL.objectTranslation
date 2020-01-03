@@ -105,6 +105,11 @@
         <name>Expected_Total_Batch_Amount__c</name>
     </fields>
     <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
+    </fields>
+    <fields>
         <help>Deze batch is bedoeld voor gebruik met Batchgiftinvoer. Batches worden automatisch gemarkeerd als giftbatches wanneer ze via het tabblad Batchgiftinvoer worden ingesteld. Dit veld handmatig wijzigen, kan onbedoelde gevolgen hebben.</help>
         <label>Giftbatch</label>
         <name>GiftBatch__c</name>
