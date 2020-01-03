@@ -52,7 +52,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testRequiredJobsAreScheduledWhenNpspSettingsPageLoads() {
+    private static void testRequiredJobsAreScheduledWhenNpspSettingsPageLoads() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
 
         Test.startTest();
@@ -76,7 +76,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testRecordTypeSettingsUpdateExceptionIsDisplayed() {
+    private static void testRecordTypeSettingsUpdateExceptionIsDisplayed() {
         Test.setCurrentPage(Page.STG_SettingsManager);
 
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
@@ -176,7 +176,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testDataBoundMultiSelect() {
+    private static void testDataBoundMultiSelect() {
         STG_DataBoundMultiSelect_CTRL ctrl = new STG_DataBoundMultiSelect_CTRL();
         Contact con = new Contact();
         con.npo02__Naming_Exclusions__c = 'a;b;c';
@@ -195,7 +195,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanel() {
+    private static void testPanel() {
         STG_Panel ctrl = new STG_Panel();
         system.assertEquals(null, ctrl.idPanel());
         ctrl.isEditMode = true;
@@ -227,7 +227,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testSettingsService() {
+    private static void testSettingsService() {
     	STG_SettingsService svc = STG_SettingsService.stgService;
     	system.assertNotEquals(null, svc);
     	system.assertNotEquals(null, svc.stgCon);
@@ -249,7 +249,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelAffl() {
+    private static void testPanelAffl() {
     	STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
     	system.assertEquals('idPanelAffl', panel.idPanel());
     	STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
@@ -265,7 +265,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelAllo() {
+    private static void testPanelAllo() {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
 
@@ -312,7 +312,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelBDE() {
+    private static void testPanelBDE() {
         STG_PanelBDE_CTRL panel = new STG_PanelBDE_CTRL();
         system.assertEquals('idPanelBDE', panel.idPanel());
         STG_Panel.stgService.stgBDE.Opportunity_Naming__c = true;
@@ -328,7 +328,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelContactRoles() {
+    private static void testPanelContactRoles() {
         STG_PanelContactRoles_CTRL panel = new STG_PanelContactRoles_CTRL();
         system.assertEquals('idPanelConRoles', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Enable_Opportunity_Contact_Role_Trigger__c = true;
@@ -348,7 +348,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelContacts() {
+    private static void testPanelContacts() {
         String hhAccountRecTypeLabel = STG_PanelContacts_CTRL.strHHAccountRecordTypeLabel;
         String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;
 
@@ -457,7 +457,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelLeads() {
+    private static void testPanelLeads() {
         STG_PanelLeads_CTRL panel = new STG_PanelLeads_CTRL();
         system.assertEquals('idPanelLeads', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Default_Opp_on_Convert__c = true;
@@ -473,7 +473,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelMembership() {
+    private static void testPanelMembership() {
         STG_PanelMembership_CTRL panel = new STG_PanelMembership_CTRL();
         system.assertEquals('idPanelMembership', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 10;
@@ -489,7 +489,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelOppBatch() {
+    private static void testPanelOppBatch() {
         STG_PanelOppBatch_CTRL panel = new STG_PanelOppBatch_CTRL();
         system.assertEquals('idPanelOppBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -502,7 +502,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelOppRollups() {
+    private static void testPanelOppRollups() {
         STG_PanelOppRollups_CTRL panel = new STG_PanelOppRollups_CTRL();
         system.assertEquals('idPanelOppRollup', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 10;
@@ -518,7 +518,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelOpps() {
+    private static void testPanelOpps() {
         STG_PanelOpps_CTRL panel = new STG_PanelOpps_CTRL();
         system.assertEquals('idPanelOpp', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Payments_Enabled__c = true;
@@ -534,7 +534,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelOppNaming() {
+    private static void testPanelOppNaming() {
         STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
         system.assertEquals('idPanelOppNaming', panel.idPanel());
         panel.newONS();
@@ -550,7 +550,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelPaymentMapping() {
+    private static void testPanelPaymentMapping() {
         STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
         system.assertEquals('idPanelPaymentMapping', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -597,7 +597,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     @isTest
-    public static void testPanelRD() {
+    private static void testPanelRD() {
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
         system.assertEquals('idPanelRD', panel.idPanel());
         panel.init();
