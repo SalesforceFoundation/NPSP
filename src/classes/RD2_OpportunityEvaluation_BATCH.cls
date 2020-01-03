@@ -58,6 +58,19 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         private set;
     }
 
+    /**
+    * @description Should Rollups be disabled before any new Installments Opps are inserted
+    */
+    private Boolean disableRollups {
+        get {
+            disableRollups = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DisableRollupsWhenCreatingInstallments__c;
+            if (disableRollups == null) {
+                disableRollups = false;
+            }
+            return disableRollups;
+        } private set;
+    }
+
     /*******************************************************************************************************
     * @description Count of RD's processed by the batch
     */
@@ -96,6 +109,10 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
 
         RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService()
             .withRds(rdIds);
+
+        if (disableRollups) {
+            TDTM_Config_API.disableAllRollupTriggers();
+        }
         oppEvalService.evaluateOpportunities();
 
         numberRDsProcessed += rds.size();

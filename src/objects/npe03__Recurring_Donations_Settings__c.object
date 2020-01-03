@@ -15,16 +15,14 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>RecurringDonations2MigrationState__c</fullName>
-        <description>Contains latest dry run and data migration results.</description>
+        <fullName>DisableRollupsWhenCreatingInstallments__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When selected, and if Customizable Rollups are enabled, then immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Contains latest dry run and data migration results.</inlineHelpText>
-        <label>Enhanced RD Data Migration State</label>
-        <length>255</length>
-        <required>false</required>
+        <inlineHelpText>When selected, and if Customizable Rollups are enabled, then immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation.</inlineHelpText>
+        <label>Disable CRLP When Creating Installments</label>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>EnableAutomaticNaming__c</fullName>
@@ -64,6 +62,18 @@
         <externalId>false</externalId>
         <inlineHelpText>Contains Enhanced Recurring Donation enablement confirmations and state.</inlineHelpText>
         <label>Recurring Donations Enablement State</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RecurringDonations2MigrationState__c</fullName>
+        <description>Contains latest dry run and data migration results.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Contains latest dry run and data migration results.</inlineHelpText>
+        <label>Enhanced RD Data Migration State</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
