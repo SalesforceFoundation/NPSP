@@ -1,12 +1,27 @@
 import { LightningElement, api, track } from 'lwc';
 
+import { isNull } from 'c/util';
+
 import labelStatus from '@salesforce/label/c.BatchProgressStatus';
 import labelTotalJobItems from '@salesforce/label/c.BatchProgressTotalJobItems';
 import labelJobItemsProcessed from '@salesforce/label/c.BatchProgressJobItemsProcessed';
 import labelTimeElapsed from '@salesforce/label/c.BatchProgressTimeElapsed';
 import labelCompletedDate from '@salesforce/label/c.BatchProgressCompletedDate';
 import labelExtendedStatus from '@salesforce/label/c.BatchProgressExtendedStatus';
+import labelTotalRecords from '@salesforce/label/c.BatchProgressTotalRecords';
+import labelTotalRecordsProcessed from '@salesforce/label/c.BatchProgressTotalRecordsProcessed';
+import labelTotalRecordsFailed from '@salesforce/label/c.BatchProgressTotalRecordsFailed';
 import labelLoading from '@salesforce/label/c.labelMessageLoading';
+import labelStatusComplete from '@salesforce/label/c.BatchProgressStatusComplete';
+import labelStatusCompleteErrors from '@salesforce/label/c.BatchProgressStatusCompleteErrors';
+import labelStatusFailed from '@salesforce/label/c.BatchProgressStatusFailed';
+import labelStatusHolding from '@salesforce/label/c.BatchProgressStatusHolding';
+import labelStatusError from '@salesforce/label/c.BatchProgressStatusError';
+import labelStatusPreparing from '@salesforce/label/c.BatchProgressStatusPreparing';
+import labelStatusProcessing from '@salesforce/label/c.BatchProgressStatusProcessing';
+import labelStatusQueued from '@salesforce/label/c.BatchProgressStatusQueued';
+import labelStatusStopped from '@salesforce/label/c.BatchProgressStatusStopped';
+import labelStatusSuccess from '@salesforce/label/c.BatchProgressStatusSuccess';
 import labelUnknownError from '@salesforce/label/c.stgUnknownError';
 
 import loadBatchJob from '@salesforce/apex/UTIL_BatchJobProgress_CTRL.loadBatchJob';
@@ -16,6 +31,8 @@ export default class BatchProgress extends LightningElement {
     @api className;
 
     @track batchJob;
+    @track hasSummary;
+    prevBatchJob;
 
     pollingTimeout = 10000;
     labels = {
@@ -25,34 +42,11 @@ export default class BatchProgress extends LightningElement {
         labelTimeElapsed,
         labelCompletedDate,
         labelExtendedStatus,
+        labelTotalRecords,
+        labelTotalRecordsProcessed,
+        labelTotalRecordsFailed,
         labelLoading
     };
-
-    /***
-    * @description Sets theme based on the batch job status
-    */
-    get themeClass() {
-        let themeClass = '';
-
-        if (this.batchJob === undefined || this.batchJob == null) {
-            return themeClass;
-        }
-
-        switch (this.batchJob.status) {
-            case 'Aborted':
-                themeClass = 'slds-theme_warning';
-                break;
-            case 'Failed':
-                themeClass = 'slds-theme_error';
-                break;
-            case 'Completed':
-                themeClass = this.batchJob.numberOfErrors > 0 ? 'slds-theme_warning' : 'slds-theme_success';
-                break;
-            default:
-        }
-
-        return themeClass;
-    }
 
     /***
     * @description Initializes the component
@@ -68,12 +62,20 @@ export default class BatchProgress extends LightningElement {
     handleLoadBatchJob() {
         loadBatchJob({ className: this.className })
             .then((data) => {
-                let previousBatchJob = this.batchJob;
+                this.prevBatchJob = this.batchJob;
                 this.batchJob = JSON.parse(data);
 
-                this.notifyOnStatusChange(previousBatchJob, this.batchJob);
+                if (isNull(this.batchJob)) {
+                    return;
+                }
 
-                if (this.batchJob && this.batchJob.isInProgress === true) {
+                this.hasSummary = !isNull(this.batchJob.summary);
+
+                this.notifyOnStatusChange();
+
+                if (this.batchJob.isInProgress === true
+                    || (this.batchJob.status === 'Completed' && this.hasSummary !== true)
+                ) {
                     this.refreshBatchJob();
                 }
             })
@@ -97,21 +99,23 @@ export default class BatchProgress extends LightningElement {
     /***
     * @description Notifies other components about the batch status change
     */
-    notifyOnStatusChange(previousBatchJob, currentBatchJob) {
-        if (currentBatchJob === undefined || currentBatchJob === null) {
+    notifyOnStatusChange() {
+        if (isNull(this.batchJob)) {
             return;
         }
 
-        const isFirstLoad = previousBatchJob === undefined || previousBatchJob === null;
-
-        if (isFirstLoad
-            || previousBatchJob.isInProgress !== currentBatchJob.isInProgress
+        if (isNull(this.prevBatchJob)
+            || this.prevBatchJob.isInProgress !== this.batchJob.isInProgress
+            || this.prevBatchJob.summary !== this.batchJob.summary
         ) {
+            const isSuccess = this.batchJob.numberOfErrors === 0;
+
             const batchProgress = {
+                batchId: this.batchJob.batchId,
                 className: this.className,
-                status: currentBatchJob.status,
-                isInProgress: currentBatchJob.isInProgress,
-                isSuccess: currentBatchJob.status === 'Completed' && currentBatchJob.numberOfErrors === 0
+                status: this.batchJob.status,
+                isInProgress: this.batchJob.isInProgress,
+                isSuccess: isSuccess
             };
 
             const statusChangeEvent = new CustomEvent('statuschange', {
@@ -154,5 +158,112 @@ export default class BatchProgress extends LightningElement {
         this.dispatchEvent(errorEvent);
     }
 
+    /***
+    * @description Sets theme based on the batch job status
+    */
+    get themeClass() {
+        let themeClass = '';
 
+        if (isNull(this.batchJob)) {
+            return themeClass;
+        }
+
+        switch (this.batchJob.status) {
+            case 'Aborted':
+                themeClass = 'slds-theme_warning';
+                break;
+            case 'Failed':
+                themeClass = 'slds-theme_error';
+                break;
+            case 'Completed':
+                themeClass = this.batchJob.numberOfErrors > 0 ? 'slds-theme_warning' : 'slds-theme_success';
+                break;
+            default:
+        }
+
+        return themeClass;
+    }
+
+    /***
+    * @description Returns batch job status to display
+    */
+    get batchStatusDisplay() {
+        let status = '';
+
+        if (isNull(this.batchJob)) {
+            return status;
+        }
+
+        switch (this.batchJob.status) {
+            case 'Completed':
+                status = this.batchJob.numberOfErrors > 0 ? labelStatusCompleteErrors : labelStatusComplete;
+                break;
+            default:
+                status = this.batchStatus;
+        }
+
+        return status;
+    }
+
+    /***
+    * @description Returns batch job status to display in the badge
+    */
+    get batchStatusBadge() {
+        let status = '';
+
+        if (isNull(this.batchJob)) {
+            return status;
+        }
+
+        switch (this.batchJob.status) {
+            case 'Completed':
+                status = this.batchJob.numberOfErrors > 0 ? labelStatusError : labelStatusSuccess;
+                break;
+            default:
+                status = this.batchStatus;
+        }
+
+        return status;
+    }
+
+    /***
+    * @description Returns batch job status to display
+    */
+    get batchStatus() {
+        let status = '';
+
+        switch (this.batchJob.status) {
+            case 'Holding':
+                status = labelStatusHolding;
+                break;
+            case 'Queued':
+                status = labelStatusQueued;
+                break;
+            case 'Preparing':
+                status = labelStatusPreparing;
+                break;
+            case 'Processing':
+                status = labelStatusProcessing;
+                break;
+            case 'Failed':
+                status = labelStatusFailed;
+                break;
+            case 'Aborted':
+                status = labelStatusStopped;
+                break;
+            default:
+                status = this.batchJob.status;
+        }
+
+        return status;
+    }
+
+    /***
+    * @description Returns message indicating percent completed
+    */
+    get progressMessage() {
+        return isNull(this.batchJob)
+            ? ''
+            : this.batchJob.percentComplete + '% ' + labelStatusComplete;
+    }
 }

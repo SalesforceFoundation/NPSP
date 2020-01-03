@@ -68,6 +68,17 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fullName>RecurringDonations2MigrationState__c</fullName>
+        <description>Contains latest dry run and data migration results.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Contains latest dry run and data migration results.</inlineHelpText>
+        <label>Enhanced RD Data Migration State</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
     <fields>
         <fullName>Recurring_Donation_Batch_Size__c</fullName>
         <defaultValue>50</defaultValue>
