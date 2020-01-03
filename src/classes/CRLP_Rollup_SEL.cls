@@ -46,35 +46,35 @@ public inherited sharing class CRLP_Rollup_SEL {
         get {
             if (cachedRollups == null) {
                 cachedRollups = [
-                    SELECT 
-                        Id, 
-                        DeveloperName, 
-                        MasterLabel, 
-                        Active__c, 
-                        Use_Fiscal_Year__c, 
-                        Description__c, 
-                        Operation__c, 
-                        Time_Bound_Operation_Type__c, 
+                    SELECT
+                        Id,
+                        DeveloperName,
+                        MasterLabel,
+                        Active__c,
+                        Use_Fiscal_Year__c,
+                        Description__c,
+                        Operation__c,
+                        Time_Bound_Operation_Type__c,
                         Integer__c,
-                        Is_Deleted__c, 
-                        Filter_Group__c, 
-                        Filter_Group__r.MasterLabel, 
-                        Filter_Group__r.DeveloperName, 
-                        Summary_Object__r.QualifiedApiName, 
-                        Summary_Object__r.Label, 
-                        Summary_Field__r.QualifiedApiName, 
-                        Summary_Field__r.Label, 
-                        Detail_Object__r.QualifiedApiName, 
-                        Detail_Object__r.Label, 
-                        Detail_Field__r.QualifiedApiName, 
-                        Detail_Field__r.Label, 
-                        Amount_Object__r.QualifiedApiName, 
-                        Amount_Object__r.Label, 
-                        Amount_Field__r.QualifiedApiName, 
-                        Amount_Field__r.Label, 
-                        Date_Object__r.QualifiedApiName, 
-                        Date_Object__r.Label, 
-                        Date_Field__r.QualifiedApiName, 
+                        Is_Deleted__c,
+                        Filter_Group__c,
+                        Filter_Group__r.MasterLabel,
+                        Filter_Group__r.DeveloperName,
+                        Summary_Object__r.QualifiedApiName,
+                        Summary_Object__r.Label,
+                        Summary_Field__r.QualifiedApiName,
+                        Summary_Field__r.Label,
+                        Detail_Object__r.QualifiedApiName,
+                        Detail_Object__r.Label,
+                        Detail_Field__r.QualifiedApiName,
+                        Detail_Field__r.Label,
+                        Amount_Object__r.QualifiedApiName,
+                        Amount_Object__r.Label,
+                        Amount_Field__r.QualifiedApiName,
+                        Amount_Field__r.Label,
+                        Date_Object__r.QualifiedApiName,
+                        Date_Object__r.Label,
+                        Date_Field__r.QualifiedApiName,
                         Date_Field__r.Label
                     FROM Rollup__mdt
                     WHERE Is_Deleted__c = false
@@ -95,7 +95,7 @@ public inherited sharing class CRLP_Rollup_SEL {
     }
 
     /**
-     * @description Return a map of Rollup Definitions with a key of the Summary object 
+     * @description Return a map of Rollup Definitions with a key of the Summary object
      * and a list of all rollups for each Summary object
      */
     @TestVisible
@@ -198,17 +198,17 @@ public inherited sharing class CRLP_Rollup_SEL {
     private static final Map<SObjectField, Set<String>> UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD = new Map<SObjectField, Set<String>> {
         Schema.Rollup__mdt.Date_Field__c => new Set<String> {}, // All Operations Supported
         Schema.Rollup__mdt.Amount_Field__c => new Set<String> {
-            CRLP_Operation.RollupType.Count.name(), 
-            CRLP_Operation.RollupType.First.name(), 
+            CRLP_Operation.RollupType.Count.name(),
+            CRLP_Operation.RollupType.First.name(),
             CRLP_Operation.RollupType.Last.name()
-        }, 
+        },
         Schema.Rollup__mdt.Detail_Field__c => new Set<String> {
-            CRLP_Operation.RollupType.Sum.name(), 
-            CRLP_Operation.RollupType.Count.name(), 
-            CRLP_Operation.RollupType.Average.name(), 
-            CRLP_Operation.RollupType.Years_Donated.name(), 
-            CRLP_Operation.RollupType.Donor_Streak.name(), 
-            CRLP_Operation.RollupType.Best_Year.name(), 
+            CRLP_Operation.RollupType.Sum.name(),
+            CRLP_Operation.RollupType.Count.name(),
+            CRLP_Operation.RollupType.Average.name(),
+            CRLP_Operation.RollupType.Years_Donated.name(),
+            CRLP_Operation.RollupType.Donor_Streak.name(),
+            CRLP_Operation.RollupType.Best_Year.name(),
             CRLP_Operation.RollupType.Best_Year_Total.name()
         }
     };
@@ -250,7 +250,7 @@ public inherited sharing class CRLP_Rollup_SEL {
         if (objType != null) {
             final DescribeSObjectResult sObjectDescribe = UTIL_Describe.getObjectDescribe(objType);
             final String sObjectName = sObjectDescribe.getName();
-            
+
             // Note: DescribeSObjectResult.fields.getMap() is a case-insensitive map
             final Map<String, SObjectField> fieldsByName = sObjectDescribe.fields.getMap();
 
@@ -260,7 +260,7 @@ public inherited sharing class CRLP_Rollup_SEL {
             ) {
                 fields.add(fieldsByName.get('CurrencyIsoCode'));
             }
-    
+
             // Summary, Date, Amount, Detail Fields from cachedRollups
             for (Rollup__mdt rollup : cachedRollups) {
                 if (rollup.Active__c == true) {
@@ -292,7 +292,7 @@ public inherited sharing class CRLP_Rollup_SEL {
                         fields.add(fieldsByName.get(rollup.Detail_Field__r.QualifiedApiName));
                     }
                 }
-            }   
+            }
         }
 
         final List<Schema.DescribeFieldResult> referencedFields = new List<Schema.DescribeFieldResult>();
@@ -342,7 +342,7 @@ public inherited sharing class CRLP_Rollup_SEL {
      */
     public static void addRollupsToCache(
         CRLP_RollupProcessingOptions.RollupType rollupType,
-        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter, 
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter,
         List<Rollup__mdt> rollups
     ) {
         cachedRollupsByTypeAndFilter.put(rollupType.name() + typeFilter.name(), rollups);
