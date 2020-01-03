@@ -53,29 +53,6 @@ const SCHEDULE_COLS = [
     { label: '$DAY_OF_MONTH', fieldName: 'dayOfMonth', type: 'text', sortable: false }
 ];
 
-/*
-    -- Work in progress on SCHEDULE_COLS --
-
-    { label: '$AMOUNT', fieldName: 'amount', type: 'currency', sortable: false,
-        typeAttributes: { currencyCode: '$CURRENCYISOCODE' } },
-    { label: '$PAYMENT_METHOD', fieldName: 'paymentMethod', type: 'text', sortable: false },
-    { label: '$CAMPAIGN', fieldName: 'campaign', type: 'text', sortable: false },
-    { label: '$START_DATE', fieldName: 'startDate', type: 'date-local', sortable: false,
-        typeAttributes:{
-            month: "2-digit",
-            day: "2-digit"
-        } },
-    { label: '$END_DATE', fieldName: 'endDate', type: 'date-local', sortable: false,
-        typeAttributes:{
-            month: "2-digit",
-            day: "2-digit"
-        } },
-    { label: '$PERIOD', fieldName: 'period', type: 'text', sortable: false },
-    { label: '$FREQUENCY', fieldName: 'frequency', type: 'number', sortable: false },
-    { label: '$DAY_OF_MONTH', fieldName: 'dayOfMonth', type: 'text', sortable: false }
-
- */
-
 export default class RdScheduleVisualizer extends LightningElement {
 
     @api recordId;
@@ -145,19 +122,6 @@ export default class RdScheduleVisualizer extends LightningElement {
             this.lblPeriod = data.fields[FIELD_RD_PERIOD.fieldApiName].label;
             this.lblFrequency = data.fields[FIELD_RD_FREQUENCY.fieldApiName].label;
             this.lblDayOfMonth = data.fields[FIELD_RD_DAYOFMONTH.fieldApiName].label;
-
-/*
-    -- Work in progress on RD wire
-
-                    this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
-                    this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-                    this.lblCampaign = data.fields[FIELD_RD_CAMPAIGN.fieldApiName].label;
-                    this.lblStartDate = data.fields[FIELD_RD_STARTDATE.fieldApiName].label;
-                    this.lblPeriod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-                    this.lblFrequency = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-                    this.lblDayOfMonth = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-
- */
         }
     }
 
@@ -199,20 +163,6 @@ export default class RdScheduleVisualizer extends LightningElement {
             { label: '$FREQUENCY', value: this.lblFrequency },
             { label: '$DAY_OF_MONTH', value: this.lblDayOfMonth }
         ];
-
-        /*
-            -- Work in progress on labelConversions
-
-                    this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
-                    this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-                    this.lblCampaign = data.fields[FIELD_RD_CAMPAIGN.fieldApiName].label;
-                    this.lblStartDate = data.fields[FIELD_RD_STARTDATE.fieldApiName].label;
-                    this.lblEndDate = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-                    this.lblPeriod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-                    this.lblFrequency = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-                    this.lblDayOfMonth = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-
-         */
 
         const currencyIsoCode = this.currencyIsoCode;
 
