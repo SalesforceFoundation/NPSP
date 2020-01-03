@@ -108,7 +108,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     public Boolean hasKeyFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        return 
+        return
             rd.npe03__Contact__c != oldRd.npe03__Contact__c ||
             rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
             rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
@@ -161,27 +161,18 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Is this a new Recurring Donation that was just inserted and 
+     * @description Is this a new Recurring Donation that was just inserted and
      * has not yet had an Installment Opportunity created?
      * @param rd Recurring Donation
-     * @return Boolean 
+     * @return Boolean
      */
     @TestVisible
     private Boolean isNewRecurringDonation(npe03__Recurring_Donation__c rd) {
         return
             rd.npe03__Next_Payment_Date__c != null
-            && rd.Status__c == RD2_Constants.STATUS_ACTIVE 
+            && rd.Status__c == RD2_Constants.STATUS_ACTIVE
             && rd.npe03__Donations__r.isEmpty()
             && !rd.RecurringDonationSchedules__r.isEmpty();
-    }
-
-    /**
-     * @description Disable Customizable Rollups before DML to reduce performance implications.
-     */
-    private void disableRollups() {
-        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
     }
 
     /**
@@ -236,7 +227,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                     Id = opp.Id,
                     StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage
                 ));
-            } 
+            }
 
             UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
         }
@@ -268,7 +259,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             queryFields.add(fld);
         }
 
-        String oppSubquery = 
+        String oppSubquery =
             '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
             'npe03__Recurring_Donation__c, ' +
             'Amount, CloseDate, ' +
@@ -279,7 +270,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'OR CloseDate >= TODAY ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
-        String scheduleSubquery = 
+        String scheduleSubquery =
             '(SELECT Id, InstallmentAmount__c, ' +
             'Campaign__c, ' +
             'Campaign__r.Name, ' +
