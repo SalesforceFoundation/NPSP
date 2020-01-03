@@ -129,7 +129,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             .withCurrentDate(currentDate)
             .evaluateOpportunities();
         
-        recordsFailed += evalService.oppService.recordsFailed;
+        recordsFailed += evalService.getRecordsFailed();
     }
 
     /**

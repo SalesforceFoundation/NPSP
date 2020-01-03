@@ -64,14 +64,14 @@ public with sharing class RD2_OpportunityService {
 
 
     /***
-    * @description Tracks number of Opportunities that failed to be processed
+    * @description Applies DML operations on records and keeps track of errors
     */
-    public Integer recordsFailed {
+    public RD2_OpportunityEvaluationService.DatabaseService dbService {
         get {
-            if (recordsFailed == null) {
-                recordsFailed = 0;
+            if (dbService == null) {
+                dbService = new RD2_OpportunityEvaluationService.DatabaseService();
             }
-            return recordsFailed;
+            return dbService;
         }
         private set;
     }
@@ -84,8 +84,9 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Constructor
     */
-    public RD2_OpportunityService(Date currentDate) {
+    public RD2_OpportunityService(Date currentDate, RD2_OpportunityEvaluationService.DatabaseService dbService) {
         this.currentDate = currentDate;
+        this.dbService = dbService;
     }
 
     /***
@@ -123,14 +124,12 @@ public with sharing class RD2_OpportunityService {
             return;
         }
 
-        List<Database.SaveResult> saveResults = Database.insert(oppsToCreate, false);
-        handleErrors(saveResults, oppsToCreate);
+        Set<Id> createdOppIds = dbService.insertRecords(oppsToCreate);
 
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
-        for (Integer i = 0, size = saveResults.size(); i < size; i++) {
-            if (saveResults[i].isSuccess()) {
-                Id rdId = oppsToCreate[i].npe03__Recurring_Donation__c;
-                installmentByOppId.put(oppsToCreate[i].Id, installmentsByRDId.get(rdId)[0]);
+        for (Opportunity opp : oppsToCreate) {
+            if (createdOppIds.contains(opp.Id)) {
+                installmentByOppId.put(opp.Id, installmentsByRDId.get(opp.npe03__Recurring_Donation__c)[0]);
             }
         }
 
@@ -239,8 +238,7 @@ public with sharing class RD2_OpportunityService {
             }
         }
 
-        List<Database.SaveResult> saveResults = Database.update(oppsToUpdate, false);
-        handleErrors(saveResults, oppsToUpdate);
+        dbService.updateRecords(oppsToUpdate);
 
         updatePaymentRecords(installmentByOppId);
     }
@@ -339,10 +337,7 @@ public with sharing class RD2_OpportunityService {
             }
         }
 
-        if (!payments.isEmpty()) {
-            Database.SaveResult[] saveResults = Database.update(payments, false);
-            handleErrors(saveResults, payments);
-        }
+        dbService.updateRecords(payments);
     }
 
     /**
@@ -368,41 +363,20 @@ public with sharing class RD2_OpportunityService {
             return;
         }
 
-        ERR_Handler.Errors errors;
         if (rdSettings.isCloseActionDeletion()) {
-            errors = UTIL_DMLService.deleteRecordsAndLogErrors(openOppsToVoid, ERR_Handler_API.Context.RD.name());
+            dbService.deleteRecords(openOppsToVoid);
 
         } else if (rdSettings.isCloseActionClosedLost()) {
             List<Opportunity> oppsToUpdate = new List<Opportunity>();
             for (Opportunity opp : openOppsToVoid) {
                 oppsToUpdate.add(new Opportunity(
                     Id = opp.Id,
+                    npe03__Recurring_Donation__c = opp.npe03__Recurring_Donation__c,
                     StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage
                 ));
             }
 
-            errors = UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
-        }
-
-        recordsFailed += errors == null ? 0 : errors.errorRecords.size();
-    }
-
-    /***
-    * @description Logs errors
-    * @param saveResults Database save results upon insert/update DML
-    * @param records SObject records attempted to save
-    * @return void
-    */
-    private void handleErrors(List<Database.SaveResult> saveResults, List<SObject> records) {
-        if (records == null || records.isEmpty()) {
-            return;
-        }
-
-        ERR_Handler.Errors errors = ERR_Handler.getErrors(saveResults, records);
-        ERR_Handler.processErrorsOnly(errors, ERR_Handler_API.Context.RD.name());
-
-        if (records[0].getSObjectType() == Opportunity.SObjectType) {
-            recordsFailed += errors.errorRecords.size();
+            dbService.updateRecords(oppsToUpdate);
         }
     }
 }

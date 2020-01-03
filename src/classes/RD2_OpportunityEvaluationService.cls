@@ -77,14 +77,27 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /***
     * @description Recurring Donation Opportunity service
     */
-    public RD2_OpportunityService oppService {
+    private RD2_OpportunityService oppService {
         get {
             if (oppService == null) {
-                oppService = new RD2_OpportunityService(currentDate);
+                oppService = new RD2_OpportunityService(currentDate, dbService);
             }
             return oppService;
         } 
-        private set;
+        set;
+    }
+
+    /***
+    * @description Applies DML operations on records and keeps track of errors
+    */
+    private DatabaseService dbService {
+        get {
+            if (dbService == null) {
+                dbService = new DatabaseService();
+            }
+            return dbService;
+        }
+        set;
     }
 
     /**
@@ -143,6 +156,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Returns number of failed Recurring Donation records
+     * @return Integer
+     */
+    public Integer getRecordsFailed() {
+        return dbService.getRecordsFailed();
+    }
+
+    /**
      * @description Returns true if any of the key fields used to create or manage installment
      * Opportunities has been changed.
      * @param rd Changed Recurring Donation
@@ -184,7 +205,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 .revise(scheduleService); 
 
             if (rdRecord.isOutdated()) {
-                outdatedRDs.add(rd);
+                outdatedRDs.add(rdRecord.getUpdate());
             }
             
             if (rdRecord.isClosed()) {
@@ -207,8 +228,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         if (!outdatedRDs.isEmpty()) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
-            UTIL_DMLService.updateRecordBatchAndLogErrors(outdatedRDs, ERR_Handler_API.Context.RD.name());
+            dbService.updateRecords(outdatedRDs);
         }
+
+        dbService.processErrors();
 
         return this;
     }
@@ -382,6 +405,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
+        * @description Returns Recurring Donation fields that were modified
+        * @return npe03__Recurring_Donation__c
+        */
+        public npe03__Recurring_Donation__c getUpdate() {
+            return new npe03__Recurring_Donation__c(
+                Id = rd.Id,
+                npe03__Next_Payment_Date__c = rd.npe03__Next_Payment_Date__c
+            );
+        }
+
+        /**
         * @description Indicates if the Recurring Donation is active
         * @return Boolean
         */
@@ -440,6 +474,143 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             return hasOpenOpportunity;
+        }
+    }
+
+
+    /**
+     * @description Database DML service to insert/update/delete records and keep track of failed RD Ids
+     */
+    public class DatabaseService {
+        private SObjectType rdSObjectType = npe03__Recurring_Donation__c.SObjectType;
+        private SObjectType oppSObjectType = Opportunity.SObjectType;
+
+        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+        Set<Id> failedRDIds = new Set<Id>();
+
+        /***
+        * @description Creates specified records
+        * @param records Records to create
+        * @return Set<Id> Ids of created records
+        */
+        public Set<Id> insertRecords(List<SObject> records) { 
+            List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
+
+            if (records != null && !records.isEmpty()) {
+                saveResults = Database.insert(records, false);
+                handleErrors(saveResults, records);
+            }
+
+            return getSuccessIds(saveResults);
+        }
+
+        /***
+        * @description Updates specified records
+        * @param records Records to update
+        * @return void
+        */
+        public void updateRecords(List<SObject> records) { 
+            List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
+
+            if (records != null && !records.isEmpty()) {
+                saveResults = Database.update(records, false);
+                handleErrors(saveResults, records);
+            }
+        }
+
+        /***
+        * @description Extracts Ids of records that were successfully created/update
+        * @param saveResults Insert/update DML operation results
+        * @return Set<Id> Ids of successfully created/updated records
+        */
+        private Set<Id> getSuccessIds(Database.SaveResult[] saveResults) {
+            Set<Id> successIds = new Set<Id>();
+
+            if (saveResults == null || saveResults.isEmpty()) {
+                return successIds;
+            }
+
+            for (Database.SaveResult result : saveResults) {
+                if (result.isSuccess()) {
+                    successIds.add(result.getId());
+                }
+            }
+            return successIds;
+        }
+
+        /***
+        * @description Deletes specified records
+        * @param records Records to delete
+        * @return void
+        */
+        public void deleteRecords(List<SObject> records) { 
+            if (records == null || records.isEmpty()) {
+                return;
+            }
+
+            List<Database.DeleteResult> deleteResults = Database.delete(records, false);
+            handleErrors(deleteResults, records);
+        }
+
+        /***
+        * @description Keeps track of errors
+        * @param dmlResults Database DML results upon insert/update/delete operation
+        * @param records SObject records in DML operation
+        * @return void
+        */
+        private void handleErrors(List<Object> dmlResults, List<SObject> records) {
+            if (records == null || records.isEmpty()) {
+                return;
+            }
+
+            //extract errors
+            ERR_Handler.Errors dmlErrors = ERR_Handler.getErrorsOnly(dmlResults, records);
+            if (dmlErrors.errorRecords.isEmpty()) {
+                return;
+            }
+
+            errorResult.errorRecords.addAll(
+                dmlErrors.errorRecords
+            );
+
+            //track failed Recurring Donation Ids
+            SObjectType recordSObjectType = records[0].getSObjectType();
+            if (recordSObjectType == oppSObjectType) {
+                for (Integer i = 0; i < dmlResults.size(); i++) {
+                    Boolean isSuccess = dmlResults[i] instanceof Database.SaveResult
+                        ? ((Database.SaveResult)dmlResults[i]).isSuccess()
+                        : ((Database.DeleteResult)dmlResults[i]).isSuccess();
+
+                    if (!isSuccess) {
+                        failedRDIds.add((Id) records[i].get('npe03__Recurring_Donation__c'));
+                    }
+                }
+
+            } else if (recordSObjectType == rdSObjectType) {
+                for (Error__c error : dmlErrors.errorRecords) {
+                    failedRDIds.add(error.Related_Record_ID__c);
+                }
+            }
+        }
+
+        /**
+        * @description Creates Error__c record for each errorResult.errorRecords
+        * @return void
+        */
+        public void processErrors() {
+            errorResult.errorsExist = !errorResult.errorRecords.isEmpty();
+
+            ERR_Handler.processErrorsOnly(errorResult, ERR_Handler_API.Context.RD.name());
+        }
+        
+        /***
+        * @description Returns number of failed Recurring Donations
+        * @return Integer
+        */
+        public Integer getRecordsFailed() {
+            failedRDIds.remove(null);
+
+            return failedRDIds.size();
         }
     }
 }

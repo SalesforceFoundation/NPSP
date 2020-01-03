@@ -355,7 +355,7 @@ private class RD2_OpportunityEvaluation_TEST {
         //Next Donation Date is outdated
         today = nextDonationDate.addDays(1);
         final Date nextCloseDate = nextDonationDate.addMonths(1);
-        //need to set the Schedule Service current date due to other async jobs completing in Test.start/stopTest()
+        //need to set the Schedule Service current date due to other async jobs completing at Test.stopTest()
         RD2_ScheduleService.currentDate = today;
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));

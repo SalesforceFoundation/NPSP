@@ -405,7 +405,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Installment Opp should exist: ' + opps);
-        System.assertEquals(newAmount, opps[0].amount, 'Amount should be updated');
+        System.assertEquals(newAmount, opps[0].Amount, 'Amount should be updated');
         System.assertEquals(nextCloseDate, opps[0].CloseDate, 'Close Date should be updated');
 
         List<Error__c> errors = errorGateway.getRecords();
