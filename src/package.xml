@@ -1265,6 +1265,7 @@
         <members>npe03__Recurring_Donation__c.StartDate__c</members>
         <members>npe03__Recurring_Donation__c.Status__c</members>
         <members>npe03__Recurring_Donations_Settings__c.DataMigrationBatchSize__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.DisableRollupsWhenCreatingInstallments__c</members>
         <members>npe03__Recurring_Donations_Settings__c.EnableAutomaticNaming__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
