@@ -67,24 +67,22 @@ private with sharing class ALLO_Allocations_TEST {
 
         Account acc = new Account(Name='foo');
         insert acc;
-        Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
         insert gau;
 
         //resetting these manually as a test is considered a single context for static variables
-        list<Allocation__c> alloForInsert = new list<Allocation__c>();
-
-        Allocation__c percentAllo = new Allocation__c(Opportunity__c=opp.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
-        alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Opportunity__c=opp.id, Amount__c = 4, General_Accounting_Unit__c = gau.id);
-        alloForInsert.add(amountAllo);
+        List<Allocation__c> alloForInsert = new List<Allocation__c>{
+            createOppAllocation(gau.Id, opp.Id, null, 50),
+            createOppAllocation(gau.Id, opp.Id, 4, null)
+        };
         insert alloForInsert;
 
         list<Allocation__c> queryAllo = getAllocationsOrderByPercent();
-        system.assertEquals(50, queryAllo[1].Percent__c, 'The percentage allocation should be 50%.');
-        system.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should be calculated based on the Opportunity amount.');
-        system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be 4.');
+        System.assertEquals(50, queryAllo[1].Percent__c, 'The percentage allocation should be 50%.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should be calculated based on the Opportunity amount.');
+        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be 4.');
 
         opp.Amount = 10;
         Test.startTest();
@@ -92,15 +90,15 @@ private with sharing class ALLO_Allocations_TEST {
         Test.stopTest();
 
         queryAllo = getAllocationsOrderByPercent();
-        system.assertEquals(5, queryAllo[1].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Opportunity amount.');
-        system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
+        System.assertEquals(5, queryAllo[1].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Opportunity amount.');
+        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
         opp.Amount = 8;
         update opp;
 
         queryAllo = getAllocationsOrderByPercent();
-        system.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Opportunity amount.');
-        system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Opportunity amount.');
+        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
         opp.Amount = 1;
 
@@ -110,11 +108,150 @@ private with sharing class ALLO_Allocations_TEST {
         } catch (Exception e) {
             ex = e;
         }
-        system.assertNotEquals(null,ex,'An exception should be caught.');
-        //system.assert(ex.getMessage().contains(), ex.getMessage());
+        System.assertNotEquals(null,ex,'An exception should be caught.');
+        //System.assert(ex.getMessage().contains(), ex.getMessage());
 
-        list<Opportunity> queryOpps = [SELECT Id, Amount FROM opportunity WHERE Id = :opp.id];
-        system.assertEquals(8, queryOpps[0].Amount, 'The opportunity amount should remain unchanged after the exception is caught.');
+        list<Opportunity> queryOpps = [SELECT Id, Amount FROM opportunity WHERE Id = :opp.Id];
+        System.assertEquals(8, queryOpps[0].Amount, 'The opportunity amount should remain unchanged after the exception is caught.');
+    }
+
+    /*******************************************************************************************************
+    * @description When Payments are created after the Opportunity and Opportunity Allocations exist,
+    * ensure that the payment allocation percentages match those from the Opportunity Allocations, and
+    * are not overwritten by additional logic in the trigger.
+    * Also check that allocation rounding works correctly and no amounts are allocated to the Default GAU
+    ********************************************************************************************************/
+    @isTest
+    private static void confirmNewPaymentAllocationsMatchExistingOpportunityAllocations() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAlloPercentCheck');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name = 'Opp-pmtAlloPercentCheck', 
+            Amount = 100, 
+            AccountID = acc.Id, 
+            CloseDate = System.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp;
+
+        List<General_Accounting_Unit__c> gauForInsert = new List<General_Accounting_Unit__c>();
+        
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name='GAU-1');
+        gauForInsert.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name='GAU-2');
+        gauForInsert.add(gau2);
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(Name='GAU-3');
+        gauForInsert.add(gau3);
+        insert gauForInsert;
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>{
+            createOppAllocation(gau1.Id, opp.Id, null, 10),
+            createOppAllocation(gau1.Id, opp.Id, null, 24),
+            createOppAllocation(gau2.Id, opp.Id, null, 33),
+            createOppAllocation(gau3.Id, opp.Id, 33, null)
+        };
+        insert alloForInsert;
+
+        // This Payment amount will allow us to test rounding of allocation percentages and amounts
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 7.70, npe01__Opportunity__c = opp.Id);
+        Test.startTest();
+        insert pmt;
+        Test.stopTest();
+
+        // Check that each allocation has the correct amount and percent
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.Id, gau1.Id);
+
+        // Make sure the percent value carried through to the Payment Allocation
+        System.assertEquals(34, queryAllo[0].Percent__c, 'The allocation percentage should be 34%.');
+        System.assertEquals(2.62, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+    
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, gau2.Id);
+
+        System.assertEquals(33, queryAllo[0].Percent__c, 'The allocation percentage should be 33%.');
+        System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+
+        // This Allocation did not have a Percent set, but it should now    
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, gau3.Id);
+
+        System.assertEquals(33, queryAllo[0].Percent__c, 'The allocation percentage should be 33%.');
+        System.assertEquals(2.54, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+    
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, defaultGau.Id);
+        System.assertEquals(queryAllo.size(), 0, 'This payment should be fully allocated without the Default GAU');
+
+    }
+
+    /*******************************************************************************************************
+    * @description When Payments are created after the Opportunity and Opportunity Allocations exist,
+    * ensure that the payment allocation percentages match those from the Opportunity Allocations, and
+    * are not overwritten by additional logic in the trigger.
+    * Also check that allocation rounding works correctly and no amounts are allocated to the Default GAU
+    ********************************************************************************************************/
+    @isTest
+    private static void confirmNewPaymentAllocationsMatchExistingOppAllocationRounding() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAlloPercentCheck');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name = 'Opp-pmtAlloPercentCheck', 
+            Amount = 100.01, 
+            AccountID = acc.Id, 
+            CloseDate = System.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp;
+
+        List<General_Accounting_Unit__c> gauForInsert = new List<General_Accounting_Unit__c>();
+        
+        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name='GAU-1');
+        gauForInsert.add(gau1);
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name='GAU-2');
+        gauForInsert.add(gau2);
+        insert gauForInsert;
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>{
+            createOppAllocation(gau1.Id, opp.Id, null, 25),
+            createOppAllocation(gau1.Id, opp.Id, 25, null),
+            createOppAllocation(gau2.Id, opp.Id, 50.01, null)
+        };
+        insert alloForInsert;
+
+        // This Payment amount will allow us to test rounding of allocation percentages and amounts
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 100.01, npe01__Opportunity__c = opp.Id);
+        Test.startTest();
+        insert pmt;
+        Test.stopTest();
+
+        // Check that each allocation has the correct amount and percent
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.Id, gau1.Id);
+
+        // Make sure the percent value carried through to the Payment Allocation
+        System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
+        System.assertEquals(50, queryAllo[0].Amount__c, 'The amount of the allocation should be calculated based on the parent Opportunity allocation.');
+    
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, gau2.Id);
+
+        System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
+        System.assertEquals(50.01, queryAllo[0].Amount__c, 'The amount of the allocation should be calculated based on the parent Opportunity allocation.');
+
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, defaultGau.Id);
+        System.assertEquals(queryAllo.size(), 0, 'This payment should be fully allocated without the Default GAU');
+
     }
 
 
@@ -137,7 +274,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         Account acc = new Account(Name='Account-pmtAmountChange');
         insert acc;
-        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 10, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
         npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 8, npe01__Opportunity__c = opp.Id);
         insert pmt;
@@ -153,7 +290,7 @@ private with sharing class ALLO_Allocations_TEST {
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.id, gau.Id);
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.Id, gau.Id);
 
         System.assertEquals(50, queryAllo[1].Percent__c, 'The percentage allocation should be 50%.');
         System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
@@ -164,14 +301,14 @@ private with sharing class ALLO_Allocations_TEST {
         update pmt;
         Test.stopTest();
 
-        queryAllo = getAllocationsOrderByPercent(pmt.id, gau.Id);
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, gau.Id);
         System.assertEquals(5, queryAllo[1].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Payment amount.');
         System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
         pmt.npe01__Payment_Amount__c = 8;
         update pmt;
 
-        queryAllo = getAllocationsOrderByPercent(pmt.id, gau.Id);
+        queryAllo = getAllocationsOrderByPercent(pmt.Id, gau.Id);
         System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Payment amount.');
         System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
@@ -184,7 +321,7 @@ private with sharing class ALLO_Allocations_TEST {
             System.assert(ex.getMessage().contains(Label.alloExceedsPmtAmount), 'Error message should indicate that allocs are greater than payment amount');
         }
 
-        List<npe01__OppPayment__c> queryPmts = [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :pmt.id];
+        List<npe01__OppPayment__c> queryPmts = [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :pmt.Id];
         System.assertEquals(8, queryPmts[0].npe01__Payment_Amount__c, 'The payment amount should remain unchanged after the exception is caught.');
     }
 
@@ -205,7 +342,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         Account acc = new Account(Name='Account-pmtAmountChange');
         insert acc;
-        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 100, AccountID=acc.id, CloseDate=system.today(), npe01__Do_Not_Automatically_Create_Payment__c = true, StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 100, AccountID=acc.Id, CloseDate=System.today(), npe01__Do_Not_Automatically_Create_Payment__c = true, StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
@@ -218,10 +355,9 @@ private with sharing class ALLO_Allocations_TEST {
 
         //resetting these manually as a test is considered a single context for static variables
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
-
-        Allocation__c percentAllo = new Allocation__c(Opportunity__c=opp.id, Percent__c = 75, General_Accounting_Unit__c = gau.id);
+        Allocation__c percentAllo = createOppAllocation(gau.Id, opp.Id, null, 75);
         alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Opportunity__c=opp.id, Amount__c = 25, General_Accounting_Unit__c = gau.id);
+        Allocation__c amountAllo = createOppAllocation(gau.Id, opp.Id, 25, null);
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
@@ -258,7 +394,7 @@ private with sharing class ALLO_Allocations_TEST {
         // Validate that the consolidation is correct going from payment to opportunity.
         List<Allocation__c> alloForUpsert = new List<Allocation__c>();
 
-        Allocation__c paymentAllo = new Allocation__c(Payment__c=pmt.Id, Amount__c = 25, General_Accounting_Unit__c = gau.id);
+        Allocation__c paymentAllo = new Allocation__c(Payment__c=pmt.Id, Amount__c = 25, General_Accounting_Unit__c = gau.Id);
 
         Allocation__c existingPaymentAllo = queryAllo[0];
         existingPaymentAllo.General_Accounting_Unit__c = gau.Id;
@@ -295,7 +431,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         Account acc = new Account(Name='Account-pmtAmountChange');
         insert acc;
-        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage(), npe01__Do_Not_Automatically_Create_Payment__c=true);
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 10, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage(), npe01__Do_Not_Automatically_Create_Payment__c=true);
         insert opp;
         npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = -8, npe01__Opportunity__c = opp.Id);
         insert pmt;
@@ -305,13 +441,13 @@ private with sharing class ALLO_Allocations_TEST {
         //resetting these manually as a test is considered a single context for static variables
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
-        Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
+        Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.Id, Percent__c = 50, General_Accounting_Unit__c = gau.Id);
         alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = -4, General_Accounting_Unit__c = gau.id);
+        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.Id, Amount__c = -4, General_Accounting_Unit__c = gau.Id);
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        List<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.id]; ///getAllocationsOrderByPercent();
+        List<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.Id]; ///getAllocationsOrderByPercent();
         System.assertEquals(50, queryAllo[0].Percent__c, 'The percentage allocation should be 50%.');
         System.assertEquals(-4, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
         System.assertEquals(-4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be -4.');
@@ -321,7 +457,7 @@ private with sharing class ALLO_Allocations_TEST {
         update pmt;
         Test.stopTest();
 
-        queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.id]; ///getAllocationsOrderByPercent();
+        queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.Id]; ///getAllocationsOrderByPercent();
         System.assertEquals(10, queryAllo[0].Amount__c, 'The calculated amount of the % allocation should be positive in order to match the Payment.');
         System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be 4.');
         System.assertEquals(6, queryAllo[2].Amount__c, 'The amount of the default allocation should be to 6.');
@@ -329,7 +465,7 @@ private with sharing class ALLO_Allocations_TEST {
         pmt.npe01__Payment_Amount__c = -10;
         update pmt;
 
-        queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.id]; ///getAllocationsOrderByPercent();
+        queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.Id]; ///getAllocationsOrderByPercent();
         System.assertEquals(-5, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be updated proportionately with the Payment amount and should match the sign.');
         System.assertEquals(-4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be -4.');
         System.assertEquals(-1, queryAllo[2].Amount__c, 'The amount of the default allocation should be -1.');
@@ -343,7 +479,7 @@ private with sharing class ALLO_Allocations_TEST {
             System.assert(ex.getMessage().contains(Label.alloExceedsPmtAmount), 'Error message should indicate that allocs are greater than payment amount');
         }
 
-        List<npe01__OppPayment__c> queryPmts = [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :pmt.id];
+        List<npe01__OppPayment__c> queryPmts = [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :pmt.Id];
         System.assertEquals(-10, queryPmts[0].npe01__Payment_Amount__c, 'The payment amount should remain unchanged after the exception is caught.');
     }
 
@@ -357,34 +493,34 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
         insert defaultGau;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         Account acc = new Account(Name='foo');
         insert acc;
-        Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='foo', Amount = 8, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
         insert gau;
 
         list<Allocation__c> queryAllo = getAllocationsOrderByPercent();
-        system.assertEquals(1,queryAllo.size(), 'An allocation to the default General Accounting Unit should be created.');
-        system.assertEquals(8,queryAllo[0].Amount__c, 'The default allocation should be for the total amount of the Opportunity.');
+        System.assertEquals(1,queryAllo.size(), 'An allocation to the default General Accounting Unit should be created.');
+        System.assertEquals(8,queryAllo[0].Amount__c, 'The default allocation should be for the total amount of the Opportunity.');
 
         //resetting these manually as a test is considered a single context for static variables
-        Allocation__c amountAllo = new Allocation__c(Opportunity__c=opp.id, Amount__c = 6, General_Accounting_Unit__c = gau.id);
+        Allocation__c amountAllo = createOppAllocation(gau.Id, opp.Id, 6, null);
         Test.startTest();
         insert amountAllo;
         Test.stopTest();
 
         queryAllo = getAllocationsOrderByAmount();
-        system.assertEquals(2,queryAllo[0].Amount__c, 'The default allocation should be equal to the remainder of the total Opp amount after removing the new Allocation amount: ' + queryAllo);
+        System.assertEquals(2,queryAllo[0].Amount__c, 'The default allocation should be equal to the remainder of the total Opp amount after removing the new Allocation amount: ' + queryAllo);
 
         amountAllo.Amount__c = 8;
         update amountAllo;
 
         queryAllo = getAllocationsOrderByAmount();
-        system.assertEquals(1,queryAllo.size(), 'The default fund allocation should be deleted.');
+        System.assertEquals(1,queryAllo.size(), 'The default fund allocation should be deleted.');
     }
 
     /*******************************************************************************************************
@@ -398,7 +534,7 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -408,35 +544,35 @@ private with sharing class ALLO_Allocations_TEST {
         insert cam;
 
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
-        Allocation__c percentAllo = new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = campaigngau.id);
+        Allocation__c percentAllo = new Allocation__c(Campaign__c=cam.Id, Percent__c = 50, General_Accounting_Unit__c = campaigngau.Id);
         alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Campaign__c=cam.id, Amount__c = 4, General_Accounting_Unit__c = campaigngau.id);
+        Allocation__c amountAllo = new Allocation__c(Campaign__c=cam.Id, Amount__c = 4, General_Accounting_Unit__c = campaigngau.Id);
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        Opportunity opp = new Opportunity(Name='success', Amount = 10, AccountID=acc.id, CampaignId=cam.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='success', Amount = 10, AccountID=acc.Id, CampaignId=cam.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         Test.startTest();
         insert opp;
         Test.stopTest();
 
         //verify campaign allocation and default allocation created
-        list<Allocation__c> queryAllo = getAllocationsOrderByAmount(opp.id);
-        system.assertEquals(3,queryAllo.size(), 'An allocation for the Campaign Opportunity should be created.');
-        system.assertEquals(defaultgau.id, queryAllo[0].General_Accounting_Unit__c, 'A default allocation should be created.');
-        system.assertEquals(1, queryAllo[0].Amount__c, 'The default allocation should cover the remainder of the amount.');
-        system.assertEquals(campaigngau.id, queryAllo[1].General_Accounting_Unit__c, 'An allocation mirroring the Campaign Allocation should be created.');
-        system.assertEquals(4, queryAllo[1].Amount__c, 'The allocation amount should mirror the Campaign allocation, and the percentage should be calculated based on the opportunity amount.');
-        system.assertEquals(campaigngau.id, queryAllo[2].General_Accounting_Unit__c, 'An allocation mirroring the Campaign Allocation should be created.');
-        system.assertEquals(5, queryAllo[2].Amount__c, 'The allocation amount should mirror the Campaign allocation.');
+        list<Allocation__c> queryAllo = getAllocationsOrderByAmount(opp.Id);
+        System.assertEquals(3,queryAllo.size(), 'An allocation for the Campaign Opportunity should be created.');
+        System.assertEquals(defaultgau.Id, queryAllo[0].General_Accounting_Unit__c, 'A default allocation should be created.');
+        System.assertEquals(1, queryAllo[0].Amount__c, 'The default allocation should cover the remainder of the amount.');
+        System.assertEquals(campaigngau.Id, queryAllo[1].General_Accounting_Unit__c, 'An allocation mirroring the Campaign Allocation should be created.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The allocation amount should mirror the Campaign allocation, and the percentage should be calculated based on the opportunity amount.');
+        System.assertEquals(campaigngau.Id, queryAllo[2].General_Accounting_Unit__c, 'An allocation mirroring the Campaign Allocation should be created.');
+        System.assertEquals(5, queryAllo[2].Amount__c, 'The allocation amount should mirror the Campaign allocation.');
 
-        Opportunity opp2 = new Opportunity(Name='error', Amount = 6, AccountID=acc.id, CampaignId=cam.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp2 = new Opportunity(Name='error', Amount = 6, AccountID=acc.Id, CampaignId=cam.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp2;
 
         //verify percent allocation created
-        queryAllo = getAllocationsOrderByPercent(opp2.id);
-        system.assertEquals(2, queryAllo.size(), 'Only the percent based allocation should be created in the case where the allocation amount exceeded the Opportunity amount.');
-        system.assertEquals(3, queryAllo[0].Amount__c, 'The percent allocation should should equal half the opportunity amount.');
-        system.assertEquals(3, queryAllo[1].Amount__c, 'The default allocation should cover the remainder of the amount.');
+        queryAllo = getAllocationsOrderByPercent(opp2.Id);
+        System.assertEquals(2, queryAllo.size(), 'Only the percent based allocation should be created in the case where the allocation amount exceeded the Opportunity amount.');
+        System.assertEquals(3, queryAllo[0].Amount__c, 'The percent allocation should should equal half the opportunity amount.');
+        System.assertEquals(3, queryAllo[1].Amount__c, 'The default allocation should cover the remainder of the amount.');
 
     }
 
@@ -456,13 +592,13 @@ private with sharing class ALLO_Allocations_TEST {
             defaultGau, campaignGau
         };
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         Campaign campaign = new Campaign(Name = 'TestCampaign', IsActive = true);
         insert campaign;
 
         Allocation__c campaignAllocation = new Allocation__c(
-            Campaign__c = campaign.id, Amount__c = 100, General_Accounting_Unit__c = campaignGau.id
+            Campaign__c = campaign.Id, Amount__c = 100, General_Accounting_Unit__c = campaignGau.Id
         );
         insert campaignAllocation;
 
@@ -470,7 +606,7 @@ private with sharing class ALLO_Allocations_TEST {
         insert acc;
 
         Opportunity opp = new Opportunity(
-            Name = 'InitOppWithNullAmount', AccountID = acc.id,
+            Name = 'InitOppWithNullAmount', AccountID = acc.Id,
             CampaignId = campaign.Id, Amount = null,
             CloseDate = System.today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
@@ -513,7 +649,7 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -535,59 +671,59 @@ private with sharing class ALLO_Allocations_TEST {
         Test.stopTest();
 
         //query for the opportunity automatically created by the schedule
-        list<Opportunity> queryOpp = [SELECT Id, npe03__Recurring_Donation__c, Amount, CloseDate, StageName FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
-        system.assertEquals(1,queryOpp.size(),'A single opportunity should be created.');
+        list<Opportunity> queryOpp = [SELECT Id, npe03__Recurring_Donation__c, Amount, CloseDate, StageName FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id];
+        System.assertEquals(1,queryOpp.size(),'A single opportunity should be created.');
 
-        list<Allocation__c> queryAllo = getAllocationsOrderByPercent(queryOpp[0].id);
-        system.assertEquals(1,queryAllo.size(),'A single default allocation should be created.');
-        system.assertEquals(defaultgau.id,queryAllo[0].General_Accounting_Unit__c,'The allocation should be assigned to the default General Accounting Unit.');
-        system.assertEquals(20,queryAllo[0].Amount__c,'The default allocation should be for the total amount of the Opportunity.');
+        list<Allocation__c> queryAllo = getAllocationsOrderByPercent(queryOpp[0].Id);
+        System.assertEquals(1,queryAllo.size(),'A single default allocation should be created.');
+        System.assertEquals(defaultgau.Id,queryAllo[0].General_Accounting_Unit__c,'The allocation should be assigned to the default General Accounting Unit.');
+        System.assertEquals(20,queryAllo[0].Amount__c,'The default allocation should be for the total amount of the Opportunity.');
 
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
-        Allocation__c percentAllo = new Allocation__c(Recurring_Donation__c = rd.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
+        Allocation__c percentAllo = new Allocation__c(Recurring_Donation__c = rd.Id, Percent__c = 50, General_Accounting_Unit__c = gau.Id);
         alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Recurring_Donation__c = rd.id, Amount__c = 10, General_Accounting_Unit__c = gau.id);
+        Allocation__c amountAllo = new Allocation__c(Recurring_Donation__c = rd.Id, Amount__c = 10, General_Accounting_Unit__c = gau.Id);
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        queryAllo = getAllocationsOrderByPercent(queryOpp[0].id);
-        system.assertEquals(2,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically after they are created for the Recurring Donation.');
-        system.assertEquals(gau.id,queryAllo[0].General_Accounting_Unit__c, 'Allocations should be to the non-default GAU.');
-        system.assertEquals(gau.id,queryAllo[1].General_Accounting_Unit__c, 'Allocations should be to the non-default GAU.');
-        system.assertEquals(10,queryAllo[1].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
+        queryAllo = getAllocationsOrderByPercent(queryOpp[0].Id);
+        System.assertEquals(2,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically after they are created for the Recurring Donation.');
+        System.assertEquals(gau.Id,queryAllo[0].General_Accounting_Unit__c, 'Allocations should be to the non-default GAU.');
+        System.assertEquals(gau.Id,queryAllo[1].General_Accounting_Unit__c, 'Allocations should be to the non-default GAU.');
+        System.assertEquals(10,queryAllo[1].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
 
         queryOpp[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
         update queryOpp[0];
 
         percentAllo.Percent__c = 20;
         update percentAllo;
-        queryAllo = getAllocationsOrderByPercent(queryOpp[0].id);
-        system.assertEquals(2,queryAllo.size(), 'Allocations for the closed/won opportunity should be unchanged.');
-        system.assertEquals(50,queryAllo[1].Percent__c, 'The percentage based allocation should be unchanged.');
+        queryAllo = getAllocationsOrderByPercent(queryOpp[0].Id);
+        System.assertEquals(2,queryAllo.size(), 'Allocations for the closed/won opportunity should be unchanged.');
+        System.assertEquals(50,queryAllo[1].Percent__c, 'The percentage based allocation should be unchanged.');
 
-        Opportunity opp = new Opportunity(Name='foo', npe03__Recurring_Donation__c = rd.id, Amount = 20, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getOpenStage());
+        Opportunity opp = new Opportunity(Name='foo', npe03__Recurring_Donation__c = rd.Id, Amount = 20, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getOpenStage());
         insert opp;
 
-        queryAllo = getAllocationsOrderByAmount(opp.id);
-        system.assertEquals(3,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically when the opportunity is created.');
+        queryAllo = getAllocationsOrderByAmount(opp.Id);
+        System.assertEquals(3,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically when the opportunity is created.');
 
-        Allocation__c exceedAllo = new Allocation__c(Recurring_Donation__c = rd.id, Amount__c = 10, General_Accounting_Unit__c = gau.id);
+        Allocation__c exceedAllo = new Allocation__c(Recurring_Donation__c = rd.Id, Amount__c = 10, General_Accounting_Unit__c = gau.Id);
         insert exceedAllo;
 
-        queryAllo = getAllocationsOrderByPercent(opp.id);
-        system.assertEquals(2,queryAllo.size(), 'Only percent based Opportunity Allocation should exist: ' + queryAllo);
-        system.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount: ' + queryAllo);
+        queryAllo = getAllocationsOrderByPercent(opp.Id);
+        System.assertEquals(2,queryAllo.size(), 'Only percent based Opportunity Allocation should exist: ' + queryAllo);
+        System.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount: ' + queryAllo);
 
         delete exceedAllo;
 
-        queryAllo = getAllocationsOrderByAmount(opp.id);
-        system.assertEquals(3,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically when the opportunity is created.');
+        queryAllo = getAllocationsOrderByAmount(opp.Id);
+        System.assertEquals(3,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically when the opportunity is created.');
 
         delete amountAllo;
 
-        queryAllo = getAllocationsOrderByPercent(opp.id);
-        system.assertEquals(2,queryAllo.size(), 'Opportunity Allocation should be deleted along with the Recurring Donation allocation.');
-        system.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
+        queryAllo = getAllocationsOrderByPercent(opp.Id);
+        System.assertEquals(2,queryAllo.size(), 'Opportunity Allocation should be deleted along with the Recurring Donation allocation.');
+        System.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
     }
 
     /*******************************************************************************************************
@@ -600,7 +736,7 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -610,20 +746,20 @@ private with sharing class ALLO_Allocations_TEST {
         insert cam;
 
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
-        Allocation__c percentAllo = new Allocation__c(Campaign__c=cam.id, Amount__c = 4, General_Accounting_Unit__c = campaigngau.id);
+        Allocation__c percentAllo = new Allocation__c(Campaign__c=cam.Id, Amount__c = 4, General_Accounting_Unit__c = campaigngau.Id);
         alloForInsert.add(percentAllo);
         insert alloForInsert;
 
         list<Opportunity> oppList = new list<Opportunity>();
         for (integer i=0;i<100;i++)
-            oppList.add(new Opportunity(Name='opp'+i, Amount = 8, AccountID=acc.id, CampaignId=math.mod(i,2)==0?cam.id:null, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
+            oppList.add(new Opportunity(Name='opp'+i, Amount = 8, AccountID=acc.Id, CampaignId=math.mod(i,2)==0?cam.Id:null, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
         Test.startTest();
         insert oppList;
         Test.stopTest();
 
         list<AggregateResult> queryAggResult = [SELECT count_distinct(Id), General_Accounting_Unit__r.Name FROM Allocation__c WHERE Opportunity__r.Name LIKE 'opp%' GROUP BY General_Accounting_Unit__r.Name ORDER BY count_distinct(Id)];
-        system.assertEquals(50, queryAggResult[0].get('expr0'), 'Fifty campaign allocations should be created.');
-        system.assertEquals(100, queryAggResult[1].get('expr0'), 'One hundred default allocations should be created.');
+        System.assertEquals(50, queryAggResult[0].get('expr0'), 'Fifty campaign allocations should be created.');
+        System.assertEquals(100, queryAggResult[1].get('expr0'), 'One hundred default allocations should be created.');
 
         for (Opportunity opp : oppList)
             opp.Amount = 4;
@@ -631,8 +767,8 @@ private with sharing class ALLO_Allocations_TEST {
         update oppList;
 
         queryAggResult = [SELECT count_distinct(Id), General_Accounting_Unit__r.Name FROM Allocation__c WHERE Opportunity__r.Name LIKE 'opp%' GROUP BY General_Accounting_Unit__r.Name ORDER BY count_distinct(Id)];
-        system.assertEquals(50, queryAggResult[0].get('expr0'), 'Fifty campaign allocations should still exist.');
-        system.assertEquals(50, queryAggResult[1].get('expr0'), 'Fifty default allocations should remain.');
+        System.assertEquals(50, queryAggResult[0].get('expr0'), 'Fifty campaign allocations should still exist.');
+        System.assertEquals(50, queryAggResult[1].get('expr0'), 'Fifty default allocations should remain.');
 
     }
 
@@ -647,21 +783,21 @@ private with sharing class ALLO_Allocations_TEST {
         string rtname = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
         id rtid = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType,rtname);
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id, Excluded_Opp_Types__c='foo;bar', Excluded_Opp_RecTypes__c=rtid));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id, Excluded_Opp_Types__c='foo;bar', Excluded_Opp_RecTypes__c=rtid));
         Account acc = new Account(Name='foo');
         insert acc;
 
         list<Opportunity> oppForInsert = new list<Opportunity>();
-        oppForInsert.add(new Opportunity(Name='excluded type', Type='foo', Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
+        oppForInsert.add(new Opportunity(Name='excluded type', Type='foo', Amount = 10, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
         //only test the record type exclusion if one exists.
         if (rtid!=null)
-            oppForInsert.add(new Opportunity(Name='excluded record type', RecordTypeId=rtid, Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
+            oppForInsert.add(new Opportunity(Name='excluded record type', RecordTypeId=rtid, Amount = 10, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage()));
         Test.startTest();
         insert oppForInsert;
         Test.stopTest();
 
         list<Allocation__c> queryAllo = getAllocationsOrderByAmount();
-        system.assertEquals(0,queryAllo.size(), 'No default allocation should be created for an excluded opportunity type or an excluded opportunity record type.');
+        System.assertEquals(0,queryAllo.size(), 'No default allocation should be created for an excluded opportunity type or an excluded opportunity record type.');
 
     }
 
@@ -674,29 +810,29 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
         Account acc = new Account(Name='foo');
         insert acc;
 
-        Opportunity opp = new Opportunity(Name='foo', Amount = null, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='foo', Amount = null, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         Test.startTest();
         insert opp;
         Test.stopTest();
 
-        list<Allocation__c> queryAllo = getAllocationsOrderByAmount(opp.id);
-        system.assertEquals(0,queryAllo.size(),'No default allocation should be created for an opportunity with a null amount.');
+        list<Allocation__c> queryAllo = getAllocationsOrderByAmount(opp.Id);
+        System.assertEquals(0,queryAllo.size(),'No default allocation should be created for an opportunity with a null amount.');
 
         opp.Amount = 8;
         update opp;
 
-        queryAllo = getAllocationsOrderByAmount(opp.id);
-        system.assertEquals(1,queryAllo.size(),'A default allocation should be created for the opportunity that now has an amount.');
+        queryAllo = getAllocationsOrderByAmount(opp.Id);
+        System.assertEquals(1,queryAllo.size(),'A default allocation should be created for the opportunity that now has an amount.');
 
         opp.Amount = null;
         update opp;
 
-        queryAllo = getAllocationsOrderByAmount(opp.id);
-        system.assertEquals(0,queryAllo.size(),'A default allocation should be deleted for the opportunity that now has no amount.');
+        queryAllo = getAllocationsOrderByAmount(opp.Id);
+        System.assertEquals(0,queryAllo.size(),'A default allocation should be deleted for the opportunity that now has no amount.');
     }
 
     /*******************************************************************************************************
@@ -720,22 +856,22 @@ private with sharing class ALLO_Allocations_TEST {
         insert cam;
 
         list<Allocation__c> listAllo = new list<Allocation__c>();
-        listAllo.add(new Allocation__c(Campaign__c=cam.id, Amount__c = 3, General_Accounting_Unit__c = listGau[0].id));
-        listAllo.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = listGau[1].id));
+        listAllo.add(new Allocation__c(Campaign__c=cam.Id, Amount__c = 3, General_Accounting_Unit__c = listGau[0].Id));
+        listAllo.add(new Allocation__c(Campaign__c=cam.Id, Percent__c = 50, General_Accounting_Unit__c = listGau[1].Id));
         insert listAllo;
 
         listGau[0].Active__c = false;
         update listGau[0];
 
-        Opportunity opp = new Opportunity(Name='foo', CampaignId=cam.id, Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='foo', CampaignId=cam.Id, Amount = 8, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         Test.startTest();
         insert opp;
         Test.stopTest();
 
-        list<Allocation__c>  queryAllo = getAllocationsOrderByAmount(opp.id);
-        system.assertEquals(1,queryAllo.size(), 'A single allocation should be created.');
-        system.assertEquals(listGau[1].id, queryAllo[0].General_Accounting_Unit__c, 'The single allocation should be assigned to the active GAU.');
-        system.assertEquals(50, queryAllo[0].Percent__c, 'The allocation should be percent based.');
+        list<Allocation__c>  queryAllo = getAllocationsOrderByAmount(opp.Id);
+        System.assertEquals(1,queryAllo.size(), 'A single allocation should be created.');
+        System.assertEquals(listGau[1].Id, queryAllo[0].General_Accounting_Unit__c, 'The single allocation should be assigned to the active GAU.');
+        System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation should be percent based.');
 
         listGau[1].Active__c = false;
         update listGau[1];
@@ -748,11 +884,11 @@ private with sharing class ALLO_Allocations_TEST {
         } catch (Exception e) {
             ex = e;
         }
-        system.assertNotEquals(null, ex, 'An exception should be thrown.');
+        System.assertNotEquals(null, ex, 'An exception should be thrown.');
 
         //ensure the allocations are not changed.
-        queryAllo = getAllocationsOrderByAmount(opp.id);
-        system.assertEquals(4,queryAllo[0].Amount__c, 'Allocation to inactive GAU should not be modified.');
+        queryAllo = getAllocationsOrderByAmount(opp.Id);
+        System.assertEquals(4,queryAllo[0].Amount__c, 'Allocation to inactive GAU should not be modified.');
 
     }
 
@@ -768,35 +904,35 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
         insert otherGau;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         // disable the allocations trigger to prevent allocations from being created at all
         TDTM_ProcessControl.toggleTriggerState('Opportunity', 'ALLO_Allocations_TDTM', false);
 
         Account acc = new Account(Name='foo');
         insert acc;
-        Opportunity opp1 = new Opportunity(Name='foo', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
-        Opportunity opp2 = new Opportunity(Name='foo2', Amount = 8, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp1 = new Opportunity(Name='foo', Amount = 8, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp2 = new Opportunity(Name='foo2', Amount = 8, AccountID=acc.Id, CloseDate=System.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp1;
         insert opp2;
 
         list<Allocation__c>  queryAllo = getAllocationsOrderByAmount();
-        system.assertEquals(0,queryAllo.size(), 'No default allocation should be created.');
+        System.assertEquals(0,queryAllo.size(), 'No default allocation should be created.');
 
-        Allocation__c nonDefaultAllo = new Allocation__c(Opportunity__c=opp1.id, Amount__c = 4, General_Accounting_Unit__c = otherGau.id);
+        Allocation__c nonDefaultAllo = createOppAllocation(otherGau.Id, opp1.Id, 4, null);
         insert nonDefaultAllo;
 
         Test.startTest();
         id batchProcessId = database.executeBatch(new ALLO_MakeDefaultAllocations_BATCH());
         Test.stopTest();
 
-        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp1.id AND General_Accounting_Unit__c = :defaultGau.id];
-        system.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
-        system.assertEquals(4, queryAllo[0].Amount__c, 'The default allocation should be of the unallocated amount of the Opportunity.');
+        queryAllo = [SELECT Id, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :opp1.Id AND General_Accounting_Unit__c = :defaultGau.Id];
+        System.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
+        System.assertEquals(4, queryAllo[0].Amount__c, 'The default allocation should be of the unallocated amount of the Opportunity.');
 
-        queryAllo = getAllocationsOrderByAmount(opp2.id);
-        system.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
-        system.assertEquals(8, queryAllo[0].Amount__c, 'The default allocation should be of the total amount of the Opportunity.');
+        queryAllo = getAllocationsOrderByAmount(opp2.Id);
+        System.assertEquals(1,queryAllo.size(), 'A default allocation should be created.');
+        System.assertEquals(8, queryAllo[0].Amount__c, 'The default allocation should be of the total amount of the Opportunity.');
     }
 
     /*******************************************************************************************************
@@ -811,7 +947,7 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
         insert otherGau;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
 
@@ -827,7 +963,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         list<Allocation__c>  allos = getAllocationsOrderByAmount();
         System.assertEquals(1, allos.size(), 'One allocation should be present.');
-        system.assertEquals(0, allos[0].Amount__c, 'Allocation Amount');
+        System.assertEquals(0, allos[0].Amount__c, 'Allocation Amount');
         System.assertEquals(defaultGau.Id, allos[0].General_Accounting_Unit__c, 'Allocation should be for the default');
         System.assertEquals(opps[0].Id, allos[0].Opportunity__c, 'Opportunity');
     }
@@ -851,7 +987,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         insert gaus;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
 
@@ -867,20 +1003,12 @@ private with sharing class ALLO_Allocations_TEST {
 
         // Percentaage Allocation for 50% to GAU 1
         newAllos.add(
-            new Allocation__c(
-                General_Accounting_Unit__c = gau1.Id,
-                Percent__c = 50,
-                Opportunity__c = opps[0].Id
-            )
+            createOppAllocation(gau1.Id, opps[0].Id, null, 50)
         );
 
         // Fix Amount Allocation for $0 to GAU 2
         newAllos.add(
-            new Allocation__c(
-                General_Accounting_Unit__c = gau2.Id,
-                Amount__c = 0,
-                Opportunity__c = opps[0].Id
-            )
+            createOppAllocation(gau2.Id, opps[0].Id, 0, null)
         );
 
         insert newAllos;
@@ -916,7 +1044,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         insert gaus;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
 
@@ -930,20 +1058,12 @@ private with sharing class ALLO_Allocations_TEST {
 
         // Percentaage Allocation for 50% to GAU 1
         newAllos.add(
-            new Allocation__c(
-                General_Accounting_Unit__c = gau1.Id,
-                Percent__c = 50,
-                Opportunity__c = opps[0].Id
-            )
+            createOppAllocation(gau1.Id, opps[0].Id, null, 50)
         );
 
         // Fix Amount Allocation for $0 to GAU 2
         newAllos.add(
-            new Allocation__c(
-                General_Accounting_Unit__c = gau2.Id,
-                Amount__c = 0,
-                Opportunity__c = opps[0].Id
-            )
+            createOppAllocation(gau2.Id, opps[0].Id, 0, null)
         );
 
         insert newAllos;
@@ -987,7 +1107,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         insert gaus;
 
-        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
+        setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.Id));
 
         List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
 
@@ -1003,20 +1123,12 @@ private with sharing class ALLO_Allocations_TEST {
 
         // Percentaage Allocation for 50% to GAU 1
         newAllos.add(
-            new Allocation__c(
-                General_Accounting_Unit__c = gau1.Id,
-                Percent__c = 50,
-                Opportunity__c = opps[0].Id
-            )
+            createOppAllocation(gau1.Id, opps[0].Id, null, 50)
         );
 
         // Fix Amount Allocation for $0 to GAU 2
         newAllos.add(
-            new Allocation__c(
-                General_Accounting_Unit__c = gau2.Id,
-                Amount__c = 10,
-                Opportunity__c = opps[0].Id
-            )
+            createOppAllocation(gau2.Id, opps[0].Id, 10, null)
         );
 
         try{
@@ -1120,4 +1232,22 @@ private with sharing class ALLO_Allocations_TEST {
             })
             .withFrom('Allocation__c');
     }
+
+    /*********************************************************************************************************
+    * @description Return a new opportunity allocation with the provided parameters
+    * @param gauId A General_Accounting_Unit__c Id
+    * @param oppId An Opportunity Id
+    * @param amt An Allocation amount
+    * @param percent An Allocation percent
+    * @return Allocation__c Allocation record with provided parameters filled in
+    **********************************************************************************************************/
+    private static Allocation__c createOppAllocation(Id gauId, Id oppId, Decimal amt, Double percent) {
+        return new Allocation__c(
+            Opportunity__c = oppId, 
+            General_Accounting_Unit__c = gauId,
+            Percent__c = percent,
+            Amount__c = amt
+        );
+    }
+
 }
