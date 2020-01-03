@@ -37,12 +37,20 @@ const SCHEDULE_COLS = [
     { label: '$AMOUNT', fieldName: 'amount', type: 'currency', sortable: false,
         typeAttributes: { currencyCode: '$CURRENCYISOCODE' } },
     { label: '$PAYMENT_METHOD', fieldName: 'paymentMethod', type: 'text', sortable: false },
+    { label: '$CAMPAIGN', fieldName: 'campaign', type: 'text', sortable: false },
     { label: '$START_DATE', fieldName: 'startDate', type: 'date-local', sortable: false,
         typeAttributes:{
             month: "2-digit",
             day: "2-digit"
         } },
-    { label: '$PERIOD', fieldName: 'period', type: 'text', sortable: false }
+    { label: '$END_DATE', fieldName: 'endDate', type: 'date-local', sortable: false,
+        typeAttributes:{
+            month: "2-digit",
+            day: "2-digit"
+        } },
+    { label: '$PERIOD', fieldName: 'period', type: 'text', sortable: false },
+    { label: '$FREQUENCY', fieldName: 'frequency', type: 'number', sortable: false },
+    { label: '$DAY_OF_MONTH', fieldName: 'dayOfMonth', type: 'text', sortable: false }
 ];
 
 /*
@@ -130,8 +138,13 @@ export default class RdScheduleVisualizer extends LightningElement {
         if (data) {
             this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
             this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+            this.lblCampaign = data.fields[FIELD_RD_CAMPAIGN.fieldApiName].label;
             this.lblStartDate = data.fields[FIELD_RD_STARTDATE.fieldApiName].label;
+            this.lblEndDate = 'End Date';
+            // this.lblEndDate = data.fields[FIELD_RD_ENDDATE.fieldApiName].label;
             this.lblPeriod = data.fields[FIELD_RD_PERIOD.fieldApiName].label;
+            this.lblFrequency = data.fields[FIELD_RD_FREQUENCY.fieldApiName].label;
+            this.lblDayOfMonth = data.fields[FIELD_RD_DAYOFMONTH.fieldApiName].label;
 
 /*
     -- Work in progress on RD wire
@@ -179,8 +192,12 @@ export default class RdScheduleVisualizer extends LightningElement {
         const labelConversions = [
             { label: '$AMOUNT', value: this.lblAmount },
             { label: '$PAYMENT_METHOD', value: this.lblPmtMethod },
+            { label: '$CAMPAIGN', value: this.lblCampaign },
             { label: '$START_DATE', value: this.lblStartDate },
-            { label: '$PERIOD', value: this.lblPeriod }
+            { label: '$END_DATE', value: this.lblEndDate },
+            { label: '$PERIOD', value: this.lblPeriod },
+            { label: '$FREQUENCY', value: this.lblFrequency },
+            { label: '$DAY_OF_MONTH', value: this.lblDayOfMonth }
         ];
 
         /*
