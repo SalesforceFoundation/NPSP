@@ -144,7 +144,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
 
         //do not evaluate Opportunities from the RD trigger during migration
         //migration batch itself will take care of outstanding Opps
-        RD2_OpportunityEvaluationService.isOverride = true;
+        RD2_OpportunityEvaluationService.skipEvaluationService = true;
 
         Logger logger = new Logger(logContext);
         Map<Id, List<Opportunity>> oppsByRdId = getRelatedOpportunities(rds);

@@ -473,7 +473,8 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verify Opportunity's campaign is updated when there is update to the campaign on the RD
+    * @description Verify Opportunity's campaign is updated when 
+    * there is update to the campaign on the RD
     * and add campaign is enabled in RD custom settings
     */
     @isTest
@@ -500,7 +501,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
-        System.assertEquals(campaign.id, opps[0].campaignid, 'Opp Campaign should be updated');
+        System.assertEquals(campaign.id, opps[0].CampaignId, 'Opp Campaign should be updated');
     }
 
     /***
@@ -537,7 +538,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An opportunity should exist: ' + opps);
-        System.assertEquals(rdCampaignId, opps[0].campaignId, 'Opp Campaign should be unchanged');
+        System.assertEquals(rdCampaignId, opps[0].CampaignId, 'Opp Campaign should be unchanged');
     }
 
     /***

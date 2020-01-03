@@ -336,7 +336,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldNotEvaluateOppsWhenOverrideIsSet() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        RD2_OpportunityEvaluationService.isOverride = true;
+        RD2_OpportunityEvaluationService.skipEvaluationService = true;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
 
@@ -358,7 +358,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldEvaluateOppsWhenOverrideIsNotSet() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        System.assertEquals(false, RD2_OpportunityEvaluationService.isOverride, 'Override should be false by default');
+        System.assertEquals(false, RD2_OpportunityEvaluationService.skipEvaluationService, 'Override should be false by default');
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
 

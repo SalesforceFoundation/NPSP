@@ -150,7 +150,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @return void
     */
     public void evaluateOpportunities(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
-        if (RD2_OpportunityEvaluationService.isOverride) {
+        if (RD2_OpportunityEvaluationService.skipEvaluationService) {
             return;
         }
 

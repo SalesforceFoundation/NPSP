@@ -345,7 +345,7 @@ public with sharing class RD2_OpportunityService {
      * @param opps Opportunities
      * @return void
      */
-    public void voidOpportunities(List<npe03__Recurring_Donation__c> rds) {
+    public void voidOpenOpportunities(List<npe03__Recurring_Donation__c> rds) {
         if (rds.isEmpty() || rdSettings.isCloseActionNoAction()) {
             return;
         }

@@ -42,7 +42,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * For example, if an active RD has no Opp, no new Opp should be created during migration.
      * Moreover, if the RD is closed, close action on Open Opps should not be applied.
      */
-    public static Boolean isOverride = false;
+    public static Boolean skipEvaluationService = false;
 
     /**
     * @description Indicates if the Opportunity evaluation is invoked from a nightly batch job
@@ -210,7 +210,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
         //do not evaluate Opps when override is set
-        if (isOverride) {
+        if (skipEvaluationService) {
             return this;
         }
         
@@ -244,7 +244,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createOpportunities(newOppRDs);
         oppService.updateOpportunities(updateOppRDs);
-        oppService.voidOpportunities(closedRDs);
+        oppService.voidOpenOpportunities(closedRDs);
 
         if (!outdatedRDs.isEmpty()) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
