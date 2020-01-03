@@ -15,6 +15,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>RecurringDonations2MigrationState__c</fullName>
+        <description>Contains latest dry run and data migration results.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Contains latest dry run and data migration results.</inlineHelpText>
+        <label>Enhanced RD Data Migration State</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>EnableAutomaticNaming__c</fullName>
         <defaultValue>false</defaultValue>
         <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>

@@ -46,17 +46,18 @@
     <aura:attribute name="isError" type="Boolean" default="false"
         description="Indicates if the step in the progress indicator has an error" />
 
-    <div
-        class="{!'slds-progress__marker' + if(v.isComplete, ' slds-progress__marker_icon slds-progress__marker_icon-success', '') + if(v.isError, ' slds-progress__marker_icon', '')}">
+    <aura:attribute name="size" type="String" default="xx-small" description="Indicates icon size" />
+
+    <div class="{!'slds-progress__marker' + if(or(v.isComplete, v.isError), ' slds-progress__marker_icon', '')}">
 
         <aura:if isTrue="{!v.isError}">
-            <lightning:icon iconName="utility:error" class="slds-icon-text-default" size="x-small"
+            <lightning:icon iconName="utility:error" class="slds-icon-text-default" size="{!v.size}"
                 alternativeText="{!$Label.c.AssistiveTextError}" variant="error" />
 
             <aura:set attribute="else">
 
                 <aura:if isTrue="{!v.isComplete}">
-                    <lightning:icon iconName="utility:success" class="slds-icon-text-default" size="x-small"
+                    <lightning:icon iconName="utility:success" class="slds-icon-text-default" size="{!v.size}"
                         alternativeText="{!$Label.c.AssistiveTextComplete}" />
 
                     <aura:set attribute="else">
