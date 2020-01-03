@@ -310,6 +310,7 @@ class NPSP(SalesforceRobotLibraryBase):
         
     def verify_related_list_items(self,list_name,value):
         """Verifies a specified related list has specified value(doesn't work if the list is in table format)"""
+        self.salesforce.load_related_list(list_name)
         locator=npsp_lex_locators['related_list_items'].format(list_name,value)
         self.selenium.page_should_contain_element(locator)
     
@@ -361,16 +362,24 @@ class NPSP(SalesforceRobotLibraryBase):
                 self.salesforce._populate_field(locator, value)
      
          
-    def verify_details_address(self,field,npsp_street, npsp_city, npsp_country):   
-        """Validates if the details page address field has specified value"""   
+    def verify_address_details(self,field,value,**kwargs):
+        """Validates if the details page address field has specified value
+        Field is the The address type field we are trying to match to the Expected address Map that is sent through Kwargs"""
+
         locator= npsp_lex_locators['detail_page']['address'].format(field)
         street, city, country = self.selenium.get_webelements(locator)
-        if street.text ==  npsp_street and city.text == npsp_city and country.text == npsp_country:
-            return "pass"
-        else:
-            return "fail"
-   
-    def validate_checkbox(self,name,checkbox_title):   
+
+        status = None
+        for key, value in kwargs.items():
+            if street.text == kwargs.get("street")  and  city.text == kwargs.get("city") and country.text == kwargs.get("country"):
+                status = "pass"
+            else:
+                status = "fail"
+        if value.lower() == "contains":
+            assert status == "pass", "Expected address {} , {}, {} does not match".format(street.text,city.text,country.text)
+
+
+    def validate_checkboxes(self,name,checkbox_title):
         """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""   
           
         locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
