@@ -62,6 +62,11 @@ public with sharing class RD2_EnablementService {
         }
         private set;
     }
+    
+    /**
+     * @description Returns true if enhanced Recurring Donations are enabled regardless of configuration
+     */
+    public static Boolean isRecurringDonations2EnabledOverride = false;
 
     /***
     * @description Contains attribute confirming if LEX is enabled
@@ -105,6 +110,10 @@ public with sharing class RD2_EnablementService {
     * @return Boolean
     */
     public Boolean isRecurringDonations2Enabled() {
+        if (isRecurringDonations2EnabledOverride) {
+            return true;
+        }
+
         return 
             UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true
             && isPilotEnabled;
