@@ -38,7 +38,8 @@
                                    class="slds-p-around_none"
                                    onactive={handleOnActiveTab}
                                    show-error-indicator={hasTemplateInfoTabError}>
-                        <c-ge-template-builder-template-info template-name={formTemplate.name}
+                        <c-ge-template-builder-template-info template-id={formTemplateRecordId}
+                                                             template-name={formTemplate.name}
                                                              template-description={formTemplate.description}
                                                              is-loading={isLoading}
                                                              onupdatevalidity={handleUpdateValidity}
