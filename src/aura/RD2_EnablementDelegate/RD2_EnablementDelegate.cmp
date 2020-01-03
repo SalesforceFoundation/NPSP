@@ -59,7 +59,10 @@
                 <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
                 <div class="slds-text-longform">
                     <h3 class="slds-text-heading_medium">{!$Label.c.RD2_EnablementDisabledHeader}</h3>
-                    <p class="slds-text-body_regular">{!$Label.c.RD2_EnablementDisabledMessage}</p>
+                    <p>
+                        <lightning:formattedRichText value="{!$Label.c.RD2_EnablementDisabledMessage}">
+                        </lightning:formattedRichText>
+                    </p>
                 </div>
             </div>
         </lightning:layoutItem>
@@ -526,7 +529,7 @@
                         </lightning:layoutItem>
 
                         <lightning:layoutItem size="9">
-                            <aura:if isTrue="equals(v.migrationProgress, 'runMigrationStep')">
+                            <aura:if isTrue="{! equals(v.migrationProgress, 'runMigrationStep') }">
                                 <aura:if isTrue="{!v.state.isMigrationCompleted}">
                                     <lightning:formattedRichText
                                         value="{!$Label.c.RD2_EnablementMigrationCompleteMessage}" />

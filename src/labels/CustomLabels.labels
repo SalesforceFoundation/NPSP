@@ -1548,7 +1548,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement page header displayed due to missing prerequisites</shortDescription>
-        <value>Enhanced Recurring Donations cannot be enabled</value>
+        <value>Almost there! Just need you to check on a couple of things first . . .</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDisabledMessage</fullName>
@@ -1556,7 +1556,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement page message displayed due to missing prerequisites</shortDescription>
-        <value>You must enable both Customizable Rollups and Lightning Experience in order to enable Enhanced Recurring Donations.</value>
+        <value>(1) If you're not already using Lightning Experience, click Switch to Lightning Experience at the top of your screen.&lt;br/&gt;(2) Enable Customizable Rollups by going to NPSP Settings | Donations | Customizable Rollups.&lt;br/&gt;&lt;br/&gt;Return here to the Upgrade to Enhanced Recurring Donations page.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDryRunBatchTitle</fullName>
@@ -1628,7 +1628,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement section confirmation message</shortDescription>
-        <value>I confirm that I have completed the Preparation Tasks above and I understand that enabling Enhanced Recurring Donations is irreversible.</value>
+        <value>I confirm that I have completed the preparation and validation tasks above and I'm ready to enable Enhanced Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableIntro</fullName>
@@ -1660,7 +1660,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement section warning</shortDescription>
-        <value>&lt;b&gt;WARNING: This is an irreversible process!&lt;/b&gt;</value>
+        <value>&lt;b&gt;WARNING: NPSP doesn't provide a way to revert back to legacy Recurring Donations.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementIntro</fullName>
@@ -1668,7 +1668,9 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement page introduction and guidelines</shortDescription>
-        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.</value>
+        <value>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
+        &lt;br/&gt;&lt;br/&gt;Since there's already a Recurring Donations feature in NPSP, you'll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We've outlined the required tasks for you below.
+        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href="https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot" target="_blank"&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployConfirm</fullName>
@@ -1692,7 +1694,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>MetaDeploy section introduction and guidelines</shortDescription>
-        <value>Use our MetaDeploy service to install the Enhanced Recurring Donations metadata. The metadata includes: new picklist values, updated help text, and a new page layout. MetaDeploy is a service that exists outside of your Salesforce org.</value>
+        <value>Use MetaDeploy to install new metadata (picklist values, help text, etc.) for Enhanced Recurring Donations. MetaDeploy is a service that exists outside of your Salesforce org. Once you've installed the metadata, return to this page to continue the upgrade to Enhanced Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployLaunch</fullName>
@@ -1732,7 +1734,13 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed on a successful migration</shortDescription>
-        <value>Your migration was successful with no errors. All set up steps are now complete. You're ready to begin using Enhanced Recurring Donations.</value>
+        <value>&lt;b&gt;Upgrade process complete!&lt;/b&gt;&lt;br/&gt;
+        &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:&lt;br/&gt;
+        &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to conversion.&lt;/li&gt;
+        &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles. You should also remove the old Recurring Donations page layout from all profiles.&lt;/li&gt;
+        &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your custom profiles and permission sets.&lt;/li&gt;
+        &lt;li&gt;Adjust existing Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
+        &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationErrorMessage</fullName>
@@ -1748,7 +1756,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Migration section introduction and guidelines</shortDescription>
-        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model.</value>
+        <value>Migrate your existing Recurring Donations data to the Enhanced Recurring Donations data model. This process may take some time. You can leave this page and return later to check the progress.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationSkipButton</fullName>
@@ -1764,7 +1772,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Migration section validation context guidelines</shortDescription>
-        <value>You may validate the data migration again by clicking Validate Migration. If you're all set to run the actual migration, click Skip Validation.</value>
+        <value>You may validate the data migration again by clicking Validate Migration. If you're all set to run the actual migration, click Skip Validation, then click Run Migration.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationStepFinal</fullName>
@@ -1796,7 +1804,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Migration section warning</shortDescription>
-        <value>&lt;b&gt;WARNING: This process rearranges existing Recurring Donation data to match the Enhanced Recurring Donations model. This process may take some time. You can leave this page and return later to check the progress.&lt;/b&gt;</value>
+        <value>&lt;b&gt;WARNING: Run Migration rearranges existing Recurring Donation data to match the Enhanced Recurring Donations model. Backup your database if you haven't already done so.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepIntro</fullName>
@@ -1804,7 +1812,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement preparation task introduction and guidelines</shortDescription>
-        <value>Before you enable Enhanced Recurring Donations, you should complete the following tasks:</value>
+        <value>To limit potential errors and to protect your data, perform these preparation tasks before you begin the upgrade to Enhanced Recurring Donations:</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepTasks</fullName>
@@ -9606,7 +9614,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgNavRD2Enablement</shortDescription>
-        <value>Enable Enhanced Recurring Donations</value>
+        <value>Upgrade to Enhanced Recurring Donations</value>
     </labels>
     <labels>
         <fullName>stgNavRDBatch</fullName>
