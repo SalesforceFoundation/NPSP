@@ -34,7 +34,7 @@
 * @description Controller for the Schedule Visualization Component
 *
 */
-public with sharing class RD2_ScheduleController {
+public with sharing class RD2_VisualizeScheduleController {
 
     @TestVisible
     private static RD2_ScheduleService scheduleService {

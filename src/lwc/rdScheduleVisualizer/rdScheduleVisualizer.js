@@ -14,7 +14,7 @@ import FIELD_RD_DAYOFMONTH from '@salesforce/schema/npe03__Recurring_Donation__c
 import FIELD_RD_STARTDATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 
-import getInstallments from '@salesforce/apex/RD2_ScheduleController.getInstallments';
+import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
 
 const INSTALLMENT_COLS = [
     { label: '$DATE', fieldName: 'donationDate', type: 'date-local', sortable: false,
@@ -27,7 +27,7 @@ const INSTALLMENT_COLS = [
     { label: '$PAYMENT_METHOD', fieldName: 'paymentMethod', type: 'text', sortable: false }
 ];
 
-export default class RdInstallmentVisualizer extends LightningElement {
+export default class RdScheduleVisualizer extends LightningElement {
 
     @api recordId;
     @api displayNum;

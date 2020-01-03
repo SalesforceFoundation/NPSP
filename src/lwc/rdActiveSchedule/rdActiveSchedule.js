@@ -31,7 +31,7 @@ import FIELD_RD_STARTDATE from '@salesforce/schema/npe03__Recurring_Donation__c.
 import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_RD_CAMPAIGN from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c';
 
-import getSchedules from '@salesforce/apex/RD2_ScheduleController.getSchedules';
+import getSchedules from '@salesforce/apex/RD2_VisualizeScheduleController.getSchedules';
 
 const SCHEDULE_COLS = [
     { label: '$AMOUNT', fieldName: 'amount', type: 'currency', sortable: false,

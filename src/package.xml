@@ -357,12 +357,12 @@
         <members>RD2_QueueableService</members>
         <members>RD2_RecurringDonations_TDTM</members>
         <members>RD2_RecurringDonations_TEST</members>
-        <members>RD2_ScheduleController</members>
-        <members>RD2_ScheduleControllerTest</members>
         <members>RD2_ScheduleService</members>
         <members>RD2_ScheduleService_TEST</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
+        <members>RD2_VisualizeScheduleController</members>
+        <members>RD2_VisualizeScheduleController_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -1476,6 +1476,7 @@
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
+        <members>RD2_ActiveSchedulesTitle</members>
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
@@ -3137,7 +3138,7 @@
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>rdActiveSchedule</members>
-        <members>rdInstallmentVisualizer</members>
+        <members>rdScheduleVisualizer</members>
         <members>util</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>

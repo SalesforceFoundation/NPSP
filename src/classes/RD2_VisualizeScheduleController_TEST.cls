@@ -35,7 +35,7 @@
 *
 */
 @IsTest(IsParallel=true)
-private with sharing class RD2_ScheduleControllerTest {
+private with sharing class RD2_VisualizeScheduleController_TEST {
 
     /****
     * @description Creates data required for unit tests
@@ -57,7 +57,7 @@ private with sharing class RD2_ScheduleControllerTest {
     @IsTest
     private static void shouldThrowAuraHandledExceptionWhenRDIdIsNull() {
         try {
-            RD2_ScheduleController.getInstallments(null, null);
+            RD2_VisualizeScheduleController.getInstallments(null, null);
         }
         catch(Exception e) {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
@@ -91,7 +91,7 @@ private with sharing class RD2_ScheduleControllerTest {
         Test.stopTest();
 
         try {
-            RD2_ScheduleController.getInstallments(rd.Id, 0);
+            RD2_VisualizeScheduleController.getInstallments(rd.Id, 0);
         }
         catch(Exception e) {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
@@ -125,7 +125,7 @@ private with sharing class RD2_ScheduleControllerTest {
         Test.stopTest();
 
         try {
-            RD2_ScheduleController.getInstallments(null, -5);
+            RD2_VisualizeScheduleController.getInstallments(null, -5);
         }
         catch(Exception e) {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
@@ -156,7 +156,7 @@ private with sharing class RD2_ScheduleControllerTest {
 
         Test.startTest();
         insert rd;
-        List<RD2_ScheduleController.Installment> schedules = RD2_ScheduleController.getInstallments(rd.Id, 12);
+        List<RD2_VisualizeScheduleController.Installment> schedules = RD2_VisualizeScheduleController.getInstallments(rd.Id, 12);
         Test.stopTest();
 
         System.assertEquals(12, schedules.size(), 'There should be 12 installments.');
@@ -183,7 +183,7 @@ private with sharing class RD2_ScheduleControllerTest {
         Test.stopTest();
 
         try {
-            List<RD2_ScheduleController.Installment> schedules = RD2_ScheduleController.getInstallments(rd.Id, 12);
+            List<RD2_VisualizeScheduleController.Installment> schedules = RD2_VisualizeScheduleController.getInstallments(rd.Id, 12);
         }
         catch(Exception e) {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
@@ -200,7 +200,7 @@ private with sharing class RD2_ScheduleControllerTest {
         insert acc;
 
         try {
-            RD2_ScheduleController.getInstallments(acc.Id, 12);
+            RD2_VisualizeScheduleController.getInstallments(acc.Id, 12);
         }
         catch(Exception e) {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
