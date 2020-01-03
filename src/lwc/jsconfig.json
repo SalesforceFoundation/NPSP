@@ -23,6 +23,9 @@
             "c/pubsubNoPageRef": [
                 "pubsubNoPageRef/pubsubNoPageRef.js"
             ],
+            "c/util": [
+                "util/util.js"
+            ],
             "c/utilPlatformEventListener": [
                 "utilPlatformEventListener/utilPlatformEventListener.js"
             ],
@@ -31,6 +34,9 @@
             ],
             "c/utilStencil": [
                 "utilStencil/utilStencil.js"
+            ],
+            "c/rdScheduleVisualizer": [
+                "rdScheduleVisualizer/rdScheduleVisualizer.js"
             ]
         },
         "experimentalDecorators": true
