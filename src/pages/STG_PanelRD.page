@@ -9,7 +9,7 @@
             <apex:commandButton id="editRD" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <div class="slds-form_horizontal slds-m-around_large">
-            <div class="slds-form-element">
+            <div class="slds-form-element" style="{!IF(!isRD2Enabled, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Opportunity_Forecast_Months__c.Label}" for="tbxOFM" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputField value="{!stgService.stgRD.npe03__Opportunity_Forecast_Months__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
@@ -41,7 +41,7 @@
                     </apex:outputPanel>
                 </div>
             </div>
-            <div class="slds-form-element">
+            <div class="slds-form-element" style="{!IF(!isRD2Enabled, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Maximum_Donations__c.Label}" for="tbxMD" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputField value="{!stgService.stgRD.npe03__Maximum_Donations__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />

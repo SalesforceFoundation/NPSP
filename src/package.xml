@@ -333,6 +333,10 @@
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD2_Constants</members>
+        <members>RD2_DataMigrationBase_BATCH</members>
+        <members>RD2_DataMigrationDryRun_BATCH</members>
+        <members>RD2_DataMigrationEnablement</members>
+        <members>RD2_DataMigrationEnablement_TEST</members>
         <members>RD2_DataMigrationMapper</members>
         <members>RD2_DataMigration_BATCH</members>
         <members>RD2_DataMigration_TEST</members>
@@ -357,6 +361,8 @@
         <members>RD2_ScheduleService_TEST</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
+        <members>RD2_VisualizeScheduleController</members>
+        <members>RD2_VisualizeScheduleControllerTest</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -710,6 +716,7 @@
         <members>ManageHHApp</members>
         <members>RD2_EnablementApp</members>
         <members>RD2_EnablementDelegate</members>
+        <members>RD2_EnhancementEnabledEvent</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>
@@ -1262,6 +1269,7 @@
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2MigrationState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
@@ -1317,10 +1325,23 @@
         <members>BatchProgressExtendedStatus</members>
         <members>BatchProgressJobItemsProcessed</members>
         <members>BatchProgressStatus</members>
+        <members>BatchProgressStatusComplete</members>
+        <members>BatchProgressStatusCompleteErrors</members>
+        <members>BatchProgressStatusError</members>
+        <members>BatchProgressStatusFailed</members>
+        <members>BatchProgressStatusHolding</members>
+        <members>BatchProgressStatusPreparing</members>
+        <members>BatchProgressStatusProcessing</members>
+        <members>BatchProgressStatusQueued</members>
+        <members>BatchProgressStatusStopped</members>
+        <members>BatchProgressStatusSuccess</members>
         <members>BatchProgressTimeElapsed</members>
         <members>BatchProgressTimeElapsedDays</members>
         <members>BatchProgressTitleRD2DataMigration</members>
         <members>BatchProgressTotalJobItems</members>
+        <members>BatchProgressTotalRecords</members>
+        <members>BatchProgressTotalRecordsFailed</members>
+        <members>BatchProgressTotalRecordsProcessed</members>
         <members>CMT_DeleteConfirm</members>
         <members>CMT_FilterGroupActiveRollupsHelpText</members>
         <members>CMT_FilterGroupDeleteError</members>
@@ -1456,12 +1477,22 @@
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
+        <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
-        <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
+        <members>RD2_DayOfMonthMustBeValid</members>
+        <members>RD2_DisableCustomizableRollupWarning</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
+        <members>RD2_EnablementDryRunBatchTitle</members>
+        <members>RD2_EnablementDryRunButton</members>
+        <members>RD2_EnablementDryRunComplete</members>
+        <members>RD2_EnablementDryRunIntro</members>
+        <members>RD2_EnablementDryRunNextButton</members>
+        <members>RD2_EnablementDryRunSkipButton</members>
+        <members>RD2_EnablementDryRunStopButton</members>
+        <members>RD2_EnablementDryRunTitle</members>
         <members>RD2_EnablementEnableConfirm</members>
         <members>RD2_EnablementEnableIntro</members>
         <members>RD2_EnablementEnableMessage</members>
@@ -1476,7 +1507,12 @@
         <members>RD2_EnablementMetaDeployTitle</members>
         <members>RD2_EnablementMigrationButton</members>
         <members>RD2_EnablementMigrationCompleteMessage</members>
+        <members>RD2_EnablementMigrationErrorMessage</members>
         <members>RD2_EnablementMigrationIntro</members>
+        <members>RD2_EnablementMigrationSkipButton</members>
+        <members>RD2_EnablementMigrationStepDryRun</members>
+        <members>RD2_EnablementMigrationStepFinal</members>
+        <members>RD2_EnablementMigrationStopButton</members>
         <members>RD2_EnablementMigrationTitle</members>
         <members>RD2_EnablementMigrationWarning</members>
         <members>RD2_EnablementPrepIntro</members>
@@ -1485,6 +1521,13 @@
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
+        <members>RD2_PageNotAvailableHeader</members>
+        <members>RD2_PageNotAvailableMessage</members>
+        <members>RD2_ScheduleVisualizerColumnDate</members>
+        <members>RD2_ScheduleVisualizerErrorEnhancedRDNot</members>
+        <members>RD2_ScheduleVisualizerErrorInvalidUsage</members>
+        <members>RD2_ScheduleVisualizerMessageNoSchedule</members>
+        <members>RD2_ScheduleVisualizerTitle</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -3093,6 +3136,8 @@
         <members>bdiObjectMappings</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rdScheduleVisualizer</members>
+        <members>util</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
