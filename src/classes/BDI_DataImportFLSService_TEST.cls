@@ -110,7 +110,8 @@ private class BDI_DataImportFLSService_TEST {
         DataImport__c dataImport = new DataImport__c(
                 Contact1_Firstname__c = 'testFirst',
                 Contact1_Lastname__c = 'testLast',
-                Contact1_Work_Email__c = 'test@test99875409948.com'
+                Contact1_Work_Email__c = 'test@test99875409948.com',
+                Opportunity_Contact_Role_1_Role__c = 'Test'
         );
         insert dataImport;
 
@@ -121,7 +122,6 @@ private class BDI_DataImportFLSService_TEST {
                 UTIL_Permissions.class,
                 utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
-
         //Process the Data Import record
         BDI_DataImportService dataImportService = new BDI_DataImportService(
                 false,
@@ -185,6 +185,85 @@ private class BDI_DataImportFLSService_TEST {
     }
 
     /**
+     * @description This test validates that the CampaignMember.CampaignId gets
+     * exempted from Field Level Security checks to allow for campaign member imports
+     */
+    @IsTest
+    static void testCampaignIdIsValidateUpdateException () {
+        UTIL_CustomSettingsFacade.enableAdvancedMapping();
+        Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
+                Set<BDI_DataImportFLSService.AccessLevel>{
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE,
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_READ,
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE
+        };
+
+        BDIFieldMappingMock mock = new BDIFieldMappingMock();
+        mock.mapField(DataImport__c.Account1_Name__c, CampaignMember.SObjectType,
+                CampaignMember.CampaignId);
+        mock.mapField(DataImport__c.Campaign_Member_Status__c, CampaignMember.SObjectType,
+                CampaignMember.Status);
+        BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
+                BDI_FieldMappingCustomMetadata.class, mock);
+        BDI_FieldMappingCustomMetadata.setInstance(stub);
+
+        Campaign campaign = new Campaign(Name = 'Test Campaign');
+        insert campaign;
+
+        DataImport__c dataImport = new DataImport__c(
+                Account1_Name__c = campaign.Id,
+                Campaign_Member_Status__c = 'Responded'
+        );
+
+        BDI_DataImportFLSService service = new BDI_DataImportFLSService(
+                new List<DataImport__c> {
+                        dataImport
+                },
+                BDI_DataImportService.getDefaultFieldMapping(),
+                accessLevels
+        );
+
+        System.assertEquals(service.getInvalidRecords().size(), 0,
+                'All records to be imported should be validated');
+    }
+
+    /**
+     * @description This test validates the FLS checks on a master-detail field
+     */
+    @IsTest
+    static void testMasterDetailFieldValid() {
+        Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
+                Set<BDI_DataImportFLSService.AccessLevel> {
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE,
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_READ,
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE
+        };
+
+        BDI_DataImportFLSService service = new BDI_DataImportFLSService(accessLevels);
+        Boolean valid = service.isValid(Account_Soft_Credit__c.SObjectType, Account_Soft_Credit__c.Opportunity__c);
+        System.assertEquals(true, valid, 'This master detail field ' +
+                'should be certified valid for data import processing');
+    }
+
+
+    /**
+    * @description This test validates the FLS checks on a non-master-detail field
+    */
+    @IsTest
+    static void testNormalFieldValid() {
+        Set<BDI_DataImportFLSService.AccessLevel> accessLevels = new
+                Set<BDI_DataImportFLSService.AccessLevel> {
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE,
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_READ,
+                BDI_DataImportFLSService.AccessLevel.VALIDATE_CREATE
+        };
+
+        BDI_DataImportFLSService service = new BDI_DataImportFLSService(accessLevels);
+        Boolean valid = service.isValid(Contact.SObjectType, Contact.FirstName);
+        System.assertEquals(true, valid, 'This field should be certified valid for data import processing');
+    }
+
+    /**
      * @description StubProvider implementation used to make a field be considered a
      * master-detail field in tests.
      */
@@ -227,6 +306,40 @@ private class BDI_DataImportFLSService_TEST {
             } else {
                 return true;
             }
+        }
+    }
+
+    /**
+     * @description StubProvider implementation used to create field mappings in tests
+     */
+    private class BDIFieldMappingMock implements StubProvider {
+        private Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = new
+                Map<SObjectField, BDI_TargetFields>();
+
+        @TestVisible
+        private void mapField(SObjectField sourceField, SObjectType targetObjectType,
+                SObjectField targetField) {
+            BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceField);
+            if (targetFields == null) {
+                targetFields = new BDI_TargetFields();
+            }
+            targetFields.addTargetField(targetObjectType, targetField);
+            targetFieldsBySourceField.put(sourceField, targetFields);
+        }
+
+        public Object handleMethodCall(
+                Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+            switch on stubbedMethodName {
+                when 'getTargetFieldsBySourceField' {
+                    return targetFieldsBySourceField;
+                }
+            }
+            return null;
         }
     }
 }
