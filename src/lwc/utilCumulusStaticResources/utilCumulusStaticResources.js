@@ -8,15 +8,13 @@ class utilCumulusStaticResources {
     moment;
 
     init = (context) => {
-        return new Promise((resolve, reject) => {
-            if (this.isInitialized) {
-                return;
-            }
-            this.isInitialized = true;
+        if (this.isInitialized) {
+            return;
+        }
+        this.isInitialized = true;
 
-            return Promise.all([
-                loadScript(context, CUMULUS_STATIC_RESOURCES + '/moment/moment.min.js')
-            ])
+        return new Promise((resolve, reject) => {
+            loadScript(context, CUMULUS_STATIC_RESOURCES + '/moment/moment.min.js')
                 .then(() => {
                     this.moment = moment;
                     resolve();
