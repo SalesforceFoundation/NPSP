@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -30,40 +30,26 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group Batch Job
-* @description Batch job progress controller
+* @group Recurring Donations
+* @description Data Migration batch job executed in Dry Run mode to convert Recurring Donation Records 
+* from Legacy to Enhanced Recurring Donation format
+*
 */
-public with sharing class UTIL_BatchJobProgress_CTRL {
+public class RD2_DataMigrationDryRun_BATCH extends RD2_DataMigrationBase_BATCH {
 
     /***
-     * @description Loads the latest batch job for the specified class name.
-     * @param className Batch job class name
-     * @return String JSON representation of the batch job
-     */
-    @AuraEnabled
-    public static String loadBatchJob(String className) {
-        String jsonBatchJob;
-
-        try {
-            UTIL_BatchJobService service = new UTIL_BatchJobService();
-            jsonBatchJob = JSON.serialize(service.getBatchJob(className));
-
-        } catch (Exception e) {
-            throwAuraHandledException(e.getMessage());
-        }
-
-        return jsonBatchJob;
-    }
-
-    /***
-    * @description Throws AuraHandledException
-    * @param errMessage
-    * @return void
+    * @description Schedulable executes the batch job
     */
-    private static void throwAuraHandledException(String errMessage) {
-        AuraHandledException e = new AuraHandledException(errMessage);
-        e.setMessage(errMessage);
-        throw e;
+    public void execute(SchedulableContext context) {
+        Database.executeBatch(new RD2_DataMigrationDryRun_BATCH(), batchSize);
     }
 
+    /***
+    * @description Constructor
+    */
+    public RD2_DataMigrationDryRun_BATCH() {
+        super();
+
+        this.isDryRunMode = true;
+    }
 }

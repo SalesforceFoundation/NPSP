@@ -51,7 +51,7 @@ export default class ProgressRing extends LightningElement {
     */
     set status(value) {
         if (this.ringSize === undefined || this.ringSize === null) {
-            this.ringSize = 'slds-progress-ring_large';
+            this.ringSize = 'slds-progress-ring_medium';
         }
 
         this.ringClass = 'slds-progress-ring ' + this.ringSize;
