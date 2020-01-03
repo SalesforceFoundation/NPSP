@@ -67,6 +67,7 @@ npsp_lex_locators={
     'desktop_rendered': 'css: div.desktop.container.oneOne.oneAppLayoutHost[data-aura-rendered-by]',
     'loading_box': 'css: div.auraLoadingBox.oneLoadingBox',
     'contacts_actions_dropdown_menu': 'css: a.slds-grid--align-center[aria-expanded="true"]',
+    'household_lookup_dropdown_menu': 'css: div.slds-show',
     'spinner': 'css: div.slds-spinner',
     'modal_field':"//div[contains(@class, 'lookupInput')][./label[contains(text(), '{}')]]/div//span[@class='lookupInput']/input",
     'name':'//tbody/tr/th/span/a',
