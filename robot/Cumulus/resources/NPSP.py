@@ -310,6 +310,7 @@ class NPSP(SalesforceRobotLibraryBase):
         
     def verify_related_list_items(self,list_name,value):
         """Verifies a specified related list has specified value(doesn't work if the list is in table format)"""
+        self.salesforce.load_related_list(list_name)
         locator=npsp_lex_locators['related_list_items'].format(list_name,value)
         self.selenium.page_should_contain_element(locator)
     
