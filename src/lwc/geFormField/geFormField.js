@@ -22,7 +22,17 @@ export default class GeFormField extends LightningElement {
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    handleValueChange = debouncify(this.handleValueChangeSync, DELAY);
+
+    handleValueChangeSync = (event) => {
+        this.value = this.getValueFromChangeEvent(event);
+        const evt = new CustomEvent('change', {field: this.element, value: this.value});
+        this.dispatchEvent(evt);
+        if(this.isRichText) {
+            this.checkRichTextValidity();
+        }
+    };
+
+    handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
 
     /**
@@ -42,18 +52,11 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    handleValueChangeSync(event) {
-        this.value = this.getValueFromChangeEvent(event);
-        const evt = new CustomEvent('change', {field: this.element, value: this.value});
-        this.dispatchEvent(evt);
-        if(this.isRichText) {
-            this.checkRichTextValidity();
-        }
-    }
-
     getValueFromChangeEvent(event) {
         if(this.fieldType === BOOLEAN_TYPE) {
             return event.detail.checked.toString();
+        } else if(this.isRichText) {
+            return event.target.value;
         }
 
         return event.detail.value;
