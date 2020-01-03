@@ -1,0 +1,25 @@
+<!-- Enhanced Recurring Donations Schedule Visualizer -->
+<!-- TODO Accessibility!! -->
+<template>
+    <lightning-card
+        title={lblScheduleTitle}
+        variant="narrow"
+        icon-name="action:defer">
+
+        <div class="slds-m-around_medium" if:true={error}>
+            <span class="slds-text-color_error">{error}</span>
+        </div>
+
+        <div class="slds-m-around_medium" if:true={schedule}>
+            <lightning-datatable
+                title={lblScheduleTitle}
+                key-field="installmentNumber"
+                data={schedule}
+                columns={columns}
+                class="visualized-schedule"
+                hide-checkbox-column>
+            </lightning-datatable>
+        </div>
+
+    </lightning-card>
+</template>

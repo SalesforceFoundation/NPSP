@@ -84,6 +84,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Indicates if Recurring Donation Settings close action on Open Opportunities 
+     * is overriden when Recurring Donation is Closed
+     */
+    public static Boolean overrideVoidOfOpenOpps = false;
+
+
+    /**
      * @description Pass the set of Recurring Donation Id's to be processed
      * @param rdIds Recurring Donation Ids
      * @return RD2_OpportunityEvaluationService The service instance
@@ -121,9 +128,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     public RD2_OpportunityEvaluationService evaluateOpportunities() {
 
         Map<npe03__Recurring_Donation__c, List<Date>> newRDsWithCloseDates = new Map<npe03__Recurring_Donation__c, List<Date>>();
-        List<Opportunity> existingOpenOpps = new List<Opportunity>();
-
         List<npe03__Recurring_Donation__c> updatedRDs = new List<npe03__Recurring_Donation__c>();
+        List<Opportunity> openOppsToVoid = new List<Opportunity>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
 
@@ -140,10 +146,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             // TODO Update the Future Installment Opportunity if needed
             // TODO Handle Past Due Installment
 
-            if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
-                existingOpenOpps.addAll(extractOpenInstallmentOpps(rd));
-            }
-
+            handleClosedRecurringDonation(rd, openOppsToVoid);
         }
 
         // TODO Disable Customizable Rollups before DML
@@ -152,7 +155,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createInstallmentOpportunities(newRDsWithCloseDates);
 
-        handleClosedRecurringDonationOpps(existingOpenOpps);
+        voidOpportunities(openOppsToVoid);
 
         return this;
     }
@@ -196,26 +199,28 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /**
      * @description Extracts open installment Opportunities for the specified Recurring Donation
      * @param rd Recurring donation containing list of all related Opportunities
-     * @return List<Opportunity> Open Opportunities
+     * @param openOppsToVoid Open Opportunities to void from other Recurring Donations
+     * @return void
      */
-    private List<Opportunity> extractOpenInstallmentOpps(npe03__Recurring_Donation__c rd) {
-        List<Opportunity> opps = new List<Opportunity>();
+    private void handleClosedRecurringDonation(npe03__Recurring_Donation__c rd, List<Opportunity> openOppsToVoid) {
+
+        if (rd.Status__c != RD2_Constants.STATUS_CLOSED || overrideVoidOfOpenOpps) {
+            return;
+        }
 
         for (Opportunity opp : rd.npe03__Donations__r) {
             if (opp.IsClosed == false) {
-                opps.add(opp);
+                openOppsToVoid.add(opp);
             }
         }
-
-        return opps;
     }
 
     /**
-     * @description Updates, deletes or keep unchanged closed RD open Installment Opportunities based on the settings
+     * @description Updates or deletes closed RD open Installment Opportunities based on the settings
      * @param opps Opportunities
      * @return void
      */
-    private void handleClosedRecurringDonationOpps(List<Opportunity> opps) {
+    private void voidOpportunities(List<Opportunity> opps) {
         if (opps.isEmpty()) {
             return;
         }
@@ -277,6 +282,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         String scheduleSubquery = 
             '(SELECT Id, InstallmentAmount__c, ' +
             'Campaign__c, ' +
+            'Campaign__r.Name, ' +
             'InstallmentFrequency__c, ' +
             'InstallmentPeriod__c, ' +
             'DayOfMonth__c, ' +
