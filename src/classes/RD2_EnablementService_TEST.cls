@@ -120,36 +120,6 @@ public with sharing class RD2_EnablementService_TEST {
     }
 
     /****
-    * @description Verifies no new Opportunity is created or existing updated on Recurring Donation update
-    * when enhanced Recurring Donations are enabled
-    */
-    @isTest
-    private static void shouldNotCreateOrUpdateOppOnUpdateWhenEnhancementIsEnabled() {
-        setRecurringDonations2Enabled();
-
-        Contact contact = getContact();
-
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withContact(contact.Id)
-            .withAmount(100)
-            .withDefaultValues()
-            .build();
-
-        insert rd;
-
-        insert buildOpportunity(rd.Id, contact.AccountId);
-
-        Test.startTest();
-        rd.npe03__Amount__c += 100;
-        update rd;
-        Test.stopTest();
-
-        List<Opportunity> opps = getOpportunities(rd.Id);
-        System.assertEquals(1, opps.size(), 'No Opp should be created on RD update: ' + opps);
-        System.assertEquals(100, opps[0].Amount, 'Existing Opp Amount should be unchanged');
-    }
-
-    /****
     * @description Verifies name is auto-generated when enhanced Recurring Donations are not enabled
     */
     @isTest
