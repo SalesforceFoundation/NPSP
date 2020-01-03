@@ -259,7 +259,7 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
-        Date newCloseDate = CLOSE_DATE.addDays(1);
+        Date nextCloseDate = CLOSE_DATE.addDays(1);
 
         setUpConfiguration();
 
@@ -273,7 +273,7 @@ private with sharing class RD2_OpportunityService_TEST {
             .build();
 
         Test.startTest();
-        rd.Day_Of_Month__c = String.valueOf(newCloseDate.day());
+        rd.Day_Of_Month__c = String.valueOf(nextCloseDate.day());
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         rd.PaymentMethod__c = PAYMENT_CHECK;
         update rd;
@@ -283,8 +283,8 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
 
         System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Amount should be updated');
-        System.assertEquals(newCloseDate, opps[0].CloseDate, 'Close Date should be updated');
-        System.assertEquals(getExpectedOppName(rd, newCloseDate), opps[0].Name, 'Opportunity name should contain new Close Date');
+        System.assertEquals(nextCloseDate, opps[0].CloseDate, 'Close Date should be updated');
+        System.assertEquals(getExpectedOppName(rd, nextCloseDate), opps[0].Name, 'Opportunity name should contain new Close Date');
         System.assertEquals(PAYMENT_CHECK, getPayments(opps)[0].npe01__Payment_Method__c, 'Payment method should be updated on Payment');
     }
 

@@ -177,12 +177,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
 
-        for (npe03__Recurring_Donation__c rd : rds) {  
-            rd.npe03__Next_Payment_Date__c = 
-                scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
-            
-            RecurringDonation rdRecord = new RecurringDonation(rd); 
+        for (npe03__Recurring_Donation__c rd : rds) {              
+            RecurringDonation rdRecord = new RecurringDonation(rd)
+                .revise(scheduleService); 
+
+            if (rdRecord.isOutdated()) {
+                outdatedRDs.add(rd);
+            }
             
             if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
@@ -201,6 +204,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         oppService.createOpportunities(newOppRDs);
         oppService.updateOpportunities(updateOppRDs);
         oppService.voidOpportunities(closedRDs);
+
+        if (!outdatedRDs.isEmpty()) {
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+            UTIL_DMLService.updateRecordBatchAndLogErrors(outdatedRDs, ERR_Handler_API.Context.RD.name());
+        }
 
         return this;
     }
@@ -338,12 +346,39 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     public class RecurringDonation {
         npe03__Recurring_Donation__c rd;
         private Boolean hasOpenOpportunity;
+        private Boolean isOutdated;
 
         /**
         * @description Constructor
         */
         public RecurringDonation(npe03__Recurring_Donation__c rd) {
             this.rd = rd;
+        }
+
+        /**
+        * @description Revises and modifies the Recurring Donation so it is up to date
+        * @param scheduleService RD Schedule Service
+        * @return RecurringDonation This record instance
+        */
+        public RecurringDonation revise(RD2_ScheduleService scheduleService) {
+            isOutdated = false;
+
+            Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
+
+            if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
+                rd.npe03__Next_Payment_Date__c = nextDonationDate;
+                isOutdated = true;
+            }
+
+            return this;
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation is outdated and requiring an update
+        * @return Boolean
+        */
+        public Boolean isOutdated() {
+            return isOutdated;
         }
 
         /**

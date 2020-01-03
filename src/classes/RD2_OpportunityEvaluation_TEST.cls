@@ -192,7 +192,7 @@ private class RD2_OpportunityEvaluation_TEST {
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
+        System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
 
         System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
             'Close Date should be unchanged for the existing Opp');
@@ -226,7 +226,7 @@ private class RD2_OpportunityEvaluation_TEST {
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
+        System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
 
         System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
             'Close Date should be unchanged for the existing Opp');
@@ -264,7 +264,7 @@ private class RD2_OpportunityEvaluation_TEST {
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(2, oppById.size(), 'New opportunity should be created: ' + oppById.values());
+        System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
 
         System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
             'Close Date should be unchanged for the existing Opp');
@@ -324,6 +324,52 @@ private class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(1, opps.size(), 'A new Opportunity should be created: ' + opps);
         System.assertEquals(rdSchedules[0].EndDate__c, opps[0].CloseDate, 
             'Close Date on the new Opp should match next Close Date');
+    }
+
+    /**
+     * @description Verifies RD Next Donation Date is updated when it is outdated and the new Opp is created
+     */
+    @IsTest
+    private static void shouldCreateNextOppWhenRDNextDonationDateIsOutdated() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date prevCloseDate = START_DATE;
+        Date today = prevCloseDate.addDays(1);
+        final Date nextDonationDate = prevCloseDate.addMonths(1);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withOpenStage()
+            .withCloseDate(prevCloseDate)
+            .build();
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should match');
+
+        //Next Donation Date is outdated
+        today = nextDonationDate.addDays(1);
+        final Date nextCloseDate = nextDonationDate.addMonths(1);
+        //need to set the Schedule Service current date due to other async jobs completing in Test.start/stopTest()
+        RD2_ScheduleService.currentDate = today;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(nextCloseDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should match');
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
+
+        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
+            'Close Date should be unchanged for the existing Opp');
+        System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate, 
+            'Close Date on the new Opp should match next Close Date after today');
     }
 
     /**

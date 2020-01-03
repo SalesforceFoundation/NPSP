@@ -150,7 +150,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
-        // New Opportunity - Is New RD
+        // New Opp - Is New RD
         npe03__Recurring_Donation__c rdNew = getRecurringDonationBuilder()
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
@@ -165,11 +165,8 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
 
         List<Opportunity> opps = new List<Opportunity>{
-            new TEST_OpportunityBuilder()
+            getOpportunityBuilder(rdOld)
                 .withAccount(rdOld.npe03__Organization__c)
-                .withContact(rdOld.npe03__Contact__c)
-                .withRecurringDonation(rdOld.Id)
-                .withAmount(rdOld.npe03__Amount__c)
                 .withOpenStage()
                 .withCloseDate(rdOld.npe03__Next_Payment_Date__c)
                 .build()
@@ -261,10 +258,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
         insert rd;
         
-        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c);
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
 
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
@@ -390,27 +384,21 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact contact = getContact();
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)        
             .withCalculateNextDonationDate()
             .build();
         insert rd;
 
-        insert new TEST_OpportunityBuilder()
-            .withContact(contact.Id)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1)
+        insert getOpportunityBuilder(rd)
             .withCloseDate(today.addDays(1))
             .withOpenStage()
             .build();
 
-        Date newCloseDate = today.addDays(2);
+        Date nextCloseDate = today.addDays(2);
         Decimal newAmount = rd.npe03__Amount__c + 100;
 
         Test.startTest();
-        rd.Day_Of_Month__c = String.valueOf(newCloseDate.day());
+        rd.Day_Of_Month__c = String.valueOf(nextCloseDate.day());
         rd.npe03__Amount__c = newAmount;
         update rd;
         Test.stopTest();
@@ -418,7 +406,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Installment Opp should exist: ' + opps);
         System.assertEquals(newAmount, opps[0].amount, 'Amount should be updated');
-        System.assertEquals(newCloseDate, opps[0].CloseDate, 'Close Date should be updated');
+        System.assertEquals(nextCloseDate, opps[0].CloseDate, 'Close Date should be updated');
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
@@ -504,6 +492,19 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = TEST_RecurringDonationBuilder.addRelatedList(rd, UTIL_Namespace.StrTokenNSPrefix('RecurringDonationSchedules__r'), schedules);
 
         return rd;
+    }
+
+    /**
+     * @description Instantiate an Opp builder for the specified Recurring Donation
+     * @param rd Recurring Donation
+     * @return TEST_OpportunityBuilder New Opp builder
+     */
+    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
+        return new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1);
     }
 
 }
