@@ -362,7 +362,9 @@ class NPSP(SalesforceRobotLibraryBase):
      
          
     def verify_address_details(self,field,value,**kwargs):
-        """Validates if the details page address field has specified value"""   
+        """Validates if the details page address field has specified value
+        Field is the The address type field we are trying to match to the Expected address Map that is sent through Kwargs"""
+
         locator= npsp_lex_locators['detail_page']['address'].format(field)
         street, city, country = self.selenium.get_webelements(locator)
 
@@ -372,8 +374,9 @@ class NPSP(SalesforceRobotLibraryBase):
                 status = "pass"
             else:
                 status = "fail"
-        if value == "contains":
-            assert status == "pass", "Expected value to be  but found "
+        if value.lower() == "contains":
+            assert status == "pass", "Expected address {} , {}, {} does not match".format(street.text,city.text,country.text)
+
 
     def validate_checkboxes(self,name,checkbox_title):
         """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""   

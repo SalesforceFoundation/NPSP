@@ -12,7 +12,6 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         Waits for the current page to be a Manage Household page
         """
         self.selenium.wait_until_location_contains("/one",timeout=60, message="Manage Household page did not load in 1 min")
-        self.selenium.location_should_contain("Manage Household",message="Current page is not ManageHousehold")
 
 
     def _go_to_page(self, filter_name=None):
@@ -26,7 +25,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
     def change_address_using(self, option, **kwargs):
         """
          Changes address setting based on the type of options chosen
-         Supported options are (Select An Existing Address/Enter A new Address)
+         Supported option is (Enter A new Address)
         """
         if option.lower() == "enter a new address":
            self.npsp.click_managehh_link("Enter a new address")

@@ -44,7 +44,7 @@ Change Name Display Settings on Manage Household Page
     Current Page Should Be                  Details                                                             Account
     Wait Until Loading Is Complete
     Click Link                              link=Manage Household
-    Go To Page                              Custom                                                              ManageHousehold
+    Current Page Should Be                  Custom                                                              ManageHousehold
 
     # Choose the display option as Informal Greeting for contact#1
 
@@ -60,9 +60,10 @@ Change Name Display Settings on Manage Household Page
     Current Page Should Be                  Details                                                             Account
     Wait Until Page Contains                Account Owner
 
-    Go To Page                              Listing                                                             Account
+    Go To Page                              Details
+    ...                                     Account
+    ...                                     object_id=&{contact1}[AccountId]
 
-    Click Link                              link=&{contact1}[LastName] and &{contact2}[LastName] Household
     Select Tab                              Details
     Check Field Value                       Informal Greeting                                                   &{contact2}[FirstName]
     Check Field Value                       Formal Greeting                                                     &{contact1}[FirstName] &{contact1}[LastName]
