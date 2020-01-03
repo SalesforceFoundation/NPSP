@@ -68,7 +68,8 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <fullName>RecurringDonations2MigrationState__c</fullName>
+    <fields>
+        <fullName>RecurringDonations2MigrationState__c</fullName>
         <description>Contains latest dry run and data migration results.</description>
         <externalId>false</externalId>
         <inlineHelpText>Contains latest dry run and data migration results.</inlineHelpText>
