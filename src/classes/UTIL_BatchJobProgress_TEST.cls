@@ -6,13 +6,13 @@
     modification, are permitted provided that the following conditions are met:
 
     * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+        notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
     * Neither the name of Salesforce.org nor the names of
-      its contributors may be used to endorse or promote products derived
-      from this software without specific prior written permission.
+        its contributors may be used to endorse or promote products derived
+        from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -47,7 +47,7 @@ private with sharing class UTIL_BatchJobProgress_TEST {
         );
 
         telemetryBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(
-            UTIL_FeatureManagement.class, 
+            UTIL_FeatureManagement.class,
             new UTIL_FeatureManagement_TEST.Mock()
         );
 
@@ -55,14 +55,25 @@ private with sharing class UTIL_BatchJobProgress_TEST {
         Database.executeBatch(telemetryBatch);
         Test.stopTest();
 
-        String className = 'UTIL_OrgTelemetry_SObject_BATCH';
+        UTIL_BatchJobService.BatchJob batchJob = getBatchJob('UTIL_OrgTelemetry_SObject_BATCH');
+        System.assertNotEquals(null, batchJob, 'Batch Job should be returned');
+    }
 
+
+    // HELPER METHODS
+    //////////////////////
+
+    /**
+     * @description Returns batch job wrapper
+     * @param className Class name
+     * @return UTIL_BatchJobService.BatchJob
+     */
+    private static UTIL_BatchJobService.BatchJob getBatchJob(String className) {
         String jsonBatchJob = UTIL_BatchJobProgress_CTRL.loadBatchJob(className);
         System.assert(String.isNotBlank(jsonBatchJob), 'Batch job details should be retrieved');
 
-        UTIL_BatchJobService.BatchJob batchJob = (UTIL_BatchJobService.BatchJob) JSON.deserialize(
+        return (UTIL_BatchJobService.BatchJob) JSON.deserialize(
             jsonBatchJob, UTIL_BatchJobService.BatchJob.class
         );
-        System.assertNotEquals(null, batchJob, 'BatchJob instance should be returned');
     }
 }
