@@ -10,6 +10,7 @@
              class="slds-button-group"
              role="group">
             <lightning-button label="New Batch"
+                              if:true={isAccessible}
                               title="New Batch"
                               variant="neutral"
                               class="slds-float_right"
@@ -25,7 +26,16 @@
             <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
         </template>
 
-        <lightning-tabset active-tab-value="Templates"
+        <div if:false={isAccessible} class=slds-p-top_x-large>
+            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
+                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
+                                 size='large'
+                                 variant='lake-mountain'>
+            </c-util-illustration>
+        </div>
+
+        <div if:true={isAccessible}>
+            <lightning-tabset active-tab-value="Templates"
                           class="extension_test">
 
             <lightning-tab value="Batches"
@@ -63,7 +73,8 @@
                 </div>
             </lightning-tab>
 
-        </lightning-tabset>
+            </lightning-tabset>
+        </div>
     </div>
 
 </template>
