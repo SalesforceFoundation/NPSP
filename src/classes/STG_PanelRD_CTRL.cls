@@ -46,12 +46,6 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     private integer originalForecastMonths;
 
     /*********************************************************************************************************
-    * @description holds map to control installment auto-creation custom label and value
-    */
-    @testVisible
-    private Map<String, String> installmentAutoCreationLabelMap;
-
-    /*********************************************************************************************************
     * @description The panel's constructor
     */
     public STG_PanelRD_CTRL() { }
@@ -61,12 +55,6 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     */
     public void init(){
         originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
-
-        installmentAutoCreationLabelMap = new Map<String, String> {
-            RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name() => Label.stgInstallmentOppEnableAll,
-            RD2_Constants.InstallmentCreation.Disable_First_Installment.name() => Label.stgInstallmentOppDisableFirst,
-            RD2_Constants.InstallmentCreation.Disable_All_Installments.name() => Label.stgInstallmentOppDisableAll
-        };
     }
 
     /*********************************************************************************************************
@@ -189,19 +177,19 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }
 
-    public List<SelectOption> listInstallmentCreationOptions {
+    public List<SelectOption> installmentOppCreationOptions {
         get {
-        	if (listInstallmentCreationOptions == null) {
-	            listInstallmentCreationOptions = getCreationOptions();
+        	if (installmentOppCreationOptions == null) {
+	            installmentOppCreationOptions = getCreationOptions();
         	}
-            return listInstallmentCreationOptions;
+            return installmentOppCreationOptions;
         }
         private set;
     }
 
     public String installmentAutoCreationLabel {
         get {
-            installmentAutoCreationLabel = installmentAutoCreationLabelMap.get(STG_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
+            installmentAutoCreationLabel = convertToInstallmentLabel(STG_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
             return installmentAutoCreationLabel;
         }
         private set;
@@ -210,15 +198,22 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     private List<SelectOption> getCreationOptions() {
         List<SelectOption> options = new List<SelectOption>();
 
-        for (String creationOption : installmentAutoCreationLabelMap.keySet()) {
-                options.add(new SelectOption(creationOption, installmentAutoCreationLabelMap.get(creationOption)));
+        for (RD2_Constants.InstallmentCreation creationOption : RD2_Constants.InstallmentCreation.values()) {
+            options.add(new SelectOption(creationOption.name(), convertToInstallmentLabel(creationOption.name())));
         }
 
         return options;
     }
-
     
-
-
-
+    @TestVisible
+    private String convertToInstallmentLabel(String installmentOption) {
+        if (installmentOption == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name()) {
+            return Label.stgInstallmentOppEnableAll;
+        } else if(installmentOption == RD2_Constants.InstallmentCreation.Disable_First_Installment.name()) {
+            return Label.stgInstallmentOppDisableFirst;
+        } else if( installmentOption == RD2_Constants.InstallmentCreation.Disable_All_Installments.name()) {
+            return Label.stgInstallmentOppDisableAll;
+        }
+        return '';
+    }
 }

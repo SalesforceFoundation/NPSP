@@ -67,7 +67,7 @@
                     <div class="slds-form-element__control">
                         <apex:outputText value="{!installmentAutoCreationLabel}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                         <apex:selectList value="{!stgService.stgRD.InstallmentOppAutoCreateOption__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="installmentAuoCreationSetting" html-aria-describedby="{!$Component.installmentAuoCreationSettingHelp}" styleClass="slds-select" >
-                            <apex:selectOptions value="{!listInstallmentCreationOptions}" />
+                            <apex:selectOptions value="{!installmentOppCreationOptions}" />
                         </apex:selectList>
                         <apex:outputPanel id="installmentAuoCreationSettingHelp" layout="block">
                             <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDInstallmentOppAutoCreateAction}" />

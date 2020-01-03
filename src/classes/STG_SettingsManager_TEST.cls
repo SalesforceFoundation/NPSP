@@ -614,21 +614,6 @@ private with sharing class STG_SettingsManager_TEST {
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(15, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
         system.assertEquals(15, UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings().npe03__Opportunity_Forecast_Months__c);
-
-       
-        List<RD2_Constants.InstallmentCreation> creationOptions = RD2_Constants.InstallmentCreation.values();
-
-        List<String> stringInstallmentCreationOption = new List<String>();
-
-        for (RD2_Constants.InstallmentCreation option : creationOptions) {
-            stringInstallmentCreationOption.add(option.name());
-        }
-
-        List<SelectOption> installmentCreationOptions = panel.listInstallmentCreationOptions;
-
-        for (SelectOption option : installmentCreationOptions) {
-            System.assert(stringInstallmentCreationOption.contains(option.getValue()), 'When initialize the controller, installment creation option should be construct correctly');
-        }
     }
 
     /*********************************************************************************************************
@@ -668,6 +653,34 @@ private with sharing class STG_SettingsManager_TEST {
         }
     }
 
+    /***
+    * @description Every Installment Auto Creation Setting option should be in the panel for displayed
+    */
+    @isTest
+    private static void shouldHaveValidSelectOptionsForInstallmentAutoCreationSetting() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        List<SelectOption> displayedOptions = panel.installmentOppCreationOptions;
+        Test.stopTest();
+
+        List<String> stringInstallmentCreationOption = new List<String>();
+
+        for (RD2_Constants.InstallmentCreation option : RD2_Constants.InstallmentCreation.values()) {
+            stringInstallmentCreationOption.add(option.name());
+        }
+
+        System.assertEquals(stringInstallmentCreationOption.size(), displayedOptions.size(),
+            'Every Installment Creation Options should be in the list for selection');
+
+        for (SelectOption option : displayedOptions) {
+            System.assert(stringInstallmentCreationOption.contains(option.getValue()),
+                'All option in the displayed list should be a valid Installment Auto Creation option');
+        }
+    }
+    /***
+    * @description The label currently being displayed should match the actual Installment Opp Auto Creation Setting
+    */
     @isTest
     private static void shouldHaveCorrectAutoCreationLabelDisplayed() {
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
@@ -678,11 +691,65 @@ private with sharing class STG_SettingsManager_TEST {
 
         String displayedAutoCreationLabel = panel.installmentAutoCreationLabel;
 
-        String installmentautoCreationSettingLabel = panel.installmentAutoCreationLabelMap.get(
+        String installmentautoCreationSettingLabel = panel.convertToInstallmentLabel(
             Stg_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
         
         System.assertEquals(installmentautoCreationSettingLabel, displayedAutoCreationLabel,
             'The installment opp displayed label should matches the one stored in the NPSP setting');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Always Allow Next Installment
+    * should be correctly conoverted to the repected label when displayed onto the RD panel 
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationAlwaysAllowToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        String alwaysAllowSetting = RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(alwaysAllowSetting);
+        Test.stopTest();
+
+        System.assertEquals(Label.stgInstallmentOppEnableAll, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to repected custom label');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Disalbe First Installment
+    * should be correctly conoverted to the repected label when displayed onto the RD panel 
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationDisableFirstToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        String DisableFirstSetting = RD2_Constants.InstallmentCreation.Disable_First_Installment.name();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(DisableFirstSetting);
+        Test.stopTest();
+
+        System.assertEquals(Label.stgInstallmentOppDisableFirst, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to repected custom label');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Disable All Installment
+    * should be correctly conoverted to the repected label when displayed onto the RD panel 
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationDisableAllToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        String DisalbeAllSetting = RD2_Constants.InstallmentCreation.Disable_All_Installments.name();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(DisalbeAllSetting);
+        Test.stopTest();
+
+        System.assertEquals(Label.stgInstallmentOppDisableAll, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to repected custom label');
     }
 
     /*********************************************************************************************************
