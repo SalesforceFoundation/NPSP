@@ -1,35 +1,69 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/ManageHouseHoldPageObject.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
+
+
+*** Keywords ***
+
+Setup Test Data
+    &{contact1} =         API Create Contact                    Email=${EMAIL1}
+    Store Session Record  Account                               &{contact1}[AccountId]
+    Set suite variable    &{contact1}
+    &{contact2} =         API Create Contact
+    Store Session Record  Account                               &{contact2}[AccountId]
+    Set suite variable    &{contact2}
+
+
+*** Variables ***
+${EMAIL1}       user1@automation.com
+
 
 *** Test Cases ***
 
-Change Naming on Manage Household Page
-    [tags]  unstable
-    &{contact1} =  API Create Contact    Email=skristem@robot.com
-    Store Session Record    Account    &{contact1}[AccountId]
-    Go To Record Home  &{contact1}[AccountId] 
-    #2 Create a new contact under HouseHold Validation
-    ${contact_id2} =  New Contact for HouseHold
-    &{contact2} =  Salesforce Get  Contact  ${contact_id2}
-    Header Field Value    Account Name    &{contact1}[LastName] and &{contact2}[LastName] Household
-    Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household    
-    # Click Link    link=Show more actions
-    Click Link    link=Manage Household    
-    Wait For Locator    frame    Manage Household       
-    Choose Frame   Manage Household
-    ${loc}    Validate Checkbox    &{contact1}[FirstName] &{contact1}[LastName]    Informal Greeting
-    Double Click Element    ${loc}
-    ${loc}    Validate Checkbox    &{contact2}[FirstName] &{contact2}[LastName]    Formal Greeting
-    Double Click Element    ${loc}
-    Click Button       title=Save
-    Unselect Frame
-    Wait Until Page Contains    Account Owner
-    Sleep    3
-    Go To Object Home          Account
-    Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household
-    Select Tab     Details
-    Check Field Value    Informal Greeting    &{contact2}[FirstName]
-    Check Field Value    Formal Greeting    &{contact1}[FirstName] &{contact1}[LastName]
+Change Name Display Settings on Manage Household Page
+    [Documentation]                      Create two contacts using the backend API
+    ...                                  Using Manage Household, add the second contact part of the Contact#1's household
+    ...                                  From the manage household page's name display settings, choose the options for both the contacts and save
+    ...                                  Verify the selection made is retained and the right display is shown on the Details section
+    [tags]                               W-038348             feature: Manage Households
+
+    Go To Page                              Details
+    ...                                     Account
+    ...                                     object_id=&{contact1}[AccountId]
+    Click Link                              link=Manage Household
+    Go To Page                              Custom                                                              ManageHousehold
+    Add contact                             Existing                                                            &{contact2}[FirstName] &{contact2}[LastName]
+    Current Page Should Be                  Details                                                             Account
+    Wait Until Loading Is Complete
+    Click Link                              link=Manage Household
+    Current Page Should Be                  Custom                                                              ManageHousehold
+
+    # Choose the display option as Informal Greeting for contact#1
+
+    Validate And Select Checkbox            &{contact1}[FirstName] &{contact1}[LastName]
+    ...                                     Informal Greeting
+
+    # Choose the display option as Formal Greeting for contact#2
+
+    Validate And Select Checkbox            &{contact2}[FirstName] &{contact2}[LastName]
+    ...                                     Formal Greeting
+
+    Save Changes Made For Manage Household
+    Current Page Should Be                  Details                                                             Account
+    Wait Until Page Contains                Account Owner
+
+    Go To Page                              Details
+    ...                                     Account
+    ...                                     object_id=&{contact1}[AccountId]
+
+    Select Tab                              Details
+    Check Field Value                       Informal Greeting                                                   &{contact2}[FirstName]
+    Check Field Value                       Formal Greeting                                                     &{contact1}[FirstName] &{contact1}[LastName]
