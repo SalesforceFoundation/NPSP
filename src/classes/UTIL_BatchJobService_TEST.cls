@@ -37,8 +37,15 @@
 @isTest(IsParallel=true)
 public with sharing class UTIL_BatchJobService_TEST {
     public static final Id MOCK_BATCH_ID = '707f100007HyXHJAA3';
-
 	private static final String TIME_ELAPSED_DAYS = System.Label.BatchProgressTimeElapsedDays;
+
+    /****
+    * @description Creates data required for unit tests
+    */
+    @TestSetup
+    private static void setUp() {
+        insert UTIL_UnitTestData_TEST.getContact();
+    }
 
     /***
     * @description Verifies the constructor throws an error when the batch job input argument is null
@@ -165,6 +172,80 @@ public with sharing class UTIL_BatchJobService_TEST {
 
 
     /***
+    * @description Verifies batch job summary is set correctly
+    */
+    @isTest
+    private static void shouldSetBatchJobSummary() {
+        Integer total = 100;
+        Integer processed = 80;
+        Integer failed = 20;
+
+        UTIL_BatchJobService.JobSummary summary =
+            new UTIL_BatchJobService.JobSummary(MOCK_BATCH_ID)
+            .withTotalRecords(total)
+            .withTotalRecordsProcessed(processed)
+            .withTotalRecordsFailed(failed);
+
+        System.assertEquals(MOCK_BATCH_ID, summary.batchId, 'Batch Id should match');
+        System.assertEquals(total, summary.total, 'Total Records should match');
+        System.assertEquals(processed, summary.processed, 'Total Records Processed should match');
+        System.assertEquals(failed, summary.failed, 'Total Records Failed should match');
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations migration batch job summary is returned
+     */
+    @IsTest
+    private static void shouldReturnEnhancedRDMigrationSummary() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        Id jobId = Database.executeBatch(new RD2_DataMigration_BATCH());
+        Test.stopTest();
+
+        assertBatchJobSummary(jobId, 'RD2_DataMigration_BATCH');
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations dry run migration batch job summary is returned
+     */
+    @IsTest
+    private static void shouldReturnEnhancedRDDryRunMigrationSummary() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        Id jobId = Database.executeBatch(new RD2_DataMigrationDryRun_BATCH());
+        Test.stopTest();
+
+        assertBatchJobSummary(jobId, 'RD2_DataMigrationDryRun_BATCH');
+    }
+
+    /***
+    * @description Asserts batch job summary
+    * @param className Class Name
+    * @return void
+    */
+    private static void assertBatchJobSummary(Id jobId, String className) {
+        UTIL_BatchJobService.BatchJob batchJob = getBatchJob(className);
+        System.assertNotEquals(null, batchJob, 'Batch Job should be returned');
+        System.assertNotEquals(null, batchJob.summary, 'Batch Job summary should be returned');
+
+        System.assertEquals(jobId, batchJob.summary.batchId, 'Batch Id should match: ' + batchJob.summary);
+        System.assertEquals(1, batchJob.summary.total, 'Total Records should match: ' + batchJob.summary);
+        System.assertEquals(1, batchJob.summary.processed, 'Total Records Processed should match: ' + batchJob.summary);
+        System.assertEquals(0, batchJob.summary.failed, 'Total Records Failed should match: ' + batchJob.summary);
+    }
+
+
+    /***
     * @description Builds an AsyncApexJob and sets attributes that are not writable otherwise
     */
     public class TestAsyncApexJob {
@@ -240,6 +321,10 @@ public with sharing class UTIL_BatchJobService_TEST {
         private Id jobId;
         private Id childJobId;
 
+        public MockBatchableContext() {
+            jobId = MOCK_BATCH_ID;
+        }
+
         public MockBatchableContext returnJobId(Id jobId) {
             this.jobId = jobId;
             return this;
@@ -280,6 +365,62 @@ public with sharing class UTIL_BatchJobService_TEST {
     */
     private static User getUser() {
         return [SELECT Id, Name FROM User WHERE Id = :UserInfo.getUserId()];
+    }
+
+    /****
+    * @description Returns contact record
+    * @return Contact
+    */
+    private static Contact getContact() {
+        return [
+            SELECT FirstName, LastName, AccountId
+            FROM Contact
+            LIMIT 1
+        ];
+    }
+
+    /**
+     * @description Sets RD Settings 
+     * @return void
+     */
+    private static void setRDSettings() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Maximum_Donations__c = 50,
+                npe03__Opportunity_Forecast_Months__c = 6
+            )
+        );
+    }
+
+    /**
+     * @description Instantiate a legacy recurring donation for a specific ContactId
+     * @param contactId
+     * @return TEST_RecurringDonationBuilder New Recurring Donation builder
+     */
+    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder(Id contactId) {
+        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withId(null)
+            .withDateEstablished(Date.today().addMonths(-1))
+            .withOpenEndedStatusOpen()
+            .withContact(contactId)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1');
+    }
+
+    /**
+     * @description Returns batch job wrapper
+     * @param className Class name
+     * @return UTIL_BatchJobService.BatchJob
+     */
+    private static UTIL_BatchJobService.BatchJob getBatchJob(String className) {
+        String jsonBatchJob = UTIL_BatchJobProgress_CTRL.loadBatchJob(className);
+        System.assert(String.isNotBlank(jsonBatchJob), 'Batch job details should be retrieved');
+
+        return (UTIL_BatchJobService.BatchJob) JSON.deserialize(
+            jsonBatchJob, UTIL_BatchJobService.BatchJob.class
+        );
     }
 
 
