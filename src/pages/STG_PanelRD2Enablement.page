@@ -12,6 +12,13 @@
         </div>
     </div>
 
+    <apex:form id="form">
+        <apex:actionFunction name="refreshPanels" 
+            action="{!refreshPanels}" 
+            reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRDInstPd, idPanelRDFieldMap"
+            status="statusLoad" />
+    </apex:form>
+
     <script>
         var namespace = '{!namespace}';
         if (!namespace || namespace === '') {
@@ -22,7 +29,12 @@
                 namespace + ":RD2_EnablementDelegate",
                 {},
                 "enablementDelegateDiv",
-                function () { }
+                function () {
+                    $A.eventService.addHandler({
+                        "event": "c:RD2_EnhancementEnabledEvent",
+                        "handler": refreshPanels
+                    });
+                }
             );
         });
     </script>

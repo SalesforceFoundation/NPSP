@@ -1,0 +1,1 @@
+<aura:event type="APPLICATION" description="Event fired when enhanced Recurring Donations are enabled" />
