@@ -66,7 +66,20 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         private set;
     }
 
-    /***
+    /**
+    * @description Should Rollups be disabled before any new Installments Opps are inserted
+    */
+    private Boolean disableRollups {
+        get {
+            disableRollups = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().DisableRollupsWhenCreatingInstallments__c;
+            if (disableRollups == null) {
+                disableRollups = false;
+            }
+            return disableRollups;
+        } private set;
+    }
+
+    /**
     * @description Count of RD's processed by the batch
     */
     @TestVisible
@@ -130,6 +143,10 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
         recordsProcessed += rds.size();
+
+        if (disableRollups) {
+            TDTM_Config_API.disableAllRollupTriggers();
+        }
 
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService()
             .withBatchContext()

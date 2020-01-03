@@ -87,6 +87,7 @@ public class TEST_SObjectGateway {
                     npe03__Installment_Period__c,
                     InstallmentFrequency__c,
                     npe03__Total_Paid_Installments__c,
+                    npe03__Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
                     Status__c
