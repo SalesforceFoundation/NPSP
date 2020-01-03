@@ -277,22 +277,7 @@ class NPSP(SalesforceRobotLibraryBase):
                 break
 
         assert list_found, "locator not found"  
- 
-            
-#     def verify_field_value(self, field,status,value):
-#         """If status is 'contains' then the specified value should be present in the field
-#                         'does not contain' then the specified value should not be present in the field
-#         """
-#         locator=npsp_lex_locators['check_field'].format(field)
-#         actual_value=self.selenium.get_webelement(locator).text
-#         if status == "contains":
-#             assert value == actual_value, "Expected value to be {} but found {}".format(
-#                 value, actual_value
-#             )
-#         elif status == "does not contain":
-#              assert value != actual_value, "Expected value {} and actual value {} should not match".format(
-#                 value, actual_value
-#             )         
+     
     
     
     def verify_record(self, name):
@@ -1292,6 +1277,8 @@ class NPSP(SalesforceRobotLibraryBase):
         """Scrolls just a little below the field
            Clicks on Edit icon next to field and enters a value into the field"""
         scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
         self.selenium.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
@@ -1306,6 +1293,8 @@ class NPSP(SalesforceRobotLibraryBase):
            checks if status is 'checked' 
            unchecks if status in 'unchecked'"""
         scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
         self.selenium.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
@@ -1319,12 +1308,15 @@ class NPSP(SalesforceRobotLibraryBase):
         footer=npsp_lex_locators["record"]["footer"]
         self.click_record_button("Save")
         self.selenium.wait_until_page_does_not_contain_element(footer)
+        #Once the record is saved, scroll to top in order to be able to interact with elements above this
         self.selenium.execute_javascript("window.scrollTo(0,0)")   
     
     def Delete_record_field_value(self,field,value):
         """Scrolls just a little below the field
            Clicks on Edit icon next to field and delete the value by clicking on 'X'"""
         scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
         self.selenium.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
