@@ -3,15 +3,19 @@ import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
 import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
+import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { findIndexByProperty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
+import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
 const actions = [
     { label: 'Edit', name: 'edit' },
     { label: 'Clone', name: 'clone' },
     { label: 'Delete', name: 'delete' }
 ];
+
+const ADVANCED_MAPPING = 'Data Import Field Mapping';
 
 const columns = [
     { label: 'Template Name', fieldName: 'name' },
@@ -31,6 +35,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     @track columns = columns;
     @track isLoading = true;
     currentNamespace;
+    @track isAccessible = true;
 
     get templateBuilderCustomTabApiName() {
         return this.currentNamespace ? `${this.currentNamespace}__GE_Template_Builder` : 'GE_Template_Builder';
@@ -41,10 +46,31 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     init = async () => {
-        await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
-        this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
-        this.templates = await getAllFormTemplates();
-        this.isLoading = false;
+        this.isAccessible = await this.checkPageAccess();
+        if(this.isAccessible){
+            await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
+            this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+            this.templates = await getAllFormTemplates();
+            this.isLoading = false;
+        }
+    }
+
+    /*******************************************************************************
+     * @description Method checks for page level access. Currently only checks
+     * if Advanced Mapping is on from the Data Import Custom Settings.
+     */
+    checkPageAccess = async () => {
+        const dataImportSettings = await getDataImportSettings();
+        const isAdvancedMappingOn =
+            dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
+        let hasPageAccess = false;
+
+        if (isAdvancedMappingOn) {
+            hasPageAccess = true;
+        } else {
+            this.isLoading = hasPageAccess = false;
+        }
+        return hasPageAccess;
     }
 
     handleRowAction(event) {
