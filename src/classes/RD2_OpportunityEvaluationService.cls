@@ -63,6 +63,26 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Indicates if the first installment Opportunity on a Recurring Donation should be created.
+     * If Opportunities are created from a batch, "Disable First Installment" is ignored and 
+     * the first installment is not created only if the setting is "Disable All Installments".
+     * @return Boolean
+     */
+    private Boolean isFirstInstallmentEnabled {
+        get {
+            if (isFirstInstallmentEnabled == null) {
+                if (isBatchContext) {
+                    isFirstInstallmentEnabled = !rdSettings.isDisableAllInstallments;
+                } else {
+                    isFirstInstallmentEnabled = rdSettings.isFirstInstallmentEnabled;
+                }
+            }
+            return isFirstInstallmentEnabled;
+        }
+        set;
+    }
+
+    /**
     * @description Current reference date to calculate schedules and compare Opps with matching installments
     */   
     private Date currentDate {
@@ -237,7 +257,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Indicates if the Recurring Donation require a new installment Opp to be created.
+     * @description Indicates if a Recurring Donation requires a new installment Opp to be created.
      * @param rd Recurring Donation SObject
      * @return Boolean
      */
@@ -248,7 +268,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
      * @description Indicates if the Recurring Donation require a new installment Opp to be created.
-     * Schedules are inserted upon the Recurring Donation insert and before Opp evaluation is done.
+     * Schedules are inserted when the Recurring Donation is created and before Opp evaluation is done.
      * @param rd Recurring Donation record
      * @return Boolean
      */
@@ -262,28 +282,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         if (rd.isNew()) {
-            return isFirstInstallmentEnabled();
+            return isFirstInstallmentEnabled;
 
         } else if (isBatchContext || !rd.hasOpenOpportunity(currentDate)) {
             return rdSettings.isNextInstallmentEnabled;
         }
 
         return false;
-    }
-
-    /**
-     * @description Indicates if the first installment Opportunity on a Recurring Donation should be created.
-     * If Opportunities are created from a batch, "Disable First Installment" is ignored and 
-     * the first installment is not created only if the setting is "Disable All Installments".
-     * @return Boolean
-     */
-    private Boolean isFirstInstallmentEnabled() {
-        if (isBatchContext) {
-            return rdSettings.isDisableAllInstallments ? false : true;
-
-        } else {
-            return rdSettings.isFirstInstallmentEnabled;
-        }
     }
 
     /**
@@ -485,8 +490,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         private SObjectType rdSObjectType = npe03__Recurring_Donation__c.SObjectType;
         private SObjectType oppSObjectType = Opportunity.SObjectType;
 
-        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
-        Set<Id> failedRDIds = new Set<Id>();
+        private ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+        private Set<Id> failedRDIds = new Set<Id>();
 
         /***
         * @description Creates specified records
@@ -494,12 +499,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Set<Id> Ids of created records
         */
         public Set<Id> insertRecords(List<SObject> records) { 
-            List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
-
-            if (records != null && !records.isEmpty()) {
-                saveResults = Database.insert(records, false);
-                handleErrors(saveResults, records);
+            if (records == null || records.isEmpty()) {
+                return new Set<Id>();
             }
+
+            List<Database.SaveResult> saveResults = Database.insert(records, false);
+            handleErrors(saveResults, records);
 
             return getSuccessIds(saveResults);
         }
@@ -510,12 +515,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return void
         */
         public void updateRecords(List<SObject> records) { 
-            List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
-
-            if (records != null && !records.isEmpty()) {
-                saveResults = Database.update(records, false);
-                handleErrors(saveResults, records);
+            if (records == null || records.isEmpty()) {
+                return;
             }
+
+            List<Database.SaveResult> saveResults = Database.update(records, false);
+            handleErrors(saveResults, records);
         }
 
         /***
