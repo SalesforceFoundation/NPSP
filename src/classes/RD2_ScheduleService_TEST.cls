@@ -1373,8 +1373,105 @@ private with sharing class RD2_ScheduleService_TEST {
 
     }
 
+    /****
+    * @description Validates that 1 active schedule is returned for a new RD
+    */
+    @IsTest
+    private static void shouldReturn1ActiveSchedulesForNewRD() {
 
-        //// Helpers
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Check')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.today())
+                        .withStartDate(Date.today())
+                        .build();
+
+        Test.startTest();
+        insert rd;
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RD2_ScheduleService.ActiveSchedule> schedules = service.getVisualizedSchedules(rd);
+        Test.stopTest();
+
+        System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
+    }
+
+    /****
+    * @description Validates that 2 active schedule are returned for an RD with current and future schedules
+    */
+    @IsTest
+    private static void shouldReturn2ActiveSchedulesForRDWithFutureAndCurrentSchedule() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Check')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.today())
+                        .withStartDate(Date.today())
+                        .build();
+
+        Test.startTest();
+        insert rd;
+        rd.StartDate__c = Date.today().addMonths(2);
+        rd.npe03__Amount__c = 100;
+        update rd;
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RD2_ScheduleService.ActiveSchedule> schedules = service.getVisualizedSchedules(rd);
+        Test.stopTest();
+
+        System.assertEquals(2, schedules.size(), 'There should be 2 schedules.');
+    }
+
+    /****
+    * @description Validates that zero active schedules are returned for a closed RD
+    */
+    @IsTest
+    private static void shouldReturnZeroActiveSchedulesForClosedRD() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Check')
+                        .withInstallmentPeriodMonthly()
+                        .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.today())
+                        .withStartDate(Date.today())
+                        .withStatusClosed()
+                        .build();
+
+        Test.startTest();
+        insert rd;
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        List<RD2_ScheduleService.ActiveSchedule> schedules = service.getVisualizedSchedules(rd);
+        Test.stopTest();
+
+        System.assertEquals(0, schedules.size(), 'There should be zero schedules.');
+    }
+
+
+    //// Helpers
 
     /****
     * @description Returns Schedule Service with current date override

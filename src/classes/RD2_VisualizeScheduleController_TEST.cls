@@ -164,6 +164,39 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     }
 
     /****
+    * @description Validates that 2 active schedules are returned for a valid non-closed RD
+    */
+    @IsTest
+    private static void shouldReturn2ActiveSchedulesForValidNonClosedRD() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd =
+                TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                        .withContact(contact.Id)
+                        .withAmount(50)
+                        .withPaymentMethod('Credit Card')
+                        .withInstallmentPeriod('1st and 15th')
+                        .withInstallmentFrequency(1)
+                        .withDateEstablished(Date.newInstance(2019, 11, 1))
+                        .withStartDate(Date.newInstance(2019, 11, 1))
+                        .build();
+
+        Test.startTest();
+        insert rd;
+        rd.PaymentMethod__c = 'Check';
+        rd.StartDate__c = Date.today().addMonths(2);
+        update rd;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        Test.stopTest();
+
+        System.assertEquals(2, schedules.size(), 'There should be 2 schedules.');
+
+    }
+
+    /****
     * @description Validates that AuraHandledException is thrown when Enhanced RD is not enabled
     */
     @IsTest
