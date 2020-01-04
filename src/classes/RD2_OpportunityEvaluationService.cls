@@ -330,7 +330,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             queryFields.add(fld);
         }
 
-        //Return all Opps for Recurring Donations
+        //Return Recurring Donations' open Opps regardless of the Close Date
+        //and Opps with Close Date >= current date regardless if closed or open
         String oppSubquery =
             '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
             'npe03__Recurring_Donation__c, ' +
@@ -338,6 +339,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'StageName, IsClosed, IsWon, ' +
             'CampaignId, Recurring_Donation_Installment_Number__c ' +
             'FROM npe03__Donations__r ' +
+            'WHERE IsClosed = false ' +	
+            'OR CloseDate >= :currentDate ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
         //Return all schedules for the RD Schedule visualization.
