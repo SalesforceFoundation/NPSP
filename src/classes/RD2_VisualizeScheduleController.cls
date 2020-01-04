@@ -86,7 +86,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @return List<Schedule>
      */
     @AuraEnabled
-    public static List<Schedule> getSchedules(Id recordId, Integer displayNum) {
+    public static List<Schedule> getSchedules(Id recordId) {
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);

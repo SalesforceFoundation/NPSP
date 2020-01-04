@@ -1477,6 +1477,7 @@
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
+        <members>RD2_ActiveSchedulesEndDate</members>
         <members>RD2_ActiveSchedulesTitle</members>
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_DataMigrationInvalidCloseAction</members>

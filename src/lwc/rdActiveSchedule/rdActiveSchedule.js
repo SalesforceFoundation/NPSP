@@ -81,7 +81,7 @@ export default class RdScheduleVisualizer extends LightningElement {
                  FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD, FIELD_RD_CAMPAIGN] })
     wireRecordChange() {
         if (this.recordId) {
-            getSchedules({ recordId: this.recordId, displayNum: this.displayNum })
+            getSchedules({ recordId: this.recordId })
                 .then(data => {
                     this.handleCurrencyIsoCode(data);
                     this.handleColumns();
