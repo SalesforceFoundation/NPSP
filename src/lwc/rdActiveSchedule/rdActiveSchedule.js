@@ -1,19 +1,3 @@
-/*
-
-    TODO: Add fields and labels
-    TODO: Add supporting methods to controller
-
-    TODO: Experiment with number of columns listed in work item
-    TODO: Experiment with panel configured as labels and fields instead of table
-    TODO: Proceed with both so you can show both versions to team
-
-    TODO: Layout options
-    TODO: Demo to team
-
-    TODO: Fix details
-    TODO: Add descriptions
- */
-
 import labelScheduleTitle from '@salesforce/label/c.RD2_ActiveSchedulesTitle';
 import labelEndDate from '@salesforce/label/c.RD2_ActiveSchedulesEndDate';
 
