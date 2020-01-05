@@ -99,7 +99,7 @@
                 <name>displayNum</name>
                 <value>12</value>
             </componentInstanceProperties>
-            <componentName>rdScheduleVisualizer</componentName>
+            <componentName>%%%NAMESPACE%%%rdScheduleVisualizer</componentName>
         </componentInstances>
         <name>sidebar</name>
         <type>Region</type>

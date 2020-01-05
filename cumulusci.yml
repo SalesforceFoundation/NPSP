@@ -696,6 +696,10 @@ flows:
 
     dependencies:
         steps:
+            1:
+                task: update_dependencies
+                options:
+                    include_beta: true
             3:
                 task: ensure_record_type
 
