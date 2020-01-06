@@ -49,7 +49,14 @@ export default class GeBatchGiftEntryApp extends LightningElement {
     }
 
     handleBatchDryRun() {
+        //toggle the spinner on the form
+        const form = this.template.querySelector('c-ge-form-renderer');
+        const toggleSpinner = function () {
+            form.showSpinner = !form.showSpinner
+        };
+        form.showSpinner = true;
+
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.runBatchDryRun();
+        table.runBatchDryRun(toggleSpinner);
     }
 }

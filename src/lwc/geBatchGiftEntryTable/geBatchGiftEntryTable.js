@@ -208,12 +208,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     @api
-    runBatchDryRun() {
-        this.isLoaded = false;
-        const isLoaded = () => {
-            this.isLoaded = true;
-        }
-
+    runBatchDryRun(callback) {
         runBatchDryRun({
             batchId: this.batchId,
             numberOfRowsToReturn: this.data.length
@@ -231,7 +226,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 handleError(error);
             })
             .finally(() => {
-                isLoaded();
+                callback();
             });
     }
 }
