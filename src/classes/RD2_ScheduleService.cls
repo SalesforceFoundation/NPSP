@@ -48,10 +48,15 @@ public without sharing class RD2_ScheduleService {
     private final Integer DEFAULT_VISUALIZATION_SCHEDULE_COUNT = 12;
 
     /**
-    * @description Date to treat as current date in calculation of schedules
+    * @description Date to treat as current date in calculation of schedules.
+    * The date should not be overwritten in this class, only from other test classes in order to
+    * verify Recurring Donation and its schedule fields based on various "current" dates. 
+    * This date is used as the starting date to
+    * - calculate RD next donation date upon RD creation
+    * - set RD Start Date when relevant fields (such as Amount) are changed
+    * - calculate projected installment Opportunities' Close Date.
     */
-    @TestVisible
-    private Date currentDate {
+    public static Date currentDate {
         get {
             if (currentDate == null) {
                 currentDate = Date.today();
@@ -66,7 +71,6 @@ public without sharing class RD2_ScheduleService {
     * @return List<RecurringDonationSchedule__c>
     */
     public List<RecurringDonationSchedule__c> getNewSchedules(npe03__Recurring_Donation__c rd) {
-
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
@@ -74,7 +78,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c();
-
         schedule.RecurringDonation__c = rd.Id;
         schedule.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
 
@@ -159,7 +162,6 @@ public without sharing class RD2_ScheduleService {
     */
     @TestVisible
     private Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
-
         Boolean isNeeded = false;
 
         // newRD should never be null.  This is a fail safe measure only.
@@ -196,7 +198,10 @@ public without sharing class RD2_ScheduleService {
 
 
     /***
-    * @description Calculates the dates of the next n donations for a single RD
+    * @description Calculates the dates of the next N donations for a single RD
+    * Schedule visualization is utilized in Opportunity service to create new and update existing installment Opps.
+    * It is also used to display projected installment Opps on a page.
+    *
     * @param rd Recurring Donation record
     * @param startDate Date (if null, current date will be used)
     * @param numInstallments Integer (if null, DEFAULT_VISUALIZATION_SCHEDULE_COUNT will be used)
@@ -236,21 +241,18 @@ public without sharing class RD2_ScheduleService {
             startDate = currentDate;
         }
 
-        Map<Id, List<Installment>> installmentsByRd = new Map<Id, List<Installment>>();
         if (schedulesByRd == null) {
             schedulesByRd = getExistingSchedules(rds);
         }
 
+        Map<Id, List<Installment>> installmentsByRd = new Map<Id, List<Installment>>();
         for (npe03__Recurring_Donation__c rd : rds) {
-
             if (rd == null || rd.Id == null) {
                 continue;
             }
 
-            installmentsByRd.put(rd.Id, doVisualization(startDate, numInstallments, schedulesByRd.get(rd.Id)));
+            installmentsByRd.put(rd.Id, getVisualizedInstallments(startDate, numInstallments, schedulesByRd.get(rd.Id)));
         }
-
-        currentDate = Date.today();
 
         return installmentsByRd;
     }
@@ -262,37 +264,48 @@ public without sharing class RD2_ScheduleService {
     * @param schedules List of active RecurringDonationSchedule__c records
     * @return List<Installment>
     */
-    private List<Installment> doVisualization(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
-
+    public List<Installment> getVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
         List<Installment> installments = new List<Installment>();
+        List <RecurringDonationSchedule__c> filteredSchedules;
+
         if (schedules == null) {
             return installments;
         }
 
-        currentDate = startDate;
-        List <RecurringDonationSchedule__c> filteredSchedules;
+        Date referenceDate = startDate;
 
         while (installments.size() < numInstallments) {
-
-            // We are changing currentDate with each loop, so the active schedules potentially change with each loop
+            // We are changing reference date with each loop, so the active schedules potentially change with each loop
             filteredSchedules = new List<RecurringDonationSchedule__c>();
 
             for (RecurringDonationSchedule__c schedule : schedules) {
-                if (schedule.EndDate__c == null || schedule.EndDate__c >= currentDate) {
+                if (isActive(schedule, referenceDate)) {
                     filteredSchedules.add(schedule);
                 }
             }
 
-            Installment ins = getNextInstallment(filteredSchedules);
+            Installment ins = getNextInstallment(filteredSchedules, referenceDate);
             if (ins == null) {
                 break;
             }
 
             installments.add(ins);
-            currentDate = ins.nextDonationDate.addDays(1);
+            referenceDate = ins.nextDonationDate.addDays(1);
         }
 
         return installments;
+    }
+
+    /***
+    * @description Indicates if the schedule is active starting from the reference date
+    * @param schedule Recurring Donation schedule
+    * @param referenceDate Reference Date
+    * @return Boolean
+    */
+    public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
+        //ensure the passed in schedules are active within the time period
+        return schedule.EndDate__c == null
+            || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
     }
 
     /***
@@ -321,12 +334,12 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculate the Next Installment using the provided Schedule with the CurrentDate as the starting point
+    * @description Calculate the Next Installment using the provided Schedule with the reference date as the starting point
     * @param rdSchedules Recurring Donation Schedule records
+    * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
     * @return Installment
     */
-    private Installment getNextInstallment(List<RecurringDonationSchedule__c> rdSchedules) {
-
+    private Installment getNextInstallment(List<RecurringDonationSchedule__c> rdSchedules, Date referenceDate) {
         Date nextDonationDate;
         Installment nextInstallment;
         Installment previousInstallment;
@@ -336,8 +349,7 @@ public without sharing class RD2_ScheduleService {
         }
 
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
-
-            nextDonationDate = getNextDonationDateGreaterThanToday(schedule);
+            nextDonationDate = getNextDonationDateGreaterThan(schedule, referenceDate);
 
             if (nextDonationDate == null) {
                 continue;
@@ -374,21 +386,22 @@ public without sharing class RD2_ScheduleService {
     * @return Date
     */
     public Date getNextDonationDate(List<RecurringDonationSchedule__c> rdSchedules) {
+        if (rdSchedules == null) {
+            return null;
+        }
 
         Date nextDate;
         Date previousDate;
-
-        if (rdSchedules == null) {
-            return nextDate;
-        }
-
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
-            nextDate = getNextDonationDateGreaterThanToday(schedule);
+            if (!isActive(schedule, currentDate)) {
+                continue;
+            }
+
+            nextDate = getNextDonationDateGreaterThan(schedule, currentDate);
 
             if (previousDate < nextDate) {
                 nextDate = previousDate;
             }
-
             previousDate = nextDate;
         }
 
@@ -396,26 +409,26 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the next donation date >= currentDate
+    * @description Calculates the next donation date >= referenced date
     * @param schedule Recurring Donation Schedule record
-    * @return Date
+    * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
+    * @return Date The Next Donation Date
     */
-    private Date getNextDonationDateGreaterThanToday(RecurringDonationSchedule__c schedule) {
-
+    private Date getNextDonationDateGreaterThan(RecurringDonationSchedule__c schedule, Date referenceDate) {
         Date firstValid = getFirstPossibleDonationDateFromStart(schedule);
 
-        if (firstValid >= currentDate) {
+        if (firstValid >= referenceDate) {
             return firstValid;
         }
 
         Integer adjustedFrequency =
             (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ? DAYS_IN_WEEK : 1) * Integer.valueOf(schedule.InstallmentFrequency__c);
 
-        Integer unitsBetween = getDateUnitsBetweenFirstValidAndCurrentDate(firstValid, schedule.InstallmentPeriod__c);
+        Integer unitsBetween = getDateUnitsBetweenDates(firstValid, schedule.InstallmentPeriod__c, referenceDate);
 
         Date adjusted = addDateUnits(firstValid, (unitsBetween / adjustedFrequency) * adjustedFrequency, schedule.InstallmentPeriod__c);
 
-        if (adjusted < currentDate) {
+        if (adjusted < referenceDate) {
             adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
         }
 
@@ -430,19 +443,20 @@ public without sharing class RD2_ScheduleService {
     * @description Returns the date units between an input date and current date based on installment period
     * @param firstValid Date
     * @param period String
+    * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
     * @return Integer
     */
-    private Integer getDateUnitsBetweenFirstValidAndCurrentDate(Date firstValid, String period) {
+    private Integer getDateUnitsBetweenDates(Date firstValid, String period, Date referenceDate) {
         Integer unitsBetween = 0;
 
         if (period == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || period == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
-            unitsBetween = firstValid.monthsBetween(currentDate);
+            unitsBetween = firstValid.monthsBetween(referenceDate);
 
         } else if (period == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY || period == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
-            unitsBetween = firstValid.daysBetween(currentDate);
+            unitsBetween = firstValid.daysBetween(referenceDate);
 
         } else if (period == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
-            unitsBetween = Math.abs(firstValid.year() - currentDate.year());
+            unitsBetween = Math.abs(firstValid.year() - referenceDate.year());
         }
 
         return unitsBetween;
@@ -540,7 +554,6 @@ public without sharing class RD2_ScheduleService {
     * @param rds List<npe03__Recurring_Donation__c>
     */
     public Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
-
         Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
 
         for (RecurringDonationSchedule__c oldSchedule : [
@@ -570,28 +583,30 @@ public without sharing class RD2_ScheduleService {
 
     /***
     * @description Filters recurring donations to determine which need schedule updates
+    * If the active RD is updated, but the RD Start Date is unchanged, the RD Start Date is updated to the current date.
+    *
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
+    * @param triggerAction Trigger action (insert, updated,...)
+    * @return Map<Id, npe03__Recurring_Donation__c>
     */
     public Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsNeedingScheduleUpdates(
             List<npe03__Recurring_Donation__c> rds,
             List<npe03__Recurring_Donation__c> oldRds,
             TDTM_Runnable.Action triggerAction)
     {
-
-        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>();
-        oldRdsById.putAll(oldRds);
-
+        Map<Id, npe03__Recurring_Donation__c> oldRdById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
         Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = new Map<Id, npe03__Recurring_Donation__c>();
+
         for (npe03__Recurring_Donation__c rd : rds) {
-            npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
+            npe03__Recurring_Donation__c oldRd = oldRdById.get(rd.Id);
 
             if (isScheduleUpdateNeeded(rd, oldRd)) {
-
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
                     rd.StartDate__c == oldRd.StartDate__c &&
-                    rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-                    rd.StartDate__c = Date.today();
+                    rd.Status__c != RD2_Constants.STATUS_CLOSED
+                ) {
+                    rd.StartDate__c = currentDate;
                 }
 
                 filteredRecurringDonations.put(rd.Id, rd);
@@ -608,7 +623,7 @@ public without sharing class RD2_ScheduleService {
     */
     private void addUpdatedSchedules(RecurringDonationSchedule__c rd, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
 
-        if (rd.EndDate__c == null || (rd.EndDate__c >= Date.today() && rd.StartDate__c < rd.EndDate__c)) {
+        if (rd.EndDate__c == null || (rd.EndDate__c >= currentDate && rd.StartDate__c < rd.EndDate__c)) {
 
             if (!newSchedulesByRdId.containsKey(rd.RecurringDonation__c)) {
                 newSchedulesByRdId.put(rd.RecurringDonation__c, new List<RecurringDonationSchedule__c>());

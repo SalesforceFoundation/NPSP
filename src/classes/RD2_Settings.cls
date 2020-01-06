@@ -1,8 +1,10 @@
 /*
-    Copyright (c) 2019 Salesforce.org
+    Copyright (c) 2020 Salesforce.org
     All rights reserved.
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -26,7 +28,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2019
+* @date 2020
 * @group Recurring Donations
 * @description Recurring Donation settings wrapper
 *
@@ -64,14 +66,14 @@ public with sharing class RD2_Settings {
     /***
     * @description Installment Opp Auto Creation Option
     */
-    public String InstallmentOppAutoCreateOption {
+    public String installmentOppAutoCreateOption {
         get {
-            if (InstallmentOppAutoCreateOption == null) {
-                InstallmentOppAutoCreateOption = String.isNotBlank(settings.InstallmentOppAutoCreateOption__c)
-                    ? settings.InstallmentOppAutoCreateOption__c
+            if (installmentOppAutoCreateOption == null) {
+                installmentOppAutoCreateOption = String.isNotBlank(settings.installmentOppAutoCreateOption__c)
+                    ? settings.installmentOppAutoCreateOption__c
                     : RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name();
             }
-            return InstallmentOppAutoCreateOption;
+            return installmentOppAutoCreateOption;
         }
         private set;
     }
@@ -137,6 +139,45 @@ public with sharing class RD2_Settings {
     */
     public Boolean isDisableAllInstallments() {
         return settings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_All_Installments.name();
+    }
+    
+    /***
+    * @description Indicates if the first installment can be created on a Recurring Donation
+    */
+    public Boolean isFirstInstallmentEnabled {
+        get {
+            if (isFirstInstallmentEnabled == null) {
+                isFirstInstallmentEnabled = true; //Disable First Installment ? false : true;
+            }
+            return isFirstInstallmentEnabled;
+        } 
+        private set;
+    }
+
+    /***
+    * @description Indicates if the next installment can be created on a Recurring Donation
+    */
+    public Boolean isNextInstallmentEnabled {
+        get {
+            if (isNextInstallmentEnabled == null) {
+                isNextInstallmentEnabled = true; //Disable All Installments ? false : true;
+            }
+            return isNextInstallmentEnabled;
+        } 
+        private set;
+    }
+
+    /***
+    * @description Indicates if any installment creation on a Recurring Donation is disabled
+    */
+    public Boolean isDisableAllInstallments {
+        get {
+            if (isDisableAllInstallments == null) {
+                isDisableAllInstallments = false; //Disable All Installments ? true : false;
+            }
+            return isDisableAllInstallments;
+        } 
+        private set;
     }
 
     /***
