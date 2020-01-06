@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">
-<<<<<<< HEAD
-    <apiVersion>47.0</apiVersion>
-=======
     <apiVersion>46.0</apiVersion>
->>>>>>> feature/RD2__meenas-changes-future-opp
     <status>Active</status>
 </ApexClass>
