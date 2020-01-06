@@ -31,6 +31,7 @@ export default class GeBatchGiftEntryApp extends LightningElement {
             )
             .catch(error => {
                 handleError(error);
+                event.detail.error();
             });
     }
 

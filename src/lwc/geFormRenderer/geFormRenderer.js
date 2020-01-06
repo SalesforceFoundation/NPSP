@@ -114,6 +114,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // show the spinner
         this.toggleSpinner();
 
+        // callback used to toggle spinner after save
+        const toggleSpinner = () => this.toggleSpinner();
+
         if (this.batchId) {
             const submission = {
                 sectionsList: sectionsList
@@ -123,10 +126,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 detail: {
                     success: function () {
                         enableSaveButton();
+                        toggleSpinner();
+                    },
+                    error: function() {
+                        enableSaveButton();
+                        toggleSpinner();
                     }
                 }
             }));
-            this.toggleSpinner();
         } else {
             GeFormService.handleSave(sectionsList).then(opportunityId => {
                 this.navigateToRecordPage(opportunityId);
