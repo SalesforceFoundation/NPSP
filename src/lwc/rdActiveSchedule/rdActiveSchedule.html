@@ -5,9 +5,14 @@
             variant="narrow"
             icon-name="action:defer">
 
+
+        <div class="slds-m-around_medium" if:true={error}>
+            <span class="slds-text-color_error">{error}</span>
+        </div>
+
         <div if:true={schedules}>
             <template for:each={schedules} for:item="schedule">
-                <div class="slds-m-around--large" style="width:60rem" key={schedule.scheduleNumber}>
+                <div class="slds-m-around--large" style="width:55rem" key={schedule.scheduleNumber}>
                     <article class="slds-tile slds-media slds-m-around--medium" >
                         <div class="slds-media__figure">
                           <span class="slds-icon_container" title="description of icon when needed">
@@ -20,29 +25,31 @@
                             <div class="slds-tile__detail slds-m-around--xx-small">
                                 <dl class="slds-list_horizontal slds-wrap">
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblAmount}>{lblAmount}:</dt>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Amount label">{lblAmount}:</dt>
                                     <dd class="slds-item_detail slds-truncate" title={lblAmount}>{schedule.amount}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblPmtMethod}>{lblPmtMethod}:</dt>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Payment Method label">{lblPmtMethod}:</dt>
                                     <dd class="slds-item_detail slds-truncate" title={lblPmtMethod}>{schedule.paymentMethod}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblCampaign}>{lblCampaign}:</dt>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Campaign label">{lblCampaign}:</dt>
                                     <dd class="slds-item_detail slds-truncate" title={lblCampaign}>{schedule.campaign}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblStartDate}>{lblStartDate}:</dt>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Effective Date label">{lblStartDate}:</dt>
                                     <dd class="slds-item_detail slds-truncate" title={lblStartDate}>{schedule.startDate}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblEndDate}>{lblEndDate}:</dt>
-                                    <dd class="slds-item_detail slds-truncate" title={lblEndDate}>{schedule.endDate}</dd>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="End Date label">{lblEndDate}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" if:false={schedule.endDate} title={lblEndDate}>None</dd>
+                                    <dd class="slds-item_detail slds-truncate" if:true={schedule.endDate} title={lblEndDate}>{schedule.endDate}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblPeriod}>{lblPeriod}:</dt>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Installment Period label">{lblPeriod}:</dt>
                                     <dd class="slds-item_detail slds-truncate" title={lblPeriod}>{schedule.period}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblFrequency}>{lblFrequency}:</dt>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Installment Frequency label">{lblFrequency}:</dt>
                                     <dd class="slds-item_detail slds-truncate" title={lblFrequency}>{schedule.frequency}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblDayOfMonth}>{lblDayOfMonth}:</dt>
-                                    <dd class="slds-item_detail slds-truncate" title={lblDayOfMonth}>{schedule.dayOfMonth}</dd>
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Day of Month label">{lblDayOfMonth}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" if:false={schedule.dayOfMonth} title={lblDayOfMonth}>None</dd>
+                                    <dd class="slds-item_detail slds-truncate" if:true={schedule.dayOfMonth} title={lblDayOfMonth}>{schedule.dayOfMonth}</dd>
 
                                 </dl>
                             </div>
@@ -50,10 +57,6 @@
                     </article>
                 </div>
             </template>
-        </div>
-
-        <div class="slds-m-around_medium" if:true={error}>
-            <span class="slds-text-color_error">{error}</span>
         </div>
 
     </lightning-card>
