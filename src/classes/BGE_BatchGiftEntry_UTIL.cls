@@ -102,7 +102,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     public static List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
 
         List<String> fields = getCoreDataImportFields(includeRelationshipFields);
-            fields.addAll(getActiveFieldNamesFromBatch(batchId));
+        fields.addAll(getActiveFieldNamesFromBatch(batchId));
 
         return fields;
     }
