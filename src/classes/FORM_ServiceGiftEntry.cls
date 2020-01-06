@@ -55,6 +55,16 @@ public with sharing class FORM_ServiceGiftEntry {
     }
 
     /*******************************************************************************************************
+    * @description Method retrieves records based on a query string.
+    */
+    @AuraEnabled
+    public static Gift_Entry_Column_Header__mdt retrieveColumnHeaderMetadataRecords(String developerName) {
+        return [SELECT Label, DeveloperName, Column_Headers__c
+            FROM Gift_Entry_Column_Header__mdt
+            WHERE DeveloperName = :developerName][0];
+    }
+
+    /*******************************************************************************************************
     * @description Method for retrieving all existing form templates.
     */
     @AuraEnabled
