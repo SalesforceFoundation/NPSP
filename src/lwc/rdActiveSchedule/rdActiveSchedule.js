@@ -1,5 +1,7 @@
 import labelScheduleTitle from '@salesforce/label/c.RD2_ActiveSchedulesTitle';
 import labelEndDate from '@salesforce/label/c.RD2_ActiveSchedulesEndDate';
+import labelCurrentSchedule from '@salesforce/label/c.RD2_ActiveSchedulesCurrentSchedule';
+import labelFutureSchedule from '@salesforce/label/c.RD2_ActiveSchedulesFutureSchedule';
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -47,6 +49,8 @@ export default class RdScheduleVisualizer extends LightningElement {
     @track columns = SCHEDULE_COLS;
     @track currencyIsoCode;
     @track lblScheduleTitle = labelScheduleTitle;
+    @track lblCurrentSchedule = labelCurrentSchedule;
+    @track lblFutureSchedule = labelFutureSchedule;
     @track lblAmount;
     @track lblPmtMethod;
     @track lblCampaign;

@@ -153,6 +153,7 @@ public with sharing class RD2_VisualizeScheduleController {
      */
     public class Schedule {
         @AuraEnabled public Integer scheduleNumber;
+        @AuraEnabled public Boolean isCurrent;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
         @AuraEnabled public String campaign;
@@ -165,6 +166,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
         public Schedule(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.ActiveSchedule schedule) {
             this.scheduleNumber = num;
+            this.isCurrent = schedule.isCurrent;
             this.amount = schedule.installmentAmount;
             this.paymentMethod = schedule.paymentMethod;
             this.campaign = schedule.campaignName;

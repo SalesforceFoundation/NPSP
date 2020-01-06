@@ -5,19 +5,59 @@
             variant="narrow"
             icon-name="action:defer">
 
-        <div class="slds-m-around_medium" if:true={error}>
-            <span class="slds-text-color_error">{error}</span>
+        <div if:true={schedules}>
+            <template for:each={schedules} for:item="schedule">
+                <div class="slds-m-around--large" style="width:60rem" key={schedule.scheduleNumber}>
+                    <article class="slds-tile slds-media slds-m-around--medium" >
+                        <div class="slds-media__figure">
+                          <span class="slds-icon_container" title="description of icon when needed">
+                            <!--svg class="slds-icon slds-icon-standard-groups" aria-hidden="true">
+                              <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#groups"></use>
+                            </svg-->
+                          </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h3 class="slds-tile__title slds-truncate" if:false={schedule.isCurrent} title={lblFutureSchedule}>{lblFutureSchedule}</h3>
+                            <h3 class="slds-tile__title slds-truncate" if:true={schedule.isCurrent} title={lblCurrentSchedule}>{lblCurrentSchedule}</h3>
+                            <div class="slds-tile__detail slds-m-around--xx-small">
+                                <dl class="slds-list_horizontal slds-wrap">
+
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblAmount}>{lblAmount}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" title={lblAmount}>{schedule.amount}</dd>
+
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblPmtMethod}>{lblPmtMethod}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" title={lblPmtMethod}>{schedule.paymentMethod}</dd>
+
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblCampaign}>{lblCampaign}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" title={lblCampaign}>{schedule.campaign}</dd>
+
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblStartDate}>{lblStartDate}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" title={lblStartDate}>
+                                        <lightning-formatted-date-time  day="2-digit" month="2-digit" year="2-digit">{schedule.startDate}</lightning-formatted-date-time>
+                                    </dd>
+
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblEndDate}>{lblEndDate}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" title={lblEndDate}>{schedule.endDate}</dd>
+
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblPeriod}>{lblPeriod}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" title={lblPeriod}>{schedule.period}</dd>
+
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblFrequency}>{lblFrequency}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" title={lblFrequency}>{schedule.frequency}</dd>
+
+                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container_25" title={lblDayOfMonth}>{lblDayOfMonth}:</dt>
+                                    <dd class="slds-item_detail slds-truncate" title={lblDayOfMonth}>{schedule.dayOfMonth}</dd>
+
+                                </dl>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </template>
         </div>
 
-        <div class="slds-m-around_medium" if:true={schedules}>
-            <lightning-datatable
-                    title={lblScheduleTitle}
-                    key-field="installmentNumber"
-                    data={schedules}
-                    columns={columns}
-                    class="visualized-schedule"
-                    hide-checkbox-column>
-            </lightning-datatable>
+        <div class="slds-m-around_medium" if:true={error}>
+            <span class="slds-text-color_error">{error}</span>
         </div>
 
     </lightning-card>
