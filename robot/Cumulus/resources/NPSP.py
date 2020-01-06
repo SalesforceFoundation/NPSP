@@ -22,11 +22,11 @@ from cumulusci.core.config import TaskConfig
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
 
 
-from locators_46 import npsp_lex_locators as locators_46
+from locators_48 import npsp_lex_locators as locators_48
 from locators_47 import npsp_lex_locators as locators_47
 locators_by_api_version = {
+    48.0: locators_48,   # spring '20
     47.0: locators_47,   # winter '20
-    46.0: locators_46,  # Summer '19
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -1236,6 +1236,7 @@ class NPSP(SalesforceRobotLibraryBase):
         self.select_row(value)
         self.selenium.click_link("Delete")
         self.selenium.wait_until_location_contains("/list")
+        self.selenium.wait_until_page_does_not_contain(value)
     
     @capture_screenshot_on_error    
     def populate_modal_form(self,**kwargs):
