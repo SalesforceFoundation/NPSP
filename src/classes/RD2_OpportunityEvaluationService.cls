@@ -118,7 +118,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     public Boolean hasKeyFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        return 
+        return
             rd.npe03__Contact__c != oldRd.npe03__Contact__c ||
             rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
             rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
@@ -171,7 +171,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /**
      * @description Determine if the recurring donation needs to have a new installment opp created
      * @param rd Recurring Donation
-     * @return Boolean 
+     * @return Boolean
      */
     @TestVisible
     private Boolean needNewInstallment(npe03__Recurring_Donation__c rd) {
@@ -196,15 +196,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         return hasOpenOpportunity;
-    }
-
-    /**
-     * @description Disable Customizable Rollups before DML to reduce performance implications.
-     */
-    private void disableRollups() {
-        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
     }
 
     /**
@@ -259,7 +250,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                     Id = opp.Id,
                     StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage
                 ));
-            } 
+            }
 
             UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.RD.name());
         }
@@ -291,7 +282,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             queryFields.add(fld);
         }
 
-        String oppSubquery = 
+        String oppSubquery =
             '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
             'npe03__Recurring_Donation__c, ' +
             'Amount, CloseDate, ' +
@@ -300,7 +291,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'FROM npe03__Donations__r ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
-        String scheduleSubquery = 
+        String scheduleSubquery =
             '(SELECT Id, InstallmentAmount__c, ' +
             'Campaign__c, ' +
             'Campaign__r.Name, ' +
