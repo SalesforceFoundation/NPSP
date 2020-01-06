@@ -77,7 +77,10 @@ public with sharing class RD2_OpportunityService {
     }
 
     /**
-    * @description Current reference date to calculate schedules and compare Opps with matching installments
+    * @description Current date used as a cut off date to filter out and evaluate Opportunities 
+     * with projected RD schedule installments as of the current date.
+     * It can be a date in past, today or a future date in testing. When executed from a scheduler,
+     * the current date is always today.
     */
     private Date currentDate;
 

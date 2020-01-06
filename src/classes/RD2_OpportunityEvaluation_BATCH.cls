@@ -92,7 +92,13 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     private Integer recordsFailed = 0;
 
     /**
-     * @description Contains current date value
+     * @description Contains current date value so the batch can be executed for a 
+     * date referenced in past, today or a future date. Regardless of the value, the current date
+     * is considered "today" for the Opp evaluation, Opp and RD Schedule services.
+     * The current date is used as a cut off date to filter out Opportunities in Opp services
+     * and to determine if the next Opp should be created for a Recurring Donation.
+     * It is also used as a point of reference to view projected RD Schedule installments as of the current date.
+     * The current date defaults to the actual today when executed from a scheduler.
      */
     private Date currentDate {
         get {

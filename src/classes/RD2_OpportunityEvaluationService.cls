@@ -40,7 +40,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @description Indicates if Opp evaluation service will be skipped.
      * The flag is currently applicable to migration since Opp evaluation service should not be executed on migration.
      * For example, if an active RD has no Opp, no new Opp should be created during migration.
-     * Moreover, if the RD is closed, close action on Open Opps should not be applied.
+     * If the RD is closed, close action on Open Opps should not be applied when data migration is executed.
      */
     public static Boolean skipEvaluationService = false;
 
@@ -83,7 +83,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-    * @description Current reference date to calculate schedules and compare Opps with matching installments
+     * @description Current date used as a cut off date to filter out and evaluate Opportunities 
+     * and to determine if the next Opp should be created for a Recurring Donation.
+     * It is also used to calculate projected RD schedule installments as of the current date.
+     * It can be a date in past, today or a future date in testing. When executed from a scheduler,
+     * the current date is always today.
     */   
     private Date currentDate {
         get {
@@ -155,7 +159,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Sets current date
+     * @description Sets current date.
+     * It also synchronizes the passed in current date with the RD Schedule service date.
+     *
      * @param currentDate Date considered as the current date
      * @return RD2_OpportunityEvaluationService The service instance
      */
