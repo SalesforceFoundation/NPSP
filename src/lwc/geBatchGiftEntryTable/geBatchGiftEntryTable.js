@@ -14,7 +14,6 @@ import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBa
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
     @track ready = false;
-    accountId;
 
     _batchLoaded = false;
     @track data = [];
@@ -52,11 +51,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         if (this.batchId) {
             this.loadBatch();
         }
-    }
-
-    @api
-    setAccountId(id) {
-        this.accountId = id;
     }
 
     setReady() {

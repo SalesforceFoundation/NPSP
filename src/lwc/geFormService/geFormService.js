@@ -160,13 +160,6 @@ class GeFormService {
         });
     }
 
-    //temporary storage of Account Id to use for testing
-    accountId;
-    @api
-    setAccountId(id) {
-        this.accountId = id;
-    }
-    //END temporary storage of Account Id to use for testing
 }
 
 const geFormServiceInstance = new GeFormService();
