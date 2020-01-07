@@ -1,11 +1,11 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
 import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { showToast, format } from 'c/utilTemplateBuilder';
+import { showToast, dispatch, handleError } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
@@ -15,12 +15,15 @@ import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
+const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
 const SUCCESS = 'success';
 const IS_LOADING = 'isLoading';
-const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
-const TEMPLATES_LIST_VIEW_NAME = 'Templates';
+const EVENT_TOGGLE_MODAL = 'togglemodal';
+const SAVE = 'save';
 
+const TEMPLATES_LIST_VIEW_NAME = 'Templates';
 const TEMPLATES_LIST_VIEW_SORT_DIRECTION = 'desc';
+const TEMPLATES_LIST_DEFAULT_LIMIT = 10;
 const TEMPLATES_LIST_VIEW_ICON = 'standard:visit_templates';
 const TEMPLATES_TABLE_ACTIONS = [
     { label: 'Edit', name: 'edit' },
@@ -42,12 +45,16 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
     }
 
-    get templatesListViewApiName() {
-        return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATES_LIST_VIEW_NAME);
+    get templatesListViewName() {
+        return TEMPLATES_LIST_VIEW_NAME;
     }
 
     get templatesListViewIcon() {
         return TEMPLATES_LIST_VIEW_ICON;
+    }
+
+    get templatesListViewDefaultLimit() {
+        return TEMPLATES_LIST_DEFAULT_LIMIT;
     }
 
     get formTemplateObjectApiName() {
@@ -66,12 +73,35 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         return TEMPLATES_LIST_VIEW_SORT_DIRECTION;
     }
 
-    get templatesListViewComponent() {
-        return this.template.querySelector('c-util-list-view[data-id="templatesListView"]');
+    get geListViewComponent() {
+        return this.template.querySelector(`c-ge-list-view[data-id='${TEMPLATES_LIST_VIEW_NAME}']`);
     }
 
-    get geListViewComponent() {
-        return this.template.querySelector('c-ge-list-view[data-id="templatesListView"]');
+    /*******************************************************************************
+    * @description Public method for receiving modal related events from geListView.
+    *
+    * @param {object} modalData: Event object containing the action and modal payload.
+    * component chain: utilDualListbox -> geListView -> here.
+    */
+    @api
+    notify(event) {
+        if (event.action === SAVE) {
+            const component =
+                this.template.querySelector(`c-ge-list-view[data-id='${event.payload.name}']`);
+            if (component) {
+                component.notify(event);
+            }
+        }
+    }
+
+    /*******************************************************************************
+    * @description Pass through method that receives an event from geListView to
+    * notify parent aura component to construct a modal.
+    *
+    * @param {object} event: Event object containing a payload for the modal.
+    */
+    toggleModal(event) {
+        dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
     connectedCallback() {
@@ -122,28 +152,35 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 this.navigateToTemplateBuilder(row.Id);
                 break;
             case 'clone':
-                this.templatesListViewComponent.setProperty(IS_LOADING, true);
+                this.geListViewComponent.setProperty(IS_LOADING, true);
 
-                cloneFormTemplate({ id: row.Id }).then((clonedTemplate) => {
-                    this.templates = [...this.templates, clonedTemplate];
-                    /*this.templatesListViewComponent.refreshImperativeQuery();
-                    this.templatesListViewComponent.setProperty(IS_LOADING, false);*/
-                    this.geListViewComponent.refresh();
-                });
+                cloneFormTemplate({ id: row.Id })
+                    .then(clonedTemplate => {
+                        this.templates = [...this.templates, clonedTemplate];
+                        this.geListViewComponent.setProperty(IS_LOADING, false);
+                        this.geListViewComponent.refresh();
+                    })
+                    .catch(error => {
+                        handleError(error);
+                    });
                 break;
             case 'delete':
-                this.templatesListViewComponent.setProperty(IS_LOADING, true);
+                this.geListViewComponent.setProperty(IS_LOADING, true);
 
-                deleteFormTemplates({ ids: [row.Id] }).then((formTemplateNames) => {
-                    /*this.templatesListViewComponent.refreshImperativeQuery();
-                    this.templatesListViewComponent.setProperty(IS_LOADING, false);*/
-                    this.geListViewComponent.refresh();
-                    const toastMessage = GeLabelService.format(
-                        this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
-                        formTemplateNames);
+                deleteFormTemplates({ ids: [row.Id] })
+                    .then(formTemplateNames => {
+                        this.geListViewComponent.setProperty(IS_LOADING, false);
+                        this.geListViewComponent.refresh();
 
-                    showToast(toastMessage, '', SUCCESS);
-                });
+                        const toastMessage = GeLabelService.format(
+                            this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
+                            formTemplateNames);
+
+                        showToast(toastMessage, '', SUCCESS);
+                    })
+                    .catch(error => {
+                        handleError(error);
+                    });
                 break;
             default:
         }

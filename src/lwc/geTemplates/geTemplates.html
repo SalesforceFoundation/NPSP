@@ -2,16 +2,16 @@
     <c-util-page-header>
         <h1 slot="title">
             <span class="slds-page-header__title"
-                  title="Gift Entry">
-                Gift Entry
+                  title={CUSTOM_LABELS.geHeaderGiftEntry}>
+                {CUSTOM_LABELS.geHeaderGiftEntry}
             </span>
         </h1>
         <div slot="actions"
              class="slds-button-group"
              role="group">
-            <lightning-button label="New Batch"
+            <lightning-button label={CUSTOM_LABELS.geButtonEnterGifts}
                               if:true={isAccessible}
-                              title="New Batch"
+                              title={CUSTOM_LABELS.geButtonEnterGifts}
                               variant="neutral"
                               class="slds-float_right"
                               onclick={navigateToForm}>
@@ -19,11 +19,11 @@
         </div>
     </c-util-page-header>
 
-    <div role="card"
-         class="slds-card slds-card_extension">
+    <div class="slds-card slds-card_extension">
 
         <template if:true={isLoading}>
-            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+            </lightning-spinner>
         </template>
 
         <div if:false={isAccessible}
@@ -70,52 +70,31 @@
                         <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
                             <div class="slds-size_1-of-1 slds-p-around_medium">
                                 <div class="slds-card slds-card_extension">
-                                    <c-ge-list-view data-id='templatesListView'
-                                                    list-name='Templates'
+                                    <c-ge-list-view data-id={templatesListViewName}
+                                                    list-name={templatesListViewName}
                                                     object-api-name='npsp__Form_Template__c'
                                                     title={CUSTOM_LABELS.commonTemplates}
                                                     custom-icon={templatesListViewIcon}
                                                     description={CUSTOM_LABELS.geBodyTemplatesTabDescription}
                                                     sorted-by={sortTemplatesBy}
                                                     sorted-direction={sortTemplatesDirection}
-                                                    limit="10"
+                                                    limit={templatesListViewDefaultLimit}
                                                     actions={templatesTableActions}
                                                     onrowaction={handleTemplatesTableRowAction}
+                                                    ontogglemodal={toggleModal}
                                                     show-standard-footer='true'>
+                                        <lightning-button label={CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}
+                                                          class="slds-m-right_small"
+                                                          onclick={handleNewFormTemplate}
+                                                          slot="actions">
+                                        </lightning-button>
                                     </c-ge-list-view>
                                 </div>
                             </div>
                         </div>
                     </template>
-
-                    <template if:false={isLoading}>
-                        <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
-                            <div class="slds-size_1-of-1 slds-p-around_medium">
-                                <div class="slds-card slds-card_extension">
-                                    <c-util-list-view data-id='templatesListView'
-                                                      title={CUSTOM_LABELS.commonTemplates}
-                                                      custom-icon={templatesListViewIcon}
-                                                      description={CUSTOM_LABELS.geBodyTemplatesTabDescription}
-                                                      list-view-api-name={templatesListViewApiName}
-                                                      object-name={formTemplateObjectApiName}
-                                                      show-standard-footer="true"
-                                                      use-imperative-query="true"
-                                                      limit="50"
-                                                      actions={templatesTableActions}
-                                                      onrowaction={handleTemplatesTableRowAction}>
-                                        <lightning-button label={CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}
-                                                          onclick={handleNewFormTemplate}
-                                                          slot="actions">
-                                        </lightning-button>
-                                    </c-util-list-view>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
                 </lightning-tab>
-
             </lightning-tabset>
         </div>
     </div>
-
 </template>
