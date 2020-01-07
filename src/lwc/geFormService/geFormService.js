@@ -94,7 +94,7 @@ class GeFormService {
      * @param widgetValues
      * @returns {Promise<Id>}
      */
-    createOpportunityFromDataImport(createdDIRecord, widgetValues) {
+    saveAndProcessGift(createdDIRecord, widgetValues) {
         const widgetDataString = JSON.stringify(widgetValues);
         return new Promise((resolve, reject) => {
             saveAndProcessGift({diRecord: createdDIRecord, widgetData: widgetDataString})
@@ -116,7 +116,7 @@ class GeFormService {
     handleSave(sectionList) {
         let diRecord = this.getDataImportRecord(sectionList);
 
-        const opportunityID = this.createOpportunityFromDataImport(diRecord);
+        const opportunityID = this.saveAndProcessGift(diRecord);
 
         return opportunityID;
     }
