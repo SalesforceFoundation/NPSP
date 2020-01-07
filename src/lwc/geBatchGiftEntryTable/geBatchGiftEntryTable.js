@@ -10,6 +10,9 @@ import FAILURE_INFORMATION_FIELD
 import {deleteRecord} from 'lightning/uiRecordApi';
 import {handleError} from 'c/utilTemplateBuilder';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
+import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
+import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
+import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -25,11 +28,11 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         {label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text'},
         {label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text'},
         {
-            label: 'Donor', fieldName: 'donorLink', type: 'url',
+            label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
             typeAttributes: {label: {fieldName: 'donorName'}}
         },
         {
-            label: 'Donation', fieldName: 'matchedRecordUrl', type: 'url',
+            label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
             typeAttributes: {label: {fieldName: 'matchedRecordLabel'}}
         }
     ];
@@ -37,7 +40,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         type: 'action',
         typeAttributes: {
             rowActions: [
-                {label: 'Delete', name: 'delete'}
+                {label: bgeActionDelete, name: 'delete'}
             ],
             menuAlignment: 'right'
         }
