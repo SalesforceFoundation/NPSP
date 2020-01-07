@@ -72,10 +72,9 @@ public with sharing class FORM_ServiceGiftEntry {
     @AuraEnabled
     public static Custom_Column_Header__c[] upsertCustomColumnHeaders(String columnHeadersString,
         String listName) {
-        System.debug('columnHeadersString: ' + columnHeadersString);
+
         Custom_Column_Header__c[] columnHeaders =
             (Custom_Column_Header__c[])JSON.deserialize(columnHeadersString, Custom_Column_Header__c[].class);
-        System.debug(columnHeaders);
         upsert columnHeaders;
 
         Id[] headerIdsToKeep = new Id[]{};
@@ -83,9 +82,10 @@ public with sharing class FORM_ServiceGiftEntry {
             headerIdsToKeep.add(columnHeader.Id);
         }
 
-        Custom_Column_Header__c[] headersToDelete =
-            [SELECT Id FROM Custom_Column_Header__c WHERE Id NOT IN :headerIdsToKeep];
-        System.debug('headersToDelete: ' + headersToDelete.size());
+        Custom_Column_Header__c[] headersToDelete = [SELECT Id
+            FROM Custom_Column_Header__c
+            WHERE Id NOT IN :headerIdsToKeep
+                AND List_Name__c = :listName];
         delete headersToDelete;
 
         return columnHeaders;

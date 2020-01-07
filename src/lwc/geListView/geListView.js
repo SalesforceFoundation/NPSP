@@ -4,6 +4,9 @@ import { dispatch, handleError, format, generateId, sort, deepClone } from 'c/ut
 import CumulusStaticResources from 'c/utilCumulusStaticResources';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
+import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.upsertCustomColumnHeaders';
+import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
+import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
 
 import ID_INFO from '@salesforce/schema/Custom_Column_Header__c.Id';
 import NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Name';
@@ -12,10 +15,6 @@ import INDEX_INFO from '@salesforce/schema/Custom_Column_Header__c.Index__c';
 import LIST_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.List_Name__c';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
-
-import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.upsertCustomColumnHeaders';
-import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
-import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
 
 const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
 const SLDS_ICON_CATEGORY_STANDARD = 'standard';
@@ -170,7 +169,6 @@ export default class geListView extends LightningElement {
 
             this.setDatatableRecordsForImperativeCall(formTemplates);
         } catch (e) {
-            console.error(e);
             handleError(e);
         }
     }
@@ -189,7 +187,7 @@ export default class geListView extends LightningElement {
 
     init = async () => {
         await CumulusStaticResources.init(this);
-        await this.getColumnHeaderData('Templates');
+        await this.getColumnHeaderData(this.listName);
 
         this.isLoading = false;
     }
@@ -206,17 +204,20 @@ export default class geListView extends LightningElement {
         this.setDatatableActions();
 
         const fields = displayColumns.map(column => column.fieldApiName);
-        let queryObject = this.buildSoqlQuery(fields);
 
-        let formTemplates = await retrieveRecords({
-            selectFields: queryObject.selectFields,
-            sObjectApiName: queryObject.sObjectApiName,
-            whereClauses: queryObject.whereClauses,
-            orderByClause: queryObject.orderByClause,
-            limitClause: queryObject.limitClause,
-        });
+        if (fields.length > 0) {
+            let queryObject = this.buildSoqlQuery(fields);
 
-        this.setDatatableRecordsForImperativeCall(formTemplates);
+            let formTemplates = await retrieveRecords({
+                selectFields: queryObject.selectFields,
+                sObjectApiName: queryObject.sObjectApiName,
+                whereClauses: queryObject.whereClauses,
+                orderByClause: queryObject.orderByClause,
+                limitClause: queryObject.limitClause,
+            });
+
+            this.setDatatableRecordsForImperativeCall(formTemplates);
+        }
     }
 
     setSelectedColumnHeaders(columnHeaderData) {
@@ -328,7 +329,6 @@ export default class geListView extends LightningElement {
                     });
             })
             .catch(error => {
-                console.error(error);
                 handleError(error);
             });
     }
