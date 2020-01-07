@@ -713,6 +713,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
+        <members>GE_GiftEntry</members>
         <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
@@ -1917,6 +1918,7 @@
         <members>geErrorRequiredField</members>
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
+        <members>geHeaderCustomTableHeaders</members>
         <members>geHeaderEmptyFormSection</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
         <members>geHeaderFormFieldsLeftCol</members>
@@ -1932,6 +1934,8 @@
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
+        <members>geLabelCustomTableSelectedFields</members>
+        <members>geLabelCustomTableSourceFields</members>
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
@@ -3256,6 +3260,7 @@
         <members>pubsubNoPageRef</members>
         <members>utilCumulusStaticResources</members>
         <members>utilDedicatedListener</members>
+        <members>utilDualListbox</members>
         <members>utilIllustration</members>
         <members>utilListView</members>
         <members>utilPageHeader</members>

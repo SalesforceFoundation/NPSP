@@ -4774,6 +4774,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Configure Batch Header Fields</value>
     </labels>
     <labels>
+        <fullName>geHeaderCustomTableHeaders</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for the component that handles the custom table headers</shortDescription>
+        <value>Select Fields to Display</value>
+    </labels>
+    <labels>
         <fullName>geHeaderEmptyFormSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4895,6 +4903,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Help text for Form Fields Field Label</shortDescription>
         <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
+    </labels>
+    <labels>
+        <fullName>geLabelCustomTableSelectedFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for selected fields in component that handles the custom table headers</shortDescription>
+        <value>Visible Fields</value>
+    </labels>
+    <labels>
+        <fullName>geLabelCustomTableSourceFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for source fields in component that handles the custom table headers</shortDescription>
+        <value>Available Fields</value>
     </labels>
     <labels>
         <fullName>geLabelSectionName</fullName>
