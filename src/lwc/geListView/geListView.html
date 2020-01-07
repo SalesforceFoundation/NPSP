@@ -1,20 +1,4 @@
 <template>
-    <div class="slds-p-around_small"
-         style="border: 1px solid red;">
-        <lightning-dual-listbox name="headers"
-                                label="Select Fields to Display"
-                                source-label="Available Fields"
-                                selected-label="Visible Fields"
-                                options={options}
-                                value={selectedColumnHeaders}
-                                onchange={handleChangeFieldsToDisplay}>
-        </lightning-dual-listbox>
-
-        <lightning-button label='Save'
-                          onclick={saveColumnHeaders}>
-        </lightning-button>
-    </div>
-
     <div class="slds-page-header slds-page-header_extension">
         <div class="slds-page-header__row slds-p-bottom_x-small">
             <div class="slds-page-header__col-title">
@@ -55,13 +39,9 @@
                           class="slds-no-flex">
                     </slot>
                     <lightning-button-icon icon-name="utility:settings"
+                                           onclick={toggleModal}
                                            slot="actions">
                     </lightning-button-icon>
-                    <lightning-button class="slds-m-left_small"
-                                      label={CUSTOM_LABELS.commonListView}
-                                      onclick={navigateToListView}
-                                      slot="actions">
-                    </lightning-button>
                 </div>
             </div>
         </div>
@@ -113,9 +93,6 @@
                 <a class="slds-card__footer-action"
                    onclick={handleViewMore}>
                     {CUSTOM_LABELS.commonViewMore}
-                    <span class="slds-assistive-text">
-                        Footer
-                    </span>
                 </a>
             </template>
         </footer>

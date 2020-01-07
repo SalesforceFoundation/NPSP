@@ -22,14 +22,17 @@ const SLDS_ICON_CATEGORY_STANDARD = 'standard';
 const DEFAULT_INCREMENT_BY = 10;
 const DEFAULT_LIMIT = 10;
 const MAX_RECORDS = 2000;
-const NAME_FIELD_MAX_LENGTH = 80;
 const NAME = 'Name';
+const USER = 'User';
 const BY = 'By';
 const URL = 'url';
 const _SELF = '_self';
 const DATE_FORMAT = 'M/D/YYYY, h:mm:ss A';
 const ASC = 'asc';
 const DESC = 'desc';
+const SAVE = 'save';
+
+const EVENT_TOGGLE_MODAL = 'togglemodal';
 
 export default class geListView extends LightningElement {
 
@@ -53,7 +56,7 @@ export default class geListView extends LightningElement {
 
     @track objectInfo;
     @track selectedColumnHeaders;
-    //@track isLoading = true;
+    @track isLoading = true;
     @track options = [];
     @track records = [];
     @track columns = [];
@@ -128,6 +131,25 @@ export default class geListView extends LightningElement {
     }
 
     @api
+    setProperty(property, value) {
+        this[property] = value;
+    }
+
+    /*******************************************************************************
+    * @description Public method for receiving modal related events.\
+    *
+    * @param {object} modalData: Event object containing the action and payload.
+    * component chain: utilDualListbox -> GE_GiftEntry -> geTemplates -> here.
+    */
+    @api
+    notify(modalData) {
+        if (modalData.action === SAVE) {
+            this.selectedColumnHeaders = modalData.payload.values;
+            this.saveColumnHeaders();
+        }
+    }
+
+    @api
     refresh() {
         this.handleImperativeRefresh();
     }
@@ -137,7 +159,6 @@ export default class geListView extends LightningElement {
             const displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
             const fields = displayColumns.map(column => column.fieldApiName);
             let queryObject = this.buildSoqlQuery(fields);
-            console.log('queryObject: ', queryObject);
 
             let formTemplates = await retrieveRecords({
                 selectFields: queryObject.selectFields,
@@ -146,7 +167,7 @@ export default class geListView extends LightningElement {
                 orderByClause: queryObject.orderByClause,
                 limitClause: queryObject.limitClause,
             });
-            console.log('formTemplates: ', formTemplates);
+
             this.setDatatableRecordsForImperativeCall(formTemplates);
         } catch (e) {
             console.error(e);
@@ -167,20 +188,16 @@ export default class geListView extends LightningElement {
     }
 
     init = async () => {
-        console.log('listName: ', this.listName);
-        console.log('objectApiName: ', this.objectApiName);
         await CumulusStaticResources.init(this);
         await this.getColumnHeaderData('Templates');
+
+        this.isLoading = false;
     }
 
     getColumnHeaderData = async (listViewDeveloperName) => {
         const columnHeaderData = await retrieveCustomColumnHeaders({ listName: listViewDeveloperName });
-        console.log('columnHeaderData: ', columnHeaderData);
 
         this.selectedColumnHeaders = this.setSelectedColumnHeaders(columnHeaderData);
-        console.log('this.selectedColumnHeaders: ', this.selectedColumnHeaders);
-
-        console.log('objectInfo: ', this.objectInfo);
 
         this.options = this.buildFieldsToDisplayOptions(this.objectInfo.fields);
 
@@ -190,7 +207,6 @@ export default class geListView extends LightningElement {
 
         const fields = displayColumns.map(column => column.fieldApiName);
         let queryObject = this.buildSoqlQuery(fields);
-        console.log('queryObject: ', queryObject);
 
         let formTemplates = await retrieveRecords({
             selectFields: queryObject.selectFields,
@@ -199,10 +215,8 @@ export default class geListView extends LightningElement {
             orderByClause: queryObject.orderByClause,
             limitClause: queryObject.limitClause,
         });
-        console.log('formTemplates: ', formTemplates);
-        this.setDatatableRecordsForImperativeCall(formTemplates);
 
-        console.log('this.options: ', this.options);
+        this.setDatatableRecordsForImperativeCall(formTemplates);
     }
 
     setSelectedColumnHeaders(columnHeaderData) {
@@ -215,17 +229,19 @@ export default class geListView extends LightningElement {
     }
 
     buildFieldsToDisplayOptions(fields) {
-        console.log('**************--- buildFieldsToDisplayOptions');
         let options = [];
 
         Object.keys(fields).forEach(key => {
             let fieldDescribe = this.objectInfo.fields[key];
             let label = fieldDescribe.label;
-            if (fieldDescribe.apiName.includes(BY) &&
+
+            // Handle relationship info for fields looking up to a User.
+            const isRelationshipField =
                 fieldDescribe.relationshipName &&
                 fieldDescribe.referenceToInfos &&
-                fieldDescribe.referenceToInfos.length === 1) {
+                fieldDescribe.referenceToInfos.length >= 1;
 
+            if (isRelationshipField) {
                 const lastWordIndex = label.lastIndexOf(" ");
                 label = label.substring(0, lastWordIndex);
             }
@@ -240,7 +256,6 @@ export default class geListView extends LightningElement {
     }
 
     buildDisplayColumns(headerFieldApiNames) {
-        console.log('**************--- buildDisplayColumns');
         let displayColumns = [];
         for (let i = 0; i < headerFieldApiNames.length; i++) {
             const fieldApiName = headerFieldApiNames[i];
@@ -251,34 +266,37 @@ export default class geListView extends LightningElement {
                 sortable: fieldDescribe.sortable
             }
 
-            if (fieldDescribe.apiName.includes(BY) &&
+            // Handle relationship info for fields looking up to a User.
+            const isRelationshipField =
                 fieldDescribe.relationshipName &&
                 fieldDescribe.referenceToInfos &&
-                fieldDescribe.referenceToInfos.length === 1) {
-                const nameFields = fieldDescribe.referenceToInfos[0].nameFields;
-                const nameField = nameFields.find(field => field === NAME) || nameFields[0];
+                fieldDescribe.referenceToInfos.length >= 1;
 
-                displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
-                const lastWordIndex = displayColumn.label.lastIndexOf(" ");
-                displayColumn.label = displayColumn.label.substring(0, lastWordIndex);
+            if (isRelationshipField) {
+                const isUserReference = fieldDescribe.referenceToInfos.find(info => info.apiName === USER);
+
+                if (isUserReference) {
+                    const nameFields = isUserReference.nameFields;
+                    const nameField = nameFields.find(field => field === NAME) || nameFields[0];
+
+                    displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
+                    const lastWordIndex = displayColumn.label.lastIndexOf(" ");
+                    displayColumn.label = displayColumn.label.substring(0, lastWordIndex);
+                }
             }
 
             displayColumns.push(displayColumn);
         }
 
-        console.log('displayColumns: ', displayColumns);
+
         return displayColumns;
     }
 
     handleChangeFieldsToDisplay(event) {
-        console.log('selected headers: ', event.detail.value);
         this.selectedColumnHeaders = event.detail.value;
     }
 
     saveColumnHeaders = async (event) => {
-        console.log('**************--- saveColumnHeaders');
-        console.log('this.columnHeadersByFieldApiName: ', this.columnHeadersByFieldApiName);
-
         const columnHeaders = this.selectedColumnHeaders.map((fieldApiName, index) => {
             let columnHeader = this.columnHeadersByFieldApiName[fieldApiName];
 
@@ -292,21 +310,18 @@ export default class geListView extends LightningElement {
             columnHeader[FIELD_API_NAME_INFO.fieldApiName] = fieldApiName;
             columnHeader[INDEX_INFO.fieldApiName] = index;
 
-            console.log('columnHeader: ', columnHeader);
             return columnHeader;
         });
-
-        console.log('columnHeaders: ', deepClone(columnHeaders));
 
         upsertCustomColumnHeaders({
             listName: this.listName,
             columnHeadersString: JSON.stringify(columnHeaders)
         })
             .then(response => {
-                console.log('RESPONSE: ', response);
+
                 this.getColumnHeaderData(this.listName)
                     .then(response => {
-                        console.log('UPDATED EVERYTHING');
+
                     })
                     .catch(error => {
                         handleError(error);
@@ -345,6 +360,7 @@ export default class geListView extends LightningElement {
             let columnEntry = {
                 label: column.label,
                 fieldName: fieldApiName,
+                fieldApiName: column.fieldApiName,
                 sortable: column.sortable
             }
 
@@ -363,7 +379,6 @@ export default class geListView extends LightningElement {
             this.columns = [...this.columns, columnEntry];
             this.columnEntriesByName[columnEntry.fieldName] = columnEntry;
         });
-        console.log('this.columns: ', deepClone(this.columns));
     }
 
     /*******************************************************************************
@@ -403,11 +418,9 @@ export default class geListView extends LightningElement {
         let orderByClause;
         if (this.sortedBy && this.sortedDirection) {
             const columnEntry = this.columnEntriesByName[this.sortedBy];
-            if (columnEntry) {
-                const sortBy = columnEntry.typeAttributes ?
-                    columnEntry.typeAttributes.label.fieldName :
-                    this.sortedBy;
 
+            if (columnEntry) {
+                const sortBy = columnEntry.fieldApiName ? columnEntry.fieldApiName : this.sortedBy;
                 orderByClause =
                     `${sortBy} ${this.sortedDirection === ASC ? ASC : DESC}`;
             }
@@ -503,8 +516,6 @@ export default class geListView extends LightningElement {
 
             this.records = [...this.records, record];
         });
-
-        console.log('this.records: ', this.records);
     }
 
     /*******************************************************************************
@@ -538,19 +549,13 @@ export default class geListView extends LightningElement {
     * @param {object} event: Event holding column details of the action
     */
     handleColumnSorting(event) {
-        console.log('**************--- handleColumnSorting');
-        const fieldName = event.detail.fieldName;
-        this.sortedBy = fieldName;
-        const columnEntry = this.columnEntriesByName[fieldName];
-        console.log('fieldName: ', fieldName);
-        console.log('columnEntry: ', columnEntry);
+        this.sortedBy = event.detail.fieldName;
+        const columnEntry = this.columnEntriesByName[this.sortedBy];
         this.sortedDirection = event.detail.sortDirection;
-        console.log('sortedBy: ', event.detail.fieldName);
-        console.log('sortDirection: ', event.detail.sortDirection);
 
         // Set sortedBy to correct fieldName if a URL type column.
         let sortedBy =
-            columnEntry.typeAttributes ? columnEntry.typeAttributes.label.fieldName : fieldName;
+            columnEntry.typeAttributes ? columnEntry.typeAttributes.label.fieldName : this.sortedBy;
 
         this.records = sort(this.records, sortedBy, this.sortedDirection, false);
     }
@@ -570,10 +575,26 @@ export default class geListView extends LightningElement {
     * more records.
     */
     handleViewMore = async () => {
-        console.log('**************--- handleViewMore');
         const NEW_LIMIT = Number(this.limit) + this.incrementBy;
         this.limit = NEW_LIMIT < MAX_RECORDS ? NEW_LIMIT : MAX_RECORDS;
 
         await this.getColumnHeaderData(this.listName);
+    }
+
+    /*******************************************************************************
+    * @description Handles increasing the pageSize for the list-view and loading
+    * more records.
+    */
+    toggleModal(event) {
+        event.stopPropagation();
+        const detail = {
+            options: this.options,
+            values: this.selectedColumnHeaders,
+            name: this.listName,
+            sourceLabel: this.CUSTOM_LABELS.geLabelCustomTableSourceFields,
+            selectedLabel: this.CUSTOM_LABELS.geLabelCustomTableSelectedFields,
+        };
+
+        dispatch(this, EVENT_TOGGLE_MODAL, detail);
     }
 }
