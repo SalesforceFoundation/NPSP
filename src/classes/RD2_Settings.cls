@@ -122,23 +122,23 @@ public with sharing class RD2_Settings {
     /***
     * @description Indicates if Installment opps should always be created during RD DML operation
     */
-    public Boolean isAlwaysCreateNextInstallment() {
-        return settings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name()
-            || String.isBlank(settings.InstallmentOppAutoCreateOption__c);
+    public Boolean isInstallmentSettingAlwaysCreateNextInstallment() {
+        return settings.installmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name()
+            || String.isBlank(settings.installmentOppAutoCreateOption__c);
     }
 
     /***
     * @description Indicates if first installment opps should not be created during RD DML operation
     */
-    public Boolean isDisableFirstInstallments() {
-        return settings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_First_Installment.name();
+    public Boolean isInstallmentSettingDisableFirstInstallments() {
+        return settings.installmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_First_Installment.name();
     }
 
     /***
     * @description Indicates if  installment opps should never be created during RD DML operation
     */
-    public Boolean isDisableAllInstallments() {
-        return settings.InstallmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_All_Installments.name();
+    public Boolean isInstallmentSettingDisableAllInstallments() {
+        return settings.installmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_All_Installments.name();
     }
     
     /***
@@ -193,22 +193,5 @@ public with sharing class RD2_Settings {
         if (!Test.isRunningTest()) {
             upsert settings;
         }
-    }
-
-    /***
-    * @description Evaluate current RD against the Installment Opp Auto Creation Option Setting
-    */
-    public Boolean evaluteInstallmentAutoCreationOption(npe03__Recurring_Donation__c rd) {
-        if (isAlwaysCreateNextInstallment()) {
-            return true;
-        }
-        else if (isDisableFirstInstallments()) {
-            return rd != null && rd.npe03__Donations__r != null && !rd.npe03__Donations__r.isEmpty();
-        }
-        else if (isDisableAllInstallments()) {
-            return false;
-        }
-
-        return false;
     }
 }

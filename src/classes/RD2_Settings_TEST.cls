@@ -184,9 +184,9 @@ public with sharing class RD2_Settings_TEST {
             'InstallmentOppAutoCreateOption__c' => installmentOption
         });
         
-        System.assertEquals(true, settings.isAlwaysCreateNextInstallment(), 'Setting should be always create next installment');
-        System.assertEquals(false, settings.isDisableFirstInstallments(), 'Setting should not be disable first installment');
-        System.assertEquals(false, settings.isDisableAllInstallments(), 'Setting should not be disable all installment');
+        System.assertEquals(true, settings.isInstallmentSettingAlwaysCreateNextInstallment(), 'Setting should be always create next installment');
+        System.assertEquals(false, settings.isInstallmentSettingDisableFirstInstallments(), 'Setting should not be disable first installment');
+        System.assertEquals(false, settings.isInstallmentSettingDisableAllInstallments(), 'Setting should not be disable all installment');
     }
 
     @IsTest
@@ -198,9 +198,9 @@ public with sharing class RD2_Settings_TEST {
             'InstallmentOppAutoCreateOption__c' => installmentOption
         });
         
-        System.assertEquals(false, settings.isAlwaysCreateNextInstallment(), 'Setting should not be always create next installment');
-        System.assertEquals(true, settings.isDisableFirstInstallments(), 'Setting should be disable first installment');
-        System.assertEquals(false, settings.isDisableAllInstallments(), 'Setting should not be disable all installment');
+        System.assertEquals(false, settings.isInstallmentSettingAlwaysCreateNextInstallment(), 'Setting should not be always create next installment');
+        System.assertEquals(true, settings.isInstallmentSettingDisableFirstInstallments(), 'Setting should be disable first installment');
+        System.assertEquals(false, settings.isInstallmentSettingDisableAllInstallments(), 'Setting should not be disable all installment');
     }
 
     @IsTest
@@ -212,9 +212,9 @@ public with sharing class RD2_Settings_TEST {
             'InstallmentOppAutoCreateOption__c' => installmentOption
         });
         
-        System.assertEquals(false, settings.isAlwaysCreateNextInstallment(), 'Setting should not be always create next installment');
-        System.assertEquals(false, settings.isDisableFirstInstallments(), 'Setting should not be disable first installment');
-        System.assertEquals(true, settings.isDisableAllInstallments(), 'Setting should be disable all installment');
+        System.assertEquals(false, settings.isInstallmentSettingAlwaysCreateNextInstallment(), 'Setting should not be always create next installment');
+        System.assertEquals(false, settings.isInstallmentSettingDisableFirstInstallments(), 'Setting should not be disable first installment');
+        System.assertEquals(true, settings.isInstallmentSettingDisableAllInstallments(), 'Setting should be disable all installment');
     }
 
     // Helpers
