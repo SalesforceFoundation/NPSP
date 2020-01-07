@@ -373,7 +373,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         queryFields.add(oppSubquery);
         queryFields.add(scheduleSubquery);
 
-        return queryRecurringDonations(queryFields, 'Id IN: rdIds');
+        String soql = new UTIL_Query()
+        .withFrom(npe03__Recurring_Donation__c.SObjectType)
+        .withSelectFields(queryFields)
+        .withWhere('Id IN :rdIds')
+        .build();
+
+        return Database.query(soql);
     }
 
     /***
@@ -403,8 +409,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         String whereClause = 'Id IN: rds';
 
+        String soql = new UTIL_Query()
+        .withFrom(npe03__Recurring_Donation__c.SObjectType)
+        .withSelectFields(selectFields)
+        .withWhere(whereClause)
+        .build();
+
         Map<Id, npe03__Recurring_Donation__c> existingRDs = new Map<Id, npe03__Recurring_Donation__c>(
-            queryRecurringDonations(selectFields, whereClause)
+            (List<npe03__Recurring_Donation__c>) Database.query(soql)
         );
 
         for(Integer i = rds.size() - 1; i >= 0; i--) {
