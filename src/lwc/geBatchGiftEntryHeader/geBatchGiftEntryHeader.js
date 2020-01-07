@@ -9,7 +9,7 @@ import EDIT_BUTTON_LABEL from '@salesforce/label/c.stgBtnEdit';
 import TAB_HEADER_LABEL from '@salesforce/label/c.bgeTabHeader';
 
 import alignClassNSWithEnvironment
-    from '@salesforce/apex/UTIL_Namespace.alignClassNSWithEnvironment';
+    from '@salesforce/apex/GE_BatchGiftEntryController.alignClassNSWithEnvironment';
 import {handleError} from 'c/utilTemplateBuilder';
 
 export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningElement) {

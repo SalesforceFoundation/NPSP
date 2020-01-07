@@ -203,7 +203,6 @@ public class UTIL_Namespace {
     * @param name : the class name to have the namespace removed or replaced.
     * @return name : the class name with namespace prefix removed or replaced.
     ********************************************************************************************************/
-    @AuraEnabled
     public static String alignClassNSWithEnvironment(String name) {
         String newName;
 
