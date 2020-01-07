@@ -1,6 +1,6 @@
 import getFieldMappingSet from '@salesforce/apex/BDI_MappingServiceAdvanced.getFieldMappingSet';
 import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
-import { handleError } from 'c/utilTemplateBuilder';
+import { handleError, mutable } from 'c/utilTemplateBuilder';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
@@ -35,9 +35,15 @@ class GeTemplateBuilderService {
         return new Promise((resolve, reject) => {
             getFieldMappingSet({ fieldMappingSetName: fieldMappingSetName, includeUtilityFields: true })
                 .then(data => {
-                    this.fieldMappingByDevName = data.fieldMappingByDevName;
-                    this.objectMappingByDevName = data.objectMappingByDevName;
-                    this.fieldMappingsByObjMappingDevName = data.fieldMappingsByObjMappingDevName;
+                    // data is an immutable stream.  Since the addWidgetsPlaceholder adds
+                    // properties to these objects, using mutable (JSON.parse/stringify) to
+                    // store as new objects rather than pointing to the data props.
+                    this.fieldMappingByDevName =
+                        mutable(data.fieldMappingByDevName);
+                    this.objectMappingByDevName =
+                        mutable(data.objectMappingByDevName);
+                    this.fieldMappingsByObjMappingDevName =
+                        mutable(data.fieldMappingsByObjMappingDevName);
 
                     this.addWidgetsPlaceholder(this.fieldMappingByDevName,
                         this.objectMappingByDevName,
