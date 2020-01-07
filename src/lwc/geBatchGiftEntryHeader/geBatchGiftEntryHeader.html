@@ -22,11 +22,14 @@
                     <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                         <lightning-button-group>
                             <lightning-button label={batchDryRunLabel}
-                                              onclick={handleClick}></lightning-button>
+                                              onclick={handleClick}
+                                              data-qa-locator="button-batch-dry-run"></lightning-button>
                             <lightning-button label={processBatchLabel}
-                                              onclick={handleClick}></lightning-button>
+                                              onclick={handleClick}
+                                              data-qa-locator="button-process-batch"></lightning-button>
                             <lightning-button label={editButtonLabel}
-                                              onclick={handleClick}></lightning-button>
+                                              onclick={handleClick}
+                                              data-qa-locator="button-edit-batch"></lightning-button>
                         </lightning-button-group>
                     </div>
                 </div>
