@@ -70,10 +70,44 @@
                         <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
                             <div class="slds-size_1-of-1 slds-p-around_medium">
                                 <div class="slds-card slds-card_extension">
-                                    <c-ge-list-view list-view='Templates'
+                                    <c-ge-list-view data-id='templatesListView'
+                                                    list-name='Templates'
                                                     object-api-name='npsp__Form_Template__c'
+                                                    title={CUSTOM_LABELS.commonTemplates}
+                                                    custom-icon={templatesListViewIcon}
+                                                    description={CUSTOM_LABELS.geBodyTemplatesTabDescription}
+                                                    sorted-by={sortTemplatesBy}
+                                                    sorted-direction={sortTemplatesDirection}
+                                                    limit="10"
+                                                    actions={templatesTableActions}
+                                                    onrowaction={handleTemplatesTableRowAction}
                                                     show-standard-footer='true'>
                                     </c-ge-list-view>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template if:false={isLoading}>
+                        <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
+                            <div class="slds-size_1-of-1 slds-p-around_medium">
+                                <div class="slds-card slds-card_extension">
+                                    <c-util-list-view data-id='templatesListView'
+                                                      title={CUSTOM_LABELS.commonTemplates}
+                                                      custom-icon={templatesListViewIcon}
+                                                      description={CUSTOM_LABELS.geBodyTemplatesTabDescription}
+                                                      list-view-api-name={templatesListViewApiName}
+                                                      object-name={formTemplateObjectApiName}
+                                                      show-standard-footer="true"
+                                                      use-imperative-query="true"
+                                                      limit="50"
+                                                      actions={templatesTableActions}
+                                                      onrowaction={handleTemplatesTableRowAction}>
+                                        <lightning-button label={CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}
+                                                          onclick={handleNewFormTemplate}
+                                                          slot="actions">
+                                        </lightning-button>
+                                    </c-util-list-view>
                                 </div>
                             </div>
                         </div>

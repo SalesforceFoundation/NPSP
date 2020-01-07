@@ -55,13 +55,40 @@ public with sharing class FORM_ServiceGiftEntry {
     }
 
     /*******************************************************************************************************
+    * @description Method retrieves custom Column Header List Custom Setting records for tables in the Gift
+    * Entry landing page.
+    */
+    @AuraEnabled
+    public static Custom_Column_Header__c[] retrieveCustomColumnHeaders(String listName) {
+        return [SELECT Id, Name, Field_Api_Name__c, Index__c, List_Name__c
+            FROM Custom_Column_Header__c
+            WHERE List_Name__c = :listName
+            ORDER BY Index__c ASC];
+    }
+
+    /*******************************************************************************************************
     * @description Method retrieves records based on a query string.
     */
     @AuraEnabled
-    public static Gift_Entry_Column_Header__mdt retrieveColumnHeaderMetadataRecords(String developerName) {
-        return [SELECT Label, DeveloperName, Column_Headers__c
-            FROM Gift_Entry_Column_Header__mdt
-            WHERE DeveloperName = :developerName][0];
+    public static Custom_Column_Header__c[] upsertCustomColumnHeaders(String columnHeadersString,
+        String listName) {
+        System.debug('columnHeadersString: ' + columnHeadersString);
+        Custom_Column_Header__c[] columnHeaders =
+            (Custom_Column_Header__c[])JSON.deserialize(columnHeadersString, Custom_Column_Header__c[].class);
+        System.debug(columnHeaders);
+        upsert columnHeaders;
+
+        Id[] headerIdsToKeep = new Id[]{};
+        for (Custom_Column_Header__c columnHeader : columnHeaders) {
+            headerIdsToKeep.add(columnHeader.Id);
+        }
+
+        Custom_Column_Header__c[] headersToDelete =
+            [SELECT Id FROM Custom_Column_Header__c WHERE Id NOT IN :headerIdsToKeep];
+        System.debug('headersToDelete: ' + headersToDelete.size());
+        delete headersToDelete;
+
+        return columnHeaders;
     }
 
     /*******************************************************************************************************

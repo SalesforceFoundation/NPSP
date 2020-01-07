@@ -294,54 +294,34 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 *
 * @return {list} data: Sorted instance of list.
 */
-const sort = (objects, attribute, direction = "desc", isNullsLast) => {
-    objects = mutable(objects);
+const sort = (objects, attribute, direction = 'desc', isNullsLast) => {
+    let objectsToSort = deepClone(objects);
+    let collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
-    if (objects && attribute) {
-        let aBeforeB, bBeforeA;
-        {
-            let sortDirectionMultiplier = direction.toLowerCase() === "asc" ? 1 : -1;
+    return objectsToSort.sort((a, b) => {
+        if (isNullsLast) {
+            if (direction === 'asc' && a[attribute]) {
+                return b[attribute] ? collator.compare(a[attribute].toString(), b[attribute].toString()) : -1;
+            } else if (b[attribute]) {
+                return a[attribute] ? collator.compare(b[attribute].toString(), a[attribute].toString()) : 1;
+            }
+        } else {
+            let propA = (a[attribute] || a['Name'] || '').toString();
+            let propB = (b[attribute] || b['Name'] || '').toString();
 
-            aBeforeB = -1 * sortDirectionMultiplier;
-            bBeforeA = 1 * sortDirectionMultiplier;
+            if (direction === 'asc') {
+                return collator.compare(propA, propB);
+            } else {
+                return collator.compare(propB, propA);
+            }
         }
-
-        return objects.sort((a, b) => {
-            if (isEmpty(a)) {
-                if (isEmpty(b)) {
-                    return 0;
-                }
-                return isNullsLast ? bBeforeA : aBeforeB;
-            }
-            if (isEmpty(b)) {
-                return isNullsLast ? aBeforeB : bBeforeA;
-            }
-            if (isEmpty(a[attribute])) {
-                if (isEmpty(b[attribute])) {
-                    return 0;
-                }
-                return isNullsLast ? bBeforeA : aBeforeB;
-            }
-            if (isEmpty(b[attribute])) {
-                return isNullsLast ? aBeforeB : bBeforeA;
-            }
-            if (a[attribute] < b[attribute]) {
-                return aBeforeB;
-            }
-            if (b[attribute] < a[attribute]) {
-                return bBeforeA;
-            }
-            return 0;
-        });
-    }
-
-    return objects;
+    });
 };
 
 /*******************************************************************************
 * @description Creates and dispatches a ShowToastEvent
 *
-* @param {string} title: Title of the toast, dispalyed as a heading.
+* @param {string} title: Title of the toast, displayed as a heading.
 * @param {string} message: Message of the toast. It can contain placeholders in
 * the form of {0} ... {N}. The placeholders are replaced with the links from
 * messageData param

@@ -476,7 +476,8 @@ export default class utilListView extends NavigationMixin(LightningElement) {
         this.records = [];
         let recordUrl = this.getRecordUrl();
 
-        dataRecords.forEach(record => {
+        let records = deepClone(dataRecords);
+        records.forEach(record => {
             Object.keys(record).forEach(key => {
                 if (record[key].Name) {
                     record[key] = record[key].Name;
