@@ -1,0 +1,15 @@
+<template>
+    <c-ge-batch-gift-entry-header
+            batch-id={recordId}
+            onbatchdryrun={handleBatchDryRun}></c-ge-batch-gift-entry-header>
+
+    <br/>
+
+    <c-ge-form-renderer
+            batch-id={recordId}
+            onsubmit={handleSubmit}
+            onsectionsretrieved={handleSectionsRetrieved}>
+    </c-ge-form-renderer>
+
+    <c-ge-batch-gift-entry-table batch-id={recordId}></c-ge-batch-gift-entry-table>
+</template>

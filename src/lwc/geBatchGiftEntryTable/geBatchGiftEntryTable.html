@@ -1,0 +1,33 @@
+<template>
+    <article class='slds-card slds-card_extension slds-m-vertical_small'>
+        <div if:true={ready}>
+            <div if:true={hasData}>
+                <div if:false={isLoaded} class="slds-is-relative">
+                    <lightning-spinner
+                            alternative-text="Loading..."
+                            class="loading">
+                    </lightning-spinner>
+                </div>
+                <div style="height: 20rem;">
+                    <lightning-datatable
+                            key-field="uid"
+                            data={data}
+                            columns={columns}
+                            show-row-number-column="true"
+                            onrowaction={handleRowActions}
+                            enable-infinite-loading
+                            onloadmore={loadMoreData}
+                            data-qa-locator="table-batch-gifts">
+                    </lightning-datatable>
+                </div>
+            </div>
+            <div if:false={hasData}>
+                <c-util-illustration title="Looks like you haven't entered any gifts yet!"
+                                     message="Enter a new gift and it will appear here."
+                                     size="small"
+                                     variant="lake-mountain">
+                </c-util-illustration>
+            </div>
+        </div>
+    </article>
+</template>
