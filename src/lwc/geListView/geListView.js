@@ -8,14 +8,20 @@ import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.up
 import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
 import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
 
-import ID_INFO from '@salesforce/schema/Custom_Column_Header__c.Id';
-import NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Name';
-import FIELD_API_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Field_Api_Name__c';
-import INDEX_INFO from '@salesforce/schema/Custom_Column_Header__c.Index__c';
-import LIST_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.List_Name__c';
+import COLUMN_ID_INFO from '@salesforce/schema/Custom_Column_Header__c.Id';
+import COLUMN_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Name';
+import COLUMN_FIELD_API_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Field_Api_Name__c';
+import COLUMN_INDEX_INFO from '@salesforce/schema/Custom_Column_Header__c.Index__c';
+import COLUMN_LIST_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.List_Name__c';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
+// import default templates list view column header fields describe info
+import FORM_TEMPLATE_NAME_INFO from '@salesforce/schema/Form_Template__c.Name';
+import FORM_TEMPLATE_DESCRIPTION_INFO from '@salesforce/schema/Form_Template__c.Description__c';
+import FORM_TEMPLATE_CREATED_BY_INFO from '@salesforce/schema/Form_Template__c.CreatedById';
+import FORM_TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
+const TEMPLATES = 'Templates';
 const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
 const SLDS_ICON_CATEGORY_STANDARD = 'standard';
 const DEFAULT_INCREMENT_BY = 10;
@@ -184,10 +190,17 @@ export default class geListView extends LightningElement {
         this.options = this.buildFieldsToDisplayOptions(this.objectInfo.fields);
 
         // Get column header data
-        await this.getColumnHeaderData(this.listName)
+        let columnHeaderData = await this.getColumnHeaderData(this.listName)
             .catch(error => {
                 handleError(error);
             });
+
+        if (columnHeaderData === null || columnHeaderData.length < 1) {
+            columnHeaderData = this.buildDefaultColumnHeadersData(this.listName);
+        }
+
+        // Set currently selected column headers
+        this.selectedColumnHeaders = this.setSelectedColumnHeaders(columnHeaderData);
 
         // Build the columns for the datatable using the currently selected column headers
         const displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
@@ -234,13 +247,10 @@ export default class geListView extends LightningElement {
     * the Custom_Column_Header__c List Custom Setting.
     */
     getColumnHeaderData = async (listViewDeveloperName) => {
-        const columnHeaderData = await retrieveCustomColumnHeaders({ listName: listViewDeveloperName })
+        return await retrieveCustomColumnHeaders({ listName: listViewDeveloperName })
             .catch(error => {
                 handleError(error);
             });
-
-        // Set currently selected column headers
-        this.selectedColumnHeaders = this.setSelectedColumnHeaders(columnHeaderData);
     }
 
     /*******************************************************************************
@@ -254,9 +264,54 @@ export default class geListView extends LightningElement {
         this.columnHeadersByFieldApiName = {};
 
         return columnHeaderData.map(column => {
-            this.columnHeadersByFieldApiName[column[FIELD_API_NAME_INFO.fieldApiName]] = column;
-            return column[FIELD_API_NAME_INFO.fieldApiName]
+            this.columnHeadersByFieldApiName[column[COLUMN_FIELD_API_NAME_INFO.fieldApiName]] = column;
+            return column[COLUMN_FIELD_API_NAME_INFO.fieldApiName]
         });
+    }
+
+    /*******************************************************************************
+    * @description Method sets the default column headers for a given list if no
+    * headers exist.
+    *
+    * @param {string} listName: Name of the list to create default headers for
+    */
+    buildDefaultColumnHeadersData(listName) {
+        let defaultFields = [];
+        let defaultColumnHeaders = [];
+
+        if (listName === TEMPLATES) {
+            defaultFields = [
+                FORM_TEMPLATE_NAME_INFO.fieldApiName,
+                FORM_TEMPLATE_DESCRIPTION_INFO.fieldApiName,
+                FORM_TEMPLATE_CREATED_BY_INFO.fieldApiName,
+                FORM_TEMPLATE_LAST_MODIFIED_DATE_INFO.fieldApiName,
+            ];
+        }
+
+        for (let i = 0; i < defaultFields.length; i++) {
+            defaultColumnHeaders.push(this.constructColumnHeader(defaultFields[i], i, listName));
+        }
+
+        return defaultColumnHeaders;
+    }
+
+    /*******************************************************************************
+    * @description Method constructs an instance of Custom_Column_Header__c.
+    *
+    * @param {string} fieldApiName: Field Api Name of a field from an SObject.
+    * @param {integer} index: Desired position of the column header in the table.
+    * @param {string} listName: Value of the List_Name__c field in the
+    * Custom_Column_Header__c object for grouping a collection of headers.
+    */
+    constructColumnHeader(fieldApiName, index, listName) {
+        let columnHeader = {};
+        columnHeader[COLUMN_ID_INFO.fieldApiName] = undefined;
+        columnHeader[COLUMN_NAME_INFO.fieldApiName] = generateId();
+        columnHeader[COLUMN_FIELD_API_NAME_INFO.fieldApiName] = fieldApiName;
+        columnHeader[COLUMN_INDEX_INFO.fieldApiName] = index;
+        columnHeader[COLUMN_LIST_NAME_INFO.fieldApiName] = listName;
+
+        return columnHeader;
     }
 
     /*******************************************************************************
@@ -370,13 +425,13 @@ export default class geListView extends LightningElement {
 
             if (!columnHeader) {
                 columnHeader = {};
-                columnHeader[ID_INFO.fieldApiName] = this.columnHeadersByFieldApiName[fieldApiName];
-                columnHeader[NAME_INFO.fieldApiName] = generateId();
-                columnHeader[LIST_NAME_INFO.fieldApiName] = this.listName;
+                columnHeader[COLUMN_ID_INFO.fieldApiName] = this.columnHeadersByFieldApiName[fieldApiName];
+                columnHeader[COLUMN_NAME_INFO.fieldApiName] = generateId();
+                columnHeader[COLUMN_LIST_NAME_INFO.fieldApiName] = this.listName;
             }
 
-            columnHeader[FIELD_API_NAME_INFO.fieldApiName] = fieldApiName;
-            columnHeader[INDEX_INFO.fieldApiName] = index;
+            columnHeader[COLUMN_FIELD_API_NAME_INFO.fieldApiName] = fieldApiName;
+            columnHeader[COLUMN_INDEX_INFO.fieldApiName] = index;
 
             return columnHeader;
         });

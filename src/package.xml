@@ -271,7 +271,6 @@
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_BatchGiftEntryController</members>
-        <members>GE_ColumnHeaderService</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_LookupController</members>
@@ -886,7 +885,6 @@
         <members>Custom_Column_Header__c.Field_Api_Name__c</members>
         <members>Custom_Column_Header__c.Index__c</members>
         <members>Custom_Column_Header__c.List_Name__c</members>
-        <members>Custom_Column_Header__c.Sortable__c</members>
         <members>Customizable_Rollup_Settings__c.AccountHardCreditNonSkew_Incremental__c</members>
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
         <members>Customizable_Rollup_Settings__c.ChunkSize_Account_HardCredit__c</members>
