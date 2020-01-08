@@ -60,7 +60,7 @@ private with sharing class GE_FormRendererService_TEST {
 
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
         
-        FORM_Template template = FORM_ServiceGiftEntryTest.createSampleTemplate();
+        FORM_Template template = FORM_ServiceGiftEntry_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
         defaultTemplate.Template_JSON__c = templateJSON;
         

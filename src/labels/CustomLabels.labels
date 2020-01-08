@@ -4692,6 +4692,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Create Template</value>
     </labels>
     <labels>
+        <fullName>geDonorColumnLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
+        <value>Donor</value>
+    </labels>
+    <labels>
+        <fullName>geDonationColumnLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for column in batch gift entry table that links to the matched Gift.</shortDescription>
+        <value>Donation</value>
+    </labels>
+    <labels>
         <fullName>geErrorExistingTemplateName</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

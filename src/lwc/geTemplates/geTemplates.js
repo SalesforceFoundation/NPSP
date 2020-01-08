@@ -133,7 +133,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         } else {
             this.isLoading = hasPageAccess = false;
         }
-
         return hasPageAccess;
     }
 

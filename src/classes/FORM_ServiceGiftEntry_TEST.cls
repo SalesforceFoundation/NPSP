@@ -32,7 +32,7 @@
 * @date 2019
 * @group Gift Entry
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Unit tests to cover methods in FORM_ServiceGiftEntryTest.
+* @description Unit tests to cover methods in FORM_ServiceGiftEntry_TEST.
 */
 @isTest
 public with sharing class FORM_ServiceGiftEntry_TEST {
@@ -199,6 +199,35 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             selectFields, sObjectApiName, whereClause, orderByClause, limitClause);
         
         System.assertEquals(3, objects.size());
+    }
+    
+    /*******************************************************************************************************
+    * @description Confirm that form template name uniqueness is enforced.
+    */
+    @IsTest
+    static void shouldReturnFalseForExistingFormTemplateName() {
+        FORM_Service fs = new FORM_Service();
+
+        FORM_Template template = createSampleTemplate();
+        String templateJSON = JSON.serialize(template);
+        fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
+
+        Form_Template__c[] formTemplates = [SELECT Id, Name, Template_JSON__c FROM Form_Template__c];
+
+        Boolean isExistingName = FORM_ServiceGiftEntry.checkNameUniqueness(
+            formTemplates[0].Name,
+            null);
+
+        Boolean isUniqueName = FORM_ServiceGiftEntry.checkNameUniqueness(
+            'New Form Template Sample Name',
+            null);
+
+        System.assertEquals(false,
+            isExistingName,
+            'Existing template names should return false from `FORM_ServiceGiftEntry.checkNameUniqueness`');
+        System.assertEquals(true,
+            isUniqueName,
+            'New template names should return true from `FORM_ServiceGiftEntry.checkNameUniqueness`');
     }
 
     //Utility method for creating a sample template.
