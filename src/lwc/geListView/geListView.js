@@ -448,7 +448,7 @@ export default class geListView extends LightningElement {
     */
     buildSoqlQuery(selectedFieldApiNames) {
         // Get select fields
-        const selectFields = selectedFieldApiNames.join(', ');
+        const selectFields = selectedFieldApiNames;
 
         // Get object name
         const sObjectApiName = this.objectApiName;

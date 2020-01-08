@@ -266,7 +266,7 @@
         <members>FORM_Section</members>
         <members>FORM_Service</members>
         <members>FORM_ServiceGiftEntry</members>
-        <members>FORM_ServiceGiftEntryTest</members>
+        <members>FORM_ServiceGiftEntry_TEST</members>
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>

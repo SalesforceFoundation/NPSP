@@ -35,7 +35,7 @@
 * @description Unit tests to cover methods in FORM_ServiceGiftEntryTest.
 */
 @isTest
-public with sharing class FORM_ServiceGiftEntryTest {
+public with sharing class FORM_ServiceGiftEntry_TEST {
 
     /*******************************************************************************************************
     * @description Confirming that method returns the correct number of records
@@ -126,6 +126,81 @@ public with sharing class FORM_ServiceGiftEntryTest {
         System.assertEquals(templateJSON, templateResultJSON);
     }
 
+    /*******************************************************************************************************
+    * @description Confirm that we're able to retrieve column headers based on a list name.
+    */
+    @IsTest
+    static void shouldRetrieveColumnHeaderBasedOnListName() {
+
+        Test.startTest();
+        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        insert allHeaders;
+        Test.stopTest();
+
+        Custom_Column_Header__c[] selectedHeaders =
+            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Sample List');
+
+        System.assertEquals(3, allHeaders.size());
+        System.assertEquals(1, selectedHeaders.size());
+    }
+
+    /*******************************************************************************************************
+    * @description Confirm that we're able to retrieve column headers based on a list name.
+    */
+    @IsTest
+    static void shouldPersistOnlyTheSelectedColumnHeadersForTheGivenList() {
+
+        Test.startTest();
+        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        insert allHeaders;
+        Test.stopTest();
+
+        Custom_Column_Header__c[] selectedHeaders =
+            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Sample List 2');
+
+        Custom_Column_Header__c columnHeaderToKeep = new Custom_Column_Header__c();
+        columnHeaderToKeep.Name = 'sampleColumnHeader2';
+        columnHeaderToKeep.List_Name__c = 'Sample List 2';
+        columnHeaderToKeep.Index__c = 0;
+        columnHeaderToKeep.Field_Api_Name__c = 'Sample_Field_2__c';
+
+        String columnHeaderStringToKeep = JSON.serialize(new Custom_Column_Header__c[]{columnHeaderToKeep});
+
+        FORM_ServiceGiftEntry.upsertCustomColumnHeaders(columnHeaderStringToKeep, 'Sample List 2');
+
+        Custom_Column_Header__c[] updatedColumnHeadersList =
+            FORM_ServiceGiftEntry.retrieveCustomColumnHeaders('Sample List 2');
+        
+        Custom_Column_Header__c columnHeaderToCheck = updatedColumnHeadersList[0];
+
+        System.assertEquals(2, selectedHeaders.size());
+        System.assertEquals(1, updatedColumnHeadersList.size());
+        System.assertEquals('Sample_Field_2__c', columnHeaderToCheck.Field_Api_Name__c);
+    }
+
+    /*******************************************************************************************************
+    * @description Confirm that we're able to build a query string and retrieve a list of records.
+    */
+    @IsTest
+    static void shouldRetrieveRecordsBasedOnAQueryString() {
+
+        Test.startTest();
+        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        insert allHeaders;
+        Test.stopTest();
+
+        String[] selectFields = new String[] {'Id', 'Name'};
+        String sObjectApiName = SObjectType.Custom_Column_Header__c.Name;
+        String[] whereClause = new String[] {};
+        String orderByClause = 'LastModifiedDate desc';
+        Integer limitClause = 10;
+
+        sObject[] objects = FORM_ServiceGiftEntry.retrieveRecords(
+            selectFields, sObjectApiName, whereClause, orderByClause, limitClause);
+        
+        System.assertEquals(3, objects.size());
+    }
+
     //Utility method for creating a sample template.
     public static FORM_Template createSampleTemplate () {
         
@@ -157,5 +232,29 @@ public with sharing class FORM_ServiceGiftEntryTest {
                                                 '1.0',
                                                 layout);
         return template;
+    }
+
+    //Utility method for creating sample column headers.
+    public static Custom_Column_Header__c[] createSampleColumnHeaders () {
+        
+        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
+        columnHeader.Name = 'sampleColumnHeader';
+        columnHeader.List_Name__c = 'Sample List';
+        columnHeader.Index__c = 0;
+        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
+
+        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
+        columnHeader2.Name = 'sampleColumnHeader2';
+        columnHeader2.List_Name__c = 'Sample List 2';
+        columnHeader2.Index__c = 0;
+        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
+
+        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
+        columnHeader3.Name = 'sampleColumnHeader3';
+        columnHeader3.List_Name__c = 'Sample List 2';
+        columnHeader3.Index__c = 1;
+        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
+
+        return new Custom_Column_Header__c[] { columnHeader, columnHeader2, columnHeader3 };
     }
 }
