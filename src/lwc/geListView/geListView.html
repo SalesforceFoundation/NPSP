@@ -15,23 +15,6 @@
                                         {title}
                                     </h1>
                                 </template>
-                                <template if:false={hasCustomTitle}>
-                                    <h1>
-                                        <lightning-button-menu alternative-text={CUSTOM_LABELS.geAssistiveShowMenu}
-                                                               variant="bare-inverse"
-                                                               label={listViewLabel}
-                                                               class="slds-lightning-button-menu_extension"
-                                                               onselect={handleChange}>
-                                            <template for:each={options}
-                                                      for:item="option">
-                                                <lightning-menu-item key={option.value}
-                                                                     value={option.value}
-                                                                     label={option.label}>
-                                                </lightning-menu-item>
-                                            </template>
-                                        </lightning-button-menu>
-                                    </h1>
-                                </template>
                             </div>
                         </div>
                     </div>
