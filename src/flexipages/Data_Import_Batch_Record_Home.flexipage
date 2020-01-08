@@ -4,10 +4,16 @@
         <componentInstances>
             <componentName>BGE_DataImportBatchEntry</componentName>
             <visibilityRule>
+                <booleanFilter>1 AND 2</booleanFilter>
                 <criteria>
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>true</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
+                    <operator>LT</operator>
+                    <rightValue>2.0</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>
@@ -103,6 +109,22 @@
                     <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
+                </criteria>
+            </visibilityRule>
+        </componentInstances>
+        <componentInstances>
+            <componentName>geBatchGiftEntryApp</componentName>
+            <visibilityRule>
+                <booleanFilter>1 AND 2</booleanFilter>
+                <criteria>
+                    <leftValue>{!Record.GiftBatch__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>true</rightValue>
+                </criteria>
+                <criteria>
+                    <leftValue>{!Record.Batch_Gift_Entry_Version__c}</leftValue>
+                    <operator>GE</operator>
+                    <rightValue>2.0</rightValue>
                 </criteria>
             </visibilityRule>
         </componentInstances>
