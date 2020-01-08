@@ -1,6 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { dispatch, handleError, format, generateId, sort, deepClone } from 'c/utilTemplateBuilder';
+import { dispatch, handleError, format, generateId, sort, deepClone, showToast } from 'c/utilTemplateBuilder';
 import CumulusStaticResources from 'c/utilCumulusStaticResources';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
@@ -143,34 +143,24 @@ export default class geListView extends LightningElement {
     @api
     notify(modalData) {
         if (modalData.action === SAVE) {
-            this.selectedColumnHeaders = modalData.payload.values;
-            this.saveColumnHeaders();
+            this.saveColumnHeaders(modalData.payload.values);
         }
     }
 
+    /*******************************************************************************
+    * @description Public method to force a refresh of the list view.
+    */
     @api
     refresh() {
         this.handleImperativeRefresh();
     }
 
     handleImperativeRefresh = async () => {
-        try {
-            const displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
-            const fields = displayColumns.map(column => column.fieldApiName);
-            let queryObject = this.buildSoqlQuery(fields);
-
-            let formTemplates = await retrieveRecords({
-                selectFields: queryObject.selectFields,
-                sObjectApiName: queryObject.sObjectApiName,
-                whereClauses: queryObject.whereClauses,
-                orderByClause: queryObject.orderByClause,
-                limitClause: queryObject.limitClause,
+        const displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
+        await this.getRecords(displayColumns)
+            .catch(error => {
+                handleError(error);
             });
-
-            this.setDatatableRecordsForImperativeCall(formTemplates);
-        } catch (e) {
-            handleError(e);
-        }
     }
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
@@ -186,40 +176,79 @@ export default class geListView extends LightningElement {
     }
 
     init = async () => {
+        // Initialize static resources if not already initialized (moment.js)
         await CumulusStaticResources.init(this);
-        await this.getColumnHeaderData(this.listName);
+
+        // Set 'Available Fields' options for the column headers
+        this.options = this.buildFieldsToDisplayOptions(this.objectInfo.fields);
+
+        // Get column header data
+        await this.getColumnHeaderData(this.listName)
+            .catch(error => {
+                handleError(error);
+            });
+
+        // Build the columns for the datatable using the currently selected column headers
+        const displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
+
+        // Set the datatable columns
+        this.setDatatableColumns(displayColumns);
+
+        // Set the datatable actions
+        this.setDatatableActions();
+
+        // Get records
+        await this.getRecords(displayColumns)
+            .catch(error => {
+                handleError(error);
+            });
 
         this.isLoading = false;
     }
 
-    getColumnHeaderData = async (listViewDeveloperName) => {
-        const columnHeaderData = await retrieveCustomColumnHeaders({ listName: listViewDeveloperName });
-
-        this.selectedColumnHeaders = this.setSelectedColumnHeaders(columnHeaderData);
-
-        this.options = this.buildFieldsToDisplayOptions(this.objectInfo.fields);
-
-        let displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
-        this.setDatatableColumns(displayColumns);
-        this.setDatatableActions();
-
+    /*******************************************************************************
+    * @description Method takes in the currently selected column headers and builds
+    * a query string that's used to get records with the relevant fields.
+    *
+    * @param {list} displayColumns: List of display columns used by lightning-datatable.
+    */
+    getRecords = async (displayColumns) => {
         const fields = displayColumns.map(column => column.fieldApiName);
-
         if (fields.length > 0) {
             let queryObject = this.buildSoqlQuery(fields);
-
-            let formTemplates = await retrieveRecords({
-                selectFields: queryObject.selectFields,
-                sObjectApiName: queryObject.sObjectApiName,
-                whereClauses: queryObject.whereClauses,
-                orderByClause: queryObject.orderByClause,
-                limitClause: queryObject.limitClause,
-            });
+            let formTemplates = await retrieveRecords(queryObject)
+                .catch(error => {
+                    handleError(error);
+                });
 
             this.setDatatableRecordsForImperativeCall(formTemplates);
         }
     }
 
+    /*******************************************************************************
+    * @description Method retrieves the column header data held in the List Custom
+    * Setting Custom_Column_Header__c records.
+    *
+    * @param {string} listViewDeveloperName: The value held in the List_Name__c of
+    * the Custom_Column_Header__c List Custom Setting.
+    */
+    getColumnHeaderData = async (listViewDeveloperName) => {
+        const columnHeaderData = await retrieveCustomColumnHeaders({ listName: listViewDeveloperName })
+            .catch(error => {
+                handleError(error);
+            });
+
+        // Set currently selected column headers
+        this.selectedColumnHeaders = this.setSelectedColumnHeaders(columnHeaderData);
+    }
+
+    /*******************************************************************************
+    * @description Method sets the columnHeadersByFieldApiName map. Map conatains
+    * currently selected column headers and is used to quickly find a column header
+    * records based on their target field api name.
+    *
+    * @param {list} columnHeaderData: List of Custom_Column_Header__c records.
+    */
     setSelectedColumnHeaders(columnHeaderData) {
         this.columnHeadersByFieldApiName = {};
 
@@ -229,6 +258,13 @@ export default class geListView extends LightningElement {
         });
     }
 
+    /*******************************************************************************
+    * @description Method builds a list of options used to populate the available
+    * fields in the utilDualListbox component. utilDualListbox is used in the list
+    * settings modal.
+    *
+    * @param {list} fields: List of fields from the object describe info.
+    */
     buildFieldsToDisplayOptions(fields) {
         let options = [];
 
@@ -256,6 +292,13 @@ export default class geListView extends LightningElement {
         return options;
     }
 
+    /*******************************************************************************
+    * @description Method builds a list of options used to populate the available
+    * fields in the utilDualListbox component. utilDualListbox is used in the list
+    * settings modal.
+    *
+    * @param {list} fields: List of fields from the object describe info.
+    */
     buildDisplayColumns(headerFieldApiNames) {
         let displayColumns = [];
         for (let i = 0; i < headerFieldApiNames.length; i++) {
@@ -293,12 +336,35 @@ export default class geListView extends LightningElement {
         return displayColumns;
     }
 
-    handleChangeFieldsToDisplay(event) {
-        this.selectedColumnHeaders = event.detail.value;
+    /*******************************************************************************
+    * @description Method handles the save action in the list view settings modal.
+    */
+    saveColumnHeaders = async (updatedColumnHeaders) => {
+        this.isLoading = true;
+        this.selectedColumnHeaders = updatedColumnHeaders;
+        const columnHeaders = this.prepareColumnHeadersForSave(updatedColumnHeaders);
+
+        upsertCustomColumnHeaders({
+            listName: this.listName,
+            columnHeadersString: JSON.stringify(columnHeaders)
+        })
+            .then(response => {
+                this.init();
+                showToast('View updated.', '', 'success');
+            })
+            .catch(error => {
+                handleError(error);
+            })
+            .finally(() => {
+                this.isLoading = false;
+            })
     }
 
-    saveColumnHeaders = async (event) => {
-        const columnHeaders = this.selectedColumnHeaders.map((fieldApiName, index) => {
+    /*******************************************************************************
+    * @description Method prepares the provided column headers to be saved.
+    */
+    prepareColumnHeadersForSave(updatedColumnHeaders) {
+        return updatedColumnHeaders.map((fieldApiName, index) => {
             let columnHeader = this.columnHeadersByFieldApiName[fieldApiName];
 
             if (!columnHeader) {
@@ -313,24 +379,6 @@ export default class geListView extends LightningElement {
 
             return columnHeader;
         });
-
-        upsertCustomColumnHeaders({
-            listName: this.listName,
-            columnHeadersString: JSON.stringify(columnHeaders)
-        })
-            .then(response => {
-
-                this.getColumnHeaderData(this.listName)
-                    .then(response => {
-
-                    })
-                    .catch(error => {
-                        handleError(error);
-                    });
-            })
-            .catch(error => {
-                handleError(error);
-            });
     }
 
     /*******************************************************************************
