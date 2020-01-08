@@ -104,6 +104,29 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
+    /*******************************************************************************
+    * @description Opens the new batch wizard modal.
+    */
+    openNewBatchWizard(event) {
+        event.stopPropagation();
+        console.log('Open New Batch Wizard');
+        const detail = {
+            componentProperties: {
+                dedicatedListenerEventName: 'geBatchWizardEvent'
+            },
+            modalProperties: {
+                cssClass: 'slds-modal_large',
+                componentName: 'geBatchWizard',
+                showCloseButton: true,
+                closeCallback: function() {
+                    console.log('Passed a closeCallback');
+                }
+            }
+        };
+
+        dispatch(this, EVENT_TOGGLE_MODAL, detail);
+    }
+
     connectedCallback() {
         this.init();
     }

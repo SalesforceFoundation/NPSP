@@ -9,13 +9,20 @@
         <div slot="actions"
              class="slds-button-group"
              role="group">
-            <lightning-button label={CUSTOM_LABELS.geButtonEnterGifts}
-                              if:true={isAccessible}
-                              title={CUSTOM_LABELS.geButtonEnterGifts}
-                              variant="neutral"
-                              class="slds-float_right"
-                              onclick={navigateToForm}>
-            </lightning-button>
+            <lightning-button-group if:true={isAccessible}>
+                <lightning-button label='New Batch'
+                                  title='New Batch'
+                                  variant="neutral"
+                                  class="slds-float_right"
+                                  onclick={openNewBatchWizard}>
+                </lightning-button>
+                <lightning-button label='New Single Gift'
+                                  title='New Single Gift'
+                                  variant="neutral"
+                                  class="slds-float_right"
+                                  onclick={navigateToForm}>
+                </lightning-button>
+            </lightning-button-group>
         </div>
     </c-util-page-header>
 

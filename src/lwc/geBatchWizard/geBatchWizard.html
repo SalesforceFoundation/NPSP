@@ -1,0 +1,78 @@
+<template>
+    <article class="slds-card">
+        <header class="slds-card__header slds-p-around_none slds-grid slds-border_bottom">
+            <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-around_medium">
+                <div class="slds-media__body slds-truncate slds-text-align_center">
+                    <h2 class="slds-modal__title">
+                        {header}
+                    </h2>
+                </div>
+            </div>
+        </header>
+        <div class="slds-card__body slds-card__body_extension">
+            <p class="slds-p-horizontal_small">You're a 🧙‍♂️ Harry!</p>
+        </div>
+        <footer class="slds-modal__footer slds-clearfix">
+            <div class="slds-grid slds-nowrap">
+                <div class="slds-size_1-of-8">
+                    <template if:true={showBackButton}>
+                        <div class="slds-float_left">
+                            <lightning-button label="Back"
+                                              title="Back"
+                                              variant="outline-brand"
+                                              onclick={handleBack}
+                                              data-tab-value="Test">
+                            </lightning-button>
+                        </div>
+                    </template>
+                </div>
+                <div class="slds-size_6-of-8 slds-p-top_x-small">
+                    <lightning-progress-indicator current-step={step}
+                                                  type="base"
+                                                  variant="base">
+                        <lightning-progress-step label="Select Template"
+                                                 aria-label="Select Template"
+                                                 value={steps.first}>
+                        </lightning-progress-step>
+                        <lightning-progress-step label="Enter Batch Info"
+                                                 aria-label="Enter Batch Info"
+                                                 value={steps.second}>
+                        </lightning-progress-step>
+                        <lightning-progress-step label="Set Default Values"
+                                                 aria-label="Set Default Values"
+                                                 value={steps.third}>
+                        </lightning-progress-step>
+                    </lightning-progress-indicator>
+                </div>
+                <div class="slds-size_1-of-8">
+                    <div class="slds-float_right">
+                        <lightning-button label='Cancel'
+                                          title='Cancel'
+                                          variant="neutral"
+                                          class="slds-m-right_small"
+                                          onclick={handleCancel}>
+                        </lightning-button>
+                        <template if:false={showSaveButton}>
+                            <lightning-button label='Next'
+                                              title='Next'
+                                              variant="brand"
+                                              class=""
+                                              onclick={handleNext}
+                                              data-tab-value='Test'>
+                            </lightning-button>
+                        </template>
+                        <template if:true={showSaveButton}>
+                            <lightning-button label='Save'
+                                              title='Save'
+                                              variant="brand"
+                                              class=""
+                                              onclick={handleGoToTab}
+                                              data-tab-value='Test'>
+                            </lightning-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </article>
+</template>

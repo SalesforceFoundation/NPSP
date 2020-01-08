@@ -16,7 +16,8 @@
                     let modalReference = component.find('overlayLib').showCustomModal({
                         header: payload.modalProperties.header || '',
                         showCloseButton: payload.modalProperties.showCloseButton || true,
-                        cssClass: payload.modalProperties.cssClass || component.getName() + ' customModal',
+                        cssClass: component.getName() + ' custom-modal ' + payload.modalProperties.cssClass,
+                        closeCallback: payload.modalProperties.closeCallback || {},
                         body: modalBody,
                     });
 
@@ -38,6 +39,19 @@
         if (details.action === 'save') {
             component.find('giftEntry').notify(details);
         }
+
+        component.get('v.modal').then(modal => {
+            modal.close();
+        });
+    },
+
+    /*******************************************************************************
+    * @description Handles receipt of events from utilDedicatedListener component
+    * and notifies the geTemplates component.
+    */
+    handleBatchWizardEvent: function (component, event, helper) {
+        console.log('************--- handleBatchWizardEvent');
+        const details = event.getParams('detail');
 
         component.get('v.modal').then(modal => {
             modal.close();
