@@ -1833,10 +1833,12 @@
         <members>commonAssistiveInfo</members>
         <members>commonAssistiveSuccess</members>
         <members>commonAssistiveWarning</members>
+        <members>commonBack</members>
         <members>commonCancel</members>
         <members>commonDefaultValue</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonNext</members>
         <members>commonNoItems</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
@@ -1889,9 +1891,11 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geBodyBatchFieldBundleInfo</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyBatchHeaderWarning</members>
+        <members>geBodyBatchScreen3</members>
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
@@ -1919,8 +1923,11 @@
         <members>geErrorPageLevelFieldPermission2</members>
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorRequiredField</members>
+        <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
+        <members>geHeaderBatchSelectTemplate</members>
+        <members>geHeaderBatchSetDefaultValues</members>
         <members>geHeaderCustomTableHeaders</members>
         <members>geHeaderEmptyFormSection</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
@@ -3241,6 +3248,7 @@
         <members>geBatchGiftEntryApp</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
+        <members>geBatchWizard</members>
         <members>geFormField</members>
         <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>

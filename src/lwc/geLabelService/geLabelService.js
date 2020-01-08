@@ -6,10 +6,12 @@ import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
 import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
+import commonBack from '@salesforce/label/c.commonBack';
 import commonCancel from '@salesforce/label/c.commonCancel';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonNext from '@salesforce/label/c.commonNext';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
@@ -33,9 +35,11 @@ import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
+import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftCol';
 import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
+import geBodyBatchScreen3 from '@salesforce/label/c.geBodyBatchScreen3';
 import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
 import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
@@ -61,8 +65,11 @@ import geErrorPageLevelFieldPermission1 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLevelFieldPermission2';
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
+import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
 import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeaderRightCol';
+import geHeaderBatchSelectTemplate from '@salesforce/label/c.geHeaderBatchSelectTemplate';
+import geHeaderBatchSetDefaultValues from '@salesforce/label/c.geHeaderBatchSetDefaultValues';
 import geHeaderCustomTableHeaders from '@salesforce/label/c.geHeaderCustomTableHeaders';
 import geHeaderEmptyFormSection from '@salesforce/label/c.geHeaderEmptyFormSection';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
@@ -114,10 +121,12 @@ class GeLabelService {
         commonAssistiveInfo,
         commonAssistiveSuccess,
         commonAssistiveWarning,
+        commonBack,
         commonCancel,
         commonDefaultValue,
         commonError,
         commonFieldLabel,
+        commonNext,
         commonNoItems,
         commonReadMore,
         commonRequired,
@@ -141,9 +150,11 @@ class GeLabelService {
         geAssistiveSectionUp,
         geAssistiveShowMenu,
         geAssistiveSpinner,
+        geBodyBatchFieldBundleInfo,
         geBodyBatchHeaderLeftCol,
         geBodyBatchHeaderRightCol,
         geBodyBatchHeaderWarning,
+        geBodyBatchScreen3,
         geBodyEmptyFormSection,
         geBodyFormFieldsLeftCol,
         geBodyFormFieldsLeftColAdditional,
@@ -169,8 +180,11 @@ class GeLabelService {
         geErrorPageLevelFieldPermission2,
         geErrorPageLevelMissingRequiredFields,
         geErrorRequiredField,
+        geHeaderBatchEnterInfo,
         geHeaderBatchHeaderLeftCol,
         geHeaderBatchHeaderRightCol,
+        geHeaderBatchSelectTemplate,
+        geHeaderBatchSetDefaultValues,
         geHeaderCustomTableHeaders,
         geHeaderEmptyFormSection,
         geHeaderFormFieldsDefaultSectionName,

@@ -4054,6 +4054,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>warning</value>
     </labels>
     <labels>
+        <fullName>commonBack</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Back button</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
         <fullName>commonCancel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4084,6 +4092,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Field Label</shortDescription>
         <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>commonNext</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next button</shortDescription>
+        <value>Next</value>
     </labels>
     <labels>
         <fullName>commonNoItems</fullName>
@@ -4510,6 +4526,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geBodyBatchFieldBundleInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text about not being able to set default values for Field Bundles</shortDescription>
+        <value>You can't set a default values for fields included in this section.</value>
+    </labels>
+    <labels>
         <fullName>geBodyBatchHeaderLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4534,6 +4558,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is comma separated list of field api names from the Data Import Batch object -->
         <!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c -->
         <value>These required fields were automatically added to the Batch Header:</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchScreen3</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Batch screen 3 body text</shortDescription>
+        <value>Set default values for this batch. You can override default values when you enter gifts.</value>
     </labels>
     <labels>
         <fullName>geBodyEmptyFormSection</fullName>
@@ -4766,6 +4798,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Required field</value>
     </labels>
     <labels>
+        <fullName>geHeaderBatchEnterInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to enter batch info</shortDescription>
+        <value>Enter Batch Info</value>
+    </labels>
+    <labels>
         <fullName>geHeaderBatchHeaderLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4780,6 +4820,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header to configure batch header fields</shortDescription>
         <value>Configure Batch Header Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchSelectTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to select template</shortDescription>
+        <value>Select Template</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchSetDefaultValues</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to set default values</shortDescription>
+        <value>Set Default Values</value>
     </labels>
     <labels>
         <fullName>geHeaderCustomTableHeaders</fullName>

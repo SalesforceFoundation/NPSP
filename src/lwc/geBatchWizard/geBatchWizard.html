@@ -1,5 +1,10 @@
 <template>
     <article class="slds-card">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+            </lightning-spinner>
+        </template>
+
         <header class="slds-card__header slds-p-around_none slds-grid slds-border_bottom">
             <div class="slds-media slds-media_center slds-has-flexi-truncate slds-p-around_medium">
                 <div class="slds-media__body slds-truncate slds-text-align_center">
@@ -9,65 +14,68 @@
                 </div>
             </div>
         </header>
+
         <div class="slds-card__body slds-card__body_extension">
-            <p class="slds-p-horizontal_small">You're a 🧙‍♂️ Harry!</p>
+            <template if:true={isLoading}>
+                <c-util-stencil row-count="6"
+                                column-count="1">
+                </c-util-stencil>
+            </template>
+            <template if:false={isLoading}>
+                <p class="slds-p-horizontal_small">You're a 🧙‍♂️ Harry!</p>
+            </template>
         </div>
         <footer class="slds-modal__footer slds-clearfix">
-            <div class="slds-grid slds-nowrap">
-                <div class="slds-size_1-of-8">
+            <div class="slds-grid slds-wrap slds-grid_vertical-align-center slds-p-vertical_x-small">
+                <div class="slds-size_2-of-12">
                     <template if:true={showBackButton}>
                         <div class="slds-float_left">
-                            <lightning-button label="Back"
-                                              title="Back"
-                                              variant="outline-brand"
-                                              onclick={handleBack}
-                                              data-tab-value="Test">
+                            <lightning-button label={CUSTOM_LABELS.commonBack}
+                                              title={CUSTOM_LABELS.commonBack}
+                                              variant="neutral"
+                                              onclick={handleBack}>
                             </lightning-button>
                         </div>
                     </template>
                 </div>
-                <div class="slds-size_6-of-8 slds-p-top_x-small">
+                <div class="slds-size_8-of-12">
                     <lightning-progress-indicator current-step={step}
                                                   type="base"
                                                   variant="base">
-                        <lightning-progress-step label="Select Template"
-                                                 aria-label="Select Template"
+                        <lightning-progress-step label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
+                                                 aria-label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
                                                  value={steps.first}>
                         </lightning-progress-step>
-                        <lightning-progress-step label="Enter Batch Info"
-                                                 aria-label="Enter Batch Info"
+                        <lightning-progress-step label={CUSTOM_LABELS.geHeaderBatchEnterInfo}
+                                                 aria-label={CUSTOM_LABELS.geHeaderBatchEnterInfo}
                                                  value={steps.second}>
                         </lightning-progress-step>
-                        <lightning-progress-step label="Set Default Values"
-                                                 aria-label="Set Default Values"
+                        <lightning-progress-step label={CUSTOM_LABELS.geHeaderBatchSetDefaultValues}
+                                                 aria-label={CUSTOM_LABELS.geHeaderBatchSetDefaultValues}
                                                  value={steps.third}>
                         </lightning-progress-step>
                     </lightning-progress-indicator>
                 </div>
-                <div class="slds-size_1-of-8">
+                <div class="slds-size_2-of-12">
                     <div class="slds-float_right">
-                        <lightning-button label='Cancel'
-                                          title='Cancel'
+                        <lightning-button label={CUSTOM_LABELS.commonCancel}
+                                          title={CUSTOM_LABELS.commonCancel}
                                           variant="neutral"
-                                          class="slds-m-right_small"
+                                          class="slds-m-right_x-small"
                                           onclick={handleCancel}>
                         </lightning-button>
                         <template if:false={showSaveButton}>
-                            <lightning-button label='Next'
-                                              title='Next'
+                            <lightning-button label={CUSTOM_LABELS.commonNext}
+                                              title={CUSTOM_LABELS.commonNext}
                                               variant="brand"
-                                              class=""
-                                              onclick={handleNext}
-                                              data-tab-value='Test'>
+                                              onclick={handleNext}>
                             </lightning-button>
                         </template>
                         <template if:true={showSaveButton}>
-                            <lightning-button label='Save'
-                                              title='Save'
+                            <lightning-button label={CUSTOM_LABELS.commonSave}
+                                              title={CUSTOM_LABELS.commonSave}
                                               variant="brand"
-                                              class=""
-                                              onclick={handleGoToTab}
-                                              data-tab-value='Test'>
+                                              onclick={handleSave}>
                             </lightning-button>
                         </template>
                     </div>

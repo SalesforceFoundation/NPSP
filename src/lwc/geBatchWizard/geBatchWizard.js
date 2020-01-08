@@ -15,11 +15,12 @@ export default class geBatchWizard extends LightningElement {
     @api dedicatedListenerEventName;
 
     @track step = 0;
+    @track isLoading = true;
 
     headers = {
-        0: 'Select Template',
-        1: 'Enter Batch Info',
-        2: 'Set Default Values'
+        0: this.CUSTOM_LABELS.geHeaderBatchSelectTemplate,
+        1: this.CUSTOM_LABELS.geHeaderBatchEnterInfo,
+        2: this.CUSTOM_LABELS.geHeaderBatchSetDefaultValues
     }
 
     steps = {
@@ -38,6 +39,10 @@ export default class geBatchWizard extends LightningElement {
 
     get header() {
         return this.headers[this.step];
+    }
+
+    connectedCallback() {
+        this.isLoading = false;
     }
 
     handleNext() {
