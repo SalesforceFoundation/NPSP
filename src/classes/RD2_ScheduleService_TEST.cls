@@ -1408,7 +1408,7 @@ private with sharing class RD2_ScheduleService_TEST {
     * @description Validates that 2 active schedule are returned for an RD with current and future schedules
     */
     @IsTest
-    private static void shouldReturn2ActiveSchedulesForRDWithFutureAndCurrentSchedule() {
+    private static void shouldReturnActiveSchedulesWhenRDHasCurrentAndFutureSchedule() {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
