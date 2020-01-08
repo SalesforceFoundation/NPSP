@@ -626,7 +626,7 @@ export default class geListView extends LightningElement {
         const NEW_LIMIT = Number(this.limit) + this.incrementBy;
         this.limit = NEW_LIMIT < MAX_RECORDS ? NEW_LIMIT : MAX_RECORDS;
 
-        await this.getColumnHeaderData(this.listName);
+        await this.refresh();
     }
 
     /*******************************************************************************
