@@ -271,6 +271,7 @@
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_BatchGiftEntryController</members>
+        <members>GE_ColumnHeaderService</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_LookupController</members>

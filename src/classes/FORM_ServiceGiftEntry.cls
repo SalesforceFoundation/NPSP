@@ -37,6 +37,12 @@
 public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
+    * @description Name of the custom 'Templates' list view in the Gift Entry landing page. Used in the
+    * List_Name__c field of Custom_Column_Header__c records.
+    */
+    private static final String TEMPLATES = 'Templates';
+
+    /*******************************************************************************************************
     * @description Method retrieves records based on a query string.
     */
     @AuraEnabled
@@ -60,10 +66,22 @@ public with sharing class FORM_ServiceGiftEntry {
     */
     @AuraEnabled
     public static Custom_Column_Header__c[] retrieveCustomColumnHeaders(String listName) {
-        return [SELECT Id, Name, Field_Api_Name__c, Index__c, List_Name__c
+        Custom_Column_Header__c[] headers = [SELECT Id, Name, Field_Api_Name__c, Index__c, List_Name__c
             FROM Custom_Column_Header__c
             WHERE List_Name__c = :listName
             ORDER BY Index__c ASC];
+
+        if (headers.size() == 0) {
+            GE_ColumnHeaderService columnHeaderService = GE_ColumnHeaderService.getInstance();
+
+            if (listName == TEMPLATES) {
+                headers = columnHeaderService.defaultTemplatesListHeaders;
+            }
+
+            insert headers;
+        }
+
+        return headers;
     }
 
     /*******************************************************************************************************

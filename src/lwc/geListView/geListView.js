@@ -23,7 +23,6 @@ const DEFAULT_LIMIT = 10;
 const MAX_RECORDS = 2000;
 const NAME = 'Name';
 const USER = 'User';
-const BY = 'By';
 const URL = 'url';
 const _SELF = '_self';
 const DATE_FORMAT = 'M/D/YYYY, h:mm:ss A';
@@ -156,11 +155,13 @@ export default class geListView extends LightningElement {
     }
 
     handleImperativeRefresh = async () => {
+        this.isLoading = true;
         const displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
         await this.getRecords(displayColumns)
             .catch(error => {
                 handleError(error);
             });
+        this.isLoading = false;
     }
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
@@ -626,7 +627,7 @@ export default class geListView extends LightningElement {
         const NEW_LIMIT = Number(this.limit) + this.incrementBy;
         this.limit = NEW_LIMIT < MAX_RECORDS ? NEW_LIMIT : MAX_RECORDS;
 
-        await this.refresh();
+        this.refresh();
     }
 
     /*******************************************************************************
