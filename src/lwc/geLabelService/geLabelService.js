@@ -10,7 +10,6 @@ import commonCancel from '@salesforce/label/c.commonCancel';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
-import commonListView from '@salesforce/label/c.commonListView';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
@@ -118,7 +117,6 @@ class GeLabelService {
         commonDefaultValue,
         commonError,
         commonFieldLabel,
-        commonListView,
         commonNoItems,
         commonReadMore,
         commonRequired,

@@ -1838,7 +1838,6 @@
         <members>commonDefaultValue</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
-        <members>commonListView</members>
         <members>commonNoItems</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
