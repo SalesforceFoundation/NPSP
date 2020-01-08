@@ -784,42 +784,4 @@ public class BDI_ManageAdvancedMappingCtrl {
             this.npspNamespace = UTIL_Namespace.HARDCODED_NPSP_NAMESPACE;
         }
     }
-
-    public class GiftEntryListViewWrapper {
-        public String DeveloperName;
-        public String MasterLabel;
-        public String ColumnHeaders;
-    }
-
-    /*******************************************************************************************************
-    * @description Converts a JSON string of a DataImportObjectMappingWrapper to an instance of
-    * Data_Import_Object_Mapping__mdt. 
-    *
-    * @param objectMappingString: DataImportFieldMappingWrapper as JSON
-    * @return String: Deployment Id or Data_Import_Object_Mapping__mdt instance JSON when in tests
-    */
-    @AuraEnabled(cacheable=true)
-    public static String createGiftEntryColumn(String giftEntryListViewString) {
-        try {
-            Gift_Entry_Column_Header__mdt giftEntryListView =
-                (Gift_Entry_Column_Header__mdt)JSON.deserialize(
-                    giftEntryListViewString, Gift_Entry_Column_Header__mdt.class);
-
-            System.debug(giftEntryListView);
-
-            if (Test.isRunningTest()) {
-                return JSON.serialize(giftEntryListView);
-            }
-
-            String deploymentId;
-
-            deploymentId = enqueueMetadataRecords(giftEntryListView);
-
-            System.debug('deploymentId: ' + deploymentId);
-            return deploymentId;
-
-        } catch (Exception e) {
-            throw e;
-        }
-    }
 }// BDI_ManageAdvancedMappingCtrl

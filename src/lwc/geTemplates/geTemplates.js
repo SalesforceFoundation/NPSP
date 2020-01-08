@@ -140,7 +140,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     /*******************************************************************************
     * @description Method handles actions for the Templates list view table.
     *
-    * @param {object} event: Event received from the utilListView component
+    * @param {object} event: Event received from the list view component
     * containing action details.
     */
     handleTemplatesTableRowAction(event) {
