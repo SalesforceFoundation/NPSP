@@ -63,6 +63,7 @@ import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPa
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
 import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeaderRightCol';
+import geHeaderCustomTableHeaders from '@salesforce/label/c.geHeaderCustomTableHeaders';
 import geHeaderEmptyFormSection from '@salesforce/label/c.geHeaderEmptyFormSection';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
@@ -170,6 +171,7 @@ class GeLabelService {
         geErrorRequiredField,
         geHeaderBatchHeaderLeftCol,
         geHeaderBatchHeaderRightCol,
+        geHeaderCustomTableHeaders,
         geHeaderEmptyFormSection,
         geHeaderFormFieldsDefaultSectionName,
         geHeaderFormFieldsLeftCol,

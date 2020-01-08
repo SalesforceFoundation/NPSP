@@ -7,27 +7,17 @@
     */
     handleShowModal: function (component, event, helper) {
         const payload = event.getParams('detail');
-        const config = {
-            cssClass: 'slds-m-bottom_medium slds-p-horizontal_small',
-            name: payload.name,
-            options: payload.options,
-            values: payload.values,
-            sourceLabel: payload.sourceLabel,
-            selectedLabel: payload.selectedLabel,
-            showModalFooter: true,
-            dedicatedListenerEventName: 'geGiftEntryModalEvent'
-        }
 
-        $A.createComponents([["c:utilDualListbox", config]],
+        $A.createComponents([[`c:${payload.modalProperties.componentName}`, payload.componentProperties]],
             function (components, status, errorMessage) {
                 if (status === "SUCCESS") {
                     const modalBody = components[0];
 
                     let modalReference = component.find('overlayLib').showCustomModal({
-                        header: $A.get("$Label.c.geHeaderCustomTableHeaders"),
+                        header: payload.modalProperties.header || '',
+                        showCloseButton: payload.modalProperties.showCloseButton || true,
+                        cssClass: payload.modalProperties.cssClass || component.getName() + ' customModal',
                         body: modalBody,
-                        showCloseButton: true,
-                        cssClass: component.getName() + ' customModal'
                     });
 
                     component.set('v.modal', modalReference);

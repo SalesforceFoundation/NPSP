@@ -692,11 +692,21 @@ export default class geListView extends LightningElement {
     toggleModal(event) {
         event.stopPropagation();
         const detail = {
-            options: this.options,
-            values: this.selectedColumnHeaders,
-            name: this.listName,
-            sourceLabel: this.CUSTOM_LABELS.geLabelCustomTableSourceFields,
-            selectedLabel: this.CUSTOM_LABELS.geLabelCustomTableSelectedFields,
+            componentProperties: {
+                cssClass: 'slds-m-bottom_medium slds-p-horizontal_small',
+                name: this.listName,
+                options: this.options,
+                values: this.selectedColumnHeaders,
+                sourceLabel: this.CUSTOM_LABELS.geLabelCustomTableSourceFields,
+                selectedLabel: this.CUSTOM_LABELS.geLabelCustomTableSelectedFields,
+                showModalFooter: true,
+                dedicatedListenerEventName: 'geGiftEntryModalEvent'
+            },
+            modalProperties: {
+                componentName: 'utilDualListbox',
+                header: this.CUSTOM_LABELS.geHeaderCustomTableHeaders,
+                showCloseButton: true,
+            }
         };
 
         dispatch(this, EVENT_TOGGLE_MODAL, detail);
