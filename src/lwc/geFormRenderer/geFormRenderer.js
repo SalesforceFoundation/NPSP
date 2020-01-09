@@ -145,6 +145,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     // Show on top if it is a page level
                     this.hasPageLevelError = true;
                     const exceptionWrapper = JSON.parse(error.body.message);
+                    //TODO: can I use this to get the field list to query?
                     const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
 
                     if (exceptionWrapper.exceptionType !== null && exceptionWrapper.exceptionType !== '') {
@@ -257,5 +258,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         this.erroredFields = [];
+    }
+
+    @api
+    load(data) {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+
+        sectionsList.forEach(section => {
+            section.load(data);
+        });
     }
 }

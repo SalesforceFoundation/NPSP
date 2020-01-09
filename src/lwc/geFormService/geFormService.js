@@ -134,9 +134,13 @@ class GeFormService {
         // Build the DI Record
         let diRecord = {};
 
+        let displayValues = {};
         for (let key in fieldData) {
             if (fieldData.hasOwnProperty(key)) {
-                let value = fieldData[key];
+                let value = fieldData[key].value;
+                if (fieldData[key].displayValue) {
+                    displayValues[value] = fieldData[key].displayValue;
+                }
 
                 // Get the field mapping wrapper with the CMT record name (this is the key variable).
                 let fieldWrapper = this.getFieldMappingWrapper(key);
@@ -144,7 +148,7 @@ class GeFormService {
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
             }
         }
-
+        diRecord.displayValues = displayValues;
         return diRecord;
     }
 

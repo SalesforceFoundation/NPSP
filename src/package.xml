@@ -1757,6 +1757,7 @@
         <members>bdiTime</members>
         <members>bdiUpdated</members>
         <members>bgeActionDelete</members>
+        <members>bgeActionEdit</members>
         <members>bgeActionView</members>
         <members>bgeBatchAvailableFields</members>
         <members>bgeBatchBatchProcessSizeHelp</members>

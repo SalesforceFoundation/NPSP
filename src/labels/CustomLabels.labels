@@ -3503,6 +3503,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Delete</value>
     </labels>
     <labels>
+        <fullName>bgeActionEdit</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Edit action for Batch Gift Entry</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
         <fullName>bgeActionView</fullName>
         <language>en_US</language>
         <protected>true</protected>

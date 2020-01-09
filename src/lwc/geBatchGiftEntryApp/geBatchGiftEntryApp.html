@@ -11,5 +11,8 @@
             onsectionsretrieved={handleSectionsRetrieved}>
     </c-ge-form-renderer>
 
-    <c-ge-batch-gift-entry-table batch-id={recordId}></c-ge-batch-gift-entry-table>
+    <c-ge-batch-gift-entry-table
+            batch-id={recordId}
+            onedit={handleEdit}>
+    </c-ge-batch-gift-entry-table>
 </template>
