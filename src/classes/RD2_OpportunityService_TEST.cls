@@ -364,7 +364,7 @@ private with sharing class RD2_OpportunityService_TEST {
     * when Close Date is today and the Opp is Closed Lost/Won
     */
     @isTest
-    private static void shouldUpdateOppWhenClosedAndCloseDateIsToday() {
+    private static void shouldNotUpdateOppWhenClosedAndCloseDateIsToday() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
