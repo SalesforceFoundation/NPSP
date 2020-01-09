@@ -18,6 +18,7 @@ import {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
+    DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS
 } from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
@@ -30,6 +31,7 @@ const LANDING_PAGE_TAB_NAME = 'GE_Templates';
 const SORTED_BY = 'required';
 const SORT_ORDER = 'desc';
 const PICKLIST = 'Picklist';
+const BOOLEAN = 'Boolean';
 const NEW = 'new';
 const EDIT = 'edit';
 const SAVE = 'save';
@@ -185,12 +187,18 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 field.required = true;
             }
 
-            if (field.required) {
+            if (field.required && field.dataType !== BOOLEAN) {
                 field.checked = true;
                 field.isRequiredFieldDisabled = true;
             } else {
                 field.checked = false;
                 field.isRequiredFieldDisabled = false;
+            }
+
+            // Need to set checkbox field types 'required' field to false
+            // as it always returns true from the field describe info.
+            if (field.dataType === BOOLEAN) {
+                field.required = false;
             }
 
             this.batchFieldFormElements.push(field);
@@ -211,6 +219,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             requiredFields.forEach((field) => {
                 this.handleAddBatchHeaderField({ detail: field.apiName });
             });
+
+            DEFAULT_BATCH_HEADER_FIELDS.forEach((fieldApiName) => {
+                this.handleAddBatchHeaderField({ detail: fieldApiName });
+            })
         }
     }
 

@@ -9,6 +9,19 @@ import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportB
 import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
 import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
 import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
+import DI_BATCH_ACCOUNT_CUSTOM_ID_INFO from '@salesforce/schema/DataImportBatch__c.Account_Custom_Unique_ID__c';
+import DI_BATCH_ACTIVE_FIELDS_INFO from '@salesforce/schema/DataImportBatch__c.Active_Fields__c';
+import DI_BATCH_CONTACT_CUSTOM_ID_INFO from '@salesforce/schema/DataImportBatch__c.Contact_Custom_Unique_ID__c';
+import DI_BATCH_GIFT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
+import DI_BATCH_LAST_PROCESSED_ON_INFO from '@salesforce/schema/DataImportBatch__c.Last_Processed_On__c';
+import DI_BATCH_PROCESS_USING_SCHEDULED_JOB_INFO from '@salesforce/schema/DataImportBatch__c.Process_Using_Scheduled_Job__c';
+import DI_BATCH_RECORDS_FAILED_INFO from '@salesforce/schema/DataImportBatch__c.Records_Failed__c';
+import DI_BATCH_RECORDS_SUCCESSFULLY_PROCESSED_INFO from '@salesforce/schema/DataImportBatch__c.Records_Successfully_Processed__c';
+import DI_BATCH_CONTACT_MATCHING_RULE_INFO from '@salesforce/schema/DataImportBatch__c.Contact_Matching_Rule__c';
+import DI_BATCH_DESCRIPTION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Description__c';
+import DI_BATCH_EXPECTED_COUNT_GIFTS_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
+import DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
+import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
@@ -20,6 +33,14 @@ const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
 ];
 Object.freeze(ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS);
+
+const DEFAULT_BATCH_HEADER_FIELDS = [
+    DI_BATCH_DESCRIPTION_INFO.fieldApiName,
+    DI_BATCH_EXPECTED_COUNT_GIFTS_INFO.fieldApiName,
+    DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO.fieldApiName,
+    DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO.fieldApiName,
+];
+Object.freeze(DEFAULT_BATCH_HEADER_FIELDS);
 
 // We've opted to exclude the following batch fields related to
 // matching logic as we're removing the matching options page
@@ -35,6 +56,15 @@ const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_DONATION_DATE_RANGE_INFO.fieldApiName,
     DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO.fieldApiName,
     DI_BATCH_OWNER_ID_INFO.fieldApiName,
+    DI_BATCH_ACCOUNT_CUSTOM_ID_INFO.fieldApiName,
+    DI_BATCH_ACTIVE_FIELDS_INFO.fieldApiName,
+    DI_BATCH_CONTACT_CUSTOM_ID_INFO.fieldApiName,
+    DI_BATCH_GIFT_BATCH_INFO.fieldApiName,
+    DI_BATCH_LAST_PROCESSED_ON_INFO.fieldApiName,
+    DI_BATCH_PROCESS_USING_SCHEDULED_JOB_INFO.fieldApiName,
+    DI_BATCH_RECORDS_FAILED_INFO.fieldApiName,
+    DI_BATCH_RECORDS_SUCCESSFULLY_PROCESSED_INFO.fieldApiName,
+    DI_BATCH_CONTACT_MATCHING_RULE_INFO.fieldApiName,
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
 
@@ -461,6 +491,7 @@ const format = (string, replacements) => {
 
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
+    DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
     removeByProperty,
     findIndexByProperty,
