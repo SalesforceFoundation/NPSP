@@ -1471,6 +1471,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Error</value>
     </labels>
     <labels>
+        <fullName>PageMessagesNone</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>None</shortDescription>
+        <value>None</value>
+    </labels>
+    <labels>
         <fullName>PageMessagesWarning</fullName>
         <categories>PageMessages</categories>
         <language>en_US</language>
