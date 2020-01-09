@@ -29,39 +29,31 @@
 */
 /**
 * @author Salesforce.org
-* @date 2019
-* @group BGE
-* @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Controller for the geTemplateBuilder Lightning Web Component.
+* @date 2020
+* @group HGE
+* @group-content
+* @description Controller for the Gift Entry lightning web components used in batch mode.
 */
-
-public with sharing class GE_TemplateBuilderCtrl {
-
-    /**
-     * @description Retrieves the render wrapper for gift entry by template name. If the template is not found, it returns the wrapper for the Default template
-     * @return      A render wrapper containing a template and information about the object/field mappings.
-     * @param String template name
-     */
-    @AuraEnabled(cacheable=true)
-    public static FORM_RenderWrapper retrieveFormRenderWrapper(String templateName) {
-        return GE_FormRendererService.getRenderWrapper(templateName);
-    }
+public with sharing class GE_BatchGiftEntryController {
 
     /**
-     * @description Retrieves the default SGE render wrapper for gift entry.
-     * @return      A render wrapper containing a template and information about the object/field mappings.
+     * @description Wraps the UTIL_Namespace.alignClassNSWithEnvironment method in a
+     * try...catch statement to facilitate throwing an AuraHandledException when
+     * an Exception is encountered.
+     *
+     * @param name The class name that needs to be namespace aligned.
+     *
+     * @return The name of the class prepended with the appropriate namespace.
      */
     @AuraEnabled
-    public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
-        return GE_FormRendererService.getDefaultSGERenderWrapper();
-    }
-
-    /**
-     * @description Retrieves the default BGE render wrapper for gift entry. 
-     * @return      A render wrapper containing a template and information about the object/field mappings.
-     */
-    @AuraEnabled(cacheable=true)
-    public static FORM_RenderWrapper retrieveDefaultBGERenderWrapper() {
-        return GE_FormRendererService.getDefaultBGERenderWrapper();
+    public static String alignClassNSWithEnvironment(String name){
+        try {
+            return UTIL_Namespace.alignClassNSWithEnvironment(name);
+        } catch (Exception e) {
+            throw new AuraHandledException(
+                    'A problem was encountered while aligning the namespace for ' + name + '.'
+                    + ' Error details: ' + JSON.serialize(e)
+            );
+        }
     }
 }
