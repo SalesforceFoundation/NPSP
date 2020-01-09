@@ -449,6 +449,17 @@ Insert CampaignMemberStatus:
   lookups:
     CampaignId:
       table: Campaign
+Insert CampaignMember:
+  sf_object: CampaignMember
+  table: CampaignMember
+  fields:
+    Id: sf_id
+    Status: Status
+  lookups:
+    CampaignId:
+      table: Campaign
+    ContactId:
+      table: Contact
 Insert npe03__Recurring_Donation__c:
   sf_object: npe03__Recurring_Donation__c
   table: npe03__Recurring_Donation__c
@@ -641,6 +652,7 @@ Event:
   sf_object: Event
   table: Event
   fields:
+    Id: sf_id
     ActivityDate: ActivityDate
     Description: Description
     StartDateTime: StartDateTime
