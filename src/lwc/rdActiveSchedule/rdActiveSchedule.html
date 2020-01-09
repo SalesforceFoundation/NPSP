@@ -12,7 +12,7 @@
 
         <div if:true={schedules}>
             <template for:each={schedules} for:item="schedule">
-                <div class="slds-m-around--large" style="width:55rem" key={schedule.scheduleNumber}>
+                <div class="slds-m-around--large" key={schedule.scheduleNumber}>
                     <article class="slds-tile slds-media slds-m-around--medium" >
                         <div class="slds-media__figure">
                           <span class="slds-icon_container" title="Record icon">
@@ -23,32 +23,32 @@
                             <h3 class="slds-tile__title  slds-truncate" if:false={schedule.isCurrent} title={labels.lblFutureSchedule}>{labels.lblFutureSchedule}</h3>
                             <h3 class="slds-tile__title  slds-truncate" if:true={schedule.isCurrent} title={labels.lblCurrentSchedule}>{labels.lblCurrentSchedule}</h3>
                             <div class="slds-tile__detail slds-m-around--xx-small">
-                                <dl class="slds-list_horizontal slds-grid slds-wrap">
+                                <dl class="slds-list_horizontal slds-wrap slds-grid">
 
-                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_3-of-12" title={labels.lblAmount}>{labels.lblAmount}</dt>
-                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12"><lightning-formatted-number format-style="currency" currency-code={currencyIsoCode} value={schedule.amount}></lightning-formatted-number></dd>
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblAmount}>{labels.lblAmount}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_7-of-12"><lightning-formatted-number format-style="currency" currency-code={currencyIsoCode} value={schedule.amount}></lightning-formatted-number></dd>
 
-                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Payment Method label">{labels.lblPmtMethod}</dt>
-                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" title={labels.lblPmtMethod}>{schedule.paymentMethod}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPmtMethod}>{labels.lblPmtMethod}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_7-of-12">{schedule.paymentMethod}</dd>
 
-                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Campaign label">{labels.lblCampaign}</dt>
-                                    <dd class="slds-dl_horizontal__detail  slds-medium-size_9-of-12" title={labels.lblCampaign}>{schedule.campaign}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblCampaign}>{labels.lblCampaign}</dt>
+                                    <dd class="slds-dl_horizontal__detail  slds-medium-size_7-of-12">{schedule.campaign}</dd>
 
-                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Effective Date label">{labels.lblStartDate}</dt>
-                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" title={labels.lblStartDate}><lightning-formatted-date-time value={schedule.startDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time></dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblStartDate}>{labels.lblStartDate}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_7-of-12"><lightning-formatted-date-time value={schedule.startDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time></dd>
 
-                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="End Date label">{labels.lblEndDate}</dt>
-                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" if:false={schedule.endDate} title={labels.lblEndDate}>None</dd>
-                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" if:true={schedule.endDate} title={labels.lblEndDate}><lightning-formatted-date-time value={schedule.endDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time></dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblEndDate}>{labels.lblEndDate}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_7-of-12" if:false={schedule.endDate}>None</dd>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_7-of-12" if:true={schedule.endDate}><lightning-formatted-date-time value={schedule.endDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time></dd>
 
-                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Installment Period label">{labels.lblPeriod}</dt>
-                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" title={labels.lblPeriod}>{schedule.period}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPeriod}>{labels.lblPeriod}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_7-of-12">{schedule.period}</dd>
 
-                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Installment Frequency label">{labels.lblFrequency}</dt>
-                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" title={labels.lblFrequency}>{schedule.frequency}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblFrequency}>{labels.lblFrequency}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_7-of-12">{schedule.frequency}</dd>
 
-                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" if:true={schedule.dayOfMonth} title="Day of Month label">{labels.lblDayOfMonth}</dt>
-                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" if:true={schedule.dayOfMonth} title={labels.lblDayOfMonth}>{schedule.dayOfMonth}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_5-of-12" if:true={schedule.dayOfMonth} title={labels.lblDayOfMonth}>{labels.lblDayOfMonth}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_7-of-12" if:true={schedule.dayOfMonth}>{schedule.dayOfMonth}</dd>
 
                                 </dl>
                             </div>
