@@ -150,8 +150,8 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 this.objectMappingNames = [...this.objectMappingNames, objMappingDevName];
 
                 let fieldMappings = TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName];
-                fieldMappings.forEach(fieldMapping => {
-                    if(fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL){
+                fieldMappings.forEach (fieldMapping => {
+                    if (fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL) {
                         //Forcing the requiredness of the Donation Donor field mapping
                         fieldMapping.Is_Required = true;
                     }
