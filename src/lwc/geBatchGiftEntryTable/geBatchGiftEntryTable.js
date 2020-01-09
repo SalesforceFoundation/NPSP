@@ -42,7 +42,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             rowActions: [
                 {label: bgeActionDelete, name: 'delete'}
             ],
-            menuAlignment: 'right'
+            menuAlignment: 'auto'
         }
     };
 
