@@ -552,12 +552,14 @@ public without sharing class RD2_ScheduleService {
                     continue;
                 }
                 first1stAnd15thFound = true;
-                schedule.DayOfMonth__c = null;
             }
 
             ActiveSchedule activeSched = new ActiveSchedule(schedule);
             if (schedule.StartDate__c <= currentDate) {
                 activeSched.isCurrent = true;
+            }
+            if (schedule.InstallmentPeriod__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+                activeSched.dayOfMonth = null;
             }
             activeSchedules.add(activeSched);
         }

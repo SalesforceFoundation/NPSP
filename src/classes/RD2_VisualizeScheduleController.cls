@@ -116,12 +116,12 @@ public with sharing class RD2_VisualizeScheduleController {
 
     /**
      * @description Retrieves the currency code to use for the display
-     * @param recordId
+     * @param SObject
      * @return CurrencyIsoCode
      */
-    public static String getCurrencyCode(npe03__Recurring_Donation__c rd) {
+    public static String getCurrencyCode(SObject sobj) {
         if (UserInfo.isMultiCurrencyOrganization()) {
-            return (String)rd.get('CurrencyIsoCode');
+            return (String)sobj.get('CurrencyIsoCode');
         } else {
             return UserInfo.getDefaultCurrency();
         }
