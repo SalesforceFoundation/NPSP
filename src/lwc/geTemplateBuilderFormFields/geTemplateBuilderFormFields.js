@@ -16,6 +16,8 @@ import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method
 import ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import CONTACT1_LASTNAME_INFO from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
+import ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__c';
 
 const WARNING = 'warning';
 
@@ -29,6 +31,14 @@ const DEFAULT_FORM_FIELDS = {
     [PAYMENT_CHECK_REF_NUM_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
     [PAYMENT_METHOD_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
 }
+
+// Required form fields for template save validation
+const REQUIRED_FORM_FIELDS = [
+    ACCOUNT1_IMPORTED_INFO.fieldApiName,
+    ACCOUNT1_NAME_INFO.fieldApiName,
+    CONTACT1_IMPORTED_INFO.fieldApiName,
+    CONTACT1_LASTNAME_INFO.fieldApiName
+];
 
 export default class geTemplateBuilderFormFields extends LightningElement {
 
@@ -58,8 +68,14 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         let missingRequiredFieldMappings = [];
 
         const elements = this.template.querySelectorAll('lightning-input');
+        let counter = 0;
+
         elements.forEach(el => {
-            if (el.required && !el.checked) {
+            if (REQUIRED_FORM_FIELDS.includes(el.getAttribute('data-source-api-name')) && el.checked) {
+              counter++;
+            }
+            if (el.required && !el.checked ||
+                el.getAttribute('data-source-api-name') === DONATION_DONOR_INFO.fieldApiName && !el.checked) {
                 objectMappingsWithMissingRequiredFields.add(el.getAttribute('data-object-mapping'));
                 let objectMappingLabel = el.getAttribute('data-object-mapping-label');
                 missingRequiredFieldMappings.push(`${objectMappingLabel}: ${el.label}`);
@@ -67,6 +83,12 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
             this.validateGiftField(el);
         });
+        if (counter === 0) {
+            let requireMessageLabel = 'Required Fields';
+            let requiredMessage = 'At least one of the following fields are required: Account Imported, ' +
+                'Account Name, Contact Imported, Contact Last Name.';
+            missingRequiredFieldMappings.push(`${requireMessageLabel}: ${requiredMessage}`);
+        }
 
         if (missingRequiredFieldMappings.length > 0) {
             const lightningAccordion = this.template.querySelector('lightning-accordion');
