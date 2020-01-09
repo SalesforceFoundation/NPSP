@@ -1474,6 +1474,7 @@
         <members>PageMessagesError</members>
         <members>PageMessagesFatal</members>
         <members>PageMessagesInfo</members>
+        <members>PageMessagesNone</members>
         <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
