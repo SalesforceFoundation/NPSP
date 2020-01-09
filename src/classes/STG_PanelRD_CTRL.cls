@@ -198,7 +198,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     private List<SelectOption> getCreationOptions() {
         List<SelectOption> options = new List<SelectOption>();
 
-        for (RD2_Constants.InstallmentCreation creationOption : RD2_Constants.InstallmentCreation.values()) {
+        for (RD2_Constants.InstallmentCreateOptions creationOption : RD2_Constants.InstallmentCreateOptions.values()) {
             options.add(new SelectOption(creationOption.name(), convertToInstallmentLabel(creationOption.name())));
         }
 
@@ -207,11 +207,11 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     
     @TestVisible
     private String convertToInstallmentLabel(String installmentOption) {
-        if (installmentOption == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name()) {
+        if (installmentOption == RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()) {
             return Label.stgInstallmentOppEnableAll;
-        } else if(installmentOption == RD2_Constants.InstallmentCreation.Disable_First_Installment.name()) {
+        } else if(installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name()) {
             return Label.stgInstallmentOppDisableFirst;
-        } else if( installmentOption == RD2_Constants.InstallmentCreation.Disable_All_Installments.name()) {
+        } else if( installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()) {
             return Label.stgInstallmentOppDisableAll;
         }
         return '';

@@ -47,9 +47,9 @@ public inherited sharing class RD2_Constants {
     /**
     * @description Enum to specify behavior of how to handle installment opportunity auto-creation
     */
-    public enum InstallmentCreation {
+    public enum InstallmentCreateOptions {
         Always_Create_Next_Installment,
-        Disable_First_Installment,
+        Disable_First_Installment_on_Create,
         Disable_All_Installments 
     }
 

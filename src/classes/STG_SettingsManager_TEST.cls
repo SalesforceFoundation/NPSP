@@ -666,7 +666,7 @@ private with sharing class STG_SettingsManager_TEST {
 
         List<String> stringInstallmentCreationOption = new List<String>();
 
-        for (RD2_Constants.InstallmentCreation option : RD2_Constants.InstallmentCreation.values()) {
+        for (RD2_Constants.InstallmentCreateOptions option : RD2_Constants.InstallmentCreateOptions.values()) {
             stringInstallmentCreationOption.add(option.name());
         }
 
@@ -706,7 +706,7 @@ private with sharing class STG_SettingsManager_TEST {
     private static void shouldConvertInstallmentOppAutoCreationAlwaysAllowToLabel() {
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
 
-        String alwaysAllowSetting = RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name();
+        String alwaysAllowSetting = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
 
         Test.startTest();
         String convertedLabel = panel.convertToInstallmentLabel(alwaysAllowSetting);
@@ -724,7 +724,7 @@ private with sharing class STG_SettingsManager_TEST {
     private static void shouldConvertInstallmentOppAutoCreationDisableFirstToLabel() {
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
 
-        String DisableFirstSetting = RD2_Constants.InstallmentCreation.Disable_First_Installment.name();
+        String DisableFirstSetting = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name();
 
         Test.startTest();
         String convertedLabel = panel.convertToInstallmentLabel(DisableFirstSetting);
@@ -742,7 +742,7 @@ private with sharing class STG_SettingsManager_TEST {
     private static void shouldConvertInstallmentOppAutoCreationDisableAllToLabel() {
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
 
-        String DisalbeAllSetting = RD2_Constants.InstallmentCreation.Disable_All_Installments.name();
+        String DisalbeAllSetting = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
 
         Test.startTest();
         String convertedLabel = panel.convertToInstallmentLabel(DisalbeAllSetting);

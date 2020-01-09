@@ -63,26 +63,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Indicates if the first installment Opportunity on a Recurring Donation should be created.
-     * If Opportunities are created from a batch, "Disable First Installment" is ignored and 
-     * the first installment is not created only if the setting is "Disable All Installments".
-     * @return Boolean
-     */
-    private Boolean isFirstInstallmentEnabled {
-        get {
-            if (isFirstInstallmentEnabled == null) {
-                if (isBatchContext) {
-                    isFirstInstallmentEnabled = !rdSettings.isDisableAllInstallments;
-                } else {
-                    isFirstInstallmentEnabled = rdSettings.isFirstInstallmentEnabled;
-                }
-            }
-            return isFirstInstallmentEnabled;
-        }
-        set;
-    }
-
-    /**
      * @description Current date used as a cut off date to filter out and evaluate Opportunities 
      * and to determine if the next Opp should be created for a Recurring Donation.
      * It is also used to calculate projected RD schedule installments as of the current date.
@@ -248,7 +228,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
-        filterAgainstInstallmentAutoCreationOption(newOppRDs);
         oppService.createOpportunities(newOppRDs);
         oppService.updateOpportunities(updateOppRDs);
         oppService.voidOpenOpportunities(closedRDs);
@@ -293,11 +272,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return false;
         }
 
-        if (rd.isNew()) {
-            return isFirstInstallmentEnabled;
+        if (isBatchContext) {
+            return !rdSettings.isDisableAllInstallments;
 
-        } else if (isBatchContext || !rd.hasOpenOpportunity(currentDate)) {
-            return rdSettings.isNextInstallmentEnabled;
+        } else if (rd.isNew()) {
+                return rdSettings.isFirstInstallmentEnabled;
+
+        } else if (!rd.hasOpenOpportunity(currentDate)) {
+                return rdSettings.isNextInstallmentEnabled;  
         }
 
         return false;
@@ -374,72 +356,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         queryFields.add(scheduleSubquery);
 
         String soql = new UTIL_Query()
-        .withFrom(npe03__Recurring_Donation__c.SObjectType)
-        .withSelectFields(queryFields)
-        .withWhere('Id IN :rdIds')
-        .build();
-
-        return Database.query(soql);
-    }
-
-    /***
-    * @description valuate The RDs against the Installment Opp Auto Creation Option Setting
-    * @param rds: The list of recurring donation to be filtered
-    */
-    private void filterAgainstInstallmentAutoCreationOption(List<npe03__Recurring_Donation__c> rds) {
-        if (rdSettings.isInstallmentSettingAlwaysCreateNextInstallment()) {
-            return;
-        } else if (rdSettings.isInstallmentSettingDisableFirstInstallments()) {
-            filterOutNewRecurringDonation(rds);
-        } else if (rdSettings.isInstallmentSettingDisableAllInstallments()) {
-            for(Integer i = rds.size() - 1; i >= 0; i--) {
-                rds.remove(i);
-            }
-        }
-    }
-
-    /***
-    * @description filter out any RD that is new (no installment opp under it)
-    * @param rds: The list of recurring donation that will be evaluated and remove if no installment opp is under it
-    */
-    private void filterOutNewRecurringDonation(List<npe03__Recurring_Donation__c> rds) {
-        Set<String> selectFields = new Set<String> {
-            '(SELECT Id FROM npe03__Donations__r LIMIT 1)'          
-        };
-
-        String whereClause = 'Id IN: rds';
-
-        String soql = new UTIL_Query()
-        .withFrom(npe03__Recurring_Donation__c.SObjectType)
-        .withSelectFields(selectFields)
-        .withWhere(whereClause)
-        .build();
-
-        Map<Id, npe03__Recurring_Donation__c> existingRDs = new Map<Id, npe03__Recurring_Donation__c>(
-            (List<npe03__Recurring_Donation__c>) Database.query(soql)
-        );
-
-        for(Integer i = rds.size() - 1; i >= 0; i--) {
-            npe03__Recurring_Donation__c exisitngRd = existingRDs.get(rds[i].Id);
-            if (exisitngRd != null && exisitngRd.npe03__Donations__r.isEmpty()) {
-                rds.remove(i);
-            }
-        }
-    }
-
-     /***
-    * @description Query reocrds with specific clause
-    * @param selectFields The set of String that will be used in the FROM clause
-    * @param whereClause A String that will be used in the WHERE clause
-    * @return A list of records
-        */
-    private List<npe03__Recurring_Donation__c> queryRecurringDonations(Set<String> selectFields, String whereClause) {
-        String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(selectFields)
-            .withWhere(whereClause)
+            .withSelectFields(queryFields)
+            .withWhere('Id IN :rdIds')
             .build();
-        
+
         return Database.query(soql);
     }
 

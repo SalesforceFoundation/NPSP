@@ -240,27 +240,35 @@ private class RD2_OpportunityEvaluationService_TEST {
 
     /**
     * @description When Installment Auto Creation Setting is set to Disable First Installment, 
-    * the installment should be created on existing RD when the nightly batch job run
+    * the installment should not be created on insert of RD
     */
     @IsTest
-    private static void shouldCreateSecondInstallmentWhenBatchRunWhenAutoCreationIsDisableFirst() {
-        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Disable_First_Installment.name());
+    private static void shouldNotCreateInstallmentOnRDInsertWhenAutoCreationIsDisableFirst() {
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name());
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+        
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, installments.size(),
+            'No installment opp should be created on insert of RD when the auto Creation setting is '
+                + RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name());
+    }
+
+    /**
+    * @description When Installment Auto Creation Setting is set to Disable First Installment, 
+    * the installment should be created on RD when the nightly batch job run
+    */
+    @IsTest
+    private static void shouldCreateInstallmentDuringBatchRunWhenAutoCreationIsDisableFirst() {
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name());
         
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
         insert rd;
-        
-        Opportunity pastInstallment = new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
-            .withAmount(rd.npe03__Amount__c)
-            .withCloseDate(Date.today().addDays(-10))
-            .withClosedLostStage()
-            .build();
-
-        insert pastInstallment;
-
-        rd.npe03__Next_Payment_Date__c = Date.today().addDays(10);
-        update rd;
 
         Test.startTest();
         Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
@@ -268,8 +276,9 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         List<Opportunity> installments = oppGateway.getRecords(rd);
 
-        System.assertEquals(2, installments.size(),
-            'The next installment should be created when Installment Auto Creation setting is set to Disable First Installment');
+        System.assertEquals(1, installments.size(),
+            'The next installment should be created during the batch run when Installment Auto Creation setting is ' 
+                + RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name());
     }
 
     /**
@@ -277,8 +286,8 @@ private class RD2_OpportunityEvaluationService_TEST {
     * no installment should be created on inserted of RD and during nightly batch job
     */
     @IsTest
-    private static void shouldNotCreateInstallmentWhenInstallmentAutoCreationIsDiableAll() {
-        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Disable_All_Installments.name());
+    private static void shouldNotCreateInstallmentOnInsertWhenInstallmentAutoCreationIsDiableAll() {
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name());
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
 
@@ -289,8 +298,32 @@ private class RD2_OpportunityEvaluationService_TEST {
         List<Opportunity> installments = oppGateway.getRecords(rd);
 
         System.assertEquals(0, installments.size(),
-            'The installment opportunity should not be created when the Auto Creation Setting is set to disalbe all Installments');
+            'The installment opportunity should not be created when the Auto Creation Setting is'
+                + RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name());
     }
+
+    /**
+    * @description When Installment Auto Creation Setting is set to Disable All Installments, 
+    * no installment should be created on inserted of RD and during nightly batch job
+    */
+    @IsTest
+    private static void shouldNotCreateInstallmentDuringBatchRunWhenInstallmentAutoCreationIsDiableAll() {
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name());
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+        insert rd;
+        
+        Test.startTest();
+        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
+        Test.stopTest();
+        
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, installments.size(),
+            'The installment opportunity should not be created when the Auto Creation Setting is'
+                + RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name());
+    }
+
 
     /**
     * @description When Installment Auto Creation Setting is set to Always Create Next Installment, 
@@ -298,7 +331,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     */
     @IsTest
     private static void shouldCreateInstallmentWhenInstallmentAutoCreationIsAlwaysCreate() {
-        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name());
+        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name());
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
 
@@ -309,43 +342,25 @@ private class RD2_OpportunityEvaluationService_TEST {
         List<Opportunity> installments = oppGateway.getRecords(rd);
 
         System.assertEquals(1, installments.size(),
-            'The installment opportunity should be created when the Auto Creation Setting is set to always create installments');
+            'The installment opportunity should be created when the Auto Creation Setting is '
+                + RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name());
     }
 
-    /**
-    * @description When Installment Auto Creation Setting is set to Disabled First Installment, 
-    * the installment should not be created if there is no existing opportunity in the system
-    */
     @IsTest
-    private static void shouldNotCreateInstallmentOnRDInsertWhenInstallmentAutoCreationIsDisableFirst() {
-        setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Disable_First_Installment.name());
+    private static void shouldCreateInstallmentWhenInstallmentAutoCreationIsRandomText() {
+        String randomText = 'RANDOM';
+        setUpRD2AndInstallmentAutoCreation(randomText);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
 
         Test.startTest();
         insert rd;
-        Test.stopTest();
-        List<Opportunity> installments = oppGateway.getRecords(rd);
-
-        System.assertEquals(0, installments.size(),
-            'The installment opportunity should be created when the Auto Creation Setting is set to disalbe first installment');
-    }
-
-    @IsTest
-    private static void shouldNotCreateInstallmentWhenBatchRunWhenAutoCreationIsDisableAll() {
-         setUpRD2AndInstallmentAutoCreation(RD2_Constants.InstallmentCreation.Disable_All_Installments.name());
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
-        insert rd;
-
-        Test.startTest();
-        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
         Test.stopTest();
         
         List<Opportunity> installments = oppGateway.getRecords(rd);
 
-        System.assertEquals(0, installments.size(),
-            'The installment opportunity should not be created when the Auto Creation Setting is set to disalbe all Installments');
+        System.assertEquals(1, installments.size(),
+            'The installment opportunity automation process should be treated as Always Create Next Installment when the system cannot regonize the text');
     }
 
     /**

@@ -175,46 +175,69 @@ public with sharing class RD2_Settings_TEST {
         System.assertEquals(true, settings.isCloseActionClosedLost(), 'Action should be Closed Lost');
     }
 
+     /**
+     * @description Verifies first and next installment creation are enabled
+     * when installment auto-create option is Always Create Next Installment
+     */
     @IsTest
-    private static void shouldReturnConfiguredInstallmentOppAutoCreationAlwaysCreate() {
+    private static void shouldEnableFirstAndNextInstallmentWhenOptionIsAlwaysCreate() {
         RD2_Settings settings = new RD2_Settings();
-        String installmentOption  = RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name();
 
         setUpConfiguration(new Map<String, Object>{
-            'InstallmentOppAutoCreateOption__c' => installmentOption
+            'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()
         });
         
-        System.assertEquals(true, settings.isInstallmentSettingAlwaysCreateNextInstallment(), 'Setting should be always create next installment');
-        System.assertEquals(false, settings.isInstallmentSettingDisableFirstInstallments(), 'Setting should not be disable first installment');
-        System.assertEquals(false, settings.isInstallmentSettingDisableAllInstallments(), 'Setting should not be disable all installment');
+        System.assertEquals(true, settings.isFirstInstallmentEnabled, 'First installment should be enabled');
+        System.assertEquals(true, settings.isNextInstallmentEnabled, 'Next installment should be enabled');
+        System.assertEquals(false, settings.isDisableAllInstallments, 'All installments should not be disabled');
     }
 
+    /**
+     * @description Verifies first installment creation is disabled but the next is enabled
+     * when installment auto-create option is Disable First Installment on Create
+     */
     @IsTest
-    private static void shouldReturnConfiguredInstallmentOppAutoCreationDisableFirst() {
+    private static void shouldDisableFirstButEnableNextInstallmentWhenOptionIsDisableFirst() {
         RD2_Settings settings = new RD2_Settings();
-        String installmentOption  = RD2_Constants.InstallmentCreation.Disable_First_Installment.name();
 
         setUpConfiguration(new Map<String, Object>{
-            'InstallmentOppAutoCreateOption__c' => installmentOption
+            'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name()
         });
-        
-        System.assertEquals(false, settings.isInstallmentSettingAlwaysCreateNextInstallment(), 'Setting should not be always create next installment');
-        System.assertEquals(true, settings.isInstallmentSettingDisableFirstInstallments(), 'Setting should be disable first installment');
-        System.assertEquals(false, settings.isInstallmentSettingDisableAllInstallments(), 'Setting should not be disable all installment');
+
+        System.assertEquals(false, settings.isFirstInstallmentEnabled, 'First installment should not be enabled');
+        System.assertEquals(true, settings.isNextInstallmentEnabled, 'Next installment should be enabled');
+        System.assertEquals(false, settings.isDisableAllInstallments, 'All installments should not be disabled');
     }
 
+    /**
+     * @description Verifies both first and next installment creation are disabled
+     * when installment auto-create option is Disable All Installments
+     */
     @IsTest
-    private static void shouldReturnConfiguredInstallmentOppAutoCreationDisableAll() {
+    private static void shouldDisableFirstAndNextInstallmentWhenOptionIsDisableAll() {
         RD2_Settings settings = new RD2_Settings();
-        String installmentOption  = RD2_Constants.InstallmentCreation.Disable_All_Installments.name();
 
         setUpConfiguration(new Map<String, Object>{
-            'InstallmentOppAutoCreateOption__c' => installmentOption
+            'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()
+        });
+
+        System.assertEquals(false, settings.isFirstInstallmentEnabled, 'First installment should not be enabled');
+        System.assertEquals(false, settings.isNextInstallmentEnabled, 'Next installment should not be enabled');
+        System.assertEquals(true, settings.isDisableAllInstallments, 'All installments should be disabled');
+    }
+
+    @isTest
+    private static void shouldEnableFirstAndNextInstallmentWhenOptionIsRandomString() {
+        RD2_Settings settings = new RD2_Settings();
+        String randomString = 'ABC';
+
+        setUpConfiguration(new Map<String, Object>{
+            'InstallmentOppAutoCreateOption__c' => randomString
         });
         
-        System.assertEquals(false, settings.isInstallmentSettingAlwaysCreateNextInstallment(), 'Setting should not be always create next installment');
-        System.assertEquals(false, settings.isInstallmentSettingDisableFirstInstallments(), 'Setting should not be disable first installment');
-        System.assertEquals(true, settings.isInstallmentSettingDisableAllInstallments(), 'Setting should be disable all installment');
+        System.assertEquals(true, settings.isFirstInstallmentEnabled, 'First installment should be enabled');
+        System.assertEquals(true, settings.isNextInstallmentEnabled, 'Next installment should be enabled');
+        System.assertEquals(false, settings.isDisableAllInstallments, 'All installments should not be disabled');
     }
 
     // Helpers

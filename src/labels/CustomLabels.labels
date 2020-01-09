@@ -8701,7 +8701,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgInstallmentOppDisableFirst</shortDescription>
-        <value>Disable First Installment</value>
+        <value>Disable First Installment on Create</value>
     </labels>
     <labels>
         <fullName>stgInstallmentOppEnableAll</fullName>

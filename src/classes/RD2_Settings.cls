@@ -64,21 +64,6 @@ public with sharing class RD2_Settings {
     }
 
     /***
-    * @description Installment Opp Auto Creation Option
-    */
-    public String installmentOppAutoCreateOption {
-        get {
-            if (installmentOppAutoCreateOption == null) {
-                installmentOppAutoCreateOption = String.isNotBlank(settings.installmentOppAutoCreateOption__c)
-                    ? settings.installmentOppAutoCreateOption__c
-                    : RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name();
-            }
-            return installmentOppAutoCreateOption;
-        }
-        private set;
-    }
-
-    /***
     * @description The installment Opportunity Record Type Id
     */
     public Id installmentRecordTypeId {
@@ -118,36 +103,31 @@ public with sharing class RD2_Settings {
     public Boolean isCloseActionNoAction() {
         return settings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.No_Action.name();
     }
-
-    /***
-    * @description Indicates if Installment opps should always be created during RD DML operation
-    */
-    public Boolean isInstallmentSettingAlwaysCreateNextInstallment() {
-        return settings.installmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Always_Create_Next_Installment.name()
-            || String.isBlank(settings.installmentOppAutoCreateOption__c);
-    }
-
-    /***
-    * @description Indicates if first installment opps should not be created during RD DML operation
-    */
-    public Boolean isInstallmentSettingDisableFirstInstallments() {
-        return settings.installmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_First_Installment.name();
-    }
-
-    /***
-    * @description Indicates if  installment opps should never be created during RD DML operation
-    */
-    public Boolean isInstallmentSettingDisableAllInstallments() {
-        return settings.installmentOppAutoCreateOption__c == RD2_Constants.InstallmentCreation.Disable_All_Installments.name();
-    }
     
+    /***
+    * @description Installment Opp Auto Creation Option
+    */
+    public String installmentCreateOption {
+        get {
+            if (installmentCreateOption == null) {
+                installmentCreateOption = String.isNotBlank(settings.installmentOppAutoCreateOption__c)
+                    ? settings.installmentOppAutoCreateOption__c
+                    : RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
+            }
+            return installmentCreateOption;
+        }
+        private set;
+    }
+
     /***
     * @description Indicates if the first installment can be created on a Recurring Donation
     */
     public Boolean isFirstInstallmentEnabled {
         get {
             if (isFirstInstallmentEnabled == null) {
-                isFirstInstallmentEnabled = true; //Disable First Installment ? false : true;
+                isFirstInstallmentEnabled =
+                    installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name()
+                    && installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
             }
             return isFirstInstallmentEnabled;
         } 
@@ -160,7 +140,8 @@ public with sharing class RD2_Settings {
     public Boolean isNextInstallmentEnabled {
         get {
             if (isNextInstallmentEnabled == null) {
-                isNextInstallmentEnabled = true; //Disable All Installments ? false : true;
+                isNextInstallmentEnabled =
+                    installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
             }
             return isNextInstallmentEnabled;
         } 
@@ -173,7 +154,8 @@ public with sharing class RD2_Settings {
     public Boolean isDisableAllInstallments {
         get {
             if (isDisableAllInstallments == null) {
-                isDisableAllInstallments = false; //Disable All Installments ? true : false;
+                isDisableAllInstallments =
+                    installmentCreateOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
             }
             return isDisableAllInstallments;
         } 
