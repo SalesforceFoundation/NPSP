@@ -5,7 +5,7 @@ import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFo
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { findIndexByProperty } from 'c/utilTemplateBuilder';
+import {findIndexByProperty, showToast} from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
@@ -89,14 +89,23 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 });
                 break;
             case 'delete':
-                deleteFormTemplates({ ids: [row.id] }).then(() => {
-                    const index = findIndexByProperty(this.templates, 'id', row.id);
-                    this.templates.splice(index, 1);
-                    this.templates = [...this.templates];
-                    this.isLoading = false;
-                });
+                this.handleTemplateDeletion(row);
                 break;
             default:
+        }
+    }
+
+
+    handleTemplateDeletion(row){
+        let deleted = deleteFormTemplates({ ids: [row.id] }).then(() => {
+            const index = findIndexByProperty(this.templates, 'id', row.id);
+            this.templates.splice(index, 1);
+            this.templates = [...this.templates];
+            this.isLoading = false;
+        });
+        if(!deleted){
+            showToast( 'Template still in use', 'The template you are trying to delete is ' +
+                'currently used in a batch ', 'warning', 'dismissable');
         }
     }
 

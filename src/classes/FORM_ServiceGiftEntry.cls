@@ -103,9 +103,23 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param id: Form_Template__c record id
     */
     @AuraEnabled
-    public static void deleteFormTemplates(String[] ids) {
-        Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id IN :ids];
-        delete templates;
+    public static Boolean deleteFormTemplates(String[] ids) {
+        List<DataImportBatch__c> batches = [
+                SELECT Id
+                FROM DataImportBatch__c
+                WHERE Form_Template__c IN: ids
+        ];
+
+        if (batches.isEmpty()) {
+            Form_Template__c[] templates = [
+                    SELECT Id
+                    FROM Form_Template__c
+                    WHERE Id IN :ids
+            ];
+            delete templates;
+            return true;
+        }
+        return false;
     }
 
     /*******************************************************************************************************
