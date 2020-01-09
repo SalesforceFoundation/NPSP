@@ -201,7 +201,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
         
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> newOppCandidateRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
@@ -217,8 +217,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
 
-            } else if (needNextInstallment(rdRecord)) {
-                newOppRDs.add(rd);
+            } else if (isCandidateForNextInstallment(rdRecord)) {
+                newOppCandidateRDs.add(rd);
             
             } else if (isUpdateContext(rdRecord)) {
                 updateOppRDs.add(rd);
@@ -228,7 +228,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
-        oppService.createOpportunities(newOppRDs);
+        oppService.createOpportunities(newOppCandidateRDs);
         oppService.updateOpportunities(updateOppRDs);
         oppService.voidOpenOpportunities(closedRDs);
 
@@ -253,8 +253,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     @TestVisible
-    private Boolean needNextInstallment(npe03__Recurring_Donation__c rd) {
-        return needNextInstallment(new RecurringDonation(rd));
+    private Boolean isCandidateForNextInstallment(npe03__Recurring_Donation__c rd) {
+        return isCandidateForNextInstallment(new RecurringDonation(rd));
     }
 
     /**
@@ -263,7 +263,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation record
      * @return Boolean
      */
-    private Boolean needNextInstallment(RecurringDonation rd) {
+    private Boolean isCandidateForNextInstallment(RecurringDonation rd) {
         Boolean hasMandatoryConditions = rd.isActive()
             && rd.hasNextDonationDate()
             && rd.hasSchedule();
