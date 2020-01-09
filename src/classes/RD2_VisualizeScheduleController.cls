@@ -96,14 +96,36 @@ public with sharing class RD2_VisualizeScheduleController {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
         }
 
-        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
-
         List<Schedule> activeSchedules = new List<Schedule>();
+        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+        if (rd == null) {
+            return activeSchedules;
+        }
+
         if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-            List<RD2_ScheduleService.ActiveSchedule> schedules = scheduleService.getVisualizedSchedules(rd);
+
+            Boolean first1stAnd15thFound = false;
             Integer num = 1;
-            for (RD2_ScheduleService.ActiveSchedule schedule : schedules) {
-                activeSchedules.add(new Schedule(num++, rd, schedule));
+            List<RecurringDonationSchedule__c> schedules = scheduleService.getExistingSchedules(rd);
+            for (RecurringDonationSchedule__c sc : schedules) {
+
+                // This block collapses 1st and 15th schedules into a single row and nulls out day of month
+                if (sc.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+                    if (first1stAnd15thFound) {
+                        first1stAnd15thFound = false;
+                        continue;
+                    }
+                    first1stAnd15thFound = true;
+                }
+
+                Schedule activeSched = new Schedule(num++, rd, sc);
+                if (sc.StartDate__c <= scheduleService.currentDate) {
+                    activeSched.isCurrent = true;
+                }
+                if (sc.InstallmentPeriod__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+                    activeSched.dayOfMonth = null;
+                }
+                activeSchedules.add(activeSched);
             }
         }
 
@@ -164,17 +186,17 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public String dayOfMonth;
         @AuraEnabled public String currencyIsoCode;
 
-        public Schedule(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.ActiveSchedule schedule) {
+        public Schedule(Integer num, npe03__Recurring_Donation__c rd, RecurringDonationSchedule__c rds) {
             this.scheduleNumber = num;
-            this.isCurrent = schedule.isCurrent;
-            this.amount = schedule.installmentAmount;
-            this.paymentMethod = schedule.paymentMethod;
-            this.campaign = schedule.campaignName;
-            this.startDate = schedule.startDate;
-            this.endDate = schedule.endDate;
-            this.period = schedule.installmentPeriod;
-            this.frequency = schedule.installmentFrequency;
-            this.dayOfMonth = schedule.dayOfMonth;
+            this.isCurrent = false;
+            this.amount = rds.InstallmentAmount__c;
+            this.paymentMethod = rds.PaymentMethod__c;
+            this.campaign = rds.Campaign__r.Name;
+            this.startDate = rds.StartDate__c;
+            this.endDate = rds.EndDate__c;
+            this.period = rds.InstallmentPeriod__c;
+            this.frequency = Integer.valueOf(rds.InstallmentFrequency__c);
+            this.dayOfMonth = rds.DayOfMonth__c;
             this.currencyIsoCode = getCurrencyCode(rd);
         }
     }
