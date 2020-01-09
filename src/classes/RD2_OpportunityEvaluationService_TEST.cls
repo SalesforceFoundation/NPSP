@@ -244,11 +244,9 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @return npe03__Recurring_Donation__c Created Recurring Donation with related Opps
      */
     private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                npe03__Open_Opportunity_Behavior__c = closeAction
-            )
-        );
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{ 
+            'npe03__Open_Opportunity_Behavior__c' => closeAction
+        });
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -302,11 +300,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         Exception actualException;
         String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                npe03__Open_Opportunity_Behavior__c = closeAction
-            )
-        );
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{ 
+            'npe03__Open_Opportunity_Behavior__c' => closeAction
+        });
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -413,47 +409,54 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-    * @description Ensures that when the DisableRollupsWhenCreatingInstallments__c flag is NOT set
-    * and CRLP is enabled, the rollups do execute properly when the RD Batch Job is run
-    */
+     * @description 
+     */
     @IsTest
-    private static void shouldRecalcRollupsOnRdAfterBatchJobWithCRLP() {
-
-        configureForBatchJobWithRollupDisableTests(false);
-        npe03__Recurring_Donation__c rd = createTestDataForRollupRecalcTest();
-        System.assertEquals(null, rd.npe03__Paid_Amount__c, 'The PaidAmount field should be null instead of zero');
-
-        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
-        Test.stopTest();
-
-        System.assertEquals(1, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
-            'There should be 1 installment Opportunities created for this RD');
-
-        rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(0, rd.npe03__Paid_Amount__c, 'The PaidAmount field should be zero instead of null');
+    private static void currentYearValueShouldIncludePastOpenOpps() {
     }
 
     /**
-    * @description Ensures that when the DisableRollupsWhenCreatingInstallments__c flag IS set
-    * and CRLP is enabled, the rollups do NOT execute when the RD Batch Job is run
-    */
+     * @description 
+     */
     @IsTest
-    private static void shouldNotRecalcRollupsOnRdAfterBatchJobWithCRLP() {
-
-        configureForBatchJobWithRollupDisableTests(true);
-        npe03__Recurring_Donation__c rd = createTestDataForRollupRecalcTest();
-
-        System.assertEquals(null, rd.npe03__Paid_Amount__c, 'The PaidAmount field should be null instead of zero');
-
-        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
-        Test.stopTest();
-
-        System.assertEquals(1, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
-            'There should be 1 installment Opportunities created for this RD');
-
-        rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(null, rd.npe03__Paid_Amount__c, 'The PaidAmount field should still be null instead of zero');
+    private static void currentYearValueShouldIncludePastClosedWonOpps() {
     }
+
+    /**
+     * @description 
+     */
+    @IsTest
+    private static void currentYearValueShouldExcludePastClosedLostOpps() {
+    }
+
+    /**
+     * @description 
+     */
+    @IsTest
+    private static void currentYearValueShouldIncludeCurrentYearOpps() {
+    }
+
+    /**
+     * @description 
+     */
+    @IsTest
+    private static void currentYearValueShouldIncludeCurrentYearOppsWhenDec() {
+    }
+
+    /**
+     * @description 
+     */
+    @IsTest
+    private static void currentYearValueShouldIncludeRDScheduleChangeInstallments() {
+    }
+
+    /**
+     * @description 
+     */
+    @IsTest
+    private static void currentYearValueShouldExcludeDuplicates() {
+    }
+
 
 
     // Helpers
@@ -548,69 +551,4 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         return rd;
     }
-
-    /**
-    * @description Configure Settings for validating the behavior of the DisableRollupsWhenCreatingInstallments__c
-    * setting in the RD Batch Job. Also mocks the CRLP settings for Enhanced Recurring Donations, and
-    * disables the internal setting that would normally prevent a null field from being updated to a zero
-    * value during rollups. This is used to tell that rollups did or did not run in the batch job.
-    */
-    private static void configureForBatchJobWithRollupDisableTests(Boolean isDisableRollups) {
-
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-            Customizable_Rollups_Enabled__c = true
-        ));
-        CMT_UnitTestData_TEST.mockEnhancedRecurringDonationRollupCMTValues();
-        CRLP_Rollup_SVC.UPDATE_NULL_TO_ZERO = true;
-
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
-            DisableRollupsWhenCreatingInstallments__c = isDisableRollups,
-            IsRecurringDonations2Enabled__c = true,
-            npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
-            npe03__Add_Campaign_to_All_Opportunites__c = true
-        ));
-    }
-
-    /**
-    * @description Create a single Enhanced Recurring Donation to use for validating
-    * the behavior of the DisableRollupsWhenCreatingInstallments__c setting in the RD Batch Job.
-    * Triggers are disabled to prevent an installment opp from being created since that is what we want to
-    * test in the batch job logic. However, the schedule records still need to be created
-    * @return Created Recurring Donation Record
-    */
-    private static npe03__Recurring_Donation__c createTestDataForRollupRecalcTest() {
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(c.Id)
-            .withAmount(100)
-            .withDateEstablished(Date.today())
-            .withStartDate(Date.today())
-            .withStatusActive()
-            .withInstallmentPeriodMonthly()
-            .withInstallmentFrequency(1)
-            .withDayOfMonth('1')
-            .withCalculateNextDonationDate()
-            .build();
-        rd.npe03__Installments__c = null;   // force this to null because the default is 1
-        Test.startTest();
-
-        TDTM_TriggerHandler.disableTDTM = true;
-        Database.insert(rd);
-        TDTM_TriggerHandler.disableTDTM = false;
-
-        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        Database.insert(scheduleService.getNewSchedules(rd));
-
-        System.assertEquals(0, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
-            'There should be no installment Opportunities created for this RD');
-        System.assertEquals(1, [SELECT Count() FROM RecurringDonationSchedule__c WHERE RecurringDonation__c = :rd.Id],
-            'There should be 1 RD Schedule record created for this RD');
-        System.assertEquals(null, rd.npe03__Paid_Amount__c, 'The PaidAmount field should be null instead of zero');
-
-        return rdGateway.getRecord(rd.Id);
-    }
-
 }
