@@ -783,7 +783,12 @@ flows:
                         - ALLO_Allocations_TDTM
                         - REL_Relationships_TDTM
                         - REL_Relationships_Con_TDTM
-                        - Opportunity
+                        - Opportunity:MTCH_Opportunity_TDTM
+                        - Opportunity:PMT_Payment_TDTM
+                        - Opportunity:RD_RecurringDonations_Opp_TDTM
+                        - Opportunity:RLLP_OppRollup_TDTM
+                        - Opportunity:ALLO_Allocations_TDTM
+                        - Opportunity:PSC_Opportunity_TDTM
                         - npe01__OppPayment__c
                         - npe03__Recurring_Donation__c
             10:
