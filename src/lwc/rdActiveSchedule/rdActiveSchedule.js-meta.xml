@@ -3,7 +3,7 @@
     <apiVersion>46.0</apiVersion>
     <description>Displays the active recurring donation schedule details.</description>
     <isExposed>true</isExposed>
-    <masterLabel>Recurring Donation Schedules</masterLabel>
+    <masterLabel>Recurring Donation Active Schedules</masterLabel>
     <targets>
         <target>lightning__RecordPage</target>
     </targets>

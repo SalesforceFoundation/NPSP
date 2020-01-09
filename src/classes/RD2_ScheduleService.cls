@@ -50,8 +50,7 @@ public without sharing class RD2_ScheduleService {
     /**
     * @description Date to treat as current date in calculation of schedules
     */
-    @TestVisible
-    private Date currentDate {
+    public Date currentDate {
         get {
             if (currentDate == null) {
                 currentDate = Date.today();
