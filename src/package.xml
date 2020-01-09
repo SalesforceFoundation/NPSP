@@ -266,10 +266,11 @@
         <members>FORM_Section</members>
         <members>FORM_Service</members>
         <members>FORM_ServiceGiftEntry</members>
-        <members>FORM_ServiceGiftEntryTest</members>
+        <members>FORM_ServiceGiftEntry_TEST</members>
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
+        <members>GE_BatchGiftEntryController</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_LookupController</members>
@@ -903,6 +904,7 @@
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Active_Fields__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
+        <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
@@ -912,6 +914,7 @@
         <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
         <members>DataImportBatch__c.Expected_Count_of_Gifts__c</members>
         <members>DataImportBatch__c.Expected_Total_Batch_Amount__c</members>
+        <members>DataImportBatch__c.Form_Template__c</members>
         <members>DataImportBatch__c.GiftBatch__c</members>
         <members>DataImportBatch__c.Last_Processed_On__c</members>
         <members>DataImportBatch__c.Post_Process_Implementing_Class__c</members>
@@ -1489,8 +1492,8 @@
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
-        <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
+        <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementEnableConfirm</members>
@@ -1894,6 +1897,8 @@
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
+        <members>geDonationColumnLabel</members>
+        <members>geDonorColumnLabel</members>
         <members>geErrorExistingTemplateName</members>
         <members>geErrorFieldPermission</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>
@@ -3211,6 +3216,9 @@
         <members>bdiObjectMappings</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
+        <members>geBatchGiftEntryApp</members>
+        <members>geBatchGiftEntryHeader</members>
+        <members>geBatchGiftEntryTable</members>
         <members>geFormField</members>
         <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
