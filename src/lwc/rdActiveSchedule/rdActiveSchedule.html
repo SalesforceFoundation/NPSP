@@ -16,44 +16,39 @@
                     <article class="slds-tile slds-media slds-m-around--medium" >
                         <div class="slds-media__figure">
                           <span class="slds-icon_container" title="Record icon">
-                              <lightning-icon icon-name="standard:record" alternative-text="Record" size="x-small"></lightning-icon>
+                              <lightning-icon icon-name="standard:record" alternative-text="Record" size="small"></lightning-icon>
                           </span>
                         </div>
                         <div class="slds-media__body">
-<!--                            <lightning-layout>-->
-<!--                                <lightning-layout-item>-->
-<!--                                    <lightning-formatted-number value={schedule.amount}></lightning-formatted-number>-->
-<!--                                </lightning-layout-item>-->
-<!--                            </lightning-layout>-->
-                            <h3 class="slds-tile__title slds-truncate" if:false={schedule.isCurrent} title={labels.lblFutureSchedule}>{labels.lblFutureSchedule}</h3>
-                            <h3 class="slds-tile__title slds-truncate" if:true={schedule.isCurrent} title={labels.lblCurrentSchedule}>{labels.lblCurrentSchedule}</h3>
+                            <h3 class="slds-tile__title  slds-truncate" if:false={schedule.isCurrent} title={labels.lblFutureSchedule}>{labels.lblFutureSchedule}</h3>
+                            <h3 class="slds-tile__title  slds-truncate" if:true={schedule.isCurrent} title={labels.lblCurrentSchedule}>{labels.lblCurrentSchedule}</h3>
                             <div class="slds-tile__detail slds-m-around--xx-small">
-                                <dl class="slds-list_horizontal slds-wrap">
+                                <dl class="slds-list_horizontal slds-grid slds-wrap">
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Amount label">{labels.lblAmount}</dt>
-                                    <dd class="slds-item_detail slds-truncate" title={labels.lblAmount}><lightning-formatted-number format-style="currency" currency-code={currencyIsoCode} value={schedule.amount}></lightning-formatted-number></dd>
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_3-of-12" title={labels.lblAmount}>{labels.lblAmount}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12"><lightning-formatted-number format-style="currency" currency-code={currencyIsoCode} value={schedule.amount}></lightning-formatted-number></dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Payment Method label">{labels.lblPmtMethod}</dt>
-                                    <dd class="slds-item_detail slds-truncate" title={labels.lblPmtMethod}>{schedule.paymentMethod}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Payment Method label">{labels.lblPmtMethod}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" title={labels.lblPmtMethod}>{schedule.paymentMethod}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Campaign label">{labels.lblCampaign}</dt>
-                                    <dd class="slds-item_detail slds-truncate" title={labels.lblCampaign}>{schedule.campaign}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Campaign label">{labels.lblCampaign}</dt>
+                                    <dd class="slds-dl_horizontal__detail  slds-medium-size_9-of-12" title={labels.lblCampaign}>{schedule.campaign}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Effective Date label">{labels.lblStartDate}</dt>
-                                    <dd class="slds-item_detail slds-truncate" title={labels.lblStartDate}><lightning-formatted-date-time value={schedule.startDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time></dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Effective Date label">{labels.lblStartDate}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" title={labels.lblStartDate}><lightning-formatted-date-time value={schedule.startDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time></dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="End Date label">{labels.lblEndDate}</dt>
-                                    <dd class="slds-item_detail slds-truncate" if:false={schedule.endDate} title={labels.lblEndDate}>None</dd>
-                                    <dd class="slds-item_detail slds-truncate" if:true={schedule.endDate} title={labels.lblEndDate}><lightning-formatted-date-time value={schedule.endDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time></dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="End Date label">{labels.lblEndDate}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" if:false={schedule.endDate} title={labels.lblEndDate}>None</dd>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" if:true={schedule.endDate} title={labels.lblEndDate}><lightning-formatted-date-time value={schedule.endDate} year="2-digit" month="2-digit" day="2-digit"></lightning-formatted-date-time></dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Installment Period label">{labels.lblPeriod}</dt>
-                                    <dd class="slds-item_detail slds-truncate" title={labels.lblPeriod}>{schedule.period}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Installment Period label">{labels.lblPeriod}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" title={labels.lblPeriod}>{schedule.period}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" title="Installment Frequency label">{labels.lblFrequency}</dt>
-                                    <dd class="slds-item_detail slds-truncate" title={labels.lblFrequency}>{schedule.frequency}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" title="Installment Frequency label">{labels.lblFrequency}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" title={labels.lblFrequency}>{schedule.frequency}</dd>
 
-                                    <dt class="slds-item_label slds-text-color_weak slds-truncate_container--25" if:true={schedule.dayOfMonth} title="Day of Month label">{labels.lblDayOfMonth}</dt>
-                                    <dd class="slds-item_detail slds-truncate" if:true={schedule.dayOfMonth} title={labels.lblDayOfMonth}>{schedule.dayOfMonth}</dd>
+                                    <dt class="slds-dl_horizontal__label  slds-text-color_weak slds-medium-size_3-of-12" if:true={schedule.dayOfMonth} title="Day of Month label">{labels.lblDayOfMonth}</dt>
+                                    <dd class="slds-dl_horizontal__detail   slds-medium-size_9-of-12" if:true={schedule.dayOfMonth} title={labels.lblDayOfMonth}>{schedule.dayOfMonth}</dd>
 
                                 </dl>
                             </div>
