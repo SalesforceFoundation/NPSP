@@ -20,6 +20,9 @@ import CONTACT1_LASTNAME_INFO from '@salesforce/schema/DataImport__c.Contact1_La
 import ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__c';
 
 const WARNING = 'warning';
+const DONATION_DONOR_LABEL = 'Donation Donor';
+const REQUIRED_FORM_FIELDS_MESSAGE = 'Account1 Imported, Account1 Name, Contact1 Imported, Contact1 Last Name';
+
 
 // Default form fields to add to new templates
 const DEFAULT_FORM_FIELDS = {
@@ -84,10 +87,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             this.validateGiftField(el);
         });
         if (counter === 0) {
-            let requireMessageLabel = 'Required Fields';
-            let requiredMessage = 'At least one of the following fields are required: Account Imported, ' +
-                'Account Name, Contact Imported, Contact Last Name.';
-            missingRequiredFieldMappings.push(`${requireMessageLabel}: ${requiredMessage}`);
+            let requiredGroupFieldsMessage = GeLabelService.format(
+                this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredGroupFields,
+                [REQUIRED_FORM_FIELDS_MESSAGE]);
+            missingRequiredFieldMappings.push(`${requiredGroupFieldsMessage}`);
         }
 
         if (missingRequiredFieldMappings.length > 0) {
@@ -147,6 +150,12 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 this.objectMappingNames = [...this.objectMappingNames, objMappingDevName];
 
                 let fieldMappings = TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName];
+                fieldMappings.forEach(fieldMapping => {
+                    if(fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL){
+                        //Forcing the requiredness of the Donation Donor field mapping
+                        fieldMapping.Is_Required = true;
+                    }
+                });
                 let objectMapping = {
                     ...TemplateBuilderService.objectMappingByDevName[objMappingDevName],
                     Field_Mappings: fieldMappings
