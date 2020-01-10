@@ -1,6 +1,9 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+// Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
+
+// Import schema for excluded template batch header fields
 import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
 import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
 import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
@@ -22,6 +25,21 @@ import DI_BATCH_DESCRIPTION_INFO from '@salesforce/schema/DataImportBatch__c.Bat
 import DI_BATCH_EXPECTED_COUNT_GIFTS_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
 import DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
 import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
+
+// Import schema for default form field element objects
+import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
+import OPPORTUNITY_INFO from '@salesforce/schema/Opportunity';
+import PAYMENT_INFO from '@salesforce/schema/npe01__OppPayment__c';
+
+// Import schema info for default form field elements
+import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
+import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
+import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
@@ -67,6 +85,18 @@ const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_CONTACT_MATCHING_RULE_INFO.fieldApiName,
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
+
+// Default form fields to add to new templates
+const DEFAULT_FORM_FIELDS = {
+    [DONATION_DONOR_INFO.fieldApiName]: DATA_IMPORT_INFO.objectApiName,
+    [ACCOUNT1_IMPORTED_INFO.fieldApiName]: ACCOUNT1_IMPORTED_INFO.objectApiName,
+    [CONTACT1_IMPORTED_INFO.fieldApiName]: CONTACT1_IMPORTED_INFO.objectApiName,
+    [DONATION_AMOUNT_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
+    [DONATION_DATE_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
+    [PAYMENT_CHECK_REF_NUM_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
+    [PAYMENT_METHOD_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
+}
+Object.freeze(DEFAULT_FORM_FIELDS);
 
 /*******************************************************************************
 * @description Map of lightning-input types by data type.
@@ -493,6 +523,7 @@ export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
+    DEFAULT_FORM_FIELDS,
     removeByProperty,
     findIndexByProperty,
     shiftToIndex,

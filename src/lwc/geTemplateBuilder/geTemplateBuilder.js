@@ -7,6 +7,7 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
+    generateId,
     mutable,
     findIndexByProperty,
     shiftToIndex,
@@ -19,7 +20,8 @@ import {
     findMissingRequiredBatchFields,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
-    EXCLUDED_BATCH_HEADER_FIELDS
+    EXCLUDED_BATCH_HEADER_FIELDS,
+    DEFAULT_FORM_FIELDS
 } from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
@@ -41,6 +43,9 @@ const ID = 'id';
 const SUCCESS = 'success';
 const ERROR = 'error';
 const EVENT_TOGGLE_MODAL = 'togglemodal';
+const WARNING = 'warning';
+const FIELD = 'field';
+const WIDGET = 'widget';
 
 export default class geTemplateBuilder extends NavigationMixin(LightningElement) {
 
@@ -85,6 +90,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     @track hasSelectFieldsTabError;
     @track hasBatchHeaderTabError;
     @track previousSaveAttempted = false;
+    @track sectionIdsByFieldMappingDeveloperNames = {};
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_BATCH_OBJECT })
     wiredBatchDataImportObject({ error, data }) {
@@ -152,6 +158,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.collectBatchHeaderFields();
                 this.addRequiredBatchHeaderFields();
                 this.validateBatchHeaderTab();
+                this.handleDefaultFormFields();
 
                 this.isLoading = false;
                 this.isAccessible = true;
@@ -424,28 +431,194 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
-    * @description Receives and handles event from child component to set the
-    * currently active section based on id.
+    * @description Method sets the currently active form section id by the provided
+    * form section id.
     *
-    * @param {object} event: Event received from child component.
-    * Detail property contains sectionId.
-    * component chain: geTemplateBuilderFormSection -> geTemplateBuilderSelectFields -> here
+    * @param {object} event: Event received from child component that contains a
+    * section id.
     */
     handleChangeActiveSection(event) {
         this.activeFormSectionId = event.detail;
     }
 
     /*******************************************************************************
-    * @description Receives and handles event from child component to add a new
-    * form section.
+    * @description Method creates a default section and adds default form fields
+    * defined in imported constant DEFAULT_FORM_FIELDS.
+    */
+    handleDefaultFormFields() {
+        if (this.formSections && this.formSections.length === 0) {
+            let sectionId = this.handleAddFormSection({
+                detail: { label: this.CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName }
+            });
+            let fieldMappingBySourceFieldAndTargetObject = this.getFieldMappingBySourceFieldAndTargetObject();
+
+            Object.keys(DEFAULT_FORM_FIELDS).forEach(sourceFieldApiName => {
+                if (DEFAULT_FORM_FIELDS[sourceFieldApiName]) {
+                    const key = `${sourceFieldApiName}.${DEFAULT_FORM_FIELDS[sourceFieldApiName]}`;
+
+                    if (fieldMappingBySourceFieldAndTargetObject[key]) {
+                        const fieldMapping = fieldMappingBySourceFieldAndTargetObject[key];
+                        const objectMapping = TemplateBuilderService
+                            .objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
+
+                        let formField = this.constructFormField(objectMapping, fieldMapping, sectionId);
+
+                        this.handleAddFieldToSection(sectionId, formField);
+                        this.catalogSelectedField(fieldMapping.DeveloperName, sectionId);
+                    }
+                }
+            });
+        }
+    }
+
+    /*******************************************************************************
+    * @description Builds a map of Field Mappings by their Source Field and Target
+    * Object api names i.e. npsp__Account1_Street__c.Account.
+    */
+    getFieldMappingBySourceFieldAndTargetObject() {
+        let map = {};
+        Object.keys(TemplateBuilderService.fieldMappingByDevName).forEach(key => {
+            const fieldMapping = TemplateBuilderService.fieldMappingByDevName[key];
+            if (fieldMapping.Source_Field_API_Name && fieldMapping.Target_Object_API_Name) {
+                const newKey =
+                    `${fieldMapping.Source_Field_API_Name}.${fieldMapping.Target_Object_API_Name}`;
+                map[newKey] = TemplateBuilderService.fieldMappingByDevName[key];
+            }
+        });
+
+        return map;
+    }
+
+    /*******************************************************************************
+    * @description Method receives an event from the child geTemplateBuilderFormFields
+    * component's handleToggleFieldMapping method.
     *
     * @param {object} event: Event received from child component.
-    * Detail property contains a form section object.
-    * component chain: geTemplateBuilderSelectFields -> here
+    */
+    handleToggleFieldMapping(event) {
+        let { clickEvent, fieldMappingDeveloperName, fieldMapping, objectMapping } = event.detail;
+        let sectionId = this.activeFormSectionId;
+        const isAddField = clickEvent.target.checked;
+
+        if (isAddField) {
+            sectionId = this.checkFormSectionId(sectionId, clickEvent);
+
+            let formElement;
+            if (fieldMapping.Element_Type === FIELD) {
+                formElement = this.constructFormField(objectMapping, fieldMapping, sectionId);
+            } else if (fieldMapping.Element_Type === WIDGET) {
+                formElement = this.constructFormWidget(fieldMapping, sectionId);
+            }
+
+            this.catalogSelectedField(fieldMappingDeveloperName, sectionId);
+            this.handleAddFieldToSection(sectionId, formElement);
+        } else {
+            this.handleRemoveFieldFromSection(fieldMappingDeveloperName);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method checks to see if a new form section needs to be created
+    * by the provided section id and click event.
+    *
+    * @param {string} sectionId: Form section id to check.
+    * @param {object} clickEvent: Click event from the field mapping checkbox in the
+    * Form Fields tab's sidebar.
+    */
+    checkFormSectionId(sectionId, clickEvent) {
+        const hasNoSection = !this.formSections || this.formSections.length === 0;
+        const hasOneSection = this.formSections.length === 1;
+        const hasManySections = this.formSections.length > 1;
+        const hasNoActiveSection = this.activeFormSectionId === undefined;
+
+        if (hasNoSection) {
+            sectionId = this.handleAddFormSection();
+        } else if (hasOneSection) {
+            sectionId = this.formSections[0].id;
+            this.activeFormSectionId = sectionId;
+        } else if (hasManySections && hasNoActiveSection) {
+            clickEvent.target.checked = false;
+            showToast(this.CUSTOM_LABELS.geToastSelectActiveSection, '', WARNING);
+        }
+
+        return sectionId;
+    }
+
+    /*******************************************************************************
+    * @description Maps the given field mapping developer name to the section id.
+    * Used to later find and remove gift fields from their sections.
+    *
+    * @param {string} fieldMappingDeveloperName: Developer name of a Field Mapping
+    * @param {string} sectionId: Id of form section this form widget will be in.
+    */
+    catalogSelectedField(fieldMappingDeveloperName, sectionId) {
+        this.sectionIdsByFieldMappingDeveloperNames[fieldMappingDeveloperName] = sectionId;
+    }
+
+    /*******************************************************************************
+    * @description Constructs a form field object.
+    *
+    * @param {object} objectMapping: Instance of BDI_ObjectMapping wrapper class.
+    * @param {object} fieldMapping: Instance of BDI_FieldMapping wrapper class.
+    * @param {string} sectionId: Id of form section this form field will be under.
+    */
+    constructFormField(objectMapping, fieldMapping, sectionId) {
+        return {
+            id: generateId(),
+            label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+            customLabel: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+            required: fieldMapping.Is_Required || false,
+            sectionId: sectionId,
+            defaultValue: null,
+            dataType: fieldMapping.Target_Field_Data_Type,
+            dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
+            elementType: fieldMapping.Element_Type,
+            objectApiName: objectMapping.Target_Object_API_Name
+        }
+    }
+
+    /*******************************************************************************
+    * @description Constructs a form widget object.
+    *
+    * @param {object} widget: Currently an instance of BDI_FieldMapping wrapper class
+    * made to look like a widget.
+    * @param {object} fieldMapping: Instance of BDI_FieldMapping wrapper class
+    * @param {string} sectionId: Id of form section this form field will be in.
+    */
+    constructFormWidget(widget, sectionId) {
+        return {
+            id: generateId(),
+            componentName: widget.DeveloperName,
+            label: widget.MasterLabel,
+            required: false,
+            sectionId: sectionId,
+            elementType: widget.Element_Type
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method handles creating and inserting a new form section.
+    *
+    * @param {object} event: An object that contains the label for the form section.
     */
     handleAddFormSection(event) {
-        this.formSections = [...this.formSections, event.detail];
-        this.activeFormSectionId = event.detail.id;
+        let label = (event && event.detail && typeof event.detail.label === 'string') ?
+            event.detail.label :
+            this.CUSTOM_LABELS.geHeaderNewSection;
+
+        let newSection = {
+            id: generateId(),
+            displayType: 'accordion',
+            defaultDisplayMode: 'expanded',
+            displayRule: 'displayRule',
+            label: label,
+            elements: []
+        }
+
+        this.formSections = [...this.formSections, newSection];
+        this.activeFormSectionId = newSection.id;
+
+        return newSection.id;
     }
 
     /*******************************************************************************
@@ -485,11 +658,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @param {object} event: Event received from child component.
     * component chain: geTemplateBuilderSelectFields -> here
     */
-    handleAddFieldToSection(event) {
-        const sectionId = event.detail.sectionId;
-        let field = event.detail.field;
+    handleAddFieldToSection(sectionId, field) {
         let formSections = mutable(this.formSections);
-
         let formSection = formSections.find(fs => fs.id === sectionId);
 
         if (formSection) {
@@ -508,8 +678,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * component chain: geTemplateBuilderFormField -> geTemplateBuilderFormSection ->
     * geTemplateBuilderSelectFields -> here
     */
-    handleRemoveFieldFromSection(event) {
-        const { sectionId, fieldName } = event.detail;
+    handleRemoveFieldFromSection(fieldName) {
+        const sectionId = this.sectionIdsByFieldMappingDeveloperNames[fieldName];
 
         let formSections = mutable(this.formSections);
         let section = formSections.find(fs => fs.id === sectionId);
@@ -725,6 +895,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         if (isTemplateValid) {
             this.isLoading = true;
+
+            if (this.formSections && this.formSections.length === 0) {
+                this.handleDefaultFormFields();
+            }
+
             this.formLayout.sections = this.formSections;
             this.formTemplate.batchHeaderFields = this.batchHeaderFields;
             this.formTemplate.layout = this.formLayout;
