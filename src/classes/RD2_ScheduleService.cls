@@ -653,6 +653,7 @@ public without sharing class RD2_ScheduleService {
     * @description Adds recurring donation schedules to map by recurring donation Id
     * @param rd SObject
     * @param newSchedulesByRdId Map<Id, List<RecurringDonationSchedule__c>>
+    * @return void
     */
     private void addUpdatedSchedules(RecurringDonationSchedule__c rd, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
 

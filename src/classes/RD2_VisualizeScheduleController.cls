@@ -54,13 +54,7 @@ public with sharing class RD2_VisualizeScheduleController {
     @AuraEnabled
     public static List<Installment> getInstallments(Id recordId, Integer displayNum) {
 
-        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
-        }
-
-        if (recordId == null || recordId.getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
-        }
+        validate(recordId);
 
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
@@ -73,9 +67,7 @@ public with sharing class RD2_VisualizeScheduleController {
             }
         }
 
-        if (upcomingDonations.isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
-        }
+        validate(upcomingDonations);
 
         return upcomingDonations;
     }
@@ -88,13 +80,7 @@ public with sharing class RD2_VisualizeScheduleController {
     @AuraEnabled
     public static List<Schedule> getSchedules(Id recordId) {
 
-        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
-        }
-
-        if (recordId == null || recordId.getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
-        }
+        validate(recordId);
 
         List<Schedule> activeSchedules = new List<Schedule>();
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
@@ -121,9 +107,7 @@ public with sharing class RD2_VisualizeScheduleController {
             }
         }
 
-        if (activeSchedules.isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
-        }
+        validate(activeSchedules);
 
         return activeSchedules;
     }
@@ -224,5 +208,31 @@ public with sharing class RD2_VisualizeScheduleController {
             cachedRd = Database.query(soql);
         }
         return cachedRd;
+    }
+
+    /**
+     * @description Validates if there is any data to be displayed
+     * @param objects List of installments or schedules
+     * @return void
+     */
+    private static void validate(List<Object> objects) {
+        if (objects.isEmpty()) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
+        }
+    }
+
+    /**
+     * @description Validates if Enhanced donations is enabled and component is being used on appropriate page
+     * @param recordId Recurring Donation Id
+     * @return void
+     */
+    private static void validate(Id recordId) {
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorInvalidUsage);
+        }
+
+        if (recordId == null || recordId.getSObjectType() != npe03__Recurring_Donation__c.SObjectType) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot);
+        }
     }
 }

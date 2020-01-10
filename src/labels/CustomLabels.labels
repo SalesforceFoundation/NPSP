@@ -309,6 +309,14 @@
         <value>Link opens in a new window</value>
     </labels>
     <labels>
+        <fullName>AssistiveTextRecordIcon</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AssistiveTextRecordIcon</shortDescription>
+        <value>Record Icon</value>
+    </labels>
+    <labels>
         <fullName>AssistiveTextWarning</fullName>
         <categories>AlternativeText</categories>
         <language>en_US</language>
@@ -1471,14 +1479,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Error</value>
     </labels>
     <labels>
-        <fullName>PageMessagesNone</fullName>
-        <categories>PageMessages</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>None</shortDescription>
-        <value>None</value>
-    </labels>
-    <labels>
         <fullName>PageMessagesWarning</fullName>
         <categories>PageMessages</categories>
         <language>en_US</language>
@@ -1495,15 +1495,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Processing</value>
     </labels>
     <labels>
-        <fullName>RD2_ActiveSchedulesCurrentSchedule</fullName>
-        <categories>Recurring-Donations, Component</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Details of the schedule which is currently in effect</shortDescription>
-        <value>Current Schedule</value>
-    </labels>
-    <labels>
-        <fullName>RD2_ActiveSchedulesEndDate</fullName>
+        <fullName>RD2_ScheduleLWCEndDate</fullName>
         <categories>Recurring-Donations, Component</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -1511,7 +1503,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>End Date</value>
     </labels>
     <labels>
-        <fullName>RD2_ActiveSchedulesFutureSchedule</fullName>
+        <fullName>RD2_ScheduleLWCFutureSchedule</fullName>
         <categories>Recurring-Donations, Component</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -1519,7 +1511,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Future Schedule</value>
     </labels>
     <labels>
-        <fullName>RD2_ActiveSchedulesTitle</fullName>
+        <fullName>RD2_ScheduleLWCTitle</fullName>
         <categories>Recurring-Donations, Component</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -1533,6 +1525,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if value on the amount is valid or not</shortDescription>
         <value>Enter a valid Amount. The Amount cannot be zero, negative, or blank.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrentScheduleTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Details of the schedule which is currently in effect</shortDescription>
+        <value>Current Schedule</value>
     </labels>
     <labels>
         <fullName>RD2_DataMigrationInvalidCloseAction</fullName>
@@ -8911,6 +8911,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelField</shortDescription>
         <value>Field</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelFieldValueNone</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Display the value None</shortDescription>
+        <value>None</value>
     </labels>
     <labels>
         <fullName>stgLabelHHGeneral</fullName>

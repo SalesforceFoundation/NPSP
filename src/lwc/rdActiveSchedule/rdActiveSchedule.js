@@ -1,8 +1,9 @@
-import lblScheduleTitle from '@salesforce/label/c.RD2_ActiveSchedulesTitle';
-import lblEndDate from '@salesforce/label/c.RD2_ActiveSchedulesEndDate';
-import lblCurrentSchedule from '@salesforce/label/c.RD2_ActiveSchedulesCurrentSchedule';
-import lblFutureSchedule from '@salesforce/label/c.RD2_ActiveSchedulesFutureSchedule';
-import lblNone from '@salesforce/label/c.PageMessagesNone';
+import lblScheduleTitle from '@salesforce/label/c.RD2_ScheduleLWCTitle';
+import lblEndDate from '@salesforce/label/c.RD2_ScheduleLWCEndDate';
+import lblCurrentSchedule from '@salesforce/label/c.RD2_CurrentScheduleTitle';
+import lblFutureSchedule from '@salesforce/label/c.RD2_ScheduleLWCFutureSchedule';
+import lblRecordIcon from '@salesforce/label/c.AssistiveTextRecordIcon';
+import lblNone from '@salesforce/label/c.stgLabelFieldValueNone';
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -83,6 +84,7 @@ export default class RdActiveSchedule extends LightningElement {
             this.labels['lblFrequency'] = data.fields[FIELD_RD_FREQUENCY.fieldApiName].label;
             this.labels['lblDayOfMonth'] = data.fields[FIELD_RD_DAYOFMONTH.fieldApiName].label;
             this.labels['lblNone'] = lblNone;
+            this.labels['lblRecordIcon'] = lblRecordIcon;
         }
     }
 
