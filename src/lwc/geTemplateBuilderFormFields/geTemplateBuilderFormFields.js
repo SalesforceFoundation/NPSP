@@ -95,6 +95,11 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             this.isInitialized = true;
             this.validate();
         }
+
+        // Set top section as active if there are multiple sections and none are selected on load
+        if (!this.activeFormSectionId && this.formSections && this.formSections.length >= 2) {
+            this.handleChangeActiveSection({ detail: this.formSections[0].id });
+        }
     }
 
     connectedCallback() {
