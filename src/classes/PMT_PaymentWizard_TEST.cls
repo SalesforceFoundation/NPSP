@@ -690,8 +690,10 @@ private class PMT_PaymentWizard_TEST {
 
         PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
 
+        Test.stopTest();
+
         System.assertEquals(opp.id, controller.currentOpp.id);
-        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.pmtWizardPaymentsDisabledTitle,ApexPages.Severity.WARNING);
+        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.pmtWizardPaymentsDisabledTitle, ApexPages.Severity.WARNING);
 
 
     }
