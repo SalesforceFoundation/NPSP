@@ -46,4 +46,4 @@ Create Organization Foundation
     Search Field By Value                  Search this list                      ${account_name}
     Verify Record   	                   ${account_name}
     Change View To                         Household Accounts
-    Page Should Not Contain                ${account_name}
+    Wait Until Page Does Not Contain       ${account_name}

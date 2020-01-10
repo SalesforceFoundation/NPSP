@@ -21,6 +21,7 @@ Create Donation from a Contact
     ${value}    Return Locator Value    alert
     Go To Object Home         Opportunity
     Click Link    ${value}
+    Wait Until Location Contains    lightning/r/Opportunity
     Save Current Record ID For Deletion    Opportunity    
     Select Tab    Related
     Load Related List    Payments

@@ -201,6 +201,7 @@ Create Opportunities
     Pick Date    Today
     Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Modal Button        Save
+    Wait Until Location Contains    lightning/r/Opportunity
 
 Create Engagement Plan
     ${plan_name} =     Generate Random String

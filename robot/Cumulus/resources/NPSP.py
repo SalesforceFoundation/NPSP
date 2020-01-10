@@ -269,7 +269,7 @@ class NPSP(SalesforceRobotLibraryBase):
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
         for i in locators:
-            locator = i.format(field)
+            locator = i.format(field,value)
             if self.check_if_element_exists(locator):   
                 actual_value=self.selenium.get_webelement(locator).text
                 if status == "contains":
@@ -500,7 +500,9 @@ class NPSP(SalesforceRobotLibraryBase):
     def select_relatedlist(self,title):
         """click on the related list to open it"""
         locator=npsp_lex_locators['record']['related']['title'].format(title)
-        self.selenium.get_webelement(locator).click()  
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+#         self.selenium.get_webelement(locator).click()  
         
     def verify_related_list_field_values(self, **kwargs):
         """verifies the values in the related list objects page""" 
@@ -520,7 +522,7 @@ class NPSP(SalesforceRobotLibraryBase):
     def page_contains_record(self,title):   
         """Validates if the specified record is present on the page"""   
         locator= npsp_lex_locators['object']['record'].format(title)
-        self.selenium.page_should_not_contain_element(locator) 
+        self.selenium.wait_until_page_does_not_contain_element(locator) 
              
                          
                
@@ -1007,6 +1009,7 @@ class NPSP(SalesforceRobotLibraryBase):
     def return_locator_value(self, path, *args, **kwargs): 
         """Returns the value pointed by the specified locator"""
         locator=self.get_npsp_locator(path, *args, **kwargs)
+        self.selenium.wait_until_page_contains_element(locator)
         value=self.selenium.get_webelement(locator).text   
         return value
         
@@ -1190,6 +1193,7 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()  
         self.selenium.click_element(view)
         self.selenium.wait_until_page_contains(view_name)
+        
 
     def search_field_by_value(self, fieldname, value):
          """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
@@ -1281,12 +1285,9 @@ class NPSP(SalesforceRobotLibraryBase):
      
     def verify_toast_message(self,value):       
         locator=npsp_lex_locators["toast-msg"]
-        ele=self.selenium.get_webelements(locator)
-        found=False
-        for e in ele:
-            msg=e.text
-            if msg == value:
-                found=True
-                print("Toast message verified")
-                break
-        assert found, "Expected Toast message not found on page"
+        self.selenium.wait_until_page_contains_element(locator)
+        msg=self.selenium.get_webelement(locator).text
+        if msg == value:
+            print("Toast message verified")
+        else:
+            raise Exception("Expected Toast message not found on page")    
