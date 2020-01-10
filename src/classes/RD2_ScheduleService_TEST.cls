@@ -269,7 +269,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStatusClosed()
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 24));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 24));
 
         System.assertEquals(null, service.getNextDonationDate(rd), 'Next Donation Date should be null');
 
@@ -294,7 +294,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2019, 11, 24))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 24));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 24));
 
         System.assertEquals(Date.newInstance(2019, 12, 23),
             service.getNextDonationDate(rd),
@@ -321,7 +321,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2019, 11, 30))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2020, 2, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2020, 2, 1));
 
         System.assertEquals(Date.newInstance(2020, 2, 29),
                 service.getNextDonationDate(rd),
@@ -348,7 +348,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2019, 1, 30))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 3, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 3, 1));
 
         System.assertEquals(Date.newInstance(2019, 3, 31),
                 service.getNextDonationDate(rd),
@@ -375,7 +375,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2019, 11, 1))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         System.assertEquals(Date.newInstance(2019, 11, 23),
             service.getNextDonationDate(rd),
@@ -401,7 +401,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2019, 11, 14))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 14));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 14));
 
         System.assertEquals(Date.newInstance(2019, 11, 15),
             service.getNextDonationDate(rd),
@@ -427,7 +427,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2020, 11, 1))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         System.assertEquals(Date.newInstance(2020, 11, 1),
             service.getNextDonationDate(rd),
@@ -453,7 +453,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 3, 17));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2018, 3, 17));
 
         System.assertEquals(Date.newInstance(2018, 3, 17),
             service.getNextDonationDate(rd),
@@ -479,7 +479,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 7, 1))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 7, 17));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2018, 7, 17));
 
         System.assertEquals(Date.newInstance(2018, 7, 31),
                 service.getNextDonationDate(rd),
@@ -505,7 +505,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 4, 8));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2018, 4, 8));
 
         System.assertEquals(Date.newInstance(2018, 4, 28),
             service.getNextDonationDate(rd),
@@ -531,7 +531,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2023, 1, 18));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2023, 1, 18));
 
         System.assertEquals(Date.newInstance(2023, 9, 17),
             service.getNextDonationDate(rd),
@@ -557,7 +557,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2023, 3, 18));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2023, 3, 18));
 
         System.assertEquals(Date.newInstance(2028, 3, 17),
             service.getNextDonationDate(rd),
@@ -583,7 +583,7 @@ private with sharing class RD2_ScheduleService_TEST {
                 .withStartDate(Date.newInstance(2018, 3, 17))
                 .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2018, 9, 16));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2018, 9, 16));
 
         System.assertEquals(Date.newInstance(2019, 2, 1),
             service.getNextDonationDate(rd),
@@ -1038,7 +1038,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2019, 11, 1))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         Test.startTest();
         insert rd;
@@ -1073,7 +1073,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStatusClosed()
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         Test.startTest();
         insert rd;
@@ -1090,7 +1090,7 @@ private with sharing class RD2_ScheduleService_TEST {
     @isTest
     private static void shouldReturnZeroInstallmentsWhenRDIdIsNull() {
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDIds = service.getVisualizedInstallments(new List<npe03__Recurring_Donation__c>{null}, Date.newInstance(2019, 11, 1), 12, null);
 
@@ -1120,7 +1120,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2019, 11, 1))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         Test.startTest();
         insert rd;
@@ -1154,7 +1154,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2019, 11, 1))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         Test.startTest();
         insert rd;
@@ -1188,7 +1188,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2019, 11, 1))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         Test.startTest();
         insert rd;
@@ -1329,7 +1329,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2019, 11, 1))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         Test.startTest();
         insert rd;
@@ -1361,7 +1361,7 @@ private with sharing class RD2_ScheduleService_TEST {
                         .withStartDate(Date.newInstance(2019, 11, 1))
                         .build();
 
-        RD2_ScheduleService service = getScheduleServiceWithCurrentDateOverride(Date.newInstance(2019, 11, 1));
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(Date.newInstance(2019, 11, 1));
 
         Test.startTest();
         insert rd;
@@ -1374,15 +1374,14 @@ private with sharing class RD2_ScheduleService_TEST {
     }
 
 
-        //// Helpers
+    //// Helpers
 
     /****
     * @description Returns Schedule Service with current date override
     */
-    private static RD2_ScheduleService getScheduleServiceWithCurrentDateOverride(Date currDateOverride) {
-
+    private static RD2_ScheduleService getScheduleServiceForCurrentDate(Date currentDate) {
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        scheduleService.currentDate = currDateOverride;
+        RD2_ScheduleService.currentDate = currentDate;
 
         return scheduleService;
     }
