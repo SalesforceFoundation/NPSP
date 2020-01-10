@@ -557,6 +557,10 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>RD2_Settings</members>
+        <members>RD2_Settings_TEST</members>
+        <members>UTIL_SObject</members>
+        <members>UTIL_SObject_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>

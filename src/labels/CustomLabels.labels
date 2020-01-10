@@ -1913,6 +1913,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
     </labels>
     <labels>
+        <fullName>RD2_ScheduleInstallmentIsRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Every installment Opportunity should have matching RD Schedule installment</shortDescription>
+        <value>The Opportunity cannot be matched with the Recurring Donation Schedule installment.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ScheduleVisualizerColumnDate</fullName>
         <categories>Recurring-Donations, Component</categories>
         <language>en_US</language>
