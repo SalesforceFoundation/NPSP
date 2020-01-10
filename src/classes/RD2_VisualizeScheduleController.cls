@@ -180,7 +180,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
         public Schedule(Integer num, npe03__Recurring_Donation__c rd, RecurringDonationSchedule__c schedule) {
             this.scheduleNumber = num;
-            this.isCurrent = schedule.StartDate__c <= scheduleService.currentDate ? true : false;
+            this.isCurrent = schedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
             this.amount = schedule.InstallmentAmount__c;
             this.paymentMethod = schedule.PaymentMethod__c;
             this.campaign = schedule.Campaign__r.Name;
