@@ -105,6 +105,7 @@ export default class geListView extends LightningElement {
             let sortLabel = GeLabelService.format(this.CUSTOM_LABELS.geTextListViewSortedBy, [columnEntry.label]);
             return this.sortedBy ? sortLabel : undefined;
         }
+        return undefined;
     }
 
     get lastUpdatedOn() {
@@ -247,7 +248,7 @@ export default class geListView extends LightningElement {
     * the Custom_Column_Header__c List Custom Setting.
     */
     getColumnHeaderData = async (listViewDeveloperName) => {
-        return await retrieveCustomColumnHeaders({ listName: listViewDeveloperName })
+        return retrieveCustomColumnHeaders({ listName: listViewDeveloperName })
             .catch(error => {
                 handleError(error);
             });

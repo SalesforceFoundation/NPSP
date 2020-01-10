@@ -7,7 +7,10 @@ import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
 import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import commonClone from '@salesforce/label/c.commonClone';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
+import commonDelete from '@salesforce/label/c.commonDelete';
+import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
@@ -91,6 +94,7 @@ import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 import geTextListViewUpdatedAgo from '@salesforce/label/c.geTextListViewUpdatedAgo';
+import geToastListViewUpdated from '@salesforce/label/c.geToastListViewUpdated';
 import geToastSaveFailed from '@salesforce/label/c.geToastSaveFailed';
 import geToastSelectActiveSection from '@salesforce/label/c.geToastSelectActiveSection';
 import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCreateSuccess';
@@ -115,7 +119,10 @@ class GeLabelService {
         commonAssistiveSuccess,
         commonAssistiveWarning,
         commonCancel,
+        commonClone,
         commonDefaultValue,
+        commonDelete,
+        commonEdit,
         commonError,
         commonFieldLabel,
         commonNoItems,
@@ -199,6 +206,7 @@ class GeLabelService {
         geTextListViewItemsCount,
         geTextListViewSortedBy,
         geTextListViewUpdatedAgo,
+        geToastListViewUpdated,
         geToastSaveFailed,
         geToastSelectActiveSection,
         geToastTemplateCreateSuccess,

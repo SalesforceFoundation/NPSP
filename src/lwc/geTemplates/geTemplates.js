@@ -20,15 +20,18 @@ const SUCCESS = 'success';
 const IS_LOADING = 'isLoading';
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const SAVE = 'save';
+const EDIT = 'edit';
+const CLONE = 'clone';
+const DELETE = 'delete';
 
 const TEMPLATES_LIST_VIEW_NAME = 'Templates';
 const TEMPLATES_LIST_VIEW_SORT_DIRECTION = 'desc';
 const TEMPLATES_LIST_DEFAULT_LIMIT = 10;
 const TEMPLATES_LIST_VIEW_ICON = 'standard:visit_templates';
 const TEMPLATES_TABLE_ACTIONS = [
-    { label: 'Edit', name: 'edit' },
-    { label: 'Clone', name: 'clone' },
-    { label: 'Delete', name: 'delete' }
+    { label: GeLabelService.CUSTOM_LABELS.commonEdit, name: EDIT },
+    { label: GeLabelService.CUSTOM_LABELS.commonClone, name: CLONE },
+    { label: GeLabelService.CUSTOM_LABELS.commonDelete, name: DELETE }
 ];
 
 export default class GeTemplates extends NavigationMixin(LightningElement) {

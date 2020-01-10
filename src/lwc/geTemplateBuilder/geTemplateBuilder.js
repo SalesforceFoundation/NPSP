@@ -155,7 +155,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.isAccessible = true;
             }
         } catch (error) {
-            console.error(error);
             handleError(error);
         }
     }
