@@ -946,6 +946,15 @@ INSERT INTO "Opportunity_rt_mapping" VALUES('0123F000001HAaJQAW','MajorGift');
 INSERT INTO "Opportunity_rt_mapping" VALUES('0123F000001HAaKQAW','MatchingGift');
 INSERT INTO "Opportunity_rt_mapping" VALUES('0123F000001HAaLQAW','Membership');
 INSERT INTO "Opportunity_rt_mapping" VALUES('0123F000001HAR2QAO','NPSP_Default');
+CREATE TABLE "OpportunityContactRole" (
+	sf_id VARCHAR(255) NOT NULL,
+	"opportunity_id" VARCHAR(255),
+	"contact_id" VARCHAR(255),
+	"Role" VARCHAR(255),
+	PRIMARY KEY (sf_id)
+);
+INSERT INTO "OpportunityContactRole" VALUES('00K6g000000vATzEAM','0063F00000ITwacQAD','0033F00000Luj4DQAR','Solicitor');
+INSERT INTO "OpportunityContactRole" VALUES('00K6g000000vAU0EAM','0063F00000ITwacQAD','0033F00000Luj3FQAR','Donor');
 CREATE TABLE "npe01__OppPayment__c" (
 	sf_id VARCHAR(255) NOT NULL, 
 	"npe01__Check_Reference_Number__c" VARCHAR(255), 
@@ -1093,7 +1102,7 @@ CREATE TABLE "npe4__Relationship__c" (
 	npe4__related_contact__c VARCHAR(255), 
 	PRIMARY KEY (sf_id)
 );
-INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3B2UAK','Candace and Robert went to the same University.','true','Current','Friend','','0033F00000Luj4jQAB','a0F3F000003L3BDUA0','0033F00000Luj4DQAR');
+INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3B2UAK','Candace and Robert went to the same University.','true','Current','Friend','Solicitor','0033F00000Luj4jQAB','a0F3F000003L3BDUA0','0033F00000Luj4DQAR');
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3B3UAK','','true','Current','Friend','','0033F00000Luj3FQAR','a0F3F000003L3BEUA0','0033F00000Luj4DQAR');
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3B4UAK','','true','Current','Friend','','0033F00000Luj3HQAR','a0F3F000003L3B9UAK','0033F00000Luj4CQAR');
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3B5UAK','','true','Current','Leader','','0033F00000Luj3WQAR','a0F3F000003L3B6UAK','0033F00000Luj3qQAB');
@@ -1104,7 +1113,7 @@ INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3B9UAK','','false','Curr
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3BAUA0','','false','Current','Friend','','0033F00000Luj4CQAR','a0F3F000003L3B7UAK','0033F00000Luj3tQAB');
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3BBUA0','','true','Current','Husband','','0033F00000Luj4CQAR','a0F3F000003L3BGUA0','0033F00000Luj4DQAR');
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3BCUA0','','false','Current','Mentee','','0033F00000Luj4CQAR','a0F3F000003L3BIUA0','0033F00000Luj4FQAR');
-INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3BDUA0','Candace and Robert went to the same University.','false','Current','Friend','Soft Credit','0033F00000Luj4DQAR','a0F3F000003L3B2UAK','0033F00000Luj4jQAB');
+INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3BDUA0','Candace and Robert went to the same University.','false','Current','Friend','','0033F00000Luj4DQAR','a0F3F000003L3B2UAK','0033F00000Luj4jQAB');
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3BEUA0','','false','Current','Friend','Solicitor','0033F00000Luj4DQAR','a0F3F000003L3B3UAK','0033F00000Luj3FQAR');
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3BFUA0','','false','Current','Daughter','Soft Credit','0033F00000Luj4DQAR','a0F3F000003L3B8UAK','0033F00000Luj4BQAR');
 INSERT INTO "npe4__Relationship__c" VALUES('a0F3F000003L3BGUA0','','false','Current','Wife','Soft Credit','0033F00000Luj4DQAR','a0F3F000003L3BBUA0','0033F00000Luj4CQAR');

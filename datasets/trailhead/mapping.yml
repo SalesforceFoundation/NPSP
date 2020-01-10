@@ -555,6 +555,17 @@ Insert Opportunity:
       after: Insert Opportunity
     npsp__Primary_Contact__c:
       table: Contact
+Insert OpportunityContactRole:
+  sf_object: OpportunityContactRole
+  table: OpportunityContactRole
+  fields:
+    Id: sf_id
+    Role: Role
+  lookups:
+    ContactId:
+      table: Contact
+    OpportunityId:
+      table: Opportunity
 Insert npsp__Grant_Deadline__c:
   sf_object: npsp__Grant_Deadline__c
   table: npsp__Grant_Deadline__c
