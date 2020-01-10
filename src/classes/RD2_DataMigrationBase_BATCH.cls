@@ -41,6 +41,8 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
     public static final String LOG_CONTEXT_DRY_RUN = 'RDValidateMigration:';
     public static final String LOG_EXCEPTION_ERROR_TYPE = 'Data Migration Exception';
 
+    public static final Integer MIGRATION_INSTALLMENT_NUMBER = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER;
+
     /**
     * @description Contains Recurring Donation custom settings
     */
@@ -316,6 +318,8 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
         } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
             for (Opportunity opp : opps) {
                 opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
+                opp.Recurring_Donation_Installment_Number__c = MIGRATION_INSTALLMENT_NUMBER;
+                opp.Closed_Lost_Reason__c = logContext;
             }
 
             dmlResults = Database.update(opps, false);

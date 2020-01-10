@@ -41,6 +41,7 @@ private class RD2_DataMigration_TEST {
     private static final Date DATE_ESTABLISHED = TODAY.addMonths(-3);
     private static final Decimal AMOUNT_VALUE = 100;
     private static String LOG_CONTEXT = 'RunDataMigrationTest';
+    private static Integer MIGRATION_INSTALLMENT_NUMBER = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER;
 
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
@@ -1016,7 +1017,7 @@ private class RD2_DataMigration_TEST {
      * @description Verifies Recurring Donation with no Open Opportunity is converted successfully
      */
     @IsTest
-    private static void shouldNotChangeAlreadyClosedOpps() {
+    private static void shouldNotVoidClosedWonOpps() {
         setCloseActionSettingsToClosedLost();
 
         npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
@@ -1110,21 +1111,25 @@ private class RD2_DataMigration_TEST {
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
+                .withInstallmentNumber(1)
                 .withCloseDate(DATE_ESTABLISHED)
                 .withClosedWonStage()
                 .build(),
             oppBuilder
                 .withName()
+                .withInstallmentNumber(2)
                 .withCloseDate(TODAY.addDays(-1))
                 .withOpenStage()
                 .build(),
             oppBuilder
                 .withName()
+                .withInstallmentNumber(3)
                 .withCloseDate(TODAY)
                 .withOpenStage()
                 .build(),
             oppBuilder
                 .withName()
+                .withInstallmentNumber(4)
                 .withCloseDate(TODAY.addDays(1))
                 .withOpenStage()
                 .build()
@@ -1140,12 +1145,27 @@ private class RD2_DataMigration_TEST {
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
-        System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
-        System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
-        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'Open Opp with Close Date equal to today should stay open');
 
-        System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon,
-            'The next future Open Opp should be Closed Lost');
+        Opportunity opp = oppById.get(opps[0].Id);
+        System.assertEquals(true, opp.IsClosed && opp.IsWon, 'Already Closed Won Opp should be unchanged');
+        System.assertEquals(opps[0].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c, 
+            'The Opp Installment Number should be unchanged');
+
+        opp = oppById.get(opps[1].Id);
+        System.assertEquals(false, opp.IsClosed, 'Open Opp with Close Date in the past should stay open');
+        System.assertEquals(opps[1].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c, 
+            'The Opp Installment Number should be unchanged');
+
+        opp = oppById.get(opps[2].Id);
+        System.assertEquals(false, opp.IsClosed, 'Open Opp with Close Date equal to today should stay open');
+        System.assertEquals(opps[2].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c, 
+            'The Opp Installment Number should be unchanged');
+
+        opp = oppById.get(opps[3].Id);
+        System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'The next future Open Opp should be Closed Lost');
+        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER, opp.Recurring_Donation_Installment_Number__c, 
+            'The Closed Lost Opp should have the Installment Number overriden');
+        System.assertEquals(getLogContextMigration(jobId), opp.Closed_Lost_Reason__c, 'Closed Lost Reason should indicate migration');
 
         assertBatchSummarySuccess(jobId, 1);
     }
@@ -1169,21 +1189,25 @@ private class RD2_DataMigration_TEST {
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
+                .withInstallmentNumber(1)
                 .withCloseDate(DATE_ESTABLISHED)
                 .withClosedWonStage()
                 .build(),
             oppBuilder
                 .withName()
+                .withInstallmentNumber(2)
                 .withCloseDate(TODAY.addDays(-1))
                 .withOpenStage()
                 .build(),
             oppBuilder
                 .withName()
+                .withInstallmentNumber(3)
                 .withCloseDate(TODAY.addDays(1))
                 .withOpenStage()
                 .build(),
             oppBuilder
                 .withName()
+                .withInstallmentNumber(4)
                 .withCloseDate(TODAY.addDays(2))
                 .withOpenStage()
                 .build()
@@ -1201,10 +1225,17 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(opps.size(), oppById.size(), 'Number of Opportunities should match');
         System.assertEquals(true, oppById.get(opps[0].Id).IsClosed && oppById.get(opps[0].Id).IsWon, 'Already Closed Won Opp should be unchanged');
         System.assertEquals(false, oppById.get(opps[1].Id).IsClosed, 'Open Opp with Close Date in the past should stay open');
-        System.assertEquals(false, oppById.get(opps[2].Id).IsClosed, 'The first future Open Opp should stay open');
 
-        System.assertEquals(true, oppById.get(opps[3].Id).IsClosed && !oppById.get(opps[3].Id).IsWon,
-            'The next future Open Opp should be Closed Lost');
+        Opportunity opp = oppById.get(opps[2].Id);
+        System.assertEquals(false, opp.IsClosed, 'The first future Open Opp should stay open');
+        System.assertEquals(opps[2].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c, 
+            'The Opp Installment Number should be unchanged');
+
+        opp = oppById.get(opps[3].Id);
+        System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'The next future Open Opp should be Closed Lost');
+        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER, opp.Recurring_Donation_Installment_Number__c, 
+            'The Closed Lost Opp should have the Installment Number overriden');
+        System.assertEquals(getLogContextMigration(jobId), opp.Closed_Lost_Reason__c, 'Closed Lost Reason should indicate migration');
 
         assertBatchSummarySuccess(jobId, 1);
     }
@@ -1268,7 +1299,7 @@ private class RD2_DataMigration_TEST {
      * @description Verifies Recurring Donations and their Open Opportunities are migrated together successfully
      */
     @IsTest
-    private static void shouldConvertRecurringDonationsAndVoidOpenOppsInBulk() {
+    private static void shouldVoidOpenOppsInBulk() {
         setCloseActionSettingsToClosedLost();
 
         List<npe03__Recurring_Donation__c> rds = createLegacyRecurringDonationsNoOpps(2);

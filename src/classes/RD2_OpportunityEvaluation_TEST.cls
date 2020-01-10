@@ -44,6 +44,8 @@ private class RD2_OpportunityEvaluation_TEST {
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
 
+    public static final Integer MIGRATION_INSTALLMENT_NUMBER = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER;
+
     /****
     * @description Creates data required for unit tests
     */
@@ -110,7 +112,7 @@ private class RD2_OpportunityEvaluation_TEST {
      * @description Verifies an Opp with Close Date today is not created if it already exists
      */
     @IsTest
-    private static void shouldNotCreateDuplicateOppWhenCloseDateIsToday() {
+    private static void shouldNotCreateDuplicateOppWhenNextCloseDateIsToday() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         final Date today = START_DATE.addMonths(1);
@@ -140,7 +142,7 @@ private class RD2_OpportunityEvaluation_TEST {
      * @description Verifies an Opp with Close Date in future is not created if it already exists
      */
     @IsTest
-    private static void shouldNotCreateDuplicateOppWhenCloseDateIsInFuture() {
+    private static void shouldNotCreateDuplicateOppWhenNextCloseDateIsInFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         final Date today = START_DATE.addMonths(1).addDays(1);
@@ -423,6 +425,74 @@ private class RD2_OpportunityEvaluation_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'An error should be created: ' + errors);
     }
+
+    /**
+     * @description Verifies an Opp with the next Close Date is created
+     * when the same Close Date Opp is Closed Lost in data migration
+     */
+    @IsTest
+    private static void shouldCreateNextOppWhenSameCloseDateOppIsClosedLostInMigration() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date today = START_DATE.addDays(1);
+        final Date nextCloseDate = START_DATE.addMonths(1);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withInstallmentNumber(MIGRATION_INSTALLMENT_NUMBER)
+            .withClosedLostStage()
+            .withCloseDate(nextCloseDate)
+            .build();
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
+
+        for (Opportunity opp : oppById.values()) {
+            System.assertEquals(nextCloseDate, opp.CloseDate, 'Both Opps should have the same next Close Date');
+
+            if (opp.Id == opps[0].Id) {
+                System.assertEquals(true, opp.isClosed && !opp.isWon, 'Existing Closed Lost Opp should stay closed');
+            } else {
+                System.assertEquals(false, opp.isClosed, 'New Opp should be open');
+            }
+        }
+    }
+
+    /**
+     * @description Verifies an Opp with the next Close Date is not created
+     * when the same Close Date Opp is Closed Lost outside of data migration
+     */
+    @IsTest
+    private static void shouldNotCreateNextOppWhenSameCloseDateOppIsClosedLostOutsideMigration() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date today = START_DATE.addDays(1);
+        final Date nextCloseDate = START_DATE.addMonths(1);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withClosedLostStage()
+            .withCloseDate(nextCloseDate)
+            .build();
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);        
+        System.assertEquals(true, opps[0].isClosed && !opps[0].isWon, 'Existing Closed Lost Opp should stay closed');
+    }
+
     
 
     // Helpers

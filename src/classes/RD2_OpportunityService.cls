@@ -36,6 +36,8 @@
 */
 public with sharing class RD2_OpportunityService {
 
+    public static final Integer MIGRATION_INSTALLMENT_NUMBER = 0;
+
     /***
     * @description Recurring Donation custom settings
     */
@@ -141,7 +143,7 @@ public with sharing class RD2_OpportunityService {
 
 
     /***
-    * @description Indicates if the Opportunity already exists
+    * @description Indicates if the Opportunity should be created
     * @param newOpp Opportunity just built but not created yet
     * @param existingOpps Existing Opportunities on the Recurring Donation
     * @return Boolean
@@ -149,7 +151,11 @@ public with sharing class RD2_OpportunityService {
     private Boolean isNewOpportunity(Opportunity newOpp, List<Opportunity> existingOpps) {
         for (Opportunity opp : existingOpps) {
             if (newOpp.CloseDate == opp.CloseDate) {
-                return false;
+
+                Boolean isClosedLostInMigration = opp.isClosed && !opp.IsWon 
+                    && opp.Recurring_Donation_Installment_Number__c == MIGRATION_INSTALLMENT_NUMBER;
+
+                return isClosedLostInMigration;
             }
         }
 
