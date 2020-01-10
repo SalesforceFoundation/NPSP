@@ -675,9 +675,8 @@ private class PMT_PaymentWizard_TEST {
     */
     @isTest
     private static void shouldDisplayWarningInSchedulePaymentWhenAutoPaymentDisabled() {
-        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)
-        );
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false));
 
         Opportunity opp = createPledgedOpportunity(100);
 
@@ -704,9 +703,8 @@ private class PMT_PaymentWizard_TEST {
     */
     @isTest
     private static void shouldDisplayWarningInWriteOffPaymentWhenAutoPaymentDisabled() {
-        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)
-        );
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false));
 
         Opportunity opp = createPledgedOpportunity(100);
 

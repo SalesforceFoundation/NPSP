@@ -136,7 +136,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description holds Contact & Org Settings that contain the payment related settings
     */
-    public npe01__Contacts_and_Orgs_Settings__c paymentsSettings;
+    private npe01__Contacts_and_Orgs_Settings__c paymentsSettings;
 
     /*******************************************************************************************************
     * @description Returns true if the user has access to the payment SObject
