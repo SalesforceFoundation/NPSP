@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>%%%NAMESPACE%%%Engagement_Plan_Template__c</name>
+    <relationshipLabel>Betrokkenheidsplannen</relationshipLabel>
+    <label>Sjabloon voor betrokkenheidsplan</label>
+  </fields>
+  <nameFieldLabel>Nummer van betrokkenheidsplan</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nummer van betrokkenheidsplan</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Betrokkenheidsplan</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Betrokkenheidsplannen</value>
+  </caseValues>
+</CustomObjectTranslation>

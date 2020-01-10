@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <nameFieldLabel>Nom de l’allocation UCG</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom de l’allocation UCG</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <startsWith>Vowel</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Allocation UCG</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Allocations UCG</value>
+  </caseValues>
+</CustomObjectTranslation>

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>%%%NAMESPACE%%%Opportunity__c</name>
+    <relationshipLabel>Te leveren producten/diensten</relationshipLabel>
+    <label>Opportunity</label>
+  </fields>
+  <layouts>
+    <layout>Deliverable</layout>
+    <sections>
+      <label>Vereisten voor te leveren product/dienst verlenen</label>
+      <section>Grant Deliverable Requirements</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Naam van te leveren product/dienst</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam van te leveren product/dienst</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Te leveren product/dienst</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Te leveren producten/diensten</value>
+  </caseValues>
+</CustomObjectTranslation>

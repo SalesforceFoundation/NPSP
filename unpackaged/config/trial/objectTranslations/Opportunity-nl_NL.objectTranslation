@@ -1,33 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <recordTypes>
-        <description><!-- Donation Received --></description>
-        <label><!-- Donation --></label>
-        <name>Donation</name>
-    </recordTypes>
-    <recordTypes>
-        <description><!-- Grant Received --></description>
-        <label><!-- Grant --></label>
-        <name>Grant</name>
-    </recordTypes>
-    <recordTypes>
-        <description><!-- Goods or Services received as In-Kind --></description>
-        <label><!-- In-Kind Gift --></label>
-        <name>InKindGift</name>
-    </recordTypes>
-    <recordTypes>
-        <description><!-- Large Donation from a Major Donor --></description>
-        <label><!-- Major Gift --></label>
-        <name>MajorGift</name>
-    </recordTypes>
-    <recordTypes>
-        <description><!-- Matching Donation from an Donor&apos;s Employer or other Organization --></description>
-        <label><!-- Matching Gift --></label>
-        <name>MatchingGift</name>
-    </recordTypes>
-    <recordTypes>
-        <description><!-- A membership record type --></description>
-        <label><!-- Membership --></label>
-        <name>Membership</name>
-    </recordTypes>
+  <recordTypes>
+    <name>Donation</name>
+    <label>Donatie</label>
+    <description>Donatie ontvangen</description>
+  </recordTypes>
+  <recordTypes>
+    <name>Grant</name>
+    <label>Toelage</label>
+    <description>Toelage ontvangen</description>
+  </recordTypes>
+  <recordTypes>
+    <name>InKindGift</name>
+    <label>Soortgelijke gift</label>
+    <description>Zaken of services ontvangen als soortgelijk</description>
+  </recordTypes>
+  <recordTypes>
+    <name>MajorGift</name>
+    <label>Belangrijke gift</label>
+    <description>Grote donatie van hoofddonor</description>
+  </recordTypes>
+  <recordTypes>
+    <name>MatchingGift</name>
+    <label>Overeenkomende gift</label>
+    <description>Overeenkomende donatie van de werkgever van een donor of een andere organisatie</description>
+  </recordTypes>
+  <recordTypes>
+    <name>Membership</name>
+    <label>Lidmaatschap</label>
+    <description>Type lidmaatschapsrecord</description>
+  </recordTypes>
+  <layouts>
+    <layout>___NAMESPACE___Major Gift Layout</layout>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Gegevens van hoofdgift</label>
+      <section>Major Gift Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsgegevens</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Donation Layout</layout>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsgegevens</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Gegevens van eerbetoon</label>
+      <section>Tribute Information</section>
+    </sections>
+    <sections>
+      <label>Gegevens van overeenkomende gift</label>
+      <section>Matching Gift Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Membership Layout</layout>
+    <sections>
+      <label>Velden</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Gegevens van lid</label>
+      <section>Member Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsgegevens</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Grant Layout</layout>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Gegevens van toelage</label>
+      <section>Grant Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsgegevens</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___In-Kind Gift Layout</layout>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Soortgelijke gegevens</label>
+      <section>In-Kind Information</section>
+    </sections>
+    <sections>
+      <label>Gegevens van eerbetoon</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Matching Gift Layout</layout>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Betalingsgegevens</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
 </CustomObjectTranslation>

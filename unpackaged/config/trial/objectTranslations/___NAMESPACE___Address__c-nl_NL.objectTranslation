@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>%%%NAMESPACE%%%Household_Account__c</name>
+    <help>Zoek gegevens op bij de account die is gekoppeld aan dit adres.</help>
+    <relationshipLabel>Adressen</relationshipLabel>
+    <label>Account</label>
+  </fields>
+  <layouts>
+    <layout>___NAMESPACE___Address Layout</layout>
+    <sections>
+      <label>Seizoensgebonden gegevens</label>
+      <section>Seasonal Information</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>ID van adres</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>ID van adres</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Adres</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Adressen</value>
+  </caseValues>
+</CustomObjectTranslation>

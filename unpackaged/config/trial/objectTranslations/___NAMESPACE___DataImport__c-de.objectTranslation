@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <layouts>
+    <layout>___NAMESPACE___Data Import Layout</layout>
+    <sections>
+      <label>Kontakt1 Informationen</label>
+      <section>Contact1 Information</section>
+    </sections>
+    <sections>
+      <label>Account1 Informationen</label>
+      <section>Account1 Information</section>
+    </sections>
+    <sections>
+      <label>Kontact2 Informationen</label>
+      <section>Contact2 Information</section>
+    </sections>
+    <sections>
+      <label>Account2 Informationen</label>
+      <section>Account2 Information</section>
+    </sections>
+    <sections>
+      <label>Haushalt-Informationen</label>
+      <section>Household Information</section>
+    </sections>
+    <sections>
+      <label>Privatadresse</label>
+      <section>Home Address</section>
+    </sections>
+    <sections>
+      <label>Spendeninformationen</label>
+      <section>Donation Information</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

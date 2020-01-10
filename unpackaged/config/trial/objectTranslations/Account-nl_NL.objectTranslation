@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Level__c</name>
+    <relationshipLabel>Huishoudens</relationshipLabel>
+    <label>Niveau</label>
+  </fields>
+  <fields>
+    <name>Previous_Level__c</name>
+    <relationshipLabel>Huishoudens (vorig niveau)</relationshipLabel>
+    <label>Vorig niveau</label>
+  </fields>
+  <layouts>
+    <layout>Organization Lightning Layout</layout>
+    <sections>
+      <label>Velden</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Adres</label>
+      <section>Address</section>
+    </sections>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totalen van donatie</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Gegevens van overeenkomende gift</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>Lidmaatschapsgegevens</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>Gegevens van gunning van toelage</label>
+      <section>Grantmaking Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Household Lightning Layout</layout>
+    <sections>
+      <label>Velden</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Adres</label>
+      <section>Address</section>
+    </sections>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totalen van donatie</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Lidmaatschapsgegevens</label>
+      <section>Membership Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>___NAMESPACE___Organization Layout</layout>
+    <sections>
+      <label>Velden</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Adres</label>
+      <section>Address</section>
+    </sections>
+    <sections>
+      <label>Gegevens van donatie</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totalen van donatie</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Gegevens van overeenkomende gift</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>Lidmaatschapsgegevens</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>Gegevens van gunning van toelage</label>
+      <section>Grantmaking Information</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

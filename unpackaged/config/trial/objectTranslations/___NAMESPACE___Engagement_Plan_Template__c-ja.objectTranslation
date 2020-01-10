@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <nameFieldLabel>エンゲージメント計画テンプレート名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>エンゲージメント計画テンプレート名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>エンゲージメント計画テンプレート</value>
+  </caseValues>
+</CustomObjectTranslation>
