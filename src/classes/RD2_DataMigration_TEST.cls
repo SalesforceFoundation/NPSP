@@ -41,7 +41,7 @@ private class RD2_DataMigration_TEST {
     private static final Date DATE_ESTABLISHED = TODAY.addMonths(-3);
     private static final Decimal AMOUNT_VALUE = 100;
     private static String LOG_CONTEXT = 'RunDataMigrationTest';
-    private static Integer MIGRATION_INSTALLMENT_NUMBER = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER;
+    private static Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
@@ -1163,7 +1163,7 @@ private class RD2_DataMigration_TEST {
 
         opp = oppById.get(opps[3].Id);
         System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'The next future Open Opp should be Closed Lost');
-        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER, opp.Recurring_Donation_Installment_Number__c, 
+        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER_FLAG, opp.Recurring_Donation_Installment_Number__c, 
             'The Closed Lost Opp should have the Installment Number overriden');
         System.assertEquals(getLogContextMigration(jobId), opp.Closed_Lost_Reason__c, 'Closed Lost Reason should indicate migration');
 
@@ -1233,7 +1233,7 @@ private class RD2_DataMigration_TEST {
 
         opp = oppById.get(opps[3].Id);
         System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'The next future Open Opp should be Closed Lost');
-        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER, opp.Recurring_Donation_Installment_Number__c, 
+        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER_FLAG, opp.Recurring_Donation_Installment_Number__c, 
             'The Closed Lost Opp should have the Installment Number overriden');
         System.assertEquals(getLogContextMigration(jobId), opp.Closed_Lost_Reason__c, 'Closed Lost Reason should indicate migration');
 

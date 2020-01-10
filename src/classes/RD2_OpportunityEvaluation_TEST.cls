@@ -44,7 +44,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
 
-    public static final Integer MIGRATION_INSTALLMENT_NUMBER = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER;
+    public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
     /****
     * @description Creates data required for unit tests
@@ -442,7 +442,7 @@ private class RD2_OpportunityEvaluation_TEST {
         insert rd;
 
         insert getOpportunityBuilder(rd)
-            .withInstallmentNumber(MIGRATION_INSTALLMENT_NUMBER)
+            .withInstallmentNumber(MIGRATION_INSTALLMENT_NUMBER_FLAG)
             .withClosedLostStage()
             .withCloseDate(nextCloseDate)
             .build();

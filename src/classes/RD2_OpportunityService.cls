@@ -36,7 +36,12 @@
 */
 public with sharing class RD2_OpportunityService {
 
-    public static final Integer MIGRATION_INSTALLMENT_NUMBER = 0;
+    /***
+     * @description A flag to mark Closed Lost Opps that are voided by the data migration. 
+     * The flag is used to exclude (ignore) such Opps by the Opp service
+     * when determining if the next Opp with the same Close Date can be created.
+     */
+    public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = 0;
 
     /***
     * @description Recurring Donation custom settings
@@ -143,7 +148,11 @@ public with sharing class RD2_OpportunityService {
 
 
     /***
-    * @description Indicates if the Opportunity should be created
+    * @description Indicates if the Opportunity can be created. The Opp gets the green light
+    * when there is no open/closed Opp with the same Close Date *except* when
+    * the Opp was Closed Lost during data migration to the enhanced (RD2) format. In that case,
+    * the Closed Lost Opp will be ignored and the new Opp with the same Close Date can be created.
+    *
     * @param newOpp Opportunity just built but not created yet
     * @param existingOpps Existing Opportunities on the Recurring Donation
     * @return Boolean
@@ -153,7 +162,7 @@ public with sharing class RD2_OpportunityService {
             if (newOpp.CloseDate == opp.CloseDate) {
 
                 Boolean isClosedLostInMigration = opp.isClosed && !opp.IsWon 
-                    && opp.Recurring_Donation_Installment_Number__c == MIGRATION_INSTALLMENT_NUMBER;
+                    && opp.Recurring_Donation_Installment_Number__c == MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
                 return isClosedLostInMigration;
             }

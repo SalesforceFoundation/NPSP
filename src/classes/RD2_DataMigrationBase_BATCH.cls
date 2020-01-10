@@ -41,7 +41,12 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
     public static final String LOG_CONTEXT_DRY_RUN = 'RDValidateMigration:';
     public static final String LOG_EXCEPTION_ERROR_TYPE = 'Data Migration Exception';
 
-    public static final Integer MIGRATION_INSTALLMENT_NUMBER = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER;
+    /**
+     * @description A flag to mark Closed Lost Opps that are voided by the data migration. 
+     * The flag is used to exclude (ignore) such Opps by the Opp service
+     * when determining if the next Opp with the same Close Date can be created.
+     */
+    public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
     /**
     * @description Contains Recurring Donation custom settings
@@ -318,7 +323,11 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
         } else if (rdSettings.npe03__Open_Opportunity_Behavior__c == RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()) {
             for (Opportunity opp : opps) {
                 opp.StageName = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
-                opp.Recurring_Donation_Installment_Number__c = MIGRATION_INSTALLMENT_NUMBER;
+
+                //Overwrite the Opp Installment Number so this Opp can be recognized and excluded 
+                //by RD2 Opp processing services when determining the next Opp with the same Close Date on the Recurring Donation
+                opp.Recurring_Donation_Installment_Number__c = MIGRATION_INSTALLMENT_NUMBER_FLAG;
+                //Indicate the Opp was set as Closed Lost due to switching to the new enhanced (RD2) processing
                 opp.Closed_Lost_Reason__c = logContext;
             }
 
