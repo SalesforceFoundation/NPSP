@@ -68,9 +68,9 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
-        dataImportObjectInfo({ objectData, error }) {
-            if (objectData) {
-                this.buildRequiredFieldsMessage(objectData);
+        dataImportObjectInfo({ data, error }) {
+            if (data) {
+                this.buildRequiredFieldsMessage(data);
             }
         }
 
