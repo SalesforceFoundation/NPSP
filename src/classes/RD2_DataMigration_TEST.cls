@@ -1452,6 +1452,29 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(0, batch.totalRecordsFailed, 'Total Records Failed should match');
     }
 
+    /**
+     * @description Verifies Recurring Donation with no Open Opportunity 
+     * does not have new Opps created during data migration
+     */
+    @IsTest
+    private static void shouldNotCreateNewOppWhenActiveRDHasNoOpp() {
+        setCloseActionSettingsToClosedLost();
+
+        npe03__Recurring_Donation__c rd = createLegacyRecurringDonationNoOpps();
+
+        Id jobId = runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(0, opps.size(), 'No Opportunity should be created: ' + opps);
+
+        assertEnhancedFormat(getRecords());
+
+        assertBatchSummarySuccess(jobId, 1);
+    }
+
 
     /**
      * @description Verifies Recurring Donations and their Open Opportunities are attempted to be migrated
@@ -1580,15 +1603,18 @@ private class RD2_DataMigration_TEST {
             .withDayOfMonth(dayOfMonth)
             .build();
 
+        Exception actualException;
         try {
             insert rd;
         } catch (Exception e) {
             if (e.getMessage().contains('INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST')) {                
                 return; //do not execute the test when the org has RD2 config deployed
             } else {
-                throw e;
+                actualException = e;
             }
         }
+
+        System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
 
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
@@ -1713,8 +1739,6 @@ private class RD2_DataMigration_TEST {
             .withDefaultValues()
             .withContact(contactId)
             .withAmount(AMOUNT_VALUE)
-            .withInstallmentPeriodMonthly()
-            .withInstallmentFrequency(1)
             .withDayOfMonth('1');
     }
 
@@ -1750,7 +1774,6 @@ private class RD2_DataMigration_TEST {
     private static npe03__Custom_Installment_Settings__c createCustomInstallmentSettings(
         String installmentIncrement, Integer installmentFrequency
     ) {
-
         npe03__Custom_Installment_Settings__c installment = new npe03__Custom_Installment_Settings__c(
             npe03__Increment__c = installmentIncrement,
             npe03__Value__c = installmentFrequency,
@@ -1797,7 +1820,6 @@ private class RD2_DataMigration_TEST {
      * @return void
      */
     private static void setCloseActionSettings(String closeAction) {
-
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 npe03__Open_Opportunity_Behavior__c = closeAction,

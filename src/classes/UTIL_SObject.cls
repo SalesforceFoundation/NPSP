@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019 Salesforce.org
+    Copyright (c) 2020 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,49 +29,35 @@
 */
 /**
 * @author Salesforce.org
-* @date 2019
-* @group Recurring Donations
-* @description Queueable Services for Enhanced Recurring Donations
+* @date 2020
+* @group Utility
+* @description SObject utility methods
 *
 */
-public class RD2_QueueableService {
+public with sharing class UTIL_SObject {
 
-    /**
-     * @description Queueable service to process Installment Opportunities for a Recurring Donation
-     * that was inserted or modified.
-     */
-    public class EvaluateInstallmentOpportunities implements Queueable {
-        Set<Id> rdIds;
-
-        /***
-         * @description Constructor
-         * @param rdIds - the RD Ids to process in this Queueable action
-         */
-        public EvaluateInstallmentOpportunities(Set<Id> rdIds) {
-            this.rdIds = rdIds;
+    /***
+    * @description Extracts SObject Ids from a list of SObjects
+    * @param records List of SObject records
+    * @return Set<Id> Record Ids
+    */
+    public static Set<Id> extractIds(List<SObject> records) {
+        if (records == null || records.isEmpty()) {
+            return new Set<Id>();
         }
-
-        /**
-         * @description Execute method called when the Queueable runs. Delegates to the
-         * evaluation service
-         * @param context queuableContext
-         */
-        public void execute(QueueableContext context) {
-            if (rdIds == null || rdIds.isEmpty()) {
-                return;
-            }
-
-            executeOppEvaluationService();
-        }
-
-        /**
-         * @description Delegate processing of the Recurring Donations to the Evaluation Service
-         */
-        public void executeOppEvaluationService() {
-            new RD2_OpportunityEvaluationService()
-                .withRds(rdIds)
-                .evaluateOpportunities();
-        }
+        return new Map<Id, SObject>(records).keySet();
     }
 
+    /***
+    * @description Extracts SObject Ids from a set of SObjects
+    * @param records Set of SObject records
+    * @return Set<Id> Record Ids
+    */
+    public static Set<Id> extractIds(Set<SObject> records) {
+        if (records == null || records.isEmpty()) {
+            return new Set<Id>();
+        }
+
+        return extractIds(new List<SObject>(records));
+    }
 }
