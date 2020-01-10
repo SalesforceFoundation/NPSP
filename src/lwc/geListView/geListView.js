@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { dispatch, handleError, format, generateId, sort, deepClone, showToast } from 'c/utilTemplateBuilder';
-import CumulusStaticResources from 'c/utilCumulusStaticResources';
+import LibsMoment from 'c/libsMoment';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.upsertCustomColumnHeaders';
@@ -109,7 +109,7 @@ export default class geListView extends LightningElement {
     }
 
     get lastUpdatedOn() {
-        const isMomentLoaded = CumulusStaticResources && CumulusStaticResources.moment;
+        const isMomentLoaded = LibsMoment && LibsMoment.moment;
         const hasRecords = this.records && this.records.length > 0;
         if (isMomentLoaded && hasRecords) {
             let records = deepClone(this.records);
@@ -117,7 +117,7 @@ export default class geListView extends LightningElement {
                 return new Date(b.LastModifiedDate) - new Date(a.LastModifiedDate);
             });
 
-            const UPDATED_TIME_AGO = [CumulusStaticResources.moment(records[0].LastModifiedDate).fromNow()];
+            const UPDATED_TIME_AGO = [LibsMoment.moment(records[0].LastModifiedDate).fromNow()];
             return GeLabelService.format(this.CUSTOM_LABELS.geTextListViewUpdatedAgo, UPDATED_TIME_AGO);
         }
         return '';
@@ -185,7 +185,7 @@ export default class geListView extends LightningElement {
 
     init = async () => {
         // Initialize static resources if not already initialized (moment.js)
-        await CumulusStaticResources.init(this);
+        await LibsMoment.init(this);
 
         // Set 'Available Fields' options for the column headers
         this.options = this.buildFieldsToDisplayOptions(this.objectInfo.fields);
@@ -608,12 +608,12 @@ export default class geListView extends LightningElement {
                     record[key] = record[key].Name;
                 }
 
-                const datetimeObject = CumulusStaticResources.moment(
+                const datetimeObject = LibsMoment.moment(
                     record[key],
-                    CumulusStaticResources.moment.ISO_8601, true);
+                    LibsMoment.moment.ISO_8601, true);
 
                 if (datetimeObject.isValid()) {
-                    record[key] = CumulusStaticResources.moment(record[key]).format(DATE_FORMAT);
+                    record[key] = LibsMoment.moment(record[key]).format(DATE_FORMAT);
                 }
             });
 
