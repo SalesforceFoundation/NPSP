@@ -670,10 +670,11 @@ private class PMT_PaymentWizard_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Verify if Warning message is displayed when Automatic Payment is disabled in Payment custom settings
+    * @description Verify if Warning message is displayed in Schedule Payment when Automatic Payment is disabled
+    * in Payment custom settings
     */
     @isTest
-    private static void shouldDisplayWarningMsgWhenAutomaticPaymentDisabled() {
+    private static void shouldDisplayWarningInSchedulePaymentWhenAutoPaymentDisabled() {
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)
         );
@@ -695,6 +696,34 @@ private class PMT_PaymentWizard_TEST {
         System.assertEquals(opp.id, controller.currentOpp.id);
         UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.pmtWizardPaymentsDisabledTitle, ApexPages.Severity.WARNING);
 
+    }
+
+    /*********************************************************************************************************
+    * @description Verify if Warning message is displayed in WriteOff Payment when Automatic Payment is disabled
+    * in Payment custom settings
+    */
+    @isTest
+    private static void shouldDisplayWarningInWriteOffPaymentWhenAutoPaymentDisabled() {
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)
+        );
+
+        Opportunity opp = createPledgedOpportunity(100);
+
+        Test.startTest();
+
+        PageReference pageRef = Page.PMT_PaymentWizard;
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
+        ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_WRITEOFF);
+
+        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+
+        Test.stopTest();
+
+        System.assertEquals(opp.id, controller.currentOpp.id);
+        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.pmtWizardPaymentsDisabledTitle, ApexPages.Severity.WARNING);
 
     }
 
