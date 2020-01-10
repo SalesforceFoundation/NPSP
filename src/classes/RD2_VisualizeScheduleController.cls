@@ -117,15 +117,7 @@ public with sharing class RD2_VisualizeScheduleController {
                     }
                     first1stAnd15thFound = true;
                 }
-
-                Schedule activeSched = new Schedule(num++, rd, sc);
-                if (sc.StartDate__c <= scheduleService.currentDate) {
-                    activeSched.isCurrent = true;
-                }
-                if (sc.InstallmentPeriod__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-                    activeSched.dayOfMonth = null;
-                }
-                activeSchedules.add(activeSched);
+                activeSchedules.add(new Schedule(num++, rd, sc));
             }
         }
 
@@ -186,17 +178,17 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public String dayOfMonth;
         @AuraEnabled public String currencyIsoCode;
 
-        public Schedule(Integer num, npe03__Recurring_Donation__c rd, RecurringDonationSchedule__c rds) {
+        public Schedule(Integer num, npe03__Recurring_Donation__c rd, RecurringDonationSchedule__c schedule) {
             this.scheduleNumber = num;
-            this.isCurrent = false;
-            this.amount = rds.InstallmentAmount__c;
-            this.paymentMethod = rds.PaymentMethod__c;
-            this.campaign = rds.Campaign__r.Name;
-            this.startDate = rds.StartDate__c;
-            this.endDate = rds.EndDate__c;
-            this.period = rds.InstallmentPeriod__c;
-            this.frequency = Integer.valueOf(rds.InstallmentFrequency__c);
-            this.dayOfMonth = rds.DayOfMonth__c;
+            this.isCurrent = schedule.StartDate__c <= scheduleService.currentDate ? true : false;
+            this.amount = schedule.InstallmentAmount__c;
+            this.paymentMethod = schedule.PaymentMethod__c;
+            this.campaign = schedule.Campaign__r.Name;
+            this.startDate = schedule.StartDate__c;
+            this.endDate = schedule.EndDate__c;
+            this.period = schedule.InstallmentPeriod__c;
+            this.frequency = schedule.InstallmentFrequency__c != null ? Integer.valueOf(schedule.InstallmentFrequency__c) : null;
+            this.dayOfMonth = schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? schedule.DayOfMonth__c : null;
             this.currencyIsoCode = getCurrencyCode(rd);
         }
     }
