@@ -1835,7 +1835,10 @@
         <members>commonAssistiveWarning</members>
         <members>commonBack</members>
         <members>commonCancel</members>
+        <members>commonClone</members>
         <members>commonDefaultValue</members>
+        <members>commonDelete</members>
+        <members>commonEdit</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
         <members>commonNext</members>
@@ -1956,6 +1959,7 @@
         <members>geTextListViewItemsCount</members>
         <members>geTextListViewSortedBy</members>
         <members>geTextListViewUpdatedAgo</members>
+        <members>geToastListViewUpdated</members>
         <members>geToastSaveFailed</members>
         <members>geToastSelectActiveSection</members>
         <members>geToastTemplateCreateSuccess</members>

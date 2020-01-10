@@ -4070,12 +4070,36 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Cancel</value>
     </labels>
     <labels>
+        <fullName>commonClone</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Clone</shortDescription>
+        <value>Clone</value>
+    </labels>
+    <labels>
         <fullName>commonDefaultValue</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Default Value</shortDescription>
         <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>commonDelete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>commonEdit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Edit</shortDescription>
+        <value>Edit</value>
     </labels>
     <labels>
         <fullName>commonError</fullName>
@@ -5065,6 +5089,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Displays how long ago the last record in the current list view was updated</shortDescription>
         <!-- &#8226; is the character entity reference for a center dot -->
         <value>&#8226; Updated {0}</value>
+    </labels>
+    <labels>
+        <fullName>geToastListViewUpdated</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>List view successfully updated</shortDescription>
+        <value>List view updated.</value>
     </labels>
     <labels>
         <fullName>geToastSaveFailed</fullName>
