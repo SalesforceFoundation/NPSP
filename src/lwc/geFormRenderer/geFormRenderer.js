@@ -96,11 +96,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleSave(event) {
-        event.target.disabled = true;
-        const enableSaveButton = function() {
-            this.disabled = false;
-        }.bind(event.target);
-
         this.clearErrors();
 
         // TODO: Pass the actual Data Import record, and navigate to the new Opportunity
@@ -110,6 +105,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if(!this.isFormValid(sectionsList)){
             return;
         }
+
+        // disable the Save button
+        event.target.disabled = true;
+        const enableSaveButton = function() {
+            this.disabled = false;
+        }.bind(event.target);
 
         // show the spinner
         this.toggleSpinner();
