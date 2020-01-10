@@ -15,19 +15,70 @@
             </div>
         </header>
 
-        <div class="slds-card__body slds-card__body_extension">
+        <div class="slds-card__body slds-p-horizontal_large slds-card__body_extension">
             <template if:true={isLoading}>
                 <c-util-stencil row-count="6"
                                 column-count="1">
                 </c-util-stencil>
             </template>
             <template if:false={isLoading}>
-                <p class="slds-p-horizontal_small">You're a 🧙‍♂️ Harry!</p>
+                <div class="slds-grid slds-wrap">
+                    <div class={cssClassStep0}>
+                        <p class="slds-p-horizontal_small">You're a 🧙‍♂️ Harry!</p>
+                        <lightning-combobox name="Templates"
+                                            label="Status"
+                                            value={selectedTemplateId}
+                                            placeholder="Select a Template"
+                                            options={templateOptions}
+                                            onchange={handleTemplateChange}
+                                            class=""
+                                            required>
+                        </lightning-combobox>
+                    </div>
+                    <div class={cssClassStep1}>
+                        <p class="slds-p-horizontal_small">You're a 🤖 Harry!</p>
+                        <template for:each={selectedBatchHeaderFields}
+                                  for:item='batchField'>
+                            <c-util-input key={batchField.apiName}
+                                          type={batchField.dataType}
+                                          field-api-name={batchField.apiName}
+                                          label={batchField.customLabel}
+                                          default-value={batchField.defaultValue}
+                                          required={batchField.required}
+                                          object-info={dataImportBatchInfo}>
+                            </c-util-input>
+                        </template>
+                    </div>
+                    <div class={cssClassStep2}>
+                        <p class="slds-p-horizontal_small">You're a 🍔 Harry!</p>
+                        <template for:each={sections}
+                                  for:item='section'>
+                            <h1 key={section.id} class="slds-text-heading_medium slds-border_bottom">
+                                {section.label}
+                            </h1>
+                            <ul key={section.id}
+                                class="slds-list--dotted">
+                                <template for:each={section.elements}
+                                          for:item='element'>
+                                    <li key={element.id}>{element.customLabel}</li>
+                                    <c-util-input key={element.apiName}
+                                                  type={element.dataType}
+                                                  field-api-name={element.apiName}
+                                                  label={element.customLabel}
+                                                  default-value={element.defaultValue}
+                                                  required={element.required}>
+                                    </c-util-input>
+                                </template>
+                            </ul>
+                        </template>
+                    </div>
+                </div>
             </template>
         </div>
+
         <footer class="slds-modal__footer slds-clearfix">
             <div class="slds-grid slds-wrap slds-grid_vertical-align-center slds-p-vertical_x-small">
-                <div class="slds-size_2-of-12">
+                <div class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_3-of-12">
                     <template if:true={showBackButton}>
                         <div class="slds-float_left">
                             <lightning-button label={CUSTOM_LABELS.commonBack}
@@ -38,10 +89,12 @@
                         </div>
                     </template>
                 </div>
-                <div class="slds-size_8-of-12">
+                <div
+                     class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_6-of-12 slds-p-around_x-small">
                     <lightning-progress-indicator current-step={step}
                                                   type="base"
-                                                  variant="base">
+                                                  variant="base"
+                                                  tabindex="-1">
                         <lightning-progress-step label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
                                                  aria-label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
                                                  value={steps.first}>
@@ -56,29 +109,28 @@
                         </lightning-progress-step>
                     </lightning-progress-indicator>
                 </div>
-                <div class="slds-size_2-of-12">
-                    <div class="slds-float_right">
-                        <lightning-button label={CUSTOM_LABELS.commonCancel}
-                                          title={CUSTOM_LABELS.commonCancel}
-                                          variant="neutral"
-                                          class="slds-m-right_x-small"
-                                          onclick={handleCancel}>
+                <div class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_3-of-12">
+                    <lightning-button label={CUSTOM_LABELS.commonCancel}
+                                      title={CUSTOM_LABELS.commonCancel}
+                                      variant="neutral"
+                                      class="slds-m-right_small"
+                                      onclick={handleCancel}>
+                    </lightning-button>
+                    <template if:false={showSaveButton}>
+                        <lightning-button label={CUSTOM_LABELS.commonNext}
+                                          title={CUSTOM_LABELS.commonNext}
+                                          variant="brand"
+                                          disabled={isNextButtonDisabled}
+                                          onclick={handleNext}>
                         </lightning-button>
-                        <template if:false={showSaveButton}>
-                            <lightning-button label={CUSTOM_LABELS.commonNext}
-                                              title={CUSTOM_LABELS.commonNext}
-                                              variant="brand"
-                                              onclick={handleNext}>
-                            </lightning-button>
-                        </template>
-                        <template if:true={showSaveButton}>
-                            <lightning-button label={CUSTOM_LABELS.commonSave}
-                                              title={CUSTOM_LABELS.commonSave}
-                                              variant="brand"
-                                              onclick={handleSave}>
-                            </lightning-button>
-                        </template>
-                    </div>
+                    </template>
+                    <template if:true={showSaveButton}>
+                        <lightning-button label={CUSTOM_LABELS.commonSave}
+                                          title={CUSTOM_LABELS.commonSave}
+                                          variant="brand"
+                                          onclick={handleSave}>
+                        </lightning-button>
+                    </template>
                 </div>
             </div>
         </footer>

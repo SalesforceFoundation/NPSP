@@ -368,7 +368,8 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             defaultValue: null,
             dataType: fieldMapping.Target_Field_Data_Type,
             dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
-            elementType: fieldMapping.Element_Type
+            elementType: fieldMapping.Element_Type,
+            objectApiName: objectMapping.Target_Object_API_Name
         }
     }
 

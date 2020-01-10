@@ -1,6 +1,5 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
 import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
@@ -34,12 +33,18 @@ const TEMPLATES_TABLE_ACTIONS = [
     { label: GeLabelService.CUSTOM_LABELS.commonDelete, name: DELETE }
 ];
 
+const BATCHES_TABLE_ACTIONS = [
+    { label: 'Edit', name: 'edit' },
+    { label: 'Delete', name: 'delete' }
+];
+
 export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @track templates;
+    // TODO: Move this tracked property to a getter
     @track templatesTableActions = TEMPLATES_TABLE_ACTIONS;
     @track isAccessible = true;
     @track isLoading = true;
@@ -74,6 +79,10 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     get sortTemplatesDirection() {
         return TEMPLATES_LIST_VIEW_SORT_DIRECTION;
+    }
+
+    get batchesTableActions() {
+        return BATCHES_TABLE_ACTIONS;
     }
 
     get geListViewComponent() {
@@ -115,13 +124,14 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         console.log('Open New Batch Wizard');
         const detail = {
             componentProperties: {
+                recordId: event.record ? event.record.Id : undefined,
                 dedicatedListenerEventName: 'geBatchWizardEvent'
             },
             modalProperties: {
                 cssClass: 'slds-modal_large',
                 componentName: 'geBatchWizard',
                 showCloseButton: true,
-                closeCallback: function() {
+                closeCallback: function () {
                     console.log('Passed a closeCallback');
                 }
             }
@@ -139,7 +149,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
         if (this.isAccessible) {
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
-            this.templates = await getAllFormTemplates();
             this.isLoading = false;
         }
     }
@@ -180,8 +189,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 this.geListViewComponent.setProperty(IS_LOADING, true);
 
                 cloneFormTemplate({ id: row.Id })
-                    .then(clonedTemplate => {
-                        this.templates = [...this.templates, clonedTemplate];
+                    .then((clonedTemplate) => {
                         this.geListViewComponent.setProperty(IS_LOADING, false);
                         this.geListViewComponent.refresh();
                     })
@@ -206,6 +214,28 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                     .catch(error => {
                         handleError(error);
                     });
+                break;
+            default:
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method handles actions for the Batches list view table.
+    *
+    * @param {object} event: Event received from the list view component
+    * containing action details.
+    */
+    handleBatchesTableRowAction(event) {
+        const actionName = event.detail.action.name;
+        const row = event.detail.row;
+
+        switch (actionName) {
+            case 'edit':
+                console.log('row: ', JSON.stringify(row));
+                event.record = row;
+                this.openNewBatchWizard(event);
+                break;
+            case 'delete':
                 break;
             default:
         }

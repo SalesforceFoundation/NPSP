@@ -49,7 +49,7 @@
     </template>
     <template if:false={isLoading}>
         <lightning-datatable key-field="id"
-                             data={records}
+                             data={recordsToDisplay}
                              columns={columns}
                              hide-checkbox-column
                              onrowaction={handleRowAction}

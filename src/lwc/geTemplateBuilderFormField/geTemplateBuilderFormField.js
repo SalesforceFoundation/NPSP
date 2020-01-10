@@ -163,6 +163,14 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return this.field.dataType ? inputTypeByDescribeType[this.field.dataType.toLowerCase()] : TEXT;
     }
 
+    get formatter() {
+        if (this.field.dataType === 'Currency' ||
+            this.field.dataType === 'Percent' ||
+            this.field.dataType === 'Decimal') {
+            return this.field.dataType;
+        }
+    }
+
     get defaultValueForCheckbox() {
         return (this.field.defaultValue === TRUE || this.field.defaultValue === true) ? true : false;
     }

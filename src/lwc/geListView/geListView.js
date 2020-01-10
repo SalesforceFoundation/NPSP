@@ -71,6 +71,13 @@ export default class geListView extends LightningElement {
     columnHeadersByFieldApiName;
     isLoaded = false;
 
+    get recordsToDisplay() {
+        if (this.actions && this.columns.length === 1) {
+            return [];
+        }
+        return this.records;
+    }
+
     get hasCustomTitle() {
         return this.title ? true : false;
     }
@@ -93,8 +100,8 @@ export default class geListView extends LightningElement {
     }
 
     get recordCount() {
-        const ITEM_COUNT = [this.records.length];
-        return this.records.length !== 1 ?
+        const ITEM_COUNT = [this.recordsToDisplay.length];
+        return this.recordsToDisplay.length !== 1 ?
             GeLabelService.format(this.CUSTOM_LABELS.geTextListViewItemsCount, ITEM_COUNT)
             : GeLabelService.format(this.CUSTOM_LABELS.geTextListViewItemCount, ITEM_COUNT);
     }
@@ -132,7 +139,7 @@ export default class geListView extends LightningElement {
     }
 
     get hasRecords() {
-        return this.records && this.records.length > 0 ? true : false;
+        return this.recordsToDisplay && this.recordsToDisplay.length > 0 ? true : false;
     }
 
     @api
@@ -639,11 +646,6 @@ export default class geListView extends LightningElement {
         } else {
             url = `/lightning/r/${this.objectApiName}/{0}/view`;
         }
-
-        const builderTabApiName =
-            TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
-
-        url = `/lightning/n/${builderTabApiName}?c__recordId={0}`;
 
         return url;
     }

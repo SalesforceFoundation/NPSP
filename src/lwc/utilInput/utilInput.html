@@ -1,0 +1,96 @@
+<template>
+    <template if:true={isLightningRichText}>
+        <lightning-input-rich-text aria-label="default value"
+                                   label={uiLabel}
+                                   required={isRequired}
+                                   class="slds-m-around_none"
+                                   data-name="defaultValue"
+                                   onclick={stopPropagation}
+                                   value={defaultValue}
+                                   variant="label-stacked">
+        </lightning-input-rich-text>
+    </template>
+
+    <template if:true={isLightningTextarea}>
+        <lightning-textarea aria-label="default value"
+                            label={uiLabel}
+                            required={isRequired}
+                            class="slds-m-around_none"
+                            data-name="defaultValue"
+                            onblur={handleOnBlur}
+                            onclick={stopPropagation}
+                            value={defaultValue}
+                            variant="label-stacked">
+        </lightning-textarea>
+    </template>
+
+    <template if:true={isLightningCombobox}>
+        <c-ge-form-field-picklist class-name="slds-m-around_none"
+                                  label={uiLabel}
+                                  required={isRequired}
+                                  field-name={targetFieldApiName}
+                                  object-name={targetObjectApiName}
+                                  object-describe-info={objectDescribeInfo}
+                                  onchange={handleChangeCombobox}
+                                  value={defaultValue}
+                                  variant="label-stacked">
+        </c-ge-form-field-picklist>
+    </template>
+
+    <template if:true={isLightningCheckbox}>
+        <lightning-input aria-label="default value"
+                         label={uiLabel}
+                         required={isRequired}
+                         checked={defaultValueForCheckbox}
+                         class="slds-m-top_small"
+                         data-name="defaultValue"
+                         onchange={handleOnBlur}
+                         onclick={stopPropagation}
+                         type="checkbox">
+        </lightning-input>
+    </template>
+
+    <template if:true={isLightningSearch}>
+        <lightning-input aria-label="default value"
+                         label={uiLabel}
+                         required={isRequired}
+                         class="slds-m-around_none"
+                         data-name="defaultValue"
+                         onblur={handleOnBlur}
+                         onclick={stopPropagation}
+                         onkeyup={handleSearch}
+                         type="search"
+                         value={defaultValue}
+                         variant="label-stacked">
+        </lightning-input>
+    </template>
+
+    <template if:true={isLightningDateOrDatetime}>
+        <lightning-input aria-label="default value"
+                         label={uiLabel}
+                         required={isRequired}
+                         class="slds-m-around_none"
+                         data-name="defaultValue"
+                         onchange={handleOnBlur}
+                         onclick={stopPropagation}
+                         type={lightningInputType}
+                         value={defaultValue}
+                         variant="label-stacked">
+        </lightning-input>
+    </template>
+
+    <template if:true={isBaseLightningInput}>
+        <lightning-input aria-label="default value"
+                         label={uiLabel}
+                         required={isRequired}
+                         class="slds-m-around_none"
+                         data-name="defaultValue"
+                         onblur={handleOnBlur}
+                         onclick={stopPropagation}
+                         type={lightningInputType}
+                         formatter={formatter}
+                         value={defaultValue}
+                         variant="label-stacked">
+        </lightning-input>
+    </template>
+</template>
