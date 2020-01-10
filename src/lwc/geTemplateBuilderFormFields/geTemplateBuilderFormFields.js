@@ -1,7 +1,8 @@
-import { LightningElement, track, api } from 'lwc';
+import { LightningElement, track, api, wire } from 'lwc';
 import { findIndexByProperty, mutable, generateId, dispatch, showToast } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 // Import schema for default form field element objects
 import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
@@ -21,8 +22,9 @@ import ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__
 
 const WARNING = 'warning';
 const DONATION_DONOR_LABEL = 'Donation Donor';
-const REQUIRED_FORM_FIELDS_MESSAGE = 'Account1 Imported, Account1 Name, Contact1 Imported, Contact1 Last Name';
-
+const COMMA_CHARACTER = ', ';
+const PERIOD_CHARACTER = '.';
+let REQUIRED_FORM_FIELDS_MESSAGE = '';
 
 // Default form fields to add to new templates
 const DEFAULT_FORM_FIELDS = {
@@ -64,21 +66,28 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     @track hasErrors = false;
     @track errors;
 
+
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
+        dataImportObjectInfo({ objectData, error }) {
+            if (objectData) {
+                this.buildRequiredFieldsMessage(objectData);
+            }
+        }
+
     @api
     validate() {
         let isValid;
         let objectMappingsWithMissingRequiredFields = new Set();
         let missingRequiredFieldMappings = [];
-
         const elements = this.template.querySelectorAll('lightning-input');
-        let counter = 0;
+        let countOfConditionallyRequiredFormFields = 0;
 
         elements.forEach(el => {
             if (REQUIRED_FORM_FIELDS.includes(el.getAttribute('data-source-api-name')) && el.checked) {
-              counter++;
+              countOfConditionallyRequiredFormFields++;
             }
-            if (el.required && !el.checked ||
-                el.getAttribute('data-source-api-name') === DONATION_DONOR_INFO.fieldApiName && !el.checked) {
+            if (!el.checked && (el.required ||
+                el.getAttribute('data-source-api-name') === DONATION_DONOR_INFO.fieldApiName)) {
                 objectMappingsWithMissingRequiredFields.add(el.getAttribute('data-object-mapping'));
                 let objectMappingLabel = el.getAttribute('data-object-mapping-label');
                 missingRequiredFieldMappings.push(`${objectMappingLabel}: ${el.label}`);
@@ -86,7 +95,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
             this.validateGiftField(el);
         });
-        if (counter === 0) {
+        if (countOfConditionallyRequiredFormFields === 0) {
             let requiredGroupFieldsMessage = GeLabelService.format(
                 this.CUSTOM_LABELS.geErrorPageLevelMissingRequiredGroupFields,
                 [REQUIRED_FORM_FIELDS_MESSAGE]);
@@ -634,5 +643,22 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     */
     handleBodyReadMore() {
         this.isReadMoreActive = true;
+    }
+
+    /*******************************************************************************
+     * @description Method generates the required fields text attached to the validation message.
+     *
+     * @param {object} objectData: Returned Object Schema
+     */
+    buildRequiredFieldsMessage(objectData){
+        for (let i= 0; i< REQUIRED_FORM_FIELDS.length; i++) {
+            let character;
+            if (i < REQUIRED_FORM_FIELDS.length - 1) {
+                character = COMMA_CHARACTER;
+            }else if ( i === REQUIRED_FORM_FIELDS.length - 1) {
+                character = PERIOD_CHARACTER;
+            }
+            REQUIRED_FORM_FIELDS_MESSAGE += objectData.fields[REQUIRED_FORM_FIELDS[i]].label + character;
+        }
     }
 }
