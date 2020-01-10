@@ -3,7 +3,7 @@ import { loadScript } from 'lightning/platformResourceLoader';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import CUMULUS_STATIC_RESOURCES from '@salesforce/resourceUrl/CumulusStaticResources';
 
-class utilCumulusStaticResources {
+class LibsMoment {
     isInitialized = false;
     moment;
 
@@ -33,4 +33,4 @@ class utilCumulusStaticResources {
     }
 }
 
-export default new utilCumulusStaticResources();
+export default new LibsMoment();

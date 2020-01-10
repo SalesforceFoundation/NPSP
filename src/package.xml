@@ -3265,9 +3265,9 @@
         <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>geTemplates</members>
+        <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
-        <members>utilCumulusStaticResources</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
         <members>utilIllustration</members>
