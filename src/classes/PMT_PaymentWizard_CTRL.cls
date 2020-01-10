@@ -188,7 +188,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         if (getPaymentsSettings() == null) {
             return false;
         }
-        return getPaymentsSettings().npe01__Payments_Enabled__c;
+        return getPaymentsSettings().npe01__Payments_Enabled__c == true;
 
     }
 
