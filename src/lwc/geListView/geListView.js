@@ -343,8 +343,8 @@ export default class geListView extends LightningElement {
                 fieldDescribe.referenceToInfos.length >= 1;
 
             if (isRelationshipField) {
-                const lastWordIndex = label.lastIndexOf(" ");
-                label = label.substring(0, lastWordIndex);
+                //const lastWordIndex = label.lastIndexOf(" ");
+                //label = label.substring(0, lastWordIndex);
             }
 
             options.push({
@@ -368,6 +368,7 @@ export default class geListView extends LightningElement {
         for (let i = 0; i < headerFieldApiNames.length; i++) {
             const fieldApiName = headerFieldApiNames[i];
             const fieldDescribe = this.objectInfo.fields[fieldApiName];
+            console.log('fieldDescribe: ', fieldDescribe);
             let displayColumn = {
                 fieldApiName: fieldDescribe.apiName,
                 label: fieldDescribe.label,
@@ -388,8 +389,17 @@ export default class geListView extends LightningElement {
                     const nameField = nameFields.find(field => field === NAME) || nameFields[0];
 
                     displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
-                    const lastWordIndex = displayColumn.label.lastIndexOf(" ");
-                    displayColumn.label = displayColumn.label.substring(0, lastWordIndex);
+                    //const lastWordIndex = displayColumn.label.lastIndexOf(" ");
+                    //displayColumn.label = displayColumn.label.substring(0, lastWordIndex);
+                } else {
+                    const reference = fieldDescribe.referenceToInfos[0];
+                    if (reference) {
+                        console.log('IS REFERENCE FIELD: ', fieldDescribe);
+                        const nameFields = reference.nameFields;
+                        const nameField = nameFields.find(field => field === NAME) || nameFields[0];
+
+                        displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
+                    }
                 }
             }
 
@@ -540,7 +550,7 @@ export default class geListView extends LightningElement {
 
         // Get limit
         const limitClause = `${this.limit}`;
-
+        console.log({ selectFields, sObjectApiName, whereClauses, orderByClause, limitClause });
         return { selectFields, sObjectApiName, whereClauses, orderByClause, limitClause };
     }
 
@@ -574,6 +584,7 @@ export default class geListView extends LightningElement {
 
         const isString = typeof value === 'string';
         const isNumber = typeof value === 'number';
+        const isBoolean = typeof value === 'boolean';
         let filter = `${fieldName} ${comparisonOperator} `;
 
         if (isString && filterInfo.operator === 'Contains') {
@@ -588,7 +599,7 @@ export default class geListView extends LightningElement {
         } else if (isString) {
             filter += `'${value}'`;
 
-        } else if (isNumber) {
+        } else if (isNumber || isBoolean) {
             filter += `${value}`;
 
         }
@@ -622,12 +633,19 @@ export default class geListView extends LightningElement {
                 if (datetimeObject.isValid()) {
                     record[key] = LibsMoment.moment(record[key]).format(DATE_FORMAT);
                 }
+
+                if (typeof record[key] !== 'string') {
+                    record[key] = record[key].toString();
+                }
             });
 
             record[URL] = format(recordUrl, [record.Id]);
 
             this.records = [...this.records, record];
         });
+
+        console.log('this.columns: ', deepClone(this.columns));
+        console.log('this.records: ', deepClone(this.records));
     }
 
     /*******************************************************************************

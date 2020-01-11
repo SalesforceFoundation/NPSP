@@ -1,15 +1,23 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { getRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import {
+    createRecord,
+    getRecord,
+    getRecordCreateDefaults,
+    generateRecordInputForCreate
+} from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
+import { handleError, checkNestedProperty, getNestedProperty } from 'c/utilTemplateBuilder';
+import GeLabelService from 'c/geLabelService';
 
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
-
-import GeLabelService from 'c/geLabelService';
 
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
 import DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
+import DATA_IMPORT_BATCH_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
+import DATA_IMPORT_BATH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
 import FORM_TEMPLATE_ID_INFO from '@salesforce/schema/Form_Template__c.Id';
 import FORM_TEMPLATE_NAME_INFO from '@salesforce/schema/Form_Template__c.Name';
 
@@ -29,8 +37,7 @@ export default class geBatchWizard extends LightningElement {
 
     @track step = 0;
     @track templates;
-    @track selectedTemplate;
-    @track sections;
+    @track selectedTemplateId;
     @track isLoading = true;
 
     dataImportBatchFieldInfos;
@@ -53,6 +60,9 @@ export default class geBatchWizard extends LightningElement {
     }
 
     get showBackButton() {
+        if (this.step === 1 && this.isEditMode) {
+            return false;
+        }
         return this.step > 0 ? true : false;
     }
 
@@ -66,10 +76,11 @@ export default class geBatchWizard extends LightningElement {
         } else if (this.step === 1) {
             return false;
         }
+        return false;
     }
 
     get selectedBatchHeaderFields() {
-        return this.selectedTemplate && this.selectedTemplate.batchHeaderFields ?
+        return checkNestedProperty(this.selectedTemplate, 'batchHeaderFields') ?
             this.selectedTemplate.batchHeaderFields :
             [];
     }
@@ -90,19 +101,29 @@ export default class geBatchWizard extends LightningElement {
         return this.header === this.headers[2] ? 'slds-size_1-of-1' : 'slds-hide';
     }
 
-    get selectedTemplateId() {
-        return this.selectedTemplate && this.selectedTemplate[ID] ? this.selectedTemplate[ID] : undefined;
+    get selectedTemplate() {
+        if (this.selectedTemplateId && this.templatesById) {
+            return this.templatesById[this.selectedTemplateId];
+        }
+        return undefined;
+    }
+
+    get formSections() {
+        return getNestedProperty(this.selectedTemplate, 'layout', 'sections');
+    }
+
+    get isEditMode() {
+        return this.recordId ? true : false;
     }
 
     get dataImportBatchName() {
-        return DATA_IMPORT_BATCH_INFO && DATA_IMPORT_BATCH_INFO.objectApiName ? DATA_IMPORT_BATCH_INFO.objectApiName : undefined;
+        return getNestedProperty(DATA_IMPORT_BATCH_INFO, 'objectApiName');
     }
 
     /*******************************************************************************
-    * @description Retrieves the target object's describe data. Used to get the
-    * picklist options for picklist fields. See component geFormFieldPicklist.
+    * @description Retrieves the DataImportBatch__c describe info.
     *
-    * @param {string} targetObjectApiName: Field's object api name.
+    * @param {string} dataImportBatchName: DataImportBatch__c object api name.
     */
     @wire(getObjectInfo, { objectApiName: '$dataImportBatchName' })
     wiredDataImportBatchInfo(response) {
@@ -111,27 +132,55 @@ export default class geBatchWizard extends LightningElement {
             this.dataImportBatchInfo = response.data;
 
             this.dataImportBatchFieldInfos =
-                Object.keys(this.dataImportBatchInfo.fields).map((fieldApiName) => {
-                    return {
-                        fieldApiName: fieldApiName,
-                        objectApiName: this.dataImportBatchInfo.apiName
-                    }
-                });
+                this.buildFieldDescribesForWiredMethod(
+                    this.dataImportBatchInfo.fields,
+                    this.dataImportBatchInfo.apiName);
         }
+    }
+
+    /*******************************************************************************
+    * @description Method converts field describe info into objects that the
+    * getRecord method can accept into its 'fields' parameter.
+    *
+    * @param {list} fields: List of field describe info.
+    * @param {string} objectApiName: An SObject api name.
+    */
+    buildFieldDescribesForWiredMethod(fields, objectApiName) {
+        return Object.keys(fields).map((fieldApiName) => {
+            return {
+                fieldApiName: fieldApiName,
+                objectApiName: objectApiName
+            }
+        });
     }
 
     @wire(getRecord, { recordId: '$recordId', fields: '$dataImportBatchFieldInfos' })
     wiredDataImportBatchRecord(response) {
         if (response.data) {
-            console.log('DataImportBatchRecord: ', response.data);
-            this.dataImportBatchRecord = response.data;
-            let templateId = this.dataImportBatchRecord.fields.npsp__Form_Template__c.value;
-            console.log('TEMPLATE ID: ', templateId);
-            this.selectedTemplate = this.templatesById[templateId];
-            console.log('this.selectedTemplate: ', this.selectedTemplate);
-            //this.setValuesForSelectedBatchHeaderFields(response.data.fields);
+            getAllFormTemplates()
+                .then(templates => {
+                    this.templates = templates;
+                    this.builderTemplateComboboxOptions(this.templates);
+
+                    this.dataImportBatchRecord = response.data;
+                    let templateId = this
+                        .dataImportBatchRecord
+                        .fields[DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO.fieldApiName]
+                        .value;
+
+                    this.handleTemplateChange({ detail: { value: templateId } });
+                    this.step = 1;
+
+                    this.isLoading = false;
+                })
+                .catch(error => {
+                    handleError(error);
+                });
         }
     }
+
+    @wire(getRecordCreateDefaults, { objectApiName: '$dataImportBatchName' })
+    dataImportBatchCreateDefaults;
 
     setValuesForSelectedBatchHeaderFields(allFields) {
         console.log('**********************--- setValuesForSelectedBatchHeaderFields');
@@ -151,36 +200,26 @@ export default class geBatchWizard extends LightningElement {
         });
     }
 
-    renderedCallback() {
-        if (this.isLoaded === false) {
-            this.init();
-            this.isLoaded = true;
+    async connectedCallback() {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>connectedCallback');
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>');
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>');
+        if (!this.recordId) {
+            this.templates = await getAllFormTemplates();
+            this.templates = this.templates.sort();
+            this.builderTemplateComboboxOptions(this.templates);
+            this.isLoading = false;
         }
     }
 
-    init = async () => {
-        this.templates = await getAllFormTemplates();
-
-        this.templateOptions = this.templates.map(template => {
-            this.templatesById[template[ID]] = template;
-            return { label: template[NAME], value: template[ID] }
-        });
-
-        /*const batchHeaderFieldsInfo = [];
-        Object.keys(this.dataImportBatchInfo.fields).map((fieldApiName) => {
-            batchHeaderFieldsInfo.push({
-                fieldApiName: fieldApiName,
-                objectApiName: this.dataImportBatchInfo.apiName
-            })
-        });*/
-
-        console.log('***************************--- init');
-        console.log('recordId: ', this.recordId);
-        console.log('DATA_IMPORT_BATCH_ID_INFO: ', DATA_IMPORT_BATCH_ID_INFO);
-        console.log('dataImportBatchFieldInfos: ', this.dataImportBatchFieldInfos);
-        console.log('this.selectedBatchHeaderFields: ', this.selectedBatchHeaderFields);
-
-        this.isLoading = false;
+    builderTemplateComboboxOptions(templates) {
+        console.log('***************************--- builderTemplateComboboxOptions');
+        if (templates && templates.length > 0) {
+            this.templateOptions = this.templates.map(template => {
+                this.templatesById[template[ID]] = template;
+                return { label: template[NAME], value: template[ID] }
+            });
+        }
     }
 
     handleNext() {
@@ -197,14 +236,11 @@ export default class geBatchWizard extends LightningElement {
 
     handleTemplateChange(event) {
         console.log('******************************--- handleTemplateChange');
-        this.selectedTemplate = this.templatesById[event.detail.value];
-        console.log('this.selectedTemplate: ', this.selectedTemplate);
-        console.log('sections: ', this.selectedTemplate.layout.sections);
+        this.selectedTemplateId = event.detail.value;
+
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
         }
-        this.sections = this.selectedTemplate.layout.sections;
-        console.log('sections: ', this.sections);
     }
 
     /*******************************************************************************
@@ -212,13 +248,73 @@ export default class geBatchWizard extends LightningElement {
     * a dedicated listener event name is provided otherwise dispatches a CustomEvent.
     */
     handleSave() {
-        const payload = { values: this.values, name: this.name };
+        console.log('************--- handleSave');
+
+        const dataImportBatchObjectInfo = this.dataImportBatchCreateDefaults.data.objectInfos[
+            this.dataImportBatchName
+        ];
+        console.log('this.dataImportBatchCreateDefaults: ', this.dataImportBatchCreateDefaults);
+        console.log('dataImportBatchObjectInfo: ', dataImportBatchObjectInfo);
+        const recordDefaults = this.dataImportBatchCreateDefaults.data.record;
+        console.log('recordDefaults: ', recordDefaults);
+        let recordObject = generateRecordInputForCreate(recordDefaults, dataImportBatchObjectInfo);
+        console.log('recordObject: ', recordObject);
+        recordObject = this.setFieldValues(recordObject);
+        this.handleRecordCreate(recordObject);
+        /*const payload = { values: this.values, name: this.name };
         const detail = { action: SAVE, payload: payload };
         if (this.dedicatedListenerEventName) {
             fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
         } else {
             this.dispatchEvent(new CustomEvent(SVGFEFuncAElement, { detail: payload }));
+        }*/
+    }
+
+    setFieldValues(recordObject) {
+        console.log('************--- collectFieldValues');
+        console.log('recordObject: ', recordObject);
+        console.log('Template Id: ', this.selectedTemplateId);
+        let utilInputs = this.template.querySelectorAll('c-util-input');
+        for (let i = 0; i < utilInputs.length; i++) {
+            let formElement = utilInputs[i].reportValue();
+            console.log(formElement.fieldApiName, formElement.value, formElement.objectApiName);
+            if (recordObject.apiName === formElement.objectApiName) {
+                recordObject.fields[formElement.fieldApiName] = formElement.value;
+            }
         }
+
+        console.log('setting gift entry fields...');
+        recordObject.fields[DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO.fieldApiName] = this.selectedTemplateId;
+        recordObject.fields[DATA_IMPORT_BATCH_VERSION_INFO.fieldApiName] = 2.0;
+        recordObject.fields[DATA_IMPORT_BATH_GIFT_INFO.fieldApiName] = true;
+
+        console.log('recordObject: ', recordObject);
+        return recordObject;
+    }
+
+    handleRecordCreate(recordObject) {
+        console.log('************--- handleRecordCreate');
+        createRecord(recordObject)
+            .then(record => {
+                console.log('Created Record: ', record);
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Record created',
+                        variant: 'success',
+                    }),
+                );
+            })
+            .catch(error => {
+                console.error(error);
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error creating record',
+                        message: error.body.message,
+                        variant: 'error',
+                    }),
+                );
+            });
     }
 
     /*******************************************************************************

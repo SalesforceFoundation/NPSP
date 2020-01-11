@@ -31,7 +31,6 @@
                                             placeholder="Select a Template"
                                             options={templateOptions}
                                             onchange={handleTemplateChange}
-                                            class=""
                                             required>
                         </lightning-combobox>
                     </div>
@@ -51,9 +50,10 @@
                     </div>
                     <div class={cssClassStep2}>
                         <p class="slds-p-horizontal_small">You're a 🍔 Harry!</p>
-                        <template for:each={sections}
+                        <template for:each={formSections}
                                   for:item='section'>
-                            <h1 key={section.id} class="slds-text-heading_medium slds-border_bottom">
+                            <h1 key={section.id}
+                                class="slds-text-heading_medium slds-border_bottom">
                                 {section.label}
                             </h1>
                             <ul key={section.id}
@@ -95,7 +95,8 @@
                                                   type="base"
                                                   variant="base"
                                                   tabindex="-1">
-                        <lightning-progress-step label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
+                        <lightning-progress-step if:false={isEditMode}
+                                                 label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
                                                  aria-label={CUSTOM_LABELS.geHeaderBatchSelectTemplate}
                                                  value={steps.first}>
                         </lightning-progress-step>

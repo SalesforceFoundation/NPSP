@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
 
 const BOOLEAN = 'boolean';
@@ -21,6 +21,17 @@ export default class utilInput extends LightningElement {
     @api required;
     @api type;
     @api objectInfo;
+
+    @track value;
+
+    @api
+    reportValue() {
+        return {
+            objectApiName: this.objectInfo ? this.objectInfo.apiName : undefined,
+            fieldApiName: this.fieldApiName,
+            value: this.value ? this.value : this.defaultValue
+        };
+    }
 
     get defaultValueForCheckbox() {
         return (this.defaultValue === TRUE || this.defaultValue === true) ? true : false;
@@ -67,6 +78,7 @@ export default class utilInput extends LightningElement {
         if (this.type === 'Currency' || this.type === 'Percent' || this.type === 'Decimal') {
             return this.type;
         }
+        return undefined;
     }
 
     get lightningInputType() {
@@ -90,6 +102,7 @@ export default class utilInput extends LightningElement {
         } else if (this.fieldDescribe) {
             return this.fieldDescribe.label;
         }
+        return undefined;
     }
 
     connectedCallback() {
@@ -121,20 +134,8 @@ export default class utilInput extends LightningElement {
     * onblur event handler 
     */
     handleOnBlur(event) {
-        let value;
-
-        if (this.dataType && this.dataType.toLowerCase() === BOOLEAN) {
-            value = event.target.checked;
-        } else {
-            value = event.target.value;
-        }
-
-        let detail = {
-            fieldName: this.name,
-            property: 'defaultValue',
-            value: value
-        }
-
-        //dispatch(this, 'updateformelement', detail);
+        this.value = this.type && this.lightningInputType === CHECKBOX ?
+            event.target.checked :
+            event.target.value;
     }
 }

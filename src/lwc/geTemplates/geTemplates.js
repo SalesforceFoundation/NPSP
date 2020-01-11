@@ -12,6 +12,10 @@ import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
+// import batch list query criteria fields
+import DATA_IMPORT_BATCH_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
+import DATA_IMPORT_BATH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
+
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
@@ -33,9 +37,10 @@ const TEMPLATES_TABLE_ACTIONS = [
     { label: GeLabelService.CUSTOM_LABELS.commonDelete, name: DELETE }
 ];
 
+// TODO: Remove as the UX designs don't call for actions on the batch list view.
+// only used for dev!
 const BATCHES_TABLE_ACTIONS = [
-    { label: 'Edit', name: 'edit' },
-    { label: 'Delete', name: 'delete' }
+    { label: 'Edit', name: 'edit' }
 ];
 
 export default class GeTemplates extends NavigationMixin(LightningElement) {
@@ -48,6 +53,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     @track templatesTableActions = TEMPLATES_TABLE_ACTIONS;
     @track isAccessible = true;
     @track isLoading = true;
+    batchListFilteredBy;
 
     get templateBuilderCustomTabApiName() {
         return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
@@ -149,8 +155,26 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
         if (this.isAccessible) {
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
+            this.buildListsFilterBy();
             this.isLoading = false;
         }
+    }
+
+    buildListsFilterBy() {
+        this.batchListFilteredBy = [
+            {
+                fieldApiName: DATA_IMPORT_BATCH_VERSION_INFO.fieldApiName,
+                label: '',
+                operandLabels:[2.0],
+                operator:'Equals'
+            },
+            {
+                fieldApiName: DATA_IMPORT_BATH_GIFT_INFO.fieldApiName,
+                label: '',
+                operandLabels:[true],
+                operator:'Equals'
+            }
+        ];
     }
 
     /*******************************************************************************

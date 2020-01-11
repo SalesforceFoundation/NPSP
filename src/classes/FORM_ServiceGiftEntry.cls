@@ -118,7 +118,8 @@ public with sharing class FORM_ServiceGiftEntry {
             Template_JSON__c,
             Description__c,
             Format_Version__c
-            FROM Form_Template__c];
+            FROM Form_Template__c
+            ORDER BY Name ASC];
 
         for (Form_Template__c formTemplate : allTemplates) {
             FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);

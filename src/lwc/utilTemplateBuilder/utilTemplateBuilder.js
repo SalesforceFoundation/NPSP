@@ -519,6 +519,35 @@ const format = (string, replacements) => {
     return formattedString;
 };
 
+/*******************************************************************************
+* @description Method checks to see if a property on the given object exists.
+* Otherwise returns undefined.
+*
+* @param {object} object: Object with properties to check.
+* @param {string} property: Name of the property to check.
+* @return {list} remainingProperties: Destructure all other arguments so we can
+* check N levels deep of the object.
+* e.g. checkNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
+*/
+const checkNestedProperty = (object, property, ...remainingProperties) => {
+    if (object === undefined) return false
+    if (remainingProperties.length === 0 && object.hasOwnProperty(property)) return true
+    return checkNestedProperty(object[property], ...remainingProperties)
+}
+
+/*******************************************************************************
+* @description Method returns the value of a property on the given object.
+* Otherwise returns undefined.
+*
+* @param {object} object: Object with properties to return.
+* @return {list} args: Destructure all other arguments so we can
+* check N levels deep of the object.
+* e.g. getNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
+*/
+const getNestedProperty = (object, ...args) => {
+    return args.reduce((obj, level) => obj && obj[level], object)
+}
+
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
@@ -544,4 +573,6 @@ export {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     format,
+    checkNestedProperty,
+    getNestedProperty
 }

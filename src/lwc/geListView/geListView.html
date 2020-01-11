@@ -21,10 +21,15 @@
                     <slot name="actions"
                           class="slds-no-flex">
                     </slot>
-                    <lightning-button-icon icon-name="utility:settings"
-                                           onclick={toggleModal}
-                                           slot="actions">
-                    </lightning-button-icon>
+                    <lightning-button-menu alternative-text="Show menu"
+                                           variant="border-filled"
+                                           icon-name="utility:settings"
+                                           menu-alignment="auto">
+                        <lightning-menu-item value="MenuItemOne"
+                                             label="Select Fields to Display"
+                                             onclick={toggleModal}>
+                        </lightning-menu-item>
+                    </lightning-button-menu>
                 </div>
             </div>
         </div>
