@@ -63,6 +63,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
                     'Both exception types should be System.AuraHandledException');
         }
+        System.assertEquals(1, 2, 'This statement should not be executed.')
     }
 
     /****
@@ -97,6 +98,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
                     'Both exception types should be System.AuraHandledException');
         }
+        System.assertEquals(1, 2, 'This statement should not be executed.')
     }
 
     /****
@@ -131,6 +133,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
                     'Both exception types should be System.AuraHandledException');
         }
+        System.assertEquals(1, 2, 'This statement should not be executed.')
     }
 
     /****
@@ -160,7 +163,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         System.assertEquals(12, schedules.size(), 'There should be 12 installments.');
-
     }
 
     /****
@@ -193,7 +195,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         System.assertEquals(2, schedules.size(), 'There should be 2 schedules.');
-
     }
 
     /****
@@ -222,6 +223,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
                     'Both exception types should be System.AuraHandledException');
         }
+        System.assertEquals(1, 2, 'This statement should not be executed.')
     }
 
     /****
@@ -239,10 +241,125 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
                     'Both exception types should be System.AuraHandledException');
         }
+        System.assertEquals(1, 2, 'This statement should not be executed.')
+    }
+
+    /****
+    * @description Validates that 1 active schedule is returned for a new RD
+    */
+    @IsTest
+    private static void shouldReturn1ActiveSchedulesForNewRD() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        rd.Day_of_Month__c = '12';
+
+        Test.startTest();
+        insert rd;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        Test.stopTest();
+
+        System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
+    }
+
+    /****
+    * @description Validates that 2 active schedule are returned for an RD with current and future schedules
+    */
+    @IsTest
+    private static void shouldReturnActiveSchedulesWhenRDHasCurrentAndFutureSchedule() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        rd.Day_of_Month__c = '12';
+
+        Test.startTest();
+        insert rd;
+        rd.StartDate__c = Date.today().addMonths(2);
+        rd.npe03__Amount__c = 100;
+        update rd;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        Test.stopTest();
+
+        System.assertEquals(2, schedules.size(), 'There should be 2 schedules.');
+    }
+
+    /****
+    * @description Validates that zero active schedules are returned for a closed RD
+    */
+    @IsTest
+    private static void shouldThrowAuraHandledExceptionRDIsClosed() {
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        rd.Day_of_Month__c = '12';
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        try {
+            List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        }
+        catch(Exception e) {
+            System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
+                    'Both exception types should be System.AuraHandledException');
+        }
+        System.assertEquals(1, 2, 'This statement should not be executed.')
     }
 
 
+
     //// Helpers
+
+    private static TEST_RecurringDonationBuilder getRecurringDonationYearlyBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriodYearly();
+    }
+
+    private static TEST_RecurringDonationBuilder getRecurringDonationMonthlyBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriodMonthly()
+                .withDayOfMonth('1');
+    }
+
+    private static TEST_RecurringDonationBuilder getRecurringDonationWeeklyBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriodWeekly();
+    }
+
+    private static TEST_RecurringDonationBuilder getRecurringDonationDailyBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_DAILY);
+    }
+
+    private static TEST_RecurringDonationBuilder getRecurringDonationFirstAndFifteenthBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
+    }
+
+    private static TEST_RecurringDonationBuilder getRecurringDonationBaseBuilder() {
+        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withContact(getContact().Id)
+                .withAmount(100)
+                .withPaymentMethod('Credit Card')
+                .withInstallmentFrequency(1)
+                .withDateEstablished(Date.today())
+                .withStartDate(Date.today());
+    }
+
+    /****
+    * @description Returns Schedule Service with current date override
+    */
+    private static RD2_ScheduleService getScheduleServiceForCurrentDate(Date currentDate) {
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        RD2_ScheduleService.currentDate = currentDate;
+
+        return scheduleService;
+    }
 
     /****
     * @description Returns contact record
