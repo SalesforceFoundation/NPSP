@@ -45,7 +45,6 @@ export default class GeBatchGiftEntryApp extends LightningElement {
     getTableDataRow(formSubmission) {
         let dataImportRecord =
             GeFormService.getDataImportRecord(formSubmission.sectionsList);
-        dataImportRecord.submissionId = formSubmission.submissionId;
         return dataImportRecord;
     }
 
