@@ -230,8 +230,12 @@ export default class geListView extends LightningElement {
     getRecords = async (displayColumns) => {
         const fields = displayColumns.map(column => column.fieldApiName);
         if (fields.length > 0) {
-            let queryObject = this.buildSoqlQuery(fields);
-            let formTemplates = await retrieveRecords(queryObject)
+            let formTemplates = await retrieveRecords({
+                selectFields: fields,
+                sObjectApiName: this.objectApiName,
+                orderByClause: `${this.sortedBy} ${this.sortedDirection}`,
+                limitClause: this.limit
+            })
                 .catch(error => {
                     handleError(error);
                 });
@@ -407,7 +411,7 @@ export default class geListView extends LightningElement {
         })
             .then(response => {
                 this.init();
-                showToast('View updated.', '', 'success');
+                showToast(this.CUSTOM_LABELS.geToastListViewUpdated, '', 'success');
             })
             .catch(error => {
                 handleError(error);
@@ -497,96 +501,6 @@ export default class geListView extends LightningElement {
                 typeAttributes: { rowActions: this.actions },
             }];
         }
-    }
-
-    /*******************************************************************************
-    * @description Method builds a SOQL query based on the currently selected list
-    * view's describe info.
-    */
-    buildSoqlQuery(selectedFieldApiNames) {
-        // Get select fields
-        const selectFields = selectedFieldApiNames;
-
-        // Get object name
-        const sObjectApiName = this.objectApiName;
-
-        // Get where clause
-        let whereClauses;
-        if (this.filteredBy && this.filteredBy.length > 0) {
-            let filters = deepClone(this.filteredBy);
-            whereClauses = filters.map((filter) => {
-                return this.createFilterEntry(filter);
-            });
-        }
-
-        // Get order by clause
-        let orderByClause;
-        if (this.sortedBy && this.sortedDirection) {
-            const columnEntry = this.columnEntriesByName[this.sortedBy];
-
-            if (columnEntry) {
-                const sortBy = columnEntry.fieldApiName ? columnEntry.fieldApiName : this.sortedBy;
-                orderByClause =
-                    `${sortBy} ${this.sortedDirection === ASC ? ASC : DESC}`;
-            }
-        }
-
-        // Get limit
-        const limitClause = `${this.limit}`;
-
-        return { selectFields, sObjectApiName, whereClauses, orderByClause, limitClause };
-    }
-
-    /*******************************************************************************
-    * @description Method creates expressions for the where clause of a soql query.
-    *
-    * @param {object} filterInfo: Filter object from a list view describe that
-    * contains the following fields:
-    *   String: fieldApiName
-    *   String: label
-    *   String[]: operandLabels
-    *   String: operator
-    *   e.g. {fieldApiName:'CreatedBy.Name', label:'Created By', operandLabels:['John'], operator:'Equals'}
-    */
-    createFilterEntry(filterInfo) {
-        const OPERATORS = {
-            'Equals': '=',
-            'NotEqual': '!=',
-            'LessThan': '<',
-            'GreaterThan': '>',
-            'LessOrEqual': '<=',
-            'GreaterOrEqual': '>=',
-            'Contains': 'LIKE',
-            'NotContain': 'LIKE',
-            'StartsWith': 'LIKE',
-        }
-
-        const fieldName = filterInfo.fieldApiName;
-        const comparisonOperator = OPERATORS[filterInfo.operator];
-        const value = filterInfo.operandLabels[0];
-
-        const isString = typeof value === 'string';
-        const isNumber = typeof value === 'number';
-        let filter = `${fieldName} ${comparisonOperator} `;
-
-        if (isString && filterInfo.operator === 'Contains') {
-            filter += `'%${value}%'`;
-
-        } else if (isString && filterInfo.operator === 'NotContain') {
-            filter = `NOT ${fieldName} ${comparisonOperator} '%${value}%'`
-
-        } else if (isString && filterInfo.operator === 'StartsWith') {
-            filter += `'${value}%'`
-
-        } else if (isString) {
-            filter += `'${value}'`;
-
-        } else if (isNumber) {
-            filter += `${value}`;
-
-        }
-
-        return filter;
     }
 
     /*******************************************************************************
