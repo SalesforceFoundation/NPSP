@@ -60,7 +60,8 @@ public with sharing class RD2_VisualizeScheduleController {
 
         List<Installment> upcomingDonations = new List<Installment>();
         if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-            List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(rd, Date.today(), displayNum, null);
+            // Enable override of current date by setting static variable currentDate in RD2_ScheduleService
+            List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(rd, RD2_ScheduleService.currentDate, displayNum, null);
             Integer num = 1;
             for (RD2_ScheduleService.Installment installment : installments) {
                 upcomingDonations.add(new Installment(num++, rd, installment));
