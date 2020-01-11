@@ -230,10 +230,16 @@ export default class geListView extends LightningElement {
     getRecords = async (displayColumns) => {
         const fields = displayColumns.map(column => column.fieldApiName);
         if (fields.length > 0) {
+            let orderBy = null;
+            if (this.sortedBy && this.sortedDirection) {
+                const orderedByFieldApiName = this.columnEntriesByName[this.sortedBy].fieldApiName;
+                orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
+            }
+
             let formTemplates = await retrieveRecords({
                 selectFields: fields,
                 sObjectApiName: this.objectApiName,
-                orderByClause: `${this.sortedBy} ${this.sortedDirection}`,
+                orderByClause: orderBy,
                 limitClause: this.limit
             })
                 .catch(error => {
