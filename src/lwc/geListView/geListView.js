@@ -32,8 +32,6 @@ const USER = 'User';
 const URL = 'url';
 const _SELF = '_self';
 const DATE_FORMAT = 'M/D/YYYY, h:mm:ss A';
-const ASC = 'asc';
-const DESC = 'desc';
 const SAVE = 'save';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
@@ -71,6 +69,13 @@ export default class geListView extends LightningElement {
     columnHeadersByFieldApiName;
     isLoaded = false;
 
+    get recordsToDisplay() {
+        if (this.actions && this.columns.length === 1) {
+            return [];
+        }
+        return this.records;
+    }
+
     get hasCustomTitle() {
         return this.title ? true : false;
     }
@@ -93,8 +98,8 @@ export default class geListView extends LightningElement {
     }
 
     get recordCount() {
-        const ITEM_COUNT = [this.records.length];
-        return this.records.length !== 1 ?
+        const ITEM_COUNT = [this.recordsToDisplay.length];
+        return this.recordsToDisplay.length !== 1 ?
             GeLabelService.format(this.CUSTOM_LABELS.geTextListViewItemsCount, ITEM_COUNT)
             : GeLabelService.format(this.CUSTOM_LABELS.geTextListViewItemCount, ITEM_COUNT);
     }
@@ -110,8 +115,7 @@ export default class geListView extends LightningElement {
 
     get lastUpdatedOn() {
         const isMomentLoaded = LibsMoment && LibsMoment.moment;
-        const hasRecords = this.records && this.records.length > 0;
-        if (isMomentLoaded && hasRecords) {
+        if (isMomentLoaded && this.hasRecords) {
             let records = deepClone(this.records);
             records.sort((a, b) => {
                 return new Date(b.LastModifiedDate) - new Date(a.LastModifiedDate);
@@ -132,7 +136,7 @@ export default class geListView extends LightningElement {
     }
 
     get hasRecords() {
-        return this.records && this.records.length > 0 ? true : false;
+        return this.recordsToDisplay && this.recordsToDisplay.length > 0 ? true : false;
     }
 
     @api
@@ -339,17 +343,6 @@ export default class geListView extends LightningElement {
             let fieldDescribe = this.objectInfo.fields[key];
             let label = fieldDescribe.label;
 
-            // Handle relationship info for fields looking up to a User.
-            const isRelationshipField =
-                fieldDescribe.relationshipName &&
-                fieldDescribe.referenceToInfos &&
-                fieldDescribe.referenceToInfos.length >= 1;
-
-            if (isRelationshipField) {
-                const lastWordIndex = label.lastIndexOf(" ");
-                label = label.substring(0, lastWordIndex);
-            }
-
             options.push({
                 label: label,
                 value: fieldDescribe.apiName
@@ -384,16 +377,13 @@ export default class geListView extends LightningElement {
                 fieldDescribe.referenceToInfos.length >= 1;
 
             if (isRelationshipField) {
+                const reference = fieldDescribe.referenceToInfos[0];
                 const isUserReference = fieldDescribe.referenceToInfos.find(info => info.apiName === USER);
 
-                if (isUserReference) {
-                    const nameFields = isUserReference.nameFields;
-                    const nameField = nameFields.find(field => field === NAME) || nameFields[0];
+                const nameFields = isUserReference ? isUserReference.nameFields : reference.nameFields;
+                const nameField = nameFields.find(field => field === NAME) || nameFields[0];
 
-                    displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
-                    const lastWordIndex = displayColumn.label.lastIndexOf(" ");
-                    displayColumn.label = displayColumn.label.substring(0, lastWordIndex);
-                }
+                displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
             }
 
             displayColumns.push(displayColumn);
@@ -415,7 +405,7 @@ export default class geListView extends LightningElement {
             listName: this.listName,
             columnHeadersString: JSON.stringify(columnHeaders)
         })
-            .then(response => {
+            .then(() => {
                 this.init();
                 showToast(this.CUSTOM_LABELS.geToastListViewUpdated, '', 'success');
             })
@@ -535,6 +525,10 @@ export default class geListView extends LightningElement {
                 if (datetimeObject.isValid()) {
                     record[key] = LibsMoment.moment(record[key]).format(DATE_FORMAT);
                 }
+
+                if (typeof record[key] !== 'string') {
+                    record[key] = record[key].toString();
+                }
             });
 
             record[URL] = format(recordUrl, [record.Id]);
@@ -559,11 +553,6 @@ export default class geListView extends LightningElement {
         } else {
             url = `/lightning/r/${this.objectApiName}/{0}/view`;
         }
-
-        const builderTabApiName =
-            TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
-
-        url = `/lightning/n/${builderTabApiName}?c__recordId={0}`;
 
         return url;
     }

@@ -21,10 +21,14 @@
                     <slot name="actions"
                           class="slds-no-flex">
                     </slot>
-                    <lightning-button-icon icon-name="utility:settings"
-                                           onclick={toggleModal}
-                                           slot="actions">
-                    </lightning-button-icon>
+                    <lightning-button-menu variant="border-filled"
+                                           icon-name="utility:settings"
+                                           menu-alignment="auto">
+                        <lightning-menu-item value="selectFieldsToDisplay"
+                                             label={CUSTOM_LABELS.geHeaderCustomTableHeaders}
+                                             onclick={toggleModal}>
+                        </lightning-menu-item>
+                    </lightning-button-menu>
                 </div>
             </div>
         </div>
@@ -49,7 +53,7 @@
     </template>
     <template if:false={isLoading}>
         <lightning-datatable key-field="id"
-                             data={records}
+                             data={recordsToDisplay}
                              columns={columns}
                              hide-checkbox-column
                              onrowaction={handleRowAction}
