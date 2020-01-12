@@ -2106,6 +2106,7 @@
         <members>isARequiredField</members>
         <members>labelGeCancel</members>
         <members>labelGeSave</members>
+        <members>labelGeUpdate</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>

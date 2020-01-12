@@ -4,10 +4,16 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
+import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import { showToast, handleError } from 'c/utilTemplateBuilder';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
+
+const mode = {
+    CREATE: 'create',
+    UPDATE: 'update'
+}
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api sections = [];
@@ -24,6 +30,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track formTemplateId;
     erroredFields = [];
     @api pageLevelErrorMessageList = [];
+    @track _data; // Row being updated when in update mode
 
     connectedCallback() {
         if (this.batchId) {
@@ -263,6 +270,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     load(data) {
+        this._data = data;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         sectionsList.forEach(section => {
@@ -272,11 +280,27 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     reset() {
+        this._data = undefined;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         sectionsList.forEach(section => {
             section.reset();
         });
+    }
+
+    get mode() {
+        return this._data ? mode.UPDATE : mode.CREATE;
+    }
+
+    @api
+    get saveActionLabel() {
+        switch (this.mode) {
+            case mode.UPDATE:
+                return geUpdate;
+                break;
+            default:
+                return geSave;
+        }
     }
 
 }
