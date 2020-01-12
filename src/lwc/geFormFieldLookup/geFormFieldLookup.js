@@ -147,4 +147,11 @@ export default class GeFormFieldLookup extends LightningElement {
         this.displayValue = lookupResult.displayValue;
         this.value = lookupResult.value;
     }
+
+    @api
+    reset() {
+        this.displayValue = null;
+        this.value = null;
+    }
+
 }

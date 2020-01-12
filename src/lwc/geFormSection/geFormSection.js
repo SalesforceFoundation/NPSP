@@ -99,4 +99,14 @@ export default class GeFormSection extends LightningElement {
             field.load(data);
         });
     }
+
+    @api
+    reset() {
+        const fields = this.template.querySelectorAll('c-ge-form-field');
+
+        fields.forEach(field => {
+            field.reset();
+        });
+    }
+
 }

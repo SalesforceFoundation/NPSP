@@ -92,7 +92,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleCancel() {
-        console.log('Form Cancel button clicked');
+        this.reset();
     }
 
     handleSave(event) {
@@ -269,4 +269,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             section.load(data);
         });
     }
+
+    @api
+    reset() {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+
+        sectionsList.forEach(section => {
+            section.reset();
+        });
+    }
+
 }

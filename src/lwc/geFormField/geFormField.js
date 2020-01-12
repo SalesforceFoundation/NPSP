@@ -19,6 +19,7 @@ export default class GeFormField extends LightningElement {
     @track objectDescribeInfo;
     @track richTextValid = true;
     @api element;
+    _defaultValue = null;
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -48,6 +49,7 @@ export default class GeFormField extends LightningElement {
     connectedCallback() {
         const { defaultValue } = this.element;
         if(defaultValue) {
+            this._defaultValue = defaultValue;
             this.value = defaultValue;
         }
     }
@@ -245,7 +247,7 @@ export default class GeFormField extends LightningElement {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             lookup.reset();
         } else {
-            this.value = null;
+            this.value = this._defaultValue;
         }
     }
 
