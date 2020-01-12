@@ -9,6 +9,7 @@ import { showToast, handleError } from 'c/utilTemplateBuilder';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
+import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 
 const mode = {
     CREATE: 'create',
@@ -301,6 +302,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             default:
                 return geSave;
         }
+    }
+
+    @api
+    get isUpdateActionDisabled() {
+        return this._data && this._data[STATUS_FIELD.fieldApiName] === 'Imported';
     }
 
 }
