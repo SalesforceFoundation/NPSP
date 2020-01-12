@@ -1,36 +1,74 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
+
+***Keywords***
+# Sets up all the required data for the test based on the keyword requests
+Setup Test Data
+    &{data} =  Setup Data
+    ...           contact1=&{contact1_fields}
+
+    ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
+    Set suite variable    ${contact1_Id}   &{data}[contact1_Id]
+    Set suite variable    ${contact1_LastName}   &{data}[contact1_LastName]
+    Set suite variable    ${opp_date}
+
+
+*** Variables ***
+&{contact1_fields}       Email=test@example.com
 
 
 *** Test Cases ***
 
 Create Donation and Opportunity and Create Payment Manually
-    [tags]  unstable
-    &{contact} =  API Create Contact    Email=skristem@robot.com
-    Store Session Record    Account    &{contact}[AccountId]
-    Go To Object Home         Opportunity
-    Click Object Button       New
-    Select Record Type        Donation
-    Create Opportunities    Sravani $100 donation    &{Contact}[LastName] Household    Closed Won
-    Save Current Record ID For Deletion    Opportunity   
-    Select Tab    Related
-    Load Related List    Payments
-    Verify Occurrence    Payments    0
-    Click Related List Button    Payments    New
+    [Documentation]  Navigate to Opportunities page and open an Opportunity>In the right sections, go to Payments click on drop down Arrow>New
+    ...              Create a new payment for the Opportunity.
+    [tags]                               W-038461                 feature:Donations
+
+    Go To Page                                      Listing
+    ...                                             Opportunity
+
+    Click Object Button                             New
+    Select Record Type                              Donation
+
+    Create Opportunities                            Sravani $100 donation
+    ...                                             ${contact1_LastName} Household
+    ...                                             Closed Won
+
+    Save Current Record ID For Deletion             Opportunity
+    Current Page Should Be                          Details                                  Opportunity
+
+    Verify Payments Made                            0
+
+    #Make A New Payment
+
+    Click Related List Button                       Payments                                New
+    Wait For Modal                                  New                                     Payment
     Select Window
-    Populate Field    Payment Amount    100
-    Select Value From Dropdown   Payment Method              Credit Card
-    Open Date Picker    Payment Date
-    Pick Date    Today
-    Click Modal Button        Save
-    Verify Occurrence    Payments    1
-    ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Go To Record Home  &{contact}[Id]
-    Scroll Element Into View    text:Donation Totals
-    Confirm Field Value           Last Gift Date    contains    ${opp_date}    
-    Scroll Element Into View    text:Soft Credit Total
-    Confirm Field Value          Total Gifts    contains    $100.00    
-    Confirm Field Value           Total Number of Gifts    contains    1    
+    Populate Modal Form                             Payment Amount=100
+    ...                                             Payment Method=Credit Card
+
+    Open Date Picker                                Payment Date
+    Pick Date                                       Today
+    Click Modal Button                              Save
+
+    Verify Payments Made                            1
+
+    Go To Page                                      Details
+    ...                                             Contact
+    ...                                             object_id=${contact1_Id}
+
+    #Perform Validations
+
+    Validate Field Value Under Section   Donation Totals      Last Gift Date                  ${opp_date}
+    Validate Field Value Under Section   Soft Credit Total    Total Gifts                     $100.00
+    Validate Field Value Under Section   Soft Credit Total    Total Number of Gifts           1

@@ -1,6 +1,10 @@
 import logging
 import warnings
 import time
+import random
+import string
+from datetime import datetime
+
 
 from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
@@ -1230,14 +1234,77 @@ class NPSP(SalesforceRobotLibraryBase):
         self.salesforce.click_object_button("Edit")
         self.salesforce.wait_until_modal_is_open()
 
+    def randomString(self,stringLength=10):
+        """Generate a random string of fixed length """
+        letters = string.ascii_lowercase
+        return ''.join(random.choice(letters) for i in range(stringLength))
+
+
+    def setup_data(self,**kwargs):
+        """Parses the keywords sent as arguments and based on the respective reqest generates the data using the
+          specified parameters
+         The generated data is then added to the Data dictionary and returned back.
+       """
+
+        data = {}
+        for name, values in kwargs.items():
+            word_list = name.lower().split()
+            word_length = len(word_list)
+            first = word_list[0];
+            last = word_list[-1]
+
+            if first=="contact1" and word_length == 1:
+                firstname = self.randomString(10);
+                lastname = self.randomString(10);
+                values.update( {'Firstname' : firstname,'Lastname' : lastname})
+                contact_id = self.salesforce.salesforce_insert("Contact", **values)
+                contact = self.salesforce.salesforce_get("Contact",contact_id)
+                data.update( {'contact1_Id': contact['Id'], "contact1_AccountId" : contact['AccountId'],"contact1_FirstName" : contact['FirstName'],"contact1_LastName" : contact['LastName']})
+            elif first=="contact2" and word_length == 1:
+                firstname = self.randomString(10);
+                lastname = self.randomString(10);
+                values.update( {'Firstname' : firstname,'Lastname' : lastname})
+                contact_id = self.salesforce.salesforce_insert("Contact", **values)
+                contact = self.salesforce.salesforce_get("Contact",contact_id)
+                data.update( {'contact2_Id': contact['Id'], "contact2_AccountId" : contact['AccountId'],"contact2_FirstName" : contact['FirstName'],"contact2_LastName" : contact['LastName']})
+            elif word_list[-2]=="linkedto" and word_length == 3:
+                firstname = self.randomString(10);
+                lastname = self.randomString(10);
+                key = last+"_AccountId"
+                values.update( {'Firstname' : firstname,'Lastname' : lastname, 'AccountId' : data[key]})
+                contact_id = self.salesforce.salesforce_insert("Contact", **values)
+                contact = self.salesforce.salesforce_get("Contact",contact_id)
+                data.update( {'contact2_Id': contact['Id'], "contact2_AccountId" : contact['AccountId'],"contact2_FirstName" : contact['FirstName'],"contact2_LastName" : contact['LastName']})
+
+            elif first=="opportunity" and word_length == 3:
+                oppType = "Donation"
+                key = last+"_AccountId"
+                opportunityid = last+"opportunityid"
+                self.builtin.log_to_console(oppType)
+                rt_id = self.salesforce.get_record_type_id("Opportunity","Donation")
+                date = datetime.now().strftime('%Y-%m-%d')
+                AccountId = data[key]
+                if "Primary_Contact" in values:
+                    ns =  self.get_npsp_namespace_prefix()
+                    contactid = values["Primary_Contact"]+"_Id"
+                    key = ns+"Primary_Contact__c"
+                    values.update( {key : data[contactid]} )
+                    del values['Primary_Contact']
+                values.update( {'AccountId' : AccountId,'CloseDate' : date, 'RecordTypeId': rt_id, 'npe01__Do_Not_Automatically_Create_Payment__c': 'true' } )
+                opportunity_id = self.salesforce.salesforce_insert("Opportunity", **values)
+                opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
+                data.update( {opportunityid: opportunity['Id']})
+
+        return data
+
     def delete_record(self,value):
         """Select the row to be deleted on the listing page, click delete
            and wait till the focus is back on the listings page."""
         self.select_row(value)
         self.selenium.click_link("Delete")
         self.selenium.wait_until_location_contains("/list")
-    
-    @capture_screenshot_on_error    
+
+    @capture_screenshot_on_error
     def populate_modal_form(self,**kwargs):
         """Populates modal form with the field-value pairs 
         supported keys are any input, textarea, lookup, checkbox, date and dropdown fields"""
@@ -1276,9 +1343,9 @@ class NPSP(SalesforceRobotLibraryBase):
                                 print ("class name for key {} did not match with field type supported by this keyword".format(key))
                                      
             else:
-                raise Exception("Locator for {} is not found on the page".format(key))   
-     
-    def verify_toast_message(self,value):       
+                raise Exception("Locator for {} is not found on the page".format(key))
+
+    def verify_toast_message(self,value):
         locator=npsp_lex_locators["toast-msg"]
         ele=self.selenium.get_webelements(locator)
         found=False
