@@ -1,22 +1,35 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
+***Keywords***
+Setup Test Data
+    &{account} =                      API Create Organization Account 
+    Set suite variable                &{account}  
+    &{contact} =                      API Create Contact                 Email=automation@example.com 
+    Set suite variable                &{contact}
+    Store Session Record              Account                            &{contact}[AccountId]
+    API Create Secondary Affiliation  &{account}[Id]                     &{contact}[Id]
  
 *** Test Cases ***    
-Remove Secondary Affiliation for Contact    
-    &{account} =  API Create Organization Account
-    &{contact} =  API Create Contact    Email=skristem@robot.com   
-    Store Session Record    Account    &{contact}[AccountId] 
-    API Create Secondary Affiliation    &{account}[Id]    &{contact}[Id]
-    Go To Object Home          Contact
-    Click Link    link=&{contact}[FirstName] &{contact}[LastName]
-    Select Tab  Related
-    Click Related Item Popup Link  Organization Affiliations  &{account}[Name]  Delete
-    Click Modal Button    Delete
-    Go To Object Home    Account
-    #Sleep    5
-    Click Link    link=&{account}[Name]
-    Verify Affiliated Contact    Affiliated Contacts    &{contact}[FirstName]    &{contact}[LastName]    N
+Remove Secondary Affiliation for Contact
+    [Documentation]                   Creates a contact, organization account and secondary affiliation via API 
+    ...                               Open contact and delete affiliation from organization affiliation related list     
+    ...                               Verifies that contact does not show under affiliated contacts in the account page
+    [tags]                            W-037651                     feature:Affiliations     
+    Go To Page                        Details                      Contact                 object_id=&{contact}[Id]   
+    Select Tab                        Related
+    Click Related Item Popup Link     Organization Affiliations    &{account}[Name]        Delete
+    Wait For Modal                    New                          Affiliation             expected_heading=Delete Affiliation
+    Click Modal Button                Delete
+    Go To Page                        Details                      Account                 object_id=&{account}[Id]
+    Select Tab                        Related
+    Verify Related List               Affiliated Contacts          does not contain        &{contact}[FirstName] &{contact}[LastName]    
