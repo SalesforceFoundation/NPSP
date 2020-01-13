@@ -652,6 +652,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      * @param {object} objectData: Returned Object Schema
      */
     buildRequiredFieldsMessage(objectData){
+        REQUIRED_FORM_FIELDS_MESSAGE = ''; // Clear out required fields placeholder
         for (let i= 0; i< REQUIRED_FORM_FIELDS.length; i++) {
             let character;
             if (i < REQUIRED_FORM_FIELDS.length - 1) {
