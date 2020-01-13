@@ -516,8 +516,12 @@ public without sharing class RD2_ScheduleService {
             return activeSchedules;
         }
 
-        Boolean first1stAnd15thFound = false;
         List<RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
+        if (schedules == null) {
+            return activeSchedules;
+        }
+
+        Boolean first1stAnd15thFound = false;
         for (RecurringDonationSchedule__c schedule : schedules) {
 
             // This block collapses 1st and 15th schedules into a single row and nulls out day of month
@@ -633,9 +637,6 @@ public without sharing class RD2_ScheduleService {
                 schedulesById.put(schedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
             }
             schedulesById.get(schedule.RecurringDonation__c).add(schedule);
-        }
-        if (schedulesById.size() == 0) {
-            schedulesById.put(rds[0].Id, new List<RecurringDonationSchedule__c>());
         }
 
         return schedulesById;
