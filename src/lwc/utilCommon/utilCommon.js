@@ -37,6 +37,10 @@ const debouncify = (anyFunction, wait) => {
 const deepClone = (src) => {
     let clone = null;
 
+    if (isPrimative(src)) {
+        return src;
+    }
+
     if (isObject(src)) {
         clone = {};
         for (let property in src) {
@@ -55,7 +59,7 @@ const deepClone = (src) => {
     }
 
     return clone;
-};
+}
 
 /*******************************************************************************
  * @description Finds an item in an array by a property.
@@ -130,6 +134,17 @@ const isFunction = (value) => {
 const isObject = (obj) => {
     return isFunction(obj) || typeof obj === OBJECT && !!obj;
 };
+
+/*******************************************************************************
+ * @description Checks to see if the passed parameter is a primative.
+ *
+ * @param {any} value: Thing to check
+ *
+ * @return {boolean}: True if the provided obj is a primative.
+ */
+const isPrimative = (value) => {
+    return (value !== Object(value));
+}
 
 /**
  * Check if a value is undefined.
@@ -252,6 +267,7 @@ export {
     isFunction,
     isObject,
     isUndefined,
+    isPrimative,
     mutable,
     sort,
     shiftToIndex,
