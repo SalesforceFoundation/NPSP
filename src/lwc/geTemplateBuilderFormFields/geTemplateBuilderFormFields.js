@@ -86,8 +86,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             if (REQUIRED_FORM_FIELDS.includes(el.getAttribute('data-source-api-name')) && el.checked) {
               countOfConditionallyRequiredFormFields++;
             }
-            if (!el.checked && (el.required ||
-                el.getAttribute('data-source-api-name') === DONATION_DONOR_INFO.fieldApiName)) {
+            if (el.required && !el.checked) {
                 objectMappingsWithMissingRequiredFields.add(el.getAttribute('data-object-mapping'));
                 let objectMappingLabel = el.getAttribute('data-object-mapping-label');
                 missingRequiredFieldMappings.push(`${objectMappingLabel}: ${el.label}`);
@@ -371,6 +370,8 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             this.handleRemoveFormElement(name);
         }
 
+        fieldMapping.Is_Required =
+            fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL ? true : fieldMapping.Is_Required;
         if (fieldMapping.Is_Required) {
             this.validate();
         }
@@ -655,7 +656,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             let character;
             if (i < REQUIRED_FORM_FIELDS.length - 1) {
                 character = COMMA_CHARACTER;
-            }else if ( i === REQUIRED_FORM_FIELDS.length - 1) {
+            } else if ( i === REQUIRED_FORM_FIELDS.length - 1) {
                 character = PERIOD_CHARACTER;
             }
             REQUIRED_FORM_FIELDS_MESSAGE += objectData.fields[REQUIRED_FORM_FIELDS[i]].label + character;
