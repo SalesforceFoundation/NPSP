@@ -847,8 +847,11 @@ class NPSP(SalesforceRobotLibraryBase):
         return main_loc   
 
     def wait_for_locator(self, path, *args, **kwargs):
-        """Waits for 60 sec for the specified locator"""
-        main_loc = self.get_npsp_locator(path,*args, **kwargs)    
+        """Waits for 90 sec for the specified locator
+        But if waiting for a Batch processing location, wait for 120 secs"""
+        main_loc = self.get_npsp_locator(path,*args, **kwargs)
+        if 'BATCH' in args:
+            self.selenium.wait_until_element_is_visible(main_loc, timeout=120)
         self.selenium.wait_until_element_is_visible(main_loc, timeout=90)
         
     @capture_screenshot_on_error    
