@@ -665,20 +665,6 @@ pre {
                 <td class="kwdoc"><p>If status is 'contains' then the specified value should be present in the field 'does not contain' then the specified value should not be present in the field</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Delete Icon">
-                <td class="kwname">
-                  Delete Icon
-                </td>
-                <td class="kwargs">
-                  
-                  <i>field_name</i>, 
-                  
-                  <i>value</i>
-                  
-                </td>
-                <td class="kwdoc"><p>To click on x</p></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.py.Delete Record">
                 <td class="kwname">
                   Delete Record
@@ -691,6 +677,20 @@ pre {
                 <td class="kwdoc"><p>Select the row to be deleted on the listing page, click delete and wait till the focus is back on the listings page.</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Delete Record Field Value">
+                <td class="kwname">
+                  Delete Record Field Value
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Scrolls just a little below the field Clicks on Edit icon next to field and delete the value by clicking on 'X'</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Edit Record">
                 <td class="kwname">
                   Edit Record
@@ -699,6 +699,34 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>Clicks on the edit button on record page for standard objects and waits for the modal to open</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Edit Record Checkbox">
+                <td class="kwname">
+                  Edit Record Checkbox
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field</i>, 
+                  
+                  <i>status</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Scrolls just a little below the field Clicks on Edit icon next to field checks if status is 'checked' unchecks if status in 'unchecked'</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="NPSP.py.Edit Record Field Value">
+                <td class="kwname">
+                  Edit Record Field Value
+                </td>
+                <td class="kwargs">
+                  
+                  <i>field</i>, 
+                  
+                  <i>value</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Scrolls just a little below the field Clicks on Edit icon next to field and enters a value into the field</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Enter Eng Plan Values">
@@ -1111,6 +1139,16 @@ pre {
                 <td class="kwdoc"><p>Gets the current page record id and stores it for specified object in order to delete record during suite teardown</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Save Record">
+                <td class="kwname">
+                  Save Record
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Saves record by clicking on footer button 'Save'</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Search Field By Value">
                 <td class="kwname">
                   Search Field By Value
@@ -1122,7 +1160,7 @@ pre {
                   <i>value</i>
                   
                 </td>
-                <td class="kwdoc"><p>search the field with the placeholder given by 'fieldname' for the given 'value'</p></td>
+                <td class="kwdoc"><p>Searches the field with the placeholder given by 'fieldname' for the given 'value'</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Select App Launcher Link">
@@ -1189,18 +1227,6 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.py.Select Lightning Checkbox">
-                <td class="kwname">
-                  Select Lightning Checkbox
-                </td>
-                <td class="kwargs">
-                  
-                  <i>title</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Clicks on a checkbox using field name</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Select Multiple Values From Duellist">
@@ -1392,6 +1418,20 @@ pre {
 <p>The retry happens for certain errors that are likely to be resolved by retrying.</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Set Checkbutton To">
+                <td class="kwname">
+                  Set Checkbutton To
+                </td>
+                <td class="kwargs">
+                  
+                  <i>title</i>, 
+                  
+                  <i>status</i>
+                  
+                </td>
+                <td class="kwdoc"><p>If status is 'checked' then checks the box if its not already checked. Prints a warning msg if already checked 'unchecked' then unchecks the box if its not already checked. Prints a warning msg if already unchecked</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Validate Checkbox">
                 <td class="kwname">
                   Validate Checkbox
@@ -1404,24 +1444,6 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required</p></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.py.Verify Affiliated Contact">
-                <td class="kwname">
-                  Verify Affiliated Contact
-                </td>
-                <td class="kwargs">
-                  
-                  <i>list_name</i>, 
-                  
-                  <i>first_name</i>, 
-                  
-                  <i>last_name</i>, 
-                  
-                  <i>y</i>
-                  
-                </td>
-                <td class="kwdoc"><p>Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Verify Allocations">
@@ -1544,22 +1566,6 @@ pre {
                 <td class="kwdoc"><p>To verify that the data in database table match with expected value, provide ns if object has namespace prefix otherwise nonns, object api name, record_id and the data u want to verify</p></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.py.Verify Field Value">
-                <td class="kwname">
-                  Verify Field Value
-                </td>
-                <td class="kwargs">
-                  
-                  <i>field</i>, 
-                  
-                  <i>value</i>, 
-                  
-                  <i>status</i>
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.py.Verify Field Values">
                 <td class="kwname">
                   Verify Field Values
@@ -1672,6 +1678,22 @@ pre {
                 <td class="kwdoc"><p>Verifies that a record with specified id is saved in specified object table in database and returns the record</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSP.py.Verify Related List">
+                <td class="kwname">
+                  Verify Related List
+                </td>
+                <td class="kwargs">
+                  
+                  <i>list_name</i>, 
+                  
+                  <i>status</i>, 
+                  
+                  <i>name</i>
+                  
+                </td>
+                <td class="kwdoc"><p>If status is 'contains' then the specified related list should contain name 'does not contain' then the specified related list should not contain name</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSP.py.Verify Related List Field Values">
                 <td class="kwname">
                   Verify Related List Field Values
@@ -1747,7 +1769,7 @@ pre {
                   <i>value</i>
                   
                 </td>
-                <td class="kwdoc"></td>
+                <td class="kwdoc"><p>Verifies that toast contains specified value</p></td>
               </tr>
               
               <tr class="kwrow" id="NPSP.py.Wait For Aura">
@@ -2109,34 +2131,6 @@ pre {
                 <td class="kwdoc"></td>
               </tr>
               
-              <tr class="kwrow" id="NPSP.robot.Create Primary Affiliation">
-                <td class="kwname">
-                  Create Primary Affiliation
-                </td>
-                <td class="kwargs">
-                  
-                  <i>acc_name</i>, 
-                  
-                  <i>con_id</i>
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
-              <tr class="kwrow" id="NPSP.robot.Create Secondary Affiliation">
-                <td class="kwname">
-                  Create Secondary Affiliation
-                </td>
-                <td class="kwargs">
-                  
-                  <i>acc_name</i>, 
-                  
-                  <i>con_id</i>
-                  
-                </td>
-                <td class="kwdoc"></td>
-              </tr>
-              
               <tr class="kwrow" id="NPSP.robot.New Contact for HouseHold">
                 <td class="kwname">
                   New Contact for HouseHold
@@ -2354,9 +2348,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>src_fld</i>, 
+                  <i>*args</i>, 
                   
-                  <i>tgt_fld</i>
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click on Create New Field Mapping button on the page select 'src_fld' arg in Source Field Label box 'tgt_fld' arg in Target Field Label box</p></td>
@@ -2368,7 +2362,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>fld_name</i>
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click the dropdown for fld_name and select Delete and wait for field mapping to not present on the page.</p></td>
@@ -2380,7 +2376,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>fld_label</i>
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Checks if mapping with fld_label exists and if exists deletes the mapping. If not then does nothing</p></td>
@@ -2392,9 +2390,9 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>fld_name</i>, 
+                  <i>*args</i>, 
                   
-                  <i>tgt_field</i>
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click the dropdown for fieldname and select edit and wait for model is open. Once modal is open click on Target field to open a dropdown and select 'target_field' from available options</p></td>
@@ -2417,10 +2415,103 @@ pre {
                 </td>
                 <td class="kwargs">
                   
-                  <i>obj</i>
+                  <i>*args</i>, 
+                  
+                  <i>**kwargs</i>
                   
                 </td>
                 <td class="kwdoc"><p>Click the dropdwon for obj and select View Field Mappings and verify that field mappings page is open</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
+      <div class="file" id="file-robot/Cumulus/resources/AffiliationPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/AffiliationPageObject.py'>AffiliationPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/AffiliationPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Details-Affiliation">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Details</td>
+	          <td title='Object Name'>Affiliation</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>AffiliationPageObject.AffiliationDetailPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="AffiliationPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+        <div class="section" pageobject="Listing-Affiliation">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Listing</td>
+	          <td title='Object Name'>Affiliation</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>AffiliationPageObject.AffiliationListingPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="AffiliationPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
               </tr>
               
             </tbody>
@@ -2488,6 +2579,34 @@ pre {
                   
                 </td>
                 <td class="kwdoc"><p>Delete the old value in specified field by clicking on delete icon and update with new value</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ContactPageObject.py.Validate Relation Status Message">
+                <td class="kwname">
+                  Validate Relation Status Message
+                </td>
+                <td class="kwargs">
+                  
+                  <i>contact1</i>, 
+                  
+                  <i>contact2</i>, 
+                  
+                  <i>relation</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Obtains the status message displayed on the relationships section of contact details page Validates it against the expected status message Note: Pass contact1,contact2, relation in a desired pattern to format as contact1 is contact2's relation</p></td>
+              </tr>
+              
+              <tr class="kwrow" id="ContactPageObject.py.Waitfor Actions Dropdown And Click Option">
+                <td class="kwname">
+                  Waitfor Actions Dropdown And Click Option
+                </td>
+                <td class="kwargs">
+                  
+                  <i>option</i>
+                  
+                </td>
+                <td class="kwdoc"><p>Wait for the Action dropdown menu to load from the contact details page Click on the desired option passed as a parameter</p></td>
               </tr>
               
             </tbody>
@@ -2784,6 +2903,16 @@ pre {
                 <td class="kwdoc"><p>Waits for the menu item to load and clicks to expand menu</p></td>
               </tr>
               
+              <tr class="kwrow" id="NPSPSettingsPageObject.py.Verify Advanced Mapping Is Not Enabled">
+                <td class="kwname">
+                  Verify Advanced Mapping Is Not Enabled
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Verifies that advanced mapping is not enabled by default By checking 'Configure Advanced Mapping' is not visible on the page</p></td>
+              </tr>
+              
               <tr class="kwrow" id="NPSPSettingsPageObject.py.Wait Until Advanced Mapping Is Enabled">
                 <td class="kwname">
                   Wait Until Advanced Mapping Is Enabled
@@ -2914,9 +3043,60 @@ pre {
         
       </div>
       
+      <div class="file" id="file-robot/Cumulus/resources/RelationshipPageObject.py">
+        <div class='file-header'>
+          <h2 title='robot/Cumulus/resources/RelationshipPageObject.py'>RelationshipPageObject.py</h2>
+          <div class='file-path'>robot/Cumulus/resources/RelationshipPageObject.py</div>
+        </div>
+
+        
+
+        
+        <div class="section" pageobject="Details-Relationship">
+
+          
+          <div class='pageobject-header'>
+
+            <table class='pageobject-header'>
+              <tbody>
+	        <tr class='data'>
+	          <td title='Page Type'>Details</td>
+	          <td title='Object Name'>Relationship</td>
+	        </tr>
+	        <tr class='labels'>
+	          <td>Page Type</td>
+	          <td>Object Name</td>
+	        </tr>
+              </tbody>
+            </table>
+          </div>
+          
+
+          <div class='description' title='Description'><p>Documentation for library <code>RelationshipPageObject.RelationshipDetailPage</code>.</p></div>
+          <table class="kwtable" title='Table of keywords'>
+            <tbody>
+              <tr><th>Keyword</th><th>Arguments</th><th>Documentation</th></tr>
+              
+              <tr class="kwrow" id="RelationshipPageObject.py.Log Current Page Object">
+                <td class="kwname">
+                  Log Current Page Object
+                </td>
+                <td class="kwargs">
+                  
+                </td>
+                <td class="kwdoc"><p>Logs the name of the current page object</p>
+<p>The current page object is also returned as an object</p></td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div> 
+        
+      </div>
+      
     </div>
     <div class="footer">
-      Generated on Friday December 13, 01:56 PM - cumulusci v3.2.0
+      Generated on Thursday January 02, 02:11 PM - cumulusci v3.3.0
     </div>
   </body>
 </html>
