@@ -1757,7 +1757,6 @@
         <members>bdiTime</members>
         <members>bdiUpdated</members>
         <members>bgeActionDelete</members>
-        <members>bgeActionEdit</members>
         <members>bgeActionView</members>
         <members>bgeBatchAvailableFields</members>
         <members>bgeBatchBatchProcessSizeHelp</members>
@@ -1879,6 +1878,7 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>geActionOpen</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveFieldDown</members>

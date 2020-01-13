@@ -51,7 +51,7 @@ export default class GeBatchGiftEntryApp extends LightningElement {
         table.runBatchDryRun(toggleSpinner);
     }
 
-    handleEdit(event) {
+    handleLoadData(event) {
         const form = this.template.querySelector('c-ge-form-renderer');
         form.load(event.detail);
     }
