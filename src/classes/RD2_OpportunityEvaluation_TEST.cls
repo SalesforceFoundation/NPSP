@@ -467,6 +467,8 @@ private class RD2_OpportunityEvaluation_TEST {
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(null, rd.npe03__Paid_Amount__c, 'The PaidAmount field should still be null instead of zero');
     }
+
+    /**
      * @description Verifies an Opp with the next Close Date is created
      * when the same Close Date Opp is Closed Lost in data migration
      */
