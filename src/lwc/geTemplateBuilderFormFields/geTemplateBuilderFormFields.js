@@ -1,5 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
-import { findIndexByProperty, mutable, generateId, dispatch } from 'c/utilTemplateBuilder';
+import { dispatch } from 'c/utilTemplateBuilder';
+import { mutable, findIndexByProperty } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 

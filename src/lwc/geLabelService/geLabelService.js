@@ -1,5 +1,5 @@
 // Import utility method
-import { format } from 'c/utilTemplateBuilder';
+import { format } from 'c/utilCommon';
 
 // Import custom labels
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
@@ -35,6 +35,7 @@ import geAssistiveFormFieldsExpandAll from '@salesforce/label/c.geAssistiveFormF
 import geAssistiveFormFieldsRemoveField from '@salesforce/label/c.geAssistiveFormFieldsRemoveField';
 import geAssistiveFormFieldsSectionEdit from '@salesforce/label/c.geAssistiveFormFieldsSectionEdit';
 import geAssistiveModalCancelAndDiscard from '@salesforce/label/c.geAssistiveModalCancelAndDiscard';
+import geAssistiveRemoveSelectedOption from '@salesforce/label/c.geAssistiveRemoveSelectedOption';
 import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
@@ -61,6 +62,7 @@ import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormField
 import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
 import geButtonFormFieldsModalDeleteSectionAndFields from '@salesforce/label/c.geButtonFormFieldsModalDeleteSectionAndFields';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
+import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
 import geErrorFieldPermission from '@salesforce/label/c.geErrorFieldPermission';
 import geErrorPageLevelAdvancedMappingBody from '@salesforce/label/c.geErrorPageLevelAdvancedMappingBody';
@@ -95,6 +97,7 @@ import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTab
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
+import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
@@ -181,6 +184,7 @@ class GeLabelService {
         geButtonFormFieldsExpandAll,
         geButtonFormFieldsModalDeleteSectionAndFields,
         geButtonTemplatesTabCreateTemplate,
+        geErrorCompleteThisField,
         geErrorExistingTemplateName,
         geErrorFieldPermission,
         geErrorPageLevelAdvancedMappingBody,
@@ -215,6 +219,8 @@ class GeLabelService {
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
+        geAssistiveRemoveSelectedOption,
+        geSearchPlaceholder,
         geTabBatchHeader,
         geTabFormFields,
         geTabTemplateInfo,

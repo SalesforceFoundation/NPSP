@@ -212,7 +212,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if(invalidFields.length > 0){
             let fieldListAsString = invalidFields.join(', ');
-            showToast(this, 'Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
+            showToast('Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
         }
 
         return invalidFields.length === 0;

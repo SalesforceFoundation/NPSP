@@ -1,6 +1,6 @@
 import { LightningElement, api } from 'lwc';
-import REMOVE_SELECTED_OPTION from '@salesforce/label/c.GE_Remove_Selected_Option';
-import SEARCH_PLACEHOLDER from '@salesforce/label/c.GE_Search_Placeholder';
+import GeLabelService from 'c/geLabelService';
+import { isNotEmpty } from 'c/utilCommon';
 
 const COMBO_BOX_CLASS = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
 const INPUT_CLASS = 'slds-input slds-combobox__input';
@@ -13,11 +13,10 @@ export default class GeAutocomplete extends LightningElement {
     @api iconName;
     @api label;
     @api fieldInfo;
+    @api valid;
+    @api required;
 
-    labels = {
-        REMOVE_SELECTED_OPTION,
-        SEARCH_PLACEHOLDER
-    };
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     /**
      * Handle changes in the value being searched for.
@@ -64,12 +63,21 @@ export default class GeAutocomplete extends LightningElement {
      * @returns {boolean} TRUE when an option is selected for this lookup
      */
     get hasOptionSelected() {
-        return !this.hasOptions && (typeof this.value !== 'undefined' && this.value !== null);
+        return !this.hasOptions && isNotEmpty(this.value);
+    }
+
+    get invalid() {
+        // necessary for aria attributes
+        return !this.valid;
     }
 
     /*******************************************
      Dynamic CSS/Id / Display Attributes below here
      *******************************************/
+
+    get formElementClass() {
+        return this.valid ? 'slds-form-element' : 'slds-form-element slds-has-error';
+    }
 
     get comboBoxClass() {
         return this.hasOptions ? COMBO_BOX_CLASS + ' slds-is-open' : COMBO_BOX_CLASS;
@@ -97,5 +105,7 @@ export default class GeAutocomplete extends LightningElement {
         return `listBox-${this.id}`;
     }
 
-
+    get errorMsgId() {
+        return `errMsg-${this.id}`;
+    }
 }
