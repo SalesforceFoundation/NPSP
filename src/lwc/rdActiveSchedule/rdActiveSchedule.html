@@ -40,14 +40,20 @@
                                     <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPmtMethod}>
                                         <lightning-formatted-text value={labels.lblPmtMethod}></lightning-formatted-text>
                                     </dt>
-                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:false={schedule.paymentMethod}>
+                                        <lightning-formatted-text value={labels.lblNone}></lightning-formatted-text>
+                                    </dd>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.paymentMethod}>
                                         <lightning-formatted-text value={schedule.paymentMethod}></lightning-formatted-text>
                                     </dd>
 
                                     <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblCampaign}>
                                         <lightning-formatted-text value={labels.lblCampaign}></lightning-formatted-text>
                                     </dt>
-                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:false={schedule.campaign}>
+                                        <lightning-formatted-text value={labels.lblNone}></lightning-formatted-text>
+                                    </dd>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.campaign}>
                                         <lightning-formatted-text value={schedule.campaign}></lightning-formatted-text>
                                     </dd>
 
