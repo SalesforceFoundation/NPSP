@@ -51,10 +51,9 @@ public with sharing class FORM_ServiceGiftEntry {
 
         for (Form_Template__c formTemplate : allTemplates) {
             FORM_Template deserializedFormTemplate = deserializeFormTemplateFromObj(formTemplate);
-            if (formTemplate.id != null) {
-                deserializedFormTemplate.id = formTemplate.id;
+            if (formTemplate.Id != null) {
+                deserializedFormTemplate.id = formTemplate.Id;
             }
-
             formTemplates.add(deserializedFormTemplate);
         }
 
@@ -99,7 +98,8 @@ public with sharing class FORM_ServiceGiftEntry {
     }
 
     /*******************************************************************************************************
-    * @description Method deletes a Form_Template__c record by id.
+    * @description Method deletes a Form_Template__c record by id. Deletes a Form_Template__c
+    * if it is not used by any Data Import Batch
     * @param id: Form_Template__c record id
     */
     @AuraEnabled

@@ -73,10 +73,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         Form_Template__c[] formTemplates = [SELECT Id, Name FROM Form_Template__c];
 
         System.assertEquals(2, formTemplates.size());
-        fs.deleteFormTemplates(new String[]{ formTemplates[0].id, formTemplates[1].id });
+        Boolean isFormTemplateDeleted = fs.deleteFormTemplates(new String[]{ formTemplates[0].id, formTemplates[1].id });
 
         formTemplates = [SELECT Id, Name FROM Form_Template__c];
         System.assertEquals(0, formTemplates.size());
+        System.assertEquals(true, isFormTemplateDeleted, 'Form Template should be deleted');
     }
 
     /*******************************************************************************************************
@@ -119,7 +120,6 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         String templateJSON = JSON.serialize(template);
         fs.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
-
         FORM_Template templateResult = fs.retrieveDefaultSGEFormTemplate();
         String templateResultJSON = JSON.serialize(templateResult);
 
@@ -155,6 +155,36 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             'New template names should return true from `FORM_ServiceGiftEntry.checkNameUniqueness`');
     }
 
+    /**************************************************************************************************
+     * @description Confirms that a form template used by any Data Import Batch cannot be deleted.
+     */
+    @IsTest
+    static void shouldPreventDeletionOfTemplateInUse() {
+        FORM_Service fs = new FORM_Service();
+
+        FORM_Template template = createSampleTemplate();
+        String templateJSON = JSON.serialize(template);
+        fs.storeFormTemplate(null,
+                template.name,
+                template.description,
+                template.version,
+                templateJSON);
+
+        Form_Template__c[] formTemplates = [
+                SELECT Id, Name, Template_JSON__c
+                FROM Form_Template__c
+        ];
+
+        DataImportBatch__c batch = createBatch('Test Batch', false);
+        batch.Form_Template__c = formTemplates[0].Id;
+
+        insert batch;
+
+        Boolean isFormTemplateDeleted =  fs.deleteFormTemplates(new String[]{ formTemplates[0].Id});
+
+        System.assertEquals(false, isFormTemplateDeleted, 'A Form Template in use should not be deleted');
+    }
+
     //Utility method for creating a sample template.
     public static FORM_Template createSampleTemplate () {
         
@@ -186,5 +216,26 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
                                                 '1.0',
                                                 layout);
         return template;
+    }
+
+
+    /**********************************************************************************************
+     * @description Utility method that creates an NPSP Data Import Batch
+     *
+     * @param name
+     * @param autoProcess
+     *
+     * @return DataImportBatch__c
+     */
+    public static DataImportBatch__c createBatch (String name, Boolean autoProcess) {
+        DataImportBatch__c batch = new DataImportBatch__c();
+        batch.Name = name;
+        batch.Batch_Process_Size__c = 200;
+        batch.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+        batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        batch.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
+        batch.Process_Using_Scheduled_Job__c = autoProcess;
+        return batch;
     }
 }

@@ -56,8 +56,8 @@ public virtual with sharing class FORM_Service {
     * @description Method deletes a Form_Template__c record by id.
     * @param id: Form_Template__c record id
     */
-    public virtual void deleteFormTemplates(String[] ids) {
-        FORM_ServiceGiftEntry.deleteFormTemplates(ids);
+    public virtual Boolean deleteFormTemplates(String[] ids) {
+        return FORM_ServiceGiftEntry.deleteFormTemplates(ids);
     }
 
     /*******************************************************************************************************

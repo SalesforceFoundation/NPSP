@@ -1932,6 +1932,7 @@
         <members>geToastSaveFailed</members>
         <members>geToastSelectActiveSection</members>
         <members>geToastTemplateCreateSuccess</members>
+        <members>geToastTemplateDeleteError</members>
         <members>geToastTemplateTabError</members>
         <members>geToastTemplateTabsError</members>
         <members>geToastTemplateUpdateSuccess</members>

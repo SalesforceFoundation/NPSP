@@ -4890,6 +4890,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The {0} template was created.</value>
     </labels>
     <labels>
+         <fullName>geToastTemplateDeleteError</fullName>
+         <categories>Gift Entry</categories>
+         <language>en_US</language>
+         <protected>true</protected>
+         <shortDescription>Body for toast error if deleting template used by a batch or is set as default</shortDescription>
+         <value>This template is in use and cannot be deleted.</value>
+    </labels>
+    <labels>
         <fullName>geToastSaveFailed</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

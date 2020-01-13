@@ -16,6 +16,7 @@ const actions = [
 ];
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
+const TOAST_MODE_DISMISSABLE = 'dismissable';
 
 const columns = [
     { label: 'Template Name', fieldName: 'name' },
@@ -89,24 +90,31 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 });
                 break;
             case 'delete':
-                this.handleTemplateDeletion(row);
+                this.handleTemplateDeletion(row.id);
                 break;
             default:
         }
     }
 
 
-    handleTemplateDeletion(row){
-        let deleted = deleteFormTemplates({ ids: [row.id] }).then(() => {
-            const index = findIndexByProperty(this.templates, 'id', row.id);
-            this.templates.splice(index, 1);
-            this.templates = [...this.templates];
+    /*******************************************************************************************************
+     * @description Handles Form Template Deletion. Currently prevents deletion if Form Templates used by a
+     * Data Import Batch
+     * @param {Id} recordId : Record id of the Form_Template__c to be deleted
+     */
+    handleTemplateDeletion(recordId){
+        deleteFormTemplates({ ids: [recordId] }).then((deleted) => {
+            if (!deleted) {
+                showToast(this.CUSTOM_LABELS.commonError, this.CUSTOM_LABELS.geToastTemplateDeleteError,
+                    this.CUSTOM_LABELS.commonAssistiveError, TOAST_MODE_DISMISSABLE);
+            } else {
+                const index = findIndexByProperty(this.templates, 'id', recordId);
+                this.templates.splice(index, 1);
+                this.templates = [...this.templates];
+            }
             this.isLoading = false;
         });
-        if(!deleted){
-            showToast( 'Template still in use', 'The template you are trying to delete is ' +
-                'currently used in a batch ', 'warning', 'dismissable');
-        }
+
     }
 
     /*******************************************************************************
