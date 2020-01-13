@@ -1,29 +1,37 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
 import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { findIndexByProperty } from 'c/utilTemplateBuilder';
+import { showToast, dispatch, handleError } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
-import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
-const actions = [
-    { label: 'Edit', name: 'edit' },
-    { label: 'Clone', name: 'clone' },
-    { label: 'Delete', name: 'delete' }
-];
+import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
+import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
+import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
+import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
+const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
+const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
+const SUCCESS = 'success';
+const IS_LOADING = 'isLoading';
+const EVENT_TOGGLE_MODAL = 'togglemodal';
+const SAVE = 'save';
+const EDIT = 'edit';
+const CLONE = 'clone';
+const DELETE = 'delete';
 
-const columns = [
-    { label: 'Template Name', fieldName: 'name' },
-    { label: 'Template Description', fieldName: 'description' },
-    {
-        type: 'action',
-        typeAttributes: { rowActions: actions },
-    },
+const TEMPLATES_LIST_VIEW_NAME = 'Templates';
+const TEMPLATES_LIST_VIEW_SORT_DIRECTION = 'desc';
+const TEMPLATES_LIST_DEFAULT_LIMIT = 10;
+const TEMPLATES_LIST_VIEW_ICON = 'standard:visit_templates';
+const TEMPLATES_TABLE_ACTIONS = [
+    { label: GeLabelService.CUSTOM_LABELS.commonEdit, name: EDIT },
+    { label: GeLabelService.CUSTOM_LABELS.commonClone, name: CLONE },
+    { label: GeLabelService.CUSTOM_LABELS.commonDelete, name: DELETE }
 ];
 
 export default class GeTemplates extends NavigationMixin(LightningElement) {
@@ -32,13 +40,71 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @track templates;
-    @track columns = columns;
-    @track isLoading = true;
-    currentNamespace;
+    @track templatesTableActions = TEMPLATES_TABLE_ACTIONS;
     @track isAccessible = true;
+    @track isLoading = true;
 
     get templateBuilderCustomTabApiName() {
-        return this.currentNamespace ? `${this.currentNamespace}__GE_Template_Builder` : 'GE_Template_Builder';
+        return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
+    }
+
+    get templatesListViewName() {
+        return TEMPLATES_LIST_VIEW_NAME;
+    }
+
+    get templatesListViewIcon() {
+        return TEMPLATES_LIST_VIEW_ICON;
+    }
+
+    get templatesListViewDefaultLimit() {
+        return TEMPLATES_LIST_DEFAULT_LIMIT;
+    }
+
+    get formTemplateObjectApiName() {
+        return FORM_TEMPLATE_INFO.objectApiName;
+    }
+
+    get dataImportBatchObjectApiName() {
+        return DATA_IMPORT_BATCH_INFO.objectApiName;
+    }
+
+    get sortTemplatesBy() {
+        return TEMPLATE_LAST_MODIFIED_DATE_INFO.fieldApiName;
+    }
+
+    get sortTemplatesDirection() {
+        return TEMPLATES_LIST_VIEW_SORT_DIRECTION;
+    }
+
+    get geListViewComponent() {
+        return this.template.querySelector(`c-ge-list-view[data-id='${TEMPLATES_LIST_VIEW_NAME}']`);
+    }
+
+    /*******************************************************************************
+    * @description Public method for receiving modal related events from geListView.
+    *
+    * @param {object} modalData: Event object containing the action and modal payload.
+    * component chain: utilDualListbox -> geListView -> here.
+    */
+    @api
+    notify(event) {
+        if (event.action === SAVE) {
+            const component =
+                this.template.querySelector(`c-ge-list-view[data-id='${event.payload.name}']`);
+            if (component) {
+                component.notify(event);
+            }
+        }
+    }
+
+    /*******************************************************************************
+    * @description Pass through method that receives an event from geListView to
+    * notify parent aura component to construct a modal.
+    *
+    * @param {object} event: Event object containing a payload for the modal.
+    */
+    toggleModal(event) {
+        dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
     connectedCallback() {
@@ -47,18 +113,18 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     init = async () => {
         this.isAccessible = await this.checkPageAccess();
-        if(this.isAccessible){
-            await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
-            this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+
+        if (this.isAccessible) {
+            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.templates = await getAllFormTemplates();
             this.isLoading = false;
         }
     }
 
     /*******************************************************************************
-     * @description Method checks for page level access. Currently only checks
-     * if Advanced Mapping is on from the Data Import Custom Settings.
-     */
+    * @description Method checks for page level access. Currently only checks
+    * if Advanced Mapping is on from the Data Import Custom Settings.
+    */
     checkPageAccess = async () => {
         const dataImportSettings = await getDataImportSettings();
         const isAdvancedMappingOn =
@@ -73,31 +139,68 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         return hasPageAccess;
     }
 
-    handleRowAction(event) {
+    /*******************************************************************************
+    * @description Method handles actions for the Templates list view table.
+    *
+    * @param {object} event: Event received from the list view component
+    * containing action details.
+    */
+    handleTemplatesTableRowAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
-        this.isLoading = true;
 
         switch (actionName) {
             case 'edit':
-                this.navigateToTemplateBuilder(row.id);
+                this.navigateToTemplateBuilder(row.Id);
                 break;
             case 'clone':
-                cloneFormTemplate({ id: row.id }).then((clonedTemplate) => {
-                    this.templates = [...this.templates, clonedTemplate];
-                    this.isLoading = false;
-                });
+                this.geListViewComponent.setProperty(IS_LOADING, true);
+
+                cloneFormTemplate({ id: row.Id })
+                    .then(clonedTemplate => {
+                        this.templates = [...this.templates, clonedTemplate];
+                        this.geListViewComponent.setProperty(IS_LOADING, false);
+                        this.geListViewComponent.refresh();
+                    })
+                    .catch(error => {
+                        handleError(error);
+                    });
                 break;
             case 'delete':
-                deleteFormTemplates({ ids: [row.id] }).then(() => {
-                    const index = findIndexByProperty(this.templates, 'id', row.id);
-                    this.templates.splice(index, 1);
-                    this.templates = [...this.templates];
-                    this.isLoading = false;
-                });
+                this.geListViewComponent.setProperty(IS_LOADING, true);
+
+                deleteFormTemplates({ ids: [row.Id] })
+                    .then(formTemplateNames => {
+                        this.geListViewComponent.setProperty(IS_LOADING, false);
+                        this.geListViewComponent.refresh();
+
+                        const toastMessage = GeLabelService.format(
+                            this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
+                            formTemplateNames);
+
+                        showToast(toastMessage, '', SUCCESS);
+                    })
+                    .catch(error => {
+                        handleError(error);
+                    });
                 break;
             default:
         }
+    }
+
+    /*******************************************************************************
+    * @description Navigates to the Record Detail Page.
+    *
+    * @param {string} recordId: SObject Record ID
+    */
+    navigateToRecordViewPage(recordId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: recordId,
+                actionName: 'view'
+            }
+        });
     }
 
     /*******************************************************************************
