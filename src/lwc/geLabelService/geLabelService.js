@@ -7,6 +7,7 @@ import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
 import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
 import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonBack from '@salesforce/label/c.commonBack';
+import commonBatches from '@salesforce/label/c.commonBatches';
 import commonCancel from '@salesforce/label/c.commonCancel';
 import commonClone from '@salesforce/label/c.commonClone';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
@@ -126,6 +127,7 @@ class GeLabelService {
         commonAssistiveSuccess,
         commonAssistiveWarning,
         commonBack,
+        commonBatches,
         commonCancel,
         commonClone,
         commonDefaultValue,

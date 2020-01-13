@@ -58,11 +58,11 @@
                         <div class="slds-grid slds-wrap slds-m-bottom_large slds-p-bottom_large">
                             <div class="slds-size_1-of-1 slds-p-around_medium">
                                 <div class="slds-card slds-card_extension">
-                                    <c-ge-list-view data-id='Batches'
-                                                    list-name='Batches'
-                                                    object-api-name='npsp__DataImportBatch__c'
-                                                    title='Batches'
-                                                    custom-icon='standard:account'
+                                    <c-ge-list-view data-id={batchesListViewName}
+                                                    list-name={batchesListViewName}
+                                                    object-api-name={dataImportBatchObjectApiName}
+                                                    title={CUSTOM_LABELS.commonBatches}
+                                                    custom-icon={batchesListViewIcon}
                                                     filtered-by={batchListFilteredBy}
                                                     actions={batchesTableActions}
                                                     onrowaction={handleBatchesTableRowAction}

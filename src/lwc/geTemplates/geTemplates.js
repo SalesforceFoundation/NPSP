@@ -42,6 +42,9 @@ const TEMPLATES_TABLE_ACTIONS = [
 const BATCHES_TABLE_ACTIONS = [
     { label: 'Edit', name: 'edit' }
 ];
+const BATCHES_LIST_VIEW_NAME = 'Batches';
+const BATCHES_LIST_VIEW_DEFAULT_LIMIT = 10;
+const BATCHES_LIST_VIEW_ICON = 'custom:custom17';
 
 export default class GeTemplates extends NavigationMixin(LightningElement) {
 
@@ -59,6 +62,10 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
     }
 
+    get formTemplateObjectApiName() {
+        return FORM_TEMPLATE_INFO.objectApiName;
+    }
+
     get templatesListViewName() {
         return TEMPLATES_LIST_VIEW_NAME;
     }
@@ -71,20 +78,28 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
         return TEMPLATES_LIST_DEFAULT_LIMIT;
     }
 
-    get formTemplateObjectApiName() {
-        return FORM_TEMPLATE_INFO.objectApiName;
-    }
-
-    get dataImportBatchObjectApiName() {
-        return DATA_IMPORT_BATCH_INFO.objectApiName;
-    }
-
     get sortTemplatesBy() {
         return TEMPLATE_LAST_MODIFIED_DATE_INFO.fieldApiName;
     }
 
     get sortTemplatesDirection() {
         return TEMPLATES_LIST_VIEW_SORT_DIRECTION;
+    }
+
+    get dataImportBatchObjectApiName() {
+        return DATA_IMPORT_BATCH_INFO.objectApiName;
+    }
+
+    get batchesListViewName() {
+        return BATCHES_LIST_VIEW_NAME;
+    }
+
+    get batchesListViewIcon() {
+        return BATCHES_LIST_VIEW_ICON;
+    }
+
+    get batchesListViewDefaultLimit() {
+        return BATCHES_LIST_VIEW_DEFAULT_LIMIT;
     }
 
     get batchesTableActions() {

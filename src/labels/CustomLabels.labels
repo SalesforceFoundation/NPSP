@@ -4062,6 +4062,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Back</value>
     </labels>
     <labels>
+        <fullName>commonBatches</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batches</shortDescription>
+        <value>Batches</value>
+    </labels>
+    <labels>
         <fullName>commonCancel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
