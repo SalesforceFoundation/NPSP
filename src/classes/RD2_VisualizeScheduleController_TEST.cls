@@ -59,7 +59,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         try {
             RD2_VisualizeScheduleController.getInstallments(rdId, numberOfInstallments);
-            System.assertEquals(1, 2, 'This statement should not be executed.');
         } catch (Exception e) {
             actualException = e;
         }
@@ -84,7 +83,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         try {
             RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
-            System.assertEquals(1, 2, 'This statement should not be executed.');
         } catch (Exception e) {
             actualException = e;
         }
@@ -109,7 +107,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         try {
             RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
-            System.assertEquals(1, 2, 'This statement should not be executed.');
         } catch (Exception e) {
             actualException = e;
         }
@@ -205,7 +202,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         try {
             RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
-            System.assertEquals(1, 2, 'This statement should not be executed.');
         } catch (Exception e) {
             actualException = e;
         }
@@ -226,7 +222,6 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         try {
             RD2_VisualizeScheduleController.getInstallments(acc.Id, numberOfInstallments);
-            System.assertEquals(1, 2, 'This statement should not be executed.');
         } catch (Exception e) {
             actualException = e;
         }
@@ -310,6 +305,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     @IsTest
     private static void shouldThrowAuraHandledExceptionRDIsClosed() {
+        Exception actualException;
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
                 .withStatusClosed()
                 .withDayOfMonth('12')
@@ -323,12 +319,11 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         try {
             List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
-            System.assertEquals(1, 2, 'This statement should not be executed.');
+        } catch (Exception e) {
+            actualException = e;
         }
-        catch(Exception e) {
-            System.assertEquals(new AuraHandledException(System.Label.RD2_ScheduleVisualizerErrorEnhancedRDNot).getTypeName(), e.getTypeName(),
-                    'Both exception types should be System.AuraHandledException');
-        }
+
+        assertScheduleVisualizerException(actualException);
     }
 
     /****
