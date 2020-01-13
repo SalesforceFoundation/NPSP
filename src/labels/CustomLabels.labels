@@ -4062,12 +4062,36 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Cancel</value>
     </labels>
     <labels>
+        <fullName>commonClone</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Clone</shortDescription>
+        <value>Clone</value>
+    </labels>
+    <labels>
         <fullName>commonDefaultValue</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Default Value</shortDescription>
         <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>commonDelete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>commonEdit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Edit</shortDescription>
+        <value>Edit</value>
     </labels>
     <labels>
         <fullName>commonError</fullName>
@@ -4084,6 +4108,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Field Label</shortDescription>
         <value>Field Label</value>
+    </labels>
+    <labels>
+        <fullName>commonNoItems</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No items to display.</shortDescription>
+        <value>No items to display.</value>
     </labels>
     <labels>
         <fullName>commonReadMore</fullName>
@@ -4116,6 +4148,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Save and Close</shortDescription>
         <value>Save &amp; Close</value>
+    </labels>
+    <labels>
+        <fullName>commonTemplates</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Templates</shortDescription>
+        <value>Templates</value>
+    </labels>
+    <labels>
+        <fullName>commonViewAll</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View All</shortDescription>
+        <value>View All</value>
+    </labels>
+    <labels>
+        <fullName>commonViewMore</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View More</shortDescription>
+        <value>View More</value>
     </labels>
     <labels>
         <fullName>commonUnknownError</fullName>
@@ -4461,6 +4517,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is a string. Name of a form section e.g. Gift Entry Form -->
         <value>Move the {0} section up.</value>
     </labels>
+     <labels>
+        <fullName>geAssistiveShowMenu</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text: Button/Picklist for selecting a list view</shortDescription>
+        <value>Show menu.</value>
+    </labels>
     <labels>
         <fullName>geAssistiveSpinner</fullName>
         <categories>Gift Entry</categories>
@@ -4540,6 +4604,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Deleting this section also removes any fields in it.</value>
     </labels>
     <labels>
+        <fullName>geBodyFormFieldsRightCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Form Fields sidebar text block</shortDescription>
+        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering the sections or fields.</value>
+    </labels>
+    <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4548,12 +4620,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter details about this Gift Entry Template.</value>
     </labels>
     <labels>
-        <fullName>geBodyFormFieldsRightCol</fullName>
+        <fullName>geBodyTemplatesTabDescription</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Form Fields right column text block</shortDescription>
-        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. The gift entry form layout can be managed by creating sections and reordering the sections or fields.</value>
+        <shortDescription>Template landing screen text block</shortDescription>
+        <value>A template is a reusable layout of fields for data entry. Edit a template by clicking the template name. Alternatively, create a new template or click any template's dropdown menu for more options.</value>
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBackFormFields</fullName>
@@ -4588,6 +4660,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Next: Form Fields</value>
     </labels>
     <labels>
+        <fullName>geButtonEnterGifts</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enter Gifts button</shortDescription>
+        <value>Enter Gifts</value>
+    </labels>
+    <labels>
         <fullName>geButtonFormFieldsAddSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4618,6 +4698,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Button to delete a section and remove its fields</shortDescription>
         <value>Delete Section and Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonTemplatesTabCreateTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Create Template button</shortDescription>
+        <value>Create Template</value>
     </labels>
     <labels>
         <fullName>geDonorColumnLabel</fullName>
@@ -4726,6 +4814,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Configure Batch Header Fields</value>
     </labels>
     <labels>
+        <fullName>geHeaderCustomTableHeaders</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for the component that handles the custom table headers</shortDescription>
+        <value>Select Fields to Display</value>
+    </labels>
+    <labels>
         <fullName>geHeaderEmptyFormSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4780,6 +4876,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for Form Fields body</shortDescription>
         <value>Configure Form Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderGiftEntry</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Top of all Gift Entry pages</shortDescription>
+        <value>Gift Entry</value>
     </labels>
     <labels>
         <fullName>geHeaderNewSection</fullName>
@@ -4841,6 +4945,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
     </labels>
     <labels>
+        <fullName>geLabelCustomTableSelectedFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for selected fields in component that handles the custom table headers</shortDescription>
+        <value>Visible Fields</value>
+    </labels>
+    <labels>
+        <fullName>geLabelCustomTableSourceFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for source fields in component that handles the custom table headers</shortDescription>
+        <value>Available Fields</value>
+    </labels>
+    <labels>
         <fullName>geLabelSectionName</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4889,13 +5009,46 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Template Info</value>
     </labels>
     <labels>
-        <fullName>geToastTemplateCreateSuccess</fullName>
+        <fullName>geTextListViewItemCount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Template successfully created</shortDescription>
-        <!-- {0} is a string. Name of the template that was created. -->
-        <value>The {0} template was created.</value>
+        <shortDescription>Text to show the number of records shown in the list view</shortDescription>
+        <value>{0} item</value>
+    </labels>
+    <labels>
+        <fullName>geTextListViewItemsCount</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to show the number of records shown in the list view</shortDescription>
+        <value>{0} items</value>
+    </labels>
+    <labels>
+        <fullName>geTextListViewSortedBy</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to display what the table is currently sorted by</shortDescription>
+        <!-- &#8226; is the character entity reference for a center dot -->
+        <value>&#8226; Sorted By {0}</value>
+    </labels>
+    <labels>
+        <fullName>geTextListViewUpdatedAgo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displays how long ago the last record in the current list view was updated</shortDescription>
+        <!-- &#8226; is the character entity reference for a center dot -->
+        <value>&#8226; Updated {0}</value>
+    </labels>
+    <labels>
+        <fullName>geToastListViewUpdated</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>List view successfully updated</shortDescription>
+        <value>List view updated.</value>
     </labels>
     <labels>
         <fullName>geToastSaveFailed</fullName>
@@ -4912,6 +5065,24 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Warning when attempting to add a gift field and a section hasn't been selected.</shortDescription>
         <value>Please select a section.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateCreateSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully created</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The "{0}" template was created.</value>
+    </labels>
+    <labels>
+        <fullName>geToastTemplateDeleteSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template successfully deleted</shortDescription>
+        <!-- {0} is a string. Name of the template that was created. -->
+        <value>The "{0}" template was deleted.</value>
     </labels>
     <labels>
         <fullName>geToastTemplateTabsError</fullName>
@@ -4938,7 +5109,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Template successfully updated</shortDescription>
         <!-- {0} is a string. Name of the template that was created. -->
-        <value>The {0} template was updated.</value>
+        <value>The "{0}" template was updated.</value>
     </labels>
     <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>
