@@ -21,12 +21,11 @@
                     <slot name="actions"
                           class="slds-no-flex">
                     </slot>
-                    <lightning-button-menu alternative-text="Show menu"
-                                           variant="border-filled"
+                    <lightning-button-menu variant="border-filled"
                                            icon-name="utility:settings"
                                            menu-alignment="auto">
-                        <lightning-menu-item value="MenuItemOne"
-                                             label="Select Fields to Display"
+                        <lightning-menu-item value="selectFieldsToDisplay"
+                                             label={CUSTOM_LABELS.geHeaderCustomTableHeaders}
                                              onclick={toggleModal}>
                         </lightning-menu-item>
                     </lightning-button-menu>

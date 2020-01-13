@@ -32,8 +32,6 @@ const USER = 'User';
 const URL = 'url';
 const _SELF = '_self';
 const DATE_FORMAT = 'M/D/YYYY, h:mm:ss A';
-const ASC = 'asc';
-const DESC = 'desc';
 const SAVE = 'save';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
@@ -117,8 +115,7 @@ export default class geListView extends LightningElement {
 
     get lastUpdatedOn() {
         const isMomentLoaded = LibsMoment && LibsMoment.moment;
-        const hasRecords = this.records && this.records.length > 0;
-        if (isMomentLoaded && hasRecords) {
+        if (isMomentLoaded && this.hasRecords) {
             let records = deepClone(this.records);
             records.sort((a, b) => {
                 return new Date(b.LastModifiedDate) - new Date(a.LastModifiedDate);
@@ -237,8 +234,18 @@ export default class geListView extends LightningElement {
     getRecords = async (displayColumns) => {
         const fields = displayColumns.map(column => column.fieldApiName);
         if (fields.length > 0) {
-            let queryObject = this.buildSoqlQuery(fields);
-            let formTemplates = await retrieveRecords(queryObject)
+            let orderBy = null;
+            if (this.sortedBy && this.sortedDirection) {
+                const orderedByFieldApiName = this.columnEntriesByName[this.sortedBy].fieldApiName;
+                orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
+            }
+
+            let formTemplates = await retrieveRecords({
+                selectFields: fields,
+                sObjectApiName: this.objectApiName,
+                orderByClause: orderBy,
+                limitClause: this.limit
+            })
                 .catch(error => {
                     handleError(error);
                 });
@@ -336,17 +343,6 @@ export default class geListView extends LightningElement {
             let fieldDescribe = this.objectInfo.fields[key];
             let label = fieldDescribe.label;
 
-            // Handle relationship info for fields looking up to a User.
-            const isRelationshipField =
-                fieldDescribe.relationshipName &&
-                fieldDescribe.referenceToInfos &&
-                fieldDescribe.referenceToInfos.length >= 1;
-
-            if (isRelationshipField) {
-                //const lastWordIndex = label.lastIndexOf(" ");
-                //label = label.substring(0, lastWordIndex);
-            }
-
             options.push({
                 label: label,
                 value: fieldDescribe.apiName
@@ -382,25 +378,13 @@ export default class geListView extends LightningElement {
                 fieldDescribe.referenceToInfos.length >= 1;
 
             if (isRelationshipField) {
+                const reference = fieldDescribe.referenceToInfos[0];
                 const isUserReference = fieldDescribe.referenceToInfos.find(info => info.apiName === USER);
 
-                if (isUserReference) {
-                    const nameFields = isUserReference.nameFields;
-                    const nameField = nameFields.find(field => field === NAME) || nameFields[0];
+                const nameFields = isUserReference ? isUserReference.nameFields : reference.nameFields;
+                const nameField = nameFields.find(field => field === NAME) || nameFields[0];
 
-                    displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
-                    //const lastWordIndex = displayColumn.label.lastIndexOf(" ");
-                    //displayColumn.label = displayColumn.label.substring(0, lastWordIndex);
-                } else {
-                    const reference = fieldDescribe.referenceToInfos[0];
-                    if (reference) {
-                        console.log('IS REFERENCE FIELD: ', fieldDescribe);
-                        const nameFields = reference.nameFields;
-                        const nameField = nameFields.find(field => field === NAME) || nameFields[0];
-
-                        displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
-                    }
-                }
+                displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
             }
 
             displayColumns.push(displayColumn);
@@ -422,9 +406,9 @@ export default class geListView extends LightningElement {
             listName: this.listName,
             columnHeadersString: JSON.stringify(columnHeaders)
         })
-            .then(response => {
+            .then(() => {
                 this.init();
-                showToast('View updated.', '', 'success');
+                showToast(this.CUSTOM_LABELS.geToastListViewUpdated, '', 'success');
             })
             .catch(error => {
                 handleError(error);
@@ -514,97 +498,6 @@ export default class geListView extends LightningElement {
                 typeAttributes: { rowActions: this.actions },
             }];
         }
-    }
-
-    /*******************************************************************************
-    * @description Method builds a SOQL query based on the currently selected list
-    * view's describe info.
-    */
-    buildSoqlQuery(selectedFieldApiNames) {
-        // Get select fields
-        const selectFields = selectedFieldApiNames;
-
-        // Get object name
-        const sObjectApiName = this.objectApiName;
-
-        // Get where clause
-        let whereClauses;
-        if (this.filteredBy && this.filteredBy.length > 0) {
-            let filters = deepClone(this.filteredBy);
-            whereClauses = filters.map((filter) => {
-                return this.createFilterEntry(filter);
-            });
-        }
-
-        // Get order by clause
-        let orderByClause;
-        if (this.sortedBy && this.sortedDirection) {
-            const columnEntry = this.columnEntriesByName[this.sortedBy];
-
-            if (columnEntry) {
-                const sortBy = columnEntry.fieldApiName ? columnEntry.fieldApiName : this.sortedBy;
-                orderByClause =
-                    `${sortBy} ${this.sortedDirection === ASC ? ASC : DESC}`;
-            }
-        }
-
-        // Get limit
-        const limitClause = `${this.limit}`;
-        console.log({ selectFields, sObjectApiName, whereClauses, orderByClause, limitClause });
-        return { selectFields, sObjectApiName, whereClauses, orderByClause, limitClause };
-    }
-
-    /*******************************************************************************
-    * @description Method creates expressions for the where clause of a soql query.
-    *
-    * @param {object} filterInfo: Filter object from a list view describe that
-    * contains the following fields:
-    *   String: fieldApiName
-    *   String: label
-    *   String[]: operandLabels
-    *   String: operator
-    *   e.g. {fieldApiName:'CreatedBy.Name', label:'Created By', operandLabels:['John'], operator:'Equals'}
-    */
-    createFilterEntry(filterInfo) {
-        const OPERATORS = {
-            'Equals': '=',
-            'NotEqual': '!=',
-            'LessThan': '<',
-            'GreaterThan': '>',
-            'LessOrEqual': '<=',
-            'GreaterOrEqual': '>=',
-            'Contains': 'LIKE',
-            'NotContain': 'LIKE',
-            'StartsWith': 'LIKE',
-        }
-
-        const fieldName = filterInfo.fieldApiName;
-        const comparisonOperator = OPERATORS[filterInfo.operator];
-        const value = filterInfo.operandLabels[0];
-
-        const isString = typeof value === 'string';
-        const isNumber = typeof value === 'number';
-        const isBoolean = typeof value === 'boolean';
-        let filter = `${fieldName} ${comparisonOperator} `;
-
-        if (isString && filterInfo.operator === 'Contains') {
-            filter += `'%${value}%'`;
-
-        } else if (isString && filterInfo.operator === 'NotContain') {
-            filter = `NOT ${fieldName} ${comparisonOperator} '%${value}%'`
-
-        } else if (isString && filterInfo.operator === 'StartsWith') {
-            filter += `'${value}%'`
-
-        } else if (isString) {
-            filter += `'${value}'`;
-
-        } else if (isNumber || isBoolean) {
-            filter += `${value}`;
-
-        }
-
-        return filter;
     }
 
     /*******************************************************************************
