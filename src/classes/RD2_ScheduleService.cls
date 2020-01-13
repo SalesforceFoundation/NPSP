@@ -510,6 +510,61 @@ public without sharing class RD2_ScheduleService {
         return nextDate;
     }
 
+    public List<ActiveSchedule> getVisualizedSchedules(npe03__Recurring_Donation__c rd) {
+        List<ActiveSchedule> activeSchedules = new List<ActiveSchedule>();
+        if (rd == null) {
+            return activeSchedules;
+        }
+
+        Boolean first1stAnd15thFound = false;
+        List<RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
+        for (RecurringDonationSchedule__c schedule : schedules) {
+
+            // This block collapses 1st and 15th schedules into a single row and nulls out day of month
+            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+                if (first1stAnd15thFound) {
+                    first1stAnd15thFound = false;
+                    continue;
+                }
+                first1stAnd15thFound = true;
+            }
+            activeSchedules.add(new ActiveSchedule(schedule));
+        }
+
+        return activeSchedules;
+    }
+
+    public class ActiveSchedule {
+
+        public Boolean  isCurrent {get;set;}
+        public Id       campaignId {get; set;}
+        public String   campaignName {get; set;}
+        public String   dayOfMonth {get; set;}
+        public Date     endDate {get; set;}
+        public Decimal  installmentAmount {get; set;}
+        public Integer  installmentFrequency {get; set;}
+        public String   installmentPeriod {get; set;}
+        public String   paymentMethod {get; set;}
+        public String   recurringDonationId {get; set;}
+        public Id       scheduleId {get; set;}
+        public Date     startDate {get; set;}
+
+        ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
+            isCurrent =             rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
+            campaignId =            rdSchedule.Campaign__c;
+            campaignName =          rdSchedule.Campaign__r.Name;
+            dayOfMonth =            rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
+            endDate =               rdSchedule.EndDate__c;
+            installmentAmount =     rdSchedule.InstallmentAmount__c;
+            installmentFrequency =  rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
+            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
+            paymentMethod =         rdSchedule.PaymentMethod__c;
+            recurringDonationId =   rdSchedule.RecurringDonation__c;
+            scheduleId =            rdSchedule.Id;
+            startDate =             rdSchedule.StartDate__c;
+        }
+    }
+
     /***
     * @description Performs a full analysis and rebuild of the Schedule records for a Recurring Donation,
     * but does not commit the schedule records to the database.  Uses the active schedules for the RD
@@ -568,23 +623,26 @@ public without sharing class RD2_ScheduleService {
     * @return Map<Id, List<RecurringDonationSchedule__c>>
     */
     public Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
-        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesById = new Map<Id, List<RecurringDonationSchedule__c>>();
 
-        for (RecurringDonationSchedule__c oldSchedule : Database.query(getExistingScheduleQueryString())) {
-            if (oldSchedule.StartDate__c > oldSchedule.EndDate__c) {
+        for (RecurringDonationSchedule__c schedule : Database.query(getExistingScheduleQueryString())) {
+            if (!isActive(schedule, currentDate)) {
                 continue;
             }
-            if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
-                oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
+            if (!schedulesById.containsKey(schedule.RecurringDonation__c)) {
+                schedulesById.put(schedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
             }
-            oldSchedules.get(oldSchedule.RecurringDonation__c).add(oldSchedule);
+            schedulesById.get(schedule.RecurringDonation__c).add(schedule);
+        }
+        if (schedulesById.size() == 0) {
+            schedulesById.put(rds[0].Id, new List<RecurringDonationSchedule__c>());
         }
 
-        return oldSchedules;
+        return schedulesById;
     }
 
     /***
-    * @description Build dynamic soql query string to support date injection
+    * @description Build dynamic soql query string with support for date injection
     * @return String
     */
     private String getExistingScheduleQueryString() {
@@ -601,14 +659,13 @@ public without sharing class RD2_ScheduleService {
             'RecurringDonation__c',
             'StartDate__c'
         };
-        String fromString = 'RecurringDonationSchedule__c';
-        String whereString = 'RecurringDonation__c IN :rds AND (EndDate__c = null OR EndDate__c >= :currentDate)';
         String orderString = 'StartDate__c';
 
         Util_Query theQuery = new UTIL_Query()
             .withSelectFields(selectFields)
-            .withFrom(fromString)
-            .withWhere(whereString)
+            .withFrom(RecurringDonationSchedule__c.SObjectType)
+            .withWhere('RecurringDonation__c IN :rds')
+            .withWhere('(EndDate__c = null OR EndDate__c >= :currentDate)')
             .withOrderBy(orderString);
 
         return theQuery.build();
