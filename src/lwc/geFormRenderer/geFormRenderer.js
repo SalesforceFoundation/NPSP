@@ -107,8 +107,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     handleSave(event) {
         this.clearErrors();
 
-        // TODO: Pass the actual Data Import record, and navigate to the new Opportunity
-        // const OpportunityId = GeFormService.createOpportunityFromDataImport(dataImport);
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         if(!this.isFormValid(sectionsList)){
