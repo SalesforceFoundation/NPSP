@@ -57,6 +57,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     });
 
     formTemplateRecordId;
+    existingFormTemplateName;
     currentNamespace;
     @track isLoading = true;
     @track isAccessible = true;
@@ -96,7 +97,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     get templateBuilderHeader() {
-        return this.formTemplateRecordId ? this.formTemplate.name : this.CUSTOM_LABELS.geHeaderNewTemplate;
+        return this.existingFormTemplateName ? this.existingFormTemplateName : this.CUSTOM_LABELS.geHeaderNewTemplate;
     }
 
     get mode() {
@@ -141,6 +142,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 if (this.formTemplateRecordId) {
                     let formTemplate = await retrieveFormTemplateById({ templateId: this.formTemplateRecordId });
 
+                    this.existingFormTemplateName = formTemplate.name;
                     this.formTemplate = formTemplate;
                     this.batchHeaderFields = formTemplate.batchHeaderFields;
                     this.formLayout = formTemplate.layout;
@@ -609,10 +611,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @description Methods runs validity checks for all tabs, sets tab errors, and
     * throws a toast to notify users which tabs to check.
     */
-    checkTabsValidity() {
+    checkTabsValidity = async () => {
         let tabsWithErrors = new Set();
 
-        this.validateTemplateInfoTab(tabsWithErrors);
+        await this.validateTemplateInfoTab(tabsWithErrors);
         this.validateSelectFieldsTab(tabsWithErrors);
         this.validateBatchHeaderTab();
 
@@ -634,12 +636,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * only has one required field (Name) and this only checks that any value is present
     * there.
     */
-    validateTemplateInfoTab(tabsWithErrors) {
+    validateTemplateInfoTab = async (tabsWithErrors) => {
         const templateInfoComponent = this.template.querySelector('c-ge-template-builder-template-info');
 
         if (templateInfoComponent) {
             // Component exists in the dom and can validate itself.
-            const isTemplateInfoTabValid = templateInfoComponent.validate();
+            const isTemplateInfoTabValid = await templateInfoComponent.validate();
 
             if (isTemplateInfoTabValid) {
                 this.hasTemplateInfoTabError = false;
@@ -709,7 +711,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     handleFormTemplateSave = async () => {
         this.previousSaveAttempted = true;
-        const isTemplateValid = this.checkTabsValidity();
+        const isTemplateValid = await this.checkTabsValidity();
 
         if (isTemplateValid) {
             this.isLoading = true;

@@ -266,10 +266,11 @@
         <members>FORM_Section</members>
         <members>FORM_Service</members>
         <members>FORM_ServiceGiftEntry</members>
-        <members>FORM_ServiceGiftEntryTest</members>
+        <members>FORM_ServiceGiftEntry_TEST</members>
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
+        <members>GE_BatchGiftEntryController</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_LookupController</members>
@@ -713,6 +714,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
+        <members>GE_GiftEntry</members>
         <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
@@ -880,6 +882,9 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
+        <members>Custom_Column_Header__c.Field_Api_Name__c</members>
+        <members>Custom_Column_Header__c.Index__c</members>
+        <members>Custom_Column_Header__c.List_Name__c</members>
         <members>Customizable_Rollup_Settings__c.AccountHardCreditNonSkew_Incremental__c</members>
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
         <members>Customizable_Rollup_Settings__c.ChunkSize_Account_HardCredit__c</members>
@@ -903,6 +908,7 @@
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Active_Fields__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
+        <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
@@ -912,6 +918,7 @@
         <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
         <members>DataImportBatch__c.Expected_Count_of_Gifts__c</members>
         <members>DataImportBatch__c.Expected_Total_Batch_Amount__c</members>
+        <members>DataImportBatch__c.Form_Template__c</members>
         <members>DataImportBatch__c.GiftBatch__c</members>
         <members>DataImportBatch__c.Last_Processed_On__c</members>
         <members>DataImportBatch__c.Post_Process_Implementing_Class__c</members>
@@ -1487,8 +1494,8 @@
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
-        <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
+        <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
         <members>RD2_EnablementEnableConfirm</members>
@@ -1825,14 +1832,21 @@
         <members>commonAssistiveSuccess</members>
         <members>commonAssistiveWarning</members>
         <members>commonCancel</members>
+        <members>commonClone</members>
         <members>commonDefaultValue</members>
+        <members>commonDelete</members>
+        <members>commonEdit</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonNoItems</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
+        <members>commonTemplates</members>
         <members>commonUnknownError</members>
+        <members>commonViewAll</members>
+        <members>commonViewMore</members>
         <members>commonWarning</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
@@ -1875,6 +1889,7 @@
         <members>geAssistiveRemoveSelectedOption</members>
         <members>geAssistiveSectionDown</members>
         <members>geAssistiveSectionUp</members>
+        <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
@@ -1885,14 +1900,19 @@
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
         <members>geBodyTemplateInfoLeftCol</members>
+        <members>geBodyTemplatesTabDescription</members>
         <members>geButtonBuilderNavBackFormFields</members>
         <members>geButtonBuilderNavBackTemplateInfo</members>
         <members>geButtonBuilderNavBatchHeader</members>
         <members>geButtonBuilderNavFormFields</members>
+        <members>geButtonEnterGifts</members>
         <members>geButtonFormFieldsAddSection</members>
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
+        <members>geButtonTemplatesTabCreateTemplate</members>
+        <members>geDonationColumnLabel</members>
+        <members>geDonorColumnLabel</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorExistingTemplateName</members>
         <members>geErrorFieldPermission</members>
@@ -1904,6 +1924,7 @@
         <members>geErrorRequiredField</members>
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
+        <members>geHeaderCustomTableHeaders</members>
         <members>geHeaderEmptyFormSection</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
         <members>geHeaderFormFieldsLeftCol</members>
@@ -1911,6 +1932,7 @@
         <members>geHeaderFormFieldsModalRenameSection</members>
         <members>geHeaderFormFieldsModalSectionSettings</members>
         <members>geHeaderFormFieldsRightCol</members>
+        <members>geHeaderGiftEntry</members>
         <members>geHeaderNewSection</members>
         <members>geHeaderNewTemplate</members>
         <members>geHeaderPageLevelError</members>
@@ -1918,6 +1940,8 @@
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
+        <members>geLabelCustomTableSelectedFields</members>
+        <members>geLabelCustomTableSourceFields</members>
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
@@ -1925,9 +1949,15 @@
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
+        <members>geTextListViewItemCount</members>
+        <members>geTextListViewItemsCount</members>
+        <members>geTextListViewSortedBy</members>
+        <members>geTextListViewUpdatedAgo</members>
+        <members>geToastListViewUpdated</members>
         <members>geToastSaveFailed</members>
         <members>geToastSelectActiveSection</members>
         <members>geToastTemplateCreateSuccess</members>
+        <members>geToastTemplateDeleteSuccess</members>
         <members>geToastTemplateTabError</members>
         <members>geToastTemplateTabsError</members>
         <members>geToastTemplateUpdateSuccess</members>
@@ -2683,6 +2713,7 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
+        <members>Custom_Column_Header__c</members>
         <members>Customizable_Rollup_Settings__c</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
@@ -3212,6 +3243,9 @@
         <members>bdiObjectMappings</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
+        <members>geBatchGiftEntryApp</members>
+        <members>geBatchGiftEntryHeader</members>
+        <members>geBatchGiftEntryTable</members>
         <members>geFormField</members>
         <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
@@ -3222,6 +3256,7 @@
         <members>geFormWidgetAllocation</members>
         <members>geFormWidgetRow</members>
         <members>geLabelService</members>
+        <members>geListView</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
@@ -3231,10 +3266,12 @@
         <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>geTemplates</members>
+        <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
         <members>utilCommon</members>
         <members>utilDedicatedListener</members>
+        <members>utilDualListbox</members>
         <members>utilIllustration</members>
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>

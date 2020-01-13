@@ -171,21 +171,32 @@ const shiftToIndex = (array, oldIndex, newIndex) => {
  * @param {array} list: List to be sorted
  * @param {string} property: Property to sort by
  * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
+ * @param {boolean} isNullsLast: If truthy, orders by NULLS LAST using isEmpty(value)
  *
  * @return {list} data: Sorted instance of list.
  */
-const sort = (list, property, sortDirection) => {
-    const data = mutable(list);
-    const key = (a) => a[property];
-    const reverse = sortDirection === ASC ? 1 : -1;
+const sort = (objects, attribute, direction = 'desc', isNullsLast) => {
+    let objectsToSort = deepClone(objects);
+    let collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
-    data.sort((a, b) => {
-        let valueA = key(a) ? key(a) : '';
-        let valueB = key(b) ? key(b) : '';
-        return reverse * ((valueA > valueB) - (valueB > valueA));
+    return objectsToSort.sort((a, b) => {
+        if (isNullsLast) {
+            if (direction === 'asc' && a[attribute]) {
+                return b[attribute] ? collator.compare(a[attribute].toString(), b[attribute].toString()) : -1;
+            } else if (b[attribute]) {
+                return a[attribute] ? collator.compare(b[attribute].toString(), a[attribute].toString()) : 1;
+            }
+        } else {
+            let propA = (a[attribute] || a['Name'] || '').toString();
+            let propB = (b[attribute] || b['Name'] || '').toString();
+
+            if (direction === 'asc') {
+                return collator.compare(propA, propB);
+            } else {
+                return collator.compare(propB, propA);
+            }
+        }
     });
-
-    return data;
 };
 
 /*******************************************************************************

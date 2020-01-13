@@ -51,7 +51,7 @@ public with sharing class GE_TemplateBuilderCtrl {
      * @description Retrieves the default SGE render wrapper for gift entry.
      * @return      A render wrapper containing a template and information about the object/field mappings.
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
         return GE_FormRendererService.getDefaultSGERenderWrapper();
     }

@@ -1,0 +1,13 @@
+<aura:component implements="force:appHostable">
+    <aura:dependency resource="c:utilDualListbox" />
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <aura:attribute name="modal" type="Object"/>
+
+    <c:utilDedicatedListener eventName="geGiftEntryModalEvent"
+                             onreceiveevent="{!c.handleModalEvent}" />
+
+    <c:geTemplates aura:id="giftEntry"
+                   ontogglemodal="{!c.handleShowModal}" />
+</aura:component>
