@@ -1,21 +1,38 @@
 import {LightningElement, api, track, wire} from 'lwc';
+import {isNotEmpty, debouncify} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
+import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
 
-const RICH_TEXT_TYPE = 'RICHTEXT';
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
 const TEXT_AREA_TYPE = 'TEXTAREA';
 const BOOLEAN_TYPE = 'BOOLEAN';
 const DELAY = 300;
+const RICH_TEXT_FORMATS = [
+    'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
+];
 
 export default class GeFormField extends LightningElement {
     @track value;
     @track picklistValues = [];
     @track objectDescribeInfo;
+    @track richTextValid = true;
     @api element;
 
-    changeTimeout;
+    richTextFormats = RICH_TEXT_FORMATS;
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
+    handleValueChangeSync = (event) => {
+        this.value = this.getValueFromChangeEvent(event);
+        const evt = new CustomEvent('change', {field: this.element, value: this.value});
+        this.dispatchEvent(evt);
+        if(this.isRichText) {
+            this.checkRichTextValidity();
+        }
+    };
+
+    handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
 
     /**
@@ -28,24 +45,21 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    handleValueChange(event) {
-        this.value = this.getValueFromChangeEvent(event);
-        window.clearTimeout(this.changeTimeout);
-        this.changeTimeout = setTimeout(() => {
-            // parent component (formSection) should bind to onchange event
-            const evt = new CustomEvent('change', {field: this.element, value: this.value});
-            this.dispatchEvent(evt);
-        }, DELAY);
+    connectedCallback() {
+        const { defaultValue } = this.element;
+        if(defaultValue) {
+            this.value = defaultValue;
+        }
     }
 
     getValueFromChangeEvent(event) {
-        if(this.isLookup) {
-            return event.detail.value;
-        } else if(this.fieldType === BOOLEAN_TYPE) {
-            return event.target.checked.toString();
+        if(this.fieldType === BOOLEAN_TYPE) {
+            return event.detail.checked.toString();
+        } else if(this.isRichText) {
+            return event.target.value;
         }
 
-        return event.target.value;
+        return event.detail.value;
     }
 
     /**
@@ -58,10 +72,7 @@ export default class GeFormField extends LightningElement {
         let fieldIsValid = this.checkFieldValidity();
 
         if(this.element.required) {
-            return this.value !== null
-                && typeof this.value !== 'undefined'
-                && this.value !== ''
-                && fieldIsValid;
+            return isNotEmpty(this.value) && fieldIsValid;
         }
 
         return fieldIsValid;
@@ -74,11 +85,29 @@ export default class GeFormField extends LightningElement {
     checkFieldValidity() {
         // TODO: Handle other input types, if needed
         const inputField = this.template.querySelector('[data-id="inputComponent"]');
-        if(inputField !== null && typeof inputField !== 'undefined'
+        if(typeof inputField !== 'undefined'
+            && inputField !== null
             && typeof inputField.reportValidity === 'function'
             && typeof inputField.checkValidity === 'function') {
                 inputField.reportValidity();
                 return inputField.checkValidity();
+        } else if(this.isRichText) {
+            this.checkRichTextValidity();
+            if(!this.richTextValid) {
+                // workaround, field will not display as invalid if it is untouched
+                inputField.focus();
+                inputField.blur();
+            }
+            return this.richTextValid;
+        }
+        return true;
+    }
+
+    checkRichTextValidity() {
+        if(this.element.required) {
+            const isValid = isNotEmpty(this.value) && this.value.length > 0;
+            this.richTextValid = isValid;
+            return isValid;
         }
         return true;
     }

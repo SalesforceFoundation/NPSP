@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import { mutable } from 'c/utilTemplateBuilder';
+import { mutable } from 'c/utilCommon';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 

@@ -7,12 +7,7 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import {
-    mutable,
-    findIndexByProperty,
-    shiftToIndex,
     dispatch,
-    sort,
-    getQueryParameters,
     handleError,
     showToast,
     findMissingRequiredFieldMappings,
@@ -20,6 +15,13 @@ import {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS
 } from 'c/utilTemplateBuilder';
+import {
+    mutable,
+    findIndexByProperty,
+    getQueryParameters,
+    shiftToIndex,
+    sort
+} from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
