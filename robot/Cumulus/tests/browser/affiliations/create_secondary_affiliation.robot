@@ -1,18 +1,37 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
-*** Test Cases ***
+***Keywords***
+Setup Test Data
+    &{account} =          API Create Organization Account 
+    Set suite variable    &{account}  
+    &{contact} =          API Create Contact                 Email=automation@example.com 
+    Set suite variable    &{contact}
+    Store Session Record  Account                            &{contact}[AccountId]
 
+*** Test Cases ***
 Create Secondary Affiliation for Contact
-    &{account} =  API Create Organization Account   
-    &{contact} =  API Create Contact    Email=skristem@robot.com
-    Store Session Record    Account    &{contact}[AccountId]
-    Create Secondary Affiliation    &{account}[Name]    &{contact}[Id]
-    Page Should Contain    &{contact}[LastName]
-    Page Should Contain    &{account}[Name]
-    ${value}    Get NPSP Locator    alert
-    Click Element    ${value}
-    Save Current Record ID For Deletion    npe5__Affiliation__c   
+    [Documentation]                      Creates a contact and organization account via API and open contact 
+    ...                                  Create affiliation to organization account from Organization Affiliations related list New button.     
+    ...                                  Verifies that affiliation to account shows under organization affiliation related list as current
+    [tags]                               W-037651    feature:Affiliations
+    Go To Page                           Details                          Contact                    object_id=&{contact}[Id]
+    Select Tab                           Related
+    Click Related List Button            Organization Affiliations        New
+    Wait For Modal                       New                              Affiliation
+    Populate Modal Form                  Organization=&{account}[Name]
+    Click Modal Button                   Save
+    Wait Until Modal Is Closed
+    Select Tab                           Related
+    Verify Occurrence                    Organization Affiliations        1
+    Verify Allocations                   Organization Affiliations        &{account}[Name]=Current 
+    Click Related Item Link              Organization Affiliations        &{account}[Name]
+    Save Current Record ID For Deletion  npe5__Affiliation__c    
