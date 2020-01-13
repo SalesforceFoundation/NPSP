@@ -125,6 +125,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // callback used to toggle spinner after save
         const toggleSpinner = () => this.toggleSpinner();
 
+        const reset = () => this.reset();
+
         if (this.batchId) {
             const data = this.getData(sectionsList);
 
@@ -134,6 +136,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     success: function () {
                         enableSaveButton();
                         toggleSpinner();
+                        reset();
                     },
                     error: function() {
                         enableSaveButton();
