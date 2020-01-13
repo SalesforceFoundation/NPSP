@@ -114,10 +114,10 @@ public with sharing class FORM_ServiceGiftEntry {
     public static FORM_Template[] getAllFormTemplates() {
         FORM_Template[] formTemplates = new FORM_Template[]{};
         Form_Template__c[] allTemplates = [SELECT Id,
-            Name,
-            Template_JSON__c,
-            Description__c,
-            Format_Version__c
+                Name,
+                Template_JSON__c,
+                Description__c,
+                Format_Version__c
             FROM Form_Template__c
             ORDER BY Name ASC];
 
