@@ -4,7 +4,8 @@ import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFo
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { showToast, dispatch, handleError } from 'c/utilCommon';
+import { showToast, handleError } from 'c/utilCommon';
+import { dispatch } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
@@ -56,7 +57,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     @track templatesTableActions = TEMPLATES_TABLE_ACTIONS;
     @track isAccessible = true;
     @track isLoading = true;
-    batchListFilteredBy;
 
     get templateBuilderCustomTabApiName() {
         return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
@@ -170,26 +170,8 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
         if (this.isAccessible) {
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
-            this.buildListsFilterBy();
             this.isLoading = false;
         }
-    }
-
-    buildListsFilterBy() {
-        this.batchListFilteredBy = [
-            {
-                fieldApiName: DATA_IMPORT_BATCH_VERSION_INFO.fieldApiName,
-                label: '',
-                operandLabels:[2.0],
-                operator:'Equals'
-            },
-            {
-                fieldApiName: DATA_IMPORT_BATH_GIFT_INFO.fieldApiName,
-                label: '',
-                operandLabels:[true],
-                operator:'Equals'
-            }
-        ];
     }
 
     /*******************************************************************************
