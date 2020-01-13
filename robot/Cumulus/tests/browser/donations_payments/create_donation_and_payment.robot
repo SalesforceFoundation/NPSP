@@ -53,7 +53,7 @@ Verify values in Create one or more Payments for this Opportunity page
     Select Tab    Related
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
     Wait Until Modal Is Open
-    Select Lightning Checkbox    Written Off
+    Set Checkbutton To    Written Off    checked
     ${pay_id}    Return Locator Value    payments.field-value    Payment Number
     Click Modal Button    Save
     Wait Until Modal Is Closed
@@ -68,8 +68,8 @@ Verify values in Create one or more Payments for this Opportunity page
     Select Tab    Related
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
     Wait Until Modal Is Open
-    Select Lightning Checkbox    Written Off
-    Select Lightning Checkbox    Paid
+    Set Checkbutton To    Written Off    checked
+    Set Checkbutton To    Paid           checked
     Click Modal Button    Save
     Page Should Contain    A Payment can't be both paid and written off. You must deselect one or both checkboxes.
     Click Modal Button    Cancel
@@ -85,7 +85,7 @@ Verify values in Writeoff Remaining Balance Page
     Select Tab    Related
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
     Wait Until Modal Is Open  
-    Select Lightning Checkbox    Written Off
+    Set Checkbutton To    Written Off    checked
     Populate Field    Payment Amount    200 
     Click Modal Button    Save
     Click Related List Dd Button    Payments    Show one more action    Write Off Payments 
