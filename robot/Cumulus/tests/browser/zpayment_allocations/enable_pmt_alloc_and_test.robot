@@ -71,8 +71,8 @@ Enable Payment Allocations
     Checkbox Status    Default Allocations Enabled    Not Checked
     Click Button    Edit
     Choose Frame    Allocations Settings
-    Select Lightning Checkbox    Default_Allocations_Enabled
-    Select Lightning Checkbox    Payment_Allocations_Enabled
+    Set Checkbutton To    Default_Allocations_Enabled    checked
+    Set Checkbutton To    Payment_Allocations_Enabled    checked
     Populate Field With Id    Default__c    &{def_gau}[Id]
     Click Button    Save    
     
@@ -87,8 +87,8 @@ Disable Payment Allocations
     Checkbox Status    Default Allocations Enabled    Checked
     Click Button    Edit
     Choose Frame    Allocations Settings
-    Select Lightning Checkbox    Default_Allocations_Enabled
-    Select Lightning Checkbox    Payment_Allocations_Enabled
+    Set Checkbutton To    Default_Allocations_Enabled    unchecked
+    Set Checkbutton To    Payment_Allocations_Enabled    unchecked
     Populate Field With Id    Default__c    null
     Click Button    Save      
     
