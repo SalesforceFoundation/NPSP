@@ -313,7 +313,7 @@
         <categories>AlternativeText</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>AssistiveTextRecordIcon</shortDescription>
+        <shortDescription>Assistive Text for a record icon</shortDescription>
         <value>Record Icon</value>
     </labels>
     <labels>
