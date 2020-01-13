@@ -1831,6 +1831,7 @@
         <members>commonAssistiveInfo</members>
         <members>commonAssistiveSuccess</members>
         <members>commonAssistiveWarning</members>
+        <members>commonBatches</members>
         <members>commonCancel</members>
         <members>commonClone</members>
         <members>commonDefaultValue</members>
