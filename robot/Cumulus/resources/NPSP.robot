@@ -170,25 +170,6 @@ New Contact for HouseHold
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
         
-
-Create Primary Affiliation
-    [Arguments]      ${acc_name}      ${con_id}
-    Go To Record Home  ${con_id}
-    # To make sure the field we want to edit has rendered
-    # and is not obscured by the footer, scroll to one further down
-    Scroll Element Into View  text:Description
-    Click Button  title:Edit Primary Affiliation
-    Wait For Locator  record.edit_form
-    Populate Lookup Field    Primary Affiliation    ${acc_name}
-    Click Record Button    Save 
-
-Create Secondary Affiliation
-    [Arguments]      ${acc_name}      ${con_id}
-    Go To Record Home  ${con_id}
-    Select Tab  Related
-    Click Related List Button   Organization Affiliations    New
-    Populate Lookup Field    Organization    ${acc_name}
-    Click Modal Button    Save
     
 Create Opportunities
     [Arguments]    ${opp_name}    ${hh_name}    ${stage}
@@ -199,7 +180,7 @@ Create Opportunities
     Populate Lookup Field    Account Name    ${hh_name}
     Open Date Picker    Close Date
     Pick Date    Today
-    Select Lightning Checkbox    Do Not Automatically Create Payment
+    Set Checkbutton To    Do Not Automatically Create Payment    checked
     Click Modal Button        Save
 
 Create Engagement Plan
