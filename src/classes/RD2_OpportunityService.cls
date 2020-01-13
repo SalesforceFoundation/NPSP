@@ -226,8 +226,10 @@ public with sharing class RD2_OpportunityService {
 
             for (Integer i = 0; i < numberOfInstallments; i++) {
                 Opportunity opp = rdOpps[i];
-                //bypass past Opps regardless if they are open or closed
-                if (opp.CloseDate < currentDate) {
+                //bypass 
+                //1. past Opps regardless if they are open or closed
+                //2. closed Opps regardless if they are past or future
+                if (opp.CloseDate < currentDate || opp.isClosed == true) {
                     continue;
                 }
 
