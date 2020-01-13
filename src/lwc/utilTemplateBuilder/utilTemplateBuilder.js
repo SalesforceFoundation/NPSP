@@ -311,6 +311,7 @@ const getNestedProperty = (object, ...args) => {
 }
 
 export {
+    DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
