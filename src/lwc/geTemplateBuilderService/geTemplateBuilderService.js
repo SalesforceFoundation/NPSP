@@ -80,6 +80,25 @@ class GeTemplateBuilderService {
         });
     }
 
+    /*******************************************************************************
+    * @description Method checks if running in non-namespaced or non-npsp namespaced
+    * environment, this method will strip off the NPSP prefix of a field or object
+    * name and replace it with the current namespace of the UTIL_Namespace if
+    * appropriate.
+    *
+    * @return {string} newName: String aligned with the current environment namespace
+    */
+    alignSchemaNSWithEnvironment = (name) => {
+        if (this.namespaceWrapper && this.namespaceWrapper.currentNamespace) {
+            const namespacePrefix = `${this.namespaceWrapper.currentNamespace}__`;
+            let newName = name.replace('npsp__', '');
+
+            return newName.includes(namespacePrefix) ? newName : `${namespacePrefix}${newName}`;
+        }
+
+        return name;
+    }
+
     // TODO: Replace or delete later when actual widgets are in place.
     /*******************************************************************************
     * @description Placeholder method for mocking widgets in the UI.
