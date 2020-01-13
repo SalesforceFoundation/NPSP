@@ -1,7 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
-import NPSP_DATA_IMPORT_BATCH_FIELD
-    from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 import {handleError} from 'c/utilTemplateBuilder';
 
 export default class GeBatchGiftEntryApp extends LightningElement {
@@ -9,13 +7,6 @@ export default class GeBatchGiftEntryApp extends LightningElement {
 
     handleSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        const dataRow = this.getTableDataRow(
-            event.target.submissions[event.target.submissions.length - 1]
-        );
-
-        if (!dataRow[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
-            dataRow[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.recordId;
-        }
 
         const displayValues = dataRow.displayValues;
         // Apex is unable to read the dataRow (DataImport__c record) if it
@@ -24,7 +15,7 @@ export default class GeBatchGiftEntryApp extends LightningElement {
         delete dataRow.displayValues;
 
         GeFormService.saveAndDryRun(
-            this.recordId, dataRow)
+            this.recordId, event.detail.data)
             .then(
                 dataImportModel => {
                     Object.assign(dataImportModel.dataImportRows[0],
@@ -40,12 +31,6 @@ export default class GeBatchGiftEntryApp extends LightningElement {
                 handleError(error);
                 event.detail.error();
             });
-    }
-
-    getTableDataRow(formSubmission) {
-        let dataImportRecord =
-            GeFormService.getDataImportRecord(formSubmission.sectionsList);
-        return dataImportRecord;
     }
 
     handleSectionsRetrieved(event) {

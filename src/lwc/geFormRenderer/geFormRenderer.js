@@ -10,6 +10,8 @@ import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
+import NPSP_DATA_IMPORT_BATCH_FIELD
+    from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
 const mode = {
     CREATE: 'create',
@@ -25,7 +27,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track version = '';
     @api showSpinner = false;
     @api batchId;
-    @api submissions = [];
     @api hasPageLevelError = false;
     label = { messageLoading, geSave, geCancel };
     @track formTemplateId;
@@ -127,12 +128,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const toggleSpinner = () => this.toggleSpinner();
 
         if (this.batchId) {
-            const submission = {
-                sectionsList: sectionsList
-            };
-            this.submissions.push(submission);
+            const data = this.getData(sectionsList);
+
             this.dispatchEvent(new CustomEvent('submit', {
                 detail: {
+                    data: data,
                     success: function () {
                         enableSaveButton();
                         toggleSpinner();
@@ -307,6 +307,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api
     get isUpdateActionDisabled() {
         return this._data && this._data[STATUS_FIELD.fieldApiName] === 'Imported';
+    }
+
+    getData(sections) {
+        let dataImportRecord =
+            GeFormService.getDataImportRecord(sections);
+
+        if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
+            dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        }
+
+        if (this._data) {
+            dataImportRecord.Id = this._data.Id;
+        }
+
+        return dataImportRecord;
     }
 
 }
