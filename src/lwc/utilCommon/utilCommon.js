@@ -27,41 +27,6 @@ const debouncify = (anyFunction, wait) => {
 };
 
 /*******************************************************************************
- * @description Loop through provided array or object properties. Recursively check
- * if the current value is an object or an array and copy accordingly.
- *
- * @param {any} src: Thing to clone
- *
- * @return {object} clone: Deep clone copy of src
- */
-const deepClone = (src) => {
-    let clone = null;
-
-    if (isPrimative(src)) {
-        return src;
-    }
-
-    if (isObject(src)) {
-        clone = {};
-        for (let property in src) {
-            if (src.hasOwnProperty(property)) {
-                // if the value is a nested object, recursively copy all it's properties
-                clone[property] = isObject(src[property]) ? deepClone(src[property]) : src[property];
-            }
-        }
-    }
-
-    if (Array.isArray(src)) {
-        clone = [];
-        for (let item of src) {
-            clone.push(deepClone(item));
-        }
-    }
-
-    return clone;
-}
-
-/*******************************************************************************
  * @description Finds an item in an array by a property.
  *
  * @param {list} array: List of items.
@@ -256,6 +221,41 @@ const removeByProperty = (array, property, value) => {
     const index = array.findIndex(element => element[property] === value);
     array.splice(index, 1);
 };
+
+/*******************************************************************************
+ * @description Loop through provided array or object properties. Recursively check
+ * if the current value is an object or an array and copy accordingly.
+ *
+ * @param {any} src: Thing to clone
+ *
+ * @return {object} clone: Deep clone copy of src
+ */
+const deepClone = (src) => {
+    let clone = null;
+
+    if (isPrimative(src)) {
+        return src;
+    }
+
+    if (isObject(src)) {
+        clone = {};
+        for (let property in src) {
+            if (src.hasOwnProperty(property)) {
+                // if the value is a nested object, recursively copy all it's properties
+                clone[property] = isObject(src[property]) ? deepClone(src[property]) : src[property];
+            }
+        }
+    }
+
+    if (Array.isArray(src)) {
+        clone = [];
+        for (let item of src) {
+            clone.push(deepClone(item));
+        }
+    }
+
+    return clone;
+}
 
 export {
     debouncify,
