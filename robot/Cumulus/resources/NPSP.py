@@ -1241,8 +1241,14 @@ class NPSP(SalesforceRobotLibraryBase):
 
 
     def setup_data(self,**kwargs):
-        """Parses the keywords sent as arguments and based on the respective reqest generates the data using the
-          specified parameters
+        """Parses the keywords sent as arguments and based on the respective request generates the data using the
+          specified parameters. An example reference as below
+          Setup Test Data
+          &{data} =  Setup Data
+               ...           contact1=&{contact1_fields}
+               ...           contact2 linkedto contact1=&{contact2_fields}
+               ...           opportunity for contact1=&{opportunity1_fields}
+               ...           opportunity for contact2=&{opportunity2_fields}
          The generated data is then added to the Data dictionary and returned back.
        """
 
