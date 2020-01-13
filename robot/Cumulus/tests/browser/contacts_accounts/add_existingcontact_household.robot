@@ -37,8 +37,7 @@ Add Existing Contact to Existing Household
     Wait Until Modal Is Closed
     
     #Verify both contacts are displayed under household account1
-    Click Header Field Link              Account Name
-    Current Page Should Be               Details               Account 
+    Go To Page                           Details               Account                                object_id=&{contact1}[AccountId]
     Select Tab                           Related
     Verify Related List Items            Contacts              &{contact1}[FirstName] &{contact1}[LastName]
     Verify Related List Items            Contacts              &{contact2}[FirstName] &{contact2}[LastName]
