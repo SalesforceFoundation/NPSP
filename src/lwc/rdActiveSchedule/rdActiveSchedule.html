@@ -1,0 +1,106 @@
+<!-- Enhanced Recurring Donations Active Schedule Visualizer -->
+<template>
+    <lightning-card
+            title={labels.lblScheduleTitle}
+            variant="narrow"
+            icon-name="action:defer">
+
+        <div class="slds-m-around_medium" if:true={error}>
+            <span class="slds-text-color_error">
+                <lightning-formatted-text value={error}></lightning-formatted-text>
+            </span>
+        </div>
+
+        <div if:true={schedules}>
+            <template for:each={schedules} for:item="schedule">
+                <div class="slds-m-around--large" key={schedule.scheduleNumber}>
+                    <article class="slds-tile slds-media slds-m-around--medium" >
+                        <div class="slds-media__figure">
+                          <span class="slds-icon_container" title={labels.AssistiveTextRecordIcon}>
+                              <lightning-icon icon-name="standard:record" alternative-text={labels.AssistiveTextRecordIcon} size="small"></lightning-icon>
+                          </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <h3 class="slds-tile__title slds-truncate" if:false={schedule.isCurrent} title={labels.lblFutureSchedule}>
+                                <lightning-formatted-text value={labels.lblFutureSchedule}></lightning-formatted-text>
+                            </h3>
+                            <h3 class="slds-tile__title slds-truncate" if:true={schedule.isCurrent} title={labels.lblCurrentSchedule}>
+                                <lightning-formatted-text value={labels.lblCurrentSchedule}></lightning-formatted-text>
+                            </h3>
+                            <div class="slds-tile__detail slds-m-around--xx-small">
+                                <dl class="slds-list_horizontal slds-wrap slds-grid">
+
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblAmount}>
+                                        <lightning-formatted-text value={labels.lblAmount}></lightning-formatted-text>
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
+                                        <lightning-formatted-number format-style="currency" currency-code={currencyIsoCode} value={schedule.amount}></lightning-formatted-number>
+                                    </dd>
+
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPmtMethod}>
+                                        <lightning-formatted-text value={labels.lblPmtMethod}></lightning-formatted-text>
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:false={schedule.paymentMethod}>
+                                        <lightning-formatted-text value={labels.lblNone}></lightning-formatted-text>
+                                    </dd>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.paymentMethod}>
+                                        <lightning-formatted-text value={schedule.paymentMethod}></lightning-formatted-text>
+                                    </dd>
+
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblCampaign}>
+                                        <lightning-formatted-text value={labels.lblCampaign}></lightning-formatted-text>
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:false={schedule.campaign}>
+                                        <lightning-formatted-text value={labels.lblNone}></lightning-formatted-text>
+                                    </dd>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.campaign}>
+                                        <lightning-formatted-text value={schedule.campaign}></lightning-formatted-text>
+                                    </dd>
+
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblStartDate}>
+                                        <lightning-formatted-text value={labels.lblStartDate}></lightning-formatted-text>
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
+                                        <lightning-formatted-date-time value={schedule.startDate} year="2-digit" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
+                                    </dd>
+
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblEndDate}>
+                                        <lightning-formatted-text value={labels.lblEndDate}></lightning-formatted-text>
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:false={schedule.endDate}>
+                                        <lightning-formatted-text value={labels.lblNone}></lightning-formatted-text>
+                                    </dd>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.endDate}>
+                                        <lightning-formatted-date-time value={schedule.endDate} year="2-digit" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
+                                    </dd>
+
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPeriod}>
+                                        <lightning-formatted-text value={labels.lblPeriod}></lightning-formatted-text>
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
+                                        <lightning-formatted-text value={schedule.period}></lightning-formatted-text>
+                                    </dd>
+
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblFrequency}>
+                                        <lightning-formatted-text value={labels.lblFrequency}></lightning-formatted-text>
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
+                                        <lightning-formatted-number value={schedule.frequency}></lightning-formatted-number>
+                                    </dd>
+
+                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" if:true={schedule.dayOfMonth} title={labels.lblDayOfMonth}>
+                                        <lightning-formatted-text value={labels.lblDayOfMonth}></lightning-formatted-text>
+                                    </dt>
+                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.dayOfMonth}>
+                                        <lightning-formatted-text value={schedule.dayOfMonth}></lightning-formatted-text>
+                                    </dd>
+
+                                </dl>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
