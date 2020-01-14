@@ -95,6 +95,9 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentName>%%%NAMESPACE_OR_C%%%:rdActiveSchedule</componentName>
+        </componentInstances>
+        <componentInstances>
             <componentInstanceProperties>
                 <name>displayNum</name>
                 <value>12</value>
