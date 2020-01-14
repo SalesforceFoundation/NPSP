@@ -326,10 +326,11 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verify opportunity is updated with installment fields when Close Date is today
+    * @description Verify opportunity is updated with installment fields 
+    * when Close Date is today and the Opp is open
     */
     @isTest
-    private static void shouldUpdateOppWhenCloseDateIsToday() {
+    private static void shouldUpdateOppWhenOpenAndCloseDateIsToday() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
@@ -344,12 +345,112 @@ private with sharing class RD2_OpportunityService_TEST {
         Test.startTest();
         rd.Day_Of_Month__c = String.valueOf(TODAY.day());
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        rd.PaymentMethod__c = PAYMENT_CHECK;
         update rd;
         Test.stopTest();
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
-        System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Amount should be changed: ' + opps[0]);
+        System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Amount should be changed');
+
+        List<npe01__OppPayment__c> payments = getPayments(opps);
+        System.assertEquals(opps.size(), payments.size(), 'Payment should exist for the Opp: ' + payments);
+        System.assertEquals(PAYMENT_CHECK, payments[0].npe01__Payment_Method__c, 
+            'Payment method should be updated for the open Opp with Close Date = today');
+    }
+
+    /***
+    * @description Verify opportunity is not updated with installment fields 
+    * when Close Date is today and the Opp is Closed Lost/Won
+    */
+    @isTest
+    private static void shouldNotUpdateOppWhenClosedAndCloseDateIsToday() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+        
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        insert getOpportunityBuilder(rd)
+            .withCloseDate(TODAY)
+            .withClosedLostStage()
+            .build();
+
+        Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(TODAY.day());
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        rd.PaymentMethod__c = PAYMENT_CHECK;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
+        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Amount should be unchanged');
+
+        List<npe01__OppPayment__c> payments = getPayments(opps);
+        System.assertEquals(opps.size(), payments.size(), 'Payment should exist for the Opp: ' + payments);
+        System.assertNotEquals(PAYMENT_CHECK, payments[0].npe01__Payment_Method__c, 
+            'Payment method should not be updated for the closed Opp with Close Date = today');
+    }
+
+    /***
+    * @description Verify opportunity is not updated with installment fields 
+    * when Close Date is today and the Opp is Closed Lost/Won
+    * and another future open Opp exists after it
+    */
+    @isTest
+    private static void shouldNotUpdateOppWhenClosedAndCloseDateIsTodayAndFutureOpenOppExists() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+        
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withInstallmentNumber(1)
+                .withCloseDate(TODAY)
+                .withClosedLostStage()
+                .build(),
+            oppBuilder
+                .withInstallmentNumber(2)
+                .withCloseDate(TODAY.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(TODAY.day());
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        rd.PaymentMethod__c = PAYMENT_CHECK;
+        update rd;
+        Test.stopTest();
+
+        Map<Id, Opportunity> actualOppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size(), actualOppById.size(), 'Opportunity number should match: ' + actualOppById);
+        for (Opportunity opp : actualOppById.values()) {
+            if (opp.Id == opps[0].Id) { 
+                System.assertEquals(RD_AMOUNT, opp.Amount, 
+                    'Amount should not be updated for the closed Opp with Close Date = today');
+            } else {
+                System.assertEquals(RD_NEW_AMOUNT, opp.Amount, 
+                    'Amount should be updated for the future open Opp');
+            }
+        }
+
+        List<npe01__OppPayment__c> payments = getPayments(opps);
+        System.assertEquals(opps.size(), payments.size(), 'Payment should exist for each Opp: ' + payments);
+        for (npe01__OppPayment__c payment : payments) {
+            if (payment.npe01__Opportunity__c == opps[0].Id) { 
+                System.assertNotEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c, 
+                    'Payment method should not be updated for the closed Opp with Close Date = today');
+            } else {
+                System.assertEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c, 
+                    'Payment method should be updated for the future open Opp');
+            }
+        }
     }
 
     /***
@@ -357,7 +458,7 @@ private with sharing class RD2_OpportunityService_TEST {
     * This test verifies that current date and future Opps are matched correctly with the RD Schedule installments.
     */
     @isTest
-    private static void shouldUpdateOppWhenCloseDateIsInFutureAndTodayCloseDateOppExists() {
+    private static void shouldUpdateOppWhenOpenAndCloseDateAreTodayAndInFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
 
@@ -381,6 +482,7 @@ private with sharing class RD2_OpportunityService_TEST {
         insert opps;
 
         Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(TODAY.day());
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         rd.PaymentMethod__c = PAYMENT_CHECK;
         update rd;
