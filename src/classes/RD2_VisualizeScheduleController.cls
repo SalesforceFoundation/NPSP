@@ -68,7 +68,9 @@ public with sharing class RD2_VisualizeScheduleController {
             }
         }
 
-        validate(upcomingDonations);
+        if (upcomingDonations.isEmpty()) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
+        }
 
         return upcomingDonations;
     }
@@ -97,7 +99,9 @@ public with sharing class RD2_VisualizeScheduleController {
             }
         }
 
-        validate(activeSchedules);
+        if (activeSchedules.isEmpty()) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoActiveSchedule);
+        }
 
         return activeSchedules;
     }
@@ -198,17 +202,6 @@ public with sharing class RD2_VisualizeScheduleController {
             cachedRd = Database.query(soql);
         }
         return cachedRd;
-    }
-
-    /**
-     * @description Validates if there is any data to be displayed
-     * @param objects List of installments or schedules
-     * @return void
-     */
-    private static void validate(List<Object> objects) {
-        if (objects.isEmpty()) {
-            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
-        }
     }
 
     /**
