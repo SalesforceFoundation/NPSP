@@ -122,6 +122,19 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
+        <fullName>Batch_Gift_Entry_Version__c</fullName>
+        <description>The version of the Batch Gift Entry feature used to create this Batch.</description>
+        <externalId>false</externalId>
+        <label>Batch Gift Entry Version</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Batch_Process_Size__c</fullName>
         <defaultValue>50</defaultValue>
         <description>The number of NPSP Data Import records to process at a time in each batch.</description>
@@ -281,6 +294,20 @@
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>Form_Template__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>The Template to use for the gift entry form for this Batch.</description>
+        <externalId>false</externalId>
+        <label>Form Template</label>
+        <referenceTo>Form_Template__c</referenceTo>
+        <relationshipLabel>NPSP Data Import Batches</relationshipLabel>
+        <relationshipName>NPSP_Data_Import_Batches</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>GiftBatch__c</fullName>

@@ -1,6 +1,8 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
+import { isNotEmpty } from 'c/utilCommon';
 
 const DELAY = 300;
 
@@ -8,22 +10,57 @@ export default class GeFormFieldLookup extends LightningElement {
     @api fieldApiName;
     @api objectApiName;
     @api displayValue = '';
+    @api defaultValue;
     @api label;
     @api required;
     @api id; // unique identifier for this field, used mainly for accessibility
 
 
     @track options = [];
-    @track targetObjectInfo;
     @track value;
     @track targetObjectApiName;
+    @track queryFields;
+    @track valid = true;
 
     /**
      * Retrieve information about the object the lookup points to.
      */
     @wire(getObjectInfo, { objectApiName: '$targetObjectApiName' })
     wiredTargetObjectInfo(response) {
-        this.targetObjectInfo = response;
+        if(response.data) {
+            this.targetObjectInfo = response;
+            this.queryFields = this.getQueryFields();
+        }
+    }
+
+    @wire(getRecord, { recordId: '$defaultValue', fields: '$queryFields'})
+    wiredGetRecord({error, data}) {
+        if(data) {
+            if(typeof this.value === 'undefined') {
+                this.value = this.defaultValue;
+                this.displayValue = data.fields.Name.value;
+            }
+        }
+    }
+
+    /**
+     * Check validity, then update the field with a message if field is invalid.
+     */
+    @api
+    reportValidity() {
+        this.valid = this.checkValidity();
+    }
+
+    /**
+     * Check validity without updating the UI
+     * @returns {boolean}
+     */
+    @api
+    checkValidity() {
+        if(this.required) {
+            return isNotEmpty(this.value);
+        }
+        return true;
     }
 
     /**
@@ -57,6 +94,11 @@ export default class GeFormFieldLookup extends LightningElement {
         }
     }
 
+    getQueryFields() {
+        const fields = ['Id', 'Name'];
+        return fields.map(f => `${this.targetObjectApiName}.${f}`);
+    }
+
     get objectDescribeInfo() {
         return this._objectDescribeInfo;
     }
@@ -65,10 +107,6 @@ export default class GeFormFieldLookup extends LightningElement {
         if(this.objectDescribeInfo && this.objectDescribeInfo) {
             return this.objectDescribeInfo.fields[this.fieldApiName];
         }
-    }
-
-    get fieldLabel() {
-        return this.fieldInfo ? this.fieldInfo.label : null;
     }
 
     /**

@@ -248,9 +248,9 @@ const isPrimitive = (value) => {
 */
 const deepClone = (src) => {
     let clone = null;
-    
+
     if (isPrimitive(src)) {
-        return src;        
+        return src;
     }
 
     if (isObject(src)) {
@@ -292,32 +292,9 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 }
 
 /*******************************************************************************
-* @description Sorts the given list by field name and direction
-*
-* @param {array} list: List to be sorted
-* @param {string} property: Property to sort by
-* @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
-*
-* @return {list} data: Sorted instance of list.
-*/
-const sort = (list, property, sortDirection) => {
-    const data = mutable(list);
-    const key = (a) => a[property];
-    const reverse = sortDirection === ASC ? 1 : -1;
-
-    data.sort((a, b) => {
-        let valueA = key(a) ? key(a) : '';
-        let valueB = key(b) ? key(b) : '';
-        return reverse * ((valueA > valueB) - (valueB > valueA));
-    });
-
-    return data;
-}
-
-/*******************************************************************************
 * @description Creates and dispatches a ShowToastEvent
 *
-* @param {string} title: Title of the toast, dispalyed as a heading.
+* @param {string} title: Title of the toast, displayed as a heading.
 * @param {string} message: Message of the toast. It can contain placeholders in
 * the form of {0} ... {N}. The placeholders are replaced with the links from
 * messageData param
@@ -365,46 +342,6 @@ const handleError = (error) => {
 };
 
 /*******************************************************************************
-* @description 'Debouncifies' any function.
-*
-* @param {object} anyFunction: Function to be debounced.
-* @param {integer} wait: Time to wait by in milliseconds.
-*/
-const debouncify = (anyFunction, wait) => {
-    let timeoutId;
-
-    return (...argsFromLastCall) => {
-        window.clearTimeout(timeoutId);
-
-        return new Promise(resolve => {
-            timeoutId = window.setTimeout(() => {
-                resolve(anyFunction(...argsFromLastCall));
-            }, wait);
-        });
-    };
-};
-
-/*******************************************************************************
-* @description Collects all query parameters in the URL and returns them as a
-* map.
-*
-* @return {object} params: Map of query parameters.
-*/
-const getQueryParameters = () => {
-    let params = {};
-    let search = location.search.substring(1);
-
-    if (search) {
-        const url = `{"${search.replace(/&/g, '","').replace(/=/g, '":"')}"}`;
-        params = JSON.parse(url, (key, value) => {
-            return key === "" ? value : decodeURIComponent(value)
-        });
-    }
-
-    return params;
-}
-
-/*******************************************************************************
 * @description Creates a 'unique' id made to look like a UUID.
 *
 * @return {string} params: String acting like a UUID.
@@ -416,7 +353,7 @@ const generateId = () => {
     //       that looks similar.
     const random4 = () => {
         return Math.random().toString(16).slice(-4);
-    }
+    };
     return random4() +
         random4() +
         '-' + random4() +
@@ -520,22 +457,16 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
-    removeByProperty,
-    findIndexByProperty,
-    shiftToIndex,
-    mutable,
     dispatch,
-    sort,
     showToast,
     handleError,
-    getQueryParameters,
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
     deepClone,
-    debouncify,
     isEmpty,
     isFunction,
+    isPrimitive,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     format,

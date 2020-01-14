@@ -1,6 +1,9 @@
 <template>
-    <div class="slds-form-element">
-        <label class="slds-form-element__label" for={comboBoxId}>{label}</label>
+    <div class={formElementClass}>
+        <label class="slds-form-element__label" for={comboBoxId}>
+            <abbr class="slds-required" title="required" if:true={required}>* </abbr>
+            {label}
+        </label>
         <div class="slds-form-element__control">
             <div class={comboBoxContainerClass}>
                 <div class={comboBoxClass} aria-expanded="true" aria-haspopup="listbox" role="combobox">
@@ -15,22 +18,25 @@
                                aria-autocomplete="list"
                                aria-controls={listBoxId}
                                auto-complete="off"
+                               aria-invalid={invalid}
+                               aria-describedby={errorMsgId}
                                role="textbox"
-                               placeholder={labels.SEARCH_PLACEHOLDER}
+                               placeholder={CUSTOM_LABELS.geSearchPlaceholder}
                                value={displayValue}
                                onkeyup={handleChange}>
                         <button
                                 class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
-                                title={labels.REMOVE_SELECTED_OPTION}
+                                title={CUSTOM_LABELS.geAssistiveRemoveSelectedOption}
                                 onclick={handleClear}
                                 if:true={hasOptionSelected}>
                             <lightning-icon icon-name="utility:close" size="x-small"></lightning-icon>
-                            <span class="slds-assistive-text">{labels.REMOVE_SELECTED_OPTION}</span>
+                            <span class="slds-assistive-text">{CUSTOM_LABELS.geAssistiveRemoveSelectedOption}</span>
                         </button>
                         <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right" if:false={hasOptionSelected}>
                             <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
                         </span>
                     </div>
+                    <div class="slds-form-element__help" id={errorMsgId} if:true={invalid}>{CUSTOM_LABELS.geErrorCompleteThisField}</div>
                     <div id={listBoxId} class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox" if:true={hasOptions}>
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                             <template for:each={options} for:item="option">

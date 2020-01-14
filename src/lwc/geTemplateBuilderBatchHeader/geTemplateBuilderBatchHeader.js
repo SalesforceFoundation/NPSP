@@ -1,11 +1,10 @@
 import { LightningElement, track, api } from 'lwc';
 import {
-    findIndexByProperty,
-    mutable,
     dispatch,
     handleError,
     findMissingRequiredBatchFields
 } from 'c/utilTemplateBuilder';
+import { findIndexByProperty, mutable } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 

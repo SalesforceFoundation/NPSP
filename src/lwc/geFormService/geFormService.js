@@ -2,7 +2,10 @@ import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDe
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 import { CONTACT_INFO, ACCOUNT_INFO, 
          DI_CONTACT1_IMPORTED_INFO, DI_ACCOUNT1_IMPORTED_INFO, 
-         DI_DONATION_DONOR_INFO, CONTACT1, ACCOUNT1 } from 'c/utilTemplateBuilder';
+         DI_DONATION_DONOR_INFO, CONTACT1, ACCOUNT1, handleError } from 'c/utilTemplateBuilder';
+import saveAndDryRunRow
+    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
+import {api} from "lwc";
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -36,6 +39,7 @@ class GeFormService {
      * Retrieve the default form render wrapper.
      * @returns {Promise<FORM_RenderWrapper>}
      */
+    @api
     getFormTemplate() {
         return new Promise((resolve, reject) => {
             getRenderWrapper({})
@@ -45,7 +49,7 @@ class GeFormService {
                     resolve(result);
                 })
                 .catch(error => {
-                    console.error(JSON.stringify(error));
+                    handleError(error);
                 });
         });
     }
@@ -92,7 +96,7 @@ class GeFormService {
      * @param widgetValues
      * @returns {Promise<Id>}
      */
-    createOpportunityFromDataImport(createdDIRecord, widgetValues) {
+    saveAndProcessGift(createdDIRecord, widgetValues) {
         const widgetDataString = JSON.stringify(widgetValues);
         return new Promise((resolve, reject) => {
             saveAndProcessGift({diRecord: createdDIRecord, widgetData: widgetDataString})
@@ -112,7 +116,14 @@ class GeFormService {
      * @returns opportunityId
      */
     handleSave(sectionList, record) {
-        
+        let diRecord = this.getDataImportRecord(sectionList, record);
+
+        const opportunityID = this.saveAndProcessGift(diRecord);
+
+        return opportunityID;
+    }
+
+    getDataImportRecord(sectionList, record){
         // Gather all the data from the input
         let fieldData = {};
         let widgetValues = {};
@@ -125,31 +136,43 @@ class GeFormService {
         // Build the DI Record
         let diRecord = {};
 
-        // set the bdi imported fields for contact or account
-        if (record.apiName === CONTACT_INFO.objectApiName) {
-            diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
-            diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = CONTACT1;
-        } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
-            diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
-            diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = ACCOUNT1;
+        if (record) {
+            // set the bdi imported fields for contact or account
+            if (record.apiName === CONTACT_INFO.objectApiName) {
+                diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
+                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = CONTACT1;
+            } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
+                diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
+                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = ACCOUNT1;
+            }
         }
 
         for (let key in fieldData) {
             if (fieldData.hasOwnProperty(key)) {
                 let value = fieldData[key];
 
-                // Get the field mapping wrapper with the CMT record name (this is the key variable). 
+                // Get the field mapping wrapper with the CMT record name (this is the key variable).
                 let fieldWrapper = this.getFieldMappingWrapper(key);
 
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
             }
         }
-        
-        // console.log(widgetValues); 
-        const opportunityID = this.createOpportunityFromDataImport(diRecord, widgetValues);
-        
-        return opportunityID;
+
+        return diRecord;
     }
+
+    saveAndDryRun(batchId, dataImport) {
+        return new Promise((resolve, reject) => {
+            saveAndDryRunRow({batchId: batchId, dataImport: dataImport})
+                .then((result) => {
+                    resolve(JSON.parse(result));
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
+
 }
 
 const geFormServiceInstance = new GeFormService();

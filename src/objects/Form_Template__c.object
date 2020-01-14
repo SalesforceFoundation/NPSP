@@ -190,7 +190,7 @@
         <label>Form Template Name</label>
         <type>Text</type>
     </nameField>
-    <pluralLabel>Form_Template</pluralLabel>
+    <pluralLabel>Form Templates</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>

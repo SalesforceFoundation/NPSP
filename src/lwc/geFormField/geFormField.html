@@ -10,21 +10,30 @@
         </lightning-input>
     </template>
     <template if:true={isLookup}>
-        <c-ge-form-field-lookup field-api-name={fieldApiName}
+        <c-ge-form-field-lookup data-id='inputComponent'
+                                field-api-name={fieldApiName}
                                 object-api-name={objectApiName}
                                 onchange={handleValueChange}
+                                default-value={element.defaultValue}
                                 required={element.required}
                                 id={element.id}
                                 object-describe-info={objectDescribeInfo}
-                                label={fieldLabel}>
+                                label={element.customLabel}>
         </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
+        <label class="slds-form-element__label">
+            <abbr class="slds-required" title="required" if:true={element.required}>*</abbr>
+            {fieldLabel}
+        </label>
         <lightning-input-rich-text data-id='inputComponent'
-            label-visible='true'
+            formats={richTextFormats}
             value={value}
-            onblur={handleValueChange}
-            label={fieldLabel}>
+            onblur={handleValueChangeSync}
+            label={fieldLabel}
+            valid={richTextValid}
+            message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
+        >
         </lightning-input-rich-text>
     </template>
     <template if:true={isPicklist}>
