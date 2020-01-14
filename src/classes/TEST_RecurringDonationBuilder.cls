@@ -324,7 +324,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodYearly() {
-        return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodYearly);
+        return withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_YEARLY);
     }
 
     /***
@@ -334,7 +334,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     public TEST_RecurringDonationBuilder withInstallmentPeriodQuarterly() {
         validateMode(Mode.Legacy);
 
-        return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly);
+        return withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);
     }
 
     /***
@@ -342,7 +342,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodMonthly() {
-        return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodMonthly);
+        return withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
     }
 
     /***
@@ -350,7 +350,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withInstallmentPeriodWeekly() {
-        return withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriodWeekly);
+        return withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_WEEKLY);
     }
 
     /***
@@ -368,7 +368,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withScheduleTypeMultiplyValue() {
-        return withScheduleType(System.Label.npe03.RecurringDonationMultiplyValue);
+        return withScheduleType(RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY);
     }
 
     /***
@@ -388,7 +388,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatusOpen() {
-        return withOpenEndedStatus(System.Label.npe03.RecurringDonationOpenStatus);
+        return withOpenEndedStatus(RD_Constants.OPEN_ENDED_STATUS_OPEN);
     }
 
     /***
@@ -396,7 +396,7 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withOpenEndedStatusClosed() {
-        return withOpenEndedStatus(System.Label.npe03.RecurringDonationClosedStatus);
+        return withOpenEndedStatus(RD_Constants.OPEN_ENDED_STATUS_CLOSED);
     }
 
     /***

@@ -113,7 +113,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     */
     private void trimOpportunities(){
         date limitDate = system.today().addMonths((integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
-        string openlabel = system.label.npe03.RecurringDonationOpenStatus;
+        string openlabel = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         delete [select id from Opportunity
                where CloseDate > :limitDate
                and isClosed != true

@@ -31,19 +31,25 @@
 * @author Salesforce.org
 * @date 2019
 * @group Recurring Donations
-* @description Enhanced Recurring Donations constants for specific picklist values and logic
+* @description Legacy Recurring Donations constants for specific picklist values. This is necessary to
+* allow the legacy custom labels for picklist values in the NPE03 (RecurringDonations) package to be
+* fully deprecated.
 *
 */
-public inherited sharing class RD2_Constants {
+public class RD_Constants {
 
-    /***
-    * @description Enum to specify behavior of how to handle open opportunities when the related RD is closed
+    /**
+    * @description Recurring Donation "Schedule Type" picklist API values
     */
-    public enum CloseActions {
-        Delete_Open_Opportunities,
-        Mark_Opportunities_Closed_Lost,
-        No_Action
-    }
+    public static final String SCHEDULE_TYPE_DIVIDE_BY = 'Divide By';
+    public static final String SCHEDULE_TYPE_MULTIPLY_BY = 'Multiply By';
+
+    /**
+    * @description Recurring Donation "Schedule Type" picklist API values
+    */
+    public static final String OPEN_ENDED_STATUS_OPEN = 'Open';
+    public static final String OPEN_ENDED_STATUS_CLOSED = 'Closed';
+    public static final String OPEN_ENDED_STATUS_NONE = 'None';
 
     /**
     * @description Recurring Donation "Installment Period" picklist API values
@@ -53,43 +59,6 @@ public inherited sharing class RD2_Constants {
     public static final String INSTALLMENT_PERIOD_WEEKLY = 'Weekly';
     public static final String INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH = '1st and 15th';
     public static final String INSTALLMENT_PERIOD_DAILY = 'Daily';
-
-    /**
-    * @description Recurring Donation "Day of Month" picklist API values
-    */
-    public static final String DAY_OF_MONTH_FIRST = '1';
-    public static final String DAY_OF_MONTH_FIFTEENTH = '15';
-    public static final String DAY_OF_MONTH_LAST_DAY = 'Last_Day';
-
-    /**
-    * @description Recurring Donation "Status" picklist API values
-    */
-    public static final String STATUS_ACTIVE = 'Active';
-    public static final String STATUS_LAPSED = 'Lapsed';
-    public static final String STATUS_CLOSED = 'Closed';
-
-    /**
-    * @description Recurring Donation "Recurring Type" picklist API values
-    */
-    public static final String RECURRING_TYPE_OPEN = 'Open';
-
-    /**
-    * @description Returns all valid Installment Periods
-    */
-    public static Set<String> allInstallmentPeriods {
-        get {
-            if (allInstallmentPeriods == null) {
-                allInstallmentPeriods = new Set<String>{
-                    INSTALLMENT_PERIOD_DAILY,
-                    INSTALLMENT_PERIOD_WEEKLY,
-                    INSTALLMENT_PERIOD_MONTHLY,
-                    INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH,
-                    INSTALLMENT_PERIOD_YEARLY
-                };
-            }
-            return allInstallmentPeriods;
-        }
-        set;
-    }
+    public static final String INSTALLMENT_PERIOD_QUARTERLY = 'Quarterly';
 
 }
