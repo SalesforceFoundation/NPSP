@@ -177,6 +177,9 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description Return a list of picklist value to be selected for Installment Auto-Creation Setting 
+    */
     public List<SelectOption> installmentOppCreationOptions {
         get {
         	if (installmentOppCreationOptions == null) {
@@ -187,33 +190,52 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }
 
-    public String installmentAutoCreationLabel {
+    /*********************************************************************************************************
+    * @description The current setting being stored on the Installment Auto-Creation Setting
+    */
+    public String selectedInstallmentCreateOption {
         get {
-            installmentAutoCreationLabel = convertToInstallmentLabel(STG_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
-            return installmentAutoCreationLabel;
+            selectedInstallmentCreateOption = convertToInstallmentLabel(STG_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
+
+            selectedInstallmentCreateOption = (String.isBlank(selectedInstallmentCreateOption))
+                ? Label.stgInstallmentOppEnableAll
+                : selectedInstallmentCreateOption;
+
+            return selectedInstallmentCreateOption;
         }
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description Generate a list of Auto-Creation option from the InstallmentCreateOptions enum list
+    */
     private List<SelectOption> getCreationOptions() {
         List<SelectOption> options = new List<SelectOption>();
 
-        for (RD2_Constants.InstallmentCreateOptions creationOption : RD2_Constants.InstallmentCreateOptions.values()) {
-            options.add(new SelectOption(creationOption.name(), convertToInstallmentLabel(creationOption.name())));
+        for (RD2_Constants.InstallmentCreateOptions option : RD2_Constants.InstallmentCreateOptions.values()) {
+            options.add(new SelectOption(option.name(), convertToInstallmentLabel(option.name())));
         }
 
         return options;
     }
     
+    /*********************************************************************************************************
+    * @description Convert Installment Auto-Creation Setting API to respected custom label
+    * @param installmentOption The API name that will be converted
+    * @return Th converted custom label string
+    */
     @TestVisible
     private String convertToInstallmentLabel(String installmentOption) {
         if (installmentOption == RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()) {
             return Label.stgInstallmentOppEnableAll;
-        } else if(installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name()) {
+
+        } else if(installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()) {
             return Label.stgInstallmentOppDisableFirst;
-        } else if( installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()) {
+
+        } else if (installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()) {
             return Label.stgInstallmentOppDisableAll;
         }
+
         return '';
     }
 }

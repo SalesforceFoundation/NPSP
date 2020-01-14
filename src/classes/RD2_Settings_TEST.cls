@@ -201,7 +201,7 @@ public with sharing class RD2_Settings_TEST {
         RD2_Settings settings = new RD2_Settings();
 
         setUpConfiguration(new Map<String, Object>{
-            'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name()
+            'InstallmentOppAutoCreateOption__c' => RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()
         });
 
         System.assertEquals(false, settings.isFirstInstallmentEnabled, 'First installment should not be enabled');

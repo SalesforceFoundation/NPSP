@@ -105,7 +105,8 @@ public with sharing class RD2_Settings {
     }
     
     /***
-    * @description Installment Opp Auto Creation Option
+    * @description Installment Opp Auto Creation Option,
+    * If random string is input, the setting will be default to Always Create Next installment
     */
     public String installmentCreateOption {
         get {
@@ -114,6 +115,7 @@ public with sharing class RD2_Settings {
                     ? settings.installmentOppAutoCreateOption__c
                     : RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
             }
+
             return installmentCreateOption;
         }
         private set;
@@ -126,7 +128,7 @@ public with sharing class RD2_Settings {
         get {
             if (isFirstInstallmentEnabled == null) {
                 isFirstInstallmentEnabled =
-                    installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_First_Installment_on_Create.name()
+                    installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()
                     && installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
             }
             return isFirstInstallmentEnabled;
@@ -143,6 +145,7 @@ public with sharing class RD2_Settings {
                 isNextInstallmentEnabled =
                     installmentCreateOption != RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
             }
+            
             return isNextInstallmentEnabled;
         } 
         private set;

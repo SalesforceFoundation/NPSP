@@ -2326,7 +2326,7 @@
         <members>stgHelpRDFieldMapRDField</members>
         <members>stgHelpRDLastRun</members>
         <members>stgHelpRDMaxDonations</members>
-        <members>stgHelpRDInstallmentOppAutoCreateAction</members>
+        <members>stgHelpRDInstallmentCreateOptionMessage</members>
         <members>stgHelpRDOpenOppBehavior</members>
         <members>stgHelpRDOppForecastMonths</members>
         <members>stgHelpRDOppRT</members>

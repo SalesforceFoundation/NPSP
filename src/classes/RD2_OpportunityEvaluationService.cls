@@ -130,6 +130,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+    * @description Querid Recurring Donation records and Related Opp
+    */
+    @TestVisible
+    private Map<Id, npe03__Recurring_Donation__c> rdsWithOpps {
+        get {
+            if(rdsWithOpps == null && rdIds != null) {
+                rdsWithOpps = getRecurringDonationsWithExistingOpps(this.rdIds);
+            }
+            return rdsWithOpps;
+        } set;
+    }
+
+    /**
      * @description Sets batch context
      * @return RD2_OpportunityEvaluationService The service instance
      */
@@ -206,9 +219,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
 
-        for (npe03__Recurring_Donation__c rd : rds) {              
-            RecurringDonation rdRecord = new RecurringDonation(rd)
-                .revise(scheduleService); 
+        for (npe03__Recurring_Donation__c rd : rds) {
+            RecurringDonation rdRecord = new RecurringDonation(rd)         
+                .revise(scheduleService)
+                .addExistingOpportunities(rdsWithOpps.get(rd.Id)); 
 
             if (rdRecord.isOutdated()) {
                 outdatedRDs.add(rdRecord.getUpdate());
@@ -276,10 +290,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return !rdSettings.isDisableAllInstallments;
 
         } else if (rd.isNew()) {
-                return rdSettings.isFirstInstallmentEnabled;
+            return rdSettings.isFirstInstallmentEnabled;
 
         } else if (!rd.hasOpenOpportunity(currentDate)) {
-                return rdSettings.isNextInstallmentEnabled;  
+            return rdSettings.isNextInstallmentEnabled;  
         }
 
         return false;
@@ -365,10 +379,30 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+    * @description Query Recuring Donation to check if any opportunity is attach to it
+    */
+    private Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsWithExistingOpps(Set<Id> rdIds) {
+        Set<String> queryFields = new Set<String> {
+            '(SELECT Id ' +
+            'FROM npe03__Donations__r ' +
+            'LIMIT 1)'
+        };
+
+        String soql = new UTIL_Query()
+            .withFrom(npe03__Recurring_Donation__c.SObjectType)
+            .withSelectFields(queryFields)
+            .withWhere('Id IN :rdIds')
+            .build();
+
+        return new Map<Id, npe03__Recurring_Donation__c>((List<npe03__Recurring_Donation__c>) Database.query(soql));
+    }
+
+    /**
      * @description Recurring Donation SObject wrapper
      */
     public class RecurringDonation {
         npe03__Recurring_Donation__c rd;
+        private Boolean hasNoOpportunity;
         private Boolean hasOpenOpportunity;
         private Boolean isOutdated;
 
@@ -393,6 +427,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
                 isOutdated = true;
             }
+
+            return this;
+        }
+
+        /**
+        * @descriptiuon Add additional Opportunities to the Recurring Donation 
+        * so any missing opp will also be taking into consideration
+        * @param rd Recurring Donation Record with the opps being querid
+        */
+        public RecurringDonation addExistingOpportunities(npe03__Recurring_Donation__c rdWithOpps) {
+            hasNoOpportunity = rdWithOpps.npe03__Donations__r.isEmpty();
 
             return this;
         }
@@ -453,7 +498,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Boolean
         */
         public Boolean isNew() {
-            return rd.npe03__Donations__r.isEmpty();
+            if(hasNoOpportunity != null) {
+                return hasNoOpportunity;
+            }
+            
+            hasNoOpportunity = rd.npe03__Donations__r.isEmpty();
+            
+            return hasNoOpportunity;
         }
 
         /**

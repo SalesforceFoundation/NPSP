@@ -49,7 +49,7 @@ public inherited sharing class RD2_Constants {
     */
     public enum InstallmentCreateOptions {
         Always_Create_Next_Installment,
-        Disable_First_Installment_on_Create,
+        Disable_First_Installment,
         Disable_All_Installments 
     }
 
