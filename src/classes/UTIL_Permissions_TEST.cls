@@ -32,12 +32,12 @@ private with sharing class UTIL_Permissions_TEST {
 
     // Read Only users don't have access to custom objects or fields
     private static User getReadOnlyUser() {
-        return UTIL_UnitTestData_TEST.createUserWithoutInsert('Read Only');
+        return UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
     }
 
     // System Administrators have read/write access to custom and standard fields
     private static User getSysAdmin() {
-        return UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
+        return UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
     }
 
     private static SObjectType customSObjType = Address__c.SObjectType;

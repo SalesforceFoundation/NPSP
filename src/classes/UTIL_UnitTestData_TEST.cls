@@ -41,8 +41,8 @@ public class UTIL_UnitTestData_TEST {
     /** @description A mock Account Id .*/
     public static final String MOCK_ACCOUNT_ID = Account.SObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
 
-    public static final String PROFILE_STANDARD_USER = 'Standard User';
-    public static final String PROFILE_READONLY_USER = 'Read Only';
+    public static final String PROFILE_STANDARD_USER = UTIL_Profile.PROFILE_STANDARD_USER;
+    public static final String PROFILE_READONLY_USER = UTIL_Profile.PROFILE_READ_ONLY;
 
     // =====================================================================================================
     // Methods to retrieve configured Stage/Status labels for the Opportunity and Task objects
@@ -398,7 +398,7 @@ public class UTIL_UnitTestData_TEST {
 
     /***
     * @description Builds a Household Account
-    * @return Account 
+    * @return Account
     */
     public static Account buildHouseholdAccount() {
         return createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
