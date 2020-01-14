@@ -4,18 +4,13 @@ import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFo
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { showToast, handleError } from 'c/utilCommon';
-import { dispatch } from 'c/utilTemplateBuilder';
+import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
-
-// import batch list query criteria fields
-import DATA_IMPORT_BATCH_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
-import DATA_IMPORT_BATH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';

@@ -1,7 +1,8 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
+import { isNotEmpty } from 'c/utilCommon';
 
-const BOOLEAN = 'boolean';
 const TEXTAREA = 'textarea';
 const COMBOBOX = 'combobox';
 const SEARCH = 'search';
@@ -21,19 +22,27 @@ export default class utilInput extends LightningElement {
     @api required;
     @api type;
     @api objectInfo;
+    @api objectApiName;
 
-    @track value;
+    @api value;
 
     @api
     reportValue() {
         return {
-            objectApiName: this.objectInfo ? this.objectInfo.apiName : undefined,
+            objectApiName: this.uiObjectApiName,
             fieldApiName: this.fieldApiName,
-            value: this.value ? this.value : this.defaultValue
+            value: this.fieldValue
         };
     }
 
-    get defaultValueForCheckbox() {
+    get fieldValue() {
+        if (this.isLightningCheckbox) {
+            return isNotEmpty(this.value) ? this.value : this.checkboxDefaultValue;
+        }
+        return this.value ? this.value : this.defaultValue;
+    }
+
+    get checkboxDefaultValue() {
         return (this.defaultValue === TRUE || this.defaultValue === true) ? true : false;
     }
 
@@ -105,9 +114,15 @@ export default class utilInput extends LightningElement {
         return undefined;
     }
 
-    connectedCallback() {
-        console.log('**********************--- connectedCallback');
-        console.log(this.fieldApiName);
+    get uiObjectApiName() {
+        return this.objectInfo && this.objectInfo.apiName ? this.objectInfo.apiName : this.objectApiName;
+    }
+
+    @wire(getObjectInfo, { objectApiName: '$objectApiName' })
+    wiredObjectInfo(response) {
+        if (response.data) {
+            this.objectInfo = response.data;
+        }
     }
 
     /*******************************************************************************

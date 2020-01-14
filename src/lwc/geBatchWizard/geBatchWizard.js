@@ -15,17 +15,14 @@ import GeLabelService from 'c/geLabelService';
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
 
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
-import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
 import DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import DATA_IMPORT_BATCH_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
-import DATA_IMPORT_BATH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
-import FORM_TEMPLATE_ID_INFO from '@salesforce/schema/Form_Template__c.Id';
-import FORM_TEMPLATE_NAME_INFO from '@salesforce/schema/Form_Template__c.Name';
+import DATA_IMPORT_BATCH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
+import DATA_IMPORT_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 
 const NAME = 'name';
 const ID = 'id';
 const MAX_STEPS = 2;
-const SAVE = 'save';
 const CANCEL = 'cancel';
 
 export default class geBatchWizard extends LightningElement {
@@ -38,6 +35,7 @@ export default class geBatchWizard extends LightningElement {
 
     @track step = 0;
     @track templates;
+    @track formSections = [];
     @track selectedTemplateId;
     @track isLoading = true;
 
@@ -109,9 +107,9 @@ export default class geBatchWizard extends LightningElement {
         return undefined;
     }
 
-    get formSections() {
+    /*get formSections() {
         return getNestedProperty(this.selectedTemplate, 'layout', 'sections');
-    }
+    }*/
 
     get isEditMode() {
         return this.recordId ? true : false;
@@ -129,7 +127,6 @@ export default class geBatchWizard extends LightningElement {
     @wire(getObjectInfo, { objectApiName: '$dataImportBatchName' })
     wiredDataImportBatchInfo(response) {
         if (response.data) {
-            console.log('DataImportBatchInfo: ', response.data);
             this.dataImportBatchInfo = response.data;
 
             this.dataImportBatchFieldInfos =
@@ -170,6 +167,8 @@ export default class geBatchWizard extends LightningElement {
                         .value;
 
                     this.handleTemplateChange({ detail: { value: templateId } });
+                    this.setFormFieldsBatchLevelDefaults();
+
                     this.step = 1;
 
                     this.isLoading = false;
@@ -180,6 +179,21 @@ export default class geBatchWizard extends LightningElement {
         }
     }
 
+    setFormFieldsBatchLevelDefaults() {
+        let batchLevelDefaults =
+            JSON.parse(this.dataImportBatchRecord.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName].value);
+
+        this.formSections.forEach(section => {
+            if (section.elements) {
+                section.elements.forEach(element => {
+                    if (batchLevelDefaults[element.fieldApiName]) {
+                        element.value = batchLevelDefaults[element.fieldApiName].value;
+                    }
+                });
+            }
+        });
+    }
+
     @wire(getRecordCreateDefaults, { objectApiName: '$dataImportBatchName' })
     dataImportBatchCreateDefaults;
 
@@ -187,16 +201,8 @@ export default class geBatchWizard extends LightningElement {
         console.log('**********************--- setValuesForSelectedBatchHeaderFields');
         this.selectedBatchHeaderFields.map(batchHeaderField => {
             let queriedField = allFields[batchHeaderField.apiName];
-            console.log('batchHeaderField: ', batchHeaderField);
-            console.log('queriedField: ', queriedField);
-            if (queriedField && queriedField.displayValue) {
-                // TODO: May not be a good idea to set lightning-input values to displayValue
-                // i.e. A currency displayValue looks like $0.00 which when provided as the
-                // value for a lightning-input[type='number'] causes a NaN result
-                //batchHeaderField.defaultValue = queriedField.displayValue;
-                batchHeaderField.defaultValue = queriedField.value;
-            } else if (queriedField && queriedField.value) {
-                batchHeaderField.defaultValue = queriedField.value;
+            if (queriedField) {
+                batchHeaderField.value = queriedField.value;
             }
         });
     }
@@ -238,6 +244,7 @@ export default class geBatchWizard extends LightningElement {
     handleTemplateChange(event) {
         console.log('******************************--- handleTemplateChange');
         this.selectedTemplateId = event.detail.value;
+        this.formSections = this.selectedTemplate.layout.sections;
 
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
@@ -254,12 +261,8 @@ export default class geBatchWizard extends LightningElement {
         const dataImportBatchObjectInfo = this.dataImportBatchCreateDefaults.data.objectInfos[
             this.dataImportBatchName
         ];
-        console.log('this.dataImportBatchCreateDefaults: ', this.dataImportBatchCreateDefaults);
-        console.log('dataImportBatchObjectInfo: ', dataImportBatchObjectInfo);
         const recordDefaults = this.dataImportBatchCreateDefaults.data.record;
-        console.log('recordDefaults: ', recordDefaults);
         let recordObject = generateRecordInputForCreate(recordDefaults, dataImportBatchObjectInfo);
-        console.log('recordObject: ', recordObject);
         recordObject = this.setFieldValues(recordObject);
         this.handleRecordCreate(recordObject);
         /*const payload = { values: this.values, name: this.name };
@@ -271,33 +274,39 @@ export default class geBatchWizard extends LightningElement {
         }*/
     }
 
-    setFieldValues(recordObject) {
+    setFieldValues(dataImportBatch) {
         console.log('************--- collectFieldValues');
-        console.log('recordObject: ', recordObject);
-        console.log('Template Id: ', this.selectedTemplateId);
+
         let utilInputs = this.template.querySelectorAll('c-util-input');
+        let batchDefaults = {};
         for (let i = 0; i < utilInputs.length; i++) {
             let formElement = utilInputs[i].reportValue();
-            console.log(formElement.fieldApiName, formElement.value, formElement.objectApiName);
-            if (recordObject.apiName === formElement.objectApiName) {
-                recordObject.fields[formElement.fieldApiName] = formElement.value;
+
+            if (dataImportBatch.apiName === formElement.objectApiName) {
+                dataImportBatch.fields[formElement.fieldApiName] = formElement.value;
+            } else {
+                batchDefaults[formElement.fieldApiName] = {
+                    objectApiName: formElement.objectApiName,
+                    fieldApiName: formElement.fieldApiName,
+                    value: formElement.value
+                };
             }
         }
 
-        console.log('setting gift entry fields...');
-        recordObject.fields[DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO.fieldApiName] = this.selectedTemplateId;
-        recordObject.fields[DATA_IMPORT_BATCH_VERSION_INFO.fieldApiName] = 2.0;
-        recordObject.fields[DATA_IMPORT_BATH_GIFT_INFO.fieldApiName] = true;
+        dataImportBatch.fields[DATA_IMPORT_BATCH_DEFAULTS_INFO.fieldApiName] =
+            JSON.stringify(batchDefaults);
+        dataImportBatch.fields[DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO.fieldApiName] = this.selectedTemplateId;
+        dataImportBatch.fields[DATA_IMPORT_BATCH_VERSION_INFO.fieldApiName] = 2.0;
+        dataImportBatch.fields[DATA_IMPORT_BATCH_GIFT_INFO.fieldApiName] = true;
 
-        console.log('recordObject: ', recordObject);
-        return recordObject;
+        console.log('dataImportBatch: ', dataImportBatch);
+        return dataImportBatch;
     }
 
     handleRecordCreate(recordObject) {
         console.log('************--- handleRecordCreate');
         createRecord(recordObject)
             .then(record => {
-                console.log('Created Record: ', record);
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',

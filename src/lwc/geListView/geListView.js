@@ -177,6 +177,7 @@ export default class geListView extends LightningElement {
     handleImperativeRefresh = async () => {
         this.isLoading = true;
         this.setDatatableColumns(this.selectedColumnHeaders);
+        this.setDatatableActions();
         await this.getRecords(this.columns)
             .catch(error => {
                 handleError(error);

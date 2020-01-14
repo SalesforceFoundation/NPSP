@@ -464,7 +464,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                             .objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
 
                         let formField = this.constructFormField(objectMapping, fieldMapping, sectionId);
-
+                        console.log('formField: ', formField);
                         this.handleAddFieldToSection(sectionId, formField);
                         this.catalogSelectedField(fieldMapping.DeveloperName, sectionId);
                     }
@@ -565,6 +565,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @param {string} sectionId: Id of form section this form field will be under.
     */
     constructFormField(objectMapping, fieldMapping, sectionId) {
+        console.log('objectMapping: ', objectMapping);
+        console.log('fieldMapping: ', fieldMapping);
         return {
             id: generateId(),
             label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
@@ -575,7 +577,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             dataType: fieldMapping.Target_Field_Data_Type,
             dataImportFieldMappingDevNames: [fieldMapping.DeveloperName],
             elementType: fieldMapping.Element_Type,
-            objectApiName: objectMapping.Target_Object_API_Name
+            fieldApiName: fieldMapping.Target_Field_API_Name,
+            objectApiName: objectMapping.Object_API_Name
         }
     }
 

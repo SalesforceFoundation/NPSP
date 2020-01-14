@@ -6,7 +6,7 @@
                                    class="slds-m-around_none"
                                    data-name="defaultValue"
                                    onclick={stopPropagation}
-                                   value={defaultValue}
+                                   value={fieldValue}
                                    variant="label-stacked">
         </lightning-input-rich-text>
     </template>
@@ -19,7 +19,7 @@
                             data-name="defaultValue"
                             onblur={handleOnBlur}
                             onclick={stopPropagation}
-                            value={defaultValue}
+                            value={fieldValue}
                             variant="label-stacked">
         </lightning-textarea>
     </template>
@@ -28,11 +28,11 @@
         <c-ge-form-field-picklist class-name="slds-m-around_none"
                                   label={uiLabel}
                                   required={isRequired}
-                                  field-name={targetFieldApiName}
-                                  object-name={targetObjectApiName}
-                                  object-describe-info={objectDescribeInfo}
+                                  field-name={fieldApiName}
+                                  object-name={uiObjectApiName}
+                                  object-describe-info={objectInfo}
                                   onchange={handleChangeCombobox}
-                                  value={defaultValue}
+                                  value={fieldValue}
                                   variant="label-stacked">
         </c-ge-form-field-picklist>
     </template>
@@ -41,7 +41,7 @@
         <lightning-input aria-label="default value"
                          label={uiLabel}
                          required={isRequired}
-                         checked={defaultValueForCheckbox}
+                         checked={fieldValue}
                          class="slds-m-top_small"
                          data-name="defaultValue"
                          onchange={handleOnBlur}
@@ -60,7 +60,7 @@
                          onclick={stopPropagation}
                          onkeyup={handleSearch}
                          type="search"
-                         value={defaultValue}
+                         value={fieldValue}
                          variant="label-stacked">
         </lightning-input>
     </template>
@@ -74,7 +74,7 @@
                          onchange={handleOnBlur}
                          onclick={stopPropagation}
                          type={lightningInputType}
-                         value={defaultValue}
+                         value={fieldValue}
                          variant="label-stacked">
         </lightning-input>
     </template>
@@ -89,7 +89,7 @@
                          onclick={stopPropagation}
                          type={lightningInputType}
                          formatter={formatter}
-                         value={defaultValue}
+                         value={fieldValue}
                          variant="label-stacked">
         </lightning-input>
     </template>
