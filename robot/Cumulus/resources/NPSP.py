@@ -1336,5 +1336,8 @@ class NPSP(SalesforceRobotLibraryBase):
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
         locator=npsp_lex_locators['delete_icon'].format(field,value)
-        self.selenium.get_webelement(locator).click()    
-
+        self.selenium.get_webelement(locator).click()        
+        
+    def wait_for_datepicker(self):
+        locator="//div[contains()][./label[text()='Donation Date']/following-sibling::div/input]"   
+        self.selenium.wait_until_page_contains_element(locator) 
