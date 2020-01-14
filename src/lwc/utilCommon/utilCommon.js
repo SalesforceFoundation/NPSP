@@ -269,6 +269,5 @@ export {
     mutable,
     sort,
     shiftToIndex,
-    removeByProperty,
     format
 };
