@@ -13,7 +13,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api recordId = '';
     @api record;
     fieldNames = [];
-    @api sections = [];
+    @track sections = [];
     @track ready = false;
     @track name = '';
     @track description = '';
