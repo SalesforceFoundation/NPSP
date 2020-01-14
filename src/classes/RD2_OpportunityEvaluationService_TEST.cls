@@ -143,9 +143,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
 
-        System.assertEquals(false, evalService.isCandidateForNextInstallment(rd1), 'Closed RD should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.isCandidateForNextInstallment(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.isCandidateForNextInstallment(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd1), 'Closed RD should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
     }
 
     /**
@@ -183,10 +183,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
 
-        System.assertEquals(true, evalService.isCandidateForNextInstallment(rdNew), 
+        System.assertEquals(true, evalService.isNewInstallmentCandidate(rdNew), 
             'RD having Schedules and no related Opp should be eligible for an Installment Opp');
 
-        System.assertEquals(false, evalService.isCandidateForNextInstallment(rdOld), 
+        System.assertEquals(false, evalService.isNewInstallmentCandidate(rdOld), 
             'RD having Schedules and a related Opp should not be eligible for an Installment Opp');
     }
 
@@ -250,7 +250,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * the installment should not be created on insert of RD
     */
     @IsTest
-    private static void shouldNotCreateOppOnRDInsertWhenAutoCreationIsDisableFirst() {
+    private static void shouldNotCreateOppOnRDInsertWhenDisableFirstInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingMap = new Map<String, Object> {
@@ -276,7 +276,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * the installment should be created on RD when the nightly batch job run
     */
     @IsTest
-    private static void shouldCreateOppDuringBatchRunWhenAutoCreationIsDisableFirst() {
+    private static void shouldCreateOppDuringBatchRunWhenDisableFirstInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingMap = new Map<String, Object> {
@@ -303,7 +303,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * no installment should be created on inserted of RD and during nightly batch job
     */
     @IsTest
-    private static void shouldNotCreateOppOnInsertWhenInstallmentAutoCreationIsDiableAll() {
+    private static void shouldNotCreateOppOnInsertWhenDiableAllInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingMap = new Map<String, Object> {
@@ -329,7 +329,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * no installment should be created on inserted of RD and during nightly batch job
     */
     @IsTest
-    private static void shouldNotCreateOppDuringBatchRunWhenInstallmentAutoCreationIsDiableAll() {
+    private static void shouldNotCreateOppDuringBatchRunWhenDiableAllInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingMap = new Map<String, Object> {
@@ -356,7 +356,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * should be created when the RD is updated and there is already a Installment Opp existed with CloseDate before today
     */
     @IsTest
-    private static void shouldCreateOppOnUpdateOfRDWhenOpenOppsCloseDateIsLessThanQueryDateAndSettingIsDisableFirst() {
+    private static void shouldCreateOppOnUpdateOfRDWhenClosedOppExistAndDisableFirstInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingMap = new Map<String, Object> {
@@ -391,7 +391,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     * the installment should be created on inserted of RD and during nightly batch job
     */
     @IsTest
-    private static void shouldCreateOppWhenInstallmentAutoCreationIsAlwaysCreate() {
+    private static void shouldCreateOppWhenAlwaysCreateNextInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Map<String, Object> rdSettingMap = new Map<String, Object> {
