@@ -4805,6 +4805,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields:</value>
     </labels>
     <labels>
+        <fullName>geErrorPageLevelMissingRequiredGroupFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>geErrorPageLevelMissingRequiredGroupFields</shortDescription>
+        <value>At least one of the following fields is required: {0}</value>
+    </labels>
+    <labels>
         <fullName>geErrorRequiredField</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
