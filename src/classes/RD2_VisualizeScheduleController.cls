@@ -66,9 +66,10 @@ public with sharing class RD2_VisualizeScheduleController {
 
         List<Installment> upcomingDonations = new List<Installment>();
         if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-            List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(rd, Date.today(), displayNum, null);
             Integer num = 1;
-            for (RD2_ScheduleService.Installment installment : installments) {
+            for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
+                RD2_ScheduleService.currentDate, displayNum, rd.RecurringDonationSchedules__r
+            )) {
                 upcomingDonations.add(new Installment(num++, rd, installment));
             }
         }
@@ -137,6 +138,22 @@ public with sharing class RD2_VisualizeScheduleController {
             if (UserInfo.isMultiCurrencyOrganization()) {
                 queryFields.add('CurrencyIsoCode');
             }
+
+            //Return all schedules for the RD Schedule visualization.
+            //The RD Schedule will filter them out if not applicable within the time period.
+            String scheduleSubquery =
+                '(SELECT Id, InstallmentAmount__c, ' +
+                'Campaign__c, ' +
+                'Campaign__r.Name, ' +
+                'InstallmentFrequency__c, ' +
+                'InstallmentPeriod__c, ' +
+                'DayOfMonth__c, ' +
+                'PaymentMethod__c, ' +
+                'StartDate__c, ' +
+                'EndDate__c ' +
+                'FROM RecurringDonationSchedules__r)';
+            queryFields.add(scheduleSubquery);
+                
             String soql = new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)
                 .withSelectFields(queryFields)
@@ -145,6 +162,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
             cachedRd = Database.query(soql);
         }
+
         return cachedRd;
     }
 }

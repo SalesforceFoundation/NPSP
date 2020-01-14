@@ -227,7 +227,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {              
-            RecurringDonation rdRecord = new RecurringDonation(rd)
+            RecurringDonation rdRecord = new RecurringDonation(rd, currentDate)
                 .revise(scheduleService); 
 
             if (rdRecord.isOutdated()) {
@@ -269,7 +269,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     @TestVisible
     private Boolean needNextInstallment(npe03__Recurring_Donation__c rd) {
-        return needNextInstallment(new RecurringDonation(rd));
+        return needNextInstallment(new RecurringDonation(rd, currentDate));
     }
 
     /**
@@ -290,7 +290,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         if (rd.isNew()) {
             return isFirstInstallmentEnabled;
 
-        } else if (isBatchContext || !rd.hasOpenOpportunity(currentDate)) {
+        } else if (isBatchContext || !rd.hasOpenOpportunity()) {
             return rdSettings.isNextInstallmentEnabled;
         }
 
@@ -306,7 +306,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return !isBatchContext
             && rd.isActive()
             && rd.hasSchedule()
-            && rd.hasOpenOpportunity(currentDate);
+            && rd.hasOpenOpportunity();
     }
 
 
@@ -385,14 +385,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public class RecurringDonation {
         npe03__Recurring_Donation__c rd;
+        Date currentDate;
         private Boolean hasOpenOpportunity;
         private Boolean isOutdated;
 
         /**
         * @description Constructor
         */
-        public RecurringDonation(npe03__Recurring_Donation__c rd) {
+        public RecurringDonation(npe03__Recurring_Donation__c rd, Date currentDate) {
             this.rd = rd;
+            this.currentDate = currentDate;
         }
 
         /**
@@ -404,13 +406,49 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             isOutdated = false;
 
             Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
-
             if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
                 isOutdated = true;
             }
 
+            Decimal currentYearValue = calcCurrentYearValue(scheduleService);
+            if (currentYearValue != rd.CurrentYearValue__c) {
+                rd.CurrentYearValue__c = currentYearValue;
+                isOutdated = true;
+            }
+
             return this;
+        }
+
+        /**
+        * @description Calculates Current Year Value
+        * @return Decimal
+        */
+        private Decimal calcCurrentYearValue(RD2_ScheduleService scheduleService) {
+            final Integer currentYear = currentDate.year();
+            final Date yearEndDate = Date.newInstance(currentYear, 12, 31);
+
+            Map<Date, Opportunity> existingOppByCloseDate = new Map<Date, Opportunity>();
+            Decimal value = 0;
+
+            //Add Open and Closed Won Opps in the current year            
+            for (Opportunity opp : rd.npe03__Donations__r) {
+                if (opp.IsClosed == false && opp.CloseDate.year() == currentYear) {
+                    existingOppByCloseDate.put(opp.CloseDate, opp);
+                    value += opp.Amount; //TODO Currency!
+                }
+            }
+
+            //Add projected installments in the current year
+            for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
+                currentDate, yearEndDate, rd.RecurringDonationSchedules__r
+            )) {
+                if (!existingOppByCloseDate.containsKey(installment.nextDonationDate)) {
+                    value += installment.installmentAmount;
+                }
+            }
+
+            return value;
         }
 
         /**
@@ -428,7 +466,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         public npe03__Recurring_Donation__c getUpdate() {
             return new npe03__Recurring_Donation__c(
                 Id = rd.Id,
-                npe03__Next_Payment_Date__c = rd.npe03__Next_Payment_Date__c
+                npe03__Next_Payment_Date__c = rd.npe03__Next_Payment_Date__c,
+                CurrentYearValue__c = rd.CurrentYearValue__c
             );
         }
 
@@ -477,7 +516,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @param currentDate Current Date to compare the Close Date to
         * @return Boolean
         */
-        public Boolean hasOpenOpportunity(Date currentDate) {
+        public Boolean hasOpenOpportunity() {
             if (hasOpenOpportunity != null) {
                 return hasOpenOpportunity;
             }
@@ -487,6 +526,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             for (Opportunity opp : rd.npe03__Donations__r) {
                 if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
                     hasOpenOpportunity = true;
+                    break;
                 }
             }
 

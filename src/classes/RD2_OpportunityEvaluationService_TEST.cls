@@ -412,6 +412,32 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @description 
      */
     @IsTest
+    private static void currentYearValueShouldBeCalculatedWhenRDIsCreated() {
+        //set current date override
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'An Installment Opp should be created: ' + opps);
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        Integer monthsLeftInYear = 4; //Start Date is Sep 15, 2019
+        System.assertEquals(rd.npe03__Amount__c * monthsLeftInYear, rd.CurrentYearValue__c, 'Current Year Value should be calculated');
+    }
+
+    /**
+     * @description 
+     */
+    @IsTest
     private static void currentYearValueShouldIncludePastOpenOpps() {
     }
 
