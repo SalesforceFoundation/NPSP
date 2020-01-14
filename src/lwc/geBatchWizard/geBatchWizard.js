@@ -8,7 +8,8 @@ import {
     generateRecordInputForCreate
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { handleError, checkNestedProperty, getNestedProperty } from 'c/utilTemplateBuilder';
+import { handleError } from 'c/utilTemplateBuilder';
+import { checkNestedProperty, getNestedProperty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';

@@ -1,7 +1,7 @@
+/* eslint-disable no-void */
+/* eslint-disable @lwc/lwc/no-async-operation */
 const FUNCTION = 'function';
 const OBJECT = 'object';
-const ASC = 'asc';
-const NAME = 'Name';
 
 
 /*******************************************************************************
@@ -59,24 +59,6 @@ const getQueryParameters = () => {
     return params;
 };
 
-/**
- * Check if a value is undefined, null or blank string.
- * @param value         Value to check.
- * @returns {boolean}   TRUE when the given value is undefined, null or blank string.
- */
-const isEmpty = (value) => {
-    return isUndefined(value) || value === null || value === '';
-};
-
-/**
- * Inverse of isEmpty
- * @param value         Value to check.
- * @returns {boolean}   TRUE when the given value is not undefined, null or blank string.
- */
-const isNotEmpty = (value) => {
-    return !isEmpty(value);
-};
-
 /*******************************************************************************
  * @description Checks if value parameter is a function
  *
@@ -121,6 +103,28 @@ const isUndefined = (value) => {
     return value === void(0);
 };
 
+/**
+ * Check if a value is undefined, null or blank string.
+ * @param value         Value to check.
+ * @returns {boolean}   TRUE when the given value is undefined, null or blank string.
+ */
+const isEmpty = (value) => {
+    return isUndefined(value) || value === null || value === '';
+};
+
+/**
+ * Inverse of isEmpty
+ * @param value         Value to check.
+ * @returns {boolean}   TRUE when the given value is not undefined, null or blank string.
+ */
+const isNotEmpty = (value) => {
+    return !isEmpty(value);
+};
+
+const isNull = value => {
+    return value === undefined || value === null;
+};
+
 /*******************************************************************************
  * @description Shallow clones the provided object.
  *
@@ -144,40 +148,6 @@ const mutable = (obj) => {
 const shiftToIndex = (array, oldIndex, newIndex) => {
     [array[oldIndex], array[newIndex]] = [array[newIndex], array[oldIndex]];
     return array;
-};
-
-/*******************************************************************************
- * @description Sorts the given list by field name and direction
- *
- * @param {array} list: List to be sorted
- * @param {string} property: Property to sort by
- * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
- * @param {boolean} isNullsLast: If truthy, orders by NULLS LAST using isEmpty(value)
- *
- * @return {list} data: Sorted instance of list.
- */
-const sort = (objects, attribute, direction = 'desc', isNullsLast) => {
-    let objectsToSort = deepClone(objects);
-    let collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-
-    return objectsToSort.sort((a, b) => {
-        if (isNullsLast) {
-            if (direction === ASC && a[attribute]) {
-                return b[attribute] ? collator.compare(a[attribute].toString(), b[attribute].toString()) : -1;
-            } else if (b[attribute]) {
-                return a[attribute] ? collator.compare(b[attribute].toString(), a[attribute].toString()) : 1;
-            }
-        } else {
-            let propA = (a[attribute] || a[NAME] || '').toString();
-            let propB = (b[attribute] || b[NAME] || '').toString();
-
-            if (direction === ASC) {
-                return collator.compare(propA, propB);
-            } else {
-                return collator.compare(propB, propA);
-            }
-        }
-    });
 };
 
 /*******************************************************************************
@@ -257,6 +227,88 @@ const deepClone = (src) => {
     return clone;
 }
 
+/*******************************************************************************
+ * @description Sorts the given list by field name and direction
+ *
+ * @param {array} list: List to be sorted
+ * @param {string} property: Property to sort by
+ * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
+ * @param {boolean} isNullsLast: If truthy, orders by NULLS LAST using isEmpty(value)
+ *
+ * @return {list} data: Sorted instance of list.
+ */
+const sort = (objects, attribute, direction = "desc", isNullsLast) => {
+    if (objects && attribute) {
+        objects = deepClone(objects);
+        let aBeforeB, bBeforeA;
+        {
+            let sortDirectionMultiplier = direction.toLowerCase() === "desc" ? -1 : 1;
+
+            aBeforeB = -1 * sortDirectionMultiplier;
+            bBeforeA = 1 * sortDirectionMultiplier;
+        }
+
+        return objects.sort((a, b) => {
+            console.log(a, b);
+            if (isNull(a)) {
+                if (isNull(b)) {
+                    return 0;
+                }
+                return isNullsLast ? bBeforeA : aBeforeB;
+            }
+            if (isNull(b)) {
+                return isNullsLast ? aBeforeB : bBeforeA;
+            }
+            if (isNull(a[attribute])) {
+                if (isNull(b[attribute])) {
+                    return 0;
+                }
+                return isNullsLast ? bBeforeA : aBeforeB;
+            }
+            if (isNull(b[attribute])) {
+                return isNullsLast ? aBeforeB : bBeforeA;
+            }
+            if (a[attribute] < b[attribute]) {
+                return aBeforeB;
+            }
+            if (b[attribute] < a[attribute]) {
+                return bBeforeA;
+            }
+            return 0;
+        });
+    }
+    return objects;
+};
+
+/*******************************************************************************
+* @description Method checks to see if a property on the given object exists.
+* Otherwise returns undefined.
+*
+* @param {object} object: Object with properties to check.
+* @param {string} property: Name of the property to check.
+* @return {list} remainingProperties: Destructure all other arguments so we can
+* check N levels deep of the object.
+* e.g. checkNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
+*/
+const checkNestedProperty = (object, property, ...remainingProperties) => {
+    if (object === undefined) return false
+    if (remainingProperties.length === 0 && object.hasOwnProperty(property)) return true
+    return checkNestedProperty(object[property], ...remainingProperties)
+}
+
+/*******************************************************************************
+* @description Method returns the value of a property on the given object.
+* Otherwise returns undefined.
+*
+* @param {object} object: Object with properties to return.
+* @return {list} args: Destructure all other arguments so we can
+* check N levels deep of the object.
+* e.g. getNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
+*/
+const getNestedProperty = (object, ...args) => {
+    return args.reduce((obj, level) => obj && obj[level], object)
+}
+
 export {
     debouncify,
     deepClone,
@@ -268,9 +320,12 @@ export {
     isObject,
     isUndefined,
     isPrimative,
+    isNull,
     mutable,
     sort,
     shiftToIndex,
     removeByProperty,
-    format
+    format,
+    checkNestedProperty,
+    getNestedProperty
 };

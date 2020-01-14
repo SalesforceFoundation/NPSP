@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuilder';
-import { format, sort, deepClone } from 'c/utilCommon';
+import { format, sort, deepClone, checkNestedProperty } from 'c/utilCommon';
 import LibsMoment from 'c/libsMoment';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
@@ -22,7 +22,6 @@ import FORM_TEMPLATE_DESCRIPTION_INFO from '@salesforce/schema/Form_Template__c.
 import FORM_TEMPLATE_CREATED_BY_INFO from '@salesforce/schema/Form_Template__c.CreatedById';
 import FORM_TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
-import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 // import default templates list view column header fields describe info
 import DATA_IMPORT_BATCH_NAME_INFO from '@salesforce/schema/DataImportBatch__c.Name';
 import DATA_IMPORT_BATCH_DESCRIPTION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Description__c';
@@ -42,7 +41,6 @@ const NAME = 'Name';
 const USER = 'User';
 const URL = 'url';
 const _SELF = '_self';
-const DATE_FORMAT = 'M/D/YYYY, h:mm:ss A';
 const SAVE = 'save';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
@@ -178,8 +176,8 @@ export default class geListView extends LightningElement {
 
     handleImperativeRefresh = async () => {
         this.isLoading = true;
-        const displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
-        await this.getRecords(displayColumns)
+        this.setDatatableColumns(this.selectedColumnHeaders);
+        await this.getRecords(this.columns)
             .catch(error => {
                 handleError(error);
             });
@@ -219,16 +217,13 @@ export default class geListView extends LightningElement {
         this.selectedColumnHeaders = this.setSelectedColumnHeaders(columnHeaderData);
 
         // Build the columns for the datatable using the currently selected column headers
-        const displayColumns = this.buildDisplayColumns(this.selectedColumnHeaders);
-
-        // Set the datatable columns
-        this.setDatatableColumns(displayColumns);
+        this.setDatatableColumns(this.selectedColumnHeaders);
 
         // Set the datatable actions
         this.setDatatableActions();
 
         // Get records
-        await this.getRecords(displayColumns)
+        await this.getRecords(this.columns)
             .catch(error => {
                 handleError(error);
             });
@@ -242,12 +237,20 @@ export default class geListView extends LightningElement {
     *
     * @param {list} displayColumns: List of display columns used by lightning-datatable.
     */
-    getRecords = async (displayColumns) => {
-        const fields = displayColumns.map(column => column.fieldApiName);
+    getRecords = async (columns) => {
+        const fields = columns.filter(column => column.fieldApiName).map(column => column.fieldApiName);
         if (fields.length > 0) {
             let orderBy = null;
             if (this.sortedBy && this.sortedDirection) {
-                const orderedByFieldApiName = this.columnEntriesByName[this.sortedBy].fieldApiName;
+                const columnEntry = this.columnEntriesByName[this.sortedBy];
+                let orderedByFieldApiName;
+
+                if (checkNestedProperty(this.columnEntriesByName[this.sortedBy],
+                    'typeAttributes', 'label', 'fieldName')) {
+                    orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
+                } else {
+                    orderedByFieldApiName = columnEntry.fieldName;
+                }
                 orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
             }
 
@@ -379,39 +382,109 @@ export default class geListView extends LightningElement {
     *
     * @param {list} fields: List of fields from the object describe info.
     */
-    buildDisplayColumns(headerFieldApiNames) {
-        let displayColumns = [];
+    setDatatableColumns(headerFieldApiNames) {
+        this.columnEntriesByName = {};
+        this.columns = [];
+
         for (let i = 0; i < headerFieldApiNames.length; i++) {
-            const fieldApiName = headerFieldApiNames[i];
+            let fieldApiName = headerFieldApiNames[i];
             const fieldDescribe = this.objectInfo.fields[fieldApiName];
-            console.log('fieldDescribe: ', fieldDescribe);
-            let displayColumn = {
+            let columnEntry = {
                 fieldApiName: fieldDescribe.apiName,
                 label: fieldDescribe.label,
                 sortable: fieldDescribe.sortable
             }
 
-            // Handle relationship info for fields looking up to a User.
-            const isRelationshipField =
-                fieldDescribe.relationshipName &&
-                fieldDescribe.referenceToInfos &&
-                fieldDescribe.referenceToInfos.length >= 1;
+            columnEntry = this.handleReferenceTypeFields(fieldDescribe, columnEntry);
 
-            if (isRelationshipField) {
-                const reference = fieldDescribe.referenceToInfos[0];
-                const isUserReference = fieldDescribe.referenceToInfos.find(info => info.apiName === USER);
-
-                const nameFields = isUserReference ? isUserReference.nameFields : reference.nameFields;
-                const nameField = nameFields.find(field => field === NAME) || nameFields[0];
-
-                displayColumn.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
+            // Special case for relationship references e.g. 'CreatedBy.Name'
+            // so we can display the Name property of the reference in the table.
+            if (columnEntry.fieldApiName.includes(`.${NAME}`)) {
+                fieldApiName = columnEntry.fieldApiName.split('.')[0];
             }
 
-            displayColumns.push(displayColumn);
+            // Need to convert types derived from schema to types useable by lightning-datable
+            const types = {
+                'double': 'number',
+                'datetime': 'date',
+                'date': 'date-local'
+            }
+            const convertedType = types[fieldDescribe.dataType.toLowerCase()];
+
+            columnEntry.fieldName = fieldApiName;
+            columnEntry.type = convertedType ? convertedType : fieldDescribe.dataType.toLowerCase();
+
+            this.handleTypesAttribute(columnEntry, fieldApiName);
+
+            this.columns = [...this.columns, columnEntry];
+            this.columnEntriesByName[columnEntry.fieldName] = columnEntry;
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method checks to see if the provided field is a reference and
+    * adjusts the relevant column entry properties as needed.
+    *
+    * @param {object} fieldDescribe: Field describe from the schema.
+    * @param {object} columnEntry: A column header entry for lightning-datatable.
+    */
+    handleReferenceTypeFields(fieldDescribe, columnEntry) {
+        const isRelationshipField =
+            fieldDescribe.relationshipName &&
+            fieldDescribe.referenceToInfos &&
+            fieldDescribe.referenceToInfos.length >= 1;
+
+        if (isRelationshipField) {
+            const reference = fieldDescribe.referenceToInfos[0];
+            const isUserReference = fieldDescribe.referenceToInfos.find(info => info.apiName === USER);
+
+            const nameFields = isUserReference ? isUserReference.nameFields : reference.nameFields;
+            const nameField = nameFields.find(field => field === NAME) || nameFields[0];
+
+            columnEntry.fieldApiName = `${fieldDescribe.relationshipName}.${nameField}`;
         }
 
+        return columnEntry;
+    }
 
-        return displayColumns;
+    /*******************************************************************************
+    * @description Method sets the typeAttributes property in a column entry if
+    * needed.
+    *
+    * @param {object} columnEntry: A column header entry for lightning-datatable.
+    * @param {string} fieldApiName: Field Api Name of an sObject.
+    */
+    handleTypesAttribute(columnEntry, fieldApiName) {
+        if (columnEntry.type === 'date') {
+            columnEntry.typeAttributes = {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: "true"
+            }
+        }
+
+        if (columnEntry.type === 'date-local') {
+            columnEntry.typeAttributes = {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric"
+            }
+        }
+
+        // Turn fields in the 'Name' column into URLs
+        if (fieldApiName === NAME) {
+            columnEntry.type = URL;
+            columnEntry.fieldName = URL;
+            columnEntry.typeAttributes = {
+                label: {
+                    fieldName: fieldApiName
+                },
+                target: _SELF
+            }
+        }
     }
 
     /*******************************************************************************
@@ -460,54 +533,6 @@ export default class geListView extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Method handles setting up the lightning-datatable columns based
-    * on the displayColumn that's provided by the getListUi api.
-    *
-    * @param {object} displayColumns: Data describing the column headers for a list
-    * view
-    */
-    setDatatableColumns(displayColumns) {
-        this.columnEntriesByName = {};
-        this.columns = [];
-
-        displayColumns.forEach(column => {
-            let fieldApiName = column.fieldApiName;
-
-            // Special case for relationship references e.g. 'CreatedBy.Name'
-            // so we can display the Name prop of the reference.
-            if (column.fieldApiName.includes(`.${NAME}`)) {
-                fieldApiName = column.fieldApiName.split('.')[0];
-            }
-
-            // Gotta create a new column object with correct properties
-            // because for some reason lightning-datatable
-            // requires the property 'fieldName', but we're given
-            // the property 'fieldApiName' by the getListUi api
-            let columnEntry = {
-                label: column.label,
-                fieldName: fieldApiName,
-                fieldApiName: column.fieldApiName,
-                sortable: column.sortable
-            }
-
-            // Turn fields in the 'Name' column into URLs
-            if (fieldApiName === NAME) {
-                columnEntry.type = URL;
-                columnEntry.fieldName = URL;
-                columnEntry.typeAttributes = {
-                    label: {
-                        fieldName: fieldApiName
-                    },
-                    target: _SELF
-                }
-            }
-
-            this.columns = [...this.columns, columnEntry];
-            this.columnEntriesByName[columnEntry.fieldName] = columnEntry;
-        });
-    }
-
-    /*******************************************************************************
     * @description Method sets the actions for the lightning-datatable based on
     * the public property 'actions'.
     */
@@ -538,27 +563,12 @@ export default class geListView extends LightningElement {
                 if (record[key].Name) {
                     record[key] = record[key].Name;
                 }
-
-                const datetimeObject = LibsMoment.moment(
-                    record[key],
-                    LibsMoment.moment.ISO_8601, true);
-
-                if (datetimeObject.isValid()) {
-                    record[key] = LibsMoment.moment(record[key]).format(DATE_FORMAT);
-                }
-
-                if (typeof record[key] !== 'string') {
-                    record[key] = record[key].toString();
-                }
             });
 
             record[URL] = format(recordUrl, [record.Id]);
 
             this.records = [...this.records, record];
         });
-
-        console.log('this.columns: ', deepClone(this.columns));
-        console.log('this.records: ', deepClone(this.records));
     }
 
     /*******************************************************************************
@@ -592,8 +602,10 @@ export default class geListView extends LightningElement {
         this.sortedDirection = event.detail.sortDirection;
 
         // Set sortedBy to correct fieldName if a URL type column.
-        let sortedBy =
-            columnEntry.typeAttributes ? columnEntry.typeAttributes.label.fieldName : this.sortedBy;
+        let sortedBy = this.sortedBy;
+        if (checkNestedProperty(columnEntry, 'typeAttributes', 'label', 'fieldName')) {
+            sortedBy = columnEntry.typeAttributes.label.fieldName;
+        }
 
         this.records = sort(this.records, sortedBy, this.sortedDirection, false);
     }
