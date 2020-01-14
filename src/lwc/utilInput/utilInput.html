@@ -7,7 +7,8 @@
                                    data-name="defaultValue"
                                    onclick={stopPropagation}
                                    value={fieldValue}
-                                   variant="label-stacked">
+                                   variant={variant}
+                                   tab-index={tabIndex}>
         </lightning-input-rich-text>
     </template>
 
@@ -20,7 +21,8 @@
                             onblur={handleOnBlur}
                             onclick={stopPropagation}
                             value={fieldValue}
-                            variant="label-stacked">
+                            variant={variant}
+                            tab-index={tabIndex}>
         </lightning-textarea>
     </template>
 
@@ -33,7 +35,8 @@
                                   object-describe-info={objectInfo}
                                   onchange={handleChangeCombobox}
                                   value={fieldValue}
-                                  variant="label-stacked">
+                                  variant={variant}
+                                  tab-index={tabIndex}>
         </c-ge-form-field-picklist>
     </template>
 
@@ -61,7 +64,8 @@
                          onkeyup={handleSearch}
                          type="search"
                          value={fieldValue}
-                         variant="label-stacked">
+                         variant={variant}
+                         tab-index={tabIndex}>
         </lightning-input>
     </template>
 
@@ -75,7 +79,8 @@
                          onclick={stopPropagation}
                          type={lightningInputType}
                          value={fieldValue}
-                         variant="label-stacked">
+                         variant={variant}
+                         tab-index={tabIndex}>
         </lightning-input>
     </template>
 
@@ -90,7 +95,8 @@
                          type={lightningInputType}
                          formatter={formatter}
                          value={fieldValue}
-                         variant="label-stacked">
+                         variant={variant}
+                         tab-index={tabIndex}>
         </lightning-input>
     </template>
 </template>

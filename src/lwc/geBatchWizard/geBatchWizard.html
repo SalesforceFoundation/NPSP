@@ -24,7 +24,6 @@
             <template if:false={isLoading}>
                 <div class="slds-grid slds-wrap">
                     <div class={cssClassStep0}>
-                        <p class="slds-p-horizontal_small">You're a 🧙‍♂️ Harry!</p>
                         <lightning-combobox name="Templates"
                                             label="Status"
                                             value={selectedTemplateId}
@@ -35,7 +34,6 @@
                         </lightning-combobox>
                     </div>
                     <div class={cssClassStep1}>
-                        <p class="slds-p-horizontal_small">You're a 🤖 Harry!</p>
                         <template for:each={selectedBatchHeaderFields}
                                   for:item='batchField'>
                             <c-util-input key={batchField.apiName}
@@ -50,34 +48,39 @@
                         </template>
                     </div>
                     <div class={cssClassStep2}>
-                        <div class="slds-grid slds-wrap">
-                            <div class="slds-size_1-of-1 slds-p-horizontal_x-large">
-                                <p class="slds-p-horizontal_small">You're a 🍔 Harry!</p>
-                                <template for:each={formSections}
-                                          for:item='section'>
-                                    <h1 key={section.id}
-                                        class="slds-text-heading_medium slds-border_bottom">
-                                        {section.label}
-                                    </h1>
-                                    <ul key={section.id}
-                                        class="slds-list--dotted">
+                        <lightning-layout vertical-align="stretch"
+                                          multiple-rows="true"
+                                          class="x-large">
+                            <template for:each={formSections}
+                                      for:item="section">
+                                <lightning-layout-item key={section.id}
+                                                       size="12">
+                                    <c-util-expandable-section id={section.id}
+                                                               label={section.label}
+                                                               class="test-class">
                                         <template for:each={section.elements}
-                                                  for:item='element'>
-                                            <li key={element.id}>{element.customLabel}</li>
-                                            <c-util-input key={element.apiName}
-                                                          type={element.dataType}
-                                                          field-api-name={element.fieldApiName}
-                                                          object-api-name={element.objectApiName}
-                                                          label={element.customLabel}
-                                                          default-value={element.defaultValue}
-                                                          value={element.value}
-                                                          required={element.required}>
-                                            </c-util-input>
+                                                  for:item="element">
+                                            <div key={element.apiName}
+                                                 class="slds-grid slds-wrap slds-p-top_x-small">
+                                                <div class="slds-size_2-of-3">
+                                                    <c-util-input key={element.apiName}
+                                                                  type={element.dataType}
+                                                                  field-api-name={element.fieldApiName}
+                                                                  object-api-name={element.objectApiName}
+                                                                  label={element.customLabel}
+                                                                  default-value={element.defaultValue}
+                                                                  value={element.value}
+                                                                  required={element.required}
+                                                                  variant="label-inline">
+                                                    </c-util-input>
+                                                </div>
+                                                <div class="slds-size_1-of-3"></div>
+                                            </div>
                                         </template>
-                                    </ul>
-                                </template>
-                            </div>
-                        </div>
+                                    </c-util-expandable-section>
+                                </lightning-layout-item>
+                            </template>
+                        </lightning-layout>
                     </div>
                 </div>
             </template>
