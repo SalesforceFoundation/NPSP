@@ -309,6 +309,14 @@
         <value>Link opens in a new window</value>
     </labels>
     <labels>
+        <fullName>AssistiveTextRecordIcon</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Assistive Text for a record icon</shortDescription>
+        <value>Record Icon</value>
+    </labels>
+    <labels>
         <fullName>AssistiveTextWarning</fullName>
         <categories>AlternativeText</categories>
         <language>en_US</language>
@@ -1486,6 +1494,30 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Processing</shortDescription>
         <value>Processing</value>
     </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCEndDate</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The end date of the recurring donation schedule</shortDescription>
+        <value>End Date</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCFutureSchedule</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Details of a schedule that will take effect at a future date</shortDescription>
+        <value>Future Schedule</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the Active Schedules Component</shortDescription>
+        <value>Active Schedules</value>
+    </labels>
      <labels>
         <fullName>RD2_AmountMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1493,6 +1525,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if value on the amount is valid or not</shortDescription>
         <value>Enter a valid Amount. The Amount cannot be zero, negative, or blank.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrentScheduleTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Details of the schedule which is currently in effect</shortDescription>
+        <value>Current Schedule</value>
     </labels>
     <labels>
         <fullName>RD2_DataMigrationInvalidCloseAction</fullName>
@@ -1873,6 +1913,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
     </labels>
     <labels>
+        <fullName>RD2_ScheduleInstallmentIsRequired</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Every installment Opportunity should have matching RD Schedule installment</shortDescription>
+        <value>The Opportunity cannot be matched with the Recurring Donation Schedule installment.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ScheduleVisualizerColumnDate</fullName>
         <categories>Recurring-Donations, Component</categories>
         <language>en_US</language>
@@ -1905,12 +1953,20 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>There are no scheduled installment Opportunities.</value>
     </labels>
     <labels>
+        <fullName>RD2_ScheduleVisualizerMessageNoActiveSchedule</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when there is no active schedule to render</shortDescription>
+        <value>There is no active schedule for this Recurring Donation.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ScheduleVisualizerTitle</fullName>
         <categories>Recurring-Donations, Component</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title of the Schedule Visualizer Component</shortDescription>
-        <value>Upcoming Schedule</value>
+        <value>Upcoming Installments</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
@@ -8863,6 +8919,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelField</shortDescription>
         <value>Field</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelFieldValueNone</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Display the value None</shortDescription>
+        <value>None</value>
     </labels>
     <labels>
         <fullName>stgLabelHHGeneral</fullName>

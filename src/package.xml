@@ -359,10 +359,12 @@
         <members>RD2_RecurringDonations_TEST</members>
         <members>RD2_ScheduleService</members>
         <members>RD2_ScheduleService_TEST</members>
+        <members>RD2_Settings</members>
+        <members>RD2_Settings_TEST</members>
         <members>RD2_ValidationService</members>
         <members>RD2_ValidationService_TEST</members>
         <members>RD2_VisualizeScheduleController</members>
-        <members>RD2_VisualizeScheduleControllerTest</members>
+        <members>RD2_VisualizeScheduleController_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
@@ -545,6 +547,8 @@
         <members>UTIL_RecordTypes</members>
         <members>UTIL_RecordTypes_API</members>
         <members>UTIL_RecordTypes_TEST</members>
+        <members>UTIL_SObject</members>
+        <members>UTIL_SObject_TEST</members>
         <members>UTIL_SalesforceID</members>
         <members>UTIL_SalesforceID_TEST</members>
         <members>UTIL_SoqlListView_CTRL</members>
@@ -1321,6 +1325,7 @@
         <members>AssistiveTextComplete</members>
         <members>AssistiveTextError</members>
         <members>AssistiveTextNewWindow</members>
+        <members>AssistiveTextRecordIcon</members>
         <members>AssistiveTextWarning</members>
         <members>BatchProgressCompletedDate</members>
         <members>BatchProgressExtendedStatus</members>
@@ -1478,6 +1483,7 @@
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
+        <members>RD2_CurrentScheduleTitle</members>
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
         <members>RD2_DataMigrationInvalidOpenEndedStatus</members>
@@ -1524,9 +1530,14 @@
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
+        <members>RD2_ScheduleInstallmentIsRequired</members>
+        <members>RD2_ScheduleLWCEndDate</members>
+        <members>RD2_ScheduleLWCFutureSchedule</members>
+        <members>RD2_ScheduleLWCTitle</members>
         <members>RD2_ScheduleVisualizerColumnDate</members>
         <members>RD2_ScheduleVisualizerErrorEnhancedRDNot</members>
         <members>RD2_ScheduleVisualizerErrorInvalidUsage</members>
+        <members>RD2_ScheduleVisualizerMessageNoActiveSchedule</members>
         <members>RD2_ScheduleVisualizerMessageNoSchedule</members>
         <members>RD2_ScheduleVisualizerTitle</members>
         <members>RD_ContactMustBelongToAccount</members>
@@ -2390,6 +2401,7 @@
         <members>stgLabelExamplesHHNameFOrmat</members>
         <members>stgLabelExamplesIGFormat</members>
         <members>stgLabelField</members>
+        <members>stgLabelFieldValueNone</members>
         <members>stgLabelHHGeneral</members>
         <members>stgLabelHHNaming</members>
         <members>stgLabelHHNamingProgress</members>
@@ -3137,6 +3149,7 @@
         <members>bdiObjectMappings</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
         <members>util</members>
         <members>utilPlatformEventListener</members>
