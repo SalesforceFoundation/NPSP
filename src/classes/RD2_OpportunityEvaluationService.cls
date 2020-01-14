@@ -135,7 +135,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     @TestVisible
     private Map<Id, npe03__Recurring_Donation__c> rdsWithOpps {
         get {
-            if(rdsWithOpps == null && rdIds != null) {
+            if (rdsWithOpps == null && rdIds != null) {
                 rdsWithOpps = getRecurringDonationsWithExistingOpps(this.rdIds);
             }
             return rdsWithOpps;
@@ -385,8 +385,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         Set<String> queryFields = new Set<String> {
             '(SELECT Id ' +
             'FROM npe03__Donations__r ' +
-            'LIMIT 1)'
-        };
+            'LIMIT 1)'};
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -498,7 +497,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Boolean
         */
         public Boolean isNew() {
-            if(hasNoOpportunity != null) {
+            if (hasNoOpportunity != null) {
                 return hasNoOpportunity;
             }
             

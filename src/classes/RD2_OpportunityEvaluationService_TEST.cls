@@ -375,6 +375,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build();
 
         rd.npe03__Amount__c = 2000;
+        
         Test.startTest();
         update rd;
         Test.stopTest();
