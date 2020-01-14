@@ -510,6 +510,11 @@ public without sharing class RD2_ScheduleService {
         return nextDate;
     }
 
+    /***
+    * @description Retrieves detailed information about schedules suitable for viewing through UI
+    * @param rd Recurring Donation record
+    * @return List<ActiveSchedule>
+    */
     public List<ActiveSchedule> getVisualizedSchedules(npe03__Recurring_Donation__c rd) {
         List<ActiveSchedule> activeSchedules = new List<ActiveSchedule>();
         List<RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
@@ -534,6 +539,9 @@ public without sharing class RD2_ScheduleService {
         return activeSchedules;
     }
 
+    /***
+    * @description Wrapper class for Recurring Donation Schedule data
+    */
     public class ActiveSchedule {
 
         public Boolean  isCurrent {get;set;}
