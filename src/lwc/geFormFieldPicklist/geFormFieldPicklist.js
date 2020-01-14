@@ -8,22 +8,36 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api variant;
     @api required;
     @api value;
-    @api objectDescribeInfo;
     @api className;
 
+    @track _objectDescribeInfo;
     @track picklistValues;
+    @track defaultRecordTypeId;
 
     @wire(getPicklistValues, {
         fieldApiName: '$fullFieldApiName',
-        recordTypeId: '$objectDescribeInfo.defaultRecordTypeId' })
+        recordTypeId: '$defaultRecordTypeId' })
     wiredPicklistValues({error, data}) {
         if(data) {
             this.picklistValues = data.values;
         }
-
         if(error) {
             console.error(error);
         }
+    }
+
+    @api
+    set objectDescribeInfo(val) {
+        this._objectDescribeInfo = val;
+        if(val) {
+            this.defaultRecordTypeId = val.defaultRecordTypeId;
+        } else {
+            this.defaultRecordTypeId = null;
+        }
+    }
+
+    get objectDescribeInfo() {
+        return this._objectDescribeInfo;
     }
 
     get fullFieldApiName() {

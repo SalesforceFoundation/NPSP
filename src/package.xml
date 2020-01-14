@@ -1479,8 +1479,6 @@
         <members>EPTaskTemplate</members>
         <members>EPTo</members>
         <members>ErrorEmailMessage</members>
-        <members>GE_Remove_Selected_Option</members>
-        <members>GE_Search_Placeholder</members>
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
         <members>NameRequired</members>
@@ -1889,6 +1887,7 @@
         <members>geAssistiveFormFieldsRemoveField</members>
         <members>geAssistiveFormFieldsSectionEdit</members>
         <members>geAssistiveModalCancelAndDiscard</members>
+        <members>geAssistiveRemoveSelectedOption</members>
         <members>geAssistiveSectionDown</members>
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
@@ -1915,6 +1914,7 @@
         <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>
+        <members>geErrorCompleteThisField</members>
         <members>geErrorExistingTemplateName</members>
         <members>geErrorFieldPermission</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>
@@ -1947,6 +1947,7 @@
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
+        <members>geSearchPlaceholder</members>
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
@@ -3270,6 +3271,7 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>utilCommon</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
         <members>utilIllustration</members>

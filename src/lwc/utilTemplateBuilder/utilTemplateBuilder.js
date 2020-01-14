@@ -12,10 +12,6 @@ import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerI
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
-const OBJECT = 'object';
-const FUNCTION = 'function';
-const ASC = 'asc';
-
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
 ];
@@ -285,40 +281,6 @@ const dispatch = (context, name, detail, bubbles = false, composed = false) => {
 }
 
 /*******************************************************************************
-* @description Sorts the given list by field name and direction
-*
-* @param {array} list: List to be sorted
-* @param {string} property: Property to sort by
-* @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
-* @param {boolean} isNullsLast: If truthy, orders by NULLS LAST using isEmpty(value)
-*
-* @return {list} data: Sorted instance of list.
-*/
-const sort = (objects, attribute, direction = 'desc', isNullsLast) => {
-    let objectsToSort = deepClone(objects);
-    let collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-
-    return objectsToSort.sort((a, b) => {
-        if (isNullsLast) {
-            if (direction === 'asc' && a[attribute]) {
-                return b[attribute] ? collator.compare(a[attribute].toString(), b[attribute].toString()) : -1;
-            } else if (b[attribute]) {
-                return a[attribute] ? collator.compare(b[attribute].toString(), a[attribute].toString()) : 1;
-            }
-        } else {
-            let propA = (a[attribute] || a['Name'] || '').toString();
-            let propB = (b[attribute] || b['Name'] || '').toString();
-
-            if (direction === 'asc') {
-                return collator.compare(propA, propB);
-            } else {
-                return collator.compare(propB, propA);
-            }
-        }
-    });
-};
-
-/*******************************************************************************
 * @description Creates and dispatches a ShowToastEvent
 *
 * @param {string} title: Title of the toast, displayed as a heading.
@@ -369,46 +331,6 @@ const handleError = (error) => {
 };
 
 /*******************************************************************************
-* @description 'Debouncifies' any function.
-*
-* @param {object} anyFunction: Function to be debounced.
-* @param {integer} wait: Time to wait by in milliseconds.
-*/
-const debouncify = (anyFunction, wait) => {
-    let timeoutId;
-
-    return (...argsFromLastCall) => {
-        window.clearTimeout(timeoutId);
-
-        return new Promise(resolve => {
-            timeoutId = window.setTimeout(() => {
-                resolve(anyFunction(...argsFromLastCall));
-            }, wait);
-        });
-    };
-};
-
-/*******************************************************************************
-* @description Collects all query parameters in the URL and returns them as a
-* map.
-*
-* @return {object} params: Map of query parameters.
-*/
-const getQueryParameters = () => {
-    let params = {};
-    let search = location.search.substring(1);
-
-    if (search) {
-        const url = `{"${search.replace(/&/g, '","').replace(/=/g, '":"')}"}`;
-        params = JSON.parse(url, (key, value) => {
-            return key === "" ? value : decodeURIComponent(value)
-        });
-    }
-
-    return params;
-}
-
-/*******************************************************************************
 * @description Creates a 'unique' id made to look like a UUID.
 *
 * @return {string} params: String acting like a UUID.
@@ -420,7 +342,7 @@ const generateId = () => {
     //       that looks similar.
     const random4 = () => {
         return Math.random().toString(16).slice(-4);
-    }
+    };
     return random4() +
         random4() +
         '-' + random4() +
@@ -429,57 +351,19 @@ const generateId = () => {
         '-' + random4() + random4() + random4();
 };
 
-/*******************************************************************************
-* @description Javascript method comparable to Apex's String.format(...).
-* Replaces placeholders in Custom Labels ({0}, {1}, etc) with provided values.
-*
-* @param {string} string: Custom Label to be formatted.
-* @param {list} replacements: List of string to use as replacements.
-* @return {string} formattedString: Formatted custom label
-*/
-const format = (string, replacements) => {
-    let formattedString = isEmpty(string) ? '' : string;
-    if (replacements) {
-        let key;
-        const type = typeof replacements;
-        const args =
-            'string' === type || 'number' === type
-                ? Array.prototype.slice.call(replacements)
-                : replacements;
-        for (key in args) {
-            if (args.hasOwnProperty(key)) {
-                formattedString = formattedString.replace(
-                    new RegExp('\\{' + key + '\\}', 'gi'),
-                    args[key]
-                );
-            }
-        }
-    }
-
-    return formattedString;
-};
-
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
-    removeByProperty,
-    findIndexByProperty,
-    shiftToIndex,
-    mutable,
     dispatch,
-    sort,
     showToast,
     handleError,
-    getQueryParameters,
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
     deepClone,
-    debouncify,
     isEmpty,
     isFunction,
     isPrimative,
     findMissingRequiredFieldMappings,
-    findMissingRequiredBatchFields,
-    format,
+    findMissingRequiredBatchFields
 }

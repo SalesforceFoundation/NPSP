@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { dispatch, handleError, format, generateId, sort, deepClone, showToast } from 'c/utilTemplateBuilder';
+import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuilder';
+import { format, sort, deepClone } from 'c/utilCommon';
 import LibsMoment from 'c/libsMoment';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
