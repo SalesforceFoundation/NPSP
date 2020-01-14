@@ -37,6 +37,77 @@
 public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
+    * @description Method retrieves records based on a query string.
+    */
+    @AuraEnabled
+    public static SObject[] retrieveRecords(String[] selectFields,
+        String sObjectApiName, String[] whereClauses, String orderByClause, Integer limitClause) {
+
+        String queryString = new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom(sObjectApiName)
+            .withWhere(whereClauses)
+            .withOrderBy(orderByClause)
+            .withLimit(limitClause)
+            .build();
+
+        return Database.query(queryString);
+    }
+
+    /*******************************************************************************************************
+    * @description Method retrieves custom Column Header List Custom Setting records for tables in the Gift
+    * Entry landing page.
+    */
+    @AuraEnabled
+    public static Custom_Column_Header__c[] retrieveCustomColumnHeaders(String listName) {
+        String[] selectFields = new String[] {
+            SObjectType.Custom_Column_Header__c.fields.Id.Name,
+            SObjectType.Custom_Column_Header__c.fields.Name.Name,
+            SObjectType.Custom_Column_Header__c.fields.Field_Api_Name__c.Name,
+            SObjectType.Custom_Column_Header__c.fields.Index__c.Name,
+            SObjectType.Custom_Column_Header__c.fields.List_Name__c.Name
+        };
+        String sObjectApiName = SObjectType.Custom_Column_Header__c.Name;
+        String whereVal = '\'' + String.escapeSingleQuotes(listName) + '\'';
+        String whereClauses = SObjectType.Custom_Column_Header__c.fields.List_Name__c.Name + ' = ' + whereVal;
+        String orderByClause = SObjectType.Custom_Column_Header__c.fields.Index__c.Name + ' ASC';
+
+        String queryString = new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom(sObjectApiName)
+            .withWhere(whereClauses)
+            .withOrderBy(orderByClause)
+            .build();
+
+        return Database.query(queryString);
+    }
+
+    /*******************************************************************************************************
+    * @description Method retrieves records based on a query string.
+    */
+    @AuraEnabled
+    public static Custom_Column_Header__c[] upsertCustomColumnHeaders(String columnHeadersString,
+        String listName) {
+
+        Custom_Column_Header__c[] columnHeaders =
+            (Custom_Column_Header__c[])JSON.deserialize(columnHeadersString, Custom_Column_Header__c[].class);
+        upsert columnHeaders;
+
+        Id[] headerIdsToKeep = new Id[]{};
+        for (Custom_Column_Header__c columnHeader : columnHeaders) {
+            headerIdsToKeep.add(columnHeader.Id);
+        }
+
+        Custom_Column_Header__c[] headersToDelete = [SELECT Id
+            FROM Custom_Column_Header__c
+            WHERE Id NOT IN :headerIdsToKeep
+                AND List_Name__c = :listName];
+        delete headersToDelete;
+
+        return columnHeaders;
+    }
+
+    /*******************************************************************************************************
     * @description Method for retrieving all existing form templates.
     */
     @AuraEnabled
@@ -100,12 +171,21 @@ public with sharing class FORM_ServiceGiftEntry {
 
     /*******************************************************************************************************
     * @description Method deletes a Form_Template__c record by id.
+    *
     * @param id: Form_Template__c record id
+    *
+    * @return list: List of deleted Form_Template__c names
     */
     @AuraEnabled
-    public static void deleteFormTemplates(String[] ids) {
-        Form_Template__c[] templates = [SELECT Id FROM Form_Template__c WHERE Id IN :ids];
+    public static String[] deleteFormTemplates(String[] ids) {
+        Form_Template__c[] templates = [SELECT Id, Name FROM Form_Template__c WHERE Id IN :ids];
         delete templates;
+
+        String[] formTemplateNames = new String[] {};
+        for (Form_Template__c template : templates) {
+            formTemplateNames.add(template.Name);
+        }
+        return formTemplateNames;
     }
 
     /*******************************************************************************************************
@@ -201,7 +281,31 @@ public with sharing class FORM_ServiceGiftEntry {
             upsert templateObj;
             return templateObj.id;
         }
+
         return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Method checks if the provided name is in use by another existing Form Template.
+    *
+    * @param String name: Name of a Form_Template__c record.
+    * @param String id: Id of a Form_Template__c record.
+    */
+    @AuraEnabled
+    public static Boolean checkNameUniqueness(String name, String id) {
+        Form_Template__c[] formTemplates = [SELECT Id FROM Form_Template__c WHERE Name = :name];
+        Boolean isNameValid = formTemplates.size() > 0 ? false : true;
+
+        if (id != null) {
+            for (Form_Template__c formTemplate : formTemplates) {
+                if (formTemplate.Id == id) {
+                    isNameValid = true;
+                    break;
+                }
+            }
+        }
+
+        return isNameValid;
     }
 
     /*******************************************************************************************************

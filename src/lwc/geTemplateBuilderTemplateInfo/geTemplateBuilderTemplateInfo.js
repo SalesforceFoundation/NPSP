@@ -1,5 +1,7 @@
 import { LightningElement, api } from 'lwc';
-import { dispatch, isEmpty, isFunction } from 'c/utilTemplateBuilder';
+import { dispatch } from 'c/utilTemplateBuilder';
+import { isEmpty, isFunction, handleError } from 'c/utilCommon';
+import checkNameUniqueness from '@salesforce/apex/FORM_ServiceGiftEntry.checkNameUniqueness';
 import GeLabelService from 'c/geLabelService';
 
 export default class geTemplateBuilderTemplateInfo extends LightningElement {
@@ -7,21 +9,37 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api isLoading;
+    @api templateId;
     @api templateName;
     @api templateDescription;
 
     @api
     validate() {
-        const nameInput = this.template.querySelector('lightning-input');
-        let isValid = false;
+        return new Promise(async (resolve, reject) => {
+            const nameInput = this.template.querySelector('lightning-input');
+            let isValid = false;
 
-        if (isFunction(nameInput.reportValidity) && !isEmpty(nameInput)) {
-            nameInput.reportValidity();
-            isValid = nameInput.checkValidity();
-        }
+            if (isFunction(nameInput.reportValidity) && !isEmpty(nameInput)) {
+                checkNameUniqueness({ name: nameInput.value, id: this.templateId })
+                    .then(isNameValid => {
+                        if (isNameValid) {
+                            nameInput.setCustomValidity('');
+                        } else {
+                            nameInput.setCustomValidity(this.CUSTOM_LABELS.geErrorExistingTemplateName);
+                        }
 
-        dispatch(this, 'updatevalidity', { property: 'hasTemplateInfoTabError', hasError: !isValid });
-        return isValid;
+                        nameInput.reportValidity();
+                        isValid = nameInput.checkValidity();
+
+                        dispatch(this, 'updatevalidity', { property: 'hasTemplateInfoTabError', hasError: !isValid });
+                        resolve(isValid);
+                    })
+                    .catch(error => {
+                        handleError(error);
+                        reject(error);
+                    });
+            }
+        });
     }
 
     /*******************************************************************************

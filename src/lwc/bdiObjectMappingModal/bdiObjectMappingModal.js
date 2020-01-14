@@ -120,11 +120,6 @@ export default class bdiObjectMappingModal extends LightningElement {
 
     _dataImportApiName;
 
-    constructor() {
-        super();
-        this.escapeFunction = this.escapeFunction.bind(this);
-    }
-
     /*******************************************************************************
     * @description Determines whether the relationship field (ie 'Through this field') field
     * is disabled or not based on whether there are relationship field options and if it is post-save
@@ -202,7 +197,7 @@ export default class bdiObjectMappingModal extends LightningElement {
     /*******************************************************************************
     * @description Handles escape key press and closes the modal
     */
-    escapeFunction(event) {
+    escapeFunction = (event) => {
         if (event.keyCode === 27) {
             this.handleCloseModal();
         }

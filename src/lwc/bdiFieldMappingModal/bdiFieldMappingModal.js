@@ -159,11 +159,6 @@ export default class bdiFieldMappingModal extends LightningElement {
         return this.isModalOpen ? 'slds-backdrop slds-backdrop_open' : 'slds-backdrop';
     }
 
-    constructor() {
-        super();
-        this.escapeFunction = this.escapeFunction.bind(this);
-    }
-
     connectedCallback() {
         document.addEventListener("keydown", this.escapeFunction, false);
         registerListener('openModal', this.handleOpenModal, this);
@@ -335,7 +330,7 @@ export default class bdiFieldMappingModal extends LightningElement {
     /*******************************************************************************
     * @description Handles escape key press and closes the modal
     */
-    escapeFunction(event) {
+    escapeFunction = (event) => {
         if (event.keyCode === 27) {
             this.handleCloseModal();
         }

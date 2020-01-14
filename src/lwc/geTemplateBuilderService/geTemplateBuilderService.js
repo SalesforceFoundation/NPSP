@@ -1,6 +1,7 @@
 import getFieldMappingSet from '@salesforce/apex/BDI_MappingServiceAdvanced.getFieldMappingSet';
 import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 import { handleError } from 'c/utilTemplateBuilder';
+import { mutable } from 'c/utilCommon';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
@@ -35,9 +36,16 @@ class GeTemplateBuilderService {
         return new Promise((resolve, reject) => {
             getFieldMappingSet({ fieldMappingSetName: fieldMappingSetName, includeUtilityFields: true })
                 .then(data => {
-                    this.fieldMappingByDevName = data.fieldMappingByDevName;
-                    this.objectMappingByDevName = data.objectMappingByDevName;
-                    this.fieldMappingsByObjMappingDevName = data.fieldMappingsByObjMappingDevName;
+                    // data is immutable after Promise resolution.  Since the
+                    // addWidgetsPlaceholder adds properties to these objects, using
+                    // mutable (JSON.parse/stringify) to store as new objects rather than
+                    // pointing to the data props.
+                    this.fieldMappingByDevName =
+                        mutable(data.fieldMappingByDevName);
+                    this.objectMappingByDevName =
+                        mutable(data.objectMappingByDevName);
+                    this.fieldMappingsByObjMappingDevName =
+                        mutable(data.fieldMappingsByObjMappingDevName);
 
                     this.addWidgetsPlaceholder(this.fieldMappingByDevName,
                         this.objectMappingByDevName,
@@ -71,6 +79,25 @@ class GeTemplateBuilderService {
                     reject(error);
                 })
         });
+    }
+
+    /*******************************************************************************
+    * @description Method checks if running in non-namespaced or non-npsp namespaced
+    * environment, this method will strip off the NPSP prefix of a field or object
+    * name and replace it with the current namespace of the UTIL_Namespace if
+    * appropriate.
+    *
+    * @return {string} newName: String aligned with the current environment namespace
+    */
+    alignSchemaNSWithEnvironment = (name) => {
+        if (this.namespaceWrapper && this.namespaceWrapper.currentNamespace) {
+            const namespacePrefix = `${this.namespaceWrapper.currentNamespace}__`;
+            let newName = name.replace('npsp__', '');
+
+            return newName.includes(namespacePrefix) ? newName : `${namespacePrefix}${newName}`;
+        }
+
+        return name;
     }
 
     // TODO: Replace or delete later when actual widgets are in place.

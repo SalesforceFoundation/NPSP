@@ -51,7 +51,40 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return List<String> list of DataImport__c field api names
     */
     public static List<String> getDataImportFields(Id batchId) {
-        return getDataImportFields(batchId, true);
+        List<String> fieldNames = new List<String>();
+
+        // Query the Batch to determine which set of fields will be needed.
+        // Batches created using BGE_DataImportBatchEntry store fields used by its Data
+        // Import records in Active_Fields__c, while Batches created in geBatchGiftEntryApp
+        // use all or a subset of fields mapped in Advanced Mapping.
+        DataImportBatch__c batch = [
+                SELECT Batch_Gift_Entry_Version__c
+                FROM DataImportBatch__c
+                WHERE Id = :batchId
+        ];
+
+        if (batch.Batch_Gift_Entry_Version__c == null ||
+                batch.Batch_Gift_Entry_Version__c < 2.0) {
+            fieldNames = getDataImportFields(batchId, true);
+        } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) {
+            // Lowercase the core fields list for use below to avoid duplication
+            for (String field : getCoreDataImportFields(true)) {
+                fieldNames.add(field.toLowerCase());
+            }
+
+            // Get all mapped source fields
+            // (no matter which template is used, it will be a subset of mapped fields)
+            // question: safe? or could a widget ever include fields that are not mapped?
+            for (SObjectField sObjectField :
+                    BDI_DataImportService.getDefaultMappingService()
+                            .getTargetFieldsBySourceField().keySet()) {
+                String field = String.valueOf(sObjectField).toLowerCase();
+                if (!fieldNames.contains(field)) {
+                    fieldNames.add(field);
+                }
+            }
+        }
+        return fieldNames;
     }
 
     /*******************************************************************************************************
