@@ -39,6 +39,14 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
     /**
+     * @description Contains Recurring Donation status values to filter
+     */
+    private static Set<String> statusFilter = new Set<String>{
+        RD2_Constants.STATUS_ACTIVE,
+        RD2_Constants.STATUS_LAPSED
+    };
+
+    /**
     * @description Batch size for Apex Job. Uses default if the Custom Setting batch size is not provided.
     */
     @TestVisible
@@ -71,15 +79,52 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
         } private set;
     }
 
-    /*******************************************************************************************************
+    /**
     * @description Count of RD's processed by the batch
     */
-    private Integer numberRDsProcessed = 0;
+    @TestVisible
+    private Integer recordsProcessed = 0;
 
-    /*******************************************************************************************************
+    /***
     * @description Count of RD's that hit errors while processing
     */
-    private Integer numberOfFailures = 0;
+    @TestVisible
+    private Integer recordsFailed = 0;
+
+    /**
+     * @description Contains current date value so the batch can be executed for a 
+     * date referenced in past, today or a future date. Regardless of the value, the current date
+     * is considered "today" for the Opp evaluation, Opp and RD Schedule services.
+     * The current date is used as a cut off date to filter out Opportunities in Opp services
+     * and to determine if the next Opp should be created for a Recurring Donation.
+     * It is also used as a point of reference to view projected RD Schedule installments as of the current date.
+     * The current date defaults to the actual today when executed from a scheduler.
+     */
+    private Date currentDate {
+        get {
+            if (currentDate == null) {
+                currentDate = Date.today();
+            }
+            return currentDate;
+        }
+        set;
+    }
+
+    /**
+     * @description Default constructor
+     */
+    public RD2_OpportunityEvaluation_BATCH() {
+        //Do not set the current date in constructor, Date.today() will be used by default.
+    }
+
+    /**
+     * @description Constructor setting the current date to the specified date.
+     * The constructor is mainly used for testing.
+     * @param currentDate Date considered as today
+     */
+    public RD2_OpportunityEvaluation_BATCH(Date currentDate) {
+        this.currentDate = currentDate;
+    }
 
     /**
      * @description Schedulable Execute Method to launch the Batch Job
@@ -87,7 +132,6 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     public void execute(SchedulableContext context) {
         Database.executeBatch(new RD2_OpportunityEvaluation_BATCH(), batchSize);
     }
-
 
     /**
     * @description Batch Start Method
@@ -104,18 +148,19 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Execute Method
     */
     public void execute(Database.BatchableContext context, List<npe03__Recurring_Donation__c> rds) {
-
-        Set<Id> rdIds = (new Map<Id, npe03__Recurring_Donation__c>(rds)).keySet();
-
-        RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService()
-            .withRds(rdIds);
+        recordsProcessed += rds.size();
 
         if (disableRollups) {
             TDTM_Config_API.disableAllRollupTriggers();
         }
-        oppEvalService.evaluateOpportunities();
 
-        numberRDsProcessed += rds.size();
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService()
+            .withBatchContext()
+            .withRds(UTIL_SObject.extractIds(rds))
+            .withCurrentDate(currentDate)
+            .evaluateOpportunities();
+        
+        recordsFailed += evalService.getRecordsFailed();
     }
 
     /**
@@ -124,13 +169,14 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     */
     @TestVisible
     private String getRDBatchQuery() {
-        Set<String> rdFields = new Set<String>{
-            'Id'
-        };
-
         return new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(rdFields)
+            .withSelectFields(
+                new Set<String>{ 'Id' }
+            )
+            .withWhere(
+                String.valueOf(npe03__Recurring_Donation__c.Status__c) + ' IN :statusFilter'
+            )
             .build();
     }
 
@@ -138,17 +184,12 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Finish Method
     */
     public void finish(Database.BatchableContext context) {
-        AsyncApexJob job = new UTIL_BatchJobService().getAsyncApexJob(context.getJobId());
-
-        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        rdSettings.npe03__Last_Batch_Run__c = job.completedDate;
-        rdSettings.npe03__Number_of_Successes__c = numberRDsProcessed - numberOfFailures;
-        rdSettings.npe03__Number_of_Failures__c = numberOfFailures;
-
-        if (!Test.isRunningTest()) {
-            upsert rdSettings;
-        }
+        new RD2_Settings()
+            .saveLatestBatchResults(context.getJobId(), recordsProcessed, recordsFailed);
     }
 
+    /**
+    * @description Custom batch exception
+    */
     private class BatchException extends Exception { }
 }
