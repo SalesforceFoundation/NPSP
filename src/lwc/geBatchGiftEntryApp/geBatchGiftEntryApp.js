@@ -8,19 +8,12 @@ export default class GeBatchGiftEntryApp extends LightningElement {
     handleSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
 
-        const displayValues = dataRow.displayValues;
-        // Apex is unable to read the dataRow (DataImport__c record) if it
-        // has this property, so it is stashed here and appended after the server call to
-        // make the display values available when loading Lookup fields in edit mode.
-        delete dataRow.displayValues;
-
         GeFormService.saveAndDryRun(
             this.recordId, event.detail.data)
             .then(
                 dataImportModel => {
                     Object.assign(dataImportModel.dataImportRows[0],
                         dataImportModel.dataImportRows[0].record);
-                    dataImportModel.dataImportRows[0].displayValues = displayValues;
                     table.upsertData(dataImportModel.dataImportRows[0], 'Id');
                     table.setTotalCount(dataImportModel.totalCountOfRows);
                     table.setTotalAmount(dataImportModel.totalAmountOfRows);

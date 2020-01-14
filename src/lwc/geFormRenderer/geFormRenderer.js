@@ -155,7 +155,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     // Show on top if it is a page level
                     this.hasPageLevelError = true;
                     const exceptionWrapper = JSON.parse(error.body.message);
-                    //TODO: can I use this to get the field list to query?
                     const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
 
                     if (exceptionWrapper.exceptionType !== null && exceptionWrapper.exceptionType !== '') {
