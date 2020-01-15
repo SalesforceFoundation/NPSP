@@ -137,7 +137,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     */
     openNewBatchWizard(event) {
         event.stopPropagation();
-        console.log('Open New Batch Wizard');
         const detail = {
             componentProperties: {
                 recordId: event.record ? event.record.Id : undefined,
@@ -147,8 +146,10 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 cssClass: 'slds-modal_large',
                 componentName: 'geBatchWizard',
                 showCloseButton: true,
-                closeCallback: function () {
-                    console.log('Passed a closeCallback');
+                closeCallback: function (event) {
+                    // TODO: We can use this callback after a save/update/cancel action
+                    // to perform additional logic in BGE (refresh, redirect, etc).
+                    // Otherwise we can scrap it in the "BGE Batch Header Edit" WI.
                 }
             }
         };
@@ -247,11 +248,8 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
         switch (actionName) {
             case 'edit':
-                console.log('row: ', JSON.stringify(row));
                 event.record = row;
                 this.openNewBatchWizard(event);
-                break;
-            case 'delete':
                 break;
             default:
         }

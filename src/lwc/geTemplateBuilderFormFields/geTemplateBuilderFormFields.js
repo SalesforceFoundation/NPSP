@@ -230,7 +230,6 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     * @param {object} event: Onchange event object from lightning-input checkbox
     */
     handleToggleFieldMapping(event) {
-        console.log('********************--- handleToggleFieldMapping');
         const fieldMappingDeveloperName = event.target.value;
         const fieldMapping = TemplateBuilderService.fieldMappingByDevName[fieldMappingDeveloperName];
         const objectMapping =

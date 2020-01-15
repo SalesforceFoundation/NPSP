@@ -21,6 +21,7 @@ import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonSave from '@salesforce/label/c.commonSave';
 import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
+import commonTemplate from '@salesforce/label/c.commonTemplate';
 import commonTemplates from '@salesforce/label/c.commonTemplates';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import commonViewAll from '@salesforce/label/c.commonViewAll';
@@ -98,6 +99,7 @@ import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
+import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
@@ -144,6 +146,7 @@ class GeLabelService {
         commonRequired,
         commonSave,
         commonSaveAndClose,
+        commonTemplate,
         commonTemplates,
         commonUnknownError,
         commonViewAll,
@@ -221,6 +224,7 @@ class GeLabelService {
         geLabelTemplateInfoNameField,
         geAssistiveRemoveSelectedOption,
         geSearchPlaceholder,
+        geSelectPlaceholder,
         geTabBatchHeader,
         geTabFormFields,
         geTabTemplateInfo,

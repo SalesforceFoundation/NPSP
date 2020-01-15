@@ -4174,6 +4174,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save &amp; Close</value>
     </labels>
     <labels>
+        <fullName>commonTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template</shortDescription>
+        <value>Template</value>
+    </labels>
+    <labels>
         <fullName>commonTemplates</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4570,7 +4578,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text about not being able to set default values for Field Bundles</shortDescription>
-        <value>You can't set a default values for fields included in this section.</value>
+        <value>You can't set default values for fields included in this section.</value>
     </labels>
     <labels>
         <fullName>geBodyBatchHeaderLeftCol</fullName>
@@ -5061,6 +5069,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Gift Entry lookup placeholder text</shortDescription>
         <value>Search...</value>
+    </labels>
+    <labels>
+        <fullName>geSelectPlaceholder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Placeholder text for a picklist field</shortDescription>
+        <value>Select...</value>
     </labels>
     <labels>
         <fullName>geTabBatchHeader</fullName>

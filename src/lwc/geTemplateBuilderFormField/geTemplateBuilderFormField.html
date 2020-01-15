@@ -4,7 +4,7 @@
             <div class="slds-grid slds-grid_vertical-align-end">
 
                 <template if:true={isWidget}>
-                    <div class="slds-size_11-of-12 slds-p-top_large slds-p-bottom_large">
+                    <div class="slds-size_10-of-12 slds-p-top_large slds-p-bottom_large">
                         <p class="slds-text_title">{field.label}</p>
                         <p>Component Name: {field.componentName}</p>
                     </div>
@@ -110,15 +110,17 @@
                 </template>
 
                 <div class="slds-size_1-of-12 slds-p-left_large slds-p-bottom_x-small">
-                    <lightning-input aria-label="Required"
-                                     checked={isRequired}
-                                     data-name="required"
-                                     disabled={field.isRequiredFieldDisabled}
-                                     onchange={handleOnChangeRequiredField}
-                                     onclick={stopPropagation}
-                                     type="checkbox"
-                                     variant="label-hidden">
-                    </lightning-input>
+                    <template if:false={isWidget}>
+                        <lightning-input aria-label="Required"
+                                         checked={isRequired}
+                                         data-name="required"
+                                         disabled={field.isRequiredFieldDisabled}
+                                         onchange={handleOnChangeRequiredField}
+                                         onclick={stopPropagation}
+                                         type="checkbox"
+                                         variant="label-hidden">
+                        </lightning-input>
+                    </template>
                 </div>
 
                 <div class="slds-size_1-of-12 slds-p-bottom_x-small">

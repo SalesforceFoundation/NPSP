@@ -1,8 +1,10 @@
+/* eslint-disable array-callback-return */
 import { LightningElement, api, track, wire } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import {
     createRecord,
+    updateRecord,
     getRecord,
     getRecordCreateDefaults,
     generateRecordInputForCreate
@@ -15,6 +17,7 @@ import GeLabelService from 'c/geLabelService';
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
 
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
+import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
 import DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import DATA_IMPORT_BATCH_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
 import DATA_IMPORT_BATCH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
@@ -25,7 +28,7 @@ const ID = 'id';
 const MAX_STEPS = 2;
 const CANCEL = 'cancel';
 
-export default class geBatchWizard extends LightningElement {
+export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -89,15 +92,21 @@ export default class geBatchWizard extends LightningElement {
     }
 
     get cssClassStep0() {
-        return this.header === this.headers[0] ? 'slds-size_1-of-1 step-0' : 'slds-hide';
+        return this.header === this.headers[0] ?
+            'slds-p-horizontal_x-large slds-p-vertical_large slds-size_1-of-1 step-0' :
+            'slds-hide';
     }
 
     get cssClassStep1() {
-        return this.header === this.headers[1] ? 'slds-size_1-of-1' : 'slds-hide';
+        return this.header === this.headers[1] ?
+            'slds-p-horizontal_x-large slds-p-vertical_large slds-size_1-of-1' :
+            'slds-hide';
     }
 
     get cssClassStep2() {
-        return this.header === this.headers[2] ? 'slds-size_1-of-1' : 'slds-hide';
+        return this.header === this.headers[2] ?
+            'slds-p-horizontal_large slds-p-bottom_x-large slds-size_1-of-1' :
+            'slds-hide';
     }
 
     get selectedTemplate() {
@@ -106,10 +115,6 @@ export default class geBatchWizard extends LightningElement {
         }
         return undefined;
     }
-
-    /*get formSections() {
-        return getNestedProperty(this.selectedTemplate, 'layout', 'sections');
-    }*/
 
     get isEditMode() {
         return this.recordId ? true : false;
@@ -198,7 +203,6 @@ export default class geBatchWizard extends LightningElement {
     dataImportBatchCreateDefaults;
 
     setValuesForSelectedBatchHeaderFields(allFields) {
-        console.log('**********************--- setValuesForSelectedBatchHeaderFields');
         this.selectedBatchHeaderFields.map(batchHeaderField => {
             let queriedField = allFields[batchHeaderField.apiName];
             if (queriedField) {
@@ -208,9 +212,6 @@ export default class geBatchWizard extends LightningElement {
     }
 
     async connectedCallback() {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>connectedCallback');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>');
         if (!this.recordId) {
             this.templates = await getAllFormTemplates();
             this.templates = this.templates.sort();
@@ -220,7 +221,6 @@ export default class geBatchWizard extends LightningElement {
     }
 
     builderTemplateComboboxOptions(templates) {
-        console.log('***************************--- builderTemplateComboboxOptions');
         if (templates && templates.length > 0) {
             this.templateOptions = this.templates.map(template => {
                 this.templatesById[template[ID]] = template;
@@ -242,7 +242,6 @@ export default class geBatchWizard extends LightningElement {
     }
 
     handleTemplateChange(event) {
-        console.log('******************************--- handleTemplateChange');
         this.selectedTemplateId = event.detail.value;
         this.formSections = this.selectedTemplate.layout.sections;
 
@@ -256,15 +255,20 @@ export default class geBatchWizard extends LightningElement {
     * a dedicated listener event name is provided otherwise dispatches a CustomEvent.
     */
     handleSave() {
-        console.log('************--- handleSave');
-
+        this.isLoading = true;
         const dataImportBatchObjectInfo = this.dataImportBatchCreateDefaults.data.objectInfos[
             this.dataImportBatchName
         ];
         const recordDefaults = this.dataImportBatchCreateDefaults.data.record;
         let recordObject = generateRecordInputForCreate(recordDefaults, dataImportBatchObjectInfo);
         recordObject = this.setFieldValues(recordObject);
-        this.handleRecordCreate(recordObject);
+
+        if (this.recordId) {
+            this.handleRecordUpdate(recordObject);
+        } else {
+            this.handleRecordCreate(recordObject);
+        }
+
         /*const payload = { values: this.values, name: this.name };
         const detail = { action: SAVE, payload: payload };
         if (this.dedicatedListenerEventName) {
@@ -275,8 +279,6 @@ export default class geBatchWizard extends LightningElement {
     }
 
     setFieldValues(dataImportBatch) {
-        console.log('************--- collectFieldValues');
-
         let utilInputs = this.template.querySelectorAll('c-util-input');
         let batchDefaults = {};
         for (let i = 0; i < utilInputs.length; i++) {
@@ -299,32 +301,31 @@ export default class geBatchWizard extends LightningElement {
         dataImportBatch.fields[DATA_IMPORT_BATCH_VERSION_INFO.fieldApiName] = 2.0;
         dataImportBatch.fields[DATA_IMPORT_BATCH_GIFT_INFO.fieldApiName] = true;
 
-        console.log('dataImportBatch: ', dataImportBatch);
+        if (this.recordId) {
+            dataImportBatch.fields[DATA_IMPORT_BATCH_ID_INFO.fieldApiName] = this.recordId;
+        }
+
         return dataImportBatch;
     }
 
     handleRecordCreate(recordObject) {
-        console.log('************--- handleRecordCreate');
         createRecord(recordObject)
             .then(record => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Success',
-                        message: 'Record created',
-                        variant: 'success',
-                    }),
-                );
+                this.navigateToRecordViewPage(record.id);
             })
             .catch(error => {
-                console.error(error);
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error creating record',
-                        message: error.body.message,
-                        variant: 'error',
-                    }),
-                );
+                handleError(error);
             });
+    }
+
+    handleRecordUpdate(recordObject) {
+        updateRecord({ fields: recordObject.fields })
+            .then(() => {
+                this.navigateToRecordViewPage(this.recordId);
+            })
+            .catch(error => {
+                handleError(error);
+            })
     }
 
     /*******************************************************************************
@@ -332,11 +333,25 @@ export default class geBatchWizard extends LightningElement {
     * a dedicated listener event name is provided otherwise dispatches a CustomEvent.
     */
     handleCancel() {
-        console.log('************--- handleCancel');
         if (this.dedicatedListenerEventName) {
             fireEvent(this.pageRef, this.dedicatedListenerEventName, { action: CANCEL });
         } else {
             this.dispatchEvent(new CustomEvent(CANCEL, { detail: {} }));
         }
+    }
+
+    /*******************************************************************************
+    * @description Navigates to a record detail page by record id.
+    *
+    * @param {string} formTemplateRecordId: Form_Template__c record id.
+    */
+    navigateToRecordViewPage(recordId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: recordId,
+                actionName: 'view'
+            }
+        });
     }
 }

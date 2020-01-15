@@ -1,8 +1,10 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
-import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
+import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
 import { isNotEmpty } from 'c/utilCommon';
+import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 
+const WIDGET = 'widget';
 const TEXTAREA = 'textarea';
 const COMBOBOX = 'combobox';
 const SEARCH = 'search';
@@ -16,11 +18,15 @@ const TRUE = 'true';
 
 export default class utilInput extends LightningElement {
 
+    // expose custom labels to template
+    CUSTOM_LABELS = { geBodyBatchFieldBundleInfo };
+
     @api fieldApiName;
     @api label;
     @api defaultValue;
     @api required;
     @api type;
+    @api formFieldType;
     @api objectInfo;
     @api objectApiName;
     @api tabIndex;
@@ -46,6 +52,10 @@ export default class utilInput extends LightningElement {
 
     get checkboxDefaultValue() {
         return (this.defaultValue === TRUE || this.defaultValue === true) ? true : false;
+    }
+
+    get isWidget() {
+        return this.formFieldType === WIDGET ? true : false;
     }
 
     get isLightningTextarea() {
@@ -135,12 +145,12 @@ export default class utilInput extends LightningElement {
     */
     handleChangeCombobox(event) {
         let detail = {
-            fieldName: this.name,
-            property: 'defaultValue',
+            objectApiName: this.uiObjectApiName,
+            fieldApiName: this.fieldApiName,
             value: event.target.value
         }
 
-        //dispatch(this, 'updateformelement', detail);
+        dispatch(this, 'change', detail);
     }
 
     /*******************************************************************************
@@ -154,5 +164,13 @@ export default class utilInput extends LightningElement {
         this.value = this.type && this.lightningInputType === CHECKBOX ?
             event.target.checked :
             event.target.value;
+
+        let detail = {
+            objectApiName: this.uiObjectApiName,
+            fieldApiName: this.fieldApiName,
+            value: this.fieldValue
+        }
+
+        dispatch(this, 'change', detail);
     }
 }

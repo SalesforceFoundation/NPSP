@@ -3,5 +3,13 @@
 }
 
 .step-0 {
-    min-height: var(--lwc-size-small, 15rem);
+    min-height: var(--lwc-size-x-small, 10rem);
+}
+
+.default-value {
+    padding-left: 22.25%;
+}
+
+.bold {
+    font-weight: bold;
 }
