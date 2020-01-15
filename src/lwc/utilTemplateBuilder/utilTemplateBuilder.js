@@ -363,36 +363,6 @@ const generateId = () => {
 };
 
 /*******************************************************************************
-* @description Javascript method comparable to Apex's String.format(...).
-* Replaces placeholders in Custom Labels ({0}, {1}, etc) with provided values.
-*
-* @param {string} string: Custom Label to be formatted.
-* @param {list} replacements: List of string to use as replacements.
-* @return {string} formattedString: Formatted custom label
-*/
-const format = (string, replacements) => {
-    let formattedString = isEmpty(string) ? '' : string;
-    if (replacements) {
-        let key;
-        const type = typeof replacements;
-        const args =
-            'string' === type || 'number' === type
-                ? Array.prototype.slice.call(replacements)
-                : replacements;
-        for (key in args) {
-            if (args.hasOwnProperty(key)) {
-                formattedString = formattedString.replace(
-                    new RegExp('\\{' + key + '\\}', 'gi'),
-                    args[key]
-                );
-            }
-        }
-    }
-
-    return formattedString;
-};
-
-/*******************************************************************************
 * @description returns a list of target field names for the fields in the template
 * in the format objectName.fieldName
 * @param formTemplate: the form template
@@ -469,7 +439,6 @@ export {
     isPrimitive,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
-    format,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     CONTACT_INFO,
