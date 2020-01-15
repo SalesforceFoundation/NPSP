@@ -5,7 +5,7 @@ import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
-import { getQueryParameters } from 'c/utilCommon';
+import { getQueryParameters, isNotEmpty } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
@@ -14,6 +14,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorRecordId = '';
     @api donorRecord;
     fieldNames = [];
+    @track formTemplate;
+    @track fieldMappings;
     @api sections = [];
     @track ready = false;
     @track name = '';
@@ -33,14 +35,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     wiredGetRecordMethod({ error, data }) {
         if (data) {
             this.donorRecord = data;
-            this.handleGetTemplate();
+            this.initializeForm(this.formTemplate, this.fieldMappings);
         } else if (error) {
             console.error(JSON.stringify(error));
         }
     }
 
     connectedCallback() {
-        
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
             // uses the @wire service below to retrieve the Template using the Template Id
@@ -54,27 +55,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         GeFormService.getFormTemplate().then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
-                const { formTemplate } = response;
-                const fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+                this.formTemplate  = response.formTemplate;
+                this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
                 // get the target field names to be used by getRecord
-                this.fieldNames = getRecordFieldNames(formTemplate, fieldMappings);
+                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
             }
         });
     }
 
-    handleGetTemplate = async () => {
-        let response = await GeFormService.getFormTemplate();
-
-        if (response !== null && typeof response !== 'undefined') {
-            this.initializeForm(response);
-        }
-    }
-
-    initializeForm(response) {
-        const { formTemplate } = response;
-        const fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
-
+    initializeForm(formTemplate, fieldMappings) {
         // read the template header info
         this.ready = true;
         this.name = formTemplate.name;
@@ -84,8 +74,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             && Array.isArray(formTemplate.layout.sections)) {
 
             // add record data to the template fields
-            let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections, fieldMappings, this.donorRecord);
-            this.sections = sectionsWithValues;
+            if (isNotEmpty(fieldMappings) && isNotEmpty(this.donorRecord)) {
+                let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections, fieldMappings, this.donorRecord);
+                this.sections = sectionsWithValues;
+            } else {
+                this.sections = formTemplate.layout.sections;
+            }
             this.dispatchEvent(new CustomEvent('sectionsretrieved'));
         }
     }
@@ -170,7 +164,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }));
         } else {
-            GeFormService.handleSave(sectionsList, this.record).then(opportunityId => {
+            GeFormService.handleSave(sectionsList, this.donorRecord).then(opportunityId => {
                 this.navigateToRecordPage(opportunityId);
             })
                 .catch(error => {

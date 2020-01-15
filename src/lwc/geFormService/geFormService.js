@@ -134,18 +134,7 @@ class GeFormService {
         });
 
         // Build the DI Record
-        let diRecord = {};
-
-        if (record) {
-            // set the bdi imported fields for contact or account
-            if (record.apiName === CONTACT_INFO.objectApiName) {
-                diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
-                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = CONTACT1;
-            } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
-                diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
-                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = ACCOUNT1;
-            }
-        }
+        let diRecord = {};  
 
         for (let key in fieldData) {
             if (fieldData.hasOwnProperty(key)) {
@@ -155,6 +144,17 @@ class GeFormService {
                 let fieldWrapper = this.getFieldMappingWrapper(key);
 
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
+            }
+        }
+
+        if (record) {
+            // set the bdi imported fields for contact or account
+            if (record.apiName === CONTACT_INFO.objectApiName) {
+                diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
+                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = CONTACT1;
+            } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
+                diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
+                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = ACCOUNT1;
             }
         }
 
