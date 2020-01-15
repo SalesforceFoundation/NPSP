@@ -164,6 +164,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.validateBatchHeaderTab();
                 this.handleDefaultFormFields();
 
+                if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
+                    this.activeFormSectionId = this.formSections[0].id;
+                }
+
                 this.isLoading = false;
                 this.isAccessible = true;
             }
