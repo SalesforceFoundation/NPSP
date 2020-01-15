@@ -25,8 +25,9 @@ import FORM_TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Templ
 // import default templates list view column header fields describe info
 import DATA_IMPORT_BATCH_NAME_INFO from '@salesforce/schema/DataImportBatch__c.Name';
 import DATA_IMPORT_BATCH_DESCRIPTION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Description__c';
-import DATA_IMPORT_EXPECTED_BATCH_AMOUNT_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
+import DATA_IMPORT_BATCH_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import DATA_IMPORT_EXPECTED_COUNT_GIFTS_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
+import DATA_IMPORT_EXPECTED_BATCH_AMOUNT_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
 import DATA_IMPORT_CREATED_BY_INFO from '@salesforce/schema/DataImportBatch__c.CreatedById';
 import DATA_IMPORT_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/DataImportBatch__c.LastModifiedDate';
 
@@ -320,8 +321,9 @@ export default class geListView extends LightningElement {
             defaultFields = [
                 DATA_IMPORT_BATCH_NAME_INFO.fieldApiName,
                 DATA_IMPORT_BATCH_DESCRIPTION_INFO.fieldApiName,
-                DATA_IMPORT_EXPECTED_BATCH_AMOUNT_INFO.fieldApiName,
+                DATA_IMPORT_BATCH_TEMPLATE_INFO.fieldApiName,
                 DATA_IMPORT_EXPECTED_COUNT_GIFTS_INFO.fieldApiName,
+                DATA_IMPORT_EXPECTED_BATCH_AMOUNT_INFO.fieldApiName,
                 DATA_IMPORT_CREATED_BY_INFO.fieldApiName,
                 DATA_IMPORT_LAST_MODIFIED_DATE_INFO.fieldApiName
             ];
