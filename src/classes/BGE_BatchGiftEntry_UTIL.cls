@@ -46,6 +46,12 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     };
 
     /*******************************************************************************************************
+    * @description Provides field mapping configuration used by BGE
+    */
+    public static Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField =
+        BDI_DataImportService.getDefaultMappingService().getTargetFieldsBySourceField();
+
+    /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
     * @param batchId the batch for which to get all fields for soql
     * @return List<String> list of DataImport__c field api names
@@ -53,12 +59,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     public static List<String> getDataImportFields(Id batchId) {
         return getDataImportFields(batchId, true);
     }
-
-    /*******************************************************************************************************
-    * @description Provides field mapping configuration used by BGE
-    */
-    public static Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
-        BDI_DataImportService.getDefaultMappingService().getTargetFieldsBySourceField();
 
     /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
