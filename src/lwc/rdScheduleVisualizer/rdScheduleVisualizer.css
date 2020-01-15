@@ -1,4 +1,0 @@
-/* This is intended to hide the menu dropdown-arrows in the column headers. It doesn't work */
-lightning-datatable.visualized-schedule lightning-button-menu.slds-th__action-button {
-    display: none;
-}

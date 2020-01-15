@@ -37,6 +37,9 @@
 @isTest//(IsParallel=true) Cannot execute in parallel due to Account/Contact insert and exclusive lock error
 public with sharing class RD2_EnablementService_TEST {
 
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+
     /****
     * @description Creates data required for unit tests
     */
@@ -64,7 +67,7 @@ public with sharing class RD2_EnablementService_TEST {
         insert rd;
         Test.stopTest();
 
-        List<Opportunity> opps = getOpportunities(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should be created on RD insert: ' + opps);
 
         System.assertEquals(0, [SELECT Count() FROM RecurringDonationSchedule__c],
@@ -77,7 +80,7 @@ public with sharing class RD2_EnablementService_TEST {
     * This verifies that RD2 functionality is isolated from RD1 functionality.
     */
     @isTest
-    private static void shouldNotCreateNewOppOnInsertIfRD2TriggerIsDisabledWhenEnhancedRDIsEnabled() {
+    private static void shouldNotCreateNewOppOnInsertWhenRD2TriggerIsDisabledAndEnhancedRDIsEnabled() {
         setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
@@ -91,7 +94,7 @@ public with sharing class RD2_EnablementService_TEST {
         insert rd;
         Test.stopTest();
 
-        List<Opportunity> opps = getOpportunities(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(true, opps.isEmpty(), 'No Opp should be created on RD insert: ' + opps);
     }
 
@@ -114,27 +117,29 @@ public with sharing class RD2_EnablementService_TEST {
         update rd;
         Test.stopTest();
 
-        List<Opportunity> opps = getOpportunities(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should be created on RD update: ' + opps);
         System.assertEquals(200, opps[0].Amount, 'Opportunity Amount should be updated');
     }
 
     /****
     * @description Verifies no new Opportunity is created or existing updated on Recurring Donation update
-    * when enhanced Recurring Donations are enabled
+    * when enhanced Recurring Donations are enabled and the RD2 Trigger has been disabled.
+    * This verifies that RD2 functionality is isolated from RD1 functionality.
     */
     @isTest
-    private static void shouldNotCreateOrUpdateOppOnUpdateWhenEnhancementIsEnabled() {
+    private static void shouldNotCreateOrUpdateOppOnUpdateWhenRD2TriggerIsDisabledAndEnhancedRDIsEnabled() {
         setRecurringDonations2Enabled();
 
         Contact contact = getContact();
+
+        disableRD2Trigger();
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(contact.Id)
             .withAmount(100)
             .withDefaultValues()
             .build();
-
         insert rd;
 
         insert buildOpportunity(rd.Id, contact.AccountId);
@@ -144,8 +149,8 @@ public with sharing class RD2_EnablementService_TEST {
         update rd;
         Test.stopTest();
 
-        List<Opportunity> opps = getOpportunities(rd.Id);
-        System.assertEquals(1, opps.size(), 'No Opp should be created on RD update: ' + opps);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created due to disabled RD2 triggers: ' + opps);
         System.assertEquals(100, opps[0].Amount, 'Existing Opp Amount should be unchanged');
     }
 
@@ -187,7 +192,7 @@ public with sharing class RD2_EnablementService_TEST {
         insert rd;
         Test.stopTest();
 
-        rd = new TEST_SObjectGateway.RecurringDonationGateway().getRecord(rd.Id);
+        rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(RD2_NamingService_TEST.getExpectedName(contact, '100'), rd.Name, 'Name should match');
     }
 
@@ -332,28 +337,6 @@ public with sharing class RD2_EnablementService_TEST {
             .withCloseDate(Date.today())
             .withRecurringDonation(rdId)
             .build();
-    }
-
-    /****
-    * @description Returns Opportunities associated with the specified Recurring Donation
-    * @param rdId Recurring Donation Id
-    * @return List<Opportunity>
-    */
-    private static List<Opportunity> getOpportunities(Id rdId) {
-        return getOpportunities(new Set<Id>{ rdId });
-    }
-
-    /****
-    * @description Returns Opportunities associated with specified Recurring Donations
-    * @param rdIds Recurring Donation Ids
-    * @return List<Opportunity>
-    */
-    private static List<Opportunity> getOpportunities(Set<Id> rdIds) {
-        return [
-            SELECT Amount, npe03__Recurring_Donation__c
-            FROM Opportunity
-            WHERE npe03__Recurring_Donation__c IN :rdIds
-        ];
     }
 
     /***
