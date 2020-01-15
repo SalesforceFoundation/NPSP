@@ -50,9 +50,6 @@
     * and notifies the geTemplates component.
     */
     handleBatchWizardEvent: function (component, event, helper) {
-        console.log('************--- handleBatchWizardEvent');
-        const details = event.getParams('detail');
-
         component.get('v.modal').then(modal => {
             modal.close();
         });
