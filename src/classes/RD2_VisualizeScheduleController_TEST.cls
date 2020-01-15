@@ -58,7 +58,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Id rdId = null;
 
         try {
-            RD2_VisualizeScheduleController.getSchedule(rdId, numberOfInstallments);
+            RD2_VisualizeScheduleController.getInstallments(rdId, numberOfInstallments);
         } catch (Exception e) {
             actualException = e;
         }
@@ -82,7 +82,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         try {
-            RD2_VisualizeScheduleController.getSchedule(rd.Id, numberOfInstallments);
+            RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
         } catch (Exception e) {
             actualException = e;
         }
@@ -106,7 +106,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         try {
-            RD2_VisualizeScheduleController.getSchedule(rd.Id, numberOfInstallments);
+            RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
         } catch (Exception e) {
             actualException = e;
         }
@@ -133,11 +133,11 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.startTest();
         insert rd;
         List<RD2_VisualizeScheduleController.Installment> schedules =
-            RD2_VisualizeScheduleController.getSchedule(rd.Id, numberOfInstallments);
+            RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
         Test.stopTest();
 
         setScheduleServiceDate(serviceDate);
-        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getSchedule(rd.Id, numberOfInstallments);
+        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
 
         System.assertEquals(numberOfInstallments, schedules.size(), 'Number of installments should match');
         System.assertEquals(installment10Date, installments[9].donationDate, 'Donation date should be 5/1/1969.');
@@ -201,7 +201,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         try {
-            RD2_VisualizeScheduleController.getSchedule(rd.Id, numberOfInstallments);
+            RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
         } catch (Exception e) {
             actualException = e;
         }
@@ -221,7 +221,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         insert acc;
 
         try {
-            RD2_VisualizeScheduleController.getSchedule(acc.Id, numberOfInstallments);
+            RD2_VisualizeScheduleController.getInstallments(acc.Id, numberOfInstallments);
         } catch (Exception e) {
             actualException = e;
         }
