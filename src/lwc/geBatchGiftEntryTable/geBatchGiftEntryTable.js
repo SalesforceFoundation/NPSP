@@ -13,6 +13,7 @@ import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBa
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
+import geActionOpen from '@salesforce/label/c.geActionOpen';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -40,9 +41,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         type: 'action',
         typeAttributes: {
             rowActions: [
+                {label: geActionOpen, name: 'open'},
                 {label: bgeActionDelete, name: 'delete'}
             ],
-            menuAlignment: 'right'
+            menuAlignment: 'auto'
         }
     };
 
@@ -159,10 +161,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     handleRowActions(event) {
         switch (event.detail.action.name) {
-            // TODO: decide if going to edit inline in table or load into form
-            // case 'Edit':
-            //     this.editDIRow(event.detail.row);
-            //     break;
+            case 'open':
+                this.loadRow(event.detail.row);
+                break;
             case 'delete':
                 deleteRecord(event.detail.row.Id).then(() => {
                     this.deleteDIRow(event.detail.row);
@@ -231,5 +232,11 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             .finally(() => {
                 callback();
             });
+    }
+
+    loadRow(row) {
+        this.dispatchEvent(new CustomEvent('loaddata', {
+            detail: row
+        }));
     }
 }
