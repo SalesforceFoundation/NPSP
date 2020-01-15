@@ -4,7 +4,9 @@ import { isNotEmpty } from 'c/utilCommon';
 
 const COMBO_BOX_CLASS = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
 const INPUT_CLASS = 'slds-input slds-combobox__input';
-
+const VARIANTS = {
+    'label-inline': ['slds-form-element_horizontal', 'slds-m-around_none']
+}
 
 export default class GeAutocomplete extends LightningElement {
     @api displayValue;
@@ -15,6 +17,7 @@ export default class GeAutocomplete extends LightningElement {
     @api fieldInfo;
     @api valid;
     @api required;
+    @api variant;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -76,7 +79,17 @@ export default class GeAutocomplete extends LightningElement {
      *******************************************/
 
     get formElementClass() {
-        return this.valid ? 'slds-form-element' : 'slds-form-element slds-has-error';
+        let baseClass = ['slds-form-element'];
+
+        if (this.variant && VARIANTS[this.variant]) {
+            baseClass = [...baseClass, ...VARIANTS[this.variant]];
+        }
+
+        if (!this.valid) {
+            baseClass = [...baseClass, 'slds-has-error'];
+        }
+
+        return baseClass.join(' ');
     }
 
     get comboBoxClass() {

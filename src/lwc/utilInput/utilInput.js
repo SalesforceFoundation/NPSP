@@ -48,7 +48,7 @@ export default class utilInput extends LightningElement {
         if (this.isLightningCheckbox) {
             return isNotEmpty(this.value) ? this.value : this.checkboxDefaultValue;
         }
-        return this.value ? this.value : this.defaultValue;
+        return this.value !== undefined ? this.value : this.defaultValue;
     }
 
     get checkboxDefaultValue() {
@@ -164,10 +164,18 @@ export default class utilInput extends LightningElement {
     * @param {object} event: Event object from various lightning-input type's
     * onblur event handler 
     */
-    handleOnBlur(event) {
-        this.value = this.type && this.lightningInputType === CHECKBOX ?
-            event.target.checked :
-            event.target.value;
+    handleValueChange(event) {
+        if (this.type && this.lightningInputType === CHECKBOX) {
+            this.value = event.target.checked;
+        }
+
+        if (this.type && this.lightningInputType === SEARCH) {
+            this.value = event.detail.value;
+        }
+
+        if (checkNestedProperty(event, 'target', 'value')) {
+            this.value = event.target.value;
+        }
 
         let detail = {
             objectApiName: this.uiObjectApiName,
