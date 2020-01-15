@@ -25,6 +25,9 @@ import DI_BATCH_DESCRIPTION_INFO from '@salesforce/schema/DataImportBatch__c.Bat
 import DI_BATCH_EXPECTED_COUNT_GIFTS_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
 import DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
 import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
+import DI_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
+import DI_BATCH_GIFT_ENTRY_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
+import DI_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 
 // Import schema for default form field element objects
 import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
@@ -79,6 +82,9 @@ const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_RECORDS_FAILED_INFO.fieldApiName,
     DI_BATCH_RECORDS_SUCCESSFULLY_PROCESSED_INFO.fieldApiName,
     DI_BATCH_CONTACT_MATCHING_RULE_INFO.fieldApiName,
+    DI_BATCH_DEFAULTS_INFO.fieldApiName,
+    DI_BATCH_GIFT_ENTRY_VERSION_INFO.fieldApiName,
+    DI_BATCH_FORM_TEMPLATE_INFO.fieldApiName,
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
 

@@ -249,7 +249,6 @@ const sort = (objects, attribute, direction = "desc", isNullsLast) => {
         }
 
         return objects.sort((a, b) => {
-            console.log(a, b);
             if (isNull(a)) {
                 if (isNull(b)) {
                     return 0;
