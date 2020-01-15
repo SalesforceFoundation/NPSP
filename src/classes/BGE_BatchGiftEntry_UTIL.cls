@@ -67,7 +67,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return List<String> list of DataImport__c field api names
     */
     public static List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
-        List<String> fields = new List<String>();
+        List<String> fieldApiNames = new List<String>();
 
         // Query the Batch to determine which set of fields will be needed.
         // Batches created using BGE_DataImportBatchEntry store fields used by its Data
@@ -83,13 +83,13 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         if (batch.Batch_Gift_Entry_Version__c == null ||
                 batch.Batch_Gift_Entry_Version__c < 2.0) {
 
-            fields = getCoreDataImportFields(includeRelationshipFields);
-            fields.addAll(getActiveFieldNamesFromBatch(batchId));
+            fieldApiNames = getCoreDataImportFields(includeRelationshipFields);
+            fieldApiNames.addAll(getActiveFieldNamesFromBatch(batchId));
 
         } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) {
 
             for (String field : getCoreDataImportFields(includeRelationshipFields)) {
-                fields.add(field.toLowerCase());
+                fieldApiNames.add(field.toLowerCase());
             }
 
             // Must explicitly use BDI_MappingServiceAdvanced here (as opposed to
@@ -115,8 +115,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                     }
 
                     // Add the source fields used in the Template
-                    if (!fields.contains(fieldMapping.Source_Field_API_Name.toLowerCase())) {
-                        fields.add(fieldMapping.Source_Field_API_Name.toLowerCase());
+                    if (!fieldApiNames.contains(fieldMapping.Source_Field_API_Name.toLowerCase())) {
+                        fieldApiNames.add(fieldMapping.Source_Field_API_Name.toLowerCase());
                     }
 
                     // Add the Name fields on the related object(s) for all Lookup fields,
@@ -127,15 +127,15 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                                 'Name'
                         }, '.'
                         ).toLowerCase();
-                        if (!fields.contains(relatedObjNameField)) {
-                            fields.add(relatedObjNameField);
+                        if (!fieldApiNames.contains(relatedObjNameField)) {
+                            fieldApiNames.add(relatedObjNameField);
                         }
                     }
                 }
             }
         }
 
-        return fields;
+        return fieldApiNames;
     }
 
     /*******************************************************************************************************
