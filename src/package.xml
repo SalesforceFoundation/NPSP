@@ -1912,11 +1912,12 @@
         <members>geButtonBuilderNavBackTemplateInfo</members>
         <members>geButtonBuilderNavBatchHeader</members>
         <members>geButtonBuilderNavFormFields</members>
-        <members>geButtonEnterGifts</members>
         <members>geButtonFormFieldsAddSection</members>
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
+        <members>geButtonNewBatch</members>
+        <members>geButtonNewSingleGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>

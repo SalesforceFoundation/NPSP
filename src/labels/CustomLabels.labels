@@ -4715,14 +4715,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Next: Form Fields</value>
     </labels>
     <labels>
-        <fullName>geButtonEnterGifts</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Enter Gifts button</shortDescription>
-        <value>Enter Gifts</value>
-    </labels>
-    <labels>
         <fullName>geButtonFormFieldsAddSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4753,6 +4745,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Button to delete a section and remove its fields</shortDescription>
         <value>Delete Section and Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonNewBatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enter batch of gifts button</shortDescription>
+        <value>New Batch</value>
+    </labels>
+    <labels>
+        <fullName>geButtonNewSingleGift</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enter a single gift button</shortDescription>
+        <value>New Single Gift</value>
     </labels>
     <labels>
         <fullName>geButtonTemplatesTabCreateTemplate</fullName>

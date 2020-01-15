@@ -57,11 +57,12 @@ import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilde
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
 import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
 import geButtonBuilderNavFormFields from '@salesforce/label/c.geButtonBuilderNavFormFields';
-import geButtonEnterGifts from '@salesforce/label/c.geButtonEnterGifts';
 import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFieldsAddSection';
 import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormFieldsCollapseAll';
 import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
 import geButtonFormFieldsModalDeleteSectionAndFields from '@salesforce/label/c.geButtonFormFieldsModalDeleteSectionAndFields';
+import geButtonNewBatch from '@salesforce/label/c.geButtonNewBatch';
+import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
@@ -181,11 +182,12 @@ class GeLabelService {
         geButtonBuilderNavBackTemplateInfo,
         geButtonBuilderNavBatchHeader,
         geButtonBuilderNavFormFields,
-        geButtonEnterGifts,
         geButtonFormFieldsAddSection,
         geButtonFormFieldsCollapseAll,
         geButtonFormFieldsExpandAll,
         geButtonFormFieldsModalDeleteSectionAndFields,
+        geButtonNewBatch,
+        geButtonNewSingleGift,
         geButtonTemplatesTabCreateTemplate,
         geErrorCompleteThisField,
         geErrorExistingTemplateName,
