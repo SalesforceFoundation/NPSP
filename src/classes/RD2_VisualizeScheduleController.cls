@@ -52,7 +52,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @return List<Schedule>
      */
     @AuraEnabled
-    public static List<Installment> getInstallments(Id recordId, Integer displayNum) {
+    public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
 
         validate(recordId);
 
