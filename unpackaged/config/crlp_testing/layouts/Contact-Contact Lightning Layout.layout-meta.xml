@@ -703,7 +703,7 @@
         <platformActionListItems>
             <actionName>Relationships_Viewer</actionName>
             <actionType>CustomButton</actionType>
-            <sortOrder>15/sortOrder>
+            <sortOrder>15</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>CallHighlightAction</actionName>
