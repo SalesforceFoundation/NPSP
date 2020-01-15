@@ -518,9 +518,6 @@ public without sharing class RD2_ScheduleService {
     public List<ActiveSchedule> getVisualizedSchedules(npe03__Recurring_Donation__c rd) {
         List<ActiveSchedule> activeSchedules = new List<ActiveSchedule>();
         List<RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
-        if (schedules == null) {
-            return activeSchedules;
-        }
 
         Boolean first1stAnd15thFound = false;
         for (RecurringDonationSchedule__c schedule : schedules) {
@@ -622,7 +619,9 @@ public without sharing class RD2_ScheduleService {
             return new List<RecurringDonationSchedule__c>();
         }
 
-        return getExistingSchedules(new List<npe03__Recurring_Donation__c> {rd}).get(rd.Id);
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesById = getExistingSchedules(new List<npe03__Recurring_Donation__c> {rd});
+
+        return schedulesById.containsKey(rd.Id) ? schedulesById.get(rd.Id) : new List<RecurringDonationSchedule__c>();
     }
 
     /***
