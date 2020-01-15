@@ -396,6 +396,7 @@ public with sharing class RD2_EnablementService_TEST {
     */
     private static void disableRD2Trigger() {
         TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RD2_RecurringDonationsOpp_TDTM', false);
     }
 
     /***

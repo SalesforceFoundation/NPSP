@@ -210,15 +210,6 @@ public without sharing class RD2_ScheduleService {
         Integer numInstallments, 
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRd
     ) {
-
-        if (numInstallments == null) {
-            numInstallments = DEFAULT_VISUALIZATION_SCHEDULE_COUNT;
-        }
-
-        if (startDate == null) {
-            startDate = currentDate;
-        }
-
         if (schedulesByRd == null) {
             schedulesByRd = getExistingSchedules(rds);
         }
@@ -248,7 +239,11 @@ public without sharing class RD2_ScheduleService {
             return installments;
         }
 
-        Date referenceDate = startDate;
+        numInstallments = numInstallments == null
+            ? DEFAULT_VISUALIZATION_SCHEDULE_COUNT
+            : numInstallments;
+
+        Date referenceDate = startDate == null ? currentDate : startDate;
         while (installments.size() < numInstallments) {            
             Installment inst = getNextInstallment(referenceDate, schedules);
             if (inst == null) {
@@ -275,7 +270,7 @@ public without sharing class RD2_ScheduleService {
             return installments;
         }
 
-        Date referenceDate = startDate;
+        Date referenceDate = startDate == null ? currentDate : startDate;
         while (referenceDate <= endDate) {
             Installment inst = getNextInstallment(referenceDate, schedules);
 

@@ -98,6 +98,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         } set;
     }
 
+    /**
+     * @description Date at the beginning of the current year.
+     * Used to retrieve current year Opportunities regardless if they are open or closed.
+    */   
+    private Date startYearDate {
+        get {
+            if (startYearDate == null) {
+                startYearDate = Date.newInstance(currentDate.year(), 1, 1);
+            }
+            return startYearDate;
+        } set;
+    }
+
     /***
     * @description Recurring Donation Opportunity service
     */
@@ -224,15 +237,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
-        List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {              
             RecurringDonation rdRecord = new RecurringDonation(rd, currentDate)
-                .revise(scheduleService); 
-
-            if (rdRecord.isOutdated()) {
-                outdatedRDs.add(rdRecord.getUpdate());
-            }
+                .reviseNextDonationDate(scheduleService); 
             
             if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
@@ -247,17 +255,49 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             // TODO Handle Past Due Installment
         }
 
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createOpportunities(newOppRDs);
         oppService.updateOpportunities(updateOppRDs);
         oppService.voidOpenOpportunities(closedRDs);
 
-        if (!outdatedRDs.isEmpty()) {
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
-            dbService.updateRecords(outdatedRDs);
-        }
+        updateRecurringDonations();
+
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
 
         dbService.processErrors();
+
+        return this;
+    }
+
+    /**
+     * @description Primary processor
+     * @return RD2_OpportunityEvaluationService This service instance
+     */
+    public RD2_OpportunityEvaluationService updateRecurringDonations() {
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
+
+        //do not evaluate Opps when override is set
+        if (skipEvaluationService) {
+            return this;
+        }
+               
+        rds = null;//reset  Recurring Donation values and refetch Opps
+
+        for (npe03__Recurring_Donation__c rd : rds) {              
+            RecurringDonation rdRecord = new RecurringDonation(rd, currentDate)
+                .revise(scheduleService); 
+
+            if (rdRecord.isOutdated()) {
+                outdatedRDs.add(rdRecord.getUpdate());
+            }
+        }
+
+        if (!outdatedRDs.isEmpty()) {
+            dbService.updateRecords(outdatedRDs);            
+            dbService.processErrors();
+        }
 
         return this;
     }
@@ -308,7 +348,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             && rd.hasSchedule()
             && rd.hasOpenOpportunity();
     }
-
+   
 
     /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
@@ -348,8 +388,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'CampaignId, Recurring_Donation_Installment_Number__c ' +
             'FROM npe03__Donations__r ' +
             'WHERE IsClosed = false ' +	
-            'OR CloseDate >= :currentDate ' +
-            'OR CloseDate = THIS_YEAR ' +
+            'OR CloseDate >= :startYearDate ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
         //Return all schedules for the RD Schedule visualization.
@@ -387,7 +426,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         npe03__Recurring_Donation__c rd;
         Date currentDate;
         private Boolean hasOpenOpportunity;
-        private Boolean isOutdated;
+        private Boolean isOutdated = false;
 
         /**
         * @description Constructor
@@ -403,14 +442,32 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return RecurringDonation This record instance
         */
         public RecurringDonation revise(RD2_ScheduleService scheduleService) {
-            isOutdated = false;
+            return reviseNextDonationDate(scheduleService)
+                .reviseSummaryValues(scheduleService);
+        }
 
+        /**
+        * @description Revises and modifies the Recurring Donation Next Donation Date
+        * @param scheduleService RD Schedule Service
+        * @return RecurringDonation This record instance
+        */
+        public RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
             Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
             if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
                 isOutdated = true;
             }
 
+            return this;
+        }
+
+        /**
+        * @description Revises and modifies the Recurring Donation 
+        * Current Year Value and (TODO) Next Year Value
+        * @param scheduleService RD Schedule Service
+        * @return RecurringDonation This record instance
+        */
+        public RecurringDonation reviseSummaryValues(RD2_ScheduleService scheduleService) {
             Decimal currentYearValue = calcCurrentYearValue(scheduleService);
             if (currentYearValue != rd.CurrentYearValue__c) {
                 rd.CurrentYearValue__c = currentYearValue;
@@ -422,28 +479,33 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         /**
         * @description Calculates Current Year Value
+        * @param scheduleService RD Schedule Service
         * @return Decimal
         */
         private Decimal calcCurrentYearValue(RD2_ScheduleService scheduleService) {
             final Integer currentYear = currentDate.year();
             final Date yearEndDate = Date.newInstance(currentYear, 12, 31);
 
-            Map<Date, Opportunity> existingOppByCloseDate = new Map<Date, Opportunity>();
+            Map<Date, Opportunity> currentYearOppByCloseDate = new Map<Date, Opportunity>();
             Decimal value = 0;
 
-            //Add Open and Closed Won Opps in the current year            
+            //Add the current year Open and Closed Won Opps           
             for (Opportunity opp : rd.npe03__Donations__r) {
-                if (opp.IsClosed == false && opp.CloseDate.year() == currentYear) {
-                    existingOppByCloseDate.put(opp.CloseDate, opp);
-                    value += opp.Amount; //TODO Currency!
+                if (opp.CloseDate.year() == currentYear) {
+                    currentYearOppByCloseDate.put(opp.CloseDate, opp);
+
+                    Boolean isClosedLost = opp.isClosed && !opp.isWon;
+                    if (!isClosedLost) {
+                        value += opp.Amount; //TODO Currency!
+                    }
                 }
             }
 
-            //Add projected installments in the current year
+            //Add the current year projected installments
             for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
                 currentDate, yearEndDate, rd.RecurringDonationSchedules__r
             )) {
-                if (!existingOppByCloseDate.containsKey(installment.nextDonationDate)) {
+                if (!currentYearOppByCloseDate.containsKey(installment.nextDonationDate)) {
                     value += installment.installmentAmount;
                 }
             }
