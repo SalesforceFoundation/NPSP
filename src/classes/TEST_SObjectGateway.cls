@@ -189,10 +189,14 @@ public class TEST_SObjectGateway {
         public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
             return [
                 SELECT
-                    Name, Amount,
-                    AccountId, Primary_Contact__c,
-                    StageName, CloseDate,
-                    isClosed, isWon
+                    Name, AccountId, RecordTypeId,
+                    Amount, CampaignId, CloseDate,
+                    StageName, isClosed, isWon,
+                    Closed_Lost_Reason__c,
+                    npe03__Recurring_Donation__c, 
+                    Recurring_Donation_Installment_Number__c,
+                    npe01__Contact_Id_for_Role__c, 
+                    Primary_Contact__c
                 FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN :rds
             ];
