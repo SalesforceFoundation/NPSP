@@ -39,6 +39,8 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
 
+    private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 9, 15);
+
     /****
     * @description Creates data required for unit tests
     */
@@ -332,10 +334,11 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies that start date is updated to current date on updated RD when appropriate
+    * @description Verifies that start date is NOT updated to current date on updated RD when appropriate
     */
     @isTest
-    private static void shouldOverrideStartDateWithCurrentDate() {
+    private static void shouldNotOverrideStartDateWithCurrentDate() {
+        Date startDate = Date.newInstance(2019, 10, 5);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
@@ -347,8 +350,8 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withDayOfMonth('10')
             .withInstallmentFrequency(1)
             .withStatus(RD2_Constants.STATUS_ACTIVE)
-            .withDateEstablished(Date.newInstance(2019, 6, 5))
-            .withStartDate(Date.newInstance(2019, 6, 5))
+            .withDateEstablished(DATE_ESTABLISHED)
+            .withStartDate(startDate)
             .build();
 
         Test.startTest();
@@ -359,7 +362,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         Test.stopTest();
 
         npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(Date.today(), rd2.StartDate__c, 'Start date should be today()');
+        System.assertEquals(startDate, rd2.StartDate__c, 'Start date should be 10/5/2019');
     }
 
     /***
