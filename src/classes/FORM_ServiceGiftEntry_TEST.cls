@@ -80,30 +80,6 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Confirming that method clones Form Template with given record id.
-    */
-    @IsTest
-    static void shouldCloneFormTemplateWithGivenId() {
-        FORM_Service fs = new FORM_Service();
-
-        FORM_Template template = createSampleTemplate();
-        String templateJSON = JSON.serialize(template);
-        fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
-
-        Form_Template__c[] formTemplates = [SELECT Id, Template_JSON__c FROM Form_Template__c];
-        Form_Template clonedTemplate = fs.cloneFormTemplate(formTemplates[0].id);
-
-        System.assertEquals(
-            JSON.serialize(template.layout),
-            JSON.serialize(clonedTemplate.layout),
-            'Original template and cloned template layouts are equal.');
-        System.assertNotEquals(
-            template.name,
-            clonedTemplate.name,
-            'Original template and cloned template names are not equal');
-    }
-
-    /*******************************************************************************************************
     * @description Confirming that the lifecycle of storing and retrieving the template does not corrupt
     * the data.
     */

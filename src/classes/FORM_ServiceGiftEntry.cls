@@ -134,43 +134,6 @@ public with sharing class FORM_ServiceGiftEntry {
     }
 
     /*******************************************************************************************************
-    * @description Method clones a Form_Template__c record by id.
-    * @param id: Form_Template__c record id
-    * @return string: A Form_Template__c record id
-    */
-    @AuraEnabled
-    public static FORM_Template cloneFormTemplate(String id) {
-        Form_Template__c formTemplate = [SELECT Id,
-                Name,
-                Template_JSON__c,
-                Description__c,
-                Format_Version__c
-            FROM Form_Template__c
-            WHERE Id = :id];
-
-        if (formTemplate != null) {
-            Form_Template__c clonedFormTemplate = formTemplate.clone();
-            FORM_Template deserializedTemplate = deserializeFormTemplateFromObj(clonedFormTemplate);
-            clonedFormTemplate.Name += ' [CLONED ' + Date.today().format() + ']';
-            deserializedTemplate.name = clonedFormTemplate.Name;
-            clonedFormTemplate.Template_JSON__c = JSON.serialize(deserializedTemplate);
-
-            String newId = storeFormTemplate(null,
-                clonedFormTemplate.Name,
-                clonedFormTemplate.Description__c,
-                clonedFormTemplate.Format_Version__c,
-                clonedFormTemplate.Template_JSON__c);
-
-            FORM_Template deserializedClonedTemplate = deserializeFormTemplateFromObj(clonedFormTemplate);
-            deserializedClonedTemplate.id = newId;
-
-            return deserializedClonedTemplate;
-        }
-
-        return null;
-    }
-
-    /*******************************************************************************************************
     * @description Method deletes a Form_Template__c record by id.
     *
     * @param id: Form_Template__c record id
