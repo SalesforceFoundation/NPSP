@@ -48,7 +48,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
     @AuraEnabled
     public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
-        return null;
+        return getInstallments(recordId, displayNum);
     }
 
     /**
