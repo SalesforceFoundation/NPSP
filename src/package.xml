@@ -1916,6 +1916,7 @@
         <members>geDonorColumnLabel</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorExistingTemplateName</members>
+        <members>geErrorDonorTypeValidation</members>
         <members>geErrorFieldPermission</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>
         <members>geErrorPageLevelAdvancedMappingHeader</members>

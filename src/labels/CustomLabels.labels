@@ -4755,6 +4755,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>This name has been used by another template. Please enter a unique name.</value>
     </labels>
     <labels>
+        <fullName>geErrorDonorTypeValidation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for Donor Type without required information</shortDescription>
+        <!-- {0} is a string. Value of Donation_Donor__c picklist -->
+        <!-- {1} is a string. Label used for Donation_Donor__c field -->
+        <!-- {2} is a string. Required label depending Donation_Donor__c value -->
+        <!-- {3} is a string. Second required label depending Donation_Donor__c value  -->
+        <value>When you select {0} for {1}, you must enter information in at least one of the following fields: {2} or {3}</value>
+    </labels>
+    <labels>
         <fullName>geErrorFieldPermission</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
