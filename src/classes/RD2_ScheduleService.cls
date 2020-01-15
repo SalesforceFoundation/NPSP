@@ -694,6 +694,12 @@ public without sharing class RD2_ScheduleService {
             npe03__Recurring_Donation__c oldRd = oldRdById.get(rd.Id);
 
             if (isScheduleUpdateNeeded(rd, oldRd)) {
+                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
+                        rd.StartDate__c == null &&
+                        rd.Status__c != RD2_Constants.STATUS_CLOSED
+                        ) {
+                    rd.StartDate__c = currentDate;
+                }
                 filteredRecurringDonations.put(rd.Id, rd);
             }
         }
