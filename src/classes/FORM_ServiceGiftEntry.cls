@@ -174,19 +174,37 @@ public with sharing class FORM_ServiceGiftEntry {
     *
     * @param id: Form_Template__c record id
     *
-    * @return list: List of deleted Form_Template__c names
+    * @return FormTemplateWrapper: Wrapper object of the list of deleted template names and the result
+    * of the DML action
     */
     @AuraEnabled
-    public static String[] deleteFormTemplates(String[] ids) {
-        Form_Template__c[] templates = [SELECT Id, Name FROM Form_Template__c WHERE Id IN :ids];
-        delete templates;
-
+    public static FormTemplateWrapper deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
-        for (Form_Template__c template : templates) {
-            formTemplateNames.add(template.Name);
+        Form_Template__c[] templates = [
+                SELECT Id, Name
+                FROM Form_Template__c
+                WHERE Id IN :ids
+        ];
+
+        FormTemplateWrapper templateWrapper;
+
+        try {
+            delete templates;
+            for (Form_Template__c template : templates) {
+                formTemplateNames.add(template.Name);
+            }
+            templateWrapper = new FormTemplateWrapper(
+                    formTemplateNames, ''
+            );
+        } catch (DmlException ex) {
+            templateWrapper = new FormTemplateWrapper(
+                    new String[]{}, ex.getDmlMessage(0)
+            );
         }
-        return formTemplateNames;
+       return templateWrapper;
     }
+
+
 
     /*******************************************************************************************************
     * @description Method for retrieving an existing template that you already have the Id for.
@@ -318,5 +336,20 @@ public with sharing class FORM_ServiceGiftEntry {
             template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
         }
         return template;
+    }
+
+    /*******************************************************************************************************
+    * @description Inner wrapper class for client side response on form template actions.
+    *
+    */
+    public class FormTemplateWrapper {
+        @AuraEnabled public String [] formTemplateNames;
+        @AuraEnabled public String message;
+
+        public FormTemplateWrapper(String [] formTemplateNames, String message){
+            this.formTemplateNames = formTemplateNames;
+            this.message = message;
+        }
+
     }
 }
