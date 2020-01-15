@@ -237,14 +237,16 @@ public class UTIL_DMLService {
     * @description Handles the batch DML updates of records combined with error handling.
     * @param records The records to be updated
     * @param context The context ERR_Handler_API enum value for the context in which this operation occurs
+    * @return ERR_Handler.Errors
     */
-    public static void updateRecordBatchAndLogErrors(List<SObject> records, String context) {
+    public static ERR_Handler.Errors updateRecordBatchAndLogErrors(List<SObject> records, String context) {
         List<Database.SaveResult> srList = Database.update(records, false);
 
         ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, records, context);
         if (errorResult.errorsExist) {
             ERR_Handler.processErrors(errorResult.errorRecords, context);
         }
+        return errorResult;
     }
 
     /***
@@ -296,19 +298,23 @@ public class UTIL_DMLService {
     * @description Handles record DML deletion of records combined with error handling.
     * @param records The records to be deleted
     * @param context The context ERR_Handler_API enum value for the context in which this operation occurs
-    * @return void
+    * @return ERR_Handler.Errors
     */
-    public static void deleteRecordsAndLogErrors(List<SObject> records, String context) {
+    public static ERR_Handler.Errors deleteRecordsAndLogErrors(List<SObject> records, String context) {
+        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+
         if (records == null || records.isEmpty()) {
-            return;
+            return errorResult;
         }
 
         List<Database.DeleteResult> deleteResults = Database.delete(records, false);
 
-        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(deleteResults, records, context);
+        errorResult = ERR_Handler.getJobErrors(deleteResults, records, context);
         if (errorResult.errorsExist) {
             ERR_Handler.processErrors(errorResult.errorRecords, context);
         }
+
+        return errorResult;
     }
 
     /***
