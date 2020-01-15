@@ -59,7 +59,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 // get the target field names to be used by getRecord
                 this.fieldNames = getRecordFieldNames(formTemplate, fieldMappings);
-                this.initializeForm(formTemplate);
             }
         });
     }
@@ -68,23 +67,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let response = await GeFormService.getFormTemplate();
 
         if (response !== null && typeof response !== 'undefined') {
-            const { formTemplate } = response;
-            const fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
-            this.ready = true;
-            this.name = formTemplate.name;
-            this.description = formTemplate.description;
-            this.version = formTemplate.layout.version;
-            if (typeof formTemplate.layout !== 'undefined'
-                && Array.isArray(formTemplate.layout.sections)) {
-
-                // add record data to the template fields
-                let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections, fieldMappings, this.record);
-                this.sections = sectionsWithValues;
-            }
+            this.initializeForm(response);
         }
     }
 
-    initializeForm(formTemplate) {
+    initializeForm(response) {
+        const { formTemplate } = response;
+        const fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+
         // read the template header info
         this.ready = true;
         this.name = formTemplate.name;
@@ -92,7 +82,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.version = formTemplate.layout.version;
         if (typeof formTemplate.layout !== 'undefined'
             && Array.isArray(formTemplate.layout.sections)) {
-            this.sections = formTemplate.layout.sections;
+
+            // add record data to the template fields
+            let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections, fieldMappings, this.record);
+            this.sections = sectionsWithValues;
             this.dispatchEvent(new CustomEvent('sectionsretrieved'));
         }
     }
