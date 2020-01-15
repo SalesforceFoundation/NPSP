@@ -37,7 +37,6 @@ const TEMPLATES_TABLE_ACTIONS = [
 const BATCHES_LIST_VIEW_NAME = 'Batches';
 const BATCHES_LIST_VIEW_DEFAULT_LIMIT = 10;
 const BATCHES_LIST_VIEW_ICON = 'custom:custom17';
-const TOAST_MODE_DISMISSABLE = 'dismissable';
 
 export default class GeTemplates extends NavigationMixin(LightningElement) {
 
