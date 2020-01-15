@@ -60,16 +60,6 @@ export default class GeFormField extends LightningElement {
         }
     }
 
-    handleValueChange(event) {
-        this.value = this.getValueFromChangeEvent(event);
-        window.clearTimeout(this.changeTimeout);
-        this.changeTimeout = setTimeout(() => {
-            // parent component (formSection) should bind to onchange event
-            const evt = new CustomEvent('change', {field: this.element, value: this.value});
-            this.dispatchEvent(evt);
-        }, DELAY);
-    }
-
     getValueFromChangeEvent(event) {
         if(this.fieldType === BOOLEAN_TYPE) {
             return event.detail.checked.toString();
