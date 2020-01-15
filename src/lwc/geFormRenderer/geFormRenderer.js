@@ -11,8 +11,8 @@ import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Temp
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
-    @api recordId = '';
-    @api record;
+    @api donorRecordId = '';
+    @api donorRecord;
     fieldNames = [];
     @api sections = [];
     @track ready = false;
@@ -29,10 +29,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     erroredFields = [];
     @api pageLevelErrorMessageList = [];
 
-    @wire(getRecord, { recordId: '$recordId', optionalFields: '$fieldNames'})
+    @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
         if (data) {
-            this.record = data;
+            this.donorRecord = data;
             this.handleGetTemplate();
         } else if (error) {
             console.error(JSON.stringify(error));
@@ -49,7 +49,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         // check if there is a record id in the url
-        this.recordId = getQueryParameters().c__recordId;
+        this.donorRecordId = getQueryParameters().c__recordId;
 
         GeFormService.getFormTemplate().then(response => {
             // read the template header info
@@ -84,7 +84,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             && Array.isArray(formTemplate.layout.sections)) {
 
             // add record data to the template fields
-            let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections, fieldMappings, this.record);
+            let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections, fieldMappings, this.donorRecord);
             this.sections = sectionsWithValues;
             this.dispatchEvent(new CustomEvent('sectionsretrieved'));
         }
