@@ -201,13 +201,11 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
             .then(formTemplateNames => {
                 this.geListViewComponent.setProperty(IS_LOADING, false);
                 this.geListViewComponent.refresh();
-
-                if (formTemplateNames) {
-                    const toastMessage = GeLabelService.format(
-                        this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
+                const toastMessage = GeLabelService.format(
+                    this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
                        formTemplateNames);
+
                         showToast(toastMessage, '', SUCCESS);
-                }
             })
             .catch(error => {
                 handleError(error);

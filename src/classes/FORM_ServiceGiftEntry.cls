@@ -329,9 +329,4 @@ public with sharing class FORM_ServiceGiftEntry {
         }
         return template;
     }
-
-    /*******************************************************************************************************
-    * @description Inner wrapper class for client side response on form template actions.
-    *
-    */
 }
