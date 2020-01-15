@@ -14,7 +14,7 @@ import FIELD_RD_DAYOFMONTH from '@salesforce/schema/npe03__Recurring_Donation__c
 import FIELD_RD_STARTDATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 
-import getSchedule from '@salesforce/apex/RD2_VisualizeScheduleController.getSchedule';
+import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
 
 const INSTALLMENT_COLS = [
     { label: '$DATE', fieldName: 'donationDate', type: 'date-local', sortable: false,
@@ -50,7 +50,7 @@ export default class RdScheduleVisualizer extends LightningElement {
         fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD, FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD] })
     wireRecordChange() {
         if (this.recordId) {
-            getSchedule({ recordId: this.recordId, displayNum: this.displayNum })
+            getInstallments({ recordId: this.recordId, displayNum: this.displayNum })
                 .then(data => {
                     this.handleCurrencyIsoCode(data);
                     this.handleColumns();

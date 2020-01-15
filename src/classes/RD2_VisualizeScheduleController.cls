@@ -46,13 +46,19 @@ public with sharing class RD2_VisualizeScheduleController {
         } set;
     }
 
+    @AuraEnabled
+    public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
+        return null;
+    }
+
     /**
      * @description Retrieves the current schedule of future donations to render in the UI
      * @param recordId
+     * @param displayNum
      * @return List<Schedule>
      */
     @AuraEnabled
-    public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
+    public static List<Installment> getInstallments(Id recordId, Integer displayNum) {
 
         validate(recordId);
 
