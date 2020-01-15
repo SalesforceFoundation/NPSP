@@ -155,6 +155,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                     this.batchHeaderFields = formTemplate.batchHeaderFields;
                     this.formLayout = formTemplate.layout;
                     this.formSections = this.formLayout.sections;
+
+                    this.catalogFieldsForTemplateEdit();
                 }
 
                 this.collectBatchHeaderFields();
@@ -469,6 +471,23 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                         this.catalogSelectedField(fieldMapping.DeveloperName, sectionId);
                     }
                 }
+            });
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method catalogs selected fields when in edit mode so we can toggle
+    * each field's corresponding checkbox.
+    */
+    catalogFieldsForTemplateEdit() {
+        for (let i = 0; i < this.formSections.length; i++) {
+            const formSection = this.formSections[i];
+            formSection.elements.forEach(element => {
+                const name = element.componentName ?
+                    element.componentName :
+                    element.dataImportFieldMappingDevNames[0];
+
+                this.catalogSelectedField(name, formSection.id)
             });
         }
     }

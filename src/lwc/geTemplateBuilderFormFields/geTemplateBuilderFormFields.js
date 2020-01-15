@@ -138,32 +138,6 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Method determines whether or not we're pulling an existing
-    * template, populates the UI with the appropriate object and field mappings,
-    * and toggles field mapping checkboxes.
-    */
-    loadObjectAndFieldMappingSets() {
-        const isExistingTemplate = this.selectedFieldMappingSet;
-
-        if (isExistingTemplate && this.formSections) {
-            if (this.formSections.length === 1) {
-                this.handleChangeActiveSection({ detail: this.formSections[0].id });
-            }
-            for (let i = 0; i < this.formSections.length; i++) {
-                const formSection = this.formSections[i];
-                formSection.elements.forEach(element => {
-                    const name = element.componentName ?
-                        element.componentName :
-                        element.dataImportFieldMappingDevNames[0];
-
-                    this.catalogSelectedField(name, formSection.id)
-                });
-            }
-            this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
-        }
-    }
-
-    /*******************************************************************************
     * @description Removes a section and unchecks checkboxes for all the gift fields
     * contained in this section
     *

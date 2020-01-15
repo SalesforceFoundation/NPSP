@@ -1,21 +1,11 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
+import { dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 
 const WIDGET = 'widget';
-const BOOLEAN = 'boolean';
-const TEXTAREA = 'textarea';
-const COMBOBOX = 'combobox';
-const SEARCH = 'search';
-const RICHTEXT = 'richtext';
-const CHECKBOX = 'checkbox';
-const DATE = 'date';
-const DATETIME = 'datetime-local';
 const YES = 'Yes';
-const TEXT = 'text';
-const TRUE = 'true';
 
 export default class geTemplateBuilderFormField extends LightningElement {
 
@@ -122,59 +112,6 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return this.field.elementType === WIDGET ? true : false;
     }
 
-    get isLightningTextarea() {
-        return this.lightningInputType === TEXTAREA ? true : false;
-    }
-
-    get isLightningCombobox() {
-        return this.lightningInputType === COMBOBOX ? true : false;
-    }
-
-    get isLightningSearch() {
-        return this.lightningInputType === SEARCH ? true : false;
-    }
-
-    get isLightningRichText() {
-        return this.lightningInputType === RICHTEXT ? true : false;
-    }
-
-    get isLightningCheckbox() {
-        return this.lightningInputType === CHECKBOX ? true : false;
-    }
-
-    get isLightningDateOrDatetime() {
-        return (this.lightningInputType === DATE || this.lightningInputType === DATETIME) ? true : false;
-    }
-
-    get isLightningInput() {
-        if (this.lightningInputType !== TEXTAREA &&
-            this.lightningInputType !== COMBOBOX &&
-            this.lightningInputType !== RICHTEXT &&
-            this.lightningInputType !== SEARCH &&
-            this.lightningInputType !== CHECKBOX &&
-            this.lightningInputType !== DATE &&
-            this.lightningInputType !== DATETIME) {
-            return true;
-        }
-        return false;
-    }
-
-    get lightningInputType() {
-        return this.field.dataType ? inputTypeByDescribeType[this.field.dataType.toLowerCase()] : TEXT;
-    }
-
-    get formatter() {
-        if (this.field.dataType === 'Currency' ||
-            this.field.dataType === 'Percent' ||
-            this.field.dataType === 'Decimal') {
-            return this.field.dataType;
-        }
-    }
-
-    get defaultValueForCheckbox() {
-        return (this.field.defaultValue === TRUE || this.field.defaultValue === true) ? true : false;
-    }
-
     get labelGeAssistiveFormFieldRemove() {
         const customLabel =
             this.isBatchHeaderField ?
@@ -216,40 +153,16 @@ export default class geTemplateBuilderFormField extends LightningElement {
 
     /*******************************************************************************
     * @description Dispatches an event to notify parent component that the form
-    * field's defaultValue property for a combobox has changed.
-    *
-    * @param {object} event: Event object from lightning-combobox onchange event handler 
-    */
-    handleChangeCombobox(event) {
-        let detail = {
-            fieldName: this.name,
-            property: 'defaultValue',
-            value: event.target.value
-        }
-
-        dispatch(this, 'updateformelement', detail);
-    }
-
-    /*******************************************************************************
-    * @description Dispatches an event to notify parent component that the form
     * field's defaultValue property has changed.
     *
     * @param {object} event: Event object from various lightning-input type's
     * onblur event handler 
     */
-    handleOnBlur(event) {
-        let value;
-
-        if (this.field.dataType && this.field.dataType.toLowerCase() === BOOLEAN) {
-            value = event.target.checked;
-        } else {
-            value = event.target.value;
-        }
-
+    handleOnChange(event) {
         let detail = {
             fieldName: this.name,
             property: 'defaultValue',
-            value: value
+            value: event.detail.value
         }
 
         dispatch(this, 'updateformelement', detail);

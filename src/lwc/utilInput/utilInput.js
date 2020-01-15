@@ -1,7 +1,8 @@
+/* eslint-disable consistent-return */
 import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, checkNestedProperty } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 
 const WIDGET = 'widget';
@@ -96,8 +97,11 @@ export default class utilInput extends LightningElement {
     }
 
     get formatter() {
-        if (this.type === 'Currency' || this.type === 'Percent' || this.type === 'Decimal') {
-            return this.type;
+        let type = checkNestedProperty(this.fieldDescribe, 'dataType') ?
+            this.fieldDescribe.dataType :
+            this.type;
+        if (type === 'Currency' || type === 'Percent' || type === 'Decimal') {
+            return type;
         }
         return undefined;
     }
@@ -172,5 +176,9 @@ export default class utilInput extends LightningElement {
         }
 
         dispatch(this, 'change', detail);
+    }
+
+    stopPropagation(event) {
+        event.stopPropagation();
     }
 }
