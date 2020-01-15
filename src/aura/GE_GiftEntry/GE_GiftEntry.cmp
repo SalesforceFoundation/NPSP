@@ -3,13 +3,14 @@
 
     <lightning:overlayLibrary aura:id="overlayLib" />
 
-    <aura:attribute name="modal" type="Object" />
+    <aura:attribute name="modal"
+                    type="Object" />
 
     <c:utilDedicatedListener eventName="geGiftEntryModalEvent"
                              onreceiveevent="{!c.handleModalEvent}" />
     <c:utilDedicatedListener eventName="geBatchWizardEvent"
                              onreceiveevent="{!c.handleBatchWizardEvent}" />
 
-    <c:geTemplates aura:id="giftEntry"
-                   ontogglemodal="{!c.handleShowModal}" />
+    <c:geHome aura:id="giftEntryHome"
+              ontogglemodal="{!c.handleShowModal}" />
 </aura:component>

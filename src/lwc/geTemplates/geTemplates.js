@@ -113,6 +113,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     */
     @api
     notify(event) {
+        console.log('notify');
         if (event.action === SAVE) {
             const component =
                 this.template.querySelector(`c-ge-list-view[data-id='${event.payload.name}']`);
@@ -129,6 +130,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     * @param {object} event: Event object containing a payload for the modal.
     */
     toggleModal(event) {
+        console.log('toggleModal');
         dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
@@ -136,6 +138,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     * @description Opens the new batch wizard modal.
     */
     openNewBatchWizard(event) {
+        console.log('openNewBatchWizard');
         event.stopPropagation();
         const detail = {
             componentProperties: {

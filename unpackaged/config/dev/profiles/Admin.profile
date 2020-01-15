@@ -143,7 +143,7 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>GE_Templates</tab>
+        <tab>GE_Gift_Entry</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
 </Profile>

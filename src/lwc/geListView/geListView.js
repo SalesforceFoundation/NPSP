@@ -649,7 +649,8 @@ export default class geListView extends LightningElement {
                 sourceLabel: this.CUSTOM_LABELS.geLabelCustomTableSourceFields,
                 selectedLabel: this.CUSTOM_LABELS.geLabelCustomTableSelectedFields,
                 showModalFooter: true,
-                dedicatedListenerEventName: 'geGiftEntryModalEvent'
+                dedicatedListenerEventName: 'geGiftEntryModalEvent',
+                targetComponentName: 'ge-templates',
             },
             modalProperties: {
                 componentName: 'utilDualListbox',

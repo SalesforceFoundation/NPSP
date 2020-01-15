@@ -6,6 +6,7 @@
     * input focus, and tabbing.
     */
     handleShowModal: function (component, event, helper) {
+        console.log('handleShowModal');
         const payload = event.getParams('detail');
 
         $A.createComponents([[`c:${payload.modalProperties.componentName}`, payload.componentProperties]],
@@ -34,10 +35,11 @@
     * and notifies the geTemplates component.
     */
     handleModalEvent: function (component, event, helper) {
+        console.log('*****--- handleModalEvent');
         const details = event.getParams('detail');
 
         if (details.action === 'save') {
-            component.find('giftEntry').notify(details);
+            component.find('giftEntryHome').notify(details);
         }
 
         component.get('v.modal').then(modal => {
