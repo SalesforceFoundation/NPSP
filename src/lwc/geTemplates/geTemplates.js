@@ -198,29 +198,21 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
      */
     handleTemplateDeletion (recordId){
         deleteFormTemplates({ ids: [recordId] })
-            .then(result => {
+            .then(formTemplateNames => {
                 this.geListViewComponent.setProperty(IS_LOADING, false);
                 this.geListViewComponent.refresh();
 
-                if (result) {
-                    if (result.formTemplateNames.length > 0 && !result.message) {
-                        const toastMessage = GeLabelService.format(
-                            this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
-                            result.formTemplateNames);
-
+                if (formTemplateNames) {
+                    const toastMessage = GeLabelService.format(
+                        this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
+                       formTemplateNames);
                         showToast(toastMessage, '', SUCCESS);
-                    } else if (result.formTemplateNames.length === 0 && result.message) {
-
-                        showToast( this.CUSTOM_LABELS.commonError,
-                            result.message,
-                            this.CUSTOM_LABELS.commonAssistiveError,
-                            TOAST_MODE_DISMISSABLE
-                        );
-                    }
                 }
             })
             .catch(error => {
                 handleError(error);
+                this.geListViewComponent.setProperty(IS_LOADING, false);
+                this.geListViewComponent.refresh();
             });
     }
 

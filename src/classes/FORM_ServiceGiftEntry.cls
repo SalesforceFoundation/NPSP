@@ -178,30 +178,22 @@ public with sharing class FORM_ServiceGiftEntry {
     * of the DML action
     */
     @AuraEnabled
-    public static FormTemplateWrapper deleteFormTemplates(String[] ids) {
+    public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
         Form_Template__c[] templates = [
                 SELECT Id, Name
                 FROM Form_Template__c
                 WHERE Id IN :ids
         ];
-
-        FormTemplateWrapper templateWrapper;
-
         try {
             delete templates;
             for (Form_Template__c template : templates) {
                 formTemplateNames.add(template.Name);
             }
-            templateWrapper = new FormTemplateWrapper(
-                    formTemplateNames, ''
-            );
         } catch (DmlException ex) {
-            templateWrapper = new FormTemplateWrapper(
-                    new String[]{}, ex.getDmlMessage(0)
-            );
+            throw new AuraHandledException(ex.getDmlMessage(0));
         }
-       return templateWrapper;
+       return formTemplateNames;
     }
 
 
@@ -342,14 +334,4 @@ public with sharing class FORM_ServiceGiftEntry {
     * @description Inner wrapper class for client side response on form template actions.
     *
     */
-    public class FormTemplateWrapper {
-        @AuraEnabled public String [] formTemplateNames;
-        @AuraEnabled public String message;
-
-        public FormTemplateWrapper(String [] formTemplateNames, String message){
-            this.formTemplateNames = formTemplateNames;
-            this.message = message;
-        }
-
-    }
 }

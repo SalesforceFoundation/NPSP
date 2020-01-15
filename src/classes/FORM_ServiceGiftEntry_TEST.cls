@@ -255,7 +255,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         insert batch;
 
-        fs.deleteFormTemplates(new String[]{ formTemplates[0].Id});
+        fs.deleteFormTemplates(new String[]{ formTemplates[0].Id });
 
         formTemplates = [
                 SELECT Id, Name
@@ -330,7 +330,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
      *
      * @return DataImportBatch__c
      */
-    public static DataImportBatch__c createBatch (String name, Boolean autoProcess) {
+    private static DataImportBatch__c createBatch (String name, Boolean autoProcess) {
         DataImportBatch__c batch = new DataImportBatch__c();
         batch.Name = name;
         batch.Batch_Process_Size__c = 200;

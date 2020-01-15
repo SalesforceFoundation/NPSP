@@ -72,10 +72,8 @@ public with sharing class BGE_FormTemplate_TDTM extends TDTM_Runnable{
 
             for (Form_Template__c formTemplate : formTemplates) {
                 for (DataImportBatch__c batch : batches) {
-                    if (batch.Form_Template__c != null) {
-                        if (formTemplate.Id == batch.Form_Template__c) {
+                    if (formTemplate.Id == batch.Form_Template__c) {
                             formTemplate.addError(System.Label.geToastTemplateDeleteError);
-                        }
                     }
                 }
             }
