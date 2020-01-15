@@ -32,7 +32,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track formTemplateId;
     erroredFields = [];
     @api pageLevelErrorMessageList = [];
-    @track _data; // Row being updated when in update mode
+    @track _dataRow; // Row being updated when in update mode
 
     connectedCallback() {
         if (this.batchId) {
@@ -270,18 +270,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @api
-    load(data) {
-        this._data = data;
+    load(dataRow) {
+        this._dataRow = dataRow;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         sectionsList.forEach(section => {
-            section.load(data);
+            section.load(dataRow);
         });
     }
 
     @api
     reset() {
-        this._data = undefined;
+        this._dataRow = undefined;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         sectionsList.forEach(section => {
@@ -290,7 +290,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get mode() {
-        return this._data ? mode.UPDATE : mode.CREATE;
+        return this._dataRow ? mode.UPDATE : mode.CREATE;
     }
 
     @api
@@ -306,7 +306,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     get isUpdateActionDisabled() {
-        return this._data && this._data[STATUS_FIELD.fieldApiName] === 'Imported';
+        return this._dataRow && this._dataRow[STATUS_FIELD.fieldApiName] === 'Imported';
     }
 
     getData(sections) {
@@ -317,8 +317,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
 
-        if (this._data) {
-            dataImportRecord.Id = this._data.Id;
+        if (this._dataRow) {
+            dataImportRecord.Id = this._dataRow.Id;
         }
 
         return dataImportRecord;
