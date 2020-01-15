@@ -52,24 +52,24 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     * @description Sends email to the owner on conversion if selected
     */
     public boolean sendEmailToOwner { get; set; }
-    
+
     /*******************************************************************************************************
     * @description Contains the Id or 'NEW' for the Account to use.
     */
     public string strAccountId { get; set; }
-    
+
     /*******************************************************************************************************
     * @description Contains the Id or 'NEW' for the Primary Affiliation to use.
     */
     public string strAfflAccountId { get; set; }
-    
+
     /*******************************************************************************************************
-    * @description Determines the account that the created Opportunity will be related to. 
+    * @description Determines the account that the created Opportunity will be related to.
     * 'CON_ACC' -> Contact.AccountId
-    * 'AFF_ACC' -> Contact.Primary_Affiliation__c  
+    * 'AFF_ACC' -> Contact.Primary_Affiliation__c
     */
     public string strOppAccChoice { get; set; }
-    
+
     /*******************************************************************************************************
     * @description Contains the value of the converted-into Contact
     */
@@ -144,22 +144,22 @@ public with sharing class LD_LeadConvertOverride_CTRL {
       if (conList == null) {
         conList = new list<selectOption>();
 
-        conList.add( new SelectOption('', label.stgLabelNone) );
-        conList.add( new SelectOption('NEW_CONTACT', label.leadConvertCreateNewContact + ' ' + l.name) );
+        conList.add( new SelectOption('', System.Label.stgLabelNone) );
+        conList.add( new SelectOption('NEW_CONTACT', System.Label.leadConvertCreateNewContact + ' ' + l.name) );
 
         for (contact c : conMap.values()) {
-          conList.add( new SelectOption(c.id, label.leadConvertMergeExistingContact + ' ' + c.name) );
+          conList.add( new SelectOption(c.id, System.Label.leadConvertMergeExistingContact + ' ' + c.name) );
         }
       }
       return conList;
     }
-    
+
     public List<SelectOption> getOppAccChoices() {
         if(oppAccChoices == null) {
             oppAccChoices = new List<SelectOption>();
-            
-            oppAccChoices.add(new SelectOption('CON_ACC', label.leadConvertContactAccount));
-            oppAccChoices.add(new SelectOption('AFF_ACC', label.leadConvertAffiliatedAccount));
+
+            oppAccChoices.add(new SelectOption('CON_ACC', System.Label.leadConvertContactAccount));
+            oppAccChoices.add(new SelectOption('AFF_ACC', System.Label.leadConvertAffiliatedAccount));
         }
         return oppAccChoices;
     }
@@ -240,28 +240,28 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 listSOAccounts = new list<selectOption>();
                 string strAcc;
                 if (CAO_CONSTANTS.isHHAccountModel())
-                    strAcc = label.leadConvertAutocreateHHAccount;
+                    strAcc = System.Label.leadConvertAutocreateHHAccount;
                 else if (CAO_CONSTANTS.isOneToOne())
-                    strAcc = label.leadConvertAutocreateOne2OneAccount;
+                    strAcc = System.Label.leadConvertAutocreateOne2OneAccount;
                 else if (CAO_CONSTANTS.isBucketModel())
-                    strAcc = label.leadConvertAttachBucketAccount;
+                    strAcc = System.Label.leadConvertAttachBucketAccount;
                 if (strAcc != null)
                     listSOAccounts.add(new SelectOption('AUTO', strAcc));
-                    
+
                 if (!isSpecialAccount) {
                     // find Account matches
                     for (Account acc : mapIdAccountMatches.values())
-                        listSOAccounts.add(new SelectOption(acc.Id, Label.leadConvertAttachExistingAccount + ' ' + acc.Name));
+                        listSOAccounts.add(new SelectOption(acc.Id, System.Label.leadConvertAttachExistingAccount + ' ' + acc.Name));
                     // new Account
-                    listSOAccounts.add(new SelectOption('NEW', Label.leadConvertCreateAccount + ' ' + l.Company));
+                    listSOAccounts.add(new SelectOption('NEW', System.Label.leadConvertCreateAccount + ' ' + l.Company));
                 }
             }
         return listSOAccounts;
         }
-      
+
         set;
     }
-    
+
     /*******************************************************************************************************
     * @description Provides the options for select list of possible Accounts to use for the Affiliation
     */
@@ -269,18 +269,18 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         get {
             if (listSOAfflAccounts == null) {
                 listSOAfflAccounts = new list<selectOption>();
-                listSOAfflAccounts.add(new SelectOption('', label.stgLabelNone));
+                listSOAfflAccounts.add(new SelectOption('', System.Label.stgLabelNone));
                 if (!isSpecialAccount) {
                     // find Account matches
                     for (Account acc : mapIdAccountMatches.values())
-                        listSOAfflAccounts.add(new SelectOption(acc.Id, Label.leadConvertAffiliateExistingAccount + ' ' + acc.Name));
+                        listSOAfflAccounts.add(new SelectOption(acc.Id, System.Label.leadConvertAffiliateExistingAccount + ' ' + acc.Name));
                     // new Account
-                    listSOAfflAccounts.add(new SelectOption('NEW', Label.leadConvertAffiliateNewAccount + ' ' + l.Company));
+                    listSOAfflAccounts.add(new SelectOption('NEW', System.Label.leadConvertAffiliateNewAccount + ' ' + l.Company));
                 }
             }
         return listSOAfflAccounts;
         }
-      
+
         set;
     }
 
@@ -323,7 +323,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
         // get the lead
         l = [select id, name, firstname, lastname, company, email, title, ownerId, status,
-             		CompanyStreet__c, CompanyCity__c, CompanyState__c, CompanyPostalCode__c, CompanyCountry__c
+                    CompanyStreet__c, CompanyCity__c, CompanyState__c, CompanyPostalCode__c, CompanyCountry__c
              from lead
              where id = : controller.getId()];
 
@@ -336,7 +336,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         oppName = l.name;
         doNotCreateOpp = !Schema.SObjectType.Opportunity.isCreateable() || !ContactsSettings.npe01__Default_Opp_on_Convert__c;
         sendEmailToOwner = false;
-        
+
         // set reasonable defaults for contact and account.
         strAccountId = 'AUTO';
         if (conMap.size() == 0)
@@ -351,11 +351,11 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             String recTypeName = UTIL_RecordTypes.getRecordTypeName(objType, recTypeId);
             if (UTIL_RecordTypes.isRecordTypeDefault(objType, recTypeName)) {
                 apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning,
-                        Label.leadConvertRecordTypeWarning));
+                        System.Label.leadConvertRecordTypeWarning));
             }
         }
     }
-    
+
     /*******************************************************************************************************
     * @description action method called when the page is created, which decides whether to defer to the
     * standard Salesforce Lead Convert page (when the Account is a company) vs. using the NPSP version (when
@@ -364,50 +364,50 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     */
     public pageReference pickLeadConvertPage() {
         PageReference pageRef = null;
-        
+
         if (!isSpecialAccount) {
             pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' + l.Id + '&id=' + l.Id + '&nooverride=1');
             pageRef.setRedirect(true);
         }
         return pageRef;
-    }               
+    }
 
     /*******************************************************************************************************
     * @description Converts the actual Lead.  All conversion logic is contained in this method
     * @return PageReference
     */
     public pageReference convertLeadNow() {
-    	Savepoint sp = Database.setSavepoint();
-    	try {
-	        if (strConId == null) {
-	            apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
-	                label.leadConvertContactSelection));
-	            return null;
-	        }
+        Savepoint sp = Database.setSavepoint();
+        try {
+            if (strConId == null) {
+                apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
+                    System.Label.leadConvertContactSelection));
+                return null;
+            }
 
-	        // set up the conversion
-	        Database.LeadConvert lc = new database.LeadConvert();
-	        lc.setLeadId(l.Id);
-	        if (!doNotCreateOpp && Schema.SObjectType.Opportunity.isCreateable()) lc.setOpportunityName(oppName);
-	        lc.setDoNotCreateOpportunity(!Schema.SObjectType.Opportunity.isCreateable() || doNotCreateOpp);
-	        lc.setConvertedStatus(l.Status);
-	        lc.setOwnerId(dummyCon.OwnerId);
-	        lc.setSendNotificationEmail(sendEmailToOwner);
-	        
-	        boolean isIndividualAccount = isSpecialAccount || strAccountId == 'AUTO';
+            // set up the conversion
+            Database.LeadConvert lc = new database.LeadConvert();
+            lc.setLeadId(l.Id);
+            if (!doNotCreateOpp && Schema.SObjectType.Opportunity.isCreateable()) lc.setOpportunityName(oppName);
+            lc.setDoNotCreateOpportunity(!Schema.SObjectType.Opportunity.isCreateable() || doNotCreateOpp);
+            lc.setConvertedStatus(l.Status);
+            lc.setOwnerId(dummyCon.OwnerId);
+            lc.setSendNotificationEmail(sendEmailToOwner);
 
-	        // is this a merge to existing?
-	        if (strConId != 'NEW_CONTACT') {
-	            // get this contact's account
-	            lc.setContactId(strConId);
-	            lc.setAccountId(conMap.get(strConId).accountId);
-	        } else if (strAccountId != 'NEW' && strAccountId != 'AUTO' && strAccountId != null && strAccountId != '') {
-	           lc.setAccountId(strAccountId);
-	        } else if (CAO_Constants.isBucketModel() && isIndividualAccount) {
+            boolean isIndividualAccount = isSpecialAccount || strAccountId == 'AUTO';
+
+            // is this a merge to existing?
+            if (strConId != 'NEW_CONTACT') {
+                // get this contact's account
+                lc.setContactId(strConId);
+                lc.setAccountId(conMap.get(strConId).accountId);
+            } else if (strAccountId != 'NEW' && strAccountId != 'AUTO' && strAccountId != null && strAccountId != '') {
+               lc.setAccountId(strAccountId);
+            } else if (CAO_Constants.isBucketModel() && isIndividualAccount) {
                 lc.setAccountID(CAO_Constants.getIndividualAccountID());
-	        }
+            }
 
-	        // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
+            // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
             TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', false);
 
             // temporarily disable address management
@@ -416,8 +416,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c = true;
             UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c = false;
 
-	        // convert the lead
-	        Database.LeadConvertResult lcr = Database.convertLead(lc);
+            // convert the lead
+            Database.LeadConvertResult lcr = Database.convertLead(lc);
 
             // restore address management
             UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c = hhAcctAddrDisabled;
@@ -425,15 +425,15 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
             // fix the account that lead conversion created
             if (strConId == 'NEW_CONTACT' && isIndividualAccount) {
-            	string strSoql = 'select id, firstname, lastname,';
-            	if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
-            	   strSoql += ' recordtypeId,';
-            	strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ';
+                string strSoql = 'select id, firstname, lastname,';
+                if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
+                   strSoql += ' recordtypeId,';
+                strSoql += ' npo02__Household__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, ';
                 if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled)
                     strSoql += ' MailingStateCode, MailingCountryCode, ';
-            	strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
+                strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
                 strSoql += ' from contact where id= \'' + lcr.getContactId() + '\'';
-            	Contact con = database.query(strSoql);
+                Contact con = database.query(strSoql);
                 Account myAccount = new Account(Id=lcr.getAccountId());
                 npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
@@ -447,10 +447,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     if (!hs.npo02__Advanced_Household_Naming__c)
                         myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
                     else
-                        myAccount.Name = system.Label.npo02.NameReplacementText;
+                        myAccount.Name = System.Label.npo02.NameReplacementText;
                     myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
                 }
-                
+
                 if (!CAO_Constants.isBucketModel()) {
                     // change its recordtype if specified in settings
                     ID rtIdAcccount = ACCT_IndividualAccounts_TDTM.rtIdForNewAccount();
@@ -462,36 +462,36 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     UTIL_DMLService.updateRecord(myAccount);
                 }
 
-	            // see if we need to create a household object for this contact (1:1 & bucket only)
-	            if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
-	                if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR || 
-	                   hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
-	                    HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
-	                    UTIL_DMLService.updateRecord(con);
-	                }
-	            }
-	            
-	            // now create the address object if appropriate
-	            if (CAO_Constants.isHHAccountModel() && !hhAcctAddrDisabled) {
-	               Address__c addr = new Address__c();
-		            addr.Household_Account__c = myAccount.Id;
-		            addr.Default_Address__c = true;
-		            addr.Latest_Start_Date__c = system.today();
-		            addr.Latest_End_Date__c = null;
-		            ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
-		            UTIL_DMLService.insertRecord(addr);
-	            }
+                // see if we need to create a household object for this contact (1:1 & bucket only)
+                if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
+                    if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR ||
+                       hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
+                        HH_Households_TDTM.insertHousehold(new list<Contact>{con}, true, null);
+                        UTIL_DMLService.updateRecord(con);
+                    }
+                }
+
+                // now create the address object if appropriate
+                if (CAO_Constants.isHHAccountModel() && !hhAcctAddrDisabled) {
+                   Address__c addr = new Address__c();
+                    addr.Household_Account__c = myAccount.Id;
+                    addr.Default_Address__c = true;
+                    addr.Latest_Start_Date__c = system.today();
+                    addr.Latest_End_Date__c = null;
+                    ADDR_Addresses_TDTM.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
+                    UTIL_DMLService.insertRecord(addr);
+                }
             }
 
             //clean up the extra OCR Issue
-            // if we create an opp, its a 1x1 (or HH), 
+            // if we create an opp, its a 1x1 (or HH),
             // before 6/2016 this fix was only applied if merging into an existing contact,
             // but we've run into multiple orgs where they can reproduce the bug when creating new contacts.
             // npsp devs have not been able to reproduce it, but feel this is a safe fix for all.
             if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel()){
 
                 //get the new OCRs
-                list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where 
+                list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where
                     isPrimary = true and
                     OpportunityID = :lcr.getOpportunityId() and ContactID = :lcr.getContactId()];
 
@@ -508,16 +508,16 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     //also make sure it has the correct role
                     OpportunityContactRole ocr = ocrList[0];
                     ocr.IsPrimary = true;
-                    ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c; 
+                    ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c;
                     UTIL_DMLService.updateRecord(ocr);
                 }
 
-	        }
-	        
+            }
+
             // if we created a new company account, affiliate to it.
             if (strAccountId == 'NEW')
                 strAfflAccountId = lcr.getAccountId();
-            
+
             Address__c tempAddr = new Address__c(
                 MailingStreet__c = l.CompanyStreet__c,
                 MailingCity__c = l.CompanyCity__c,
@@ -528,13 +528,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
             // if we created a new company acct and the Lead had a company address, set the new acct's address
             if (strAccountId == 'NEW' && !String.isBlank(l.CompanyStreet__c)) {
-            	Account acc = new Account(
+                Account acc = new Account(
                     Id=lcr.getAccountId()
                 );
                 //copy address from temporary address__c record, handles state and country picklists if enabled
                 ADDR_Addresses_TDTM.copyAddressAddrSObj(tempAddr,acc,'Billing',null);
                 UTIL_DMLService.updateRecord(acc);
-            }   
+            }
             // handle the optional Affiliation to a new or existing Account.
             ID afflAccId = null;
             if (strAfflAccountId == 'NEW') {
@@ -546,25 +546,25 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 UTIL_DMLService.insertRecord(acc);
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {
-            	afflAccId = strAfflAccountId;
+                afflAccId = strAfflAccountId;
             }
             if (afflAccId != null) {
                 // Re-Enable the Affilations Trigger for the Contact
                 TDTM_ProcessControl.toggleTriggerState('Contact', 'AFFL_Affiliations_TDTM', true);
                 AFFL_Affiliations_TDTM.createNonDupeAffiliation(l, lcr.getContactId(), afflAccId, true);
             }
-            
-            //// Opportunity Cleanup 
+
+            //// Opportunity Cleanup
             if(!lc.isDoNotCreateOpportunity()) {
-            	Opportunity convertedOpp = new Opportunity(Id = lcr.getOpportunityId());
-            
-            	// Set the (a/o 3.45) Opportunity Primary Contact to the converted contact
-            	convertedOpp.Primary_Contact__c = lcr.getContactId();
-            
-            	// set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
-            	if(strOppAccChoice == 'AFF_ACC') {
-                	convertedOpp.AccountId = afflAccId;
-            	}
+                Opportunity convertedOpp = new Opportunity(Id = lcr.getOpportunityId());
+
+                // Set the (a/o 3.45) Opportunity Primary Contact to the converted contact
+                convertedOpp.Primary_Contact__c = lcr.getContactId();
+
+                // set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
+                if(strOppAccChoice == 'AFF_ACC') {
+                    convertedOpp.AccountId = afflAccId;
+                }
                 String oppName = convertedOpp.Name;
 
                 UTIL_DMLService.updateRecord(convertedOpp);
@@ -576,10 +576,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     UTIL_DMLService.updateRecord(convertedOpp);
                 }
             }
-            
-	        // redirect
+
+            // redirect
             return new PageReference('/' + lcr.getContactId());
-    	} catch (exception e) {
+        } catch (exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.LD);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));

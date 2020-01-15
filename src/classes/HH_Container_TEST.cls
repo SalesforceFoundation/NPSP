@@ -41,18 +41,18 @@ private class HH_Container_TEST {
     private static npo02__Household__c hhO;
     private static Contact conA;
     private static Contact conO;
-    
+
     /*********************************************************************************************************
     * @description initializes test data of a Household Account and a Household Object
     */
-    private static void initTestData() { 
-        
+    private static void initTestData() {
+
         // create a Household Account and contact and address object
         hhA = new Account(Name = 'test_hh', npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE);
         insert hhA;
         conA = new Contact(FirstName='cA', LastName='conA', AccountId=hhA.Id, MailingCity='conA city', MailingCountry='United States');
         insert conA;
-        Address__c addr = new Address__c(Household_Account__c=hhA.Id, Default_Address__c=false, 
+        Address__c addr = new Address__c(Household_Account__c=hhA.Id, Default_Address__c=false,
             MailingCity__c='addr city', MailingCountry__c='United States');
         insert addr;
 
@@ -68,8 +68,8 @@ private class HH_Container_TEST {
     /*********************************************************************************************************
     * @description Tests getHH() and getContacts()
     */
-    public static testMethod void testGetHHGetContacts() { 
-        
+    public static testMethod void testGetHHGetContacts() {
+
         initTestData();
 
         Test.startTest();
@@ -78,17 +78,17 @@ private class HH_Container_TEST {
         system.assertNotEquals(null, HH_Container_LCTRL.getHH(hhO.Id));
         system.assertNotEquals(null, HH_Container_LCTRL.getContacts(hhA.Id));
         system.assertNotEquals(null, HH_Container_LCTRL.getContacts(hhO.Id));
-                
+
         Test.stopTest();
     }
-    
+
     /*********************************************************************************************************
     @description
         Test getContacts() method when Household Naming Settings is invalid
-        and the Automatic Household Naming is turned off 
+        and the Automatic Household Naming is turned off
     verify:
         Contacts are retrieved successfully
-    **********************************************************************************************************/  
+    **********************************************************************************************************/
     static testMethod void testContactsAreReturnedWhenHHNamingSettingsIsInvalidAndAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
@@ -106,17 +106,17 @@ private class HH_Container_TEST {
         System.assertEquals(conO.Id, contacts[0].Id, 'Contact should not change in the Household Object');
 
         Test.stopTest();
-    }     
-     
+    }
+
     /*********************************************************************************************************
     @description
         Test getContactSelectQueryWithFls() builds expected SOQL
     verify:
         The SOQL is correct
-    **********************************************************************************************************/  
+    **********************************************************************************************************/
     static testMethod void testContactSoqlIsCorrect() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
-        UTIL_UnitTestData_TEST.setupHHNamingSettings(            
+        UTIL_UnitTestData_TEST.setupHHNamingSettings(
             '{!{!FIRSTname} {!LASTname}} Household',
             '{!{!Title} {!firstname}} {!lastname}',
             '{!{!firstNAME}}'
@@ -125,7 +125,7 @@ private class HH_Container_TEST {
         String soql = HH_Container_LCTRL.getContactSelectQueryWithFls();
 
         Set<String> expectedFieldNames = HH_Container_LCTRL.getContactFields();
-        expectedFieldNames.addAll(new Set<String>{ 
+        expectedFieldNames.addAll(new Set<String>{
             'npo02__Household__c', 'Account.Number_of_Household_Members__c',
             'npo02__Household__r.Number_of_Household_Members__c',
             'Account.Name', 'npo02__Household__r.Name',
@@ -133,7 +133,7 @@ private class HH_Container_TEST {
         });
 
         for (String fieldName : expectedFieldNames) {
-            System.assert(soql.containsIgnoreCase(fieldName), fieldName + ' should be in the SOQL: ' + soql); 
+            System.assert(soql.containsIgnoreCase(fieldName), fieldName + ' should be in the SOQL: ' + soql);
         }
 
         System.assert(soql.endsWith(' FROM Contact'), 'The SOQL should query all Contacts: ' + soql);
@@ -153,7 +153,7 @@ private class HH_Container_TEST {
         }
 
         System.assertEquals(contacts.size(), actualContacts.size(), 'Expected Contacts: ' + contacts + '; Actual Contacts: ' + actualContacts);
-    }     
+    }
 
     /*********************************************************************************************************
     @description
@@ -162,7 +162,7 @@ private class HH_Container_TEST {
         Expected field names are returned including:
             - The MiddleName field (if the org has MiddleName enabled)
             - Contact fields specified in Household Naming configuration
-    **********************************************************************************************************/  
+    **********************************************************************************************************/
     static testMethod void testGetContactFieldsReturnsExpectedFieldNames() {
         UTIL_UnitTestData_TEST.setupHHNamingSettings();
 
@@ -182,54 +182,54 @@ private class HH_Container_TEST {
 
         //verify main mandatory fields are included in the output
         for (String fieldName : new String[] {
-            'Id', 'npo02__Household_Naming_Order__c', 
-            'FirstName', 'LastName', 'Salutation', 
-            'Name', 'npo02__Naming_Exclusions__c', 'AccountId', 
+            'Id', 'npo02__Household_Naming_Order__c',
+            'FirstName', 'LastName', 'Salutation',
+            'Name', 'npo02__Naming_Exclusions__c', 'AccountId',
             UTIL_Namespace.StrTokenNSPrefix('HHId__c'),
-            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'), 
-            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'), 
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Name__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Formal_Greeting__c'),
             UTIL_Namespace.StrTokenNSPrefix('Exclude_from_Household_Informal_Greeting__c'),
-            UTIL_Namespace.StrTokenNSPrefix('is_Address_Override__c'), 
-            UTIL_Namespace.StrTokenNSPrefix('Current_Address__c'), 
-            'npe01__Primary_Address_Type__c','MailingStreet', 'MailingCity', 
-            'MailingState', 'MailingPostalCode', 'MailingCountry', 
+            UTIL_Namespace.StrTokenNSPrefix('is_Address_Override__c'),
+            UTIL_Namespace.StrTokenNSPrefix('Current_Address__c'),
+            'npe01__Primary_Address_Type__c','MailingStreet', 'MailingCity',
+            'MailingState', 'MailingPostalCode', 'MailingCountry',
             'MailingLatitude', 'MailingLongitude', 'CreatedDate'
         }) {
             System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);
         }
-    } 
+    }
 
     /*********************************************************************************************************
     * @description Tests getAddresses()
     */
-    public static testMethod void testGetAddresses() { 
+    public static testMethod void testGetAddresses() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
+
         initTestData();
 
         Test.startTest();
-        
+
         list<Address__c> listAddrA = HH_Container_LCTRL.getAddresses(hhA.Id, null);
         system.assertEquals(2, listAddrA.size());
 
         list<Address__c> listAddrO = HH_Container_LCTRL.getAddresses(hhO.Id, null);
         system.assertEquals(1, listAddrO.size());
-                
+
         Test.stopTest();
     }
 
     /*********************************************************************************************************
     * @description Tests packageLabels()
     */
-    public static testMethod void testPackageLabels() { 
+    public static testMethod void testPackageLabels() {
         HH_Container_LCTRL.packageLabels();
     }
-        
+
     /*********************************************************************************************************
     * @description Tests upsertContacts()
     */
-    public static testMethod void testUpsertContacts() { 
+    public static testMethod void testUpsertContacts() {
         initTestData();
 
         conA.FirstName = 'upserted';
@@ -238,7 +238,7 @@ private class HH_Container_TEST {
         list<Contact> listCon = new list<Contact>{conA, conO, con};
 
         Test.startTest();
-                    
+
         HH_Container_LCTRL.upsertContacts(listCon);
         listCon = [select FirstName from Contact order by CreatedDate];
         system.assertEquals(3, listCon.size());
@@ -247,15 +247,15 @@ private class HH_Container_TEST {
         system.assertEquals('inserted', listCon[2].FirstName);
 
         Test.stopTest();
-        
+
     }
 
     /*********************************************************************************************************
-    @description 
-        Test upserContacts() rolls back DMLs when an exception occurs 
+    @description
+        Test upserContacts() rolls back DMLs when an exception occurs
     verify:
         The transaction is completely rolled back and there is no partial commit
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void testUpsertContactsRollsBackAllDmlsOnError() {
         initTestData();
 
@@ -266,11 +266,11 @@ private class HH_Container_TEST {
         conO.FirstName = conO.FirstName + ' - Test Update';
         //fail update
         conO.AccountId = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
-        
-        List<Contact> contacts = new List<Contact>{ 
-            conA, 
-            conO, 
-            new Contact(FirstName = 'Foo', LastName = 'Bar') 
+
+        List<Contact> contacts = new List<Contact>{
+            conA,
+            conO,
+            new Contact(FirstName = 'Foo', LastName = 'Bar')
         };
 
         Exception expectedException = null;
@@ -302,40 +302,40 @@ private class HH_Container_TEST {
     /*********************************************************************************************************
     * @description Tests updateHousehold()
     */
-    public static testMethod void testUpdateHousehold() { 
+    public static testMethod void testUpdateHousehold() {
         initTestData();
 
         Test.startTest();
 
-        hhA.Name = 'updated';            
+        hhA.Name = 'updated';
         HH_Container_LCTRL.updateHousehold(hhA);
         hhA = [select Name from Account where Id = :hhA.Id];
         system.assertEquals('updated', hhA.Name);
 
-        hhO.Name = 'updated';            
+        hhO.Name = 'updated';
         HH_Container_LCTRL.updateHousehold(hhO);
         hhO = [select Name from npo02__Household__c where Id = :hhO.Id];
         system.assertEquals('updated', hhO.Name);
 
-        Test.stopTest();        
+        Test.stopTest();
     }
 
     /*********************************************************************************************************
     * @description Tests mergeHouseholds()
     */
-    public static testMethod void testMergeHouseholds() { 
+    public static testMethod void testMergeHouseholds() {
         initTestData();
         Account hhA2 = new Account(Name = 'test_hh2', npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE);
         Account hhA3 = new Account(Name = 'test_hh3', npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE);
         list<Account> listAcc = new list<Account>{hhA2, hhA3};
         insert listAcc;
- 
+
         Test.startTest();
 
         HH_Container_LCTRL.mergeHouseholds(hhA, listAcc);
         system.assertEquals(0, [select count() from Account where Id in :listAcc]);
-        
-        Test.stopTest();        
+
+        Test.stopTest();
     }
 
     /*********************************************************************************************************
@@ -346,7 +346,7 @@ private class HH_Container_TEST {
     verify:
         Only one default Address exists for the Household.
         Other Households are merged with the Household.
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void saveShouldResultInOneDefaultAddressWhenContactsAreAddedToTheHousehold() {
         Integer accountSize = 3;
         Account[] accounts = buildAccounts(accountSize);
@@ -375,7 +375,7 @@ private class HH_Container_TEST {
             //Copy the Address to Contact the same way as it being done from Manage Household.
             //No other update, such as Household Naming, is done since it does not impact this test.
             copyAddressToContact(addresses[0], newContact);
-            
+
             hhContacts.add(newContact);
         }
 
@@ -396,23 +396,23 @@ private class HH_Container_TEST {
         Address__c defaultAddress = null;
         for (Address__c addr : actualAddresses) {
             Boolean isDefault = addr.Id == addresses[0].Id;
-            System.assertEquals(isDefault, addr.Default_Address__c, addr); 
+            System.assertEquals(isDefault, addr.Default_Address__c, addr);
 
             if (isDefault) {
                 defaultAddress = addr;
             }
         }
 
-        System.assertNotEquals(null, defaultAddress); 
+        System.assertNotEquals(null, defaultAddress);
 
         contactsByHh = getContactsByHousehold();
-        System.assertEquals(1, contactsByHh.size()); 
+        System.assertEquals(1, contactsByHh.size());
         Contact[] actualContacts = contactsByHh.get(accounts[0].Id);
-        System.assertEquals(hhContacts.size(), actualContacts.size(), actualContacts); 
+        System.assertEquals(hhContacts.size(), actualContacts.size(), actualContacts);
 
         for (Contact c : actualContacts) {
             System.assertEquals(defaultAddress.Id, c.Current_Address__c);
-        }     
+        }
     }
 
     /*********************************************************************************************************
@@ -422,7 +422,7 @@ private class HH_Container_TEST {
         The new Contact is added to the Household.
         A new Household and an Address are created for the Removed Contact.
         No Household is merged.
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void saveShouldAddRemovedContactToNewHousehold() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -447,7 +447,7 @@ private class HH_Container_TEST {
 
         Contact newContact = contactsByHh.get(accounts[1].Id)[0];
         newContact.AccountId = accounts[0].Id;
-        copyAddressToContact(addresses[0], newContact);        
+        copyAddressToContact(addresses[0], newContact);
         hhContacts.add(newContact);
 
         Contact removedContact = contactsByHh.get(accounts[0].Id)[1];
@@ -467,9 +467,9 @@ private class HH_Container_TEST {
 
         Address__c[] actualAddresses = getAddresses();
         System.assertEquals(actualAccountSize, actualAddresses.size(), actualAddresses);
-        
+
         contactsByHh = getContactsByHousehold();
-        System.assertEquals(actualAccountSize, contactsByHh.size(), contactsByHh); 
+        System.assertEquals(actualAccountSize, contactsByHh.size(), contactsByHh);
 
         for (Account acc : actualAccounts) {
             Address__c[] accountAddresses = new Address__c[0];
@@ -493,25 +493,25 @@ private class HH_Container_TEST {
                 } else if (acc.Id != accounts[1].Id) {
                     System.assertEquals(removedContact.Id, c.Id);
                 }
-                
+
                 System.assertEquals(accountAddresses[0].Id, c.Current_Address__c);
-            }     
-        } 
-    }    
+            }
+        }
+    }
 
     /*********************************************************************************************************
     @description
-        Test getHHNamesGreetings() method when Household Naming Settings is invalid 
-        and the Automatic Household Naming is turned off 
+        Test getHHNamesGreetings() method when Household Naming Settings is invalid
+        and the Automatic Household Naming is turned off
     verify:
         Name and Formal/Informal Greetings are not modified on the Household
-    **********************************************************************************************************/  
+    **********************************************************************************************************/
     static testMethod void testHHNameAndGreetingsAreNotModifiedWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
         initTestData();
- 
+
         Test.startTest();
 
         Account actual = (Account) HH_Container_LCTRL.getHHNamesGreetings(hhA, new Contact[]{ conA, conO });
@@ -519,44 +519,44 @@ private class HH_Container_TEST {
         System.assertEquals(hhA.Name, actual.Name, 'Household Name should not change');
         System.assertEquals(hhA.npo02__Formal_Greeting__c, actual.npo02__Formal_Greeting__c, 'Formal Greeting should not change');
         System.assertEquals(hhA.npo02__Informal_Greeting__c, actual.npo02__Informal_Greeting__c, 'Informal Greeting should not change');
-        
-        Test.stopTest();        
+
+        Test.stopTest();
     }
 
     /*********************************************************************************************************
     @description
         Test getHHNamesGreetings() method when Household Naming Settings is valid
-        and the Automatic Household Naming is turned on 
+        and the Automatic Household Naming is turned on
     verify:
         Name and Formal/Informal Greetings are set on the Household
-    **********************************************************************************************************/  
+    **********************************************************************************************************/
     static testMethod void testHHNameAndGreetingsAreModifiedWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
         initTestData();
- 
+
         Test.startTest();
 
         hhA = (Account) HH_Container_LCTRL.getHHNamesGreetings(hhA, new Contact[]{ conA, conO });
 
-        system.assertEquals('conA and conO Household', hhA.Name, 'Household Name should correspond to the format');
-        system.assertEquals('cA conA and cO conO', hhA.npo02__Formal_Greeting__c, 'Formal Greeting should correspond to the format');
-        system.assertEquals('cA and cO', hhA.npo02__Informal_Greeting__c, 'Informal Greeting should correspond to the format');
-        
-        Test.stopTest();        
+        System.assertEquals('conA' + CAO_Constants.HH_NAME_CONNECTOR + 'conO' + CAO_Constants.HH_NAME_SUFFIX, hhA.Name, 'Household Name should correspond to the format');
+        System.assertEquals('cA conA' + CAO_Constants.HH_NAME_CONNECTOR + 'cO conO', hhA.npo02__Formal_Greeting__c, 'Formal Greeting should correspond to the format');
+        System.assertEquals('cA' + CAO_Constants.HH_NAME_CONNECTOR + 'cO', hhA.npo02__Informal_Greeting__c, 'Informal Greeting should correspond to the format');
+
+        Test.stopTest();
     }
-    
+
     /*********************************************************************************************************
     * @description Tests addContactAddresses()
     */
-    public static testMethod void testAddContactAddresses() { 
-        
+    public static testMethod void testAddContactAddresses() {
+
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         initTestData();
 
         Test.startTest();
-        
+
         list<Address__c> listAddrA = HH_Container_LCTRL.getAddresses(hhA.Id, null);
         // conA city, addr city
         system.assertEquals(2, listAddrA.size());
@@ -567,32 +567,32 @@ private class HH_Container_TEST {
             listCon.add(con);
         }
         Contact conADup = new Contact(FirstName='cA', LastName='conA', AccountId=hhA.Id, MailingCity='conA city', MailingCountry='United States');
-        listCon.add(conADup);       
+        listCon.add(conADup);
 
         list<Address__c> listAddr = HH_Container_LCTRL.addContactAddresses(listCon, listAddrA);
         system.assertEquals(7, listAddr.size());
-        
+
         Test.stopTest();
     }
 
     /*********************************************************************************************************
     * @description Tests getSalutations()
     */
-    public static testMethod void testGetSalutations() { 
+    public static testMethod void testGetSalutations() {
         list<HH_Container_LCTRL.SelectOption> listSO = HH_Container_LCTRL.getSalutations();
         system.assert(listSO.size() > 0);
     }
-    
+
     /*********************************************************************************************************
     * @description Tests HH_AutoCompleteDataProvider_LCTRL
     */
-    public static testMethod void testAutoCompleteDataProvider() { 
-        
+    public static testMethod void testAutoCompleteDataProvider() {
+
         initTestData();
 
         Test.startTest();
         UTIL_UnitTestData_TEST.setFixedSearchResults(new List<Contact>{ conA, conO });
-        
+
         list<HH_AutoCompleteDataProvider_LCTRL.ProviderResult> listPR = HH_AutoCompleteDataProvider_LCTRL.queryObjects('con', null);
         system.assertEquals(2, listPR.size());
 
@@ -601,14 +601,14 @@ private class HH_Container_TEST {
         listCon.add(conO);
         listPR = HH_AutoCompleteDataProvider_LCTRL.queryObjects('con', listCon);
         system.assertEquals(0, listPR.size());
-        
+
         Test.stopTest();
     }
 
     /*********************************************************************************************************
     * @description Test if the queryValue is valid for the SOSL
     */
-    public static testMethod void testAutoCompleteIsValidSearchQuery() { 
+    public static testMethod void testAutoCompleteIsValidSearchQuery() {
         System.assertEquals(false, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery(null), 'Search is invalid for null query');
         System.assertEquals(false, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery(''), 'Search is invalid for empty query');
         System.assertEquals(false, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery('c'), 'Search is invalid for one character query');
@@ -622,13 +622,13 @@ private class HH_Container_TEST {
     * @description Verifies auto complete does not return records when Contact.Name is encrypted and
     * the search query is not at least two characters long
     */
-    public static testMethod void testAutoCompleteReturnsEmptyListForEncryptedContactNameAndInvalidSearchQuery() { 
+    public static testMethod void testAutoCompleteReturnsEmptyListForEncryptedContactNameAndInvalidSearchQuery() {
         initTestData();
         UTIL_UnitTestData_TEST.setFixedSearchResults(new List<Contact>{ conA, conO });
 
         HH_AutoCompleteDataProvider_LCTRL.isNameFilterable = false;
         List<HH_AutoCompleteDataProvider_LCTRL.ProviderResult> records = HH_AutoCompleteDataProvider_LCTRL.queryObjects('c*', null);
-        
+
         System.assert(records.isEmpty(), 'No record should be returned when Contact.Name is encrypted and the search query is invalid: ' + records);
     }
 
@@ -636,19 +636,19 @@ private class HH_Container_TEST {
     * @description Verifies auto complete returns records when Contact.Name is encrypted and
     * the search query is valid
     */
-    public static testMethod void testAutoCompleteReturnsRecordsForEncryptedContactNameAndValidSearchQuery() { 
+    public static testMethod void testAutoCompleteReturnsRecordsForEncryptedContactNameAndValidSearchQuery() {
         initTestData();
         UTIL_UnitTestData_TEST.setFixedSearchResults(new List<Contact>{ conA, conO });
 
         HH_AutoCompleteDataProvider_LCTRL.isNameFilterable = false;
         List<HH_AutoCompleteDataProvider_LCTRL.ProviderResult> records = HH_AutoCompleteDataProvider_LCTRL.queryObjects('co*', null);
-        
+
         System.assertEquals(2, records.size(), 'Expected records when Contact.Name is encrypted and the search query is valid: ' + records);
     }
-    
+
 
     // Helpers
-    ////////////    
+    ////////////
 
     /*********************************************************************************************************
     * @description Builds Accounts with Household Account Type
@@ -701,7 +701,7 @@ private class HH_Container_TEST {
         for (Account acc : accounts) {
             for (Integer i = 0; i < sizePerAccount; i++) {
                 contacts.add(new Contact(
-                    LastName = acc.Name + i, 
+                    LastName = acc.Name + i,
                     AccountId = acc.Id
                 ));
             }
@@ -747,7 +747,7 @@ private class HH_Container_TEST {
     * @return Contact[] List of all Contacts
     **********************************************************************************************************/
     private static Contact[] getContacts() {
-        return Database.query(HH_Container_LCTRL.getContactSelectQueryWithFls());     
+        return Database.query(HH_Container_LCTRL.getContactSelectQueryWithFls());
     }
 
     /*********************************************************************************************************
@@ -769,7 +769,7 @@ private class HH_Container_TEST {
     **********************************************************************************************************/
     private static Account[] getAccounts() {
         return [
-            SELECT Name, BillingStreet, BillingCity, 
+            SELECT Name, BillingStreet, BillingCity,
                 BillingState, BillingPostalCode, BillingCountry
             FROM Account
         ];
