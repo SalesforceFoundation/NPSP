@@ -1,12 +1,12 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
-import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { showToast, dispatch, handleError } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
+import { deleteRecord } from 'lightning/uiRecordApi';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
@@ -197,16 +197,15 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
      * @param {Id} recordId : Record id of the Form_Template__c to be deleted
      */
     handleTemplateDeletion (recordId){
-        deleteFormTemplates({ ids: [recordId] })
-            .then(formTemplateNames => {
-                this.geListViewComponent.setProperty(IS_LOADING, false);
-                this.geListViewComponent.refresh();
-                const toastMessage = GeLabelService.format(
-                    this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
-                       formTemplateNames);
+        deleteRecord(recordId).then(formTemplateNames => {
+            this.geListViewComponent.setProperty(IS_LOADING, false);
+            this.geListViewComponent.refresh();
+            const toastMessage = GeLabelService.format(
+                this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
+                formTemplateNames);
 
-                        showToast(toastMessage, '', SUCCESS);
-            })
+            showToast(toastMessage, '', SUCCESS);
+        })
             .catch(error => {
                 handleError(error);
                 this.geListViewComponent.setProperty(IS_LOADING, false);

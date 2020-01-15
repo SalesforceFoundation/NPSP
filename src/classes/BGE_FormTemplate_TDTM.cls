@@ -64,17 +64,19 @@ public with sharing class BGE_FormTemplate_TDTM extends TDTM_Runnable{
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
             List<Form_Template__c> formTemplates = (List<Form_Template__c>) oldlist;
 
-            List<DataImportBatch__c> batches = [
+            Map<Id, DataImportBatch__c> batchByFormTemplateId = new Map<Id, DataImportBatch__c>();
+
+            for (DataImportBatch__c batch : [
                     SELECT Form_Template__c
                     FROM DataImportBatch__c
                     WHERE Form_Template__c IN : formTemplates
-            ];
+            ]) {
+                batchByFormTemplateId.put(batch.Form_Template__c, batch);
+            }
 
             for (Form_Template__c formTemplate : formTemplates) {
-                for (DataImportBatch__c batch : batches) {
-                    if (formTemplate.Id == batch.Form_Template__c) {
-                            formTemplate.addError(System.Label.geToastTemplateDeleteError);
-                    }
+                if (batchByFormTemplateId.containsKey(formTemplate.Id)) {
+                    formTemplate.addError(System.Label.geToastTemplateDeleteError);
                 }
             }
         }

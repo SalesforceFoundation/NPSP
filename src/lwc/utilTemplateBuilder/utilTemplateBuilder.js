@@ -315,14 +315,22 @@ const handleError = (error) => {
     if (typeof error === 'string' || error instanceof String) {
         message = error;
     } else if (error) {
-        if (Array.isArray(error.body)) {
+        if (Array.isArray(error.body) &&
+            !error.body.output.errors) {
             message = error.body.map(e => e.message).join(', ');
-        } else if (error.body && typeof error.body.message === 'string') {
+
+        } else if (error.body && typeof error.body.message === 'string' &&
+            !error.body.output.errors) {
             message = error.body.message;
+
+        } else if(error.body &&
+            error.detail.output &&
+            Array.isArray(error.body.output.errors)){
+            message = error.body.output.errors.map(e => e.message).join(', ');
+
         } else if (error.detail &&
             error.detail.output &&
             Array.isArray(error.detail.output.errors)) {
-
             message = error.detail.output.errors.map(e => e.message).join(', ');
         }
     }

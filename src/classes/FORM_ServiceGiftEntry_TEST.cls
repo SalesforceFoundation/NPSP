@@ -255,12 +255,20 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         insert batch;
 
-        fs.deleteFormTemplates(new String[]{ formTemplates[0].Id });
+        AuraHandledException failure;
+
+        try {
+            fs.deleteFormTemplates(new String[]{ formTemplates[0].Id });
+        } catch (AuraHandledException ex) {
+            failure = ex;
+        }
 
         formTemplates = [
                 SELECT Id, Name
                 FROM Form_Template__c
         ];
+        System.assertNotEquals(null, failure.getMessage());
+        System.assertNotEquals('', failure.getMessage());
         System.assertEquals(1, formTemplates.size(), 'A Form Template in use should not be deleted');
 
     }
