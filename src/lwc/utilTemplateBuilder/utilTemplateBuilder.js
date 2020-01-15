@@ -312,6 +312,7 @@ const handleError = (error) => {
 
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
+    // error.body.output.errors is for AuraHandledException messages
     if (typeof error === 'string' || error instanceof String) {
         message = error;
     } else if (error) {
@@ -324,7 +325,7 @@ const handleError = (error) => {
             message = error.body.message;
 
         } else if(error.body &&
-            error.detail.output &&
+            error.body.output &&
             Array.isArray(error.body.output.errors)){
             message = error.body.output.errors.map(e => e.message).join(', ');
 
