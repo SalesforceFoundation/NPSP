@@ -54,7 +54,7 @@ npsp_lex_locators={
     'link':'//a[./span[text()="{}"]]',
     'link-text':'//a[text()="{}"]',
     'link-title':'//a[@title="{}"]',
-    'link-contains':'//a[contains(@title,"{}")]',
+    'link-contains':'//button[.//span[contains(text(),"{}")]]',
     'checkbox':{
         'model-checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
         'details-checkbox':'//label[@class="slds-checkbox__label"][./span[text()="{}"]]/span[contains(@class,"slds-checkbox_faux")]',
@@ -103,14 +103,14 @@ npsp_lex_locators={
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
     'field-value':"//div[contains(@class,'slds-form-element')][./label[text()='{}']]/div/span",
     'header':'//h1/div[contains(@title,"{}")]',
-    'check_related_list_item':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//th//a[text()="{}"]',
+    'check_related_list_item':'//article[.//span[text() = "{}"]]/descendant::tbody//th//a[text()="{}"]',
     'detail_page': {
         'section_header':'//h3//span[text()="{}"]',
         'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a/div[contains(@class, "slds")]',
         'field':'//h3[contains(@class, "slds-section__title")][.//span[text()="{}"]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//span[text()="{}"]',
         'field-value':{
             'verify_field_value1':'//div[contains(@class, "forcePageBlockItem")]/div/div//span[text()="{}"]/../../div[2]/span/span[text() = "{}"]',
-            'verify_field_value2':'//force-record-layout-item/div/div/span[text()="{}"]/../../div[2]/span//lightning-formatted-text[text() = "{}"]',
+            'verify_field_value2':'//force-record-layout-item//div[./span[text()="{}"]]/following-sibling::div//lightning-formatted-text[text() = "{}"]',
         },
         'edit_mode':{
             'section_header':'//div[contains(@class,"forcePageBlockSectionEdit")]/h3//span[text()="{}"]',

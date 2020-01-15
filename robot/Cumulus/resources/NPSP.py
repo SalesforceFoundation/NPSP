@@ -130,10 +130,10 @@ class NPSP(SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["record"]["related"]["button"].format(
             heading, button_title
         )
-        buttons=self.selenium.get_webelements(locator)
+        buttons = self.selenium.driver.find_elements_by_xpath(locator)
         for button in buttons:
             if button.is_displayed():
-                button.click()
+                self.selenium.driver.execute_script('arguments[0].click()', button)
                 b_found = True
                 break
             
@@ -144,11 +144,14 @@ class NPSP(SalesforceRobotLibraryBase):
             Pass the list name, dd name and button name"""
         self.salesforce.load_related_list(heading)
         locator = npsp_lex_locators["record"]["related"]["button"].format(heading, dd_title)
-        self.selenium.click_link(locator) 
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element) 
         time.sleep(1)
         loc=npsp_lex_locators["record"]["related"]["dd-link"].format(button_title)
         self.selenium.wait_until_element_is_visible(loc)
-        self.selenium.click_link(loc)   
+        element = self.selenium.driver.find_element_by_xpath(loc)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+           
         
         
     def click_flexipage_dropdown(self, title):
@@ -493,7 +496,7 @@ class NPSP(SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['record']['related']['title'].format(title)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
-#         self.selenium.get_webelement(locator).click()  
+ 
         
     def verify_related_list_field_values(self, **kwargs):
         """verifies the values in the related list objects page""" 
@@ -719,7 +722,8 @@ class NPSP(SalesforceRobotLibraryBase):
     def click_viewall_related_list (self,title):  
         """clicks on the View All link under the Related List"""      
         locator=npsp_lex_locators['record']['related']['viewall'].format(title)
-        self.selenium.get_webelement(locator).click()
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
         
     def click_button_with_value (self,title):  
         """clicks on the button on the payments page"""      

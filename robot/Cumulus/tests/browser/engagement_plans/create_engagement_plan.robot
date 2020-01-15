@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/EngagementPlanTemplatesPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
