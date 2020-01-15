@@ -209,7 +209,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                             result.formTemplateNames);
 
                         showToast(toastMessage, '', SUCCESS);
-                    } else if(result.formTemplateNames.length === 0 && result.message) {
+                    } else if (result.formTemplateNames.length === 0 && result.message) {
 
                         showToast( this.CUSTOM_LABELS.commonError,
                             result.message,
