@@ -1929,6 +1929,7 @@
         <members>geErrorPageLevelFieldPermission1</members>
         <members>geErrorPageLevelFieldPermission2</members>
         <members>geErrorPageLevelMissingRequiredFields</members>
+        <members>geErrorPageLevelMissingRequiredGroupFields</members>
         <members>geErrorRequiredField</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchHeaderLeftCol</members>
