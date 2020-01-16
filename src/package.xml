@@ -3122,6 +3122,7 @@
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
+        <members>GE_Form_Renderer</members>
         <members>GE_Template_Builder</members>
         <members>GE_Templates</members>
         <members>General_Accounting_Unit__c</members>
@@ -3378,10 +3379,12 @@
     </types>
     <types>
         <members>Account.Manage_Household</members>
+        <members>Account.New_Gift</members>
         <members>Account.Recalculate_Rollups</members>
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
+        <members>Contact.New_Gift</members>
         <members>Contact.Recalculate_Rollups</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>

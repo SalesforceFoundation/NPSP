@@ -47,8 +47,16 @@ export default class GeFormField extends LightningElement {
     }
 
     connectedCallback() {
-        const { defaultValue } = this.element;
-        if(defaultValue) {
+        const { defaultValue, recordValue } = this.element;
+
+        if(recordValue) {
+
+            // set the record value to the element value
+            this.value = recordValue;
+        } else if(defaultValue) {
+           
+            // Set the default value if there is one
+            // and no record value. 
             this._defaultValue = defaultValue;
             this.value = defaultValue;
         }
