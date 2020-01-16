@@ -212,11 +212,18 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
-    get fieldAndLabel() {
+    get fieldValidationWrapper() {
 
-        let fieldAndLabel = {};
-        fieldAndLabel[ this.formElementName ] = this.fieldLabel;
-        return fieldAndLabel;
+        let fieldWrapper = {};
+        fieldWrapper.sourceFieldAPIName   = this.sourceFieldAPIName;
+        fieldWrapper.formElementName      = this.formElementName;
+        fieldWrapper.value                = this.value;
+        fieldWrapper.label                = this.fieldLabel;
+
+        let fieldValidationWrapper = {};
+        fieldValidationWrapper[ this.formElementName ] = fieldWrapper;
+
+        return fieldValidationWrapper;
 
     }
 

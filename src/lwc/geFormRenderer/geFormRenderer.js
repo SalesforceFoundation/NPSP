@@ -247,16 +247,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     donorTypeInvalid( sectionsList ){
 
         // aux vars
-        let fieldDataValues = {};
-        let fieldDataLabels = {};
+        let fieldDataWrapper = {};
         // get DeveloperName and value from fields for each section
         sectionsList.forEach(section => {
-            fieldDataValues = { ...fieldDataValues, ...(section.values)};
-            fieldDataLabels = { ...fieldDataLabels, ...(section.labels)};
+            fieldDataWrapper = { ...fieldDataWrapper, ...(section.getValidationHelper)};
         });
 
         // if no donation donor selection, nothing to validate here yet
-        if (isEmpty(fieldDataValues[DONATION_DONOR_FIELD_INFO.fieldApiName])) {
+        if ( isEmpty(fieldDataWrapper[DONATION_DONOR_FIELD_INFO.fieldApiName].value) ) {
             return false;
         }
 
@@ -272,7 +270,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             account1NameField:      ACCOUNT1_NAME_FIELD_INFO.fieldApiName,
             contact1ImportedField:  CONTACT1_IMPORTED_FIELD_INFO.fieldApiName,
             contact1LastNameField:  CONTACT1_LASTNAME_FIELD_INFO.fieldApiName,
-            donationDonorField:     DONATION_DONOR_FIELD_INFO.fieldApiName
+            donationDonorField:     DONATION_DONOR_FIELD_INFO.fieldApiName,
         };
 
         // aux vars
@@ -280,12 +278,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let diRecordLabels = {};
 
         // get field mapping wrapper to retrieve api definitions
-        for (let key in fieldDataValues) {
-            if (fieldDataValues.hasOwnProperty(key)) {
+        for (let key in fieldDataWrapper) {
+            if (fieldDataWrapper.hasOwnProperty(key)) {
 
-                let fieldMappingWrapper = GeFormService.getFieldMappingWrapper(key);
-                diRecord[ fieldMappingWrapper.Source_Field_API_Name ] = fieldDataValues[key];
-                diRecordLabels[ fieldMappingWrapper.Source_Field_API_Name ] = fieldDataLabels[key];
+                let dataWrapper = fieldDataWrapper[key];
+                diRecord[ dataWrapper.sourceFieldAPIName ] = dataWrapper.value;
+                diRecordLabels[ dataWrapper.sourceFieldAPIName ] = dataWrapper.label;
 
             }
         }
