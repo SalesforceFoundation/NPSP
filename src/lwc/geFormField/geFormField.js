@@ -212,6 +212,15 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
+    get fieldAndLabel() {
+
+        let fieldAndLabel = {};
+        fieldAndLabel[ this.formElementName ] = this.fieldLabel;
+        return fieldAndLabel;
+
+    }
+
+    @api
     setCustomValidity(errorMessage) {
         let inputField = this.template.querySelector('[data-id="inputComponent"]');
         
