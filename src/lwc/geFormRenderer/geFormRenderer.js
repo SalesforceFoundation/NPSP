@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
+import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
@@ -11,19 +12,26 @@ import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JS
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api sections = [];
+    @api showSpinner = false;
+    @api batchId;
+    @api submissions = [];
+    @api hasPageLevelError = false;
+    @api pageLevelErrorMessageList = [];
+
     @track ready = false;
     @track name = '';
     @track description = '';
     @track mappingSet = '';
     @track version = '';
-    @api showSpinner = false;
-    @api batchId;
-    @api submissions = [];
-    @api hasPageLevelError = false;
-    label = { messageLoading, geSave, geCancel };
     @track formTemplateId;
+    @track isPermissionError = false;
+    @track permissionErrorTitle = '';
+    @track permissionErrorMessage = '';
+
+    label = { messageLoading, geSave, geCancel };
     erroredFields = [];
-    @api pageLevelErrorMessageList = [];
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    
 
     connectedCallback() {
         if (this.batchId) {
@@ -36,8 +44,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         GeFormService.getFormTemplate().then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
-                const { formTemplate } = response;
-                this.initializeForm(formTemplate);
+                let template = response.formTemplate;
+                let permissionErrors = new Array(template.permissionErrors);
+
+                if(permissionErrors && template.permissionErrorType) {
+                    const FLS_ERROR_TYPE = 'FLS';
+                    const CRUD_ERROR_TYPE = 'CRUD';
+
+                    if(template.permissionErrorType === CRUD_ERROR_TYPE) {
+                        this.permissionErrorTitle = this.CUSTOM_LABELS.geErrorObjectCRUDHeader;
+                        this.permissionErrorMessage = GeLabelService.format(this.CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors)
+                    } else if(template.permissionErrorType === FLS_ERROR_TYPE) {
+                        this.permissionErrorTitle = this.CUSTOM_LABELS.geErrorFLSHeader;
+                        this.permissionErrorMessage = GeLabelService.format(this.CUSTOM_LABELS.geErrorFLSBody, permissionErrors)
+                    }
+                    this.isPermissionError = true;
+                } else {
+                    const { formTemplate } = response;
+                    this.initializeForm(formTemplate);
+                }
+                console.log(response);
             }
         });
     }
