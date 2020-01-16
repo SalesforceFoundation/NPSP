@@ -212,7 +212,7 @@ Create Engagement Plan
     
 Create Level
     ${level_name}=    Generate Random String
-    Select App Launcher Tab  Levels
+    Go To Page                        Listing                 Level__c
     Click Special Object Button       New
     Choose Frame    Levels
     Enter Level Values
@@ -240,7 +240,7 @@ Verify Engagement Plan
 
 Create GAU
     ${gau_name} =         Generate Random String
-    Select App Launcher Tab    General Accounting Units
+    Go To Page                        Listing                General_Accounting_Unit__c
     Click Object Button       New
     Populate Form
     ...                    General Accounting Unit Name=${gau_name}

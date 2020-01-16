@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/LevelsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -15,7 +17,7 @@ ${contact_id}
     ${level_id}  ${level_name}     Create Level
     Set Global Variable      ${level_name}
     Set Global Variable      ${level_id}
-    Go To Record Home        ${level_id}
+    Go To Page               Details               Level__c                                object_id=${level_id}
     Confirm Field Value    Minimum Amount (>=)    contains    0.10    
     Page Should Contain  0.9  # work around platform not showing the right number of decimals
 
@@ -55,7 +57,7 @@ ${contact_id}
     Go To Record Home       ${contact_id}
     Scroll Element Into View    text:Donation Totals
     Click Button       title:Edit Smallest Gift
-    Wait For Locator  record.edit_form
+    Wait For Locator  record.footer
     Populate Field          Smallest Gift     0.75
     Click Record Button     Save
     Wait Until Loading Is Complete
