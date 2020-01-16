@@ -111,6 +111,17 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
+        <fullName>Batch_Defaults__c</fullName>
+        <description>Represents the data model of batch level default field values for a NPSP_DataImportBatch__c record in Gift Entry. Not intended for direct customer use and should not be edited directly.</description>
+        <externalId>false</externalId>
+        <label>Batch Defaults</label>
+        <length>50000</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
         <fullName>Batch_Description__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>An optional description about this batch.</inlineHelpText>

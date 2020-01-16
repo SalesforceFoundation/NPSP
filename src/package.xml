@@ -907,6 +907,7 @@
         <members>Customizable_Rollup_Settings__c.Rollups_Skew_Dispatcher_Batch_Size__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Active_Fields__c</members>
+        <members>DataImportBatch__c.Batch_Defaults__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Gift_Entry_Version__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
@@ -1831,6 +1832,7 @@
         <members>commonAssistiveInfo</members>
         <members>commonAssistiveSuccess</members>
         <members>commonAssistiveWarning</members>
+        <members>commonBack</members>
         <members>commonBatches</members>
         <members>commonCancel</members>
         <members>commonClone</members>
@@ -1839,11 +1841,13 @@
         <members>commonEdit</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonNext</members>
         <members>commonNoItems</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonSave</members>
         <members>commonSaveAndClose</members>
+        <members>commonTemplate</members>
         <members>commonTemplates</members>
         <members>commonUnknownError</members>
         <members>commonViewAll</members>
@@ -1893,6 +1897,8 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geBodyBatchDefaultValues</members>
+        <members>geBodyBatchFieldBundleInfo</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyBatchHeaderWarning</members>
@@ -1907,11 +1913,12 @@
         <members>geButtonBuilderNavBackTemplateInfo</members>
         <members>geButtonBuilderNavBatchHeader</members>
         <members>geButtonBuilderNavFormFields</members>
-        <members>geButtonEnterGifts</members>
         <members>geButtonFormFieldsAddSection</members>
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
+        <members>geButtonNewBatch</members>
+        <members>geButtonNewSingleGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>
@@ -1926,8 +1933,11 @@
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
         <members>geErrorRequiredField</members>
+        <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
+        <members>geHeaderBatchSelectTemplate</members>
+        <members>geHeaderBatchSetDefaultValues</members>
         <members>geHeaderCustomTableHeaders</members>
         <members>geHeaderEmptyFormSection</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
@@ -1950,6 +1960,7 @@
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
         <members>geSearchPlaceholder</members>
+        <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
@@ -3252,6 +3263,7 @@
         <members>geBatchGiftEntryApp</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
+        <members>geBatchWizard</members>
         <members>geFormField</members>
         <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
@@ -3278,7 +3290,9 @@
         <members>utilCommon</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
+        <members>utilExpandableSection</members>
         <members>utilIllustration</members>
+        <members>utilInput</members>
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>

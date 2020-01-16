@@ -4054,6 +4054,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>warning</value>
     </labels>
     <labels>
+        <fullName>commonBack</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Back button</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
         <fullName>commonBatches</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4118,6 +4126,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Field Label</value>
     </labels>
     <labels>
+        <fullName>commonNext</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Next button</shortDescription>
+        <value>Next</value>
+    </labels>
+    <labels>
         <fullName>commonNoItems</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4156,6 +4172,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Save and Close</shortDescription>
         <value>Save &amp; Close</value>
+    </labels>
+    <labels>
+        <fullName>commonTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Template</shortDescription>
+        <value>Template</value>
     </labels>
     <labels>
         <fullName>commonTemplates</fullName>
@@ -4557,6 +4581,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geBodyBatchFieldBundleInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text about not being able to set default values for Field Bundles</shortDescription>
+        <value>You can't set default values for fields included in this section.</value>
+    </labels>
+    <labels>
         <fullName>geBodyBatchHeaderLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4581,6 +4613,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <!-- {0} is comma separated list of field api names from the Data Import Batch object -->
         <!-- e.g. npsp__GiftBatch__c, npsp__Batch_Description__c -->
         <value>These required fields were automatically added to the Batch Header:</value>
+    </labels>
+    <labels>
+        <fullName>geBodyBatchDefaultValues</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Batch screen with info about setting default values</shortDescription>
+        <value>Set default values for this batch. You can override default values when you enter gifts.</value>
     </labels>
     <labels>
         <fullName>geBodyEmptyFormSection</fullName>
@@ -4683,14 +4723,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Next: Form Fields</value>
     </labels>
     <labels>
-        <fullName>geButtonEnterGifts</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Enter Gifts button</shortDescription>
-        <value>Enter Gifts</value>
-    </labels>
-    <labels>
         <fullName>geButtonFormFieldsAddSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4721,6 +4753,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Button to delete a section and remove its fields</shortDescription>
         <value>Delete Section and Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonNewBatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enter batch of gifts button</shortDescription>
+        <value>New Batch</value>
+    </labels>
+    <labels>
+        <fullName>geButtonNewSingleGift</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enter a single gift button</shortDescription>
+        <value>New Single Gift</value>
     </labels>
     <labels>
         <fullName>geButtonTemplatesTabCreateTemplate</fullName>
@@ -4841,6 +4889,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Required field</value>
     </labels>
     <labels>
+        <fullName>geHeaderBatchEnterInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to enter batch info</shortDescription>
+        <value>Enter Batch Info</value>
+    </labels>
+    <labels>
         <fullName>geHeaderBatchHeaderLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4855,6 +4911,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header to configure batch header fields</shortDescription>
         <value>Configure Batch Header Fields</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchSelectTemplate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to select template</shortDescription>
+        <value>Select Template</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderBatchSetDefaultValues</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header to set default values</shortDescription>
+        <value>Set Default Values</value>
     </labels>
     <labels>
         <fullName>geHeaderCustomTableHeaders</fullName>
@@ -5033,6 +5105,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Gift Entry lookup placeholder text</shortDescription>
         <value>Search...</value>
+    </labels>
+    <labels>
+        <fullName>geSelectPlaceholder</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Placeholder text for a picklist field</shortDescription>
+        <value>Select...</value>
     </labels>
     <labels>
         <fullName>geTabBatchHeader</fullName>
