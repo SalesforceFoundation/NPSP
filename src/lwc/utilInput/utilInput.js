@@ -165,16 +165,14 @@ export default class utilInput extends LightningElement {
     * onblur event handler 
     */
     handleValueChange(event) {
-        if (this.type && this.lightningInputType === CHECKBOX) {
-            this.value = event.target.checked;
-        }
-
-        if (this.type && this.lightningInputType === SEARCH) {
-            this.value = event.detail.value;
-        }
-
-        if (checkNestedProperty(event, 'target', 'value')) {
-            this.value = event.target.value;
+        if (event) {
+            if (this.type && this.lightningInputType === CHECKBOX) {
+                this.value = event.target.checked;
+            } else if (this.type && this.lightningInputType === SEARCH) {
+                this.value = event.detail.value;
+            } else if (event.target && event.target.value) {
+                this.value = event.target.value;
+            }
         }
 
         let detail = {
