@@ -115,19 +115,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         this.clearErrors();
 
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+
+        // apply custom and standard field validation
+        if (!this.isFormValid(sectionsList)) {
+            return;
+        }
+
         // disable the Save button
         event.target.disabled = true;
         const enableSaveButton = function() {
             this.disabled = false;
         }.bind(event.target);
-
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-
-        // apply custom and standard field validation
-        if( !this.isFormValid(sectionsList) ){
-            enableSaveButton();
-            return;
-        }
 
         // show the spinner
         this.toggleSpinner();
@@ -226,7 +225,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     isFormValid(sectionsList){
 
         // custom donor type validation
-        if( this.donorTypeInvalid(sectionsList) ){
+        if (this.donorTypeInvalid(sectionsList)) {
             return false;
         }
 
@@ -245,17 +244,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return invalidFields.length === 0;
     }
 
-    donorTypeInvalid(sectionsList){
+    donorTypeInvalid( sectionsList ){
 
         // aux vars
         let fieldDataValues = {};
+        let fieldDataLabels = {};
         // get DeveloperName and value from fields for each section
         sectionsList.forEach(section => {
             fieldDataValues = { ...fieldDataValues, ...(section.values)};
+            fieldDataLabels = { ...fieldDataLabels, ...(section.labels)};
         });
 
         // if no donation donor selection, nothing to validate here yet
-        if( isEmpty(fieldDataValues[DONATION_DONOR_FIELD_INFO.fieldApiName]) ){
+        if (isEmpty(fieldDataValues[DONATION_DONOR_FIELD_INFO.fieldApiName])) {
             return false;
         }
 
@@ -279,28 +280,34 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let diRecordLabels = {};
 
         // get field mapping wrapper to retrieve api definitions
-        for( let key in fieldDataValues ){
-            if( fieldDataValues.hasOwnProperty(key) ){
+        for (let key in fieldDataValues) {
+            if (fieldDataValues.hasOwnProperty(key)) {
 
                 let fieldMappingWrapper = GeFormService.getFieldMappingWrapper(key);
                 diRecord[ fieldMappingWrapper.Source_Field_API_Name ] = fieldDataValues[key];
-                diRecordLabels[ fieldMappingWrapper.Source_Field_API_Name ] = fieldMappingWrapper.MasterLabel;
+                diRecordLabels[ fieldMappingWrapper.Source_Field_API_Name ] = fieldDataLabels[key];
 
             }
         }
 
         // donation type validation ready to start
-        if( diRecord[DONATION_TYPE_FIELDS.donationDonorField] === DONATION_DONOR.isAccount1 &&
+        if (diRecord[DONATION_TYPE_FIELDS.donationDonorField] === DONATION_DONOR.isAccount1 &&
                 isEmpty( diRecord[DONATION_TYPE_FIELDS.account1ImportedField] ) &&
                     isEmpty( diRecord[DONATION_TYPE_FIELDS.account1NameField] ) &&
-                        this.getDonorTypeValidationError(DONATION_DONOR.isAccount1, diRecordLabels[DONATION_TYPE_FIELDS.donationDonorField], diRecordLabels[DONATION_TYPE_FIELDS.account1ImportedField], diRecordLabels[DONATION_TYPE_FIELDS.account1NameField]) ){
+                        this.getDonorTypeValidationError(   DONATION_DONOR.isAccount1,
+                                                            diRecordLabels[DONATION_TYPE_FIELDS.donationDonorField],
+                                                            diRecordLabels[DONATION_TYPE_FIELDS.account1ImportedField],
+                                                            diRecordLabels[DONATION_TYPE_FIELDS.account1NameField])) {
 
             return true;
 
-        }else if( diRecord[DONATION_TYPE_FIELDS.donationDonorField] === DONATION_DONOR.isContact1 &&
+        } else if (diRecord[DONATION_TYPE_FIELDS.donationDonorField] === DONATION_DONOR.isContact1 &&
                     isEmpty( diRecord[DONATION_TYPE_FIELDS.contact1ImportedField] ) &&
                         isEmpty( diRecord[DONATION_TYPE_FIELDS.contact1LastNameField] ) &&
-                            this.getDonorTypeValidationError(DONATION_DONOR.isContact1, diRecordLabels[DONATION_TYPE_FIELDS.donationDonorField], diRecordLabels[DONATION_TYPE_FIELDS.contact1ImportedField], diRecordLabels[DONATION_TYPE_FIELDS.contact1LastNameField]) ){
+                            this.getDonorTypeValidationError(   DONATION_DONOR.isContact1,
+                                                                diRecordLabels[DONATION_TYPE_FIELDS.donationDonorField],
+                                                                diRecordLabels[DONATION_TYPE_FIELDS.contact1ImportedField],
+                                                                diRecordLabels[DONATION_TYPE_FIELDS.contact1LastNameField])) {
 
             return true;
 
