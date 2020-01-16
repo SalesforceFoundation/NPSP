@@ -15,7 +15,6 @@
         var parentAmount = {!parentAmount};
         var decimalSeparator = "{!decimalSeparator}";
         var thousandsSeparator = "{!thousandsSeparator}";
-        var defaultEnabled = {!Settings.Default_Allocations_Enabled__c};
 
         function isLightningExperienceOrSalesforce1() {
             return((typeof sforce != 'undefined') && sforce && (!!sforce.one));
@@ -41,9 +40,9 @@
                     if (isBlankOrEmpty(thisRowPercent)) {
                         //make amount field editable, nulled out
                         thisRowPercent.prop('disabled', false);
-                        thisRowAmount.prop('disabled', false);    
+                        thisRowAmount.prop('disabled', false);
                     }
-                    
+
                 } else {
                 //if amount is full and percent is blank, disable percent
                     if (isBlankOrEmpty(thisRowPercent)) {
@@ -67,7 +66,7 @@
 
             });
 
-            //write total amount. if we have a parent amount, include the unallocated remainder. 
+            //write total amount. if we have a parent amount, include the unallocated remainder.
             //if we're over the parent amount, make it red.
             //also supports negative payments, rejecting positive allocations in that case
             var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
@@ -116,7 +115,7 @@
                     }
                 }
             });
-            
+
         }
 
         var changePercent = function(i) {
@@ -172,7 +171,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <apex:variable var="cnt" value="{!0}" /> 
+                        <apex:variable var="cnt" value="{!0}" />
                         <apex:repeat var="allo" value="{!listAllo}" >
                             <tr>
                                 <td>
@@ -202,8 +201,8 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <apex:commandButton 
-                                        styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" 
+                                    <apex:commandButton
+                                        styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}"
                                         action="{!delRow}" reRender="theTable,messages" immediate="false">
                                         <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
                                         <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
@@ -231,7 +230,7 @@
 
                  <!-- Add Row -->
                 <div class="slds-p-around_medium">
-                        <apex:commandLink action="{!addRow}" immediate="true" reRender="theTable, messages" 
+                        <apex:commandLink action="{!addRow}" immediate="true" reRender="theTable, messages"
                             value="{!$Label.alloAddRow}" title="{!$Label.alloAddRow}" />
                 </div>
                 <script>
