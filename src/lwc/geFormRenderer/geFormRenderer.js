@@ -249,13 +249,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return false;
         }
 
-        // donation donor required picklist values
+        // relevant Donation_Donor picklist values for validation
         const DONATION_DONOR = {
             isAccount1: 'Account1',
             isContact1: 'Contact1'
         };
 
-        // donation type relevant fields
+        // relevant donation type fields for validation
         const DONATION_TYPE_FIELDS = {
             account1ImportedField:  ACCOUNT1_IMPORTED_FIELD_INFO.fieldApiName,
             account1NameField:      ACCOUNT1_NAME_FIELD_INFO.fieldApiName,
