@@ -4619,7 +4619,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>New Batch screen 3 body text</shortDescription>
+        <shortDescription>New Batch screen with info about setting default values</shortDescription>
         <value>Set default values for this batch. You can override default values when you enter gifts.</value>
     </labels>
     <labels>
