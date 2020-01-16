@@ -139,6 +139,10 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
+        <tab>GE_Form_Renderer</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
         <tab>GE_Template_Builder</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>

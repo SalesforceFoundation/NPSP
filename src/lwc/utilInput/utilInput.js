@@ -154,7 +154,7 @@ export default class utilInput extends LightningElement {
             value: event.target.value
         }
 
-        dispatch(this, 'change', detail);
+        dispatch(this, 'changevalue', detail);
     }
 
     /*******************************************************************************
@@ -175,7 +175,7 @@ export default class utilInput extends LightningElement {
             value: this.fieldValue
         }
 
-        dispatch(this, 'change', detail);
+        dispatch(this, 'changevalue', detail);
     }
 
     stopPropagation(event) {

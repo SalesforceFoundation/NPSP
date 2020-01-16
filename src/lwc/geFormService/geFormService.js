@@ -1,9 +1,11 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
+import { CONTACT_INFO, ACCOUNT_INFO, 
+         DI_CONTACT1_IMPORTED_INFO, DI_ACCOUNT1_IMPORTED_INFO, 
+         DI_DONATION_DONOR_INFO, CONTACT1, ACCOUNT1, handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunRow
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 import {api} from "lwc";
-import {handleError} from 'c/utilTemplateBuilder';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -113,15 +115,15 @@ class GeFormService {
      * @param sectionList
      * @returns opportunityId
      */
-    handleSave(sectionList) {
-        let diRecord = this.getDataImportRecord(sectionList);
+    handleSave(sectionList, record) {
+        let diRecord = this.getDataImportRecord(sectionList, record);
 
         const opportunityID = this.saveAndProcessGift(diRecord);
 
         return opportunityID;
     }
 
-    getDataImportRecord(sectionList){
+    getDataImportRecord(sectionList, record){
         // Gather all the data from the input
         let fieldData = {};
         let widgetValues = {};
@@ -132,7 +134,7 @@ class GeFormService {
         });
 
         // Build the DI Record
-        let diRecord = {};
+        let diRecord = {};  
 
         for (let key in fieldData) {
             if (fieldData.hasOwnProperty(key)) {
@@ -142,6 +144,17 @@ class GeFormService {
                 let fieldWrapper = this.getFieldMappingWrapper(key);
 
                 diRecord[fieldWrapper.Source_Field_API_Name] = value;
+            }
+        }
+
+        if (record) {
+            // set the bdi imported fields for contact or account
+            if (record.apiName === CONTACT_INFO.objectApiName) {
+                diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
+                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = CONTACT1;
+            } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
+                diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
+                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = ACCOUNT1;
             }
         }
 
