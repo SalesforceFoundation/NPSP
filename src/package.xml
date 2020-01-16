@@ -1882,6 +1882,7 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
+        <members>geActionOpen</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveFieldDown</members>
@@ -2116,6 +2117,7 @@
         <members>isARequiredField</members>
         <members>labelGeCancel</members>
         <members>labelGeSave</members>
+        <members>labelGeUpdate</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>

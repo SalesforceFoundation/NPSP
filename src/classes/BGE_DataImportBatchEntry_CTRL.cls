@@ -330,7 +330,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     @AuraEnabled
     public static String saveAndDryRunRow(Id batchId, DataImport__c dataImport) {
         try {
-            Database.insert(dataImport);
+            if (String.isNotBlank(dataImport.Id)) {
+                Database.update(dataImport);
+            } else {
+                Database.insert(dataImport);
+            }
             return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
