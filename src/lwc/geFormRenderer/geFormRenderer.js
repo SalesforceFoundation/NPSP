@@ -247,25 +247,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     donorTypeInvalid( sectionsList ){
 
         // aux vars
-        let fieldDataWrapper = {};
-        // get DeveloperName and value from fields for each section
+        let miniFieldWrapper = {};
+        // get label and value using apiName as key from fields for each section
         sectionsList.forEach(section => {
-            fieldDataWrapper = { ...fieldDataWrapper, ...(section.getValidationHelper)};
+            miniFieldWrapper = { ...miniFieldWrapper, ...(section.getValidationHelper)};
         });
 
         // if no donation donor selection, nothing to validate here yet
-        if ( isEmpty(fieldDataWrapper[DONATION_DONOR_FIELD_INFO.fieldApiName].value) ) {
+        if (isEmpty(miniFieldWrapper[DONATION_DONOR_FIELD_INFO.fieldApiName].value)) {
             return false;
         }
 
-        // relevant Donation_Donor picklist values for validation
-        const DONATION_DONOR = {
-            isAccount1: 'Account1',
-            isContact1: 'Contact1'
-        };
+        // is donation donor valid
+        return this.getDonorTypeValidationError(miniFieldWrapper);
+
+    }
+
+    getDonorTypeValidationError( fieldWrapper ){
 
         // relevant donation type fields for validation
-        const DONATION_TYPE_FIELDS = {
+        const DONATION_FIELDS = {
             account1ImportedField:  ACCOUNT1_IMPORTED_FIELD_INFO.fieldApiName,
             account1NameField:      ACCOUNT1_NAME_FIELD_INFO.fieldApiName,
             contact1ImportedField:  CONTACT1_IMPORTED_FIELD_INFO.fieldApiName,
@@ -273,58 +274,53 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             donationDonorField:     DONATION_DONOR_FIELD_INFO.fieldApiName,
         };
 
-        // aux vars
-        let diRecord = {};
-        let diRecordLabels = {};
+        // relevant Donation_Donor picklist values for validation
+        const DONATION_DONOR = {
+            isAccount1: 'Account1',
+            isContact1: 'Contact1'
+        };
 
-        // get field mapping wrapper to retrieve api definitions
-        for (let key in fieldDataWrapper) {
-            if (fieldDataWrapper.hasOwnProperty(key)) {
-
-                let dataWrapper = fieldDataWrapper[key];
-                diRecord[ dataWrapper.sourceFieldAPIName ] = dataWrapper.value;
-                diRecordLabels[ dataWrapper.sourceFieldAPIName ] = dataWrapper.label;
-
-            }
-        }
+        let isError = false, validationErrorLabelReplacements = {};
 
         // donation type validation ready to start
-        if (diRecord[DONATION_TYPE_FIELDS.donationDonorField] === DONATION_DONOR.isAccount1 &&
-                isEmpty( diRecord[DONATION_TYPE_FIELDS.account1ImportedField] ) &&
-                    isEmpty( diRecord[DONATION_TYPE_FIELDS.account1NameField] ) &&
-                        this.getDonorTypeValidationError(   DONATION_DONOR.isAccount1,
-                                                            diRecordLabels[DONATION_TYPE_FIELDS.donationDonorField],
-                                                            diRecordLabels[DONATION_TYPE_FIELDS.account1ImportedField],
-                                                            diRecordLabels[DONATION_TYPE_FIELDS.account1NameField])) {
+        if ( fieldWrapper[DONATION_FIELDS.donationDonorField].value === DONATION_DONOR.isAccount1 &&
+                isEmpty( fieldWrapper[DONATION_FIELDS.account1ImportedField].value ) &&
+                    isEmpty( fieldWrapper[DONATION_FIELDS.account1NameField].value )) {
 
-            return true;
+            isError = true;
+            validationErrorLabelReplacements = [
+                DONATION_DONOR.isAccount1,
+                fieldWrapper[DONATION_FIELDS.donationDonorField].label,
+                fieldWrapper[DONATION_FIELDS.account1ImportedField].label,
+                fieldWrapper[DONATION_FIELDS.account1NameField].label
+            ];
 
-        } else if (diRecord[DONATION_TYPE_FIELDS.donationDonorField] === DONATION_DONOR.isContact1 &&
-                    isEmpty( diRecord[DONATION_TYPE_FIELDS.contact1ImportedField] ) &&
-                        isEmpty( diRecord[DONATION_TYPE_FIELDS.contact1LastNameField] ) &&
-                            this.getDonorTypeValidationError(   DONATION_DONOR.isContact1,
-                                                                diRecordLabels[DONATION_TYPE_FIELDS.donationDonorField],
-                                                                diRecordLabels[DONATION_TYPE_FIELDS.contact1ImportedField],
-                                                                diRecordLabels[DONATION_TYPE_FIELDS.contact1LastNameField])) {
+        } else if (fieldWrapper[DONATION_FIELDS.donationDonorField].value === DONATION_DONOR.isContact1 &&
+                    isEmpty( fieldWrapper[DONATION_FIELDS.contact1ImportedField].value ) &&
+                        isEmpty( fieldWrapper[DONATION_FIELDS.contact1LastNameField].value )) {
 
-            return true;
+            isError = true;
+            validationErrorLabelReplacements = [
+                DONATION_DONOR.isContact1,
+                fieldWrapper[DONATION_FIELDS.donationDonorField].label,
+                fieldWrapper[DONATION_FIELDS.contact1ImportedField].label,
+                fieldWrapper[DONATION_FIELDS.contact1LastNameField].label
+            ];
 
         }
 
-        return false;
+        if (isError) {
 
-    }
+            // set message using label and replacement array
+            let message = format( geDonationTypeErrorLabel, validationErrorLabelReplacements );
+            // set page error
+            this.hasPageLevelError = true;
+            this.pageLevelErrorMessageList = [ {index: 0, errorMessage: message} ];
+            // TODO: mark fields with errors using this.erroredFields
 
-    getDonorTypeValidationError( donorValue, donorLabel, requiredLabel, requiredLabelAux ){
+        }
 
-        // set message using label
-        let message = format( geDonationTypeErrorLabel, [donorValue, donorLabel, requiredLabel, requiredLabelAux] );
-        // set page error
-        this.hasPageLevelError = true;
-        this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: 0, errorMessage: message}];
-        // TODO: mark fields with errors using this.erroredFields
-
-        return true;
+        return isError;
 
     }
 
