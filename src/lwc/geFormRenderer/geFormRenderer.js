@@ -5,7 +5,8 @@ import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
-import { showToast, handleError } from 'c/utilTemplateBuilder';
+import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
+import { getQueryParameters, isNotEmpty } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
@@ -19,6 +20,11 @@ const mode = {
 }
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
+    @api donorRecordId = '';
+    @api donorRecord;
+    fieldNames = [];
+    @track formTemplate;
+    @track fieldMappings;
     @api sections = [];
     @track ready = false;
     @track name = '';
@@ -34,6 +40,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api pageLevelErrorMessageList = [];
     @track _dataRow; // Row being updated when in update mode
 
+    @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames'})
+    wiredGetRecordMethod({ error, data }) {
+        if (data) {
+            this.donorRecord = data;
+            this.initializeForm(this.formTemplate, this.fieldMappings);
+        } else if (error) {
+            console.error(JSON.stringify(error));
+        }
+    }
+
     connectedCallback() {
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -42,16 +58,22 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return;
         }
 
+        // check if there is a record id in the url
+        this.donorRecordId = getQueryParameters().c__recordId;
+
         GeFormService.getFormTemplate().then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
-                const { formTemplate } = response;
-                this.initializeForm(formTemplate);
+                this.formTemplate  = response.formTemplate;
+                this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+
+                // get the target field names to be used by getRecord
+                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
             }
         });
     }
 
-    initializeForm(formTemplate) {
+    initializeForm(formTemplate, fieldMappings) {
         // read the template header info
         this.ready = true;
         this.name = formTemplate.name;
@@ -59,7 +81,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.version = formTemplate.layout.version;
         if (typeof formTemplate.layout !== 'undefined'
             && Array.isArray(formTemplate.layout.sections)) {
-            this.sections = formTemplate.layout.sections;
+
+            // add record data to the template fields
+            if (isNotEmpty(fieldMappings) && isNotEmpty(this.donorRecord)) {
+                let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections, fieldMappings, this.donorRecord);
+                this.sections = sectionsWithValues;
+            } else {
+                this.sections = formTemplate.layout.sections;
+            }
             this.dispatchEvent(new CustomEvent('sectionsretrieved'));
         }
     }
@@ -145,7 +174,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }));
         } else {
-            GeFormService.handleSave(sectionsList).then(opportunityId => {
+            GeFormService.handleSave(sectionsList, this.donorRecord).then(opportunityId => {
                 this.navigateToRecordPage(opportunityId);
             })
                 .catch(error => {

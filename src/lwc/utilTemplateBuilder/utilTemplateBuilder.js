@@ -9,8 +9,19 @@ import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportB
 import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
 import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
 import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
+import DI_CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DI_ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DI_DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import CONTACT_INFO from '@salesforce/schema/Contact';
+import ACCOUNT_INFO from '@salesforce/schema/Account';
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
+
+const OBJECT = 'object';
+const FUNCTION = 'function';
+const ASC = 'asc';
+const CONTACT1 = 'Contact1';
+const ACCOUNT1 = 'Account1';
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
@@ -223,7 +234,7 @@ const isObject = (obj) => {
 *
 * @return {boolean}: True if the provided obj is a primative.
 */
-const isPrimative = (value) => {
+const isPrimitive = (value) => {
     return (value !== Object(value));
 }
 
@@ -238,7 +249,7 @@ const isPrimative = (value) => {
 const deepClone = (src) => {
     let clone = null;
 
-    if (isPrimative(src)) {
+    if (isPrimitive(src)) {
         return src;
     }
 
@@ -351,6 +362,68 @@ const generateId = () => {
         '-' + random4() + random4() + random4();
 };
 
+/*******************************************************************************
+* @description returns a list of target field names for the fields in the template
+* in the format objectName.fieldName
+* @param formTemplate: the form template
+* @param fieldMappings: the field mappings dev names
+*/
+const getRecordFieldNames = (formTemplate, fieldMappings) => {
+    let fieldNames = [];
+
+    for (const section of formTemplate.layout.sections) {
+        for (const element of section.elements) {
+            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                if (objectName === CONTACT_INFO.objectApiName || objectName === ACCOUNT_INFO.objectApiName) {
+                    let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                    fieldNames.push(`${objectName}.${fieldName}`);
+                }              
+            }     
+        }
+    }
+    return fieldNames;
+};
+
+/*******************************************************************************
+* @description returns a copy of the form template that has record values on the element
+* stored in the recordValue attribute
+* in the format objectName.fieldName
+* @param formTemplate: the form template
+* @param fieldMappings: the field mappings dev names
+* @param record: the contact or account record
+*/
+const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
+    // check if we have a contact or account record
+    if (isEmpty(record)) {
+        return templateSections;
+    }
+
+    // create a copy of the sections
+    // so we can add the record value to the elements
+    let sections = deepClone(templateSections);
+
+    sections.forEach(section => {
+        const elements = section.elements;
+        elements.forEach(element => {
+            // set an empty default value
+            element.recordValue = '';
+
+            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                 if (objectName === record.apiName) {
+                     // field name from the mappings
+                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+
+                     // get the record value and store it in the element
+                     element.recordValue = record.fields[fieldName].value;
+                }
+             }
+        });                 
+    });
+    return sections;
+};
+
 export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
@@ -363,7 +436,16 @@ export {
     deepClone,
     isEmpty,
     isFunction,
-    isPrimative,
+    isPrimitive,
     findMissingRequiredFieldMappings,
-    findMissingRequiredBatchFields
+    findMissingRequiredBatchFields,
+    getRecordFieldNames,
+    setRecordValuesOnTemplate,
+    CONTACT_INFO,
+    ACCOUNT_INFO,
+    DI_CONTACT1_IMPORTED_INFO,
+    DI_ACCOUNT1_IMPORTED_INFO,
+    DI_DONATION_DONOR_INFO,
+    CONTACT1,
+    ACCOUNT1
 }
