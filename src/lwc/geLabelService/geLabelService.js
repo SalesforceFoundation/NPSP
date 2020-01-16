@@ -108,10 +108,6 @@ import geToastTemplateTabError from '@salesforce/label/c.geToastTemplateTabError
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
-import geErrorFLSHeader from '@salesforce/label/c.geErrorFLSHeader';
-import geErrorFLSBody from '@salesforce/label/c.geErrorFLSBody';
-import geErrorObjectCRUDHeader from '@salesforce/label/c.geErrorObjectCRUDHeader';
-import geErrorObjectCRUDBody from '@salesforce/label/c.geErrorObjectCRUDBody';
 
 class GeLabelService {
 
@@ -123,10 +119,6 @@ class GeLabelService {
     * utility method is provided.
     */
     CUSTOM_LABELS = Object.freeze({
-        geErrorFLSHeader,
-        geErrorFLSBody,
-        geErrorObjectCRUDHeader,
-        geErrorObjectCRUDBody,
         commonAssistiveError,
         commonAssistiveInfo,
         commonAssistiveSuccess,
