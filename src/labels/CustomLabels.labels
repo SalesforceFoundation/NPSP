@@ -4615,7 +4615,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>These required fields were automatically added to the Batch Header:</value>
     </labels>
     <labels>
-        <fullName>geBodyBatchScreen3</fullName>
+        <fullName>geBodyBatchDefaultValues</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
