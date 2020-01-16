@@ -4763,6 +4763,38 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You don't have permission to edit this field.</value>
     </labels>
     <labels>
+        <fullName>geErrorObjectCRUDHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header of full page error when insufficient access to all objects on the form</shortDescription>
+        <value>Check Your Object Permissions</value>
+    </labels>
+    <labels>
+        <fullName>getErrorObjectCRUDBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body of full page error when insufficient access to all objects on the form</shortDescription>
+        <value>You must have permission to edit all objects in the form. Check with your Salesforce admin about access for the following objects: {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorFLSHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header of full page error when insufficient field access to what's on the form</shortDescription>
+        <value>Check Your Field Permissions</value>
+    </labels>
+    <labels>
+        <fullName>geErrorFLSBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body of full page error when insufficient field access to what's on the form</shortDescription>
+        <value>You must have permission to edit all fields in the form. Check with your Salesforce admin about accessing the following fields: {0}</value>
+    </labels>
+    <labels>
         <fullName>geErrorPageLevelAdvancedMappingBody</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

@@ -15,7 +15,14 @@
                     </ul>
                 </c-util-page-level-message>
             </div>
-            <template for:each={sections} for:item='section'>
+            <template if:true={isPermissionError}>
+                <c-util-illustration title={permissionErrorTitle}
+                                     message={permissionErrorMessage}
+                                     size='large'
+                                     variant='lake-mountain'>
+                </c-util-illustration>
+            </template>
+            <template if:false={isPermissionError} for:each={sections} for:item='section'>
                 <c-ge-form-section key={section.id} section={section}></c-ge-form-section>
             </template>
         </lightning-layout-item>
@@ -30,4 +37,5 @@
         <lightning-button variant="brand" label={label.geSave} title={label.geSave} onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
     </div>
 </template>
+
 
