@@ -4431,6 +4431,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to access {0}.</value>
     </labels>
     <labels>
+        <fullName>geActionOpen</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Open action label for Gift Entry batch mode.</shortDescription>
+        <value>Open</value>
+    </labels>
+    <labels>
         <fullName>geAssistiveActiveSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4805,6 +4813,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields:</value>
     </labels>
     <labels>
+        <fullName>geErrorPageLevelMissingRequiredGroupFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>geErrorPageLevelMissingRequiredGroupFields</shortDescription>
+        <value>At least one of the following fields is required: {0}</value>
+    </labels>
+    <labels>
         <fullName>geErrorRequiredField</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5156,6 +5172,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Gift Entry Save</shortDescription>
         <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>labelGeUpdate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Entry Update</shortDescription>
+        <value>Update</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>

@@ -597,8 +597,8 @@ export default class geListView extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Handles increasing the pageSize for the list-view and loading
-    * more records.
+    * @description Method handles dispatches a custom event to the parent component
+    * to toggle a modal.
     */
     toggleModal(event) {
         event.stopPropagation();

@@ -4,11 +4,20 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
+import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
 import { getQueryParameters, isNotEmpty } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
+import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
+import NPSP_DATA_IMPORT_BATCH_FIELD
+    from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+
+const mode = {
+    CREATE: 'create',
+    UPDATE: 'update'
+}
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorRecordId = '';
@@ -24,12 +33,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track version = '';
     @api showSpinner = false;
     @api batchId;
-    @api submissions = [];
     @api hasPageLevelError = false;
     label = { messageLoading, geSave, geCancel };
     @track formTemplateId;
     erroredFields = [];
     @api pageLevelErrorMessageList = [];
+    @track _dataRow; // Row being updated when in update mode
 
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
@@ -121,24 +130,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleCancel() {
-        console.log('Form Cancel button clicked');
+        this.reset();
     }
 
     handleSave(event) {
-        event.target.disabled = true;
-        const enableSaveButton = function() {
-            this.disabled = false;
-        }.bind(event.target);
-
         this.clearErrors();
 
-        // TODO: Pass the actual Data Import record, and navigate to the new Opportunity
-        // const OpportunityId = GeFormService.createOpportunityFromDataImport(dataImport);
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         if(!this.isFormValid(sectionsList)){
             return;
         }
+
+        // disable the Save button
+        event.target.disabled = true;
+        const enableSaveButton = function() {
+            this.disabled = false;
+        }.bind(event.target);
 
         // show the spinner
         this.toggleSpinner();
@@ -146,16 +154,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // callback used to toggle spinner after save
         const toggleSpinner = () => this.toggleSpinner();
 
+        const reset = () => this.reset();
+
         if (this.batchId) {
-            const submission = {
-                sectionsList: sectionsList
-            };
-            this.submissions.push(submission);
+            const data = this.getData(sectionsList);
+
             this.dispatchEvent(new CustomEvent('submit', {
                 detail: {
+                    data: data,
                     success: function () {
                         enableSaveButton();
                         toggleSpinner();
+                        reset();
                     },
                     error: function() {
                         enableSaveButton();
@@ -287,4 +297,60 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         this.erroredFields = [];
     }
+
+    @api
+    load(dataRow) {
+        this._dataRow = dataRow;
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+
+        sectionsList.forEach(section => {
+            section.load(dataRow);
+        });
+    }
+
+    @api
+    reset() {
+        this._dataRow = undefined;
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+
+        sectionsList.forEach(section => {
+            section.reset();
+        });
+    }
+
+    get mode() {
+        return this._dataRow ? mode.UPDATE : mode.CREATE;
+    }
+
+    @api
+    get saveActionLabel() {
+        switch (this.mode) {
+            case mode.UPDATE:
+                return geUpdate;
+                break;
+            default:
+                return geSave;
+        }
+    }
+
+    @api
+    get isUpdateActionDisabled() {
+        return this._dataRow && this._dataRow[STATUS_FIELD.fieldApiName] === 'Imported';
+    }
+
+    getData(sections) {
+        let dataImportRecord =
+            GeFormService.getDataImportRecord(sections);
+
+        if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
+            dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        }
+
+        if (this._dataRow) {
+            dataImportRecord.Id = this._dataRow.Id;
+        }
+
+        return dataImportRecord;
+    }
+
 }
