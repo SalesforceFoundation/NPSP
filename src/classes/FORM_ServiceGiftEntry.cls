@@ -196,8 +196,6 @@ public with sharing class FORM_ServiceGiftEntry {
        return formTemplateNames;
     }
 
-
-
     /*******************************************************************************************************
     * @description Method for retrieving an existing template that you already have the Id for.
     * @param templateId - the Id of an existing form template record for retrieval.
