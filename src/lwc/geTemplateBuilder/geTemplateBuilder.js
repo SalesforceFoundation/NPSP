@@ -168,6 +168,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.validateBatchHeaderTab();
                 this.handleDefaultFormFields();
 
+                if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
+                    this.activeFormSectionId = this.formSections[0].id;
+                }
+
                 // Clear out form template record id if cloning after retrieving all relevant data
                 if (queryParameters.c__clone) {
                     this.formTemplateRecordId = null;
