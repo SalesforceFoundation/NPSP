@@ -33,11 +33,6 @@ const TEMPLATES_TABLE_ACTIONS = [
     { label: GeLabelService.CUSTOM_LABELS.commonDelete, name: DELETE }
 ];
 
-// TODO: Remove as the UX designs don't call for actions on the batch list view.
-// only used for dev!
-const BATCHES_TABLE_ACTIONS = [
-    { label: 'Edit', name: 'edit' }
-];
 const BATCHES_LIST_VIEW_NAME = 'Batches';
 const BATCHES_LIST_VIEW_DEFAULT_LIMIT = 10;
 const BATCHES_LIST_VIEW_ICON = 'custom:custom17';
@@ -95,10 +90,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
 
     get batchesListViewDefaultLimit() {
         return BATCHES_LIST_VIEW_DEFAULT_LIMIT;
-    }
-
-    get batchesTableActions() {
-        return BATCHES_TABLE_ACTIONS;
     }
 
     get geListViewComponent() {

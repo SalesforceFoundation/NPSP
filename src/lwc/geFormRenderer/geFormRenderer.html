@@ -27,7 +27,14 @@
 
     <div class="slds-docked-form-footer ge-form-footer">
         <lightning-button label={label.geCancel} title={label.geCancel} onclick={handleCancel} class="slds-m-left_x-small"></lightning-button>
-        <lightning-button variant="brand" label={label.geSave} title={label.geSave} onclick={handleSave} class="slds-m-left_x-small"></lightning-button>
+        <lightning-button
+                variant="brand"
+                label={saveActionLabel}
+                title={saveActionLabel}
+                onclick={handleSave}
+                class="slds-m-left_x-small"
+                disabled={isUpdateActionDisabled}>
+        </lightning-button>
     </div>
 </template>
 
