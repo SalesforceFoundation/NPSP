@@ -47,8 +47,23 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
+     * @description This method was inserted to work around an anomaly with Salesforce deploy.
+     *              Deploy consistently failed after renaming this method to getInstallments.
+     *              May be able to remove this method after successful deploy of this class
+     *              with the new method name.
+     * @param recordId
+     * @param displayNum
+     * @return List<Installment>
+     */
+    @AuraEnabled
+    public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
+        return getInstallments(recordId, displayNum);
+    }
+
+    /**
      * @description Retrieves the current schedule of future donations to render in the UI
      * @param recordId
+     * @param displayNum
      * @return List<Schedule>
      */
     @AuraEnabled
