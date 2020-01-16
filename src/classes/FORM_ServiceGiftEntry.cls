@@ -36,13 +36,6 @@
 */
 public with sharing class FORM_ServiceGiftEntry {
 
-     private enum AccessLevel {
-        VALIDATE_READ, VALIDATE_CREATE, VALIDATE_UPDATE
-    }
-
-    private final static String OBJECT_CRUD_ERROR = 'CRUD';
-    private final static String FLS_ERROR = 'FLS';
-
     /*******************************************************************************************************
     * @description Method retrieves records based on a query string.
     */
@@ -258,105 +251,10 @@ public with sharing class FORM_ServiceGiftEntry {
                                 WHERE Name =: giftEntrySettings.Default_Single_Gift_Entry_Template__c];
         
          if (!templateObjList.isEmpty()) {
-            Set<String> crudErrors = new Set<String>();
-            Map<String, Set<String>> flsErrors = new Map<String, Set<String>>();
             template = deserializeFormTemplateFromObj(templateObjList[0]);
-
-            Map<String, Set<String>> permissionErrorsBySObject = checkPermissions(template, new Set<AccessLevel>{AccessLevel.VALIDATE_READ, AccessLevel.VALIDATE_CREATE, AccessLevel.VALIDATE_UPDATE});
-
-            // The map will contain only the object key if there is a CRUD error
-            for (String objDevName : permissionErrorsBySObject.keySet()) {
-                if(permissionErrorsBySObject.get(objDevName).contains(OBJECT_CRUD_ERROR)) {
-                    crudErrors.add(objDevName);
-                }
-            }
-            if(!crudErrors.isEmpty()) {
-                template.permissionErrorType = OBJECT_CRUD_ERROR;
-                template.permissionErrors = String.join(new List<String>(crudErrors), ', ');
-            } else if(crudErrors.isEmpty() && !permissionErrorsBySObject.values().isEmpty()){
-                template.permissionErrorType = FLS_ERROR;
-                template.permissionErrors = formatFLSError(permissionErrorsBySObject);
-            }
         }
+
         return template;
-    }
-
-    private static Map<String, Set<String>> checkPermissions(FORM_Template template,
-            Set<AccessLevel> accessLevels){
-
-        Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
-        Map<String, Set<String>> fieldMappingsByTargetObject = new Map<String, Set<String>>();
-
-        BDI_FieldMappingSet fieldMappings = BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet; 
-        for (FORM_Section section : template.layout.sections) {
-            for (FORM_Element element : section.elements) {
-                for (String fieldDevName : element.dataImportFieldMappingDevNames) {
-                    if(fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
-                        BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
-
-                        String targetObjDevName = fieldMapping.Target_Object_API_Name;
-                        String targetFieldDevName = fieldMapping.Target_Field_API_Name;
-
-                        // Check SObject level crud
-                        if(!isValid(targetObjDevName, accessLevels)) {
-                            permissionErrorsBySObject.put(targetObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
-                        }
-                        
-                        // Check Target SObject FLS
-                        if(!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
-                            if(permissionErrorsBySObject.containsKey(targetObjDevName)) {
-                                permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
-                            } else {
-                                permissionErrorsBySObject.put(targetObjDevName, new Set<String>{targetFieldDevName});
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return permissionErrorsBySObject;
-    }
-
-    private static String formatFLSError(Map<String, Set<String>> permissionErrorsBySObject) {
-        String message;
-        if(!permissionErrorsBySObject.isEmpty()) {
-            message = '';
-            List<String> crudErrors = new List<String>();
-            for (String objDevName : permissionErrorsBySObject.keySet()) {
-                List<String> errors = new List<String>(permissionErrorsBySObject.get(objDevName));
-                crudErrors.add(objDevName + ': (' + String.join(errors, ', ') + ')');
-            }
-            message += String.join(crudErrors, ', ');
-        }
-        return message;
-    }
-
-    private static Boolean isValid(String objDevName, Set<AccessLevel> accessLevels) {
-        if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
-            && !UTIL_Permissions.canCreate(objDevName, false))
-            || (accessLevels.contains(AccessLevel.VALIDATE_READ)
-            && !UTIL_Permissions.canRead(objDevName, false))
-            || (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-            && !UTIL_Permissions.canUpdate(objDevName, false))
-        ) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private static Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
-        if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
-            && !UTIL_Permissions.canCreate(objDevName, fieldDevName, false))
-            || (accessLevels.contains(AccessLevel.VALIDATE_READ)
-            && !UTIL_Permissions.canRead(objDevName, fieldDevName, false))
-            || (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-            && !UTIL_Permissions.canUpdate(objDevName, fieldDevName, false))
-        ) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     /*******************************************************************************************************
