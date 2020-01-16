@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>%%%NAMESPACE%%%RD2_EnablementDelegate_CTRL</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>%%%NAMESPACE%%%RD2_VisualizeScheduleController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>%%%NAMESPACE%%%UTIL_BatchJobProgress_CTRL</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <layoutAssignments>
         <layout>npe03__Recurring_Donation__c-Enhanced Recurring Donations Layout</layout>
     </layoutAssignments>
