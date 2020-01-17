@@ -266,11 +266,13 @@ public without sharing class RD2_ScheduleService {
     */
     public List<Installment> getVisualizedInstallments(Date startDate, Date endDate, List<RecurringDonationSchedule__c> schedules) {
         List<Installment> installments = new List<Installment>();
-        if (schedules == null) {
+        startDate = startDate == null ? currentDate : startDate;
+        
+        if (schedules == null || startDate > endDate) {
             return installments;
         }
 
-        Date referenceDate = startDate == null ? currentDate : startDate;
+        Date referenceDate = startDate;
         while (referenceDate <= endDate) {
             Installment inst = getNextInstallment(referenceDate, schedules);
 
