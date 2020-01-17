@@ -14,27 +14,26 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 # Setup a contact with parameters specified
 Setup Test Data
-    &{data} =  Setup Data
-    ...           contact1=&{contact1_fields}
-    Set suite variable    ${contact1_Id}   &{data}[contact1_Id]
+    &{data}=  Setupdata   contact   ${contact1_fields}
+    Set suite variable   &{data}
 
 *** Variables ***
 ${Date}  10
 ${Amount}  100
 ${Stage_Type}  Closed Won
-&{contact1_fields}       Email=test@example.com
+&{contact1_fields}  Email=test@example.com
 
 
 *** Test Cases ***
 
 Add Existing Contact to Existing Household
-    [Documentation]                      Create Opportunity from Contact with closed/won status.
+    [Documentation]                      Create Opportunity from Contact with closed-won status.
 
     [tags]                               W-038461                 feature:Donations
 
     Go To Page                           Details
     ...                                  Contact
-    ...                                  object_id=${contact1_Id}
+    ...                                  object_id=${data}[contact][Id]
 
     Click Object Button                  New Donation
     Wait For Modal                       New                       Donation

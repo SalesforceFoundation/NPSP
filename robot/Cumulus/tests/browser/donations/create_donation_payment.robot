@@ -14,17 +14,14 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 # Sets up all the required data for the test based on the keyword requests
 Setup Test Data
-    &{data} =  Setup Data
-    ...           contact1=&{contact1_fields}
-
+    &{data}=  Setupdata   contact   ${contact1_fields}
+    Set suite variable   &{data}
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Set suite variable    ${contact1_Id}   &{data}[contact1_Id]
-    Set suite variable    ${contact1_LastName}   &{data}[contact1_LastName]
     Set suite variable    ${opp_date}
-
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
+
 
 
 *** Test Cases ***
@@ -32,6 +29,7 @@ Setup Test Data
 Create Donation and Opportunity and Create Payment Manually
     [Documentation]  Navigate to Opportunities page and open an Opportunity>In the right sections, go to Payments click on drop down Arrow>New
     ...              Create a new payment for the Opportunity.
+
     [tags]                               W-038461                 feature:Donations
 
     Go To Page                                      Listing
@@ -41,7 +39,7 @@ Create Donation and Opportunity and Create Payment Manually
     Select Record Type                              Donation
 
     Create Opportunities                            Sravani $100 donation
-    ...                                             ${contact1_LastName} Household
+    ...                                             ${data}[contact][LastName] Household
     ...                                             Closed Won
 
     Save Current Record ID For Deletion             Opportunity
@@ -65,7 +63,7 @@ Create Donation and Opportunity and Create Payment Manually
 
     Go To Page                                      Details
     ...                                             Contact
-    ...                                             object_id=${contact1_Id}
+    ...                                             object_id=${data}[contact][Id]
 
     #Perform Validations
 

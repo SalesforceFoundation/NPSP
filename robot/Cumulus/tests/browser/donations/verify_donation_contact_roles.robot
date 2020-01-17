@@ -13,22 +13,27 @@ Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 
-Setup Test Data
+
 # Set up all the required data for the test based on the keyword requests
-    &{data} =  Setup Data
-               ...           contact1=&{contact1_fields}
-               ...           contact2 linkedto contact1=&{contact2_fields}
-               ...           opportunity for contact1=&{opportunity1_fields}
-               ...           opportunity for contact2=&{opportunity2_fields}
+Setup Test Data
+    # Create contact1
+    &{data}=    Setupdata   contact1   ${contact1_fields}
+
+    # Create contact2 linked to contact1's household
+    &{contact2_fields} =	Create Dictionary  Email=test2@example.com  AccountId=${data}[contact1][AccountId]
+    &{data}=    Setupdata   contact2   ${contact2_fields}
+
+    # Setup an opportunity for contact1 and contact2
+    &{data}=    Setupdata   contact1   None     ${opportunity1_fields}
+    &{data}=    Setupdata   contact2   None     ${opportunity2_fields}
 
     Set suite variable    &{data}
 
 
 *** Variables ***
 &{contact1_fields}         Email=test@example.com
-&{contact2_fields}         Email=test2@example.com
 &{opportunity1_fields}     Type=Donation   Name=Delete test $100 Donation   Amount=100  StageName=Closed Won
-&{opportunity2_fields}     Type=Donation   Name=Rollup test $50 donation    Amount=50   StageName=Closed Won    Primary_Contact=contact2
+&{opportunity2_fields}     Type=Donation   Name=Rollup test $50 donation    Amount=50   StageName=Closed Won
 
 *** Test Cases ***
 
@@ -38,17 +43,17 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
 
     Go To Page                             Details
     ...                                    Opportunity
-    ...                                    object_id=&{data}[contact1opportunityid]
+    ...                                    object_id=${data}[contact1_opportunity][Id]
 
 
     Select Tab                             Related
 
-    Validate Values Under Relatedlist For  Contact Roles           &{data}[contact1_FirstName] &{data}[contact1_LastName]=Donor
-    ...                                                            &{data}[contact2_FirstName] &{data}[contact2_LastName]=Household Member
+    Validate Values Under Relatedlist For  Contact Roles           ${data}[contact1][FirstName] ${data}[contact1][LastName]=Donor
+    ...                                                            ${data}[contact2][FirstName] ${data}[contact2][LastName]=Household Member
 
     Go To Page                             Details
     ...                                    Contact
-    ...                                    object_id=&{data}[contact1_AccountId]
+    ...                                    object_id=${data}[contact1][AccountId]
 
     Select Tab                             Details
 
@@ -57,12 +62,12 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
     Validate Field Value Under Section     Membership Information    Total Gifts                 $150.00
     Validate Field Value Under Section     Membership Information    Total Number of Gifts       2
 
-   # Run the batch process to obtain all the soft credits
+    # Run the batch process to obtain all the soft credits
     Run Donations Batch Process
 
     Go To Page                             Details
     ...                                    Contact
-    ...                                    object_id=&{data}[contact1_Id]
+    ...                                    object_id=${data}[contact1][Id]
 
     Validate Field Value Under Section     Soft Credit Total          Total Gifts                  $100.00
     Validate Field Value Under Section     Soft Credit Total          Total Number of Gifts        1

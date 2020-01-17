@@ -14,20 +14,13 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 # Sets up all the required data for the test based on the keyword requests
 Setup Test Data
-    &{Data} =  Setup Data
-               ...           contact1=&{contact1_fields}
-               ...           opportunity for contact1=&{opportunity_fields}
-
-    Set suite variable    &{Data}
+    &{data}=  Setupdata   contact   contact_data=&{contact1_fields}     opportunity_data=&{opportunity_fields}
+    Set suite variable    &{data}
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
 &{opportunity_fields}    Type=Donation   Name=Delete test $100 Donation   Amount=100  StageName=Closed Won
 
-
-Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -39,7 +32,7 @@ Create Donation from a Contact and Delete Opportunity
 
     Go To Page                           Detail
     ...                                  Opportunity
-    ...                                  object_id=&{data}[contact1opportunityid]
+    ...                                  object_id=${data}[contact_opportunity][Id]
 
     ${donation_name}                     Get Main Header
     Go To Page                           Listing
@@ -52,7 +45,7 @@ Create Donation from a Contact and Delete Opportunity
 
     Go To Page                           Details
     ...                                  Contact
-    ...                                  object_id=&{data}[contact1_AccountId]
+    ...                                  object_id=${data}[contact][Id]
 
     Select Tab                           Details
 
