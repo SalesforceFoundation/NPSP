@@ -69,6 +69,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 // get the target field names to be used by getRecord
                 this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
+                this.initializeForm(this.formTemplate);
             }
         });
     }
