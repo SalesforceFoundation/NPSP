@@ -6,7 +6,7 @@ import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
-import { getQueryParameters, isNotEmpty } from 'c/utilCommon';
+import {getQueryParameters, isEmpty, isNotEmpty} from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
@@ -69,7 +69,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 // get the target field names to be used by getRecord
                 this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
-                this.initializeForm(this.formTemplate);
+                if(isEmpty(this.donorRecordId)) {
+                    // if we don't have a donor record, it's ok to initialize the form now
+                    // otherwise the form will be initialized after wiredGetRecordMethod completes
+                    this.initializeForm(this.formTemplate);
+                }
             }
         });
     }
