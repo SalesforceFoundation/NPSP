@@ -1,6 +1,10 @@
 import logging
 import warnings
 import time
+import random
+import string
+from datetime import datetime
+
 
 from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
@@ -1220,6 +1224,52 @@ class NPSP(SalesforceRobotLibraryBase):
            and waits for the modal to open"""  
         self.salesforce.click_object_button("Edit")
         self.salesforce.wait_until_modal_is_open()
+
+    def randomString(self,stringLength=10):
+        """Generate a random string of fixed length """
+        letters = string.ascii_lowercase
+        return ''.join(random.choice(letters) for i in range(stringLength))
+
+    def setupdata(self, name, contact_data=None, opportunity_data=None):
+        """ Creates a contact if contact_data is passed
+            Creates an opportunity for the contact if opportunit_data is provided
+            Creates a contact and sets an opportunity simultaneously if both the
+            contact_data and opportunity_data is specified
+         """
+
+        # get the data variable, or an empty dictionary if not set
+        data = self.builtin.get_variable_value("${data}", {})
+
+        if contact_data is not None:
+
+            # create the contact
+            firstname = self.randomString(10);
+            lastname = self.randomString(10);
+
+            contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
+            contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
+            contact = self.salesforce.salesforce_get("Contact",contact_id)
+
+            # save the contact
+            data[name] = contact
+
+        if opportunity_data is not None:
+            # create opportunity
+            oppType = "Donation"
+            rt_id = self.salesforce.get_record_type_id("Opportunity","Donation")
+            date = datetime.now().strftime('%Y-%m-%d')
+            ns =  self.get_npsp_namespace_prefix()
+            key = ns+"Primary_Contact__c"
+            opportunity_data.update( {'AccountId' : data[name]["AccountId"],'CloseDate' : date, 'RecordTypeId': rt_id, 'npe01__Do_Not_Automatically_Create_Payment__c': 'true' , key : data[name]["Id"]} )
+
+            opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
+            opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
+
+            # save the opportunity
+            data[name+'_opportunity'] = opportunity
+            self.builtin.set_suite_variable('${data}', data)
+
+        return data
 
     def delete_record(self,value):
         """Select the row to be deleted on the listing page, click delete
