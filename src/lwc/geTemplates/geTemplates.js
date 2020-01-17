@@ -3,7 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { showToast, dispatch, handleError } from 'c/utilTemplateBuilder';
+import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
