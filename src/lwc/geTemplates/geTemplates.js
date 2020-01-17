@@ -1,11 +1,11 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import deleteFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.deleteFormTemplates';
 import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
+import { deleteRecord } from 'lightning/uiRecordApi';
 
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
@@ -207,25 +207,34 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 break;
             case 'delete':
                 this.geListViewComponent.setProperty(IS_LOADING, true);
-
-                deleteFormTemplates({ ids: [row.Id] })
-                    .then(formTemplateNames => {
-                        this.geListViewComponent.setProperty(IS_LOADING, false);
-                        this.geListViewComponent.refresh();
-
-                        const toastMessage = GeLabelService.format(
-                            this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
-                            formTemplateNames);
-
-                        showToast(toastMessage, '', SUCCESS);
-                    })
-                    .catch(error => {
-                        handleError(error);
-                    });
+                this.handleTemplateDeletion(row.Id);
                 break;
             default:
         }
     }
+
+    /*******************************************************************************************************
+     * @description Handles Form Template Deletion. Currently prevents deletion if Form Templates used by a
+     * Data Import Batch
+     * @param {Id} recordId : Record id of the Form_Template__c to be deleted
+     */
+    handleTemplateDeletion (recordId){
+        deleteRecord(recordId).then(formTemplateNames => {
+            this.geListViewComponent.setProperty(IS_LOADING, false);
+            this.geListViewComponent.refresh();
+            const toastMessage = GeLabelService.format(
+                this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
+                formTemplateNames);
+
+            showToast(toastMessage, '', SUCCESS);
+        })
+            .catch(error => {
+                handleError(error);
+                this.geListViewComponent.setProperty(IS_LOADING, false);
+                this.geListViewComponent.refresh();
+            });
+    }
+
 
     /*******************************************************************************
     * @description Method handles actions for the Batches list view table.
