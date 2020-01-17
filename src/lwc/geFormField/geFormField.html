@@ -6,7 +6,7 @@
             formatter={formatter}
             required={element.required}
             onchange={handleValueChange} 
-            label={element.customLabel}>
+            label={fieldLabel}>
         </lightning-input>
     </template>
     <template if:true={isLookup}>
@@ -18,19 +18,19 @@
                                 required={element.required}
                                 id={element.id}
                                 object-describe-info={objectDescribeInfo}
-                                label={element.customLabel}>
+                                label={fieldLabel}>
         </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
         <label class="slds-form-element__label">
             <abbr class="slds-required" title="required" if:true={element.required}>*</abbr>
-            {element.customLabel}
+            {fieldLabel}
         </label>
         <lightning-input-rich-text data-id='inputComponent'
             formats={richTextFormats}
             value={value}
             onblur={handleValueChangeSync}
-            label={element.customLabel}
+            label={fieldLabel}
             valid={richTextValid}
             message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
         >
@@ -43,7 +43,7 @@
             field-name={fieldApiName}
             object-name={objectApiName}
             onchange={handleValueChange}
-            label={element.customLabel}
+            label={fieldLabel}
             object-describe-info={objectDescribeInfo}>
         </c-ge-form-field-picklist>
     </template>
@@ -52,7 +52,7 @@
             value={value}
             required={element.required}
             onchange={handleValueChange}
-            label={element.customLabel}>
+            label={fieldLabel}>
         </lightning-textarea>
     </template>
 </template>
