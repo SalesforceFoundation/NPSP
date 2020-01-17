@@ -27,11 +27,11 @@ Find Matching Gifts
     Click Link    link=Find Matched Gifts
     Choose Frame    vfFrameId
     Page Should Contain Link    &{Contact1}[FirstName] $50 donation    limit=1
-    Select Lightning Checkbox     &{Contact1}[FirstName] $50 donation
+    Set Checkbutton To     &{Contact1}[FirstName] $50 donation    checked
     Click Link    link=Find More Gifts
     Populate Modal Field    Primary Contact    &{Contact2}[FirstName] &{Contact2}[LastName]
     Click Button With Value    Search
-    Select Lightning Checkbox     &{Contact2}[FirstName] $25 donation
+    Set Checkbutton To     &{Contact2}[FirstName] $25 donation    checked
     Click Button With Value    Save 
     Reload Page
     Select Tab    Related  
@@ -51,11 +51,11 @@ Find Matching Gifts
     Go To Record Home  &{opportunity1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Matching Gift Information
     Scroll Element Into View    ${locator}
-    Verify Field Value    Matching Gift    &{opportunity3}[Name]    Y
+    Confirm Field Value    Matching Gift    contains    &{opportunity3}[Name]    
     Go To Record Home  &{opportunity2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Matching Gift Information
     Scroll Element Into View    ${locator}
-    Verify Field Value    Matching Gift    &{opportunity3}[Name]    Y
+    Confirm Field Value    Matching Gift    contains    &{opportunity3}[Name]    
     Run Donations Batch Process
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
