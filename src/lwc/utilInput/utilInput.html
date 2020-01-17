@@ -10,13 +10,15 @@
         <template if:true={isLightningRichText}>
             <lightning-input-rich-text aria-label="default value"
                                        label={uiLabel}
+                                       formats={richTextFormats}
                                        required={isRequired}
                                        class="slds-m-around_none"
                                        data-name="defaultValue"
                                        onclick={stopPropagation}
                                        value={fieldValue}
                                        variant={variant}
-                                       tab-index={tabIndex}>
+                                       tab-index={tabIndex}
+                                       onblur={handleValueChange}>
             </lightning-input-rich-text>
         </template>
 

@@ -16,11 +16,15 @@ const DATETIME = 'datetime-local';
 const YES = 'Yes';
 const TEXT = 'text';
 const TRUE = 'true';
+const RICH_TEXT_FORMATS = [
+    'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
+];
 
 export default class utilInput extends LightningElement {
 
     // expose custom labels to template
     CUSTOM_LABELS = { geBodyBatchFieldBundleInfo };
+    richTextFormats = RICH_TEXT_FORMATS;
 
     @api fieldApiName;
     @api label;
@@ -162,17 +166,15 @@ export default class utilInput extends LightningElement {
     * field's defaultValue property has changed.
     *
     * @param {object} event: Event object from various lightning-input type's
-    * onblur event handler 
+    * change event handler.
     */
     handleValueChange(event) {
-        if (event) {
-            if (this.type && this.lightningInputType === CHECKBOX) {
-                this.value = event.target.checked;
-            } else if (this.type && this.lightningInputType === SEARCH) {
-                this.value = event.detail.value;
-            } else if (event.target && event.target.value) {
-                this.value = event.target.value;
-            }
+        if (this.type && this.lightningInputType === CHECKBOX) {
+            this.value = event.target.checked;
+        } else if (this.type && this.lightningInputType === SEARCH) {
+            this.value = event.detail.value;
+        } else if (event.target && event.target.value) {
+            this.value = event.target.value;
         }
 
         let detail = {
