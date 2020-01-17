@@ -117,6 +117,7 @@
         <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
+        <members>BGE_FormTemplate_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -686,6 +687,7 @@
         <members>TDTM_DataImportBatch</members>
         <members>TDTM_EngagementPlan</members>
         <members>TDTM_EngagementPlanTask</members>
+        <members>TDTM_FormTemplate</members>
         <members>TDTM_GeneralAccountingUnit</members>
         <members>TDTM_GrantDeadline</members>
         <members>TDTM_HouseholdObject</members>
@@ -1971,6 +1973,7 @@
         <members>geToastSaveFailed</members>
         <members>geToastSelectActiveSection</members>
         <members>geToastTemplateCreateSuccess</members>
+        <members>geToastTemplateDeleteError</members>
         <members>geToastTemplateDeleteSuccess</members>
         <members>geToastTemplateTabError</members>
         <members>geToastTemplateTabsError</members>

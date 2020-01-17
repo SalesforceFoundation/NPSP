@@ -175,18 +175,26 @@ public with sharing class FORM_ServiceGiftEntry {
     *
     * @param id: Form_Template__c record id
     *
-    * @return list: List of deleted Form_Template__c names
+    * @return FormTemplateWrapper: Wrapper object of the list of deleted template names and the result
+    * of the DML action
     */
     @AuraEnabled
-    public static String[] deleteFormTemplates(String[] ids) {
-        Form_Template__c[] templates = [SELECT Id, Name FROM Form_Template__c WHERE Id IN :ids];
-        delete templates;
-
+    public static String [] deleteFormTemplates(String[] ids) {
         String[] formTemplateNames = new String[] {};
-        for (Form_Template__c template : templates) {
-            formTemplateNames.add(template.Name);
+        Form_Template__c[] templates = [
+                SELECT Id, Name
+                FROM Form_Template__c
+                WHERE Id IN :ids
+        ];
+        try {
+            delete templates;
+            for (Form_Template__c template : templates) {
+                formTemplateNames.add(template.Name);
+            }
+        } catch (DmlException ex) {
+            throw new AuraHandledException(ex.getDmlMessage(0));
         }
-        return formTemplateNames;
+       return formTemplateNames;
     }
 
     /*******************************************************************************************************
