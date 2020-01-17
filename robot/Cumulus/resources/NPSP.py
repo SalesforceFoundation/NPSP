@@ -1183,7 +1183,7 @@ class NPSP(SalesforceRobotLibraryBase):
     def change_view_to(self,view_name): 
         """Selects a different view for the object records in listing page""" 
         locator=npsp_lex_locators['object_dd']
-        view=npsp_lex_locators['link'].format(view_name)
+        view=npsp_lex_locators['link'].format(view_name,view_name)
         self.selenium.wait_until_page_contains("List Views")
         self.selenium.get_webelement(locator).click()  
         self.selenium.click_element(view)
@@ -1339,9 +1339,14 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.click_button(btn)
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
-        locator=npsp_lex_locators['delete_icon'].format(field,value)
+        locator=npsp_lex_locators['delete_icon_record'].format(field,value)
         self.selenium.get_webelement(locator).click()        
         
     def wait_for_datepicker(self):
         locator="//div[contains()][./label[text()='Donation Date']/following-sibling::div/input]"   
         self.selenium.wait_until_page_contains_element(locator) 
+        
+    def click_more_actions_button(self):
+        """"""   
+        locator=npsp_lex_locators['link'].format("more actions","more actions")
+        self.selenium.click_element(locator)    

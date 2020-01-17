@@ -48,7 +48,8 @@ Create Relationships for contacts
     ...                                 &{contact2}[FirstName] &{contact2}[LastName]
     ...                                 Parent
 
-    Click Link                          link=Show more actions
+    Click More Actions Button
+    # Click Link                          link=Show more actions
     Click Link                          link=Relationships Viewer
     Wait Until Loading Is Complete
     Capture Page Screenshot
