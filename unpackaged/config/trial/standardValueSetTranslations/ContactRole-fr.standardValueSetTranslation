@@ -2,42 +2,42 @@
 <StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <valueTranslation>
         <masterLabel>Decision Maker</masterLabel>
-        <translation><!-- Decision Maker --></translation>
+        <translation>Décideur</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Donor</masterLabel>
-        <translation><!-- Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Honoree</masterLabel>
-        <translation><!-- Honoree --></translation>
+        <translation>Donateur</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Household Member</masterLabel>
-        <translation><!-- Household Member --></translation>
+        <translation>Membre du foyer</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Influencer</masterLabel>
-        <translation><!-- Influencer --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Matched Donor</masterLabel>
-        <translation><!-- Matched Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Notification Recipient</masterLabel>
-        <translation><!-- Notification Recipient --></translation>
+        <translation>Influenceur</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Other</masterLabel>
-        <translation><!-- Other --></translation>
+        <translation>Autre</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Matched Donor</masterLabel>
+        <translation>Donateur jumelé</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Soft Credit</masterLabel>
-        <translation><!-- Soft Credit --></translation>
+        <translation>Crédit indirect</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Solicitor</masterLabel>
-        <translation><!-- Solicitor --></translation>
+        <translation>Solliciteur</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Honoree</masterLabel>
+        <translation>Personne honorée</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Notification Recipient</masterLabel>
+        <translation>Destinataire de notification</translation>
     </valueTranslation>
 </StandardValueSetTranslation>

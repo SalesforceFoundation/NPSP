@@ -2,42 +2,42 @@
 <StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <valueTranslation>
         <masterLabel>Decision Maker</masterLabel>
-        <translation><!-- Decision Maker --></translation>
+        <translation>意志決定者</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Donor</masterLabel>
-        <translation><!-- Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Honoree</masterLabel>
-        <translation><!-- Honoree --></translation>
+        <translation>支援者</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Household Member</masterLabel>
-        <translation><!-- Household Member --></translation>
+        <translation>世帯メンバー</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Influencer</masterLabel>
-        <translation><!-- Influencer --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Matched Donor</masterLabel>
-        <translation><!-- Matched Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Notification Recipient</masterLabel>
-        <translation><!-- Notification Recipient --></translation>
+        <translation>インフルエンサー</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Other</masterLabel>
-        <translation><!-- Other --></translation>
+        <translation>その他</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Matched Donor</masterLabel>
+        <translation>一致する支援者</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Soft Credit</masterLabel>
-        <translation><!-- Soft Credit --></translation>
+        <translation>ソフトクレジット</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Solicitor</masterLabel>
-        <translation><!-- Solicitor --></translation>
+        <translation>支援依頼者</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Honoree</masterLabel>
+        <translation>受賞者</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Notification Recipient</masterLabel>
+        <translation>通知受信者</translation>
     </valueTranslation>
 </StandardValueSetTranslation>

@@ -2,42 +2,42 @@
 <StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <valueTranslation>
         <masterLabel>Decision Maker</masterLabel>
-        <translation><!-- Decision Maker --></translation>
+        <translation>Responsable de tomar decisiones</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Donor</masterLabel>
-        <translation><!-- Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Honoree</masterLabel>
-        <translation><!-- Honoree --></translation>
+        <translation>Donante</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Household Member</masterLabel>
-        <translation><!-- Household Member --></translation>
+        <translation>Miembro de hogar</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Influencer</masterLabel>
-        <translation><!-- Influencer --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Matched Donor</masterLabel>
-        <translation><!-- Matched Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Notification Recipient</masterLabel>
-        <translation><!-- Notification Recipient --></translation>
+        <translation>Influyente</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Other</masterLabel>
-        <translation><!-- Other --></translation>
+        <translation>Otro</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Matched Donor</masterLabel>
+        <translation>Donante coincidente</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Soft Credit</masterLabel>
-        <translation><!-- Soft Credit --></translation>
+        <translation>Crédito blando</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Solicitor</masterLabel>
-        <translation><!-- Solicitor --></translation>
+        <translation>Abogado</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Honoree</masterLabel>
+        <translation>Galardonado</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Notification Recipient</masterLabel>
+        <translation>Destinatario de notificación</translation>
     </valueTranslation>
 </StandardValueSetTranslation>

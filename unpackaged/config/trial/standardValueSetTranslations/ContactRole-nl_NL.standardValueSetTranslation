@@ -2,42 +2,42 @@
 <StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <valueTranslation>
         <masterLabel>Decision Maker</masterLabel>
-        <translation><!-- Decision Maker --></translation>
+        <translation>Beleidsvormer</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Donor</masterLabel>
-        <translation><!-- Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Honoree</masterLabel>
-        <translation><!-- Honoree --></translation>
+        <translation>Donor</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Household Member</masterLabel>
-        <translation><!-- Household Member --></translation>
+        <translation>Lid van huishouden</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Influencer</masterLabel>
-        <translation><!-- Influencer --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Matched Donor</masterLabel>
-        <translation><!-- Matched Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Notification Recipient</masterLabel>
-        <translation><!-- Notification Recipient --></translation>
+        <translation>Beïnvloeder</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Other</masterLabel>
-        <translation><!-- Other --></translation>
+        <translation>Overige</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Matched Donor</masterLabel>
+        <translation>Gekoppelde donor</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Soft Credit</masterLabel>
-        <translation><!-- Soft Credit --></translation>
+        <translation>"Soft credit"</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Solicitor</masterLabel>
-        <translation><!-- Solicitor --></translation>
+        <translation>Advocaat/notaris</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Honoree</masterLabel>
+        <translation>Bekroonde persoon</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Notification Recipient</masterLabel>
+        <translation>Ontvanger van kennisgeving</translation>
     </valueTranslation>
 </StandardValueSetTranslation>

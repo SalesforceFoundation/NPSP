@@ -2,42 +2,42 @@
 <StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <valueTranslation>
         <masterLabel>Decision Maker</masterLabel>
-        <translation><!-- Decision Maker --></translation>
+        <translation>Entscheidungsträger</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Donor</masterLabel>
-        <translation><!-- Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Honoree</masterLabel>
-        <translation><!-- Honoree --></translation>
+        <translation>Spender</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Household Member</masterLabel>
-        <translation><!-- Household Member --></translation>
+        <translation>Haushaltsmitglied</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Influencer</masterLabel>
-        <translation><!-- Influencer --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Matched Donor</masterLabel>
-        <translation><!-- Matched Donor --></translation>
-    </valueTranslation>
-    <valueTranslation>
-        <masterLabel>Notification Recipient</masterLabel>
-        <translation><!-- Notification Recipient --></translation>
+        <translation>Einflussnehmer</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Other</masterLabel>
-        <translation><!-- Other --></translation>
+        <translation>Weitere</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Matched Donor</masterLabel>
+        <translation>Zugewiesener Spender</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Soft Credit</masterLabel>
-        <translation><!-- Soft Credit --></translation>
+        <translation>Soft Credit</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>Solicitor</masterLabel>
-        <translation><!-- Solicitor --></translation>
+        <translation>Anwalt</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Honoree</masterLabel>
+        <translation>Begünstigter</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>Notification Recipient</masterLabel>
+        <translation>Benachrichtigungsempfänger</translation>
     </valueTranslation>
 </StandardValueSetTranslation>
