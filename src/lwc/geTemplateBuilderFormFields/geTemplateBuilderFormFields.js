@@ -268,7 +268,8 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
         fieldMapping.Is_Required =
             fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL ? true : fieldMapping.Is_Required;
-        if (fieldMapping.Is_Required) {
+        if (fieldMapping.Is_Required ||
+            REQUIRED_FORM_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
             this.validate();
         }
     }
