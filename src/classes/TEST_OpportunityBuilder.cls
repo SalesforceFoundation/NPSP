@@ -211,6 +211,15 @@ public without sharing class TEST_OpportunityBuilder {
     }     
 
     /***
+    * @description Sets Recurring Donation Installment Number to the value set in data migration
+    * @param installmentNumber Recurring Donation Installment Number
+    * @return TEST_OpportunityBuilder Builder instance
+    */
+    public TEST_OpportunityBuilder withInstallmentNumberMigrationFlag() {
+        return withInstallmentNumber(RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER_FLAG);
+    }     
+
+    /***
     * @description Sets the specified custom or standard field to the specified value
     * @param fieldName Any field name on the Opportunity
     * @param value The field value

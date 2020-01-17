@@ -485,6 +485,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         private Decimal calcCurrentYearValue(RD2_ScheduleService scheduleService) {
             final Integer currentYear = currentDate.year();
             final Date yearEndDate = Date.newInstance(currentYear, 12, 31);
+            final Integer migrationFlag = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
             Map<Date, Opportunity> currentYearOppByCloseDate = new Map<Date, Opportunity>();
             Decimal value = 0;
@@ -505,7 +506,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
                 currentDate, yearEndDate, rd.RecurringDonationSchedules__r
             )) {
-                if (!currentYearOppByCloseDate.containsKey(installment.nextDonationDate)) {
+                Opportunity existingOpp = currentYearOppByCloseDate.get(installment.nextDonationDate);
+                Boolean isClosedLostInMigration = existingOpp != null 
+                    && existingOpp.isClosed && !existingOpp.isWon 
+                    && existingOpp.Recurring_Donation_Installment_Number__c == migrationFlag;
+
+                if (existingOpp == null || isClosedLostInMigration) {
                     value += installment.installmentAmount;
                 }
             }
