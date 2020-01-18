@@ -1,0 +1,3 @@
+.slds-form-element_hidden > .slds-form-element__label {
+    visibility: hidden;
+}

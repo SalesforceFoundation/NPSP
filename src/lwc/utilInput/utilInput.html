@@ -10,13 +10,15 @@
         <template if:true={isLightningRichText}>
             <lightning-input-rich-text aria-label="default value"
                                        label={uiLabel}
+                                       formats={richTextFormats}
                                        required={isRequired}
                                        class="slds-m-around_none"
                                        data-name="defaultValue"
                                        onclick={stopPropagation}
                                        value={fieldValue}
                                        variant={variant}
-                                       tab-index={tabIndex}>
+                                       tab-index={tabIndex}
+                                       onblur={handleValueChange}>
             </lightning-input-rich-text>
         </template>
 
@@ -26,7 +28,7 @@
                                 required={isRequired}
                                 class="slds-m-around_none"
                                 data-name="defaultValue"
-                                onblur={handleOnBlur}
+                                onblur={handleValueChange}
                                 onclick={stopPropagation}
                                 value={fieldValue}
                                 variant={variant}
@@ -55,26 +57,24 @@
                              checked={fieldValue}
                              class="slds-m-top_small"
                              data-name="defaultValue"
-                             onchange={handleOnBlur}
+                             onchange={handleValueChange}
                              onclick={stopPropagation}
                              type="checkbox">
             </lightning-input>
         </template>
 
         <template if:true={isLightningSearch}>
-            <lightning-input aria-label="default value"
-                             label={uiLabel}
-                             required={isRequired}
-                             class="slds-m-around_none"
-                             data-name="defaultValue"
-                             onblur={handleOnBlur}
-                             onclick={stopPropagation}
-                             onkeyup={handleSearch}
-                             type="search"
-                             value={fieldValue}
-                             variant={variant}
-                             tab-index={tabIndex}>
-            </lightning-input>
+            <c-ge-form-field-lookup id={fieldApiName}
+                                    data-id='inputComponent'
+                                    field-api-name={fieldApiName}
+                                    object-api-name={objectApiName}
+                                    onchange={handleValueChange}
+                                    default-value={fieldValue}
+                                    required={isRequired}
+                                    object-describe-info={objectInfo}
+                                    label={uiLabel}
+                                    variant={variant}>
+            </c-ge-form-field-lookup>
         </template>
 
         <template if:true={isLightningDateOrDatetime}>
@@ -83,7 +83,7 @@
                              required={isRequired}
                              class="slds-m-around_none"
                              data-name="defaultValue"
-                             onchange={handleOnBlur}
+                             onchange={handleValueChange}
                              onclick={stopPropagation}
                              type={lightningInputType}
                              value={fieldValue}
@@ -98,7 +98,7 @@
                              required={isRequired}
                              class="slds-m-around_none"
                              data-name="defaultValue"
-                             onblur={handleOnBlur}
+                             onblur={handleValueChange}
                              onclick={stopPropagation}
                              type={lightningInputType}
                              formatter={formatter}
