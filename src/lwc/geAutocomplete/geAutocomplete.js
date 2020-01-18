@@ -71,6 +71,23 @@ export default class GeAutocomplete extends LightningElement {
         return !this.valid;
     }
 
+    @api
+    setCustomValidity(errorMessage) {
+
+        console.log('setCustomValidity in geAutocomplete');
+        //const inputField = this.template.querySelector( this.errorMsgId );
+        //return inputField.setCustomValidity(errorMessage);
+        this.valid = false;
+        // TODO: add message using errorMessage var
+
+    }
+
+    @api
+    resetCustomValidity() {
+        this.valid = true;
+        // TODO: remove message
+    }
+
     /*******************************************
      Dynamic CSS/Id / Display Attributes below here
      *******************************************/

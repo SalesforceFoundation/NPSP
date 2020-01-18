@@ -354,11 +354,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             ];
             // set message using label and replacement array
             const message = format( geDonationTypeErrorLabel, validationErrorLabelReplacements );
-            // // set page error <-- currently breaking layout when templates are big
-            // this.hasPageLevelError = true;
-            // this.pageLevelErrorMessageList = [ {index: 0, errorMessage: message} ];
-            // set toast error
             showToast('Review the errors on this page:', message, 'error');
+            // // set page error -> currently breaking layout when templates are big:
+            // this.hasPageLevelError = true; this.pageLevelErrorMessageList = [ {index: 0, errorMessage: message} ];
 
         }
 
