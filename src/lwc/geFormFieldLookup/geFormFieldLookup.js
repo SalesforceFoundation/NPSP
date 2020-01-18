@@ -64,6 +64,17 @@ export default class GeFormFieldLookup extends LightningElement {
     }
 
     /**
+     * Set custom validity
+     * @param errorMessage, custom message for custom validity
+     */
+    @api
+    setCustomValidity(errorMessage) {
+        // TODO: follow up here
+        let autocomplete = this.template.querySelectorAll('c-ge-autocomplete');
+        console.log('implement setCustomValidity from geFormFieldLookup');
+    }
+
+    /**
      * Handle text input change, and retrieve lookup options.
      * @param event
      */

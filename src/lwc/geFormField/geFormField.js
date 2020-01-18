@@ -220,26 +220,23 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
-    get fieldValidationWrapper() {
+    get fieldValueAndLabel() {
 
         let fieldWrapper = { value: this.value, label: this.fieldLabel };
-        let fieldValidationWrapper = {};
-        fieldValidationWrapper[ this.sourceFieldAPIName ] = fieldWrapper;
+        let returnMap = {};
+        returnMap[ this.sourceFieldAPIName ] = fieldWrapper;
 
-        return fieldValidationWrapper;
+        return returnMap;
 
     }
 
     @api
     setCustomValidity(errorMessage) {
+
         let inputField = this.template.querySelector('[data-id="inputComponent"]');
-        
-        if (this.isLookup) {
-            // This is where we will set the lookup's error when it is available. 
-        } else {
-            inputField.setCustomValidity(errorMessage);
-            inputField.reportValidity();
-        }
+        inputField.setCustomValidity(errorMessage);
+        inputField.reportValidity();
+
     }
 
     @api
