@@ -1,7 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -29,7 +31,7 @@ Opportunity is Autoclosed when Overpaid
     ...    Amount=100    
     ...    CloseDate=${date}
     ...    Name=&{contact}[LastName] Test Donation    
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry

@@ -1,7 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -25,7 +27,7 @@ Dont select match for contact new donation with grid changes
     Store Session Record      Account    &{contact}[AccountId]
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry

@@ -1,7 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -21,7 +23,7 @@ Create a new account and enter payment information
     ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   
     ...    ${ns}GiftBatch__c=true    
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]     
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry

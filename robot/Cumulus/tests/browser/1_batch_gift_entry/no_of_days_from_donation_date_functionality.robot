@@ -1,7 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+Library         DateTime
 Suite Setup      Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
@@ -13,7 +15,7 @@ Match Based on Number of Days from Donation Date Functionality
     [Documentation]    The number of days from donation date field on the BGE wizard allows matching to be made by providing a margin of error on the Donation Date field for a record. If the gift created is within range of that date, gift is matched to the existing donation
     [tags]  stable
     Set Window Size    1024    768  
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry

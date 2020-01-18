@@ -1,7 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -29,7 +31,7 @@ Enter a donation for an account with exact payment match
     ...    CloseDate=${date}    
     ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
     ...    Name=&{account}[Name] Test Donation        
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry

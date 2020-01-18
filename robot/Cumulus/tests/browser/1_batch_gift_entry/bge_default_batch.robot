@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -11,7 +13,7 @@ BGE Batch With Default Values
     [tags]  stable
     Set Window Size    1024    768
     ${batch} =           Generate Random String
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     Click BGE Button       New Batch
     Fill BGE Form
     ...                       Name=${batch}

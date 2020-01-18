@@ -1,7 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+Library         DateTime
 Suite Setup      Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
@@ -13,7 +15,7 @@ Best Match Donation Matching Behaviour
     
     [tags]  stable
     Set Window Size    1024    768  
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
@@ -41,6 +43,7 @@ Best Match Donation Matching Behaviour
     Fill BGE Form
     ...                       Donation Amount=200
     Click Element With Locator    bge.field-input    Donation Date
+    Wait For Datepicker
     Click BGE Button    Today
     Click BGE Button       Save
     Sleep    2
