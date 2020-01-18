@@ -44,15 +44,6 @@ public virtual with sharing class FORM_Service {
     }
 
     /*******************************************************************************************************
-    * @description Method clones a Form_Template__c record by id.
-    * @param id: Form_Template__c record id
-    * @return string: A Form_Template__c record id
-    */
-    public virtual FORM_Template cloneFormTemplate(String id) {
-        return FORM_ServiceGiftEntry.cloneFormTemplate(id);
-    }
-
-    /*******************************************************************************************************
     * @description Method deletes a Form_Template__c record by id.
     * @param id: Form_Template__c record id
     */

@@ -1,9 +1,9 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import cloneFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.cloneFormTemplate';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
+import { isEmpty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
@@ -194,16 +194,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 this.navigateToTemplateBuilder(row.Id);
                 break;
             case 'clone':
-                this.geListViewComponent.setProperty(IS_LOADING, true);
-
-                cloneFormTemplate({ id: row.Id })
-                    .then((clonedTemplate) => {
-                        this.geListViewComponent.setProperty(IS_LOADING, false);
-                        this.geListViewComponent.refresh();
-                    })
-                    .catch(error => {
-                        handleError(error);
-                    });
+                this.navigateToTemplateBuilder(row.Id, { c__clone: true });
                 break;
             case 'delete':
                 this.geListViewComponent.setProperty(IS_LOADING, true);
@@ -276,8 +267,11 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     *
     * @param {string} recordId: Record id of the Form_Template__c
     */
-    navigateToTemplateBuilder(recordId) {
-        const queryParameter = recordId ? { c__recordId: recordId } : {};
+    navigateToTemplateBuilder(recordId, additionalQueryParameters) {
+        let queryParameter = recordId ? { c__recordId: recordId } : {};
+        if (!isEmpty(additionalQueryParameters)) {
+            queryParameter = { ...queryParameter, ...additionalQueryParameters };
+        }
 
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',

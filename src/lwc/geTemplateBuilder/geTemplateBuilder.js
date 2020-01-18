@@ -135,20 +135,24 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     init = async () => {
         try {
             const dataImportSettings = await getDataImportSettings();
+            const fieldMappingApiName = FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName;
 
-            if (dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] !== ADVANCED_MAPPING) {
+            if (dataImportSettings[fieldMappingApiName] !== ADVANCED_MAPPING) {
                 this.isAccessible = false;
                 this.isLoading = false;
 
-            } else if (dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING) {
+            } else if (dataImportSettings[fieldMappingApiName] === ADVANCED_MAPPING) {
                 await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
                 this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
-                // Check if there's a record id in the url
-                this.formTemplateRecordId = getQueryParameters().c__recordId;
+                // Check if we have query parameters in the url
+                const queryParameters = getQueryParameters();
+                this.formTemplateRecordId = queryParameters.c__recordId;
 
                 if (this.formTemplateRecordId) {
-                    let formTemplate = await retrieveFormTemplateById({ templateId: this.formTemplateRecordId });
+                    let formTemplate = await retrieveFormTemplateById({
+                        templateId: this.formTemplateRecordId
+                    });
 
                     this.existingFormTemplateName = formTemplate.name;
                     this.formTemplate = formTemplate;
@@ -166,6 +170,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
                 if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
                     this.activeFormSectionId = this.formSections[0].id;
+                }
+
+                // Clear out form template record id if cloning after retrieving all relevant data
+                if (queryParameters.c__clone) {
+                    this.formTemplateRecordId = null;
                 }
 
                 this.isLoading = false;
