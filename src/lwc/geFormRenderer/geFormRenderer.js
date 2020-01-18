@@ -16,9 +16,6 @@ import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Temp
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
-// additional schema for donation type validation
-import DI_ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__c';
-import DI_CONTACT1_LAST_NAME_INFO from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 
 const mode = {
     CREATE: 'create',
@@ -274,9 +271,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /**
-     *
-     * @param sectionsList
-     * @returns {boolean|*}
+     * validates donation donor type on sectionsList
+     * @param sectionsList, list of sections
+     * @returns {boolean|*} - true if form invalid, false otherwise
      */
     isDonorTypeInvalid( sectionsList ){
 
@@ -297,21 +294,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if ( isEmpty(miniFieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value) ) {
             return false;
         }
-
+        
         // is donation donor valid
         return this.getDonorTypeValidationError( miniFieldWrapper, sectionsList );
     }
 
     /**
-     *
-     * @param fieldWrapper
-     * @param sectionsList
-     * @returns {*}
+     * helper class for isDonorTypeInvalid, contains majority of logic
+     * @param fieldWrapper - Array, field ui-label and value using field-api-name as key
+     * @param sectionsList - Array, all sections
+     * @returns {boolean} - true if error message was generated, false if otherwise
      */
     getDonorTypeValidationError( fieldWrapper, sectionsList ){
 
         // created to improve code reading
-        const DI_RECORD = {
+        const di_record = {
             // donation donor
             donationDonorValue: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value,
             donationDonorLabel: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].label,
@@ -331,9 +328,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         };
 
         // donation donor validation depending value
-        let isError = (DI_RECORD.donationDonorValue===DONATION_DONOR.isAccount1) ?
-                        DI_RECORD.isAccount1ImportedEmpty && DI_RECORD.isAccount1NameEmpty :
-                            DI_RECORD.donationDonorValue===DONATION_DONOR.isContact1 && DI_RECORD.isContact1ImportedEmpty && DI_RECORD.isContact1LastNameEmpty;
+        let isError = (di_record.donationDonorValue===DONATION_DONOR.isAccount1) ?
+                        di_record.isAccount1ImportedEmpty && di_record.isAccount1NameEmpty :
+                            di_record.donationDonorValue===DONATION_DONOR.isContact1 && di_record.isContact1ImportedEmpty && di_record.isContact1LastNameEmpty;
 
         // process error notification when error
         if (isError) {
@@ -341,8 +338,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // prepare array to highlight fields that require attention depending on Donation_Donor
             const markErrorFields = [
                 DONATION_DONOR_FIELDS.donationDonorField,
-                DI_RECORD.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField : DONATION_DONOR_FIELDS.contact1ImportedField,
-                DI_RECORD.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField : DONATION_DONOR_FIELDS.contact1LastNameField
+                di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField : DONATION_DONOR_FIELDS.contact1ImportedField,
+                di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField : DONATION_DONOR_FIELDS.contact1LastNameField
             ];
             sectionsList.forEach(section => {
                 section.setCustomValidityOnFields( markErrorFields, ' ' );
@@ -350,10 +347,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             // replacement array for custom label
             const validationErrorLabelReplacements = [
-                DI_RECORD.donationDonorValue,
-                DI_RECORD.donationDonorLabel,
-                DI_RECORD.donationDonorValue === DONATION_DONOR.isAccount1 ? DI_RECORD.account1ImportedLabel : DI_RECORD.contact1ImportedLabel,
-                DI_RECORD.donationDonorValue === DONATION_DONOR.isAccount1 ? DI_RECORD.account1NameLabel : DI_RECORD.contact1LastNameLabel
+                di_record.donationDonorValue,
+                di_record.donationDonorLabel,
+                di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? di_record.account1ImportedLabel : di_record.contact1ImportedLabel,
+                di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? di_record.account1NameLabel : di_record.contact1LastNameLabel
             ];
             // set message using label and replacement array
             const message = format( geDonationTypeErrorLabel, validationErrorLabelReplacements );
