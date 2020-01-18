@@ -60,6 +60,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // check if there is a record id in the url
         this.donorRecordId = getQueryParameters().c__recordId;
+        const donorApiName = getQueryParameters().c__apiName;
 
         GeFormService.getFormTemplate().then(response => {
             // read the template header info
@@ -68,7 +69,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
                 // get the target field names to be used by getRecord
-                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
+                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, donorApiName);
             }
         });
     }

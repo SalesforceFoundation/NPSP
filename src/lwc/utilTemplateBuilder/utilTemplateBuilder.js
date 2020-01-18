@@ -306,15 +306,16 @@ const generateId = () => {
 * in the format objectName.fieldName
 * @param formTemplate: the form template
 * @param fieldMappings: the field mappings dev names
+* @param apiName: the sObject api name
 */
-const getRecordFieldNames = (formTemplate, fieldMappings) => {
+const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
     let fieldNames = [];
 
     for (const section of formTemplate.layout.sections) {
         for (const element of section.elements) {
             for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-                if (objectName === CONTACT_INFO.objectApiName || objectName === ACCOUNT_INFO.objectApiName) {
+                if (objectName === apiName) {
                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
                     fieldNames.push(`${objectName}.${fieldName}`);
                 }              
