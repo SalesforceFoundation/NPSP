@@ -132,6 +132,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleCancel() {
         this.reset();
+
+        // go back to the donor record page
+        if(isNotEmpty(this.donorRecordId)) {
+            this.navigateToRecordPage(this.donorRecordId);
+        }
     }
 
     handleSave(event) {
