@@ -2,6 +2,7 @@
 
 #### For Users
 
+
 * <a href="https://powerofus.force.com" target="_blank">Ask questions or get help</a>
 * <a href="https://github.com/SalesforceFoundation/NPSP/issues/new" target="_blank">Log a confirmed Issue</a> or <a href="https://powerofus.force.com/hub-ideas" target="_blank">Feature Request</a>
 * <a href="https://powerofus.force.com/NPSP_Documentation" target="_blank">User Documentation</a>
