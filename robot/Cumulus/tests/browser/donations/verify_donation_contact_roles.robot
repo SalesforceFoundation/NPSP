@@ -21,7 +21,7 @@ Setup Test Data
 
     # Create contact2 linked to contact1's household
     &{contact2_fields} =	Create Dictionary  Email=test2@example.com  AccountId=${data}[contact1][AccountId]
-    &{data}=    Setupdata   contact2   ${contact2_fields}
+    Setupdata   contact2   ${contact2_fields}
 
     # Setup an opportunity for contact1 and contact2
     Setupdata   contact1   None     ${opportunity1_fields}
