@@ -476,10 +476,10 @@
     </fields>
     <fields>
         <fullName>StartDate__c</fullName>
-        <description>The starting date for this schedule record.</description>
+        <description>The effective date for this schedule record.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The starting date for this schedule record.</inlineHelpText>
-        <label>Start Date</label>
+        <inlineHelpText>The effective date for this schedule record.</inlineHelpText>
+        <label>Effective Date</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Date</type>

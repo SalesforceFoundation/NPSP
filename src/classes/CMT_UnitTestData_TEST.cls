@@ -640,4 +640,82 @@ public class CMT_UnitTestData_TEST {
 
         return CRLP_Rollup_SEL.cachedRollups.size();
     }
+
+    /**
+     * @description Create Rollup__mdt records to test rolling up from the Opp object to Recurring Donations
+     * @return Count of Rollup__mdt records mocked
+     */
+    public static Integer mockRecurringDonationRollupCMTValues() {
+
+        // Create a single Filter Group (no need for filter rules here)
+        String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
+
+        // Simple testing filters for IsWon, RecordType, and Paid/Written Off
+        String filterGroupsJSON = '[' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-Pledged') + ',' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-ClosedWon') +
+            ']';
+        String filterRulesJSON = '[' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'False') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'IsClosed', 'Equals', 'False') + ',' +
+
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') +
+            ']';
+
+        // Deserialize the filter group and filter rule to use for the tests
+        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
+        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
+
+        // Create a Rollup that uses the above Filter Group
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', filterGroupId1,
+                CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                'npe03__Next_Payment_Date__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
+
+            CMT_UnitTestData_TEST.createRollupRecord('RD Last Payment Date', filterGroupId2,
+                CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                'npe03__Last_Payment_Date__c', CRLP_Operation.RollupType.Last, 'CloseDate') + ',' +
+
+            CMT_UnitTestData_TEST.createRollupRecord('RD Total Paid Amount', filterGroupId2,
+                CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                'npe03__Paid_Amount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
+
+            CMT_UnitTestData_TEST.createRollupRecord('RD Total Paid Installments', filterGroupId2,
+                CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                'npe03__Total_Paid_Installments__c', CRLP_Operation.RollupType.Count, 'CloseDate') +
+
+            ']';
+
+        // Deserialize the rollups to use for testing
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        // Clear any cached collections as well
+        CRLP_Rollup_SEL.rollupsBySummaryType = null;
+        CRLP_Rollup_SEL.rollupsByDetailType = null;
+        CRLP_Rollup_SEL.rollupsByFilterGroup = null;
+
+        return CRLP_Rollup_SEL.cachedRollups.size();
+    }
+
+    /**
+     * @description Create Rollup__mdt records to test rolling up from the Opp object to Recurring Donations
+     * To work with Enhanced Recurring Donations, this disables the rollup on the npe03__Next_Payment_Date__c field
+     * @return Count of Rollup__mdt records mocked
+     */
+    public static Integer mockEnhancedRecurringDonationRollupCMTValues() {
+        mockRecurringDonationRollupCMTValues();
+        List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
+
+        for (Integer n = 0; n < rollups.size(); n++) {
+            Rollup__mdt r = rollups[n];
+            if (r.Summary_Field__r.QualifiedApiName == 'npe03__Next_Payment_Date__c') {
+                rollups.remove(n);
+                break;
+            }
+        }
+
+        return rollups.size();
+    }
+
 }
