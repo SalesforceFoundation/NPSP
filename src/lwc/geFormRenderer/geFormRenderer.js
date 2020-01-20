@@ -6,7 +6,7 @@ import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
-import {getQueryParameters, isEmpty, isNotEmpty} from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
@@ -60,6 +60,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // check if there is a record id in the url
         this.donorRecordId = getQueryParameters().c__recordId;
+        const donorApiName = getQueryParameters().c__apiName;
 
         GeFormService.getFormTemplate().then(response => {
             // read the template header info
@@ -68,7 +69,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
                 // get the target field names to be used by getRecord
-                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
+                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, donorApiName);
+            
                 if(isEmpty(this.donorRecordId)) {
                     // if we don't have a donor record, it's ok to initialize the form now
                     // otherwise the form will be initialized after wiredGetRecordMethod completes
@@ -136,6 +138,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleCancel() {
         this.reset();
+
+        // go back to the donor record page
+        if(isNotEmpty(this.donorRecordId)) {
+            this.navigateToRecordPage(this.donorRecordId);
+        }
     }
 
     handleSave(event) {
