@@ -654,6 +654,35 @@ public class UTIL_Describe {
         return isNameSuffixEnabled;
     }
 
+    /** @description Returns the correctly cased version of the field API Name for situations where it
+    * is required (ex some LWC functions).
+    * @param objectName The name of the object.
+    * @param fieldName The name of the field.
+    * @return String the canonical field name
+    */
+    public static String getFieldName(String objectName, String fieldName) {
+        if (fieldName != null && objectName != null) {
+            Schema.DescribeFieldResult fieldDescribe = getFieldDescribe(objectName, fieldName);
+            fieldName = fieldDescribe.getName();
+        }
+
+        return fieldName;
+    }
+
+    /** @description Returns the correctly cased version of the object API Name for situations where it
+    * is required (ex some LWC functions).
+    * @param objectName The name of the object.
+    * @return String the canonical object name
+    */
+    public static String getObjectName(String objectName) {
+        if (objectName != null) {
+            Schema.DescribeSObjectResult objectDescribe = getObjectDescribe(objectName);
+            objectName = objectDescribe.getName();
+        }
+
+        return objectName;
+    }
+
     /** @description our exception object for Field Level & Object Security errors. */
     private class permsException extends Exception {}
 

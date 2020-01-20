@@ -34,8 +34,19 @@
 * @description Recurring Donations enablement options and status tests
 *
 */
-@isTest(IsParallel=true)
+@isTest(IsParallel=false)
 public with sharing class RD2_EnablementDelegate_TEST {
+
+    private static final TEST_SObjectGateway.AsyncApexJobGateway jobGateway = new TEST_SObjectGateway.AsyncApexJobGateway();
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
+
+    /****
+    * @description Creates data required for unit tests
+    */
+    @TestSetup
+    private static void setUp() {
+        insert UTIL_UnitTestData_TEST.getContact();
+    }
 
     /****
     * @description Verifies enablement state values are not set by default
@@ -152,18 +163,13 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isConfirmed = true;
         setEnablementState(JSON.serialize(expectedState));
 
-        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class,
-            new RD2_EnablementService_TEST.Stub()
-                .withRecurringDonations2Ready()
-                .withRecurringDonations2Enabled()
-        );
+        stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.launchMetaDeploy();
 
         expectedState.isReady = true;
         expectedState.isEnabled = true;
-        expectedState.isMetaDeployLaunched = true;
+        expectedState.isMetaLaunched = true;
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
 
@@ -178,15 +184,10 @@ public with sharing class RD2_EnablementDelegate_TEST {
     private static void shouldConfirmMetaDeploy() {
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
-        expectedState.isMetaDeployLaunched = true;
+        expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
-
-        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class,
-            new RD2_EnablementService_TEST.Stub()
-                .withRecurringDonations2Ready()
-                .withRecurringDonations2Enabled()
-        );
+        
+        stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
 
@@ -194,7 +195,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         expectedState.isReady = true;
         expectedState.isEnabled = true;
-        expectedState.isMetaDeployConfirmed = true;
+        expectedState.isMetaConfirmed = true;
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
     }
@@ -208,15 +209,10 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
         expectedState.isConfirmed = true;
-        expectedState.isMetaDeployLaunched = true;
+        expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
-
-        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
-            RD2_EnablementService.class,
-            new RD2_EnablementService_TEST.Stub()
-                .withRecurringDonations2Ready()
-                .withRecurringDonations2Enabled()
-        );
+        
+        stubRD2ReadyAndEnabled();
 
         //mock value that does not exist but is expected
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '32';
@@ -234,16 +230,142 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         expectedState.isReady = true;
         expectedState.isEnabled = true;
-        expectedState.isMetaDeployConfirmed = false;
+        expectedState.isMetaConfirmed = false;
 
         assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
     }
 
+    /**
+     * @description Verifies Enhanced Recurring Donations dry run migration batch job is executed.
+     * If metadata deployment is not checked, dry run part 2 is not visible.
+     */
+    @IsTest
+    private static void shouldRunDryRun() {
+        setRDSettings();
 
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        setEnablementState(JSON.serialize(expectedState));
+
+        Test.startTest();
+        Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
+        Test.stopTest();
+        
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigrationDryRun_BATCH');
+        System.assertEquals(1, job.JobItemsProcessed,
+            'The batch should have run with one child batch processed'
+        );
+
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations dry run migration batch job sets "isDryRun2" 
+     * if metadata deployment has been confirmed
+     */
+    @IsTest
+    private static void shouldAllowDryRunAfterMetaDeployIsConfirmed() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
+        stubRD2ReadyAndEnabled();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isConfirmed = true;
+        expectedState.isEnabled = true;
+        expectedState.isMetaLaunched = true;
+        expectedState.isMetaConfirmed = true;
+        setEnablementState(JSON.serialize(expectedState));        
+
+        Test.startTest();
+        Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        expectedState.isDryRun2 = true;
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies migration enabled flag is checked when user skips dry run
+    */
+    @isTest
+    private static void shouldEnableMigrationWhenUserSkipsOptionalDryRun() {
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isEnabled = true;
+        setEnablementState(JSON.serialize(expectedState));
+        
+        stubRD2ReadyAndEnabled();
+
+        RD2_EnablementDelegate_CTRL.skipDryRun();
+
+        expectedState.isMigrationEnabled = true;
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies migration enabled flag is unchecked when user skips migration 
+    * and goes back to the validation
+    */
+    @isTest
+    private static void shouldDisableMigrationWhenUserNavigatesBackToDryRun() {
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isEnabled = true;
+        setEnablementState(JSON.serialize(expectedState));
+        
+        stubRD2ReadyAndEnabled();
+
+        RD2_EnablementDelegate_CTRL.skipMigration();
+
+        expectedState.isMigrationEnabled = false;
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /**
+     * @description Verifies Enhanced Recurring Donations migration batch job is executed
+     */
+    @IsTest
+    private static void shouldRunMigration() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Test.startTest();
+        Id jobId = RD2_EnablementDelegate_CTRL.runMigration();
+        Test.stopTest();
+
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigration_BATCH');
+        System.assertEquals(1, job.JobItemsProcessed,
+            'The batch should have run with one child batch processed'
+        );
+    }
 
 
     // Helpers
     ////////////////
+
+    /****
+    * @description Returns contact record
+    * @return Contact
+    */
+    private static Contact getContact() {
+        return [
+            SELECT FirstName, LastName, AccountId
+            FROM Contact
+            LIMIT 1
+        ];
+    }
 
     /****
     * @description Sets enablement state in the custom settings
@@ -254,7 +376,9 @@ public with sharing class RD2_EnablementDelegate_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 RecurringDonations2EnablementState__c = state,
-                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Maximum_Donations__c = 50,
+                npe03__Opportunity_Forecast_Months__c = 6
             )
         );
     }
@@ -266,14 +390,25 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @return void
     */
     private static void assertEnablementState(RD2_EnablementDelegate_CTRL.EnablementState expectedState, RD2_EnablementDelegate_CTRL.EnablementState state) {
-        System.assertEquals(expectedState.isReady, state.isReady, 'isReady should match');
-        System.assertEquals(expectedState.isConfirmed, state.isConfirmed, 'isConfirmed should match');
-        System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match');
-        System.assertEquals(expectedState.isMetaDeployLaunched, state.isMetaDeployLaunched, 'isMetaDeployLaunched should match');
-        System.assertEquals(expectedState.isMetaDeployConfirmed, state.isMetaDeployConfirmed, 'isMetaDeployConfirmed should match');
-        System.assertEquals(expectedState.isMigrationCompleted, state.isMigrationCompleted, 'isMigrationCompleted should match');
+        System.assertEquals(expectedState.isReady, state.isReady, 'isReady should match: ' + state);
+        System.assertEquals(expectedState.isConfirmed, state.isConfirmed, 'isConfirmed should match: ' + state);
+        System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match: ' + state);
+        System.assertEquals(expectedState.isMetaLaunched, state.isMetaLaunched, 'isMetaLaunched should match: ' + state);
+        System.assertEquals(expectedState.isMetaConfirmed, state.isMetaConfirmed, 'isMetaConfirmed should match: ' + state);
     }
 
+    /****
+    * @description Set enablement service to return true for the enablement ready and enabled state
+    * @return void
+    */
+    private static void stubRD2ReadyAndEnabled() {
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class,
+            new RD2_EnablementService_TEST.Stub()
+                .withRecurringDonations2Ready()
+                .withRecurringDonations2Enabled()
+        );
+    }
 
     /**
      * @description Mock the Next Donation Date customizable rollup
@@ -289,4 +424,33 @@ public with sharing class RD2_EnablementDelegate_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
+    /**
+     * @description Sets RD Settings 
+     * @return void
+     */
+    private static void setRDSettings() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Maximum_Donations__c = 50,
+                npe03__Opportunity_Forecast_Months__c = 6
+            )
+        );
+    }
+
+    /**
+     * @description Instantiate a legacy recurring donation for a specific ContactId
+     * @param contactId
+     * @return TEST_RecurringDonationBuilder New Recurring Donation builder
+     */
+    private static TEST_RecurringDonationBuilder getLegacyRecurringDonationBuilder(Id contactId) {
+        return TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withId(null)
+            .withDateEstablished(Date.today().addMonths(-1))
+            .withOpenEndedStatusOpen()
+            .withContact(contactId)
+            .withAmount(100)
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1');
+    }
 }

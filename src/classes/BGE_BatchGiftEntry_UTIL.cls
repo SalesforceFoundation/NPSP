@@ -46,52 +46,19 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     };
 
     /*******************************************************************************************************
+    * @description Provides field mapping configuration used by BGE
+    */
+    public static Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField =
+        BDI_DataImportService.getDefaultMappingService().getTargetFieldsBySourceField();
+
+    /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
     * @param batchId the batch for which to get all fields for soql
     * @return List<String> list of DataImport__c field api names
     */
     public static List<String> getDataImportFields(Id batchId) {
-        List<String> fieldNames = new List<String>();
-
-        // Query the Batch to determine which set of fields will be needed.
-        // Batches created using BGE_DataImportBatchEntry store fields used by its Data
-        // Import records in Active_Fields__c, while Batches created in geBatchGiftEntryApp
-        // use all or a subset of fields mapped in Advanced Mapping.
-        DataImportBatch__c batch = [
-                SELECT Batch_Gift_Entry_Version__c
-                FROM DataImportBatch__c
-                WHERE Id = :batchId
-        ];
-
-        if (batch.Batch_Gift_Entry_Version__c == null ||
-                batch.Batch_Gift_Entry_Version__c < 2.0) {
-            fieldNames = getDataImportFields(batchId, true);
-        } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) {
-            // Lowercase the core fields list for use below to avoid duplication
-            for (String field : getCoreDataImportFields(true)) {
-                fieldNames.add(field.toLowerCase());
-            }
-
-            // Get all mapped source fields
-            // (no matter which template is used, it will be a subset of mapped fields)
-            // question: safe? or could a widget ever include fields that are not mapped?
-            for (SObjectField sObjectField :
-                    BDI_DataImportService.getDefaultMappingService()
-                            .getTargetFieldsBySourceField().keySet()) {
-                String field = String.valueOf(sObjectField).toLowerCase();
-                if (!fieldNames.contains(field)) {
-                    fieldNames.add(field);
-                }
-            }
-        }
-        return fieldNames;
+        return getDataImportFields(batchId, true);
     }
-
-    /*******************************************************************************************************
-    * @description Provides field mapping configuration used by BGE
-    */
-    public static Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
-        BDI_DataImportService.getDefaultMappingService().getTargetFieldsBySourceField();
 
     /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
@@ -100,11 +67,75 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return List<String> list of DataImport__c field api names
     */
     public static List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
+        List<String> fieldApiNames = new List<String>();
 
-        List<String> fields = getCoreDataImportFields(includeRelationshipFields);
-        fields.addAll(getActiveFieldNamesFromBatch(batchId));
+        // Query the Batch to determine which set of fields will be needed.
+        // Batches created using BGE_DataImportBatchEntry store fields used by its Data
+        // Import records in Active_Fields__c, while Batches created in geBatchGiftEntryApp
+        // use fields included in the Form_Template__c record related to the Batch.
+        DataImportBatch__c batch = [
+                SELECT Batch_Gift_Entry_Version__c,
+                        Form_Template__r.Template_JSON__c
+                FROM DataImportBatch__c
+                WHERE Id = :batchId
+        ];
 
-        return fields;
+        if (batch.Batch_Gift_Entry_Version__c == null ||
+                batch.Batch_Gift_Entry_Version__c < 2.0) {
+
+            fieldApiNames = getCoreDataImportFields(includeRelationshipFields);
+            fieldApiNames.addAll(getActiveFieldNamesFromBatch(batchId));
+
+        } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) {
+
+            for (String field : getCoreDataImportFields(includeRelationshipFields)) {
+                fieldApiNames.add(field.toLowerCase());
+            }
+
+            // Must explicitly use BDI_MappingServiceAdvanced here (as opposed to
+            // BDI_DataImportService.getDefaultMappingService()) because of the need
+            // to reference the fieldMappingByDevName property.
+            Map<String,BDI_FieldMapping> fieldMappingByDevName =
+                    BDI_MappingServiceAdvanced.getInstance().fieldMappingByDevName;
+
+            FORM_Template t = (FORM_Template) JSON.deserialize(
+                    batch.Form_Template__r.Template_JSON__c,
+                    FORM_Template.class
+            );
+
+            for (FORM_Section formSection : t.layout.sections) {
+                for (FORM_Element formElement : formSection.elements) {
+
+                    // Get the field mapping, used to reference the source field
+                    String fieldMappingName = formElement.dataImportFieldMappingDevNames[0];
+                    BDI_FieldMapping fieldMapping =
+                            fieldMappingByDevName.get(fieldMappingName);
+                    if (fieldMapping == null) {
+                        continue;
+                    }
+
+                    // Add the source fields used in the Template
+                    if (!fieldApiNames.contains(fieldMapping.Source_Field_API_Name.toLowerCase())) {
+                        fieldApiNames.add(fieldMapping.Source_Field_API_Name.toLowerCase());
+                    }
+
+                    // Add the Name fields on the related object(s) for all Lookup fields,
+                    // used as display value(s) for Lookup fields loaded in the Form UI
+                    if (fieldMapping.Source_Field_Data_Type == 'REFERENCE') {
+                        String relatedObjNameField = String.join(new List<String>{
+                                fieldMapping.Source_Field_API_Name.replace('__c', '__r'),
+                                'Name'
+                        }, '.'
+                        ).toLowerCase();
+                        if (!fieldApiNames.contains(relatedObjNameField)) {
+                            fieldApiNames.add(relatedObjNameField);
+                        }
+                    }
+                }
+            }
+        }
+
+        return fieldApiNames;
     }
 
     /*******************************************************************************************************

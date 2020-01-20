@@ -269,13 +269,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             this.handleRecordCreate(recordObject);
         }
 
-        /*const payload = { values: this.values, name: this.name };
-        const detail = { action: SAVE, payload: payload };
-        if (this.dedicatedListenerEventName) {
-            fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
-        } else {
-            this.dispatchEvent(new CustomEvent(SVGFEFuncAElement, { detail: payload }));
-        }*/
+        // TODO: Add logic for dispatching of events if used outside of the Gift Entry landing page.
     }
 
     setFieldValues(dataImportBatch) {

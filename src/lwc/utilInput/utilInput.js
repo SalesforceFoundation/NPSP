@@ -16,11 +16,15 @@ const DATETIME = 'datetime-local';
 const YES = 'Yes';
 const TEXT = 'text';
 const TRUE = 'true';
+const RICH_TEXT_FORMATS = [
+    'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
+];
 
 export default class utilInput extends LightningElement {
 
     // expose custom labels to template
     CUSTOM_LABELS = { geBodyBatchFieldBundleInfo };
+    richTextFormats = RICH_TEXT_FORMATS;
 
     @api fieldApiName;
     @api label;
@@ -48,7 +52,7 @@ export default class utilInput extends LightningElement {
         if (this.isLightningCheckbox) {
             return isNotEmpty(this.value) ? this.value : this.checkboxDefaultValue;
         }
-        return this.value ? this.value : this.defaultValue;
+        return this.value !== undefined ? this.value : this.defaultValue;
     }
 
     get checkboxDefaultValue() {
@@ -154,7 +158,7 @@ export default class utilInput extends LightningElement {
             value: event.target.value
         }
 
-        dispatch(this, 'change', detail);
+        dispatch(this, 'changevalue', detail);
     }
 
     /*******************************************************************************
@@ -162,12 +166,16 @@ export default class utilInput extends LightningElement {
     * field's defaultValue property has changed.
     *
     * @param {object} event: Event object from various lightning-input type's
-    * onblur event handler 
+    * change event handler.
     */
-    handleOnBlur(event) {
-        this.value = this.type && this.lightningInputType === CHECKBOX ?
-            event.target.checked :
-            event.target.value;
+    handleValueChange(event) {
+        if (this.type && this.lightningInputType === CHECKBOX) {
+            this.value = event.target.checked;
+        } else if (this.type && this.lightningInputType === SEARCH) {
+            this.value = event.detail.value;
+        } else if (event.target && event.target.value) {
+            this.value = event.target.value;
+        }
 
         let detail = {
             objectApiName: this.uiObjectApiName,
@@ -175,7 +183,7 @@ export default class utilInput extends LightningElement {
             value: this.fieldValue
         }
 
-        dispatch(this, 'change', detail);
+        dispatch(this, 'changevalue', detail);
     }
 
     stopPropagation(event) {
