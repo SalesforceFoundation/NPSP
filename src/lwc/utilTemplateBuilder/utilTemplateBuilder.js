@@ -257,7 +257,9 @@ const handleError = (error) => {
     // error.body.output.errors is for AuraHandledException messages
     if (typeof error === 'string' || error instanceof String) {
         message = error;
-    } else if (error || error.body || error.detail) {
+    } else if (error.message) {
+        message = error.message;
+    } else if (error.body || error.detail) {
         if (Array.isArray(error.body) &&
             !error.body.output.errors) {
             message = error.body.map(e => e.message).join(', ');
@@ -266,13 +268,13 @@ const handleError = (error) => {
             !error.body.output.errors) {
             message = error.body.message;
 
-        } else if(error.body.output &&
-            Array.isArray(error.body.output.errors)){
+        } else if (error.body.output &&
+            Array.isArray(error.body.output.errors)) {
             message = error.body.output.errors.map(e => e.message).join(', ');
 
         } else if (error.detail.output &&
-                Array.isArray(error.detail.output.errors)) {
-                message = error.detail.output.errors.map(e => e.message).join(', ');
+            Array.isArray(error.detail.output.errors)) {
+            message = error.detail.output.errors.map(e => e.message).join(', ');
         }
     }
 
@@ -316,8 +318,8 @@ const getRecordFieldNames = (formTemplate, fieldMappings) => {
                 if (objectName === CONTACT_INFO.objectApiName || objectName === ACCOUNT_INFO.objectApiName) {
                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
                     fieldNames.push(`${objectName}.${fieldName}`);
-                }              
-            }     
+                }
+            }
         }
     }
     return fieldNames;
@@ -348,16 +350,16 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
             element.recordValue = '';
 
             for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
-                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-                 if (objectName === record.apiName) {
-                     // field name from the mappings
-                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                if (objectName === record.apiName) {
+                    // field name from the mappings
+                    let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
 
-                     // get the record value and store it in the element
-                     element.recordValue = record.fields[fieldName].value;
+                    // get the record value and store it in the element
+                    element.recordValue = record.fields[fieldName].value;
                 }
-             }
-        });                 
+            }
+        });
     });
     return sections;
 };
