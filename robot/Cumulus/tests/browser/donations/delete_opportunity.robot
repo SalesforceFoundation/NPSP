@@ -12,14 +12,14 @@ Suite Setup     Run keywords
 Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
-# Sets up all the required data for the test based on the keyword requests
+# Sets test data contact and an opportunity for the contact
 Setup Test Data
-    &{data}=  Setupdata   contact   contact_data=&{contact1_fields}     opportunity_data=&{opportunity_fields}
+    &{data}=  Setupdata   contact   ${contact1_fields}     ${opportunity_fields}
     Set suite variable    &{data}
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
-&{opportunity_fields}    Type=Donation   Name=Delete test $100 Donation   Amount=100  StageName=Closed Won
+&{opportunity_fields}    Type=Donation   Name=Delete Auto test $100 Donation   Amount=100  StageName=Closed Won
 
 
 *** Test Cases ***
@@ -36,20 +36,20 @@ Create Donation from a Contact and Delete Opportunity
 
     ${donation_name}                     Get Main Header
     Go To Page                           Listing
-    ...                                  Opportunity
 
-    Select Row                           ${donation_name}
-    Click Link                           link=Delete
-    Click Modal Button                   Delete
-    Page Contains Record                 ${donation_name}
+    ...                                  Opportunity
+    Wait Until Loading Is Complete
+    Perform Delete Menu Operation On            ${donation_name}          Delete
+    Verify Toast Message                 Opportunity "${donation_name}" was deleted. Undo
+
 
     Go To Page                           Details
     ...                                  Contact
-    ...                                  object_id=${data}[contact][Id]
+    ...                                  object_id=${data}[contact][AccountId]
 
     Select Tab                           Details
 
-    # Validations
+    # Perform Validations
     Validate Field Value Under Section   Membership Information    Total Gifts                 $0.00
     Validate Field Value Under Section   Membership Information    Total Number of Gifts       0
 
