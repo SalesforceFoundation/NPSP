@@ -11,6 +11,7 @@
     </types>
     <types>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Day_of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%StartDate__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Date_Established__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Amount__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Paid_Amount__c</members>
@@ -31,8 +32,12 @@
         <name>CustomObjectTranslation</name>
     </types>
     <types>
+        <members>NPSP_Recurring_Donation</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
         <members>npe03__Recurring_Donation__c-Enhanced Recurring Donations Layout</members>
         <name>Layout</name>
     </types>
-    <version>46.0</version>
+    <version>47.0</version>
 </Package>

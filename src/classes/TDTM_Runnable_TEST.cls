@@ -86,8 +86,8 @@ private with sharing class TDTM_Runnable_TEST {
     **/
     @isTest
     private static void groupByTypeShouldRemoveDuplicateSObjects() {
-        List<Id> accountIds = extractIds([SELECT Id FROM Account]);
-        List<Id> contactIds = extractIds([SELECT Id FROM Contact]);
+        List<Id> accountIds = new List<Id>(UTIL_SObject.extractIds([SELECT Id FROM Account]));
+        List<Id> contactIds = new List<Id>(UTIL_SObject.extractIds([SELECT Id FROM Contact]));
 
         List<SObject> objectsToInsert = new List<SObject>{
             new Contact(LastName = 'GroupBySmith', AccountId = accountIds[0]),
@@ -123,7 +123,7 @@ private with sharing class TDTM_Runnable_TEST {
     **/
     @isTest
     private static void groupByTypeShouldGroupSObjectsByType() {
-        List<Id> accountIds = extractIds([SELECT Id FROM Account]);
+        List<Id> accountIds = new List<Id>(UTIL_SObject.extractIds([SELECT Id FROM Account]));
 
         // Assign more than 10 groups of sObjectTypes in sequence
         List<SObject> objectsToInsert = new List<SObject>{
@@ -149,19 +149,6 @@ private with sharing class TDTM_Runnable_TEST {
             'Insert list size should be unchanged: ' + dmlWrapper.objectsToInsert);
 
         insert dmlWrapper.objectsToInsert;
-    }
-
-
-    // Helpers
-    //////////////
-
-    /*******************************************************************************************************************
-    * @description Extracts sObjects Ids
-    * @param sObjects List of sObjects
-    * @return List<Id> List of sObject Ids
-    */
-    public static List<Id> extractIds(List<SObject> sObjects) {
-        return new List<Id>(new Map<Id, SObject>(sObjects).keySet());
     }
     
 }
