@@ -1,4 +1,18 @@
 <template>
-    <c-ge-templates ontogglemodal={toggleModal}>
-    </c-ge-templates>
+    <template if:true={isLandingPage}>
+        <c-ge-templates ontogglemodal={toggleModal}
+                        onchangeview={handleChangeView}>
+        </c-ge-templates>
+    </template>
+
+    <template if:true={isTemplateBuilder}>
+        <c-ge-template-builder ontogglemodal={toggleModal}
+                               onchangeview={handleChangeView}
+                               form-template-record-id={recordId}>
+        </c-ge-template-builder>
+    </template>
+
+    <template if:true={isSingleGiftEntry}>
+        <c-ge-form-renderer></c-ge-form-renderer>
+    </template>
 </template>

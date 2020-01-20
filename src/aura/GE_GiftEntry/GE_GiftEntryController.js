@@ -7,7 +7,9 @@
     */
     handleShowModal: function (component, event, helper) {
         console.log('handleShowModal');
+        component.set('v.isLoading', true);
         const payload = event.getParams('detail');
+        console.log('payload: ', payload);
 
         $A.createComponents([[`c:${payload.modalProperties.componentName}`, payload.componentProperties]],
             function (components, status, errorMessage) {
@@ -18,7 +20,10 @@
                         header: payload.modalProperties.header || '',
                         showCloseButton: payload.modalProperties.showCloseButton || true,
                         cssClass: component.getName() + ' custom-modal ' + payload.modalProperties.cssClass,
-                        closeCallback: payload.modalProperties.closeCallback || {},
+                        closeCallback: payload.modalProperties.closeCallback || function() {
+                            console.log('closeCallback');
+                            component.set('v.isLoading', false);
+                        },
                         body: modalBody,
                     });
 
@@ -38,12 +43,13 @@
         console.log('*****--- handleModalEvent');
         const details = event.getParams('detail');
 
-        if (details.action === 'save') {
+        if (details) {
             component.find('giftEntryHome').notify(details);
         }
 
         component.get('v.modal').then(modal => {
             modal.close();
+            component.set('v.isLoading', true);
         });
     },
 
@@ -54,6 +60,7 @@
     handleBatchWizardEvent: function (component, event, helper) {
         component.get('v.modal').then(modal => {
             modal.close();
+            component.set('v.isLoading', true);
         });
     }
 })

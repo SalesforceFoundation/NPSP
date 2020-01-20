@@ -4,4 +4,7 @@
     <description>Ge Form Renderer</description>
     <isExposed>false</isExposed>
     <masterLabel>Ge Form Renderer</masterLabel>
+    <targets>
+        <target>lightning__Tab</target>
+    </targets>
 </LightningComponentBundle>

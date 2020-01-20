@@ -63,7 +63,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         BATCH_HEADER_TAB: this.CUSTOM_LABELS.geTabBatchHeader
     });
 
-    formTemplateRecordId;
+    @api formTemplateRecordId;
+
     existingFormTemplateName;
     currentNamespace;
     @track isLoading = true;
@@ -133,6 +134,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     init = async () => {
+        console.log('******--- init: ', this.formTemplateRecordId);
+        console.time('template_builder');
         try {
             const dataImportSettings = await getDataImportSettings();
 
@@ -144,8 +147,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
                 this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
-                // Check if there's a record id in the url
-                this.formTemplateRecordId = getQueryParameters().c__recordId;
+                // If we have no template record id, check if there's a record id in the url
+                if (!this.formTemplateRecordId) {
+                    this.formTemplateRecordId = getQueryParameters().c__recordId;
+                }
 
                 if (this.formTemplateRecordId) {
                     let formTemplate = await retrieveFormTemplateById({ templateId: this.formTemplateRecordId });
@@ -170,6 +175,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
                 this.isLoading = false;
                 this.isAccessible = true;
+                console.timeEnd('template_builder');
             }
         } catch (error) {
             handleError(error);
@@ -287,6 +293,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     @api
     notify(modalData) {
+        console.log('******-------- notify: ', modalData);
         if (modalData.action === SAVE) {
             let formSections = mutable(this.formSections);
             let formSection = formSections.find((fs) => { return fs.id === modalData.section.id });
@@ -967,12 +974,19 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @description Navigates to the list view GE_Templates tab.
     */
     handleCancel() {
+        /*const queryParameter = {
+            c__view: 'Gift_Entry'
+        }
+
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                apiName: this.listViewCustomTabApiName
-            }
-        });
+                apiName: 'npsp__GE_Gift_Entry'
+            },
+            state: queryParameter
+        });*/
+
+        dispatch(this, 'changeview', { view: 'Gift_Entry' });
     }
 
     /*******************************************************************************
@@ -994,11 +1008,22 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     * @description Navigates to Gift Entry landing page.
     */
     navigateToLandingPage() {
-        this[NavigationMixin.Navigate]({
+        /*this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
                 apiName: this.listViewCustomTabApiName
             }
+        });*/
+        const queryParameter = {
+            c__view: 'Gift_Entry'
+        }
+
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: 'npsp__GE_Gift_Entry'
+            },
+            state: queryParameter
         });
     }
 }

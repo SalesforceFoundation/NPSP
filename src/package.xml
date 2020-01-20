@@ -3269,6 +3269,7 @@
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
         <members>geFormWidgetRow</members>
+        <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
         <members>geTemplateBuilder</members>

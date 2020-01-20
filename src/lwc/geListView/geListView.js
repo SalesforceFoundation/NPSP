@@ -586,7 +586,8 @@ export default class geListView extends LightningElement {
             const builderTabApiName =
                 TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
 
-            url = `/lightning/n/${builderTabApiName}?c__recordId={0}`;
+            //url = `/lightning/n/${builderTabApiName}?c__recordId={0}`;
+            url = `/lightning/n/npsp__GE_Gift_Entry?c__view=Template_Builder&c__recordId={0}`;
         } else {
             url = `/lightning/r/${this.objectApiName}/{0}/view`;
         }

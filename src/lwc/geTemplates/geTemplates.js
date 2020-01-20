@@ -149,11 +149,10 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 cssClass: 'slds-modal_large',
                 componentName: 'geBatchWizard',
                 showCloseButton: true,
-                closeCallback: function (event) {
-                    // TODO: We can use this callback after a save/update/cancel action
-                    // to perform additional logic in BGE (refresh, redirect, etc).
-                    // Otherwise we can scrap it in the "BGE Batch Header Edit" WI.
-                }
+                // TODO: We can use this callback after a save/update/cancel action
+                // to perform additional logic in BGE (refresh, redirect, etc).
+                // Otherwise we can scrap it in the "BGE Batch Header Edit" WI.
+                closeCallback: undefined,
             }
         };
 
@@ -165,11 +164,13 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     init = async () => {
+        console.time('templates_list_view');
         this.isAccessible = await this.checkPageAccess();
 
         if (this.isAccessible) {
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.isLoading = false;
+            console.timeEnd('templates_list_view');
         }
     }
 
@@ -280,14 +281,25 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     * @param {string} recordId: Record id of the Form_Template__c
     */
     navigateToTemplateBuilder(recordId) {
-        const queryParameter = recordId ? { c__recordId: recordId } : {};
+        /*let queryParameter = {
+            c__view: 'Template_Builder'
+        }
+
+        if (recordId) {
+            queryParameter.c__recordId = recordId;
+        }
 
         this[NavigationMixin.Navigate]({
             type: 'standard__navItemPage',
             attributes: {
-                apiName: this.templateBuilderCustomTabApiName
+                apiName: 'npsp__GE_Gift_Entry'
             },
             state: queryParameter
+        });*/
+
+        dispatch(this, 'changeview', {
+            view: 'Template_Builder',
+            recordId: recordId
         });
     }
 
@@ -304,11 +316,16 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     * to the Form Renderer.
     */
     navigateToForm() {
+        let queryParameter = {
+            c__view: 'Single_Gift_Entry'
+        }
+
         this[NavigationMixin.Navigate]({
-            type: 'standard__component',
+            type: 'standard__navItemPage',
             attributes: {
-                componentName: 'c__geFormRendererPlaceholder'
-            }
+                apiName: 'npsp__GE_Gift_Entry'
+            },
+            state: queryParameter
         });
     }
 }
