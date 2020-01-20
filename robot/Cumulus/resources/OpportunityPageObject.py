@@ -63,6 +63,7 @@ class OpportunityListingPage(BaseNPSPPage, ListingPage):
                 self.selenium.wait_until_page_contains(action)
                 self.selenium.click_link(action)
 
+                # Wait for the delete button from the modal and confirmt he delete action
                 delete_btn=npsp_lex_locators["Delete_opportunity_modal_button"]
                 self.selenium.wait_until_element_is_visible(delete_btn)
                 self.selenium.click_button(delete_btn)
