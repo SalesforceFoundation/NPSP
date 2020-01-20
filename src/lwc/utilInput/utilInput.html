@@ -1,0 +1,111 @@
+<template>
+    <template if:true={isWidget}>
+        <div class="slds-card">
+            <p class="slds-text_title">{uiLabel}</p>
+            <p class="slds-text-body_regular">{CUSTOM_LABELS.geBodyBatchFieldBundleInfo}</p>
+        </div>
+    </template>
+
+    <template if:false={isWidget}>
+        <template if:true={isLightningRichText}>
+            <lightning-input-rich-text aria-label="default value"
+                                       label={uiLabel}
+                                       formats={richTextFormats}
+                                       required={isRequired}
+                                       class="slds-m-around_none"
+                                       data-name="defaultValue"
+                                       onclick={stopPropagation}
+                                       value={fieldValue}
+                                       variant={variant}
+                                       tab-index={tabIndex}
+                                       onblur={handleValueChange}>
+            </lightning-input-rich-text>
+        </template>
+
+        <template if:true={isLightningTextarea}>
+            <lightning-textarea aria-label="default value"
+                                label={uiLabel}
+                                required={isRequired}
+                                class="slds-m-around_none"
+                                data-name="defaultValue"
+                                onblur={handleValueChange}
+                                onclick={stopPropagation}
+                                value={fieldValue}
+                                variant={variant}
+                                tab-index={tabIndex}>
+            </lightning-textarea>
+        </template>
+
+        <template if:true={isLightningCombobox}>
+            <c-ge-form-field-picklist class-name="slds-m-around_none"
+                                      label={uiLabel}
+                                      required={isRequired}
+                                      field-name={fieldApiName}
+                                      object-name={uiObjectApiName}
+                                      object-describe-info={objectInfo}
+                                      onchange={handleChangeCombobox}
+                                      value={fieldValue}
+                                      variant={variant}
+                                      tab-index={tabIndex}>
+            </c-ge-form-field-picklist>
+        </template>
+
+        <template if:true={isLightningCheckbox}>
+            <lightning-input aria-label="default value"
+                             label={uiLabel}
+                             required={isRequired}
+                             checked={fieldValue}
+                             class="slds-m-top_small"
+                             data-name="defaultValue"
+                             onchange={handleValueChange}
+                             onclick={stopPropagation}
+                             type="checkbox">
+            </lightning-input>
+        </template>
+
+        <template if:true={isLightningSearch}>
+            <c-ge-form-field-lookup id={fieldApiName}
+                                    data-id='inputComponent'
+                                    field-api-name={fieldApiName}
+                                    object-api-name={objectApiName}
+                                    onchange={handleValueChange}
+                                    default-value={fieldValue}
+                                    required={isRequired}
+                                    object-describe-info={objectInfo}
+                                    label={uiLabel}
+                                    variant={variant}>
+            </c-ge-form-field-lookup>
+        </template>
+
+        <template if:true={isLightningDateOrDatetime}>
+            <lightning-input aria-label="default value"
+                             label={uiLabel}
+                             required={isRequired}
+                             class="slds-m-around_none"
+                             data-name="defaultValue"
+                             onchange={handleValueChange}
+                             onclick={stopPropagation}
+                             type={lightningInputType}
+                             value={fieldValue}
+                             variant={variant}
+                             tab-index={tabIndex}>
+            </lightning-input>
+        </template>
+
+        <template if:true={isBaseLightningInput}>
+            <lightning-input aria-label="default value"
+                             label={uiLabel}
+                             required={isRequired}
+                             class="slds-m-around_none"
+                             data-name="defaultValue"
+                             onblur={handleValueChange}
+                             onclick={stopPropagation}
+                             type={lightningInputType}
+                             formatter={formatter}
+                             value={fieldValue}
+                             variant={variant}
+                             tab-index={tabIndex}>
+            </lightning-input>
+        </template>
+    </template>
+</template>

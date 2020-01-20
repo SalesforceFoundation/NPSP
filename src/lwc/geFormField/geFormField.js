@@ -20,6 +20,7 @@ export default class GeFormField extends LightningElement {
     @track richTextValid = true;
     @api element;
     @api targetFieldName;
+    _defaultValue = null;
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -35,18 +36,6 @@ export default class GeFormField extends LightningElement {
 
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
 
-    connectedCallback(){
-        if(this.targetFieldName !== undefined){
-            // Construct an element object using the field name and mapping info
-            this.element = {
-                label: this.fieldInfo.Target_Field_Label,
-                required: this.fieldInfo.Is_Required,
-                dataImportFieldMappingDevNames: [this.targetFieldName]
-            };
-        }
-    }
-
-
     /**
      * Retrieve field metadata. Used to configure how fields are displayed on the form.
      */
@@ -58,8 +47,26 @@ export default class GeFormField extends LightningElement {
     }
 
     connectedCallback() {
-        const { defaultValue } = this.element;
-        if(defaultValue) {
+        if(this.targetFieldName !== undefined){
+            // Construct an element object using the field name and mapping info
+            this.element = {
+                label: this.fieldInfo.Target_Field_Label,
+                required: this.fieldInfo.Is_Required,
+                dataImportFieldMappingDevNames: [this.targetFieldName]
+            };
+        }
+
+        const { defaultValue, recordValue } = this.element;
+
+        if(recordValue) {
+
+            // set the record value to the element value
+            this.value = recordValue;
+        } else if(defaultValue) {
+
+            // Set the default value if there is one
+            // and no record value.
+            this._defaultValue = defaultValue;
             this.value = defaultValue;
         }
     }
@@ -136,7 +143,7 @@ export default class GeFormField extends LightningElement {
 
         // TODO: Update for widget fields
         fieldAndValue[this.formElementName] = this.value;
-        
+
         return fieldAndValue;
     }
 
@@ -233,4 +240,33 @@ export default class GeFormField extends LightningElement {
             inputField.reportValidity();
         }
     }
+
+    @api
+    load(data) {
+        const value = data[this.sourceFieldAPIName];
+
+        if (this.isLookup) {
+            const lookup = this.template.querySelector('c-ge-form-field-lookup');
+            if (value) {
+                const displayValue =
+                    data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
+                lookup.setSelected({value, displayValue});
+            } else {
+                lookup.reset();
+            }
+        } else {
+            this.value = value;
+        }
+    }
+
+    @api
+    reset() {
+        if (this.isLookup) {
+            const lookup = this.template.querySelector('c-ge-form-field-lookup');
+            lookup.reset();
+        } else {
+            this.value = this._defaultValue;
+        }
+    }
+
 }

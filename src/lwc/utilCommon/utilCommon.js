@@ -1,6 +1,7 @@
+/* eslint-disable no-void */
+/* eslint-disable @lwc/lwc/no-async-operation */
 const FUNCTION = 'function';
 const OBJECT = 'object';
-const ASC = 'asc';
 
 
 /*******************************************************************************
@@ -23,37 +24,6 @@ const debouncify = (anyFunction, wait) => {
             }, wait);
         });
     };
-};
-
-/*******************************************************************************
- * @description Loop through provided array or object properties. Recursively check
- * if the current value is an object or an array and copy accordingly.
- *
- * @param {any} src: Thing to clone
- *
- * @return {object} clone: Deep clone copy of src
- */
-const deepClone = (src) => {
-    let clone = null;
-
-    if (isObject(src)) {
-        clone = {};
-        for (let property in src) {
-            if (src.hasOwnProperty(property)) {
-                // if the value is a nested object, recursively copy all it's properties
-                clone[property] = isObject(src[property]) ? deepClone(src[property]) : src[property];
-            }
-        }
-    }
-
-    if (Array.isArray(src)) {
-        clone = [];
-        for (let item of src) {
-            clone.push(deepClone(item));
-        }
-    }
-
-    return clone;
 };
 
 /*******************************************************************************
@@ -89,24 +59,6 @@ const getQueryParameters = () => {
     return params;
 };
 
-/**
- * Check if a value is undefined, null or blank string.
- * @param value         Value to check.
- * @returns {boolean}   TRUE when the given value is undefined, null or blank string.
- */
-const isEmpty = (value) => {
-    return isUndefined(value) || value === null || value === '';
-};
-
-/**
- * Inverse of isEmpty
- * @param value         Value to check.
- * @returns {boolean}   TRUE when the given value is not undefined, null or blank string.
- */
-const isNotEmpty = (value) => {
-    return !isEmpty(value);
-};
-
 /*******************************************************************************
  * @description Checks if value parameter is a function
  *
@@ -130,6 +82,17 @@ const isObject = (obj) => {
     return isFunction(obj) || typeof obj === OBJECT && !!obj;
 };
 
+/*******************************************************************************
+ * @description Checks to see if the passed parameter is a primative.
+ *
+ * @param {any} value: Thing to check
+ *
+ * @return {boolean}: True if the provided obj is a primative.
+ */
+const isPrimative = (value) => {
+    return (value !== Object(value));
+}
+
 /**
  * Check if a value is undefined.
  * @param value         Value to check
@@ -138,6 +101,28 @@ const isObject = (obj) => {
 const isUndefined = (value) => {
     // void(0) allows us to safely obtain undefined to compare with the passed-in value
     return value === void(0);
+};
+
+/**
+ * Check if a value is undefined, null or blank string.
+ * @param value         Value to check.
+ * @returns {boolean}   TRUE when the given value is undefined, null or blank string.
+ */
+const isEmpty = (value) => {
+    return isUndefined(value) || value === null || value === '';
+};
+
+/**
+ * Inverse of isEmpty
+ * @param value         Value to check.
+ * @returns {boolean}   TRUE when the given value is not undefined, null or blank string.
+ */
+const isNotEmpty = (value) => {
+    return !isEmpty(value);
+};
+
+const isNull = value => {
+    return value === undefined || value === null;
 };
 
 /*******************************************************************************
@@ -163,40 +148,6 @@ const mutable = (obj) => {
 const shiftToIndex = (array, oldIndex, newIndex) => {
     [array[oldIndex], array[newIndex]] = [array[newIndex], array[oldIndex]];
     return array;
-};
-
-/*******************************************************************************
- * @description Sorts the given list by field name and direction
- *
- * @param {array} list: List to be sorted
- * @param {string} property: Property to sort by
- * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
- * @param {boolean} isNullsLast: If truthy, orders by NULLS LAST using isEmpty(value)
- *
- * @return {list} data: Sorted instance of list.
- */
-const sort = (objects, attribute, direction = 'desc', isNullsLast) => {
-    let objectsToSort = deepClone(objects);
-    let collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
-
-    return objectsToSort.sort((a, b) => {
-        if (isNullsLast) {
-            if (direction === 'asc' && a[attribute]) {
-                return b[attribute] ? collator.compare(a[attribute].toString(), b[attribute].toString()) : -1;
-            } else if (b[attribute]) {
-                return a[attribute] ? collator.compare(b[attribute].toString(), a[attribute].toString()) : 1;
-            }
-        } else {
-            let propA = (a[attribute] || a['Name'] || '').toString();
-            let propB = (b[attribute] || b['Name'] || '').toString();
-
-            if (direction === 'asc') {
-                return collator.compare(propA, propB);
-            } else {
-                return collator.compare(propB, propA);
-            }
-        }
-    });
 };
 
 /*******************************************************************************
@@ -241,6 +192,122 @@ const removeByProperty = (array, property, value) => {
     array.splice(index, 1);
 };
 
+/*******************************************************************************
+ * @description Loop through provided array or object properties. Recursively check
+ * if the current value is an object or an array and copy accordingly.
+ *
+ * @param {any} src: Thing to clone
+ *
+ * @return {object} clone: Deep clone copy of src
+ */
+const deepClone = (src) => {
+    let clone = null;
+
+    if (isPrimative(src)) {
+        return src;
+    }
+
+    if (isObject(src)) {
+        clone = {};
+        for (let property in src) {
+            if (src.hasOwnProperty(property)) {
+                // if the value is a nested object, recursively copy all it's properties
+                clone[property] = isObject(src[property]) ? deepClone(src[property]) : src[property];
+            }
+        }
+    }
+
+    if (Array.isArray(src)) {
+        clone = [];
+        for (let item of src) {
+            clone.push(deepClone(item));
+        }
+    }
+
+    return clone;
+}
+
+/*******************************************************************************
+ * @description Sorts the given list by field name and direction
+ *
+ * @param {array} list: List to be sorted
+ * @param {string} property: Property to sort by
+ * @param {string} sortDirection: Direction to sort by (i.e. 'asc' or 'desc')
+ * @param {boolean} isNullsLast: If truthy, orders by NULLS LAST using isEmpty(value)
+ *
+ * @return {list} data: Sorted instance of list.
+ */
+const sort = (objects, attribute, direction = "desc", isNullsLast) => {
+    if (objects && attribute) {
+        objects = deepClone(objects);
+        let aBeforeB, bBeforeA;
+        {
+            let sortDirectionMultiplier = direction.toLowerCase() === "desc" ? -1 : 1;
+
+            aBeforeB = -1 * sortDirectionMultiplier;
+            bBeforeA = 1 * sortDirectionMultiplier;
+        }
+
+        return objects.sort((a, b) => {
+            if (isNull(a)) {
+                if (isNull(b)) {
+                    return 0;
+                }
+                return isNullsLast ? bBeforeA : aBeforeB;
+            }
+            if (isNull(b)) {
+                return isNullsLast ? aBeforeB : bBeforeA;
+            }
+            if (isNull(a[attribute])) {
+                if (isNull(b[attribute])) {
+                    return 0;
+                }
+                return isNullsLast ? bBeforeA : aBeforeB;
+            }
+            if (isNull(b[attribute])) {
+                return isNullsLast ? aBeforeB : bBeforeA;
+            }
+            if (a[attribute] < b[attribute]) {
+                return aBeforeB;
+            }
+            if (b[attribute] < a[attribute]) {
+                return bBeforeA;
+            }
+            return 0;
+        });
+    }
+    return objects;
+};
+
+/*******************************************************************************
+* @description Method checks to see if a property on the given object exists.
+* Otherwise returns undefined.
+*
+* @param {object} object: Object with properties to check.
+* @param {string} property: Name of the property to check.
+* @return {list} remainingProperties: Destructure all other arguments so we can
+* check N levels deep of the object.
+* e.g. checkNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
+*/
+const checkNestedProperty = (object, property, ...remainingProperties) => {
+    if (object === undefined) return false
+    if (remainingProperties.length === 0 && object.hasOwnProperty(property)) return true
+    return checkNestedProperty(object[property], ...remainingProperties)
+}
+
+/*******************************************************************************
+* @description Method returns the value of a property on the given object.
+* Otherwise returns undefined.
+*
+* @param {object} object: Object with properties to return.
+* @return {list} args: Destructure all other arguments so we can
+* check N levels deep of the object.
+* e.g. getNestedProperty(someObject, 'firstLevel', 'secondLevel', 'thirdLevel')
+*/
+const getNestedProperty = (object, ...args) => {
+    return args.reduce((obj, level) => obj && obj[level], object)
+}
+
 export {
     debouncify,
     deepClone,
@@ -251,9 +318,13 @@ export {
     isFunction,
     isObject,
     isUndefined,
+    isPrimative,
+    isNull,
     mutable,
     sort,
     shiftToIndex,
     removeByProperty,
-    format
+    format,
+    checkNestedProperty,
+    getNestedProperty
 };
