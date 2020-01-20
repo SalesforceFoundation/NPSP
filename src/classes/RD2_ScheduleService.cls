@@ -45,7 +45,7 @@ public without sharing class RD2_ScheduleService {
     /**
     * @description Default number of visualization records to calculate
     */
-    private final Integer DEFAULT_VISUALIZATION_SCHEDULE_COUNT = 12;
+    private final Integer DEFAULT_INSTALLMENT_NUMBER = 12;
 
     /**
     * @description Date to treat as current date in calculation of schedules.
@@ -197,12 +197,12 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the dates of the next n donations for a list of Recurring Donations
-    * @param rds List of Recurring Donation records
-    * @param startDate Date (if null, current date will be used)
-    * @param numInstallments Integer (if null, DEFAULT_VISUALIZATION_SCHEDULE_COUNT will be used)
+    * @description Calculates the dates of the next N Installment Opportunities for specified Recurring Donations
+    * @param rds Recurring Donation records
+    * @param startDate Lower boundary date used to filter installments with Close Date >= startDate (if null, current date will be used)
+    * @param numInstallments Number of installment Opportunities to return (if null, default number will be used)
     * @param schedulesByRd RD Schedules by RD Id (if null, active schedules will be queried)
-    * @return Map<Id, List<Installment>> Recurring Donation Ids to List of upcoming installments
+    * @return Map<Id, List<Installment>> Upcoming installments mapped by the Recurring Donation Id
     */
     public Map<Id, List<Installment>> getVisualizedInstallments(
         List<npe03__Recurring_Donation__c> rds, 
@@ -227,9 +227,9 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the dates of the next n donations for a single Recurring Donation
-    * @param startDate Date
-    * @param numInstallments Integer
+    * @description Calculates the dates of the next N Installment Opportunities for a single Recurring Donation
+    * @param startDate Lower boundary date used to filter installments with Close Date >= startDate
+    * @param numInstallments Number of installment Opportunities
     * @param schedules RD Schedules
     * @return List<Installment>
     */
@@ -240,7 +240,7 @@ public without sharing class RD2_ScheduleService {
         }
 
         numInstallments = numInstallments == null
-            ? DEFAULT_VISUALIZATION_SCHEDULE_COUNT
+            ? DEFAULT_INSTALLMENT_NUMBER
             : numInstallments;
 
         Date referenceDate = startDate == null ? currentDate : startDate;
@@ -258,7 +258,7 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the dates of the next n donations for a single Recurring Donation
+    * @description Calculates the dates of the next N donations for a single Recurring Donation
     * @param startDate Lower boundary date used to filter installments with Close Date >= startDate
     * @param endDate Upper boundary date used to filter installments with Close Date <= endDate
     * @param schedules RD Schedules
@@ -620,7 +620,11 @@ public without sharing class RD2_ScheduleService {
             return new List<RecurringDonationSchedule__c>();
         }
 
-        return getExistingSchedules(new List<npe03__Recurring_Donation__c> {rd}).get(rd.Id);
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRDId = getExistingSchedules(new List<npe03__Recurring_Donation__c>{ rd });
+
+        return schedulesByRDId.containsKey(rd.Id)
+            ? schedulesByRDId.get(rd.Id)
+            : new List<RecurringDonationSchedule__c>();
     }
 
     /***

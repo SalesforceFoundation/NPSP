@@ -38,6 +38,8 @@
 private with sharing class RD2_VisualizeScheduleController_TEST {
 
     private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 11, 1);
+    private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
+    private static final String PAYMENT_CHECK = 'Check';
 
     /****
     * @description Creates data required for unit tests
@@ -121,31 +123,31 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     private static void shouldReturnSpecifiedInstallmentsForValidActiveRD() {
         Integer numberOfInstallments = 12;
         Date startDate = Date.newInstance(1950, 1, 1);
-        Date serviceDate = Date.newInstance(1968, 7, 19);
-        Date installment5Date = Date.newInstance(1968,12,1);
-        Date installment10Date = Date.newInstance(1969,5,1);
+        Date today = Date.newInstance(1968, 7, 19);
+        Date installment5Date = Date.newInstance(1968, 12, 1);
+        Date installment10Date = Date.newInstance(1969, 5, 1);
+  
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withDateEstablished(startDate)
             .withStartDate(startDate)
             .build();
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
         Test.startTest();
         insert rd;
-        List<RD2_VisualizeScheduleController.Installment> schedules =
-            RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
         Test.stopTest();
 
-        setScheduleServiceDate(serviceDate);
+        RD2_ScheduleService.currentDate = today;      
         List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
+        System.assertEquals(numberOfInstallments, installments.size(), 'Number of installments should match');
 
-        System.assertEquals(numberOfInstallments, schedules.size(), 'Number of installments should match');
-        System.assertEquals(installment10Date, installments[9].donationDate, 'Donation date should be 5/1/1969.');
+        for (RD2_VisualizeScheduleController.Installment installment : installments) {
+            System.assertEquals(PAYMENT_CREDIT_CARD, installment.paymentMethod, 'Payment Method should be Credit Card.');
+            System.assertEquals(rd.npe03__Amount__c, installment.amount, 'Installment Amount should match RD Amount.');
+        }
         System.assertEquals(installment5Date, installments[4].donationDate, 'Donation date should be 12/1/1968.');
-        System.assertEquals('Credit Card', installments[3].paymentMethod, 'Payment Method should be Credit Card.');
-        System.assertEquals('Credit Card', installments[6].paymentMethod, 'Payment Method should be Credit Card.');
-        System.assertEquals(100, installments[11].amount, 'Amount should be 100.');
-        System.assertEquals(100, installments[2].amount, 'Amount should be 100.');
+        System.assertEquals(installment10Date, installments[9].donationDate, 'Donation date should be 5/1/1969.');
     }
 
     /****
@@ -153,34 +155,31 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     @IsTest
     private static void shouldReturnTwoActiveSchedulesForValidNonClosedRD() {
-        Date startDate = Date.newInstance(2019,6,1);
-        Date newStartDate = Date.newInstance(2019,10,15);
-        Date serviceDate = Date.newInstance(2019,7,31);
-        Date endDate = Date.newInstance(2019,10,14);
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .build();
+        Date startDate = Date.newInstance(2019, 6, 1);
+        Date today = Date.newInstance(2019, 7, 31);
+        Date newStartDate = Date.newInstance(2019, 10, 15);
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Test.startTest();
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withDateEstablished(startDate)
+            .withStartDate(startDate)
+            .build();
         insert rd;
-        rd.PaymentMethod__c = 'Check';
+
+        Test.startTest();
+        rd.PaymentMethod__c = PAYMENT_CHECK;
         rd.StartDate__c = newStartDate;
         update rd;
-        setScheduleServiceDate(serviceDate);
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
         Test.stopTest();
 
-        System.assertEquals(2, schedules.size(), 'There should be 2 schedules.');
-        System.assertEquals(true, schedules[0].isCurrent, 'isCurrent should be true.');
-        System.assertEquals(false, schedules[1].isCurrent, 'isCurrent should be false.');
-        System.assertEquals('Credit Card', schedules[0].paymentMethod, 'Payment Method should be Credit Card.');
-        System.assertEquals('Check', schedules[1].paymentMethod, 'Payment Method should be Check.');
-        System.assertEquals(startDate, schedules[0].startDate, 'Start Date should be 6/1/2019.');
-        System.assertEquals(newStartDate, schedules[1].startDate, 'Start Date should be 10/15/2019.');
-        System.assertEquals(endDate, schedules[0].endDate, 'End Date should be 10/14/2019.');
-        System.assertEquals(null, schedules[1].endDate, 'End Date should be null.');
+        RD2_ScheduleService.currentDate = today;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+
+        assertScheduleDates(schedules, startDate, newStartDate);
+
+        System.assertEquals(PAYMENT_CREDIT_CARD, schedules[0].paymentMethod, 'First schedule Payment Method should be Credit Card.');
+        System.assertEquals(PAYMENT_CHECK, schedules[1].paymentMethod, 'Second schedule Payment Method should be Check.');
     }
 
     /****
@@ -190,6 +189,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     private static void shouldThrowAuraHandledExceptionWhenEnhancedRDNotEnabled() {
         Exception actualException;
         Integer numberOfInstallments = 12;
+
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(getContact().Id)
             .withAmount(50)
@@ -234,29 +234,31 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     @IsTest
     private static void shouldReturnOneActiveScheduleForNewRD() {
-        Date startDate = Date.newInstance(2018,2,1);
-        Date serviceDate = Date.newInstance(2019,7,31);
+        Date startDate = Date.newInstance(2018, 2, 1);
+        Date today = Date.newInstance(2019, 7, 31);
         String dayOfMonth = '12';
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .withDayOfMonth(dayOfMonth)
-                .build();
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .build();
+
         Test.startTest();
         insert rd;
-        setScheduleServiceDate(serviceDate);
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
         Test.stopTest();
 
+        RD2_ScheduleService.currentDate = today;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+
         System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
-        System.assertEquals(true, schedules[0].isCurrent, 'isCurrent should be true.');
-        System.assertEquals(100, schedules[0].amount, 'Amount should be 100.');
-        System.assertEquals(startDate, schedules[0].startDate, 'Start Date should be 2/1/2018.');
-        System.assertEquals(null, schedules[0].endDate, 'End Date should be null.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'Period should be monthly.');
-        System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'Day of month should be 12.');
+        System.assertEquals(true, schedules[0].isCurrent, 'Schedule should be current');
+        System.assertEquals(rd.npe03__Amount__c, schedules[0].amount, 'Schedule Amount should match RD Amount');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'Schedule Period should match RD Installment Period');
+        System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'Schedule Day of Month should match');
+        System.assertEquals(startDate, schedules[0].startDate, 'Schedule Start Date should be RD Effective Date');
+        System.assertEquals(null, schedules[0].endDate, 'Schedule End Date should be undefined');
     }
 
     /****
@@ -264,40 +266,39 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     @IsTest
     private static void shouldReturnActiveSchedulesWhenRDHasCurrentAndFutureSchedule() {
-        Date startDate = Date.newInstance(2018,2,1);
-        Date newStartDate = Date.newInstance(2018,4,1);
-        Date serviceDate = Date.newInstance(2018,3,1);
-        Date endDate = Date.newInstance(2018,3,31);
+        Date startDate = Date.newInstance(2018, 2, 1);
+        Date today = Date.newInstance(2018, 3, 1);
+        Date newStartDate = Date.newInstance(2018, 4, 1);
         String dayOfMonth = '12';
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .withDayOfMonth(dayOfMonth)
-                .build();
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Test.startTest();
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .build();
         insert rd;
+
+        Decimal newAmount = rd.npe03__Amount__c + 100;
+        Test.startTest();
         rd.StartDate__c = newStartDate;
-        rd.npe03__Amount__c = 200;
+        rd.npe03__Amount__c = newAmount;
         update rd;
-        setScheduleServiceDate(serviceDate);
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
         Test.stopTest();
 
-        System.assertEquals(2, schedules.size(), 'There should be 2 schedules.');
-        System.assertEquals(true, schedules[0].isCurrent, 'isCurrent should be true.');
-        System.assertEquals(false, schedules[1].isCurrent, 'isCurrent should be false.');
-        System.assertEquals(100, schedules[0].amount, 'Amount should be 100.');
-        System.assertEquals(200, schedules[1].amount, 'Amount should be 200.');
-        System.assertEquals(startDate, schedules[0].startDate, 'Start Date should be 2/1/2018.');
-        System.assertEquals(newStartDate, schedules[1].startDate, 'Start Date should be 4/1/2018.');
-        System.assertEquals(endDate, schedules[0].endDate, 'End Date should be 3/31/2018.');
-        System.assertEquals(null, schedules[1].endDate, 'End Date should be null.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'Period should be monthly.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[1].period, 'Period should be monthly.');
-        System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'Day of month should be 12.');
-        System.assertEquals(dayOfMonth, schedules[1].dayOfMonth, 'Day of month should be 12.');
+        RD2_ScheduleService.currentDate = today;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+
+        assertScheduleDates(schedules, startDate, newStartDate);
+
+        System.assertEquals(100, schedules[0].amount, 'First schedule Amount should be old Amount');
+        System.assertEquals(newAmount, schedules[1].amount, 'Second schedule Amount should be new Amount');
+
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'First schedule Period should be unchanged');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[1].period, 'Second schedule Period should match');
+
+        System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'First schedule Day of Month should be unchanged');
+        System.assertEquals(dayOfMonth, schedules[1].dayOfMonth, 'Second schedule Day of Month should match');
     }
 
     /****
@@ -306,12 +307,12 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     @IsTest
     private static void shouldThrowAuraHandledExceptionRDIsClosed() {
         Exception actualException;
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStatusClosed()
-                .withDayOfMonth('12')
-                .build();
-
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStatusClosed()
+            .withDayOfMonth('12')
+            .build();
 
         Test.startTest();
         insert rd;
@@ -331,41 +332,40 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     @IsTest
     private static void shouldDisplayExpectedValuesWhenChangingFromFirstAndFifteenthToMonthly() {
-        Date startDate = Date.newInstance(2018,2,1);
-        Date newStartDate = Date.newInstance(2018,4,1);
-        Date serviceDate = Date.newInstance(2018,3,1);
-        Date endDate = Date.newInstance(2018,3,31);
+        Date startDate = Date.newInstance(2018, 2, 1);
+        Date today = Date.newInstance(2018, 3, 1);
+        Date newStartDate = Date.newInstance(2018, 4, 1);
         String dayOfMonth = '12';
-        npe03__Recurring_Donation__c rd = getRecurringDonationFirstAndFifteenthBuilder()
-                .withStartDate(startDate)
-                .withDayOfMonth(dayOfMonth)
-                .build();
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Test.startTest();
+        npe03__Recurring_Donation__c rd = getRecurringDonationFirstAndFifteenthBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .build();
         insert rd;
+
+        Decimal newAmount = rd.npe03__Amount__c + 100;
+        Test.startTest();
         rd.StartDate__c = newStartDate;
-        rd.npe03__Amount__c = 200;
+        rd.npe03__Amount__c = newAmount;
         rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
         update rd;
-        setScheduleServiceDate(serviceDate);
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
         Test.stopTest();
 
-        System.assertEquals(2, schedules.size(), 'There should be 2 schedules.');
-        System.assertEquals(true, schedules[0].isCurrent, 'isCurrent should be true.');
-        System.assertEquals(false, schedules[1].isCurrent, 'isCurrent should be false.');
-        System.assertEquals(100, schedules[0].amount, 'Amount should be 100.');
-        System.assertEquals(200, schedules[1].amount, 'Amount should be 200.');
-        System.assertEquals(startDate, schedules[0].startDate, 'Start Date should be 2/1/2018.');
-        System.assertEquals(newStartDate, schedules[1].startDate, 'Start Date should be 4/1/2018.');
-        System.assertEquals(endDate, schedules[0].endDate, 'End Date should be 3/31/2018.');
-        System.assertEquals(null, schedules[1].endDate, 'End Date should be null.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH, schedules[0].period, 'Period should be 1st and 15th.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[1].period, 'Period should be monthly.');
-        System.assertEquals(null, schedules[0].dayOfMonth, 'Day of month should be null.');
-        System.assertEquals(dayOfMonth, schedules[1].dayOfMonth, 'Day of month should be 12.');
+        RD2_ScheduleService.currentDate = today;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+
+        assertScheduleDates(schedules, startDate, newStartDate);
+
+        System.assertEquals(100, schedules[0].amount, 'First schedule Amount should be old Amount');
+        System.assertEquals(newAmount, schedules[1].amount, 'Second schedule Amount should be new Amount');
+
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH, schedules[0].period, 'First schedule Period should be 1st and 15th.');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[1].period, 'Second schedule Period should be monthly.');
+
+        System.assertEquals(null, schedules[0].dayOfMonth, 'First schedule Day of Month should be undefined');
+        System.assertEquals(dayOfMonth, schedules[1].dayOfMonth, 'Second schedule Day of Month should match');
     }
 
     /****
@@ -373,41 +373,40 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     @IsTest
     private static void shouldDisplayExpectedValuesWhenChangingFromMonthlyToFirstAndFifteenth() {
-        Date startDate = Date.newInstance(2018,2,1);
-        Date newStartDate = Date.newInstance(2018,4,1);
-        Date serviceDate = Date.newInstance(2018,3,1);
-        Date endDate = Date.newInstance(2018,3,31);
+        Date startDate = Date.newInstance(2018, 2, 1);
+        Date today = Date.newInstance(2018, 3, 1);
+        Date newStartDate = Date.newInstance(2018, 4, 1);
         String dayOfMonth = '12';
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .withDayOfMonth(dayOfMonth)
-                .build();
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Test.startTest();
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .build();
         insert rd;
+
+        Decimal newAmount = rd.npe03__Amount__c + 100;
+        Test.startTest();
         rd.StartDate__c = newStartDate;
-        rd.npe03__Amount__c = 200;
+        rd.npe03__Amount__c = newAmount;
         rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
         update rd;
-        setScheduleServiceDate(serviceDate);
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
         Test.stopTest();
 
-        System.assertEquals(2, schedules.size(), 'There should be 1 schedule.');
-        System.assertEquals(true, schedules[0].isCurrent, 'isCurrent should be true.');
-        System.assertEquals(false, schedules[1].isCurrent, 'isCurrent should be false.');
-        System.assertEquals(100, schedules[0].amount, 'Amount should be 100.');
-        System.assertEquals(200, schedules[1].amount, 'Amount should be 200.');
-        System.assertEquals(startDate, schedules[0].startDate, 'Start Date should be 2/1/2018.');
-        System.assertEquals(newStartDate, schedules[1].startDate, 'Start Date should be 4/1/2018.');
-        System.assertEquals(endDate, schedules[0].endDate, 'End Date should be 3/31/2018.');
-        System.assertEquals(null, schedules[1].endDate, 'End Date should be null.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'Period should be monthly.');
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH, schedules[1].period, 'Period should be 1st and 15th.');
-        System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'Day of month should be 12.');
-        System.assertEquals(null, schedules[1].dayOfMonth, 'Day of month should be null.');
+        RD2_ScheduleService.currentDate = today;
+        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+
+        assertScheduleDates(schedules, startDate, newStartDate);
+
+        System.assertEquals(100, schedules[0].amount, 'First schedule Amount should be old Amount');
+        System.assertEquals(newAmount, schedules[1].amount, 'Second schedule Amount should be new Amount');
+
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].period, 'First schedule Period should be monthly.');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH, schedules[1].period, 'Second schedule Period should be 1st and 15th.');
+
+        System.assertEquals(dayOfMonth, schedules[0].dayOfMonth, 'First schedule Day of Month should match');
+        System.assertEquals(null, schedules[1].dayOfMonth, 'Second schedule Day of Month should be undefined');
     }
 
 
@@ -419,8 +418,8 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationMonthlyBuilder() {
         return getRecurringDonationBaseBuilder()
-                .withInstallmentPeriodMonthly()
-                .withDayOfMonth('1');
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1');
     }
 
     /****
@@ -428,7 +427,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationFirstAndFifteenthBuilder() {
         return getRecurringDonationBaseBuilder()
-                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
+            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
     }
 
 
@@ -437,19 +436,12 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationBaseBuilder() {
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                .withContact(getContact().Id)
-                .withAmount(100)
-                .withPaymentMethod('Credit Card')
-                .withInstallmentFrequency(1)
-                .withDateEstablished(DATE_ESTABLISHED)
-                .withStartDate(DATE_ESTABLISHED);
-    }
-
-    /****
-    * @description Sets schedule service current date for testing
-    */
-    private static void setScheduleServiceDate (Date currentDate) {
-        RD2_ScheduleService.currentDate = currentDate;
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withPaymentMethod(PAYMENT_CREDIT_CARD)
+            .withInstallmentFrequency(1)
+            .withDateEstablished(DATE_ESTABLISHED)
+            .withStartDate(DATE_ESTABLISHED);
     }
 
     /****
@@ -477,5 +469,24 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
                 'Exception type should be System.AuraHandledException');
         System.assertEquals(expectedException.getMessage(), actualException.getMessage(),
                 'Exception message should match');
+    }
+
+    /****
+    * @description Verifies schedules
+    * @param schedules RD Schedules
+    * @param startDate First schedule start date
+    * @param newStartDate Second schedule start date
+    * @return void
+    */
+    private static void assertScheduleDates(List<RD2_VisualizeScheduleController.Schedule> schedules, Date startDate, Date newStartDate) {
+        System.assertEquals(2, schedules.size(), 'There should be 2 schedules.');
+
+        System.assertEquals(true, schedules[0].isCurrent, 'First schedule should be current');
+        System.assertEquals(false, schedules[1].isCurrent, 'Second schedule should not be current');
+        
+        System.assertEquals(startDate, schedules[0].startDate, 'First schedule Start Date should be unchanged');
+        System.assertEquals(newStartDate.addDays(-1), schedules[0].endDate, 'First schedule should end before the second starts');
+        System.assertEquals(newStartDate, schedules[1].startDate, 'Second schedule Start Date should be new Effective Date');
+        System.assertEquals(null, schedules[1].endDate, 'Second schedule End Date should be undefined');
     }
 }
