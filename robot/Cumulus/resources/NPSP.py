@@ -192,7 +192,7 @@ class NPSP(SalesforceRobotLibraryBase):
 #         drop_down = npsp_lex_locators['locating_delete_dropdown'].format(value)
 #         time.sleep(1)
 #         return drop_down
-    
+
     def select_row(self, value):
         """To select a row on object page based on name and open the dropdown"""
         locators = npsp_lex_locators['name']
@@ -212,6 +212,7 @@ class NPSP(SalesforceRobotLibraryBase):
                 drop_down = npsp_lex_locators['rel_loc_dd'].format(index + 1)
                 self.selenium.get_webelement(drop_down).click()
                 time.sleep(1)
+
 #     def select_row(self, value ):
 #         """To select a row on object page based on name and open the dropdown"""
 #         locators = npsp_lex_locators['name']
@@ -1266,8 +1267,9 @@ class NPSP(SalesforceRobotLibraryBase):
             opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
 
             # save the opportunity
-            data[name+'_opportunity'] = opportunity
-            self.builtin.set_suite_variable('${data}', data)
+            data[f"{name}_opportunity"] = opportunity
+
+        self.builtin.set_suite_variable('${data}', data)
 
         return data
 

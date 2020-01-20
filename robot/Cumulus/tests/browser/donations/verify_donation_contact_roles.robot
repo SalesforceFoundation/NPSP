@@ -17,18 +17,15 @@ Suite Teardown  Delete Records and Close Browser
 # Set up all the required data for the test based on the keyword requests
 Setup Test Data
     # Create contact1
-    &{data}=    Setupdata   contact1   ${contact1_fields}
+    Setupdata   contact1   ${contact1_fields}
 
     # Create contact2 linked to contact1's household
     &{contact2_fields} =	Create Dictionary  Email=test2@example.com  AccountId=${data}[contact1][AccountId]
     &{data}=    Setupdata   contact2   ${contact2_fields}
 
     # Setup an opportunity for contact1 and contact2
-    &{data}=    Setupdata   contact1   None     ${opportunity1_fields}
-    &{data}=    Setupdata   contact2   None     ${opportunity2_fields}
-
-    Set suite variable    &{data}
-
+    Setupdata   contact1   None     ${opportunity1_fields}
+    Setupdata   contact2   None     ${opportunity2_fields}
 
 *** Variables ***
 &{contact1_fields}         Email=test@example.com
@@ -41,7 +38,7 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
 
     [tags]                                 W-038461                 feature:Donations
 
-    Go To Page                             Details
+    Go To Page                             Detail
     ...                                    Opportunity
     ...                                    object_id=${data}[contact1_opportunity][Id]
 

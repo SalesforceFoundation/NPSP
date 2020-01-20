@@ -14,14 +14,10 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 # Sets up all the required data for the test based on the keyword requests
 Setup Test Data
-    &{data}=  Setupdata   contact   ${contact1_fields}
-    Set suite variable   &{data}
-    ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Set suite variable    ${opp_date}
+    Setupdata   contact   ${contact1_fields}
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
-
 
 
 *** Test Cases ***
@@ -30,7 +26,7 @@ Create Donation and Opportunity and Create Payment Manually
     [Documentation]  Navigate to Opportunities page and open an Opportunity>In the right sections, go to Payments click on drop down Arrow>New
     ...              Create a new payment for the Opportunity.
 
-    [tags]                               W-038461                 feature:Donations
+    [tags]                                          W-038461                 feature:Donations
 
     Go To Page                                      Listing
     ...                                             Opportunity
@@ -43,7 +39,7 @@ Create Donation and Opportunity and Create Payment Manually
     ...                                             Closed Won
 
     Save Current Record ID For Deletion             Opportunity
-    Current Page Should Be                          Details                                  Opportunity
+    Current Page Should Be                          Detail                                  Opportunity
 
     Verify Payments Made                            0
 
@@ -66,7 +62,7 @@ Create Donation and Opportunity and Create Payment Manually
     ...                                             object_id=${data}[contact][Id]
 
     #Perform Validations
-
+    ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Validate Field Value Under Section   Donation Totals      Last Gift Date                  ${opp_date}
     Validate Field Value Under Section   Soft Credit Total    Total Gifts                     $100.00
     Validate Field Value Under Section   Soft Credit Total    Total Number of Gifts           1

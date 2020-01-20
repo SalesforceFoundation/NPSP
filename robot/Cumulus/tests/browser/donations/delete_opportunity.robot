@@ -14,8 +14,7 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 # Sets test data contact and an opportunity for the contact
 Setup Test Data
-    &{data}=  Setupdata   contact   ${contact1_fields}     ${opportunity_fields}
-    Set suite variable    &{data}
+    Setupdata   contact   ${contact1_fields}     ${opportunity_fields}
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
@@ -39,7 +38,7 @@ Create Donation from a Contact and Delete Opportunity
 
     ...                                  Opportunity
     Wait Until Loading Is Complete
-    Perform Delete Menu Operation On            ${donation_name}          Delete
+    Perform Delete Menu Operation On     ${donation_name}          Delete
     Verify Toast Message                 Opportunity "${donation_name}" was deleted. Undo
 
 

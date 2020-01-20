@@ -14,8 +14,7 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 # Setup a contact with parameters specified
 Setup Test Data
-    &{data}=  Setupdata   contact   ${contact1_fields}
-    Set suite variable   &{data}
+    Setupdata   contact   ${contact1_fields}
 
 *** Variables ***
 ${Date}  10
@@ -49,6 +48,6 @@ Add Existing Contact to Existing Household
     Go To Page                           Listing                   Opportunity
     Click Link                           ${value}
     Save Current Record ID For Deletion  Opportunity
-    Current Page Should Be               Details                   Opportunity
+    Current Page Should Be               Detail                   Opportunity
     Verify Payments Made                 1
 
