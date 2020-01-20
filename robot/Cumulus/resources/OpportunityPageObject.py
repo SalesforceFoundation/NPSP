@@ -48,6 +48,9 @@ class OpportunityListingPage(BaseNPSPPage, ListingPage):
         self.selenium.location_should_contain("lightning/o/Opportunity/list",message="Current page is not a list page")
 
     def perform_delete_menu_operation_on(self,value,action):
+        """ Identifies the value to delete from the List and chooses delete
+            option from the menu. Confirms the delete action from the confirmation modal
+        """
         locators = npsp_lex_locators['name']
         list_ele = self.selenium.get_webelements(locators)
         for index, element in enumerate(list_ele):
@@ -61,6 +64,7 @@ class OpportunityListingPage(BaseNPSPPage, ListingPage):
                 self.selenium.click_link(action)
 
                 delete_btn=npsp_lex_locators["Delete_opportunity_modal_button"]
+                self.selenium.wait_until_element_is_visible(delete_btn)
                 self.selenium.click_button(delete_btn)
                 self.selenium.wait_until_location_contains("/list")
                 break
