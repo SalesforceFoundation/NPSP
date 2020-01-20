@@ -90,7 +90,7 @@ public with sharing class RD2_ValidationService {
 
         if (rd.npe03__Contact__c == null) {
             rd.addError(System.Label.RD_ContactMustBelongToAccount);
-        } else if (!extractIds(acct.Contacts).contains(rd.npe03__Contact__c)) {
+        } else if (!UTIL_SObject.extractIds(acct.Contacts).contains(rd.npe03__Contact__c)) {
             rd.addError(System.Label.RD_ContactMustBelongToAccount);
         }
 
@@ -151,18 +151,6 @@ public with sharing class RD2_ValidationService {
                 );
             }
         }
-    }
-
-    /***
-    * @description Extracts record Ids from a list of SObject records.
-    * @param records
-    * @return Set<Id>
-    */
-    private Set<Id> extractIds(List<SObject> records) {
-        if (records == null || records.isEmpty()) {
-            return new Set<Id>();
-        }
-        return new Map<Id, SObject>(records).keySet();
     }
 
 }

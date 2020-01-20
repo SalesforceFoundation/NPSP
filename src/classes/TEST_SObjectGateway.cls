@@ -87,6 +87,7 @@ public class TEST_SObjectGateway {
                     npe03__Installment_Period__c,
                     InstallmentFrequency__c,
                     npe03__Total_Paid_Installments__c,
+                    npe03__Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
                     Status__c
@@ -188,10 +189,14 @@ public class TEST_SObjectGateway {
         public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
             return [
                 SELECT
-                    Name, Amount,
-                    AccountId, Primary_Contact__c,
-                    StageName, CloseDate,
-                    isClosed, isWon
+                    Name, AccountId, RecordTypeId,
+                    Amount, CampaignId, CloseDate,
+                    StageName, isClosed, isWon,
+                    Closed_Lost_Reason__c,
+                    npe03__Recurring_Donation__c, 
+                    Recurring_Donation_Installment_Number__c,
+                    npe01__Contact_Id_for_Role__c, 
+                    Primary_Contact__c
                 FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN :rds
             ];
@@ -262,8 +267,9 @@ public class TEST_SObjectGateway {
                 .withWhere('ApexClass.Name = :className')
                 .withLimit(1)
                 .build();
-
-            return (AsyncApexJob) Database.query(soql);
+            
+            List<SObject> records = Database.query(soql);
+            return records == null  || records.isEmpty() ? null : (AsyncApexJob) records[0];
         }
 
         /***
@@ -278,7 +284,8 @@ public class TEST_SObjectGateway {
                 .withWhere('Id = :jobId')
                 .build();
 
-            return (AsyncApexJob) Database.query(soql);
+            List<SObject> records = Database.query(soql);
+            return records == null  || records.isEmpty() ? null : (AsyncApexJob) records[0];
         }
     }
 }
