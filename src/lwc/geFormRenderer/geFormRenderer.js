@@ -63,7 +63,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     const { formTemplate } = response;
                     this.initializeForm(formTemplate);
                 }
-                console.log(response);
             }
         });
     }

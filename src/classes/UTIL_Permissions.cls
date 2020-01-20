@@ -334,7 +334,7 @@ public with sharing class UTIL_Permissions {
     * @param sObjType the sObjectType to check read permissions
     * @return Boolean true when the user has permissions for the SObjType provided
     */
-    private Boolean canRead(SObjectType sObjType) {
+    public Boolean canRead(SObjectType sObjType) {
         return canRead(String.valueOf(sObjType), false);
     }
 
@@ -372,6 +372,17 @@ public with sharing class UTIL_Permissions {
     }
 
     /*******************************************************************************************************************
+    * @description Determines whether the running user has create permissions for the object
+    * provided
+    *
+    * @param sObjType the sObjectType to check update permissions
+    * @return Boolean true when the user has permissions for the SObjType provided
+    */
+    public Boolean canCreate(SObjectType sObjType) {
+        return canCreate(String.valueOf(sObjType), false);
+    }
+
+    /*******************************************************************************************************************
     * @description Determines whether the running user has update permissions on the sObject and fields provided
     *
     * @param sObjType the sObjectType to check update permissions
@@ -392,7 +403,7 @@ public with sharing class UTIL_Permissions {
     * @param sObjType the sObjectType to check update permissions
     * @return Boolean true when the user has permissions for the SObjType provided
     */
-    private Boolean canUpdate(SObjectType sObjType) {
+    public Boolean canUpdate(SObjectType sObjType) {
         return canUpdate(String.valueOf(sObjType), false);
     }
 
