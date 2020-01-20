@@ -53,7 +53,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder().build();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
 
         try {
             insert rd;
@@ -75,7 +75,7 @@ private with sharing class RD2_ValidationService_TEST {
         Account acc = UTIL_UnitTestData_TEST.buildHouseholdAccount();
         insert acc;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withAccount(acc.Id)
             .build();
         try {
@@ -99,7 +99,7 @@ private with sharing class RD2_ValidationService_TEST {
         Account acc = UTIL_UnitTestData_TEST.buildHouseholdAccount();
         insert acc;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withAccount(acc.Id)
             .withContact(getContact().Id)
             .build();
@@ -122,11 +122,10 @@ private with sharing class RD2_ValidationService_TEST {
 
         List<Contact> contacts = getContacts();
 
-        List<npe03__Recurring_Donation__c> rds = new TEST_RecurringDonationBuilder()
-        .withAccount(contacts[0].AccountId)//only RD for one Contact will be valid
-        .withAmount(100)
-        .withInstallmentPeriodYearly()
-        .build(contacts);
+        List<npe03__Recurring_Donation__c> rds = getRecurringDonationBuilder()
+            .withAccount(contacts[0].AccountId)//only RD for one Contact will be valid
+            .withInstallmentPeriodYearly()
+            .build(contacts);
 
         List<Database.SaveResult> results = Database.insert(rds, false);
         npe03__Recurring_Donation__c rd = [
@@ -152,9 +151,8 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
-            .withAmount(10)
             .withInstallmentPeriodYearly()
             .build();
 
@@ -178,9 +176,8 @@ private with sharing class RD2_ValidationService_TEST {
         Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert acc;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withAccount(acc.Id)
-            .withAmount(100)
             .withInstallmentPeriodYearly()
             .build();
 
@@ -200,9 +197,8 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldNotCreateActiveRDWhenAmountIsNotValid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
-            .withContact(getContact().Id)
-            .withDefaultValues();
+        TEST_RecurringDonationBuilder rdBuilder = getRecurringDonationBuilder()
+            .withContact(getContact().Id);
 
         for (Decimal amount : new Set<Decimal>{
             null,
@@ -231,9 +227,8 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldCreateRDForClosedRDWhenAmountIsNotValid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
+        TEST_RecurringDonationBuilder rdBuilder = getRecurringDonationBuilder()
             .withContact(getContact().Id)
-            .withDefaultValues()
             .withStatusClosed();
 
         for (Decimal amount : new Set<Decimal>{
@@ -263,10 +258,9 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
-            .withAmount(10)
-            .withInstallmentPeriodMonthly()
+            .withDayOfMonth(null)
             .build();
 
         try {
@@ -288,9 +282,8 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
-            .withAmount(10)
             .withInstallmentPeriod('Occasionally')
             .build();
 
@@ -315,10 +308,8 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldFailWhenDayOfMonthIsNotValidForMonthlyInstallments() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
-            .withContact(getContact().Id)
-            .withAmount(10)
-            .withInstallmentPeriodMonthly();
+        TEST_RecurringDonationBuilder rdBuilder = getRecurringDonationBuilder()
+            .withContact(getContact().Id);
 
         for (String day : new Set<String>{
             '29', '30', '31'
@@ -350,10 +341,8 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldCreateRDWhenDayOfMonthIsValid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
-            .withContact(getContact().Id)
-            .withAmount(10)
-            .withInstallmentPeriodMonthly();
+        TEST_RecurringDonationBuilder rdBuilder = getRecurringDonationBuilder()
+            .withContact(getContact().Id);
 
         for (String day : new Set<String>{
             '15', '10', '28'
@@ -396,6 +385,22 @@ private with sharing class RD2_ValidationService_TEST {
             SELECT FirstName, LastName, AccountId, Account.Name
             FROM Contact
         ];
+    }
+
+    /**
+     * @description Base common RecurringDonation test structure for all test methods to start from
+     * @param contactId Contact Id
+     * @return TEST_RecurringDonationBuilder instance
+     */
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
+        final Date startDate = Date.newInstance(2019, 9, 15);
+
+        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withAmount(10)
+            .withPaymentMethod('Check')
+            .withDateEstablished(startDate)
+            .withStartDate(startDate);
     }
     
 }

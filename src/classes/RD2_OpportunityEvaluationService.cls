@@ -444,6 +444,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return RecurringDonation This record instance
         */
         public RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
+            if (!isEnhancedFormat()) {
+                return this;
+            }
+
             Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
             if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
@@ -460,6 +464,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return RecurringDonation This record instance
         */
         public RecurringDonation reviseYearValues(YearValueProcessor processor) {
+            if (!isEnhancedFormat()) {
+                return this;
+            }
+
             Decimal currentYearValue = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
             if (currentYearValue != rd.CurrentYearValue__c) {
                 rd.CurrentYearValue__c = currentYearValue;
@@ -503,6 +511,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         */
         public Boolean isClosed() {
             return rd.Status__c == RD2_Constants.STATUS_CLOSED;
+        }
+
+        /**
+        * @description Returns true if the RD record is in enhanced Recurring Donation format
+        */
+        public Boolean isEnhancedFormat() {
+            return String.isNotBlank(rd.Status__c) && rd.InstallmentFrequency__c != null;
         }
 
         /**
