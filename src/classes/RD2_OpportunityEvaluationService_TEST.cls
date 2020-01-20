@@ -253,11 +253,9 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldNotCreateOppOnRDInsertWhenDisableFirstInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Map<String, Object> rdSettingMap = new Map<String, Object> {
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
-        };
-
-        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
+        });
         
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
         
@@ -272,33 +270,6 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-    * @description When Installment Auto Creation Setting is set to Disable First Installment, 
-    * the installment should be created on RD when the nightly batch job run
-    */
-    @IsTest
-    private static void shouldCreateOppDuringBatchRunWhenDisableFirstInstallment() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Map<String, Object> rdSettingMap = new Map<String, Object> {
-            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
-        };
-
-        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
-        
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
-        insert rd;
-
-        Test.startTest();
-        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
-        Test.stopTest();
-
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-
-        System.assertEquals(1, opps.size(),
-            'The next installment should be created during the batch run when Installment Auto Creation setting is ' + OPTION_NAME_DISABLE_FIRST);
-    }
-
-    /**
     * @description When Installment Auto Creation Setting is set to Disable All Installments, 
     * no installment should be created on inserted of RD and during nightly batch job
     */
@@ -306,43 +277,14 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldNotCreateOppOnInsertWhenDiableAllInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Map<String, Object> rdSettingMap = new Map<String, Object> {
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_ALL
-        };
-
-        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
+        });
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
 
         Test.startTest();
         insert rd;
-        Test.stopTest();
-        
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-
-        System.assertEquals(0, opps.size(),
-            'The installment opportunity should not be created when the Auto Creation Setting is' + OPTION_NAME_DISABLE_ALL);
-    }
-
-    /**
-    * @description When Installment Auto Creation Setting is set to Disable All Installments, 
-    * no installment should be created on inserted of RD and during nightly batch job
-    */
-    @IsTest
-    private static void shouldNotCreateOppDuringBatchRunWhenDiableAllInstallment() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        Map<String, Object> rdSettingMap = new Map<String, Object> {
-            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_ALL
-        };
-
-        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
-        insert rd;
-        
-        Test.startTest();
-        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
         Test.stopTest();
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
@@ -359,18 +301,16 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldCreateOppOnUpdateOfRDWhenClosedOppExistAndDisableFirstInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Map<String, Object> rdSettingMap = new Map<String, Object> {
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
-        };
-
-        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
+        });
         
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
         insert rd;
 
         insert getOpportunityBuilder(rd)
             .withName()
-            .withCloseDate(Date.Today().addDays(-10))
+            .withCloseDate(START_DATE.addMonths(1))
             .withClosedWonStage()
             .build();
 
@@ -394,11 +334,9 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void shouldCreateOppWhenAlwaysCreateNextInstallment() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Map<String, Object> rdSettingMap = new Map<String, Object> {
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'InstallmentOppAutoCreateOption__c' => OPTION_NAME_ALWAYS_CREATE_NEXT
-        };
-
-        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
+        });
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
 
@@ -422,11 +360,9 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Map<String, Object> rdSettingMap = new Map<String, Object> {
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'InstallmentOppAutoCreateOption__c' => randomText
-        };
-
-        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
+        });
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
 
@@ -445,12 +381,10 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @param closeAction Recurring Donation settings Open Opportunity Behaviour close action
      * @return npe03__Recurring_Donation__c Created Recurring Donation with related Opps
      */
-    private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {
-        Map<String, Object> rdSettingFieldMap = new Map<String, Object> {
+    private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {        
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'npe03__Open_Opportunity_Behavior__c' => closeAction
-        };
-        
-        RD2_Settings_TEST.setUpConfiguration(rdSettingFieldMap);
+        });
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 

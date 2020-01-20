@@ -660,7 +660,7 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /***
-    * @description Every Installment Auto Creation Setting option should be in the panel for displayed
+    * @description Every Installment Auto Creation Setting option should be converted into SelectOption
     */
     @isTest
     private static void shouldHaveValidSelectOptionsForInstallmentAutoCreationSetting() {
@@ -693,10 +693,10 @@ private with sharing class STG_SettingsManager_TEST {
         panel.init();
         Test.stopTest();
 
-        String installmentautoCreationSettingLabel = panel.convertToInstallmentLabel(
+        String currentOppSettingLabel = panel.convertToInstallmentLabel(
             Stg_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
         
-        System.assertEquals(installmentautoCreationSettingLabel, panel.selectedInstallmentCreateOption,
+        System.assertEquals(currentOppSettingLabel, panel.selectedInstallmentCreateOption,
             'The installment opp displayed label should matches the one stored in the NPSP setting');
     }
 
@@ -723,7 +723,7 @@ private with sharing class STG_SettingsManager_TEST {
 
     /**
     * @description Installment Auto Creation Settings - Always Allow Next Installment
-    * should be correctly conoverted to the repected label when displayed onto the RD panel 
+    * should be correctly conoverted to the respected label when displayed onto the RD panel 
     */
     @isTest
     private static void shouldConvertInstallmentOppAutoCreationAlwaysAllowToLabel() {
@@ -734,12 +734,12 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         System.assertEquals(Label.stgInstallmentOppEnableAll, convertedLabel,
-            'Installment Auto Creation Setting should be correctly converted to repected custom label');
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
     /**
     * @description Installment Auto Creation Settings - Disalbe First Installment
-    * should be correctly conoverted to the repected label when displayed onto the RD panel 
+    * should be correctly conoverted to the respected label when displayed onto the RD panel 
     */
     @isTest
     private static void shouldConvertInstallmentOppAutoCreationDisableFirstToLabel() {
@@ -750,12 +750,12 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         System.assertEquals(Label.stgInstallmentOppDisableFirst, convertedLabel,
-            'Installment Auto Creation Setting should be correctly converted to repected custom label');
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
     /**
     * @description Installment Auto Creation Settings - Disable All Installment
-    * should be correctly conoverted to the repected label when displayed onto the RD panel 
+    * should be correctly conoverted to the respected label when displayed onto the RD panel 
     */
     @isTest
     private static void shouldConvertInstallmentOppAutoCreationDisableAllToLabel() {
@@ -766,7 +766,7 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         System.assertEquals(Label.stgInstallmentOppDisableAll, convertedLabel,
-            'Installment Auto Creation Setting should be correctly converted to repected custom label');
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
     /*********************************************************************************************************

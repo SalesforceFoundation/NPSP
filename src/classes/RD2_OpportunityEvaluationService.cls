@@ -130,15 +130,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-    * @description Querid Recurring Donation records and Related Opp
+    * @description Contains Ids of new Recurring Donations
     */
     @TestVisible
-    private Map<Id, npe03__Recurring_Donation__c> rdsWithOpps {
+    private Set<Id> newRDIds {
         get {
-            if (rdsWithOpps == null && rdIds != null) {
-                rdsWithOpps = getRecurringDonationsWithExistingOpps(this.rdIds);
+            if (newRDIds == null) {
+                newRDIds = getNewRDIds(this.rdIds);
             }
-            return rdsWithOpps;
+            return newRDIds;
         } set;
     }
 
@@ -221,8 +221,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             RecurringDonation rdRecord = new RecurringDonation(rd)         
-                .revise(scheduleService)
-                .addExistingOpportunities(rdsWithOpps.get(rd.Id)); 
+                .setIsNew(newRDIds.contains(rd.Id))
+                .revise(scheduleService);
 
             if (rdRecord.isOutdated()) {
                 outdatedRDs.add(rdRecord.getUpdate());
@@ -379,21 +379,29 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-    * @description Query Recuring Donation to check if any opportunity is attach to it
+    * @description Determines which Recurring Donations are new
+    * @param rdIds All Recurring Donation Ids to be evaluated
+    * @return Set<Id> Ids of new Recurring Donations
     */
-    private Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsWithExistingOpps(Set<Id> rdIds) {
-        Set<String> queryFields = new Set<String> {
-            '(SELECT Id ' +
-            'FROM npe03__Donations__r ' +
-            'LIMIT 1)'};
+    private Set<Id> getNewRDIds(Set<Id> rdIds) {
+        Set<Id> newRDIds = new Set<Id>();
 
-        String soql = new UTIL_Query()
-            .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(queryFields)
-            .withWhere('Id IN :rdIds')
-            .build();
-
-        return new Map<Id, npe03__Recurring_Donation__c>((List<npe03__Recurring_Donation__c>) Database.query(soql));
+        for (npe03__Recurring_Donation__c rd : [
+            SELECT Id,
+                (
+                    SELECT Id 
+                    FROM npe03__Donations__r 
+                    LIMIT 1
+                )
+            FROM npe03__Recurring_Donation__c
+            WHERE Id IN :rdIds
+        ]) {
+            if (rd.npe03__Donations__r.isEmpty()) {
+                newRDIds.add(rd.Id);
+            }
+        }
+        
+        return newRDIds;
     }
 
     /**
@@ -401,7 +409,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public class RecurringDonation {
         npe03__Recurring_Donation__c rd;
-        private Boolean hasNoOpportunity;
+        private Boolean isNew;
         private Boolean hasOpenOpportunity;
         private Boolean isOutdated;
 
@@ -431,13 +439,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
-        * @descriptiuon Add additional Opportunities to the Recurring Donation 
-        * so any missing opp will also be taking into consideration
-        * @param rd Recurring Donation Record with the opps being querid
+        * @description Sets property indicating the Recurring Donation is a new record
+        * @param isNew Indicates if the record is new
+        * @return Boolean
         */
-        public RecurringDonation addExistingOpportunities(npe03__Recurring_Donation__c rdWithOpps) {
-            hasNoOpportunity = rdWithOpps.npe03__Donations__r.isEmpty();
-
+        public RecurringDonation setIsNew(Boolean isNew) {
+            this.isNew = isNew;
             return this;
         }
 
@@ -497,13 +504,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Boolean
         */
         public Boolean isNew() {
-            if (hasNoOpportunity != null) {
-                return hasNoOpportunity;
-            }
-            
-            hasNoOpportunity = rd.npe03__Donations__r.isEmpty();
-            
-            return hasNoOpportunity;
+            return isNew == null
+                ? rd.npe03__Donations__r.isEmpty()
+                : isNew;
         }
 
         /**
