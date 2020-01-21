@@ -14,6 +14,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @api label;
     @api required;
     @api id; // unique identifier for this field, used mainly for accessibility
+    @api variant;
 
 
     @track options = [];
@@ -141,5 +142,17 @@ export default class GeFormFieldLookup extends LightningElement {
     retrieveLookupOptions = async (searchValue, sObjectType) => {
         this.options = await doSearch({searchValue, sObjectType});
     };
+
+    @api
+    setSelected(lookupResult) {
+        this.displayValue = lookupResult.displayValue;
+        this.value = lookupResult.value;
+    }
+
+    @api
+    reset() {
+        this.displayValue = null;
+        this.value = null;
+    }
 
 }

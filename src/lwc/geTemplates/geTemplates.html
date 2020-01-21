@@ -9,13 +9,20 @@
         <div slot="actions"
              class="slds-button-group"
              role="group">
-            <lightning-button label={CUSTOM_LABELS.geButtonEnterGifts}
-                              if:true={isAccessible}
-                              title={CUSTOM_LABELS.geButtonEnterGifts}
-                              variant="neutral"
-                              class="slds-float_right"
-                              onclick={navigateToForm}>
-            </lightning-button>
+            <lightning-button-group if:true={isAccessible}>
+                <lightning-button label={CUSTOM_LABELS.geButtonNewBatch}
+                                  title={CUSTOM_LABELS.geButtonNewBatch}
+                                  variant="neutral"
+                                  class="slds-float_right"
+                                  onclick={openNewBatchWizard}>
+                </lightning-button>
+                <lightning-button label={CUSTOM_LABELS.geButtonNewSingleGift}
+                                  title={CUSTOM_LABELS.geButtonNewSingleGift}
+                                  variant="neutral"
+                                  class="slds-float_right"
+                                  onclick={navigateToForm}>
+                </lightning-button>
+            </lightning-button-group>
         </div>
     </c-util-page-header>
 
@@ -36,10 +43,10 @@
         </div>
 
         <template if:true={isAccessible}>
-            <lightning-tabset active-tab-value="Templates">
+            <lightning-tabset active-tab-value={CUSTOM_LABELS.commonTemplates}>
 
-                <lightning-tab value="Batches"
-                               label="Batches"
+                <lightning-tab value={CUSTOM_LABELS.commonBatches}
+                               label={CUSTOM_LABELS.commonBatches}
                                class="slds-p-around_none">
                     <template if:true={isLoading}>
                         <c-util-stencil row-count="5"
@@ -56,6 +63,8 @@
                                                     object-api-name={dataImportBatchObjectApiName}
                                                     title={CUSTOM_LABELS.commonBatches}
                                                     custom-icon={batchesListViewIcon}
+                                                    filtered-by={batchListFilteredBy}
+                                                    onrowaction={handleBatchesTableRowAction}
                                                     ontogglemodal={toggleModal}>
                                     </c-ge-list-view>
                                 </div>
@@ -64,7 +73,7 @@
                     </template>
                 </lightning-tab>
 
-                <lightning-tab value="Templates"
+                <lightning-tab value={CUSTOM_LABELS.commonTemplates}
                                label={CUSTOM_LABELS.commonTemplates}
                                class="slds-p-around_none">
                     <template if:true={isLoading}>

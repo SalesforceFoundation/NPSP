@@ -42,6 +42,8 @@ public with sharing class FORM_Element {
     @AuraEnabled public String customLabel;
     @AuraEnabled public String componentName;
     @AuraEnabled public String[] dataImportFieldMappingDevNames;
+    @AuraEnabled public String fieldApiName;
+    @AuraEnabled public String objectApiName;
 
     /* PS Additional props for FormFields */
     @AuraEnabled public String id;

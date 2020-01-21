@@ -1,6 +1,11 @@
 /* eslint-disable @lwc/lwc/no-async-operation */
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+import { isEmpty, deepClone } from 'c/utilCommon';
+
+// Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
+
+// Import schema for excluded template batch header fields
 import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
 import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
 import DI_BATCH_DONATION_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c'
@@ -9,13 +14,57 @@ import DI_BATCH_DONATION_MATCHING_RULE_INFO from '@salesforce/schema/DataImportB
 import DI_BATCH_DONATION_DATE_RANGE_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Date_Range__c'
 import DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO from '@salesforce/schema/DataImportBatch__c.Post_Process_Implementing_Class__c'
 import DI_BATCH_OWNER_ID_INFO from '@salesforce/schema/DataImportBatch__c.OwnerId'
+import DI_BATCH_ACCOUNT_CUSTOM_ID_INFO from '@salesforce/schema/DataImportBatch__c.Account_Custom_Unique_ID__c';
+import DI_BATCH_ACTIVE_FIELDS_INFO from '@salesforce/schema/DataImportBatch__c.Active_Fields__c';
+import DI_BATCH_CONTACT_CUSTOM_ID_INFO from '@salesforce/schema/DataImportBatch__c.Contact_Custom_Unique_ID__c';
+import DI_BATCH_GIFT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
+import DI_BATCH_LAST_PROCESSED_ON_INFO from '@salesforce/schema/DataImportBatch__c.Last_Processed_On__c';
+import DI_BATCH_PROCESS_USING_SCHEDULED_JOB_INFO from '@salesforce/schema/DataImportBatch__c.Process_Using_Scheduled_Job__c';
+import DI_BATCH_RECORDS_FAILED_INFO from '@salesforce/schema/DataImportBatch__c.Records_Failed__c';
+import DI_BATCH_RECORDS_SUCCESSFULLY_PROCESSED_INFO from '@salesforce/schema/DataImportBatch__c.Records_Successfully_Processed__c';
+import DI_BATCH_CONTACT_MATCHING_RULE_INFO from '@salesforce/schema/DataImportBatch__c.Contact_Matching_Rule__c';
+import DI_BATCH_DESCRIPTION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Description__c';
+import DI_BATCH_EXPECTED_COUNT_GIFTS_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
+import DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
+import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
+import DI_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
+import DI_BATCH_GIFT_ENTRY_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
+import DI_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
+
+// Import schema for default form field element objects
+import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
+import OPPORTUNITY_INFO from '@salesforce/schema/Opportunity';
+import PAYMENT_INFO from '@salesforce/schema/npe01__OppPayment__c';
+
+// Import schema info for default form field elements
+import DONATION_AMOUNT_INFO from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DONATION_DATE_INFO from '@salesforce/schema/DataImport__c.Donation_Date__c';
+import PAYMENT_CHECK_REF_NUM_INFO from '@salesforce/schema/DataImport__c.Payment_Check_Reference_Number__c';
+import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import DI_ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DI_CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DI_DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+
+import CONTACT_INFO from '@salesforce/schema/Contact';
+import ACCOUNT_INFO from '@salesforce/schema/Account';
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
+
+const CONTACT1 = 'Contact1';
+const ACCOUNT1 = 'Account1';
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
 ];
 Object.freeze(ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS);
+
+const DEFAULT_BATCH_HEADER_FIELDS = [
+    DI_BATCH_DESCRIPTION_INFO.fieldApiName,
+    DI_BATCH_EXPECTED_COUNT_GIFTS_INFO.fieldApiName,
+    DI_BATCH_EXPECTED_TOTAL_BATCH_AMOUNT_INFO.fieldApiName,
+    DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO.fieldApiName,
+];
+Object.freeze(DEFAULT_BATCH_HEADER_FIELDS);
 
 // We've opted to exclude the following batch fields related to
 // matching logic as we're removing the matching options page
@@ -31,8 +80,32 @@ const EXCLUDED_BATCH_HEADER_FIELDS = [
     DI_BATCH_DONATION_DATE_RANGE_INFO.fieldApiName,
     DI_BATCH_POST_PROCESS_IMPLEMENTING_CLASS_INFO.fieldApiName,
     DI_BATCH_OWNER_ID_INFO.fieldApiName,
+    DI_BATCH_ACCOUNT_CUSTOM_ID_INFO.fieldApiName,
+    DI_BATCH_ACTIVE_FIELDS_INFO.fieldApiName,
+    DI_BATCH_CONTACT_CUSTOM_ID_INFO.fieldApiName,
+    DI_BATCH_GIFT_BATCH_INFO.fieldApiName,
+    DI_BATCH_LAST_PROCESSED_ON_INFO.fieldApiName,
+    DI_BATCH_PROCESS_USING_SCHEDULED_JOB_INFO.fieldApiName,
+    DI_BATCH_RECORDS_FAILED_INFO.fieldApiName,
+    DI_BATCH_RECORDS_SUCCESSFULLY_PROCESSED_INFO.fieldApiName,
+    DI_BATCH_CONTACT_MATCHING_RULE_INFO.fieldApiName,
+    DI_BATCH_DEFAULTS_INFO.fieldApiName,
+    DI_BATCH_GIFT_ENTRY_VERSION_INFO.fieldApiName,
+    DI_BATCH_FORM_TEMPLATE_INFO.fieldApiName,
 ];
 Object.freeze(EXCLUDED_BATCH_HEADER_FIELDS);
+
+// Default form fields to add to new templates
+const DEFAULT_FORM_FIELDS = {
+    [DI_DONATION_DONOR_INFO.fieldApiName]: DATA_IMPORT_INFO.objectApiName,
+    [DI_ACCOUNT1_IMPORTED_INFO.fieldApiName]: DI_ACCOUNT1_IMPORTED_INFO.objectApiName,
+    [DI_CONTACT1_IMPORTED_INFO.fieldApiName]: DI_CONTACT1_IMPORTED_INFO.objectApiName,
+    [DONATION_AMOUNT_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
+    [DONATION_DATE_INFO.fieldApiName]: OPPORTUNITY_INFO.objectApiName,
+    [PAYMENT_CHECK_REF_NUM_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
+    [PAYMENT_METHOD_INFO.fieldApiName]: PAYMENT_INFO.objectApiName,
+}
+Object.freeze(DEFAULT_FORM_FIELDS);
 
 /*******************************************************************************
 * @description Map of lightning-input types by data type.
@@ -133,136 +206,6 @@ const findMissingRequiredBatchFields = (batchFields, selectedBatchFields) => {
 }
 
 /*******************************************************************************
-* @description Removes an item in an array by a property.
-*
-* @param {list} array: List of items.
-* @param {string} property: Property to find by.
-* @param {string} value: Value of property to check against.
-*/
-const removeByProperty = (array, property, value) => {
-    const index = array.findIndex(element => element[property] === value);
-    array.splice(index, 1);
-}
-
-/*******************************************************************************
-* @description Finds an item in an array by a property.
-*
-* @param {list} array: List of items.
-* @param {string} property: Property to find by.
-* @param {string} value: Value of property to check against.
-*
-* @return {Integer}: Index of the item from provided array.
-*/
-const findIndexByProperty = (array, property, value) => {
-    return array.findIndex(element => element[property] === value);
-}
-
-/*******************************************************************************
-* @description Shifts an item in the array to a given index.
-*
-* @param {list} array: List of items.
-* @param {integer} oldIndex: Current index of the item to be moved.
-* @param {integer} newIndex: Index to move the item to.
-*
-* @return {list} array: Array with shifted items.
-*/
-const shiftToIndex = (array, oldIndex, newIndex) => {
-    [array[oldIndex], array[newIndex]] = [array[newIndex], array[oldIndex]];
-    return array;
-}
-
-/*******************************************************************************
-* @description Shallow clones the provided object.
-*
-* @param {object} obj: Object to clone
-*
-* @return {object}: Cloned object
-*/
-const mutable = (obj) => {
-    return JSON.parse(JSON.stringify(obj));
-}
-
-/*******************************************************************************
-* @description Checks if value parameter is null or undefined
-*
-* @param {*} value: Anything
-*
-* @return {boolean}: True if provided value is null or undefined.
-*/
-const isEmpty = (value) => {
-    return value === null || value === undefined;
-};
-
-/*******************************************************************************
-* @description Checks if value parameter is a function
-*
-* @param {*} value: Anything
-*
-* @return {boolean}: True if provided value is a function.
-*/
-const isFunction = (value) => {
-    return typeof value === FUNCTION;
-};
-
-/*******************************************************************************
-* @description Checks to see if the passed parameter is of type 'Object' or
-* 'function'.
-*
-* @param {any} obj: Thing to check
-*
-* @return {boolean}: True if the provided obj is an object or a function.
-*/
-const isObject = (obj) => {
-    return isFunction(obj) || typeof obj === OBJECT && !!obj;
-}
-
-/*******************************************************************************
-* @description Checks to see if the passed parameter is a primative.
-*
-* @param {any} value: Thing to check
-*
-* @return {boolean}: True if the provided obj is a primative.
-*/
-const isPrimative = (value) => {
-    return (value !== Object(value));
-}
-
-/*******************************************************************************
-* @description Loop through provided array or object properties. Recursively check
-* if the current value is an object or an array and copy accordingly.
-*
-* @param {any} src: Thing to clone
-*
-* @return {object} clone: Deep clone copy of src
-*/
-const deepClone = (src) => {
-    let clone = null;
-
-    if (isPrimative(src)) {
-        return src;
-    }
-
-    if (isObject(src)) {
-        clone = {};
-        for (let property in src) {
-            if (src.hasOwnProperty(property)) {
-                // if the value is a nested object, recursively copy all it's properties
-                clone[property] = isObject(src[property]) ? deepClone(src[property]) : src[property];
-            }
-        }
-    }
-
-    if (Array.isArray(src)) {
-        clone = [];
-        for (let item of src) {
-            clone.push(deepClone(item));
-        }
-    }
-
-    return clone;
-}
-
-/*******************************************************************************
 * @description Dispatches a CustomEvent.
 *
 * @param {object} context: 'this' context from which to dispatch this event from.
@@ -312,18 +255,25 @@ const handleError = (error) => {
 
     // error.body is the error from apex calls
     // error.detail.output.errors is the error from record-edit-forms
+    // error.body.output.errors is for AuraHandledException messages
     if (typeof error === 'string' || error instanceof String) {
         message = error;
-    } else if (error) {
-        if (Array.isArray(error.body)) {
+    } else if (error || error.body || error.detail) {
+        if (Array.isArray(error.body) &&
+            !error.body.output.errors) {
             message = error.body.map(e => e.message).join(', ');
-        } else if (error.body && typeof error.body.message === 'string') {
-            message = error.body.message;
-        } else if (error.detail &&
-            error.detail.output &&
-            Array.isArray(error.detail.output.errors)) {
 
-            message = error.detail.output.errors.map(e => e.message).join(', ');
+        } else if (typeof error.body.message === 'string' &&
+            !error.body.output.errors) {
+            message = error.body.message;
+
+        } else if(error.body.output &&
+            Array.isArray(error.body.output.errors)){
+            message = error.body.output.errors.map(e => e.message).join(', ');
+
+        } else if (error.detail.output &&
+                Array.isArray(error.detail.output.errors)) {
+                message = error.detail.output.errors.map(e => e.message).join(', ');
         }
     }
 
@@ -351,8 +301,73 @@ const generateId = () => {
         '-' + random4() + random4() + random4();
 };
 
+/*******************************************************************************
+* @description returns a list of target field names for the fields in the template
+* in the format objectName.fieldName
+* @param formTemplate: the form template
+* @param fieldMappings: the field mappings dev names
+* @param apiName: the sObject api name
+*/
+const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
+    let fieldNames = [];
+
+    for (const section of formTemplate.layout.sections) {
+        for (const element of section.elements) {
+            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                if (objectName === apiName) {
+                    let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                    fieldNames.push(`${objectName}.${fieldName}`);
+                }              
+            }     
+        }
+    }
+    return fieldNames;
+};
+
+/*******************************************************************************
+* @description returns a copy of the form template that has record values on the element
+* stored in the recordValue attribute
+* in the format objectName.fieldName
+* @param formTemplate: the form template
+* @param fieldMappings: the field mappings dev names
+* @param record: the contact or account record
+*/
+const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
+    // check if we have a contact or account record
+    if (isEmpty(record)) {
+        return templateSections;
+    }
+
+    // create a copy of the sections
+    // so we can add the record value to the elements
+    let sections = deepClone(templateSections);
+
+    sections.forEach(section => {
+        const elements = section.elements;
+        elements.forEach(element => {
+            // set an empty default value
+            element.recordValue = '';
+
+            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                 if (objectName === record.apiName) {
+                     // field name from the mappings
+                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+
+                     // get the record value and store it in the element
+                     element.recordValue = record.fields[fieldName].value;
+                }
+             }
+        });                 
+    });
+    return sections;
+};
+
 export {
+    DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
+    DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
     dispatch,
     showToast,
@@ -360,10 +375,15 @@ export {
     generateId,
     inputTypeByDescribeType,
     lightningInputTypeByDataType,
-    deepClone,
-    isEmpty,
-    isFunction,
-    isPrimative,
     findMissingRequiredFieldMappings,
-    findMissingRequiredBatchFields
+    findMissingRequiredBatchFields,
+    getRecordFieldNames,
+    setRecordValuesOnTemplate,
+    CONTACT_INFO,
+    ACCOUNT_INFO,
+    DI_CONTACT1_IMPORTED_INFO,
+    DI_ACCOUNT1_IMPORTED_INFO,
+    DI_DONATION_DONOR_INFO,
+    CONTACT1,
+    ACCOUNT1
 }
