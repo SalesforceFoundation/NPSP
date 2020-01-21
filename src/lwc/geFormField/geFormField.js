@@ -216,7 +216,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     get fieldLabel() {
-        return this.element.label;
+        return this.element.customLabel;
     }
 
     @api

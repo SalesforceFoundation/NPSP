@@ -42,8 +42,21 @@ public without sharing class RD2_ScheduleService {
     */
     private final Integer DAYS_IN_WEEK = 7;
 
-    @TestVisible
-    private Date currentDate {
+    /**
+    * @description Default number of visualization records to calculate
+    */
+    private final Integer DEFAULT_VISUALIZATION_SCHEDULE_COUNT = 12;
+
+    /**
+    * @description Date to treat as current date in calculation of schedules.
+    * The date should not be overwritten in this class, only from other test classes in order to
+    * verify Recurring Donation and its schedule fields based on various "current" dates.
+    * This date is used as the starting date to
+    * - calculate RD next donation date upon RD creation
+    * - set RD Start Date when relevant fields (such as Amount) are changed
+    * - calculate projected installment Opportunities' Close Date.
+    */
+    public static Date currentDate {
         get {
             if (currentDate == null) {
                 currentDate = Date.today();
@@ -58,7 +71,6 @@ public without sharing class RD2_ScheduleService {
     * @return List<RecurringDonationSchedule__c>
     */
     public List<RecurringDonationSchedule__c> getNewSchedules(npe03__Recurring_Donation__c rd) {
-
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
@@ -66,7 +78,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c();
-
         schedule.RecurringDonation__c = rd.Id;
         schedule.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
 
@@ -125,8 +136,8 @@ public without sharing class RD2_ScheduleService {
                 } else if (rd.Status__c != RD2_Constants.STATUS_CLOSED && schedule.StartDate__c > currentDate) {
                     schedule.EndDate__c = schedule.StartDate__c.addDays(-1);
 
-                } else {
-                    schedule.EndDate__c = currentDate;
+                } else if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+                    schedule.EndDate__c = currentDate.addDays(-1);
                 }
 
                 scheduleChanges.objectsToUpdate.add(schedule);
@@ -149,15 +160,15 @@ public without sharing class RD2_ScheduleService {
     * @param oldRd Trigger.old record
     * @return Boolean
     */
-    public Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
-
+    @TestVisible
+    private Boolean isScheduleUpdateNeeded(npe03__Recurring_Donation__c newRd, npe03__Recurring_Donation__c oldRd) {
         Boolean isNeeded = false;
 
         // newRD should never be null.  This is a fail safe measure only.
         if (newRd == null) {
             isNeeded = false;
 
-        // oldRd will be null on insert.  This method is unnecessary on inserts, so it should also always be null.  Defensive again.
+        // Since this method should never be called on inserts, oldRd should never be null.  Defensive again.
         } else if (oldRd == null) {
             isNeeded = true;
 
@@ -186,6 +197,176 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
+    * @description Calculates the dates of the next N donations for a single RD
+    * Schedule visualization is utilized in Opportunity service to create new and update existing installment Opps.
+    * It is also used to display projected installment Opps on a page.
+    *
+    * @param rd Recurring Donation record
+    * @param startDate Date (if null, current date will be used)
+    * @param numInstallments Integer (if null, DEFAULT_VISUALIZATION_SCHEDULE_COUNT will be used)
+    * @param schedules RecurringDonationSchedule__c (if null, getVisualizedInstallments will query for all active schedules)
+    * @return List<Installment>
+    */
+    public List<Installment> getVisualizedInstallments(npe03__Recurring_Donation__c rd, Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
+        if (rd == null) {
+            return new List<Installment>();
+        }
+
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesByRd;
+        if (schedules != null) {
+            schedulesByRd = new Map<Id, List<RecurringDonationSchedule__c>>();
+            schedulesByRd.put(rd.Id, schedules);
+        }
+
+        return getVisualizedInstallments(new List<npe03__Recurring_Donation__c> {rd}, startDate, numInstallments, schedulesByRd).get(rd.Id);
+    }
+
+    /***
+    * @description Calculates the dates of the next n donations for a list of Recurring Donations
+    * @param rds List of Recurring Donation records
+    * @param startDate Date (if null, current date will be used)
+    * @param numInstallments Integer (if null, DEFAULT_VISUALIZATION_SCHEDULE_COUNT will be used)
+    * @param schedulesByRd Map Id, RecurringDonationSchedule__c (if null, getVisualizedInstallments will query for all active schedules)
+    * @return Map<Id, List<Installment>> Recurring Donation Ids to List of upcoming installments
+    */
+    public Map<Id, List<Installment>> getVisualizedInstallments(
+            List<npe03__Recurring_Donation__c> rds, Date startDate, Integer numInstallments, Map<Id, List<RecurringDonationSchedule__c>> schedulesByRd) {
+
+        if (numInstallments == null) {
+            numInstallments = DEFAULT_VISUALIZATION_SCHEDULE_COUNT;
+        }
+
+        if (startDate == null) {
+            startDate = currentDate;
+        }
+
+        if (schedulesByRd == null) {
+            schedulesByRd = getExistingSchedules(rds);
+        }
+
+        Map<Id, List<Installment>> installmentsByRd = new Map<Id, List<Installment>>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd == null || rd.Id == null) {
+                continue;
+            }
+
+            installmentsByRd.put(rd.Id, getVisualizedInstallments(startDate, numInstallments, schedulesByRd.get(rd.Id)));
+        }
+
+        return installmentsByRd;
+    }
+
+    /***
+    * @description Calculates the dates of the next n donations for a single Recurring Donation
+    * @param startDate Date
+    * @param numInstallments Integer
+    * @param schedules List of active RecurringDonationSchedule__c records
+    * @return List<Installment>
+    */
+    public List<Installment> getVisualizedInstallments(Date startDate, Integer numInstallments, List<RecurringDonationSchedule__c> schedules) {
+        List<Installment> installments = new List<Installment>();
+        List <RecurringDonationSchedule__c> filteredSchedules;
+
+        if (schedules == null) {
+            return installments;
+        }
+
+        Date referenceDate = startDate;
+
+        while (installments.size() < numInstallments) {
+            // We are changing reference date with each loop, so the active schedules potentially change with each loop
+            filteredSchedules = new List<RecurringDonationSchedule__c>();
+
+            for (RecurringDonationSchedule__c schedule : schedules) {
+                if (isActive(schedule, referenceDate)) {
+                    filteredSchedules.add(schedule);
+                }
+            }
+
+            Installment ins = getNextInstallment(filteredSchedules, referenceDate);
+            if (ins == null) {
+                break;
+            }
+
+            installments.add(ins);
+            referenceDate = ins.nextDonationDate.addDays(1);
+        }
+
+        return installments;
+    }
+
+    /***
+    * @description Indicates if the schedule is active starting from the reference date
+    * @param schedule Recurring Donation schedule
+    * @param referenceDate Reference Date
+    * @return Boolean
+    */
+    public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
+        //ensure the passed in schedules are active within the time period
+        return schedule.EndDate__c == null
+            || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
+    }
+
+    /***
+    * @description Wrapper class for Recurring Donation Installment data
+    */
+    public class Installment {
+
+        public Id       campaignId {get; set;}
+        public String   campaignName {get; set;}
+        public Date     endDate {get; set;}
+        public Decimal  installmentAmount {get; set;}
+        public Date     nextDonationDate {get; set;}
+        public String   paymentMethod {get; set;}
+        public Id       scheduleId {get; set;}
+        public Date     startDate {get; set;}
+
+        Installment(RecurringDonationSchedule__c rdSchedule) {
+            campaignId =            rdSchedule.Campaign__c;
+            campaignName =          rdSchedule.Campaign__r.Name;
+            endDate =               rdSchedule.EndDate__c;
+            installmentAmount =     rdSchedule.InstallmentAmount__c;
+            paymentMethod =         rdSchedule.PaymentMethod__c;
+            scheduleId =            rdSchedule.Id;
+            startDate =             rdSchedule.StartDate__c;
+        }
+    }
+
+    /***
+    * @description Calculate the Next Installment using the provided Schedule with the reference date as the starting point
+    * @param rdSchedules Recurring Donation Schedule records
+    * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
+    * @return Installment
+    */
+    private Installment getNextInstallment(List<RecurringDonationSchedule__c> rdSchedules, Date referenceDate) {
+        Date nextDonationDate;
+        Installment nextInstallment;
+        Installment previousInstallment;
+
+        if (rdSchedules == null) {
+            return nextInstallment;
+        }
+
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            nextDonationDate = getNextDonationDateGreaterThan(schedule, referenceDate);
+
+            if (nextDonationDate == null) {
+                continue;
+            }
+
+            if ((schedule.EndDate__c == null || nextDonationDate <= schedule.EndDate__c) &&
+                (previousInstallment == null || previousInstallment.nextDonationDate > nextDonationDate)) {
+                    nextInstallment = new Installment(schedule);
+                    nextInstallment.nextDonationDate = nextDonationDate;
+            }
+
+            previousInstallment = nextInstallment;
+        }
+
+        return nextInstallment;
+    }
+
+    /***
     * @description Calculates the date of the next donation
     * @param rd Recurring Donation record
     * @return Date
@@ -204,21 +385,22 @@ public without sharing class RD2_ScheduleService {
     * @return Date
     */
     public Date getNextDonationDate(List<RecurringDonationSchedule__c> rdSchedules) {
+        if (rdSchedules == null) {
+            return null;
+        }
 
         Date nextDate;
         Date previousDate;
-
-        if (rdSchedules == null) {
-            return nextDate;
-        }
-
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
-            nextDate = getNextDonationDateGreaterThanToday(schedule);
+            if (!isActive(schedule, currentDate)) {
+                continue;
+            }
+
+            nextDate = getNextDonationDateGreaterThan(schedule, currentDate);
 
             if (previousDate < nextDate) {
                 nextDate = previousDate;
             }
-
             previousDate = nextDate;
         }
 
@@ -226,78 +408,80 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the next donation date >= currentDate
+    * @description Calculates the next donation date >= referenced date
     * @param schedule Recurring Donation Schedule record
-    * @return Date
+    * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
+    * @return Date The Next Donation Date
     */
-    private Date getNextDonationDateGreaterThanToday(RecurringDonationSchedule__c schedule) {
-
-        Integer frequency = Integer.valueOf(schedule.InstallmentFrequency__c);
+    private Date getNextDonationDateGreaterThan(RecurringDonationSchedule__c schedule, Date referenceDate) {
         Date firstValid = getFirstPossibleDonationDateFromStart(schedule);
 
-        if (firstValid >= currentDate) {
+        if (firstValid >= referenceDate) {
             return firstValid;
         }
 
-        Integer unitsBetween;
-        Integer remains;
-        Date adjusted;
+        Integer adjustedFrequency =
+            (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ? DAYS_IN_WEEK : 1) * Integer.valueOf(schedule.InstallmentFrequency__c);
 
-        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+        Integer unitsBetween = getDateUnitsBetweenDates(firstValid, schedule.InstallmentPeriod__c, referenceDate);
 
-            unitsBetween = firstValid.monthsBetween(currentDate);
-            remains = Math.mod(unitsBetween, frequency);
-            adjusted = firstValid.addMonths((unitsBetween / frequency) * frequency);
+        Date adjusted = addDateUnits(firstValid, (unitsBetween / adjustedFrequency) * adjustedFrequency, schedule.InstallmentPeriod__c);
 
-            if (remains > 0) {
-                adjusted = adjusted.addMonths(frequency);
-            }
-
-            if (adjusted < currentDate) {
-                adjusted = adjusted.addMonths(frequency);
-            }
-
-            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
-                adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
-            }
+        if (adjusted < referenceDate) {
+            adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
         }
 
-        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
-
-            unitsBetween = firstValid.monthsBetween(currentDate);
-            remains = Math.mod(unitsBetween, frequency*12);
-            adjusted = firstValid.addYears(unitsBetween / (12));
-
-            if (remains > 0) {
-                adjusted = adjusted.addYears(frequency);
-            }
-
-            if (adjusted < currentDate) {
-                adjusted = adjusted.addYears(frequency);
-            }
-        }
-
-        else if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY ||
-                 schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
-
-            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY) {
-                frequency *= DAYS_IN_WEEK;
-            }
-
-            unitsBetween = firstValid.daysBetween(currentDate);
-            remains = Math.mod(unitsBetween, frequency);
-            adjusted = firstValid.addDays((unitsBetween / (frequency)) * (frequency));
-
-            if (remains > 0) {
-                adjusted = adjusted.addDays(frequency);
-            }
-
-            if (adjusted < currentDate) {
-                adjusted = adjusted.addDays(frequency);
-            }
+        if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY && schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
         }
 
         return adjusted;
+    }
+
+    /***
+    * @description Returns the date units between an input date and current date based on installment period
+    * @param firstValid Date
+    * @param period String
+    * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
+    * @return Integer
+    */
+    private Integer getDateUnitsBetweenDates(Date firstValid, String period, Date referenceDate) {
+        Integer unitsBetween = 0;
+
+        if (period == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || period == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+            unitsBetween = firstValid.monthsBetween(referenceDate);
+
+        } else if (period == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY || period == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
+            unitsBetween = firstValid.daysBetween(referenceDate);
+
+        } else if (period == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
+            unitsBetween = Math.abs(firstValid.year() - referenceDate.year());
+        }
+
+        return unitsBetween;
+    }
+
+    /***
+    * @description Adds date units to an input date based on installment period
+    * @param dateIn Date
+    * @param addUnits Integer
+    * @param period String
+    * @return Date
+    */
+    private Date addDateUnits(Date dateIn, Integer addUnits, String period) {
+        Date adjustedDate = dateIn;
+
+        if (period == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY || period == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+            adjustedDate = dateIn.addMonths(addUnits);
+
+        } else if (period == RD2_Constants.INSTALLMENT_PERIOD_WEEKLY || period == RD2_Constants.INSTALLMENT_PERIOD_DAILY) {
+            adjustedDate = dateIn.addDays(addUnits);
+
+        } else if (period == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
+            adjustedDate = dateIn.addYears(addUnits);
+        }
+
+        return adjustedDate;
     }
 
     /***
@@ -327,12 +511,76 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
+    * @description Retrieves detailed information about schedules suitable for viewing through UI
+    * @param rd Recurring Donation record
+    * @return List<ActiveSchedule>
+    */
+    public List<ActiveSchedule> getVisualizedSchedules(npe03__Recurring_Donation__c rd) {
+        List<ActiveSchedule> activeSchedules = new List<ActiveSchedule>();
+        List<RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
+        if (schedules == null) {
+            return activeSchedules;
+        }
+
+        Boolean first1stAnd15thFound = false;
+        for (RecurringDonationSchedule__c schedule : schedules) {
+
+            // This block collapses 1st and 15th schedules into a single row and nulls out day of month
+            if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH) {
+                if (first1stAnd15thFound) {
+                    first1stAnd15thFound = false;
+                    continue;
+                }
+                first1stAnd15thFound = true;
+            }
+            activeSchedules.add(new ActiveSchedule(schedule));
+        }
+
+        return activeSchedules;
+    }
+
+    /***
+    * @description Wrapper class for Recurring Donation Schedule data
+    */
+    public class ActiveSchedule {
+
+        public Boolean  isCurrent {get;set;}
+        public Id       campaignId {get; set;}
+        public String   campaignName {get; set;}
+        public String   dayOfMonth {get; set;}
+        public Date     endDate {get; set;}
+        public Decimal  installmentAmount {get; set;}
+        public Integer  installmentFrequency {get; set;}
+        public String   installmentPeriod {get; set;}
+        public String   paymentMethod {get; set;}
+        public String   recurringDonationId {get; set;}
+        public Id       scheduleId {get; set;}
+        public Date     startDate {get; set;}
+
+        ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
+            isCurrent =             rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
+            campaignId =            rdSchedule.Campaign__c;
+            campaignName =          rdSchedule.Campaign__r.Name;
+            dayOfMonth =            rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
+            endDate =               rdSchedule.EndDate__c;
+            installmentAmount =     rdSchedule.InstallmentAmount__c;
+            installmentFrequency =  rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
+            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
+            paymentMethod =         rdSchedule.PaymentMethod__c;
+            recurringDonationId =   rdSchedule.RecurringDonation__c;
+            scheduleId =            rdSchedule.Id;
+            startDate =             rdSchedule.StartDate__c;
+        }
+    }
+
+    /***
     * @description Performs a full analysis and rebuild of the Schedule records for a Recurring Donation,
     * but does not commit the schedule records to the database.  Uses the active schedules for the RD
     * to calculate the Next Donation Date and store onto the RD record (in a Before Update context,
     * thus avoiding the extra DML against the object).
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
+    * @return Map<Id, List<RecurringDonationSchedule__c>>
     */
     public Map<Id, List<RecurringDonationSchedule__c>> getAllRecurringDonationSchedules(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
 
@@ -365,29 +613,95 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
+    * @description Retrieves recurring donation schedules associated with a single recurring donation
+    * @param rd npe03__Recurring_Donation__c
+    * @return List<RecurringDonationSchedule__c>
+    */
+    public List<RecurringDonationSchedule__c> getExistingSchedules(npe03__Recurring_Donation__c rd) {
+        if (rd == null) {
+            return new List<RecurringDonationSchedule__c>();
+        }
+
+        return getExistingSchedules(new List<npe03__Recurring_Donation__c> {rd}).get(rd.Id);
+    }
+
+    /***
+    * @description Retrieves recurring donation schedules associated with recurring donation list
+    * @param rds List<npe03__Recurring_Donation__c>
+    * @return Map<Id, List<RecurringDonationSchedule__c>>
+    */
+    public Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
+        Map<Id, List<RecurringDonationSchedule__c>> schedulesById = new Map<Id, List<RecurringDonationSchedule__c>>();
+
+        for (RecurringDonationSchedule__c schedule : Database.query(getExistingScheduleQueryString())) {
+            if (!isActive(schedule, currentDate)) {
+                continue;
+            }
+            if (!schedulesById.containsKey(schedule.RecurringDonation__c)) {
+                schedulesById.put(schedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
+            }
+            schedulesById.get(schedule.RecurringDonation__c).add(schedule);
+        }
+
+        return schedulesById;
+    }
+
+    /***
+    * @description Build dynamic soql query string with support for date injection
+    * @return String
+    */
+    private String getExistingScheduleQueryString() {
+
+        Set<String> selectFields = new Set<String> {
+            'Campaign__c',
+            'Campaign__r.Name',
+            'DayOfMonth__c',
+            'EndDate__c',
+            'InstallmentAmount__c',
+            'InstallmentFrequency__c',
+            'InstallmentPeriod__c',
+            'PaymentMethod__c',
+            'RecurringDonation__c',
+            'StartDate__c'
+        };
+        String orderString = 'StartDate__c';
+
+        Util_Query theQuery = new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom(RecurringDonationSchedule__c.SObjectType)
+            .withWhere('RecurringDonation__c IN :rds')
+            .withWhere('(EndDate__c = null OR EndDate__c >= :currentDate)')
+            .withOrderBy(orderString);
+
+        return theQuery.build();
+    }
+
+    /***
     * @description Filters recurring donations to determine which need schedule updates
+    * If the active RD is updated, but the RD Start Date is unchanged, the RD Start Date is updated to the current date.
+    *
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
+    * @param triggerAction Trigger action (insert, updated,...)
+    * @return Map<Id, npe03__Recurring_Donation__c>
     */
     public Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsNeedingScheduleUpdates(
             List<npe03__Recurring_Donation__c> rds,
             List<npe03__Recurring_Donation__c> oldRds,
             TDTM_Runnable.Action triggerAction)
     {
-
-        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>();
-        oldRdsById.putAll(oldRds);
-
+        Map<Id, npe03__Recurring_Donation__c> oldRdById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
         Map<Id, npe03__Recurring_Donation__c> filteredRecurringDonations = new Map<Id, npe03__Recurring_Donation__c>();
+
         for (npe03__Recurring_Donation__c rd : rds) {
-            npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
+            npe03__Recurring_Donation__c oldRd = oldRdById.get(rd.Id);
 
             if (isScheduleUpdateNeeded(rd, oldRd)) {
-
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
                     rd.StartDate__c == oldRd.StartDate__c &&
-                    rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-                    rd.StartDate__c = Date.today();
+                    rd.Status__c != RD2_Constants.STATUS_CLOSED
+                ) {
+                    rd.StartDate__c = currentDate;
                 }
 
                 filteredRecurringDonations.put(rd.Id, rd);
@@ -398,41 +712,14 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Retrieves recurring donation schedules associated with recurring donation list
-    * @param rds List<npe03__Recurring_Donation__c>
-    */
-    public Map<Id, List<RecurringDonationSchedule__c>> getExistingSchedules(List<npe03__Recurring_Donation__c> rds) {
-
-        Map<Id, List<RecurringDonationSchedule__c>> oldSchedules = new Map<Id, List<RecurringDonationSchedule__c>>();
-
-        for (RecurringDonationSchedule__c oldSchedule : [
-                SELECT RecurringDonation__c,
-                        StartDate__c,
-                        EndDate__c,
-                        InstallmentFrequency__c,
-                        InstallmentPeriod__c,
-                        DayOfMonth__c
-                FROM RecurringDonationSchedule__c
-                WHERE RecurringDonation__c IN :rds
-                AND Active__c = true
-        ]) {
-            if (!oldSchedules.containsKey(oldSchedule.RecurringDonation__c)) {
-                oldSchedules.put(oldSchedule.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
-            }
-            oldSchedules.get(oldSchedule.RecurringDonation__c).add(oldSchedule);
-        }
-
-        return oldSchedules;
-    }
-
-    /***
     * @description Adds recurring donation schedules to map by recurring donation Id
     * @param rd SObject
     * @param newSchedulesByRdId Map<Id, List<RecurringDonationSchedule__c>>
+    * @return void
     */
-    public void addUpdatedSchedules(RecurringDonationSchedule__c rd, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
+    private void addUpdatedSchedules(RecurringDonationSchedule__c rd, Map<Id, List<RecurringDonationSchedule__c>> newSchedulesByRdId) {
 
-        if (rd.EndDate__c == null || (rd.EndDate__c >= Date.today() && rd.StartDate__c < rd.EndDate__c)) {
+        if (rd.EndDate__c == null || (rd.EndDate__c >= currentDate && rd.StartDate__c < rd.EndDate__c)) {
 
             if (!newSchedulesByRdId.containsKey(rd.RecurringDonation__c)) {
                 newSchedulesByRdId.put(rd.RecurringDonation__c, new List<RecurringDonationSchedule__c>());

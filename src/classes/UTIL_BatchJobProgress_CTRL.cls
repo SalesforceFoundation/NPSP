@@ -42,18 +42,18 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
      */
     @AuraEnabled
     public static String loadBatchJob(String className) {
-      String jsonBatchJob;
-      try {
-          UTIL_BatchJobService service = new UTIL_BatchJobService();
+        String jsonBatchJob;
 
-          jsonBatchJob = JSON.serialize(service.getBatchJob(className));
+        try {
+            UTIL_BatchJobService service = new UTIL_BatchJobService();
+            jsonBatchJob = JSON.serialize(service.getBatchJob(className));
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
+
         return jsonBatchJob;
     }
-
 
     /***
     * @description Throws AuraHandledException
@@ -64,6 +64,6 @@ public with sharing class UTIL_BatchJobProgress_CTRL {
         AuraHandledException e = new AuraHandledException(errMessage);
         e.setMessage(errMessage);
         throw e;
-    }    
+    }
 
 }

@@ -68,9 +68,9 @@ public class RD2_QueueableService {
          * @description Delegate processing of the Recurring Donations to the Evaluation Service
          */
         public void executeOppEvaluationService() {
-            RD2_OpportunityEvaluationService oppService = new RD2_OpportunityEvaluationService()
-                .withRds(rdIds);
-            oppService.evaluateOpportunities();
+            new RD2_OpportunityEvaluationService()
+                .withRds(rdIds)
+                .evaluateOpportunities();
         }
     }
 

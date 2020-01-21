@@ -139,15 +139,22 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Determine if Installment Opportunities need to be created or updated (asynchronously)
+    * @description Determine if Installment Opportunities need to be created or updated.
+    * Opportunities are evaluated *asynchronously* unless the async job limit has been reached.
+    * Thus, static flags set in the evaluation service are reset when the service executes in the async mode.
+    * However, the trigger can check for those flags and verify if the service should be called at all.
+    *
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     * @return void
     */
     public void evaluateOpportunities(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
-        Set<Id> rdIds = new Set<Id>();
+        if (RD2_OpportunityEvaluationService.skipEvaluationService) {
+            return;
+        }
 
+        Set<Id> rdIds = new Set<Id>();
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             rdIds = new Map<Id, npe03__Recurring_Donation__c>(rds).keySet();
 
