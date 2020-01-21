@@ -226,6 +226,10 @@ public with sharing class RD2_Settings_TEST {
         System.assertEquals(true, settings.isDisableAllInstallments, 'All installments should be disabled');
     }
 
+    /**
+     * @description Verifies both first and next installment creation are enabled
+     * when installment auto-create option is unexpected text
+     */
     @isTest
     private static void shouldEnableFirstAndNextInstallmentWhenOptionIsRandomString() {
         RD2_Settings settings = new RD2_Settings();

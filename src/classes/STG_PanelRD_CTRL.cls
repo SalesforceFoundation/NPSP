@@ -180,12 +180,12 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Return a list of picklist value to be selected for Installment Auto-Creation Setting 
     */
-    public List<SelectOption> installmentOppCreationOptions {
+    public List<SelectOption> installmentCreateOptions {
         get {
-        	if (installmentOppCreationOptions == null) {
-	            installmentOppCreationOptions = getCreationOptions();
+        	if (installmentCreateOptions == null) {
+	            installmentCreateOptions = getCreationOptions();
         	}
-            return installmentOppCreationOptions;
+            return installmentCreateOptions;
         }
         private set;
     }

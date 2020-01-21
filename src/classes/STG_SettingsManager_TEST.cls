@@ -668,7 +668,7 @@ private with sharing class STG_SettingsManager_TEST {
         List<String> optionValues = new List<String>();
 
         Test.startTest();
-        for (SelectOption option : panel.installmentOppCreationOptions) {
+        for (SelectOption option : panel.installmentCreateOptions) {
             optionValues.add(option.getValue());
         }
         Test.stopTest();
