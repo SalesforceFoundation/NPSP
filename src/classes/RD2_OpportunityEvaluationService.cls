@@ -46,7 +46,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
     * @description Indicates if the Opportunity evaluation is invoked from a nightly batch job
-    */   
+    */
     private Boolean isBatchContext = false;
 
     /***
@@ -56,19 +56,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         get {
             if (rdSettings == null) {
                 rdSettings = new RD2_Settings();
-            } 
+            }
             return rdSettings;
         }
         set;
     }
 
     /**
-     * @description Current date used as a cut off date to filter out and evaluate Opportunities 
+     * @description Current date used as a cut off date to filter out and evaluate Opportunities
      * and to determine if the next Opp should be created for a Recurring Donation.
      * It is also used to calculate projected RD schedule installments as of the current date.
      * It can be a date in past, today or a future date in testing. When executed from a scheduler,
      * the current date is always today.
-    */   
+    */
     private Date currentDate {
         get {
             if (currentDate == null) {
@@ -81,9 +81,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /**
      * @description Beggining of the current or the fiscal year, whichever is earlier.
      * Date is used to retrieve all Opportunities with Close Date after the year start.
-    */   
+    */
     private Date startDate {
-        get {            
+        get {
             return yearValueProcessor.getStartDate();
         } set;
     }
@@ -97,7 +97,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 oppService = new RD2_OpportunityService(currentDate, dbService);
             }
             return oppService;
-        } 
+        }
         set;
     }
 
@@ -234,24 +234,30 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         if (skipEvaluationService) {
             return this;
         }
-        
+
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
 
-        for (npe03__Recurring_Donation__c rd : rds) {              
+        for (npe03__Recurring_Donation__c rd : rds) {
             RecurringDonation rdRecord = new RecurringDonation(rd)
-                .reviseNextDonationDate(scheduleService); 
-            
+                .reviseNextDonationDate(scheduleService)
+                .reviseYearValues(yearValueProcessor);
+
+            if (rdRecord.isOutdated()) {
+                outdatedRDs.add(rdRecord.getUpdate());
+            }
+
             if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
 
             } else if (needNextInstallment(rdRecord)) {
                 newOppRDs.add(rd);
-            
+
             } else if (isUpdateContext(rdRecord)) {
                 updateOppRDs.add(rd);
-            } 
+            }
 
             // TODO Handle Past Due Installment
         }
@@ -262,8 +268,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         oppService.updateOpportunities(updateOppRDs);
         oppService.voidOpenOpportunities(closedRDs);
 
-        updateRecurringDonations();
-
+        dbService.updateRecords(outdatedRDs);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
 
         dbService.processErrors();
@@ -282,23 +287,21 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         if (skipEvaluationService) {
             return this;
         }
-               
+
         rds = null;//reset  Recurring Donation values and refetch Opps
 
-        for (npe03__Recurring_Donation__c rd : rds) {              
+        for (npe03__Recurring_Donation__c rd : rds) {
             RecurringDonation rdRecord = new RecurringDonation(rd)
                 .reviseNextDonationDate(scheduleService)
-                .reviseYearValues(yearValueProcessor); 
+                .reviseYearValues(yearValueProcessor);
 
             if (rdRecord.isOutdated()) {
                 outdatedRDs.add(rdRecord.getUpdate());
             }
         }
 
-        if (!outdatedRDs.isEmpty()) {
-            dbService.updateRecords(outdatedRDs);            
-            dbService.processErrors();
-        }
+        dbService.updateRecords(outdatedRDs);
+        dbService.processErrors();
 
         return this;
     }
@@ -323,11 +326,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         Boolean hasMandatoryConditions = rd.isActive()
             && rd.hasNextDonationDate()
             && rd.hasSchedule();
-        
+
         if (!hasMandatoryConditions) {
             return false;
         }
-        
+
         if (isBatchContext) {
             return !rdSettings.isDisableAllInstallments;
 
@@ -335,7 +338,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return rdSettings.isFirstInstallmentEnabled;
 
         } else if (!rd.hasOpenOpportunity(currentDate)) {
-            return rdSettings.isNextInstallmentEnabled;  
+            return rdSettings.isNextInstallmentEnabled;
         }
 
         return false;
@@ -352,7 +355,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             && rd.hasSchedule()
             && rd.hasOpenOpportunity(currentDate);
     }
-   
+
 
     /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
@@ -380,7 +383,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             queryFields.add(fld);
         }
 
-        //Return Recurring Donations' 
+        //Return Recurring Donations'
         //open Opps regardless of the Close Date
         //and Opps with Close Date >= current date regardless if closed or open
         //and all Opps with Close Date in this current year
@@ -391,7 +394,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'StageName, IsClosed, IsWon, ' +
             'CampaignId, Recurring_Donation_Installment_Number__c ' +
             'FROM npe03__Donations__r ' +
-            'WHERE IsClosed = false ' +	
+            'WHERE IsClosed = false ' +
             'OR CloseDate >= :startDate ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
@@ -458,7 +461,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
-        * @description Revises and modifies the Recurring Donation 
+        * @description Revises and modifies the Recurring Donation
         * Current Year Value and Next Year Value fields
         * @param processor Used to calculate current and next year values
         * @return RecurringDonation This record instance
@@ -564,52 +567,52 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
     * @description Recurring Donation processor calculating Current Year Value and Next Year Value
-    */   
+    */
     public class YearValueProcessor {
         /**
         * @description Recurring Donation Schedule Service
-        */  
-        private RD2_ScheduleService scheduleService; 
+        */
+        private RD2_ScheduleService scheduleService;
         /**
-        * @description Date representing current date. 
+        * @description Date representing current date.
         * It can be back-dated or future-dated during testing, but it defaults to today.
         * Date is populated from the Opp eval service.
-        */  
-        private Date currentDate;     
-        
+        */
+        private Date currentDate;
+
         /**
         * @description Date at the beginning of the current year.
         * Used to retrieve current year Opportunities regardless if they are open or closed.
-        */   
+        */
         private Date currentYearStartDate {
             get {
                 if (currentYearStartDate == null) {
                     currentYearStartDate = Date.newInstance(currentDate.year(), 1, 1);
                 }
                 return currentYearStartDate;
-            } 
+            }
             set;
-        } 
+        }
 
         /**
         * @description Date at the end of the current year.
         * Used to set end date for RD Schedule Installment Close Date.
-        */   
+        */
         private Date currentYearEndDate {
             get {
                 if (currentYearEndDate == null) {
                     currentYearEndDate = Date.newInstance(currentDate.year(), 12, 31);
                 }
                 return currentYearEndDate;
-            } 
+            }
             set;
-        } 
+        }
 
         /**
         * @description Constructor
         * @param currentDate Current Date
         * @param scheduleService RD Schedule Service
-        */   
+        */
         public YearValueProcessor(Date currentDate, RD2_ScheduleService scheduleService) {
             this.currentDate = currentDate;
             this.scheduleService = scheduleService;
@@ -617,7 +620,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         /**
         * @description Returns start date to filter open/closed Opportunities based on their Close Date
-        */   
+        */
         public Date getStartDate() {
             return currentYearStartDate;
         }
@@ -629,15 +632,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Decimal
         */
         public Decimal calcCurrentYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            Decimal value = 0;   
+            Decimal value = 0;
 
-            List<RD2_ScheduleService.Installment> installments = 
+            List<RD2_ScheduleService.Installment> installments =
                 scheduleService.getVisualizedInstallments(currentDate, currentYearEndDate, schedules);
 
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
                 .filterByYear(opps, currentDate.year())
                 .match(installments);
-      
+
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
                 if (!record.isClosedLost()) {
                     value += record.getAmount();//TODO currency
@@ -664,7 +667,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @param records Records to create
         * @return Set<Id> Ids of created records
         */
-        public Set<Id> insertRecords(List<SObject> records) { 
+        public Set<Id> insertRecords(List<SObject> records) {
             if (records == null || records.isEmpty()) {
                 return new Set<Id>();
             }
@@ -680,7 +683,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @param records Records to update
         * @return void
         */
-        public void updateRecords(List<SObject> records) { 
+        public void updateRecords(List<SObject> records) {
             if (records == null || records.isEmpty()) {
                 return;
             }
@@ -714,7 +717,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @param records Records to delete
         * @return void
         */
-        public void deleteRecords(List<SObject> records) { 
+        public void deleteRecords(List<SObject> records) {
             if (records == null || records.isEmpty()) {
                 return;
             }
@@ -773,7 +776,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             ERR_Handler.processErrorsOnly(errorResult, ERR_Handler_API.Context.RD.name());
         }
-        
+
         /***
         * @description Returns number of failed Recurring Donations
         * @return Integer

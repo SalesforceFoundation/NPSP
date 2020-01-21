@@ -57,7 +57,7 @@ private class RD2_OpportunityEvaluation_TEST {
      * job throws an exception
      */
     @IsTest
-    private static void shouldThrowExceptionForEnhancedRDJobIfEnhancedRDIsNotEnabled() {        
+    private static void shouldThrowExceptionForEnhancedRDJobIfEnhancedRDIsNotEnabled() {
         Exception actuaException = runBatch(new RD2_OpportunityEvaluation_BATCH());
 
         System.assertNotEquals(null, actuaException, 'An exception should have been thrown because Enhanced RD is not enabled');
@@ -123,7 +123,7 @@ private class RD2_OpportunityEvaluation_TEST {
             .withOpenStage()
             .withCloseDate(today)
             .build();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
@@ -154,7 +154,7 @@ private class RD2_OpportunityEvaluation_TEST {
             .withOpenStage()
             .withCloseDate(nextCloseDate)
             .build();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
@@ -185,7 +185,7 @@ private class RD2_OpportunityEvaluation_TEST {
             .withClosedWonStage()
             .withCloseDate(prevCloseDate)
             .build();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
@@ -194,9 +194,9 @@ private class RD2_OpportunityEvaluation_TEST {
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
 
-        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
+        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate,
             'Close Date should be unchanged for the existing Opp');
-        System.assertEquals(today, oppById.values()[0].CloseDate, 
+        System.assertEquals(today, oppById.values()[0].CloseDate,
             'Close Date on the new Opp should match next Close Date');
     }
 
@@ -219,7 +219,7 @@ private class RD2_OpportunityEvaluation_TEST {
             .withOpenStage()
             .withCloseDate(prevCloseDate)
             .build();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
@@ -228,9 +228,9 @@ private class RD2_OpportunityEvaluation_TEST {
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
 
-        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
+        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate,
             'Close Date should be unchanged for the existing Opp');
-        System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate, 
+        System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate,
             'Close Date on the new Opp should match next Close Date');
     }
 
@@ -257,7 +257,7 @@ private class RD2_OpportunityEvaluation_TEST {
             .withClosedWonStage()
             .withCloseDate(prevCloseDate)
             .build();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
@@ -266,9 +266,9 @@ private class RD2_OpportunityEvaluation_TEST {
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
 
-        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
+        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate,
             'Close Date should be unchanged for the existing Opp');
-        System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate, 
+        System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate,
             'Close Date on the new Opp should match next Close Date');
     }
 
@@ -284,9 +284,9 @@ private class RD2_OpportunityEvaluation_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
-        
-        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);  
-        System.assertEquals(1, rdSchedules.size(), 'An RD Schedule should exist: ' + rdSchedules);   
+
+        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
+        System.assertEquals(1, rdSchedules.size(), 'An RD Schedule should exist: ' + rdSchedules);
 
         //Set Schedule End Date to date before the next Close Date
         rdSchedules[0].EndDate__c = START_DATE.addMonths(2).addDays(-1);
@@ -310,9 +310,9 @@ private class RD2_OpportunityEvaluation_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
-        
-        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);  
-        System.assertEquals(1, rdSchedules.size(), 'An RD Schedule should exist: ' + rdSchedules);   
+
+        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
+        System.assertEquals(1, rdSchedules.size(), 'An RD Schedule should exist: ' + rdSchedules);
 
         //Set Schedule End Date to the next Close Date
         rdSchedules[0].EndDate__c = START_DATE.addMonths(2);
@@ -322,7 +322,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'A new Opportunity should be created: ' + opps);
-        System.assertEquals(rdSchedules[0].EndDate__c, opps[0].CloseDate, 
+        System.assertEquals(rdSchedules[0].EndDate__c, opps[0].CloseDate,
             'Close Date on the new Opp should match next Close Date');
     }
 
@@ -345,7 +345,7 @@ private class RD2_OpportunityEvaluation_TEST {
             .withOpenStage()
             .withCloseDate(prevCloseDate)
             .build();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
@@ -366,9 +366,9 @@ private class RD2_OpportunityEvaluation_TEST {
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
 
-        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate, 
+        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate,
             'Close Date should be unchanged for the existing Opp');
-        System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate, 
+        System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate,
             'Close Date on the new Opp should match next Close Date after today');
     }
 
@@ -486,7 +486,7 @@ private class RD2_OpportunityEvaluation_TEST {
             .withClosedLostStage()
             .withCloseDate(nextCloseDate)
             .build();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'An Opp should exist: ' + opps);
 
@@ -529,11 +529,11 @@ private class RD2_OpportunityEvaluation_TEST {
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);        
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
         System.assertEquals(true, opps[0].isClosed && !opps[0].isWon, 'Existing Closed Lost Opp should stay closed');
     }
 
-    
+
 
     // Helpers
     //////////////
@@ -573,7 +573,7 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-     * @description Instantiate an Enhanced RD format recurring donation 
+     * @description Instantiate an Enhanced RD format recurring donation
      * @return TEST_RecurringDonationBuilder New Recurring Donation builder
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
@@ -634,9 +634,9 @@ private class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(recordsFailed, batch.recordsFailed, 'Record Failed should match');
 
         npe03__Recurring_Donations_Settings__c settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        System.assertEquals(recordsProcessed - recordsFailed, settings.npe03__Number_of_Successes__c, 
+        System.assertEquals(recordsProcessed - recordsFailed, settings.npe03__Number_of_Successes__c,
             'Settings Number of Successes should be updated');
-        System.assertEquals(recordsFailed, settings.npe03__Number_of_Failures__c, 
+        System.assertEquals(recordsFailed, settings.npe03__Number_of_Failures__c,
             'Settings Number of Failures should be updated');
     }
 
@@ -645,8 +645,8 @@ private class RD2_OpportunityEvaluation_TEST {
     * @return void
     */
     private static void configInvalidOppRecordTypeId() {
-        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{ 
-            'npe03__Record_Type__c' => UTIL_RecordTypes_TEST.MOCK_ID 
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{
+            'npe03__Record_Type__c' => UTIL_RecordTypes_TEST.MOCK_ID
         });
     }
 
@@ -666,8 +666,8 @@ private class RD2_OpportunityEvaluation_TEST {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{ 
-            'DisableRollupsWhenCreatingInstallments__c' => isDisableRollups 
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{
+            'DisableRollupsWhenCreatingInstallments__c' => isDisableRollups
         });
     }
 

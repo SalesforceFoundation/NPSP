@@ -181,10 +181,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
 
-        System.assertEquals(true, evalService.needNextInstallment(rdNew), 
+        System.assertEquals(true, evalService.needNextInstallment(rdNew),
             'RD having Schedules and no related Opp should be eligible for an Installment Opp');
 
-        System.assertEquals(false, evalService.needNextInstallment(rdOld), 
+        System.assertEquals(false, evalService.needNextInstallment(rdOld),
             'RD having Schedules and a related Opp should not be eligible for an Installment Opp');
     }
 
@@ -193,7 +193,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * Recurring Donation settings Open Opportunity Behaviour is set to mark open Opps as Closed Lost
      */
     @IsTest
-    private static void shouldMarkOpenOppsAsClosedLostWhenRDIsClosedAndCloseActionIsClosedLost() {        
+    private static void shouldMarkOpenOppsAsClosedLostWhenRDIsClosedAndCloseActionIsClosedLost() {
         String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
         npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
@@ -203,7 +203,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         System.assertEquals(oldOpps.size(), oppById.size(), 'The number of Opps should be unchanged');
         System.assertEquals(true, oppById.get(oldOpps[0].Id).isWon, 'The closed Opp should stay won');
-        System.assertEquals(true, oppById.get(oldOpps[1].Id).isClosed && !oppById.get(oldOpps[1].Id).isWon, 
+        System.assertEquals(true, oppById.get(oldOpps[1].Id).isClosed && !oppById.get(oldOpps[1].Id).isWon,
             'The Open Opp should be Closed Lost now');
     }
 
@@ -230,7 +230,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * Recurring Donation settings Open Opportunity Behaviour is set to not change open Opps
      */
     @IsTest
-    private static void shouldNotChangeOpenOppsWhenRDIsClosedAndCloseActionIsNoAction() {        
+    private static void shouldNotChangeOpenOppsWhenRDIsClosedAndCloseActionIsNoAction() {
         String closeAction = RD2_Constants.CloseActions.No_Action.name();
 
         npe03__Recurring_Donation__c rd = setupDataAndCloseRD(closeAction);
@@ -249,7 +249,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * @return npe03__Recurring_Donation__c Created Recurring Donation with related Opps
      */
     private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {
-        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{ 
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{
             'npe03__Open_Opportunity_Behavior__c' => closeAction
         });
 
@@ -260,7 +260,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withCalculateNextDonationDate()
             .build();
         insert rd;
-        
+
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
 
         List<Opportunity> opps = new List<Opportunity>{
@@ -301,11 +301,11 @@ private class RD2_OpportunityEvaluationService_TEST {
      * has no Opportunities
      */
     @IsTest
-    private static void shouldNotThrowExceptionWhenRDIsClosedAndHasNoOpp() { 
+    private static void shouldNotThrowExceptionWhenRDIsClosedAndHasNoOpp() {
         Exception actualException;
         String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
 
-        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{ 
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{
             'npe03__Open_Opportunity_Behavior__c' => closeAction
         });
 
@@ -385,7 +385,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
             .withCalculateNextDonationDate()
             .build();
         insert rd;
@@ -413,7 +413,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-     * @description Verifies future open Opp is updated when an active RD is updated. 
+     * @description Verifies future open Opp is updated when an active RD is updated.
      * The future Closed Won Opp is not updated.
      */
     @IsTest
@@ -487,13 +487,13 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        Integer monthsLeftInYear = 4; 
-        System.assertEquals(rd.npe03__Amount__c * monthsLeftInYear, rd.CurrentYearValue__c, 
+        Integer monthsLeftInYear = 4;
+        System.assertEquals(rd.npe03__Amount__c * monthsLeftInYear, rd.CurrentYearValue__c,
             'Current Year Value should be calculated when RD is created');
     }
 
     /**
-     * @description Current Year Value should include past Closed Won and Open Opps. 
+     * @description Current Year Value should include past Closed Won and Open Opps.
      * The value in this test is calculated when Recurring Donation is updated.
      */
     @IsTest
@@ -532,7 +532,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         Decimal expectedValue = RD_AMOUNT * 2 + RD_NEW_AMOUNT * 2; //2 months of old amount and 2 months of new amount
-        System.assertEquals(expectedValue, rd.CurrentYearValue__c, 
+        System.assertEquals(expectedValue, rd.CurrentYearValue__c,
             'Current Year Value should be include past and future Open and Closed Won Opps');
     }
 
@@ -582,7 +582,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         Decimal expectedValue = RD_AMOUNT + RD_NEW_AMOUNT; //past Closed Won Amount + installment Amount in Dec
-        System.assertEquals(expectedValue, rd.CurrentYearValue__c, 
+        System.assertEquals(expectedValue, rd.CurrentYearValue__c,
             'Current Year Value should exclude past Closed Lost Opps');
     }
 
@@ -633,7 +633,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         Decimal expectedValue = RD_AMOUNT + RD_NEW_AMOUNT * 2; //past Closed Won Amount + installment Amount on nextCloseDate and in Dec
-        System.assertEquals(expectedValue, rd.CurrentYearValue__c, 
+        System.assertEquals(expectedValue, rd.CurrentYearValue__c,
             'Current Year Value should exclude past Closed Lost Opps');
     }
 
@@ -669,10 +669,10 @@ private class RD2_OpportunityEvaluationService_TEST {
                 .withClosedWonStage()
                 .build()
             );
-            
+
             closeDate = closeDate.addMonths(1);
         }
-        System.assertEquals(7, opps.size(), 
+        System.assertEquals(7, opps.size(),
             'There should be four past and three current year Closed Won Opps including today: ' + opps);
         insert opps;
 
@@ -686,8 +686,8 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         //there are two past Opps and one today's Opp with the old amount,
         //and nine projected installments in this year with the new amount
-        Decimal expectedValue = RD_AMOUNT * 3 + RD_NEW_AMOUNT * 9; 
-        System.assertEquals(expectedValue, rd.CurrentYearValue__c, 
+        Decimal expectedValue = RD_AMOUNT * 3 + RD_NEW_AMOUNT * 9;
+        System.assertEquals(expectedValue, rd.CurrentYearValue__c,
             'Current Year Value should include changed installments');
     }
 
@@ -722,7 +722,7 @@ private class RD2_OpportunityEvaluationService_TEST {
                 .withCloseDate(closeDate)
                 .withClosedWonStage()
                 .build()
-            );            
+            );
             closeDate = closeDate.addMonths(1);
         }
         opps.add(oppBuilder
@@ -730,13 +730,14 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withCloseDate(closeDate)
             .withOpenStage()
             .build()
-        );   
-        System.assertEquals(8, opps.size(), 
-            'There should be four past and three current year Closed Won Opps including tomorrow plus future Open Opp: ' + opps);
+        );
+        System.assertEquals(8, opps.size(),
+            'There should be four past and three current year Closed Won Opps plus one future Open Opp: ' + opps);
         insert opps;
 
         Test.startTest();
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        rd.Day_of_Month__c = String.valueOf(tomorrow.addDays(1).day());
         rd.StartDate__c = today;
         update rd;
         Test.stopTest();
@@ -745,8 +746,8 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         //there are two past Opps and one tomorrow's Opp that are Closed Won with the old amount,
         //and nine projected installments with the new amount
-        Decimal expectedValue = RD_AMOUNT * 3 + RD_NEW_AMOUNT * 9; 
-        System.assertEquals(expectedValue, rd.CurrentYearValue__c, 
+        Decimal expectedValue = RD_AMOUNT * 3 + RD_NEW_AMOUNT * 9;
+        System.assertEquals(expectedValue, rd.CurrentYearValue__c,
             'Current Year Value should not double count an installment when the matching Opp exists');
     }
 
@@ -792,7 +793,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         Decimal expectedValue = rd.npe03__Amount__c;//the Closed Won Opp Amount, the Open Opp has been voided
-        System.assertEquals(expectedValue, rd.CurrentYearValue__c, 
+        System.assertEquals(expectedValue, rd.CurrentYearValue__c,
             'Current Year Value should include Closed Won amounts when RD is Closed');
     }
 

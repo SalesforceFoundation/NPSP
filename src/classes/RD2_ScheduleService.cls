@@ -205,9 +205,9 @@ public without sharing class RD2_ScheduleService {
     * @return Map<Id, List<Installment>> Upcoming installments mapped by the Recurring Donation Id
     */
     public Map<Id, List<Installment>> getVisualizedInstallments(
-        List<npe03__Recurring_Donation__c> rds, 
-        Date startDate, 
-        Integer numInstallments, 
+        List<npe03__Recurring_Donation__c> rds,
+        Date startDate,
+        Integer numInstallments,
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRd
     ) {
         if (schedulesByRd == null) {
@@ -244,7 +244,7 @@ public without sharing class RD2_ScheduleService {
             : numInstallments;
 
         Date referenceDate = startDate == null ? currentDate : startDate;
-        while (installments.size() < numInstallments) {            
+        while (installments.size() < numInstallments) {
             Installment inst = getNextInstallment(referenceDate, schedules);
             if (inst == null) {
                 break;
@@ -267,7 +267,7 @@ public without sharing class RD2_ScheduleService {
     public List<Installment> getVisualizedInstallments(Date startDate, Date endDate, List<RecurringDonationSchedule__c> schedules) {
         List<Installment> installments = new List<Installment>();
         startDate = startDate == null ? currentDate : startDate;
-        
+
         if (schedules == null || startDate > endDate) {
             return installments;
         }
@@ -326,7 +326,7 @@ public without sharing class RD2_ScheduleService {
 
     /***
     * @description Calculate the Next Installment using the provided Schedule with the reference date as the starting point
-    * @param referenceDate Reference date used to calculate next donation date. 
+    * @param referenceDate Reference date used to calculate next donation date.
     * @param schedules Recurring Donation Schedule records
     * @return Installment
     */

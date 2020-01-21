@@ -36,7 +36,7 @@
 */
 public inherited sharing class RD2_OpportunityMatcher {
     /***
-     * @description A flag to mark Closed Lost Opps that are voided by the data migration. 
+     * @description A flag to mark Closed Lost Opps that are voided by the data migration.
      * The flag is used to exclude (ignore) such Opps by the Opp service
      * when determining if the next Opp with the same Close Date can be created.
      */
@@ -60,13 +60,13 @@ public inherited sharing class RD2_OpportunityMatcher {
             return currentRecordByOrder;
         }
         set;
-    } 
+    }
 
     public RD2_OpportunityMatcher(Date currentDate) {
         this.currentDate = currentDate;
     }
 
-    public RD2_OpportunityMatcher filterByYear(List<Opportunity> opps, Integer year) { 
+    public RD2_OpportunityMatcher filterByYear(List<Opportunity> opps, Integer year) {
         for (Opportunity opp : opps) {
             if (opp.CloseDate.year() == year && !isClosedLostInMigration(opp)) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
@@ -94,8 +94,8 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     private Boolean isClosedLostInMigration(Opportunity opp) {
-        return opp.isClosed 
-            && !opp.IsWon 
+        return opp.isClosed
+            && !opp.IsWon
             && opp.Recurring_Donation_Installment_Number__c == MIGRATION_INSTALLMENT_NUMBER_FLAG;
     }
 
@@ -150,7 +150,7 @@ public inherited sharing class RD2_OpportunityMatcher {
             Decimal amount = hasInstallment() && (isNew() || isOpen())
                 ? installment.installmentAmount
                 : opp.Amount;
-            
+
             return amount == null ? 0 : amount;
         }
 

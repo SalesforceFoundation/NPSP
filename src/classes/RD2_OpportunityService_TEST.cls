@@ -124,7 +124,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(rd.npe03__Amount__c, opps[0].Amount);
         System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, opps[0].CampaignId);
         System.assertEquals(CLOSE_DATE, opps[0].CloseDate);
-        System.assertEquals(STAGE_NAME_PROMISED, opps[0].StageName); 
+        System.assertEquals(STAGE_NAME_PROMISED, opps[0].StageName);
         System.assertEquals(PAYMENT_CREDIT_CARD, getPayments(opps)[0].npe01__Payment_Method__c);
 
         List<OpportunityContactRole> ocrs = getOppContactRoles(new Set<Id>{ opps[0].Id });
@@ -168,7 +168,7 @@ private with sharing class RD2_OpportunityService_TEST {
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
 
         setUpConfiguration();
-        
+
         Test.startTest();
         npe03__Recurring_Donation__c rd = createRecurringDonation();
         Test.stopTest();
@@ -278,7 +278,7 @@ private with sharing class RD2_OpportunityService_TEST {
         rd.PaymentMethod__c = PAYMENT_CHECK;
         update rd;
         Test.stopTest();
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
 
@@ -298,7 +298,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         setUpConfiguration();
         RD2_ScheduleService.currentDate = CLOSE_DATE.addDays(1);
-        
+
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
         Opportunity opp = getOpportunityBuilder(rd)
@@ -313,7 +313,7 @@ private with sharing class RD2_OpportunityService_TEST {
         Test.stopTest();
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(2, oppById.size(), 
+        System.assertEquals(2, oppById.size(),
             'New Opp for the next Close Date should be created on RD update: ' + oppById.values());
 
         opp = oppById.remove(opp.Id);
@@ -326,7 +326,7 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verify opportunity is updated with installment fields 
+    * @description Verify opportunity is updated with installment fields
     * when Close Date is today and the Opp is open
     */
     @isTest
@@ -334,7 +334,7 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
-        
+
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
         insert getOpportunityBuilder(rd)
@@ -355,12 +355,12 @@ private with sharing class RD2_OpportunityService_TEST {
 
         List<npe01__OppPayment__c> payments = getPayments(opps);
         System.assertEquals(opps.size(), payments.size(), 'Payment should exist for the Opp: ' + payments);
-        System.assertEquals(PAYMENT_CHECK, payments[0].npe01__Payment_Method__c, 
+        System.assertEquals(PAYMENT_CHECK, payments[0].npe01__Payment_Method__c,
             'Payment method should be updated for the open Opp with Close Date = today');
     }
 
     /***
-    * @description Verify opportunity is not updated with installment fields 
+    * @description Verify opportunity is not updated with installment fields
     * when Close Date is today and the Opp is Closed Lost/Won
     */
     @isTest
@@ -368,7 +368,7 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
-        
+
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
         insert getOpportunityBuilder(rd)
@@ -389,12 +389,12 @@ private with sharing class RD2_OpportunityService_TEST {
 
         List<npe01__OppPayment__c> payments = getPayments(opps);
         System.assertEquals(opps.size(), payments.size(), 'Payment should exist for the Opp: ' + payments);
-        System.assertNotEquals(PAYMENT_CHECK, payments[0].npe01__Payment_Method__c, 
+        System.assertNotEquals(PAYMENT_CHECK, payments[0].npe01__Payment_Method__c,
             'Payment method should not be updated for the closed Opp with Close Date = today');
     }
 
     /***
-    * @description Verify opportunity is not updated with installment fields 
+    * @description Verify opportunity is not updated with installment fields
     * when Close Date is today and the Opp is Closed Lost/Won
     * and another future open Opp exists after it
     */
@@ -403,7 +403,7 @@ private with sharing class RD2_OpportunityService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
-        
+
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
@@ -431,11 +431,11 @@ private with sharing class RD2_OpportunityService_TEST {
         Map<Id, Opportunity> actualOppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(opps.size(), actualOppById.size(), 'Opportunity number should match: ' + actualOppById);
         for (Opportunity opp : actualOppById.values()) {
-            if (opp.Id == opps[0].Id) { 
-                System.assertEquals(RD_AMOUNT, opp.Amount, 
+            if (opp.Id == opps[0].Id) {
+                System.assertEquals(RD_AMOUNT, opp.Amount,
                     'Amount should not be updated for the closed Opp with Close Date = today');
             } else {
-                System.assertEquals(RD_NEW_AMOUNT, opp.Amount, 
+                System.assertEquals(RD_NEW_AMOUNT, opp.Amount,
                     'Amount should be updated for the future open Opp');
             }
         }
@@ -443,11 +443,11 @@ private with sharing class RD2_OpportunityService_TEST {
         List<npe01__OppPayment__c> payments = getPayments(opps);
         System.assertEquals(opps.size(), payments.size(), 'Payment should exist for each Opp: ' + payments);
         for (npe01__OppPayment__c payment : payments) {
-            if (payment.npe01__Opportunity__c == opps[0].Id) { 
-                System.assertNotEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c, 
+            if (payment.npe01__Opportunity__c == opps[0].Id) {
+                System.assertNotEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c,
                     'Payment method should not be updated for the closed Opp with Close Date = today');
             } else {
-                System.assertEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c, 
+                System.assertEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c,
                     'Payment method should be updated for the future open Opp');
             }
         }
@@ -487,12 +487,12 @@ private with sharing class RD2_OpportunityService_TEST {
         rd.PaymentMethod__c = PAYMENT_CHECK;
         update rd;
         Test.stopTest();
-        
+
         Map<Id, Opportunity> actualOppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(opps.size(), actualOppById.size(), 'Opportunity number should match: ' + actualOppById);
         for (Opportunity opp : actualOppById.values()) {
-            System.assertEquals(RD_NEW_AMOUNT, opp.Amount, 
-                opp.Id == opps[0].Id 
+            System.assertEquals(RD_NEW_AMOUNT, opp.Amount,
+                opp.Id == opps[0].Id
                 ? 'Amount should be updated for the Opp with Close Date = today'
                 : 'Amount should be updated for the future Opp');
         }
@@ -501,8 +501,8 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(opps.size(), payments.size(), 'Payment should exist for each Opp: ' + payments);
 
         for (npe01__OppPayment__c payment : payments) {
-            System.assertEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c, 
-                payment.npe01__Opportunity__c == opps[0].Id 
+            System.assertEquals(PAYMENT_CHECK, payment.npe01__Payment_Method__c,
+                payment.npe01__Opportunity__c == opps[0].Id
                 ? 'Payment method should be updated for the Opp with Close Date = today'
                 : 'Payment method should be updated for the future Opp');
         }
@@ -527,7 +527,7 @@ private with sharing class RD2_OpportunityService_TEST {
             .build();
 
         System.assert(TODAY < CLOSE_DATE, 'Opp Close Date should be in future');
-        
+
         Test.startTest();
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         update rd;
@@ -575,7 +575,7 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verify Opportunity's campaign is updated when 
+    * @description Verify Opportunity's campaign is updated when
     * there is update to the campaign on the RD
     * and add campaign is enabled in RD custom settings
     */
@@ -592,8 +592,8 @@ private with sharing class RD2_OpportunityService_TEST {
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
-  
-        Campaign campaign = new Campaign(Name = 'ChildrenCampaign', IsActive = true); 
+
+        Campaign campaign = new Campaign(Name = 'ChildrenCampaign', IsActive = true);
         insert campaign;
 
         Test.startTest();
@@ -629,11 +629,11 @@ private with sharing class RD2_OpportunityService_TEST {
         setUpConfiguration(new Map<String, Object>{
             'npe03__Add_Campaign_to_All_Opportunites__c' => false
         });
-  
+
         Test.startTest();
         Campaign campaign = new Campaign(Name = 'ChildrenCampaign', IsActive = true);
         insert campaign;
-        
+
         rd.npe03__Recurring_Donation_Campaign__c = campaign.id;
         update rd;
         Test.stopTest();
@@ -711,7 +711,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
         TEST_RecurringDonationBuilder builder = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withDefaultValues()
-            .withAmount(RD_AMOUNT)            
+            .withAmount(RD_AMOUNT)
             .withPaymentMethod(PAYMENT_CREDIT_CARD)
             .withCampaign(campaign.Id)
             .withDateEstablished(START_DATE)
@@ -740,7 +740,7 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Creates Recurring Donation settings and configures Installment Opp Stage 
+    * @description Creates Recurring Donation settings and configures Installment Opp Stage
     * @param stageName Installment Opportunity Stage
     * @return void
     */

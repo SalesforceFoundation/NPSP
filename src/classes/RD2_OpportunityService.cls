@@ -43,7 +43,7 @@ public with sharing class RD2_OpportunityService {
         get {
             if (rdSettings == null) {
                 rdSettings = new RD2_Settings();
-            } 
+            }
             return rdSettings;
         }
         set;
@@ -77,7 +77,7 @@ public with sharing class RD2_OpportunityService {
     }
 
     /**
-    * @description Current date used as a cut off date to filter out and evaluate Opportunities 
+    * @description Current date used as a cut off date to filter out and evaluate Opportunities
      * with projected RD schedule installments as of the current date.
      * It can be a date in past, today or a future date in testing. When executed from a scheduler,
      * the current date is always today.
@@ -105,7 +105,9 @@ public with sharing class RD2_OpportunityService {
         for (npe03__Recurring_Donation__c rd : rds) {
             List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
                 currentDate, numberOfInstallments, rd.RecurringDonationSchedules__r
-            );             
+            );
+            installmentsByRDId.put(rd.Id, installments);
+
             if (installments.isEmpty()) {
                 continue;
             }
@@ -117,7 +119,6 @@ public with sharing class RD2_OpportunityService {
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
                 if (record.isNew()) {
                     oppsToCreate.add(buildOpportunity(rd, record.getInstallment()));
-                    installmentsByRDId.put(rd.Id, installments); 
                 }
             }
         }
@@ -154,7 +155,7 @@ public with sharing class RD2_OpportunityService {
             npe03__Recurring_Donation__c = rd.Id
         );
         opp.Recurring_Donation_Installment_Number__c = rd.npe03__Total_Paid_Installments__c != null
-            ? rd.npe03__Total_Paid_Installments__c + 1 
+            ? rd.npe03__Total_Paid_Installments__c + 1
             : 1;
         opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
 
@@ -175,7 +176,7 @@ public with sharing class RD2_OpportunityService {
     */
     private String buildOpportunityName(String donorName, Opportunity opp) {
         return
-            donorName + ' ' 
+            donorName + ' '
             + System.Label.npe03.RecurringDonationPrefix
             + ' (' + opp.Recurring_Donation_Installment_Number__c +  ') '
             + opp.CloseDate.format();
@@ -191,29 +192,31 @@ public with sharing class RD2_OpportunityService {
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
 
         //Synchronize Opps with matching Schedule installments
-        for (npe03__Recurring_Donation__c rd : rds) {                        
+        for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
                 .filterCurrent(rd.npe03__Donations__r);
 
             List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
                 currentDate, matcher.size(), rd.RecurringDonationSchedules__r
-            ); 
-            
+            );
+
             matcher.match(installments);
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
-                if (!record.isNew() && record.isOpen() && record.hasInstallment()) {
-                    RD2_ScheduleService.Installment installment = record.getInstallment();
-                    Opportunity opp = record.getOpportunity();
-
-                    installmentByOppId.put(opp.Id, installment);   
-                     
-                    Boolean isChanged = syncOppWithSchedule(opp, installment, rd.npe03__Donor_Name__c);
-                    if (isChanged) {
-                        oppsToUpdate.add(opp);
-                    }
+                if (record.isNew() || !record.isOpen() || !record.hasInstallment()) {
+                    continue;
                 }
-            } 
+
+                RD2_ScheduleService.Installment installment = record.getInstallment();
+                Opportunity opp = record.getOpportunity();
+
+                installmentByOppId.put(opp.Id, installment);
+
+                Boolean isChanged = syncOppWithSchedule(opp, installment, rd.npe03__Donor_Name__c);
+                if (isChanged) {
+                    oppsToUpdate.add(opp);
+                }
+            }
         }
 
         dbService.updateRecords(oppsToUpdate);
@@ -228,13 +231,13 @@ public with sharing class RD2_OpportunityService {
     * @param donorName Recurring Donation donor name
     * @return Boolean
     */
-    private Boolean syncOppWithSchedule(Opportunity opp, RD2_ScheduleService.Installment installment, String donorName) {  
+    private Boolean syncOppWithSchedule(Opportunity opp, RD2_ScheduleService.Installment installment, String donorName) {
         //An installment Opportunity should always have a matching RD Schedule installment.
         //If the installment is null, this is most probably a programatic error.
         if (installment == null) {
             opp.addError(System.Label.RD2_ScheduleInstallmentIsRequired);
             return true;
-        }    
+        }
 
         Boolean isChanged = false;
 
@@ -249,8 +252,8 @@ public with sharing class RD2_OpportunityService {
             isChanged = true;
         }
 
-        if (installment.campaignId != null 
-            && opp.CampaignId != installment.campaignId 
+        if (installment.campaignId != null
+            && opp.CampaignId != installment.campaignId
             && rdSettings.shouldSetInstallmentCampaign
         ) {
             opp.CampaignId = installment.campaignId;
@@ -283,9 +286,9 @@ public with sharing class RD2_OpportunityService {
             RD2_ScheduleService.Installment installment = installmentByOppId.get(payment.npe01__Opportunity__c);
 
             if (installment != null
-                && String.isNotBlank(installment.paymentMethod) 
+                && String.isNotBlank(installment.paymentMethod)
                 && payment.npe01__Payment_Method__c != installment.paymentMethod
-            ) {                
+            ) {
                 payment.npe01__Payment_Method__c = installment.paymentMethod;
                 payments.add(payment);
             }
