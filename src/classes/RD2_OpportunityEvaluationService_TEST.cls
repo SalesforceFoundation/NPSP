@@ -413,6 +413,61 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+     * @description Verifies future open Opp is updated when an active RD is updated. 
+     * The future Closed Won Opp is not updated.
+     */
+    @IsTest
+    private static void shouldNotUpdateFutureOpenOppCloseDateWhenRDNextDonationDateIsNotUpdated() {
+        //set current date override
+        final Date today = START_DATE.addDays(-1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Decimal oldAmount = rd.npe03__Amount__c;
+        Decimal newAmount = rd.npe03__Amount__c + 100;
+        Test.startTest();
+        rd.npe03__Amount__c = newAmount;
+        rd.StartDate__c = START_DATE;
+        update rd;
+        Test.stopTest();
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size(), oppById.size(), 'The number of returned Opps should match');
+
+        Opportunity opp = oppById.get(opps[0].Id);
+        System.assertEquals(true, opp.isClosed && opp.isWon, 'The first Opp should stay Closed Won');
+        System.assertEquals(START_DATE, opp.CloseDate, 'The first Opp Close Date should be unchanged');
+        System.assertEquals(oldAmount, opp.Amount, 'The first Opp Amount should be unchanged');
+
+        opp = oppById.get(opps[1].Id);
+        System.assertEquals(false, opp.isClosed, 'The second Opp should stay open');
+        System.assertEquals(START_DATE.addMonths(1), opp.CloseDate, 'The second Opp Close Date should be unchanged');
+        System.assertEquals(newAmount, opp.Amount, 'The second Opp Amount should be updated');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /**
     * @description Ensures that when the DisableRollupsWhenCreatingInstallments__c flag is NOT set
     * and CRLP is enabled, the rollups do execute properly when the RD Batch Job is run
     */
