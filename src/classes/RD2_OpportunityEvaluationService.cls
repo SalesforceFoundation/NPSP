@@ -554,14 +554,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 return hasOpenOpportunity;
             }
 
-            hasOpenOpportunity = false;
-            
-            for (Opportunity opp : rd.npe03__Donations__r) {
-                if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
-                    hasOpenOpportunity = true;
-                    break;
-                }
-            }
+            hasOpenOpportunity = new RD2_OpportunityMatcher(currentDate)
+                .filterOpen(rd.npe03__Donations__r)
+                .size() > 0;
 
             return hasOpenOpportunity;
         }
@@ -571,10 +566,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     * @description Recurring Donation processor calculating Current Year Value and Next Year Value
     */   
     public class YearValueProcessor {
-        /**
-        * @description Flag marking Closed Lost Opportunities as records voided during data migration
-        */  
-        private Integer MIGRATION_FLAG = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER_FLAG; 
         /**
         * @description Recurring Donation Schedule Service
         */  
@@ -633,52 +624,23 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         /**
         * @description Calculates Current Year Value
-        * @param rdOpps A Recurring Donation Opportunities retrieved by the Opp eval service
-        * @param rdSchedules A Recurring Donation Schedules retrieved by the Opp eval service
+        * @param opps A Recurring Donation Opportunities retrieved by the Opp eval service
+        * @param schedules A Recurring Donation Schedules retrieved by the Opp eval service
         * @return Decimal
         */
-        public Decimal calcCurrentYearValue(List<Opportunity> rdOpps, List<RecurringDonationSchedule__c> rdSchedules) {
-            final Integer currentYear = currentDate.year();
-            Map<Date, Opportunity> oppByCloseDate = new Map<Date, Opportunity>();
-            Decimal value = 0;
+        public Decimal calcCurrentYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
+            Decimal value = 0;   
 
-            //Add the current year Open and Closed Won Opps           
-            for (Opportunity opp : rdOpps) {
-                if (opp.CloseDate.year() == currentYear) {
-                    oppByCloseDate.put(opp.CloseDate, opp);
+            List<RD2_ScheduleService.Installment> installments = 
+                scheduleService.getVisualizedInstallments(currentDate, currentYearEndDate, schedules);
 
-                    Boolean isClosedLost = opp.isClosed && !opp.isWon;
-                    if (!isClosedLost) {
-                        value += opp.Amount; //TODO Currency!
-                    }
-                }
-            }
-
-            value += sumInstallments(currentDate, currentYearEndDate, rdSchedules, oppByCloseDate);
-            return value;
-        }
-
-        /**
-        * @description Sums projected schedule installment Amounts
-        * @param startDate Start Date is the lower boundary date to generate installments for
-        * @param endDate End Date is the upper boundary date to generate installments for 
-        * @param rdSchedules A Recurring Donation Schedules retrieved by the Opp eval service
-        * @param oppByCloseDate Existing Opportunities assigned to the Recurring Donation mapped by their Close Date
-        * @return Decimal
-        */
-        public Decimal sumInstallments(Date startDate, Date endDate, List<RecurringDonationSchedule__c> rdSchedules, Map<Date, Opportunity> oppByCloseDate) {
-            Decimal value = 0;
-
-            for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
-                startDate, endDate, rdSchedules
-            )) {
-                Opportunity existingOpp = oppByCloseDate.get(installment.nextDonationDate);
-                Boolean isClosedLostInMigration = existingOpp != null 
-                    && existingOpp.isClosed && !existingOpp.isWon 
-                    && existingOpp.Recurring_Donation_Installment_Number__c == MIGRATION_FLAG;
-
-                if (existingOpp == null || isClosedLostInMigration) {
-                    value += installment.installmentAmount;
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
+                .filterByYear(opps, currentDate.year())
+                .match(installments);
+      
+            for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
+                if (!record.isClosedLost()) {
+                    value += record.getAmount();//TODO currency
                 }
             }
 
