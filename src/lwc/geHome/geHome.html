@@ -1,4 +1,22 @@
 <template>
+    <template if:true={isLoading}>
+        <c-util-page-header>
+            <h1 slot="title">
+                <span class="slds-page-header__title"
+                      title={CUSTOM_LABELS.geHeaderGiftEntry}>
+                    {CUSTOM_LABELS.geHeaderGiftEntry}
+                </span>
+            </h1>
+        </c-util-page-header>
+
+        <lightning-card>
+            <div class="slds-card-body_extension">
+                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+                </lightning-spinner>
+            </div>
+        </lightning-card>
+    </template>
+
     <template if:false={isLoading}>
         <template if:true={isLandingPage}>
             <c-ge-templates ontogglemodal={toggleModal}
@@ -15,8 +33,7 @@
         </template>
 
         <template if:true={isSingleGiftEntry}>
-            <c-ge-form-renderer>
-            </c-ge-form-renderer>
+            <c-ge-form-renderer></c-ge-form-renderer>
         </template>
     </template>
 </template>
