@@ -188,7 +188,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 break;
             case 'delete':
                 this.geListViewComponent.setProperty(IS_LOADING, true);
-                this.handleTemplateDeletion(row.Id);
+                this.handleTemplateDeletion(row);
                 break;
             default:
         }
@@ -199,13 +199,13 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
      * Data Import Batch
      * @param {Id} recordId : Record id of the Form_Template__c to be deleted
      */
-    handleTemplateDeletion(recordId) {
-        deleteRecord(recordId).then(formTemplateNames => {
+    handleTemplateDeletion(row) {
+        deleteRecord(row.Id).then(() => {
             this.geListViewComponent.setProperty(IS_LOADING, false);
             this.geListViewComponent.refresh();
             const toastMessage = GeLabelService.format(
                 this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
-                formTemplateNames);
+                [row.Name]);
 
             showToast(toastMessage, '', SUCCESS);
         })
