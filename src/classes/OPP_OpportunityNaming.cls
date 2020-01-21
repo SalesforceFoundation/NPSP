@@ -187,10 +187,13 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                     } catch (Exception e) {}
                 }
             }
-
+            System.debug('Value in attribution:' + ons.Attribution__c );
+            System.debug('Label value:' + Label.oppNamingBoth);
+            String oppAttributionValue = STG_PanelOppNaming_CTRL.convertToAttributionNamingLabel(ons.Attribution__c);
+            System.debug('What is corresponding value:' + oppAttributionValue);
             if (oppRecTypeIds.isEmpty()) {
                 mapOppIdSettings.put('', ons);
-                if (ons.Attribution__c == Label.oppNamingBoth) {
+                if (oppAttributionValue == Label.oppNamingBoth) {
                     mapOppIdSettings.put(Label.oppNamingIndividual,ons);
                     mapOppIdSettings.put(Label.oppNamingOrganizational,ons);
                 } else {
@@ -199,7 +202,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             } else {
                 for (Id recTypeId : oppRecTypeIds) {
                     mapOppIdSettings.put(recTypeId,ons);
-                    if (ons.Attribution__c == Label.oppNamingBoth) {
+                    if (oppAttributionValue == Label.oppNamingBoth) {
                         mapOppIdSettings.put(Label.oppNamingIndividual+recTypeId,ons);
                         mapOppIdSettings.put(Label.oppNamingOrganizational+recTypeId,ons);
                     } else {
