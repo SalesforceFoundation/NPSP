@@ -1982,6 +1982,7 @@
         <members>geErrorCompleteThisField</members>
         <members>geErrorExistingTemplateName</members>
         <members>geErrorDonorTypeValidation</members>
+        <members>geErrorDonorTypeValidationSingle</members>
         <members>geErrorFieldPermission</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>
         <members>geErrorPageLevelAdvancedMappingHeader</members>
