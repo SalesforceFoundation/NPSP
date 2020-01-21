@@ -1,4 +1,5 @@
 <template>
+    <template if:true={isAccessible}>
     <lightning-layout multiple-rows='true' class='ge-form-container slds-p-bottom_medium'>
         <lightning-layout-item size='12' class='slds-card'>
             <div if:true={hasPageLevelError} class="slds-size_1-of-1 slds-card slds-p-around_small">
@@ -36,5 +37,15 @@
                 disabled={isUpdateActionDisabled}>
         </lightning-button>
     </div>
-</template>
+    </template>
 
+    <div class="slds-card slds-card_extension" if:false={isAccessible}>
+        <div class="slds-p-top_x-large">
+            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
+                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
+                                 size='large'
+                                 variant='lake-mountain'>
+            </c-util-illustration>
+        </div>
+    </div>
+</template>

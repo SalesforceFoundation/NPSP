@@ -1121,6 +1121,7 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
+        <members>Gift_Entry_Feature_Gate_Settings__c.Enable_Gift_Entry__c</members>
         <members>Gift_Entry_Settings__c.Default_Batch_Gift_Entry_Template__c</members>
         <members>Gift_Entry_Settings__c.Default_Single_Gift_Entry_Template__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
@@ -2744,6 +2745,7 @@
         <members>Form_Template__c</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
+        <members>Gift_Entry_Feature_Gate_Settings__c</members>
         <members>Gift_Entry_Settings__c</members>
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>

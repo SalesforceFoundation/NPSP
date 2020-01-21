@@ -13,6 +13,7 @@ import {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     generateId,
+    getPageAccess,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
@@ -74,7 +75,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         description: null,
         batchHeaderFields: [],
         layout: null
-    }
+    };
     formLayout = {
         fieldMappingSetDevName: null,
         version: null,
@@ -134,13 +135,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            const dataImportSettings = await getDataImportSettings();
-
-            if (dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] !== ADVANCED_MAPPING) {
-                this.isAccessible = false;
-                this.isLoading = false;
-
-            } else if (dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING) {
+            this.isAccessible = await getPageAccess();
+            this.isLoading = false;
+         if (this.isAccessible) {
                 await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
                 this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
@@ -167,14 +164,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
                     this.activeFormSectionId = this.formSections[0].id;
                 }
-
-                this.isLoading = false;
-                this.isAccessible = true;
             }
         } catch (error) {
             handleError(error);
         }
-    }
+    };
 
     /*******************************************************************************
     * @description Method builds and sorts a list of batch header fields for the

@@ -5,7 +5,7 @@ import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
-import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
+import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate, getPageAccess } from 'c/utilTemplateBuilder';
 import { getQueryParameters, isNotEmpty } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -13,6 +13,7 @@ import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JS
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD
     from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+import GeLabelService from 'c/geLabelService';
 
 const mode = {
     CREATE: 'create',
@@ -20,6 +21,7 @@ const mode = {
 }
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     @api donorRecordId = '';
     @api donorRecord;
     fieldNames = [];
@@ -39,6 +41,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     erroredFields = [];
     @api pageLevelErrorMessageList = [];
     @track _dataRow; // Row being updated when in update mode
+    @track isAccessible = true;
 
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
@@ -51,27 +54,31 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     connectedCallback() {
-        if (this.batchId) {
-            // When the form is being used for Batch Gift Entry, the Form Template JSON
-            // uses the @wire service below to retrieve the Template using the Template Id
-            // stored on the Batch.
-            return;
-        }
-
-        // check if there is a record id in the url
-        this.donorRecordId = getQueryParameters().c__recordId;
-
-        GeFormService.getFormTemplate().then(response => {
-            // read the template header info
-            if(response !== null && typeof response !== 'undefined') {
-                this.formTemplate  = response.formTemplate;
-                this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
-
-                // get the target field names to be used by getRecord
-                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
+        this.checkPageAccess();
+        if(this.isAccessible){
+            if (this.batchId) {
+                // When the form is being used for Batch Gift Entry, the Form Template JSON
+                // uses the @wire service below to retrieve the Template using the Template Id
+                // stored on the Batch.
+                return;
             }
-        });
+
+            // check if there is a record id in the url
+            this.donorRecordId = getQueryParameters().c__recordId;
+
+            GeFormService.getFormTemplate().then(response => {
+                // read the template header info
+                if(response !== null && typeof response !== 'undefined') {
+                    this.formTemplate  = response.formTemplate;
+                    this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+
+                    // get the target field names to be used by getRecord
+                    this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
+                }
+            });
+        }
     }
+
 
     initializeForm(formTemplate, fieldMappings) {
         // read the template header info
@@ -351,6 +358,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         return dataImportRecord;
+    }
+
+    /************************************************************************************
+     * @description This function retrieves page access based on the Advanced Mapping and
+     * Gift Entry feature gate.
+     */
+    checkPageAccess = async () => {
+        this.isAccessible = await getPageAccess();
     }
 
 }
