@@ -2678,6 +2678,10 @@
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
+        <members>geErrorObjectCRUDHeader</members>
+        <members>getErrorObjectCRUDBody</members>
+        <members>geErrorFLSHeader</members>
+        <members>geErrorFLSBody</members>
         <name>CustomLabel</name>
     </types>
     <types>
