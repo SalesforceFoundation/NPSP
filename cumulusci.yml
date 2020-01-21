@@ -742,9 +742,6 @@ flows:
 
 orgs:
     scratch:
-        prerelease_namespaced:
-            config_file: orgs/prerelease.json
-            namespaced: True
         dev_multicurrency:
             config_file: orgs/dev_multicurrency.json
             days: 7
