@@ -2,10 +2,10 @@
 <StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <valueTranslation>
         <masterLabel>Existing Funding</masterLabel>
-        <translation><!-- Existing Funding --></translation>
+        <translation>Fondos existentes</translation>
     </valueTranslation>
     <valueTranslation>
         <masterLabel>New Funding</masterLabel>
-        <translation><!-- New Funding --></translation>
+        <translation>Fondos nuevos</translation>
     </valueTranslation>
 </StandardValueSetTranslation>
