@@ -224,7 +224,7 @@ public class CRLP_RollupAccount_TEST {
         // Test is only relevant for multi-currency organizations.  If not, skip it
         if (!UserInfo.isMultiCurrencyOrganization()) {
             return;
-        }    
+        }
 
         UtilCurrencyCacheMock mockCurrencyCache = new UtilCurrencyCacheMock();
         UTIL_CurrencyCache.instance = mockCurrencyCache;
@@ -280,14 +280,14 @@ public class CRLP_RollupAccount_TEST {
                 Rollups_Contact_Batch_Size__c = 20
         ));
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE,
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
                 npe01__Payments_Enabled__c = true
         ));
 
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                npo02__Household_Member_Contact_Role__c = System.Label.npo02.Household_Member_Contact_Role,
+                npo02__Household_Member_Contact_Role__c = CAO_Constants.HH_MEMBER_CONTACT_ROLE,
                 npo02__Household_Contact_Roles_On__c = true,
                 npo02__Always_Rollup_to_Primary_Contact__c = false
         ));

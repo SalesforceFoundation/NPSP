@@ -96,7 +96,7 @@ private class CRLP_RollupRecurringDonation_TEST {
         ));
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE,
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR
         ));
 

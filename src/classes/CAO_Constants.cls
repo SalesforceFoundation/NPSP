@@ -121,6 +121,16 @@ public with sharing class CAO_Constants {
     public static String HH_NAME_CONNECTOR = ' ' + System.Label.npo02.HouseholdNameConnector + ' ';
 
     /*******************************************************************************************************
+    * @description The api name of the "Donor" OCR role
+    */
+    public static final String OCR_DONOR_ROLE = 'Donor';
+
+    /*******************************************************************************************************
+    * @description The api name of the "Household Member" OCR role for Soft Credits
+    */
+    public static final String HH_MEMBER_CONTACT_ROLE = 'Household Member';
+
+    /*******************************************************************************************************
     * @description Returns whether we are in the One-to-One Account Model
     * @return  Boolean
     */
