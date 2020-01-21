@@ -20,9 +20,11 @@ const mode = {
 }
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
+
     @api donorRecordId;
     @api donorApiName;
     @api donorRecord;
+
     fieldNames = [];
     @track formTemplate;
     @track fieldMappings;

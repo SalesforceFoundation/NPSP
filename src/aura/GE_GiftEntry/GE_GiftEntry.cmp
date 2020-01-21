@@ -5,17 +5,19 @@
 
     <lightning:overlayLibrary aura:id="overlayLib" />
 
-    <aura:attribute name="modal"
-                    type="Object" />
+    <!-- isLoading attribute is used for the lightning:spinner when a modal is toggled. -->
     <aura:attribute name="isLoading"
                     type="Boolean" />
+    <!-- modal attribute is a reference to the modal created by lightning:overlayLibrary -->
+    <aura:attribute name="modal"
+                    type="Object" />
 
     <c:utilDedicatedListener eventName="geGiftEntryModalEvent"
                              onreceiveevent="{!c.handleModalEvent}" />
-    <c:utilDedicatedListener eventName="geBatchWizardEvent"
-                             onreceiveevent="{!c.handleBatchWizardEvent}" />
     <c:utilDedicatedListener eventName="geTemplateBuilderSectionModalBodyEvent"
                              onreceiveevent="{!c.handleModalEvent}" />
+    <c:utilDedicatedListener eventName="geBatchWizardEvent"
+                             onreceiveevent="{!c.handleBatchWizardEvent}" />
 
     <aura:if isTrue="{!v.isLoading}">
         <lightning:spinner alternativeText="Loading"

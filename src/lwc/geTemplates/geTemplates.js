@@ -1,7 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
-import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 import { deleteRecord } from 'lightning/uiRecordApi';
@@ -12,8 +11,6 @@ import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Sett
 import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
-const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
-const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
 const SUCCESS = 'success';
 const IS_LOADING = 'isLoading';
 const EVENT_TOGGLE_MODAL = 'togglemodal';
@@ -46,10 +43,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     @track templatesTableActions = TEMPLATES_TABLE_ACTIONS;
     @track isAccessible = true;
     @track isLoading = true;
-
-    get templateBuilderCustomTabApiName() {
-        return TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
-    }
 
     get formTemplateObjectApiName() {
         return FORM_TEMPLATE_INFO.objectApiName;
