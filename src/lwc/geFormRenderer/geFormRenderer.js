@@ -271,7 +271,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             let fieldListAsString = invalidFields.join(', ');
             this.hasPageLevelError = true;
             this.pageLevelErrorMessageList = [ {index: 0, errorMessage: `The following fields are required: ${fieldListAsString}`} ];
-            // showToast('Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
         }
 
         return invalidFields.length === 0;
@@ -286,10 +285,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         const DONATION_VALUES = [
             DONATION_DONOR_FIELDS.donationDonorField,
-            DONATION_DONOR_FIELDS.account1ImportedField,
-            DONATION_DONOR_FIELDS.account1NameField,
-            DONATION_DONOR_FIELDS.contact1ImportedField,
-            DONATION_DONOR_FIELDS.contact1LastNameField
+            DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField,
+            DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField
         ];
         // get label and value using apiName as key from fields for each section
         let miniFieldWrapper = {};
@@ -314,8 +311,82 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     getDonorTypeValidationError( fieldWrapper, sectionsList ){
 
-        // created to improve code reading
-        const di_record = {
+        // get data import record helper
+        const di_record = this.getDataImportHelper( fieldWrapper );
+
+        // donation donor validation depending on selection and field presence
+        let isError = (di_record.donationDonorValue===DONATION_DONOR.isAccount1) ?
+                        di_record.isAccount1Present && di_record.isAccount1ImportedEmpty && di_record.isAccount1NameEmpty :
+                            di_record.donationDonorValue===DONATION_DONOR.isContact1 &&
+                                di_record.isContact1Present && di_record.isContact1ImportedEmpty && di_record.isContact1LastNameEmpty;
+
+        // process error notification when error
+        if (isError) {
+            // highlight validation fields
+            this.highlightValidationErrorFields( di_record, sectionsList, ' ' );
+            // set page error
+            this.hasPageLevelError = true;
+            this.pageLevelErrorMessageList = [ {index: 0, errorMessage: this.getDonationDonorErrorLabel( di_record, fieldWrapper )} ];
+        }
+
+        return isError;
+    }
+
+    /**
+     * Set donation donor error message using custom label depending on field presence
+     * @param diRecord, Object - helper obj
+     * @param fieldWrapper, Array of fields with Values and Labels
+     * @returns {String}, formatted error message for donation donor validation
+     */
+    getDonationDonorErrorLabel( diRecord, fieldWrapper ){
+
+        // init array replacement for custom label
+        let validationErrorLabelReplacements = [ diRecord.donationDonorValue, diRecord.donationDonorLabel ];
+
+        if (diRecord.donationDonorValue === DONATION_DONOR.isAccount1){
+            if (diRecord.isAccount1ImportedPresent)
+                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label);
+            if (diRecord.isAccount1NamePresent)
+                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].label);
+        } else {
+            if (diRecord.isContact1ImportedPresent)
+                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].label);
+            if (diRecord.isContact1LastNamePresent)
+                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label);
+        }
+
+        // set message using replacement array - set label depending fields present on template
+        return validationErrorLabelReplacements.length===3 ? format(geErrorDonorTypeValidationSingle, validationErrorLabelReplacements) :
+                                                                format(geDonationTypeErrorLabel, validationErrorLabelReplacements);
+    }
+
+    /**
+     * highlight geForm fields on lSections using sError as message
+     * @param diRecord, Object - helper obj
+     * @param lSections, Array of geFormSection
+     * @param sError, String to set on setCustomValidity
+     */
+    highlightValidationErrorFields( diRecord, lSections, sError ) {
+
+        // prepare array to highlight fields that require attention depending on Donation_Donor
+        const highlightFields = [ DONATION_DONOR_FIELDS.donationDonorField,
+            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField : DONATION_DONOR_FIELDS.contact1ImportedField,
+            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField : DONATION_DONOR_FIELDS.contact1LastNameField
+        ];
+        lSections.forEach(section => {
+            section.setCustomValidityOnFields( highlightFields, sError );
+        });
+
+    }
+
+    /**
+     * helper object to minimize length of if statements and improve code legibility
+     * @param fieldWrapper, Array of fields with Values and Labels
+     * @returns Object, helper object to minimize length of if statements and improve code legibility
+     */
+    getDataImportHelper( fieldWrapper ) {
+
+        const dataImportRecord = {
             // donation donor
             donationDonorValue: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value,
             donationDonorLabel: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].label,
@@ -323,50 +394,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             isAccount1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].value),
             isContact1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].value),
             isContact1LastNameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].value),
-            isAccount1NameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].value)
+            isAccount1NameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].value),
+            // field presence
+            isAccount1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]),
+            isAccount1NamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]),
+            isContact1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]),
+            isContact1LastNamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]),
+            isContact1Present: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]) || isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]),
+            isAccount1Present: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]) || isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField])
         };
-
-        // donation donor validation depending value
-        let isError = (di_record.donationDonorValue===DONATION_DONOR.isAccount1) ?
-                        di_record.isAccount1ImportedEmpty && di_record.isAccount1NameEmpty :
-                            di_record.donationDonorValue===DONATION_DONOR.isContact1 && di_record.isContact1ImportedEmpty && di_record.isContact1LastNameEmpty;
-
-        // process error notification when error
-        if (isError) {
-
-            // prepare array to highlight fields that require attention depending on Donation_Donor
-            const highlightFields = [ DONATION_DONOR_FIELDS.donationDonorField,
-                di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField : DONATION_DONOR_FIELDS.contact1ImportedField,
-                di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField : DONATION_DONOR_FIELDS.contact1LastNameField
-            ];
-            sectionsList.forEach(section => {
-                section.setCustomValidityOnFields( highlightFields, ' ' );
-            });
-
-            // array replacement for custom label
-            let validationErrorLabelReplacements = [ di_record.donationDonorValue, di_record.donationDonorLabel ];
-            if ( di_record.donationDonorValue===DONATION_DONOR.isAccount1 ){
-                if (isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]))
-                    validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label);
-                if (isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]))
-                    validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].label);
-            } else {
-                if (isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]))
-                    validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].label);
-                if (isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]))
-                    validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label);
-            }
-
-            // set message using replacement array - set label depending fields present on template
-            let message = validationErrorLabelReplacements.length===3 ?
-                                format(geErrorDonorTypeValidationSingle, validationErrorLabelReplacements) : format(geDonationTypeErrorLabel, validationErrorLabelReplacements);
-            // set page error
-            this.hasPageLevelError = validationErrorLabelReplacements.length>=3;
-            this.pageLevelErrorMessageList = [ {index: 0, errorMessage: message} ];
-
-        }
-
-        return isError;
+        return dataImportRecord;
     }
 
     navigateToRecordPage(recordId) {
