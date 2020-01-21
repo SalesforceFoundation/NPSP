@@ -618,7 +618,19 @@ public class UTIL_UnitTestData_TEST {
      * @return User
      */
     private static User buildUser(String lastName, String profileName) {
+        return buildUser(lastName, profileName, currentUser.LocaleSidKey);
+    }
+
+    /**
+     * @description Set new User fields
+     * @param lastName Last Name
+     * @param profileName Profile Name
+     * @param localSidKey An NPSP supported locale key (EN_us, es, de, fr, or NL_nl)
+     * @return User
+     */
+    private static User buildUser(String lastName, String profileName, String localSidKey) {
         Profile p = [SELECT Id FROM Profile WHERE Name = :profileName];
+
         String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
         String email = lastName.left(70) + '@email.npsp';
 
@@ -628,11 +640,33 @@ public class UTIL_UnitTestData_TEST {
             ProfileId = p.Id,
             Username = email,
             Alias = alias,
-            TimeZoneSidKey = 'America/Los_Angeles',
-            LocaleSidKey = 'en_US',
-            LanguageLocaleKey = 'en_US',
-            EmailEncodingKey = 'ISO-8859-1'
+            TimeZoneSidKey = currentUser.TimeZoneSidKey,
+            LocaleSidKey = (localSidKey != null ? localSidKey : currentUser.LocaleSidKey),
+            LanguageLocaleKey = currentUser.LanguageLocaleKey,
+            EmailEncodingKey = currentUser.EmailEncodingKey
         );
+    }
+
+    /**
+     * @description Retrieve the Current User record
+     */
+    private static User currentUser {
+        get {
+            if (currentUser == null) {
+                currentUser = [
+                    SELECT
+                        Id,
+                        LocaleSidKey,
+                        LanguageLocaleKey,
+                        TimeZoneSidKey,
+                        EmailEncodingKey
+                    FROM User
+                    WHERE Id = :UserInfo.getUserId()
+                    LIMIT 1
+                ];
+            }
+            return currentUser;
+        } set;
     }
 
     // =====================================================================================================

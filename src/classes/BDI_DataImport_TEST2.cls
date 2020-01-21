@@ -1418,7 +1418,8 @@ private with sharing class BDI_DataImport_TEST2 {
             string flsError = label.flsError;
             flsError = flsError.replace('{0}', '');
             flsError = flsError.replace('.', '');
-            System.assert(listDI[i].FailureInformation__c.contains(flsError));
+            System.assert(listDI[i].FailureInformation__c.contains(flsError),
+                'Expected: "' + flsError + '", Actual: ' + listDI[i].FailureInformation__c);
         }
     }
 
@@ -1450,13 +1451,14 @@ private with sharing class BDI_DataImport_TEST2 {
 
         listDI = getDIs();
         System.assertEquals(4, listDI.size());
-        for (integer i = 0; i < 3; i++) {
+        for (Integer i = 0; i < 3; i++) {
             System.assertEquals(listDI[i].Contact1Imported__c, null);
             System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
-            string flsError = label.flsError;
+            String flsError = System.Label.flsError;
             flsError = flsError.replace('{0}', '');
             flsError = flsError.replace('.', '');
-            System.assert(listDI[i].FailureInformation__c.contains(flsError));
+            System.assert(listDI[i].FailureInformation__c.contains(flsError),
+                'Expected: "' + flsError + '", Actual: ' + listDI[i].FailureInformation__c);
         }
     }
 
@@ -1472,6 +1474,8 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void testInvalidAddressHandling() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        String billingCityLabel = UTIL_Describe.getFieldDescribe('Account','BillingCity').getLabel();
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
@@ -1501,7 +1505,7 @@ private with sharing class BDI_DataImport_TEST2 {
         System.assertEquals(listDI[2].HomeAddressImported__c, listAddr[1].Id);
 
         System.assertEquals(label.bdiCreated, listDI[0].HomeAddressImportStatus__c);
-        System.assert(listDI[1].HomeAddressImportStatus__c.contains('Billing City'));
+        System.assert(listDI[1].HomeAddressImportStatus__c.contains(billingCityLabel), listDI[1].HomeAddressImportStatus__c);
         System.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);
 
         System.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
@@ -1509,7 +1513,7 @@ private with sharing class BDI_DataImport_TEST2 {
         System.assertEquals(BDI_DataImport_API.bdiImported, listDI[2].Status__c);
 
         System.assertEquals(null, listDI[0].FailureInformation__c);
-        System.assert(listDI[1].FailureInformation__c.contains('Billing City'));
+        System.assert(listDI[1].FailureInformation__c.contains(billingCityLabel));
         System.assertEquals(null, listDI[2].FailureInformation__c);
 
         List<Account> listAcc = getAccounts();
@@ -1555,8 +1559,9 @@ private with sharing class BDI_DataImport_TEST2 {
         try {
             BDI_DataImport_API.importData();
             System.assert(false, 'importData should have thrown exception');
-        } catch (exception ex) {
-            System.assert(ex.getMessage().contains('Household Account model'));
+        } catch (Exception ex) {
+            System.assert(ex.getMessage().contains(System.Label.bdiHouseholdModelRequired),
+                'Expected: "' + System.Label.bdiHouseholdModelRequired + '", Actual: ' + ex.getMessage());
         }
         Test.stopTest();
     }

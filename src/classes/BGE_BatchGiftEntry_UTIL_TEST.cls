@@ -56,10 +56,13 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
     */
     @isTest
     static void testHandleMissingPermissions() {
-        List<DescribeFieldResult> dfrs = new List<DescribeFieldResult>();
-        dfrs.add(UTIL_Describe.getFieldDescribe('Account','Name'));
-        dfrs.add(UTIL_Describe.getFieldDescribe('Account','CreatedById'));
-        String expectedErrorMsg = Label.bgeFLSError + ' [Account Name, Created By ID]';
+        DescribeFieldResult acctNameDescribe = UTIL_Describe.getFieldDescribe('Account','Name');
+        DescribeFieldResult createdByIdDescribe = UTIL_Describe.getFieldDescribe('Account','CreatedById');
+        List<DescribeFieldResult> dfrs = new List<DescribeFieldResult> { acctNameDescribe, createdByIdDescribe };
+
+        String expectedErrorMsg = Label.bgeFLSError + ' ['
+            + acctNameDescribe.getLabel() + ', ' + createdByIdDescribe.getLabel()
+            + ']';
 
         try {
             BGE_BatchGiftEntry_UTIL.handleMissingPermissions(dfrs);

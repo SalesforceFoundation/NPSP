@@ -66,9 +66,7 @@ private class HH_CampaignDedupeBTN_TEST {
                 CampaignId = camp.Id
             )
         };
-        if ([SELECT Count() FROM CampaignMemberStatus] == 0) {
-            insert campStatuses;
-        }
+        insert campStatuses;
     }
 
     /*******************************************************************************************************
