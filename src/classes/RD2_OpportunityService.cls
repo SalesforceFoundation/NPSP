@@ -273,13 +273,9 @@ public with sharing class RD2_OpportunityService {
     */
     private List<Opportunity> getCurrentOpps(npe03__Recurring_Donation__c rd) {
         List<Opportunity> opps = new List<Opportunity>();
-
-        if (rd.npe03__Donations__r.isEmpty()) {
-            return opps;
-        }
         
         for (Opportunity opp : rd.npe03__Donations__r) {
-            if ((opp.IsClosed == false && opp.CloseDate > currentDate) || opp.CloseDate == currentDate) {
+            if (opp.CloseDate >= currentDate) {
                 opps.add(opp);
             }
         }
