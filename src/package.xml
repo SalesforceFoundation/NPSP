@@ -3192,8 +3192,6 @@
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
         <members>GE_Gift_Entry</members>
-        <members>GE_Form_Renderer</members>
-        <members>GE_Template_Builder</members>
         <members>General_Accounting_Unit__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
