@@ -99,10 +99,9 @@ export default class geHome extends LightningElement {
     */
     @api
     notify(event) {
-        if (event.componentChain && event.componentChain.length > 0) {
-            const component = this.template.querySelector(`c-${event.componentChain[0]}`);
+        if (event.receiverComponent && event.receiverComponent.length > 0) {
+            const component = this.template.querySelector(`c-${event.receiverComponent}`);
             if (component) {
-                event.componentChain.shift();
                 component.notify(event);
             }
         }

@@ -53,7 +53,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
                 modalData: {
                     section: this.formSection,
                     action: 'edit',
-                    componentChain: ['ge-template-builder'],
+                    receiverComponent: 'ge-template-builder',
                 },
                 dedicatedListenerEventName: 'geTemplateBuilderSectionModalBodyEvent',
             },

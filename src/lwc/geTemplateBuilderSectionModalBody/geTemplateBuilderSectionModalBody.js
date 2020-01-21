@@ -26,9 +26,11 @@ export default class GeTemplateBuilderSectionModalBody extends LightningElement 
     * component GE_ModalProxy that the given section needs to be removed.
     */
     handleDelete() {
-        let componentChain = mutable(this.modalData.componentChain);
-
-        const detail = { componentChain: componentChain, action: 'delete', section: this.modalData.section };
+        const detail = {
+            receiverComponent: this.modalData.receiverComponent,
+            action: 'delete',
+            section: this.modalData.section
+        };
         fireEvent(this.pageRef, 'geTemplateBuilderSectionModalBodyEvent', detail);
     }
 
@@ -38,11 +40,14 @@ export default class GeTemplateBuilderSectionModalBody extends LightningElement 
     */
     handleSave() {
         let section = mutable(this.modalData.section);
-        let componentChain = mutable(this.modalData.componentChain);
 
         section.label = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
 
-        const detail = { componentChain: componentChain, action: 'save', section: section };
+        const detail = {
+            receiverComponent: this.modalData.receiverComponent,
+            action: 'save',
+            section: section
+        };
         fireEvent(this.pageRef, 'geTemplateBuilderSectionModalBodyEvent', detail);
     }
 
