@@ -4824,7 +4824,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error message body when Advanced Mapping off</shortDescription>
-        <value>This feature requires Advanced Mapping. Please enable it in NPSP Settings.</value>
+        <value>This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.</value>
     </labels>
     <labels>
         <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
@@ -4832,7 +4832,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error message header when Advanced Mapping off</shortDescription>
-        <value>Enable Advanced Mapping</value>
+        <value>Enable Advanced Mapping and Gift Entry</value>
     </labels>
     <labels>
         <fullName>geErrorPageLevelFieldPermission1</fullName>
