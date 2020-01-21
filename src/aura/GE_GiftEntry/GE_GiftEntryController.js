@@ -6,10 +6,8 @@
     * input focus, and tabbing.
     */
     handleShowModal: function (component, event, helper) {
-        console.log('handleShowModal');
         component.set('v.isLoading', true);
         const payload = event.getParams('detail');
-        console.log('payload: ', payload);
 
         $A.createComponents([[`c:${payload.modalProperties.componentName}`, payload.componentProperties]],
             function (components, status, errorMessage) {
@@ -21,7 +19,6 @@
                         showCloseButton: payload.modalProperties.showCloseButton || true,
                         cssClass: component.getName() + ' custom-modal ' + payload.modalProperties.cssClass,
                         closeCallback: payload.modalProperties.closeCallback || function() {
-                            console.log('closeCallback');
                             component.set('v.isLoading', false);
                         },
                         body: modalBody,
@@ -40,7 +37,6 @@
     * and notifies the geTemplates component.
     */
     handleModalEvent: function (component, event, helper) {
-        console.log('*****--- handleModalEvent');
         const details = event.getParams('detail');
 
         if (details) {

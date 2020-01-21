@@ -67,6 +67,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     existingFormTemplateName;
     currentNamespace;
+    @api isClone = false;
     @track isLoading = true;
     @track isAccessible = true;
     @track activeTab = this.TabEnums.INFO_TAB;
@@ -134,8 +135,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     init = async () => {
-        console.log('******--- init: ', this.formTemplateRecordId);
-        console.time('template_builder');
         try {
             const dataImportSettings = await getDataImportSettings();
             const fieldMappingApiName = FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName;
@@ -145,7 +144,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.isLoading = false;
 
             } else if (dataImportSettings[fieldMappingApiName] === ADVANCED_MAPPING) {
-                await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
                 this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
                 const queryParameters = getQueryParameters();
@@ -178,13 +176,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 }
 
                 // Clear out form template record id if cloning after retrieving all relevant data
-                if (queryParameters.c__clone) {
+                if (queryParameters.c__clone || this.isClone) {
                     this.formTemplateRecordId = null;
                 }
 
                 this.isLoading = false;
                 this.isAccessible = true;
-                console.timeEnd('template_builder');
             }
         } catch (error) {
             handleError(error);
@@ -302,7 +299,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     */
     @api
     notify(modalData) {
-        console.log('******-------- notify: ', modalData);
         if (modalData.action === SAVE) {
             let formSections = mutable(this.formSections);
             let formSection = formSections.find((fs) => { return fs.id === modalData.section.id });

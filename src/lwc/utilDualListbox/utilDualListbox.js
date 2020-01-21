@@ -35,7 +35,7 @@ export default class utilDualListbox extends LightningElement {
     */
     handleSave() {
         const payload = { values: this.values, name: this.name };
-        const detail = { componentName: this.targetComponentName, action: 'save', payload: payload };
+        const detail = { componentChain: [this.targetComponentName], action: 'save', payload: payload };
         if (this.dedicatedListenerEventName) {
             fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
         } else {

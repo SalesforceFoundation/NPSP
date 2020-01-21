@@ -3,7 +3,6 @@ import { NavigationMixin } from 'lightning/navigation';
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
-import { isEmpty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
@@ -104,7 +103,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     */
     @api
     notify(event) {
-        console.log('notify');
         if (event.action === SAVE) {
             const component =
                 this.template.querySelector(`c-ge-list-view[data-id='${event.payload.name}']`);
@@ -121,7 +119,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     * @param {object} event: Event object containing a payload for the modal.
     */
     toggleModal(event) {
-        console.log('toggleModal');
         dispatch(this, EVENT_TOGGLE_MODAL, event.detail);
     }
 
@@ -129,7 +126,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     * @description Opens the new batch wizard modal.
     */
     openNewBatchWizard(event) {
-        console.log('openNewBatchWizard');
         event.stopPropagation();
         const detail = {
             componentProperties: {
@@ -155,13 +151,10 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     init = async () => {
-        console.time('templates_list_view');
         this.isAccessible = await this.checkPageAccess();
 
         if (this.isAccessible) {
-            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.isLoading = false;
-            console.timeEnd('templates_list_view');
         }
     }
 
@@ -198,7 +191,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
                 this.navigateToTemplateBuilder(row.Id);
                 break;
             case 'clone':
-                this.navigateToTemplateBuilder(row.Id, { c__clone: true });
+                this.navigateToTemplateBuilder(row.Id, { clone: true });
                 break;
             case 'delete':
                 this.geListViewComponent.setProperty(IS_LOADING, true);
@@ -213,7 +206,7 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
      * Data Import Batch
      * @param {Id} recordId : Record id of the Form_Template__c to be deleted
      */
-    handleTemplateDeletion (recordId){
+    handleTemplateDeletion(recordId) {
         deleteRecord(recordId).then(formTemplateNames => {
             this.geListViewComponent.setProperty(IS_LOADING, false);
             this.geListViewComponent.refresh();
@@ -230,67 +223,17 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
             });
     }
 
-
-    /*******************************************************************************
-    * @description Method handles actions for the Batches list view table.
-    *
-    * @param {object} event: Event received from the list view component
-    * containing action details.
-    */
-    handleBatchesTableRowAction(event) {
-        const actionName = event.detail.action.name;
-        const row = event.detail.row;
-
-        switch (actionName) {
-            case 'edit':
-                event.record = row;
-                this.openNewBatchWizard(event);
-                break;
-            default:
-        }
-    }
-
-    /*******************************************************************************
-    * @description Navigates to the Record Detail Page.
-    *
-    * @param {string} recordId: SObject Record ID
-    */
-    navigateToRecordViewPage(recordId) {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: recordId,
-                actionName: 'view'
-            }
-        });
-    }
-
     /*******************************************************************************
     * @description Navigates to the Template Builder. If a recordId is provided,
     * adds the recordId to the navigation state (query param).
     *
     * @param {string} recordId: Record id of the Form_Template__c
     */
-    navigateToTemplateBuilder(recordId) {
-        /*let queryParameter = {
-            c__view: 'Template_Builder'
-        }
-
-        if (recordId) {
-            queryParameter.c__recordId = recordId;
-        }
-
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: 'npsp__GE_Gift_Entry'
-            },
-            state: queryParameter
-        });*/
-
+    navigateToTemplateBuilder(recordId, additionalParameters) {
         dispatch(this, 'changeview', {
             view: 'Template_Builder',
-            recordId: recordId
+            formTemplateId: recordId,
+            ...additionalParameters
         });
     }
 
@@ -307,16 +250,6 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     * to the Form Renderer.
     */
     navigateToForm() {
-        let queryParameter = {
-            c__view: 'Single_Gift_Entry'
-        }
-
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: 'npsp__GE_Gift_Entry'
-            },
-            state: queryParameter
-        });
+        dispatch(this, 'changeview', { view: 'Single_Gift_Entry' });
     }
 }

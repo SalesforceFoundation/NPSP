@@ -21,6 +21,7 @@
         <lightning:spinner alternativeText="Loading"
                            size="medium" />
     </aura:if>
+
     <c:geHome aura:id="giftEntryHome"
               ontogglemodal="{!c.handleShowModal}" />
 </aura:component>

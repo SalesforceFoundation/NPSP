@@ -27,7 +27,6 @@ export default class GeTemplateBuilderSectionModalBody extends LightningElement 
     */
     handleDelete() {
         let componentChain = mutable(this.modalData.componentChain);
-        console.log('componentChain: ', mutable(this.modalData));
 
         const detail = { componentChain: componentChain, action: 'delete', section: this.modalData.section };
         fireEvent(this.pageRef, 'geTemplateBuilderSectionModalBodyEvent', detail);
@@ -40,7 +39,7 @@ export default class GeTemplateBuilderSectionModalBody extends LightningElement 
     handleSave() {
         let section = mutable(this.modalData.section);
         let componentChain = mutable(this.modalData.componentChain);
-        console.log('componentChain: ', mutable(this.modalData));
+
         section.label = this.template.querySelector('lightning-input[data-name="customLabel"]').value;
 
         const detail = { componentChain: componentChain, action: 'save', section: section };
