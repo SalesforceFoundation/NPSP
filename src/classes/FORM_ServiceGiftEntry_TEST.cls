@@ -209,66 +209,73 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     @isTest
     static void shouldRetrieveTemplateWithCRUDErrors() {
         UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(false, 'CRUD');
-        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,                   utilPermissionsMockInstance);
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,
+            utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
         
         FORM_Template template = createSampleTemplate();
 
         createSampleFieldMappings();
         
-        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template, new                                Set<FORM_PermissionValidator.AccessLevel> {FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                      FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template,
+            new Set<FORM_PermissionValidator.AccessLevel> {
+                FORM_PermissionValidator.AccessLevel.VALIDATE_READ,FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                 FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
 
-        System.assert(String.isNotBlank(updatedTemplate.permissionErrors), 'There should be permission errors when          the user has no CRUD access to an object.');
-        System.assertEquals(updatedTemplate.permissionErrorType, 'CRUD', 'The permission error type should be \'CRUD\'      when the user does not have CRUD permissions.');
-        System.assert(updatedTemplate.permissionErrors.contains('Account'), 'The permissions error should contain the        Account object, which the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Contact'), 'The permissions error should contain the        Contact object, which the user does not have access to.');
+        System.assert(String.isNotBlank(updatedTemplate.permissionErrors), 'There should be permission errors   when the user has no CRUD access to an object.');
+        System.assertEquals(updatedTemplate.permissionErrorType, 'CRUD', 'The permission error type should be   \'CRUD\' when the user does not have CRUD permissions.');
+        System.assert(updatedTemplate.permissionErrors.contains('Account'), 'The permissions error should       contain the Account object, which the user does not have access to.');
+        System.assert(updatedTemplate.permissionErrors.contains('Contact'), 'The permissions error should       contain the Contact object, which the user does not have access to.');
     }
 
     @isTest
     static void shouldRetrieveTemplateWithFLSErrors() {
         UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(false, 'FLS');
-        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,                   utilPermissionsMockInstance);
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,       utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
         
         FORM_Template template = createSampleTemplate();
 
         createSampleFieldMappings();
         
-        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template, new                                Set<FORM_PermissionValidator.AccessLevel> {FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                      FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template,
+            new Set<FORM_PermissionValidator.AccessLevel> {
+                FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                      FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                 FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
 
-        System.assert(String.isNotBlank(updatedTemplate.permissionErrors), 'There should be permission errors when          the user has no CRUD access to an object.');
-        System.assertEquals(updatedTemplate.permissionErrorType, 'FLS', 'The permission error type should be \'FLS\'        when the user does not have FLS permissions.');
-        System.assert(updatedTemplate.permissionErrors.contains('Account_1_City'), 'The permissions error should            contain any field the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Account_1_Country'), 'The permissions error should         contain any field the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Account_1_Name'), 'The permissions error should            contain any field the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Contact_1_First_Name'), 'The permissions error should      contain any field the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Contact_1_Last_Name'), 'The permissions error should       contain any field the user does not have access to.');
+        System.assert(String.isNotBlank(updatedTemplate.permissionErrors), 'There should be permission errors   when the user has no CRUD access to an object.');
+        System.assertEquals(updatedTemplate.permissionErrorType, 'FLS', 'The permission error type should be    \'FLS\' when the user does not have FLS permissions.');
+        System.assert(updatedTemplate.permissionErrors.contains('Account_1_City'), 'The permissions error       should contain any field the user does not have access to.');
+        System.assert(updatedTemplate.permissionErrors.contains('Account_1_Country'), 'The permissions error    should contain any field the user does not have access to.');
+        System.assert(updatedTemplate.permissionErrors.contains('Account_1_Name'), 'The permissions error       should contain any field the user does not have access to.');
+        System.assert(updatedTemplate.permissionErrors.contains('Contact_1_First_Name'), 'The permissions       error should contain any field the user does not have access to.');
+        System.assert(updatedTemplate.permissionErrors.contains('Contact_1_Last_Name'), 'The permissions        error should contain any field the user does not have access to.');
     }
 
     @isTest
     static void shouldRetrieveTemplateWithPermission() {
         UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true);
-        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,                   utilPermissionsMockInstance);
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,       utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
         
         FORM_Template template = createSampleTemplate();
 
         createSampleFieldMappings();
         
-        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template, new                                Set<FORM_PermissionValidator.AccessLevel> {FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                      FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template,
+            new Set<FORM_PermissionValidator.AccessLevel> {
+                FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                      FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                 FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
 
-        System.assert(String.isBlank(updatedTemplate.permissionErrors), 'There should be no permission errors when the      user has all required CRUD and FLS permissions.');
-        System.assertEquals(updatedTemplate.permissionErrorType, null, 'The template should not have a permission error     type if the user has all required CRUD and FLS permissions.');
+        System.assert(String.isBlank(updatedTemplate.permissionErrors), 'There should be no permission errors   when the user has all required CRUD and FLS permissions.');
+        System.assertEquals(updatedTemplate.permissionErrorType, null, 'The template should not have a          permission error type if the user has all required CRUD and FLS permissions.');
     }
 
     // Method to create instance of field mappings to use in test data
     private static void createSampleFieldMappings() {
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
-        dis.Default_Data_Import_Field_Mapping_Set__c =                                                                              BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        dis.Default_Data_Import_Field_Mapping_Set__c =                                                            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
         BDI_MappingServiceAdvanced.getInstance(

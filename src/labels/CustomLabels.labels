@@ -5171,7 +5171,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Check Your Object Permissions</value>
     </labels>
     <labels>
-        <fullName>getErrorObjectCRUDBody</fullName>
+        <fullName>geErrorObjectCRUDBody</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>

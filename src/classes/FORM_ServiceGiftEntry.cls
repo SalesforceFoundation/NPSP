@@ -226,8 +226,9 @@ public with sharing class FORM_ServiceGiftEntry {
          if (!templateObjList.isEmpty()) {
             template = deserializeFormTemplateFromObj(templateObjList[0]);
 
-            template = checkPermissions(template, new Set<FORM_PermissionValidator.AccessLevel>                                                      {FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                                                         FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                                          FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+            template = checkPermissions(template,
+                new Set<FORM_PermissionValidator.AccessLevel>                                                 {FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                                          FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
             }
         return template;
     }
