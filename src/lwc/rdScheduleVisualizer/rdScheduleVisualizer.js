@@ -1,4 +1,4 @@
-import labelScheduleTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
+import labelInstallmentTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
 import labelColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 
 import { LightningElement, api, wire, track } from 'lwc';
@@ -14,9 +14,9 @@ import FIELD_RD_DAYOFMONTH from '@salesforce/schema/npe03__Recurring_Donation__c
 import FIELD_RD_STARTDATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 
-import getSchedule from '@salesforce/apex/RD2_VisualizeScheduleController.getSchedule';
+import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
 
-const SCHEDULE_COLS = [
+const INSTALLMENT_COLS = [
     { label: '$DATE', fieldName: 'donationDate', type: 'date-local', sortable: false,
         typeAttributes:{
             month: "2-digit",
@@ -32,11 +32,11 @@ export default class RdScheduleVisualizer extends LightningElement {
     @api recordId;
     @api displayNum;
 
-    @track schedule;
+    @track installments;
     @track error;
-    @track columns = SCHEDULE_COLS;
+    @track columns = INSTALLMENT_COLS;
     @track currencyIsoCode;
-    @track lblScheduleTitle = labelScheduleTitle;
+    @track lblInstallmentTitle = labelInstallmentTitle;
     @track lblCloseDate = labelColumnDate;
     @track lblAmount;
     @track lblPmtMethod;
@@ -50,16 +50,16 @@ export default class RdScheduleVisualizer extends LightningElement {
         fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD, FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD] })
     wireRecordChange() {
         if (this.recordId) {
-            getSchedule({ recordId: this.recordId, displayNum: this.displayNum })
+            getInstallments({ recordId: this.recordId, displayNum: this.displayNum })
                 .then(data => {
                     this.handleCurrencyIsoCode(data);
                     this.handleColumns();
-                    this.schedule = data;
+                    this.installments = data;
                     this.error = null;
 
                 })
                 .catch(error => {
-                    this.schedule = null;
+                    this.installments = null;
                     this.error = this.handleError(error);
                 });
         }
@@ -68,9 +68,9 @@ export default class RdScheduleVisualizer extends LightningElement {
     /*******************************************************************************
      * @description Call Apex to retrieve the Currency Code to use in the UI
      */
-    handleCurrencyIsoCode(schedule) {
-        if (schedule) {
-            this.currencyIsoCode = schedule[0].currencyIsoCode;
+    handleCurrencyIsoCode(installments) {
+        if (installments) {
+            this.currencyIsoCode = installments[0].currencyIsoCode;
         } else {
             this.currencyIsoCode = 'USD';
         }
@@ -91,8 +91,8 @@ export default class RdScheduleVisualizer extends LightningElement {
     /*******************************************************************************
      * @description Called by the HTML to retrieve the schedule to render
      */
-    get schedule() {
-        return this.schedule;
+    get installments() {
+        return this.installments;
     }
 
     /*******************************************************************************
@@ -123,7 +123,7 @@ export default class RdScheduleVisualizer extends LightningElement {
         ];
         const currencyIsoCode = this.currencyIsoCode;
 
-        this.columns = SCHEDULE_COLS;
+        this.columns = INSTALLMENT_COLS;
         this.columns.forEach(function(col){
             if (col.label === '$AMOUNT') {
                 col.typeAttributes.currencyCode = currencyIsoCode;
