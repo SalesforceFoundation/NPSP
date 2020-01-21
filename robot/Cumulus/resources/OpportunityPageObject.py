@@ -14,17 +14,6 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.location_should_contain("/lightning/r/Opportunity/",message="Current page is not a Opportunity detail view")
 
-
-    def verify_payments_made(self, count):
-        """
-            Verify payments tally matches the count specified on the opportunity details page
-        """
-
-        self.npsp.select_tab("Related")
-        self.salesforce.load_related_list("Payments")
-        self.npsp.verify_occurrence("Payments", count)
-
-
     def validate_values_under_relatedlist_for(self, listname, **kwargs):
         """
         Navigate to one of the related list items specified and verify the values match the specified values as per the

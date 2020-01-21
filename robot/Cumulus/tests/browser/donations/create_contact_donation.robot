@@ -25,7 +25,7 @@ ${Stage_Type}  Closed Won
 
 *** Test Cases ***
 
-Add Existing Contact to Existing Household
+Create Donation from a Contact
     [Documentation]                      Create Opportunity from Contact with closed-won status.
 
     [tags]                               W-038461                 feature:Donations
@@ -48,6 +48,6 @@ Add Existing Contact to Existing Household
     Go To Page                           Listing                   Opportunity
     Click Link                           ${value}
     Save Current Record ID For Deletion  Opportunity
-    Current Page Should Be               Detail                   Opportunity
-    Verify Payments Made                 1
+    Current Page Should Be               Detail                    Opportunity
+    Validate Occurence For               Payments                    1
 

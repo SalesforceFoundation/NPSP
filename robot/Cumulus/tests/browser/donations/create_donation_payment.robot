@@ -41,7 +41,7 @@ Create Donation and Opportunity and Create Payment Manually
     Save Current Record ID For Deletion             Opportunity
     Current Page Should Be                          Detail                                  Opportunity
 
-    Verify Payments Made                            0
+    Validate Occurence For                          Payments                                0
 
     #Make A New Payment
 
@@ -55,7 +55,7 @@ Create Donation and Opportunity and Create Payment Manually
     Pick Date                                       Today
     Click Modal Button                              Save
 
-    Verify Payments Made                            1
+    Validate Occurence For                          Payments                                1
 
     Go To Page                                      Details
     ...                                             Contact
@@ -63,6 +63,6 @@ Create Donation and Opportunity and Create Payment Manually
 
     #Perform Validations
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Validate Field Value Under Section   Donation Totals      Last Gift Date                  ${opp_date}
-    Validate Field Value Under Section   Soft Credit Total    Total Gifts                     $100.00
-    Validate Field Value Under Section   Soft Credit Total    Total Number of Gifts           1
+    Scroll To Validate Field Value    Donation Totals      Last Gift Date           contains       ${opp_date}
+    Scroll To Validate Field Value    Soft Credit Total    Total Gifts              contains       $100.00
+    Scroll To Validate Field Value    Soft Credit Total    Total Number of Gifts    contains       1

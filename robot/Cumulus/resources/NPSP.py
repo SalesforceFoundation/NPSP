@@ -264,10 +264,12 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()   
         
         
-    def confirm_field_value(self, field,status,value):
+    def scroll_to_validate_field_value(self, section, field,status,value):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
         """
+        section="text:"+section
+        self.selenium.scroll_element_into_view(section)
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
         for i in locators:
@@ -448,7 +450,9 @@ class NPSP(SalesforceRobotLibraryBase):
         else :    
             self.salesforce._populate_field(locator, value)
         
-    def verify_occurrence(self,title,value):
+    def validate_occurence_for(self,title,value):
+        self.select_tab("Related")
+        self.salesforce.load_related_list(title)
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
         actual_value=self.selenium.get_webelement(locator).text
         exp_value="("+value+")"
@@ -499,7 +503,7 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()  
         
     def verify_related_list_field_values(self, **kwargs):
-        """verifies the values in the related list objects page""" 
+        """verifies the values in the related list objects page"""
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
             self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
