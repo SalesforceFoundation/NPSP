@@ -5,6 +5,7 @@ import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geDonationTypeErrorLabel from '@salesforce/label/c.geErrorDonorTypeValidation';
+import geErrorDonorTypeValidationSingle from '@salesforce/label/c.geErrorDonorTypeValidationSingle';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import { CONTACT1, ACCOUNT1,
         DONATION_DONOR_FIELDS, DONATION_DONOR,
@@ -264,7 +265,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if(invalidFields.length > 0){
             let fieldListAsString = invalidFields.join(', ');
-            showToast('Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
+            this.hasPageLevelError = true;
+            this.pageLevelErrorMessageList = [ {index: 0, errorMessage: `The following fields are required: ${fieldListAsString}`} ];
+            // showToast('Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
         }
 
         return invalidFields.length === 0;
@@ -313,18 +316,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             donationDonorValue: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value,
             donationDonorLabel: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].label,
             // empty val checks
-            isAccount1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].value),
-            isContact1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].value),
+            isAccount1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].value),
+            isContact1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].value),
             isContact1LastNameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].value),
-            isAccount1NameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].value),
-            // check fields on template
-            isContact1LastNameFieldPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]),
-            isAccount1NameFieldPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]),
-            // fields labels
-            account1ImportedLabel: fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label,
-            contact1ImportedLabel: fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].label,
-            account1NameLabel: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]) ? fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].label : '',
-            contact1LastNameLabel: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]) ? fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label : ''
+            isAccount1NameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].value)
         };
 
         // donation donor validation depending value
@@ -336,27 +331,34 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (isError) {
 
             // prepare array to highlight fields that require attention depending on Donation_Donor
-            const markErrorFields = [
-                DONATION_DONOR_FIELDS.donationDonorField,
+            const highlightFields = [ DONATION_DONOR_FIELDS.donationDonorField,
                 di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField : DONATION_DONOR_FIELDS.contact1ImportedField,
                 di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField : DONATION_DONOR_FIELDS.contact1LastNameField
             ];
             sectionsList.forEach(section => {
-                section.setCustomValidityOnFields( markErrorFields, ' ' );
+                section.setCustomValidityOnFields( highlightFields, ' ' );
             });
 
-            // replacement array for custom label
-            const validationErrorLabelReplacements = [
-                di_record.donationDonorValue,
-                di_record.donationDonorLabel,
-                di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? di_record.account1ImportedLabel : di_record.contact1ImportedLabel,
-                di_record.donationDonorValue === DONATION_DONOR.isAccount1 ? di_record.account1NameLabel : di_record.contact1LastNameLabel
-            ];
-            // set message using label and replacement array
-            const message = format( geDonationTypeErrorLabel, validationErrorLabelReplacements );
-            showToast('Review the errors on this page:', message, 'error');
-            // // set page error -> currently breaking layout when templates are big:
-            // this.hasPageLevelError = true; this.pageLevelErrorMessageList = [ {index: 0, errorMessage: message} ];
+            // array replacement for custom label
+            let validationErrorLabelReplacements = [ di_record.donationDonorValue, di_record.donationDonorLabel ];
+            if ( di_record.donationDonorValue===DONATION_DONOR.isAccount1 ){
+                if (isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]))
+                    validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label);
+                if (isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]))
+                    validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].label);
+            } else {
+                if (isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]))
+                    validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].label);
+                if (isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]))
+                    validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label);
+            }
+
+            // set message using replacement array - set label depending fields present on template
+            let message = validationErrorLabelReplacements.length===3 ?
+                                format(geErrorDonorTypeValidationSingle, validationErrorLabelReplacements) : format(geDonationTypeErrorLabel, validationErrorLabelReplacements);
+            // set page error
+            this.hasPageLevelError = validationErrorLabelReplacements.length>=3;
+            this.pageLevelErrorMessageList = [ {index: 0, errorMessage: message} ];
 
         }
 
