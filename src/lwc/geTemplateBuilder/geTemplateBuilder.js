@@ -31,7 +31,7 @@ import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Sett
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
-const LANDING_PAGE_TAB_NAME = 'GE_Templates';
+const GIFT_ENTRY = 'Gift_Entry';
 const SORTED_BY = 'required';
 const SORT_ORDER = 'desc';
 const PICKLIST = 'Picklist';
@@ -128,10 +128,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     get namespace() {
         return this.currentNamespace ? `${this.currentNamespace}__` : '';
-    }
-
-    get listViewCustomTabApiName() {
-        return this.currentNamespace ? `${this.namespace + LANDING_PAGE_TAB_NAME}` : LANDING_PAGE_TAB_NAME;
     }
 
     init = async () => {
@@ -976,59 +972,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
-    * @description Navigates to the list view GE_Templates tab.
-    */
-    handleCancel() {
-        /*const queryParameter = {
-            c__view: 'Gift_Entry'
-        }
-
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: 'npsp__GE_Gift_Entry'
-            },
-            state: queryParameter
-        });*/
-
-        dispatch(this, 'changeview', { view: 'Gift_Entry' });
-    }
-
-    /*******************************************************************************
-    * @description Navigates to a record detail page by record id.
-    *
-    * @param {string} formTemplateRecordId: Form_Template__c record id.
-    */
-    navigateToRecordViewPage(formTemplateRecordId) {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: formTemplateRecordId,
-                actionName: 'view'
-            }
-        });
-    }
-
-    /*******************************************************************************
     * @description Navigates to Gift Entry landing page.
     */
     navigateToLandingPage() {
-        /*this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: this.listViewCustomTabApiName
-            }
-        });*/
-        const queryParameter = {
-            c__view: 'Gift_Entry'
-        }
-
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: 'npsp__GE_Gift_Entry'
-            },
-            state: queryParameter
-        });
+        dispatch(this, 'changeview', { view: GIFT_ENTRY });
     }
 }
