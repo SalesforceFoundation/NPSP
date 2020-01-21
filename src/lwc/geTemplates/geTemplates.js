@@ -200,15 +200,16 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
      * @param {Id} recordId : Record id of the Form_Template__c to be deleted
      */
     handleTemplateDeletion(row) {
-        deleteRecord(row.Id).then(() => {
-            this.geListViewComponent.setProperty(IS_LOADING, false);
-            this.geListViewComponent.refresh();
-            const toastMessage = GeLabelService.format(
-                this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
-                [row.Name]);
+        deleteRecord(row.Id)
+            .then(() => {
+                this.geListViewComponent.setProperty(IS_LOADING, false);
+                this.geListViewComponent.refresh();
+                const toastMessage = GeLabelService.format(
+                    this.CUSTOM_LABELS.geToastTemplateDeleteSuccess,
+                    [row.Name]);
 
-            showToast(toastMessage, '', SUCCESS);
-        })
+                showToast(toastMessage, '', SUCCESS);
+            })
             .catch(error => {
                 handleError(error);
                 this.geListViewComponent.setProperty(IS_LOADING, false);
