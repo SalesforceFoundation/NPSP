@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <recordTypes>
-    <name>Donation</name>
-    <label>Donación</label>
-    <description>Donación recibida</description>
+      <description>Donación recibida</description>
+      <label>Donación</label>
+      <name>Donation</name>
   </recordTypes>
   <recordTypes>
-    <name>Grant</name>
-    <label>Beca</label>
-    <description>Beca recibida</description>
+      <description>Beca recibida</description>
+      <label>Beca</label>
+      <name>Grant</name>
   </recordTypes>
   <recordTypes>
-    <name>InKindGift</name>
-    <label>Regalo en especie</label>
-    <description>Bienes o servicios recibidos como en especie</description>
+      <description>Bienes o servicios recibidos como en especie</description>
+      <label>Regalo en especie</label>
+      <name>InKindGift</name>
   </recordTypes>
   <recordTypes>
-    <name>MajorGift</name>
-    <label>Regalo importante</label>
-    <description>Donación de gran calibre de un donante importante</description>
+      <description>Donación de gran calibre de un donante importante</description>
+      <label>Regalo importante</label>
+      <name>MajorGift</name>
   </recordTypes>
   <recordTypes>
-    <name>MatchingGift</name>
-    <label>Regalo que iguala</label>
-    <description>Donación complementaria procedente del empleador de un donante u otra organización</description>
+      <description>Donación complementaria procedente del empleador de un donante u otra organización</description>
+      <label>Regalo que iguala</label>
+      <name>MatchingGift</name>
   </recordTypes>
   <recordTypes>
-    <name>Membership</name>
-    <label>Afiliación</label>
-    <description>Un tipo de registro de afiliación</description>
+      <description>Un tipo de registro de afiliación</description>
+      <label>Afiliación</label>
+      <name>Membership</name>
   </recordTypes>
   <layouts>
     <layout>___NAMESPACE___Major Gift Layout</layout>

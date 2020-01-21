@@ -14,15 +14,6 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Opportunity-de</members>
-        <members>Opportunity-es</members>
-        <members>Opportunity-fr</members>
-        <members>Opportunity-iw</members>
-        <members>Opportunity-ja</members>
-        <members>Opportunity-nl_NL</members>
-        <name>CustomObjectTranslation</name>
-    </types>
-    <types>
         <members>Account.Level__c</members>
         <members>Account.Previous_Level__c</members>
         <members>Contact.Gender__c</members>
@@ -142,27 +133,6 @@
         <members>OpportunityType</members>
         <members>Salutation</members>
         <name>StandardValueSet</name>
-    </types>
-    <types>
-        <members>ContactRole-de</members>
-        <members>ContactRole-es</members>
-        <members>ContactRole-fr</members>
-        <members>ContactRole-iw</members>
-        <members>ContactRole-ja</members>
-        <members>ContactRole-nl_NL</members>
-        <members>OpportunityStage-de</members>
-        <members>OpportunityStage-es</members>
-        <members>OpportunityStage-fr</members>
-        <members>OpportunityStage-iw</members>
-        <members>OpportunityStage-ja</members>
-        <members>OpportunityStage-nl_NL</members>
-        <members>OpportunityType-de</members>
-        <members>OpportunityType-es</members>
-        <members>OpportunityType-fr</members>
-        <members>OpportunityType-iw</members>
-        <members>OpportunityType-ja</members>
-        <members>OpportunityType-nl_NL</members>
-        <name>StandardValueSetTranslation</name>
     </types>
     <types>
         <members>Nonprofit_Success_Pack</members>
