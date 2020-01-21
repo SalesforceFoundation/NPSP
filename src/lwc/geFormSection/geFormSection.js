@@ -62,7 +62,7 @@ export default class GeFormSection extends LightningElement {
         if (fields !== null && typeof fields !== 'undefined') {
             fields.forEach( field => {
                 if ( requestedFields.indexOf(field.sourceFieldAPIName) !== -1 ){
-                    field.setCustomValidity('');
+                    field.clearCustomValidity();
                     dataImportFieldAndLabels = { ...dataImportFieldAndLabels, ...(field.fieldValueAndLabel) };
                 }
             });

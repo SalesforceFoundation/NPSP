@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import { isNotEmpty } from 'c/utilCommon';
 
@@ -20,6 +20,7 @@ export default class GeAutocomplete extends LightningElement {
     @api valid;
     @api required;
     @api variant;
+    @track errorMessage;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -77,20 +78,17 @@ export default class GeAutocomplete extends LightningElement {
     }
 
     @api
-    setCustomValidity(errorMessage) {
-
-        console.log('setCustomValidity in geAutocomplete');
-        //const inputField = this.template.querySelector( this.errorMsgId );
-        //return inputField.setCustomValidity(errorMessage);
+    setCustomError(message) {
+        if (message===undefined || message==='') {
+            message = this.CUSTOM_LABELS.geErrorCompleteThisField;
+        }
+        this.errorMessage = message;
         this.valid = false;
-        // TODO: add message using errorMessage var
-
     }
 
     @api
-    resetCustomValidity() {
+    clearCustomError() {
         this.valid = true;
-        // TODO: remove message
     }
 
     /*******************************************

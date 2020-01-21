@@ -50,6 +50,9 @@ export default class GeFormFieldLookup extends LightningElement {
     @api
     reportValidity() {
         this.valid = this.checkValidity();
+        if (!this.valid) {
+            this.setCustomValidity();
+        }
     }
 
     /**
@@ -65,14 +68,19 @@ export default class GeFormFieldLookup extends LightningElement {
     }
 
     /**
-     * Set custom validity
+     * Set custom validity - custom since geAutocomplete does not use lightning-input
      * @param errorMessage, custom message for custom validity
      */
     @api
     setCustomValidity(errorMessage) {
-        // TODO: follow up here
-        let autocomplete = this.template.querySelectorAll('c-ge-autocomplete');
-        console.log('implement setCustomValidity from geFormFieldLookup');
+        let autocomplete = this.template.querySelector('c-ge-autocomplete');
+        autocomplete.setCustomError(errorMessage);
+    }
+
+    @api
+    clearCustomValidity() {
+        let autocomplete = this.template.querySelector('c-ge-autocomplete');
+        autocomplete.clearCustomError();
     }
 
     /**
