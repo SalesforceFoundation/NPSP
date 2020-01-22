@@ -3195,9 +3195,7 @@
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
-        <members>GE_Form_Renderer</members>
-        <members>GE_Template_Builder</members>
-        <members>GE_Templates</members>
+        <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
@@ -3335,6 +3333,7 @@
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
         <members>geFormWidgetRow</members>
+        <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
         <members>geTemplateBuilder</members>
@@ -3349,6 +3348,9 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rdActiveSchedule</members>
+        <members>rdScheduleVisualizer</members>
+        <members>util</members>
         <members>utilCommon</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
@@ -3357,9 +3359,6 @@
         <members>utilInput</members>
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
-        <members>rdActiveSchedule</members>
-        <members>rdScheduleVisualizer</members>
-        <members>util</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
