@@ -60,7 +60,6 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Customizable_Rollup_Settings__c customizableRollupSettings;
     static Levels_Settings__c levelsSettings;
     static Gift_Entry_Settings__c giftEntrySettings;
-    static Gift_Entry_Feature_Gate_Settings__c giftEntryFeatureGateSettings;
 
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -77,7 +76,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Customizable_Rollup_Settings__c orgCustomizableRollupSettings;
     static Levels_Settings__c orgLevelsSettings;
     static Gift_Entry_Settings__c orgGiftEntrySettings;
-    static Gift_Entry_Feature_Gate_Settings__c orgGiftEntryFeatureGateSettings;
+
 
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after
@@ -318,6 +317,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
     * in the database.
     */
+    @AuraEnabled
     public static Gift_Entry_Settings__c getGiftEntrySettings() {
         if(Test.isRunningTest() && giftEntrySettings == null) {
             giftEntrySettings = new Gift_Entry_Settings__c();
@@ -329,25 +329,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         }
        
         return giftEntrySettings;
-    }
-
-    /*******************************************************************************************************
-    * @description Returns the Gift Entry Feature Gate Settings.
-    * @return Gift_Entry_Feature_Gate Settings Custom settings record for Gift Entry Feature Gate Settings.
-    * At the org level, if no user level settings are defined. The ID field should be checked to determine if
-    * the returned record already exists or doesn't exist in the database.
-    */
-    @AuraEnabled
-    public static Gift_Entry_Feature_Gate_Settings__c getGiftEntryFeatureGateSettings() {
-        if (Test.isRunningTest() && giftEntryFeatureGateSettings == null) {
-            giftEntryFeatureGateSettings = new Gift_Entry_Feature_Gate_Settings__c();
-        } else if (giftEntryFeatureGateSettings == null) {
-            giftEntryFeatureGateSettings = Gift_Entry_Feature_Gate_Settings__c.getInstance();
-            if (giftEntryFeatureGateSettings.Id == null) {
-                giftEntryFeatureGateSettings = getOrgGiftEntryFeatureGateSettings();
-            }
-        }
-        return giftEntryFeatureGateSettings;
     }
 
     /*******************************************************************************************************
@@ -564,24 +545,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         return orgGiftEntrySettings;
     }
 
-    /***************************************************************************************************************
-   * @description Returns the org-level Gift Entry Feature Gate settings. Default org-level settings will be created
-   * if none exist. Meant to be called only from settings page and install script.
-   * @return Gift_Entry_Feature_Gate_Settings__c Org-level settings for Gift Entry Feature Gate.
-   */
-    public static Gift_Entry_Feature_Gate_Settings__c getOrgGiftEntryFeatureGateSettings() {
-        if (orgGiftEntryFeatureGateSettings == null) {
-            orgGiftEntryFeatureGateSettings = Gift_Entry_Feature_Gate_Settings__c.getOrgDefaults();
 
-            if (orgGiftEntryFeatureGateSettings.Id == null) {
-                orgGiftEntryFeatureGateSettings.SetupOwnerId = UserInfo.getOrganizationId();
-                if (!Test.isRunningTest()) {
-                    upsert orgGiftEntryFeatureGateSettings;
-                }
-            }
-        }
-        return orgGiftEntryFeatureGateSettings;
-    }
 
     /*******************************************************************************************************
      * Private methods that will configure the default org-level custom settings.
