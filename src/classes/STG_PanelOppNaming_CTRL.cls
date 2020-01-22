@@ -216,7 +216,6 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
 
         for (oppAttributionNames option : oppAttributionNames.values()) {
             options.add(new SelectOption(option.name(), convertToAttributionNamingLabel(option.name())));
-            System.debug('options values:' + option.name()+ ':' + convertToAttributionNamingLabel(option.name()) );
         }
 
         return options;

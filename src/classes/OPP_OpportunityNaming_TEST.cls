@@ -37,6 +37,8 @@
 @isTest
 private class OPP_OpportunityNaming_TEST
 {
+    private static final Date CLOSE_DATE = Date.today().addDays(1);
+
     /*********************************************************************************************************
     * @description Returns an active record type id for the current profile.
     */
@@ -164,12 +166,12 @@ private class OPP_OpportunityNaming_TEST
             Name = 'foo',
             Opportunity_Record_Types__c = '',
             Opportunity_Name_Format__c = '{!Account.Name} {!Amount} {!Type} {!RecordType.Name}',
-            Attribution__c = Label.oppNamingOrganizational
+            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Organization_Donations.name()
         ));
         onsList.add(new Opportunity_Naming_Settings__c(
             Name = 'foo2',
             Opportunity_Name_Format__c = '{!Contact.Name} {!Contact.HasOptedOutOfFax} {!Type} {!RecordType.Name}',
-            Attribution__c = Label.oppNamingIndividual
+            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Contact_Donations.name()
         ));
 
         if (hasActiveRecType())
@@ -276,4 +278,146 @@ private class OPP_OpportunityNaming_TEST
         System.assertEquals(1, errors.size(), 'An error record should be created.');
 
     }
+
+    /*******************************************************************************************************
+    * @description Verify if opportunity naming format works when creating opportunity using a user with
+    * language other than English.
+    ********************************************************************************************************/
+    @isTest
+    public static void shouldFormatOppNameWhenInsertingForNonEnglishUser() {
+
+        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!CloseDate} ',
+            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Both.name()
+        );
+
+        insert ons;
+        System.debug('details:' + ons);
+
+        Account acc = new Account(Name='accname');
+        insert acc;
+        Contact con = new Contact(LastName='conname');
+        insert con;
+
+        Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
+        //spanish language users to use for opp name formatting
+        User spanishLanguageUser = new User(
+            UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
+            Email = 'spanishlanguageuser@testorg.com',
+            Alias = 'spanis',
+            ProfileId = standardProfile.Id,
+            LastName = 'Testing',
+            LanguageLocaleKey = 'es',
+            LocaleSidKey = 'es',
+            EmailEncodingKey = 'UTF-8',
+            TimeZoneSidKey = 'America/Los_Angeles'
+        );
+
+
+        System.runAs(spanishLanguageUser) {
+            Opportunity opp = new Opportunity(
+            AccountId = acc.id,
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Name='temp',
+            Amount=8,
+            CloseDate = CLOSE_DATE,
+            npe01__Contact_Id_for_Role__c = con.id
+            );
+
+            insert opp;
+
+            List<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
+
+            String oppName = 'conname';
+            DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
+            oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
+            System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+        }
+
+    }
+
+    /*******************************************************************************************************
+    * @description Verify if opportunity naming format works when batch process is run and existing
+    * opportunity is updated when logged in user language is not English.
+    ********************************************************************************************************/
+    @isTest
+    public static void shouldFormatOppNameWhenBatchRunForNonEnglishUser() {
+        List<Opportunity> queryOpp = new List<Opportunity>();
+
+        Contact con = new Contact(LastName='conname');
+        insert con;
+
+        Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
+        //spanish language users to use for opp name formatting
+        User spanishLanguageUser = new User(
+            UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
+            Email = 'spanishlanguageuser@testorg.com',
+            Alias = 'spanis',
+            ProfileId = standardProfile.Id,
+            LastName = 'Testing',
+            LanguageLocaleKey = 'es',
+            LocaleSidKey = 'es',
+            EmailEncodingKey = 'UTF-8',
+            TimeZoneSidKey = 'America/Los_Angeles'
+        );
+
+
+        System.runAs(spanishLanguageUser) {
+            Opportunity opp = new Opportunity(
+            AccountId = getContact().AccountId,
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Name='temp',
+            Amount=8,
+            CloseDate = CLOSE_DATE,
+            npe01__Contact_Id_for_Role__c = con.id
+            );
+
+            insert opp;
+
+            List<Opportunity> oppCreated = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE Id = :opp.id];
+             System.debug('opportunity before name settings:' + OppCreated);
+            String oppName = 'temp';
+            System.assertEquals(oppName, oppCreated[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+
+        }
+
+        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!CloseDate} ',
+            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Contact_Donations.name()
+        );
+
+        insert ons;
+
+        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
+
+        //Run the batch to check opp naming works for existing opportunity
+        Test.startTest();
+        STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
+        ctrl.runBatch();
+        Test.stopTest();
+
+        queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :getContact().accountId];
+        System.debug('opportunity after name settings:' + queryOpp);
+        String oppName = 'conname';
+        DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
+        oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
+        System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+
+
+    }
+
+    /****
+    * @description Returns contact record
+    * @return Contact
+    */
+    private static Contact getContact() {
+        return [
+            SELECT FirstName, LastName, AccountId, Account.Name
+            FROM Contact
+            LIMIT 1
+        ];
+    }
+
 }
