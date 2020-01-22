@@ -145,7 +145,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 const queryParameters = getQueryParameters();
                 // If we have no template record id, check if there's a record id in the url
                 if (!this.formTemplateRecordId) {
-                    this.formTemplateRecordId = queryParameters.c__recordId;
+                    this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
                 }
 
                 if (this.formTemplateRecordId) {

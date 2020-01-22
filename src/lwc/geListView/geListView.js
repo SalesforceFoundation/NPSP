@@ -581,7 +581,7 @@ export default class geListView extends LightningElement {
         let url;
 
         if (this.objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
-            url = `/lightning/n/npsp__GE_Gift_Entry?c__view=Template_Builder&c__recordId={0}`;
+            url = `/lightning/n/npsp__GE_Gift_Entry?c__view=Template_Builder&c__formTemplateRecordId={0}`;
         } else {
             url = `/lightning/r/${this.objectApiName}/{0}/view`;
         }

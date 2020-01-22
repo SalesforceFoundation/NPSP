@@ -63,7 +63,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         GeFormService.getFormTemplate().then(response => {
             // check if there is a record id in the url
-            this.donorRecordId = getQueryParameters().c__recordId;
+            this.donorRecordId = getQueryParameters().c__donorRecordId;
             this.donorApiName = getQueryParameters().c__apiName;
 
             // read the template header info

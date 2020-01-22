@@ -66,7 +66,7 @@ export default class geHome extends LightningElement {
     * in the received event.
     *
     * @param {object} event: Event object containing parameters like 'c__view',
-    * 'c__formTemplateId', 'c__donorTypeId', etc used to change the current
+    * 'c__formTemplateRecordId', 'c__donorRecordId', etc used to change the current
     * view and set the respective view record id.
     */
     handleChangeView(event) {
