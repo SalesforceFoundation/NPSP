@@ -1981,6 +1981,9 @@
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>
         <members>geErrorCompleteThisField</members>
+        <members>geErrorDonorTypeInvalid</members>
+        <members>geErrorDonorTypeValidation</members>
+        <members>geErrorDonorTypeValidationSingle</members>
         <members>geErrorExistingTemplateName</members>
         <members>geErrorFieldPermission</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>

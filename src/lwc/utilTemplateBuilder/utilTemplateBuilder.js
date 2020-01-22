@@ -45,6 +45,9 @@ import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method
 import DI_ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import DI_CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import DI_DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+// Additional schema needed for donation donor validation
+import DI_ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import DI_CONTACT1_LAST_NAME_INFO from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 
 import CONTACT_INFO from '@salesforce/schema/Contact';
 import ACCOUNT_INFO from '@salesforce/schema/Account';
@@ -55,10 +58,26 @@ import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.ge
 import getGiftEntryFeatureGateSettings from
         '@salesforce/apex/UTIL_CustomSettingsFacade.getGiftEntryFeatureGateSettings';
 
+// relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
+
+// relevant Donation_Donor custom validation fields
+const DONATION_DONOR_FIELDS = {
+    account1ImportedField:  DI_ACCOUNT1_IMPORTED_INFO.fieldApiName,
+    account1NameField:      DI_ACCOUNT1_NAME_INFO.fieldApiName,
+    contact1ImportedField:  DI_CONTACT1_IMPORTED_INFO.fieldApiName,
+    contact1LastNameField:  DI_CONTACT1_LAST_NAME_INFO.fieldApiName,
+    donationDonorField:     DI_DONATION_DONOR_INFO.fieldApiName
+};
+
+// encapsulate Donation_Donor picklist values
+const DONATION_DONOR = {
+    isAccount1: ACCOUNT1,
+    isContact1: CONTACT1
+};
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
@@ -409,5 +428,7 @@ export {
     DI_ACCOUNT1_IMPORTED_INFO,
     DI_DONATION_DONOR_INFO,
     CONTACT1,
-    ACCOUNT1
+    ACCOUNT1,
+    DONATION_DONOR_FIELDS,
+    DONATION_DONOR
 }
