@@ -91,7 +91,8 @@ public class TEST_SObjectGateway {
                     PaymentMethod__c,
                     RecurringType__c,
                     Status__c,
-                    CurrentYearValue__c
+                    CurrentYearValue__c,
+                    NextYearValue__c
                 FROM npe03__Recurring_Donation__c
                 WHERE Id IN :rdIds
             ];

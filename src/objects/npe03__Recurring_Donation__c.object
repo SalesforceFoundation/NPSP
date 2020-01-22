@@ -257,6 +257,19 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>NextYearValue__c</fullName>
+        <description>The total amount of this Recurring Donation for the next calendar or fiscal year (read only).</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The total amount of this Recurring Donation for the next calendar or fiscal year (read only).</inlineHelpText>
+        <label>Next Year Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
         <fullName>PaymentMethod__c</fullName>
         <description>The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record.</description>
         <externalId>false</externalId>

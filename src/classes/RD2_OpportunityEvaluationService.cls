@@ -471,9 +471,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 return this;
             }
 
-            Decimal currentYearValue = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
-            if (currentYearValue != rd.CurrentYearValue__c) {
-                rd.CurrentYearValue__c = currentYearValue;
+            Decimal value = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
+            if (value != rd.CurrentYearValue__c) {
+                rd.CurrentYearValue__c = value;
+                isOutdated = true;
+            }
+            
+            value = processor.calcNextYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
+            if (value != rd.NextYearValue__c) {
+                rd.NextYearValue__c = value;
                 isOutdated = true;
             }
 
@@ -496,7 +502,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return new npe03__Recurring_Donation__c(
                 Id = rd.Id,
                 npe03__Next_Payment_Date__c = rd.npe03__Next_Payment_Date__c,
-                CurrentYearValue__c = rd.CurrentYearValue__c
+                CurrentYearValue__c = rd.CurrentYearValue__c,
+                NextYearValue__c = rd.NextYearValue__c
             );
         }
 
@@ -609,6 +616,34 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
+        * @description Date at the beginning of the next year.
+        * Used to retrieve next year Opportunities regardless if they are open or closed.
+        */
+        private Date nextYearStartDate {
+            get {
+                if (nextYearStartDate == null) {
+                    nextYearStartDate = Date.newInstance(currentDate.addYears(1).year(), 1, 1);
+                }
+                return nextYearStartDate;
+            }
+            set;
+        }
+
+        /**
+        * @description Date at the end of the next year.
+        * Used to set end date for RD Schedule Installment Close Date.
+        */
+        private Date nextYearEndDate {
+            get {
+                if (nextYearEndDate == null) {
+                    nextYearEndDate = Date.newInstance(currentDate.addYears(1).year(), 12, 31);
+                }
+                return nextYearEndDate;
+            }
+            set;
+        }
+
+        /**
         * @description Constructor
         * @param currentDate Current Date
         * @param scheduleService RD Schedule Service
@@ -632,13 +667,40 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Decimal
         */
         public Decimal calcCurrentYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
+            return calcCalendarYearValue(opps, schedules, currentDate, currentYearEndDate);
+        }
+
+        /**
+        * @description Calculates Next Year Value
+        * @param opps A Recurring Donation Opportunities retrieved by the Opp eval service
+        * @param schedules A Recurring Donation Schedules retrieved by the Opp eval service
+        * @return Decimal
+        */
+        public Decimal calcNextYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
+            return calcCalendarYearValue(opps, schedules, nextYearStartDate, nextYearEndDate);
+        }
+
+        /**
+        * @description Calculates Current or Next Calendar Year Value.
+        * Start and End date belong to the same year.
+        *
+        * @param opps A Recurring Donation Opportunities retrieved by the Opp eval service
+        * @param schedules A Recurring Donation Schedules retrieved by the Opp eval service
+        * @param startDate Start date to project installment Opps from
+        * @param endDate End date is the end cutoff date for the projected installment Opps
+        * @return Decimal
+        */
+        public Decimal calcCalendarYearValue(
+            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules,
+            Date startDate, Date endDate
+        ) {
             Decimal value = 0;
 
             List<RD2_ScheduleService.Installment> installments =
-                scheduleService.getVisualizedInstallments(currentDate, currentYearEndDate, schedules);
+                scheduleService.getVisualizedInstallments(startDate, endDate, schedules);
 
-            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-                .filterByYear(opps, currentDate.year())
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(startDate)
+                .filterByYear(opps, startDate.year())
                 .match(installments);
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
