@@ -139,15 +139,7 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>GE_Form_Renderer</tab>
-        <visibility>DefaultOn</visibility>
-    </tabVisibilities>
-    <tabVisibilities>
-        <tab>GE_Template_Builder</tab>
-        <visibility>DefaultOn</visibility>
-    </tabVisibilities>
-    <tabVisibilities>
-        <tab>GE_Templates</tab>
+        <tab>GE_Gift_Entry</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
 </Profile>
