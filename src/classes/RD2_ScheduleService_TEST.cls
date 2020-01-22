@@ -1018,28 +1018,35 @@ private with sharing class RD2_ScheduleService_TEST {
     }
 
     /****
-    * @description Validates start date on RD with unmodified past start date
+    * @description Validates the RD past Effective Date is unchanged when Amount is changed
+    * and schedule is marked for update.
     */
     @IsTest
-    private static void shouldApplyRDChangesIfPastStartDateUnchanged() {
+    private static void shouldMarkRDForScheduleUpdateWhenStartDateIsInPast() {
         Date startDate = Date.newInstance(2019, 11, 1);
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .withMockId()
-                .build();
-        npe03__Recurring_Donation__c rd2 = rd.clone(true);
-
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        rd2.npe03__Amount__c = 250;
-        RD2_ScheduleService service = new RD2_ScheduleService();
-        Map<Id, npe03__Recurring_Donation__c> rdsNeedUpdate =
-                service.getRecurringDonationsNeedingScheduleUpdates(new List<npe03__Recurring_Donation__c>{rd2},
-                        new List<npe03__Recurring_Donation__c>{rd}, TDTM_Runnable.Action.BeforeUpdate);
+        List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>{
+                getRecurringDonationMonthlyBuilder()
+                        .withStartDate(startDate)
+                        .withMockId()
+                        .build()
+        };
 
-        System.assertEquals(1, rdsNeedUpdate.size(), 'There should be 1 Recurring Donation which needs to be updated.');
-        System.assertEquals(250, rdsNeedUpdate.get(rd.Id).npe03__Amount__c, 'Updated amount should equal 250.');
-        System.assertEquals(startDate, rdsNeedUpdate.get(rd.Id).StartDate__c, 'Start date should be 11/1/2019.');
+        Decimal newAmount = 250;
+        List<npe03__Recurring_Donation__c> updatedRds = new List<npe03__Recurring_Donation__c>{
+                oldRds[0].clone(true)
+        };
+        updatedRds[0].npe03__Amount__c = newAmount;
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+        Map<Id, npe03__Recurring_Donation__c> rdsNeedUpdate = service.getRecurringDonationsNeedingScheduleUpdates(
+                updatedRds, oldRds, TDTM_Runnable.Action.BeforeUpdate
+        );
+
+        System.assertEquals(1, rdsNeedUpdate.size(), 'Recurring Donation should be marked for update');
+        System.assertEquals(newAmount, rdsNeedUpdate.get(updatedRds[0].Id).npe03__Amount__c, 'Updated amount should match');
+        System.assertEquals(startDate, rdsNeedUpdate.get(updatedRds[0].Id).StartDate__c, 'RD Effective Date should be unchanged');
     }
 
     /****
@@ -1048,23 +1055,28 @@ private with sharing class RD2_ScheduleService_TEST {
     @IsTest
     private static void shouldApplyRDChangesIfFutureStartDateUnchanged() {
         Date startDate = Date.today().addYears(12);
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .withMockId()
-                .build();
-        npe03__Recurring_Donation__c rd2 = rd.clone(true);
-
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>{
+                getRecurringDonationMonthlyBuilder()
+                        .withStartDate(startDate)
+                        .withMockId()
+                        .build()
+        };
 
-        rd2.npe03__Amount__c = 250;
+        Decimal newAmount = 250;
+        List<npe03__Recurring_Donation__c> updatedRds = new List<npe03__Recurring_Donation__c>{
+                oldRds[0].clone(true)
+        };
+        updatedRds[0].npe03__Amount__c = newAmount;
+
         RD2_ScheduleService service = new RD2_ScheduleService();
-        Map<Id, npe03__Recurring_Donation__c> rdsNeedUpdate =
-                service.getRecurringDonationsNeedingScheduleUpdates(new List<npe03__Recurring_Donation__c>{rd2},
-                        new List<npe03__Recurring_Donation__c>{rd}, TDTM_Runnable.Action.BeforeUpdate);
+        Map<Id, npe03__Recurring_Donation__c> rdsNeedUpdate = service.getRecurringDonationsNeedingScheduleUpdates(
+                updatedRds, oldRds, TDTM_Runnable.Action.BeforeUpdate
+        );
 
-        System.assertEquals(1, rdsNeedUpdate.size(), 'There should be 1 Recurring Donation which needs to be updated.');
-        System.assertEquals(250, rdsNeedUpdate.get(rd.Id).npe03__Amount__c, 'Updated amount should equal 250.');
-        System.assertEquals(startDate, rdsNeedUpdate.get(rd.Id).StartDate__c, 'Start date should be 12 years from today\'s date.');
+        System.assertEquals(1, rdsNeedUpdate.size(), 'Recurring Donation should be marked for update');
+        System.assertEquals(250, rdsNeedUpdate.get(updatedRds[0].Id).npe03__Amount__c, 'Updated amount should match');
+        System.assertEquals(startDate, rdsNeedUpdate.get(updatedRds[0].Id).StartDate__c, 'Start date should be 12 years from today\'s date');
     }
 
 

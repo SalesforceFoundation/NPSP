@@ -339,28 +339,36 @@ private with sharing class RD2_RecurringDonations_TEST {
     @isTest
     private static void shouldNotOverrideStartDateWithCurrentDate() {
         Date startDate = Date.newInstance(2019, 10, 5);
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(contact.Id)
+            .withAmount(50)
+            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY)
+            .withDayOfMonth('10')
+            .withInstallmentFrequency(1)
+            .withStatus(RD2_Constants.STATUS_ACTIVE)
+            .withDateEstablished(DATE_ESTABLISHED)
             .withStartDate(startDate)
             .build();
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
         Test.startTest();
         insert rd;
-        rd.npe03__Amount__c = 250;
+        rd.npe03__Amount__c = 100;
         rd.InstallmentFrequency__c = 2;
         update rd;
         Test.stopTest();
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
-        System.assertEquals(2, rdSchedules.size(), 'Should be 2 schedules.');
-
-        System.assertEquals(startDate, rdSchedules[0].StartDate__c, 'Original start date should be 10/5/2019.');
-        System.assertEquals(startDate.addDays(-1), rdSchedules[0].EndDate__c, 'Original end date should be 10/4/2019.');
-        System.assertEquals(startDate, rdSchedules[1].StartDate__c, 'Updated start date should be 10/5/2019.');
-        System.assertEquals(null, rdSchedules[1].EndDate__c, 'Updated end date should be null.');
-        System.assertEquals(100, rdSchedules[0].InstallmentAmount__c, 'Original amount should equal 100.');
-        System.assertEquals(250, rdSchedules[1].InstallmentAmount__c, 'Updated amount should equal 250.');
+        System.assertEquals(2, rdSchedules.size(), 'Should be 2 schedules');
+        System.assertEquals(startDate, rdSchedules[0].StartDate__c, 'Original schedule Start Date should be unchanged');
+        System.assertEquals(startDate, rdSchedules[1].StartDate__c, 'New schedule Start Date should be original schedule Start Date');
+        System.assertEquals(startDate.addDays(-1), rdSchedules[0].EndDate__c, 'Original schedule End Date should be changed so the schedule is inactive');
+        System.assertEquals(null, rdSchedules[1].EndDate__c, 'New schedule End Date should be undefined');
+        System.assertEquals(50, rdSchedules[0].InstallmentAmount__c, 'Original amount should equal 50');
+        System.assertEquals(100, rdSchedules[1].InstallmentAmount__c, 'Updated amount should equal 100');
     }
 
     /****
@@ -382,15 +390,15 @@ private with sharing class RD2_RecurringDonations_TEST {
         update rd;
         Test.stopTest();
 
-        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(Date.today(), rd2.StartDate__c, 'Next donation date should be today()');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(Date.today(), rd.StartDate__c, 'Next donation date should be today()');
 
         List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
         System.assertEquals(2, rdSchedules.size(), 'Should be 2 schedules.');
 
-        System.assertEquals(startDate, rdSchedules[0].StartDate__c, 'Original start date should be 11/1/2019.');
-        System.assertEquals(Date.today().addDays(-1), rdSchedules[0].EndDate__c, 'Original end date should be yesterday.');
-        System.assertEquals(Date.today(), rdSchedules[1].StartDate__c, 'Updated start date should be today.');
+        System.assertEquals(startDate, rdSchedules[0].StartDate__c, 'Original schedule start date should be same as start date on recurring donation.');
+        System.assertEquals(Date.today().addDays(-1), rdSchedules[0].EndDate__c, 'Original schedule end date should be yesterday.');
+        System.assertEquals(Date.today(), rdSchedules[1].StartDate__c, 'Updated schedule start date should be today.');
         System.assertEquals(null, rdSchedules[1].EndDate__c, 'Updated end date should be null.');
         System.assertEquals(100, rdSchedules[0].InstallmentAmount__c, 'Original amount should equal 100.');
         System.assertEquals(250, rdSchedules[1].InstallmentAmount__c, 'Updated amount should equal 250.');
