@@ -4831,7 +4831,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Page-level error message header when Advanced Mapping off</shortDescription>
+        <shortDescription>Page-level error message header when Advanced Mapping and Gift Entry are off</shortDescription>
         <value>Enable Advanced Mapping and Gift Entry</value>
     </labels>
     <labels>
