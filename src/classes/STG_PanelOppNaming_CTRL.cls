@@ -59,6 +59,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
         Contact_Donations,
         Organization_Donations
     }
+
     /*********************************************************************************************************
     * @description A map of all Opportunity Naming Settings by Name.
     */
