@@ -55,7 +55,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     connectedCallback() {
         this.checkPageAccess();
-        if(this.isAccessible){
+        if (this.isAccessible) {
             if (this.batchId) {
                 // When the form is being used for Batch Gift Entry, the Form Template JSON
                 // uses the @wire service below to retrieve the Template using the Template Id
@@ -68,7 +68,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             GeFormService.getFormTemplate().then(response => {
                 // read the template header info
-                if(response !== null && typeof response !== 'undefined') {
+                if (response !== null && typeof response !== 'undefined') {
                     this.formTemplate  = response.formTemplate;
                     this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
@@ -196,14 +196,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     if (exceptionWrapper.exceptionType !== null && exceptionWrapper.exceptionType !== '') {
 
                         // Check to see if there are any field level errors
-                        if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined || Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
+                        if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined ||
+                            Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
 
-                            // If there are no specific fields the error has to go to, put it on the page level error message.
+                            // If there are no specific fields the error has to go to,
+                            // put it on the page level error message.
                             for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
-                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
+                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
+                                    {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
                             }
                         } else {
-                            // If there is a specific field that each error is supposed to go to, show it on the field on the page.
+                            // If there is a specific field that each error is supposed to go to,
+                            // show it on the field on the page.
                             // If it is not on the page to show, display it on the page level.
                             for (const key in exceptionWrapper.DMLErrorFieldNameMapping) {
 
@@ -235,12 +239,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                                 if (hiddenFieldList.length > 0) {
                                     let combinedFields = hiddenFieldList.join(', ');
 
-                                    this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: key, errorMessage: errorMessage + ' [' + combinedFields + ']'}];
+                                    this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
+                                        {index: key, errorMessage: errorMessage + ' [' + combinedFields + ']'}];
                                 }
                             }
                         }
                     } else {
-                        pageLevelErrorMessageList = [...pageLevelErrorMessageList, {index: 0, errorMessage: exceptionWrapper.errorMessage}];
+                        pageLevelErrorMessageList = [...pageLevelErrorMessageList,
+                            {index: 0, errorMessage: exceptionWrapper.errorMessage}];
                     }
 
                     // focus either the page level or field level error messsage somehow
@@ -258,7 +264,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if(invalidFields.length > 0){
             let fieldListAsString = invalidFields.join(', ');
-            showToast('Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
+            showToast('Invalid Form',
+                'The following fields are required: ' + fieldListAsString, 'error');
         }
 
         return invalidFields.length === 0;
