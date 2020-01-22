@@ -5,7 +5,7 @@ import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
-import { geDonationTypeErrorLabel, geErrorDonorTypeValidationSingle } from 'c/geLabelService';
+import geLabelService from 'c/geLabelService';
 import { CONTACT1, ACCOUNT1,
         DONATION_DONOR_FIELDS, DONATION_DONOR,
         showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
@@ -304,7 +304,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return false;
         }
         
-        // is donation donor valid
+        // returns true when error message was generated
         return this.getDonorTypeValidationError( miniFieldWrapper, sectionsList );
     }
 
@@ -321,9 +321,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // donation donor validation depending on selection and field presence
         let isError = (di_record.donationDonorValue===DONATION_DONOR.isAccount1) ?
-                        di_record.isAccount1Present && di_record.isAccount1ImportedEmpty && di_record.isAccount1NameEmpty :
+                        di_record.isAccount1ImportedEmpty && di_record.isAccount1NameEmpty :
                             di_record.donationDonorValue===DONATION_DONOR.isContact1 &&
-                                di_record.isContact1Present && di_record.isContact1ImportedEmpty && di_record.isContact1LastNameEmpty;
+                                di_record.isContact1ImportedEmpty && di_record.isContact1LastNameEmpty;
 
         // process error notification when error
         if (isError) {
@@ -347,9 +347,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // init array replacement for custom label
         let validationErrorLabelReplacements = [ diRecord.donationDonorValue, diRecord.donationDonorLabel ];
-        const sizeErrorReplacementArray = 3;
 
-        if (diRecord.donationDonorValue === DONATION_DONOR.isAccount1){
+        if (diRecord.donationDonorValue === DONATION_DONOR.isAccount1) {
             if (diRecord.isAccount1ImportedPresent)
                 validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label);
             if (diRecord.isAccount1NamePresent)
@@ -361,10 +360,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label);
         }
 
-        // set message using replacement array - set label depending fields present on template
-        return validationErrorLabelReplacements.length === sizeErrorReplacementArray ?
-                    format(geErrorDonorTypeValidationSingle, validationErrorLabelReplacements) :
-                        format(geDonationTypeErrorLabel, validationErrorLabelReplacements);
+        // set label depending fields present on template
+        let label;
+        switch (validationErrorLabelReplacements.length) {
+            case 2: label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeInvalid; break;
+            case 3: label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeValidationSingle; break;
+            case 4: label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeValidation; break;
+            default: label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeInvalid;
+        }
+
+        // set message using replacement array
+        return  format( label, validationErrorLabelReplacements);
     }
 
     /**
@@ -406,9 +412,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             isAccount1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]),
             isAccount1NamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]),
             isContact1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]),
-            isContact1LastNamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]),
-            isContact1Present: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]) || isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]),
-            isAccount1Present: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]) || isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField])
+            isContact1LastNamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField])
         };
         return dataImportRecord;
     }
