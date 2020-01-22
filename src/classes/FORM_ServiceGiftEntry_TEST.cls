@@ -44,11 +44,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldReturnCorrectNumberOfRecords() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template0 = createSampleTemplate();
+        FORM_Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
         fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
 
-        FORM_Template template1 = createSampleTemplate();
+        FORM_Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON1 = JSON.serialize(template1);
         fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
 
@@ -62,11 +62,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldDeleteFormTemplatesWithGivenIds() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template0 = createSampleTemplate();
+        FORM_Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
         fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
 
-        FORM_Template template1 = createSampleTemplate();
+        FORM_Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON1 = JSON.serialize(template1);
         fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
 
@@ -87,7 +87,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldCommitAndRetrieveTemplate() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template = createSampleTemplate();
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = template.name;
 
@@ -109,7 +109,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldRetrieveColumnHeaderBasedOnListName() {
 
         Test.startTest();
-        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        Custom_Column_Header__c[] allHeaders = UTIL_UnitTestData_TEST.createSampleColumnHeaders();
         insert allHeaders;
         Test.stopTest();
 
@@ -127,7 +127,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldPersistOnlyTheSelectedColumnHeadersForTheGivenList() {
 
         Test.startTest();
-        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        Custom_Column_Header__c[] allHeaders = UTIL_UnitTestData_TEST.createSampleColumnHeaders();
         insert allHeaders;
         Test.stopTest();
 
@@ -161,7 +161,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldRetrieveRecordsBasedOnAQueryString() {
 
         Test.startTest();
-        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        Custom_Column_Header__c[] allHeaders = UTIL_UnitTestData_TEST.createSampleColumnHeaders();
         insert allHeaders;
         Test.stopTest();
 
@@ -184,7 +184,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldReturnFalseForExistingFormTemplateName() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template = createSampleTemplate();
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
         fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
 
@@ -207,80 +207,32 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     }
 
     @isTest
-    static void shouldRetrieveTemplateWithCRUDErrors() {
-        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(false, 'CRUD');
-        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,
+    static void shouldRetrieveSGETemplateWithPermission() {
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true);
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
+            UTIL_Permissions.class,
             utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
-        
-        FORM_Template template = createSampleTemplate();
 
-        createSampleFieldMappings();
-        
-        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template,
-            new Set<FORM_PermissionValidator.AccessLevel> {
-                FORM_PermissionValidator.AccessLevel.VALIDATE_READ,FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+        FORM_Service fs = new FORM_Service();
 
-        System.assert(String.isNotBlank(updatedTemplate.permissionErrors), 'There should be permission errors   when the user has no CRUD access to an object.');
-        System.assertEquals(updatedTemplate.permissionErrorType, 'CRUD', 'The permission error type should be   \'CRUD\' when the user does not have CRUD permissions.');
-        System.assert(updatedTemplate.permissionErrors.contains('Account'), 'The permissions error should       contain the Account object, which the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Contact'), 'The permissions error should       contain the Contact object, which the user does not have access to.');
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        giftEntrySettings.Default_Single_Gift_Entry_Template__c = 'Sample Template';
+        insert giftEntrySettings;
+        
+        String templateJSON = JSON.serialize(template);
+        fs.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+        
+        UTIL_UnitTestData_TEST.createSampleFieldMappings();
+        
+        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
+
+        System.assert(String.isBlank(updatedTemplate.permissionErrors), 'There should be no permission errors     when the user has all required CRUD and FLS permissions.');
+        System.assertEquals(updatedTemplate.permissionErrorType, null, 'The template should not have a            permission error type if the user has all required CRUD and FLS permissions.');
     }
 
-    @isTest
-    static void shouldRetrieveTemplateWithFLSErrors() {
-        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(false, 'FLS');
-        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,       utilPermissionsMockInstance);
-        UTIL_Permissions.setInstance(utilPermissionsMock);
-        
-        FORM_Template template = createSampleTemplate();
-
-        createSampleFieldMappings();
-        
-        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template,
-            new Set<FORM_PermissionValidator.AccessLevel> {
-                FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                      FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
-
-        System.assert(String.isNotBlank(updatedTemplate.permissionErrors), 'There should be permission errors   when the user has no CRUD access to an object.');
-        System.assertEquals(updatedTemplate.permissionErrorType, 'FLS', 'The permission error type should be    \'FLS\' when the user does not have FLS permissions.');
-        System.assert(updatedTemplate.permissionErrors.contains('Account_1_City'), 'The permissions error       should contain any field the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Account_1_Country'), 'The permissions error    should contain any field the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Account_1_Name'), 'The permissions error       should contain any field the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Contact_1_First_Name'), 'The permissions       error should contain any field the user does not have access to.');
-        System.assert(updatedTemplate.permissionErrors.contains('Contact_1_Last_Name'), 'The permissions        error should contain any field the user does not have access to.');
-    }
-
-    @isTest
-    static void shouldRetrieveTemplateWithPermission() {
-        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true);
-        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,       utilPermissionsMockInstance);
-        UTIL_Permissions.setInstance(utilPermissionsMock);
-        
-        FORM_Template template = createSampleTemplate();
-
-        createSampleFieldMappings();
-        
-        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.checkPermissions(template,
-            new Set<FORM_PermissionValidator.AccessLevel> {
-                FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                      FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
-                FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
-
-        System.assert(String.isBlank(updatedTemplate.permissionErrors), 'There should be no permission errors   when the user has all required CRUD and FLS permissions.');
-        System.assertEquals(updatedTemplate.permissionErrorType, null, 'The template should not have a          permission error type if the user has all required CRUD and FLS permissions.');
-    }
-
-    // Method to create instance of field mappings to use in test data
-    private static void createSampleFieldMappings() {
-        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
-        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
-        dis.Default_Data_Import_Field_Mapping_Set__c =                                                            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
-        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
-
-        BDI_MappingServiceAdvanced.getInstance(
-            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
-    }
     /**************************************************************************************************
     * @description Confirms that a form template used by any Data Import Batch cannot be deleted.
     */
@@ -288,7 +240,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldPreventDeletionOfTemplateInUse() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template = createSampleTemplate();
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
         fs.storeFormTemplate(null,
                 template.name,
@@ -322,63 +274,6 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         System.assert(String.isNotBlank(failure.getMessage()));
         System.assertEquals(1, formTemplates.size(), 'A Form Template in use should not be deleted');
 
-    }
-
-    //Utility method for creating a sample template.
-    public static FORM_Template createSampleTemplate () {
-        
-        FORM_Element field = new FORM_Element('FormField',
-                                        'True',
-                                        null,
-                                        'CustomLabel',
-                                        new String[]{'Account_1_City', 'Account_1_Country', 'Account_1_Name'});
-        
-        FORM_Element widget = new FORM_Element('FormWidget',
-                                            'DisplayRule',
-                                            'ComponentName',
-                                            new String[]{'Contact_1_First_Name', 'Contact_1_Last_Name'});
-        
-        FORM_Element[] elements = new FORM_Element[]{field,widget};
-
-        FORM_Section section = new FORM_Section('SectionLabel',
-                                                'Accordion',
-                                                'Expanded',
-                                                'True',
-                                                elements);
-        
-        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
-                                            new FORM_Section[]{section});
-
-
-        FORM_Template template = new FORM_Template('Sample Template',
-                                                'This is the description.',
-                                                '1.0',
-                                                layout);
-        return template;
-    }
-
-    //Utility method for creating sample column headers.
-    public static Custom_Column_Header__c[] createSampleColumnHeaders () {
-        
-        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
-        columnHeader.Name = 'sampleColumnHeader';
-        columnHeader.List_Name__c = 'Sample List';
-        columnHeader.Index__c = 0;
-        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
-
-        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
-        columnHeader2.Name = 'sampleColumnHeader2';
-        columnHeader2.List_Name__c = 'Sample List 2';
-        columnHeader2.Index__c = 0;
-        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
-
-        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
-        columnHeader3.Name = 'sampleColumnHeader3';
-        columnHeader3.List_Name__c = 'Sample List 2';
-        columnHeader3.Index__c = 1;
-        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
-
-        return new Custom_Column_Header__c[] { columnHeader, columnHeader2, columnHeader3 };
     }
 
     /**********************************************************************************************

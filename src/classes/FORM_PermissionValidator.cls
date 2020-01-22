@@ -10,6 +10,7 @@ public with sharing class FORM_PermissionValidator {
     FORM_Template template;
     Set<AccessLevel> accessLevels;
     UTIL_Permissions permissionsService = UTIL_Permissions.getInstance();
+    UTIL_Describe describeService = UTIL_Describe.getInstance();
     
     public FORM_PermissionValidator(FORM_Template template, Set<AccessLevel> accessLevels) {
         this.template = template;
@@ -19,7 +20,7 @@ public with sharing class FORM_PermissionValidator {
     /*******************************************************************************************************
     * @description Method for validating CRUD/FLS permissions for a template
     * @param template - the template to use for CRUD/FLS validation
-    * @param accessLevels - a collection of CRUD/FLS validations to perform on the template (i.e. CREATE/UPDATE/READ)
+    * @param accessLevels - a collection of CRUD/FLS validations to perform on the template (i.e. CREATE/       UPDATE/READ)
     */
     public FORM_Template validateTemplate() {
         Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
@@ -62,7 +63,7 @@ public with sharing class FORM_PermissionValidator {
     private Boolean isValid(String objDevName, Set<AccessLevel> accessLevels) {
 
         SObjectType objType = ((SObject) Type.forName(objDevName).newInstance()).getSObjectType();
-
+        System.debug('OBJECT TYPE == ' + objType);
         if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
             && !permissionsService.canCreate(objType))
             || (accessLevels.contains(AccessLevel.VALIDATE_READ)
@@ -84,8 +85,8 @@ public with sharing class FORM_PermissionValidator {
     */
     private Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
 
-        SObjectType objType = UTIL_Describe.getSObjectType(objDevName);
-        SObjectField objField = objType.getDescribe().fields.getMap().get(fieldDevName);
+        SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
+        SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
         Set<SObjectField> fields = new Set<SObjectField>{objField};
 
         if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
@@ -93,12 +94,31 @@ public with sharing class FORM_PermissionValidator {
             || (accessLevels.contains(AccessLevel.VALIDATE_READ)
             && !permissionsService.canRead(fields))
             || (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-            && !permissionsService.canUpdate(fields))
+            && !isValidateUpdateException(objectType, objField))
         ) {
             return false;
         } else {
             return true;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Performs FLS update validation, taking master-detail relationships and campaign lookups      into account
+    * @param objectType - SObjectType of the object
+    * @param field - SObjectField type to validate
+    */
+    private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field) {
+        if (describeService.isMasterDetailField(field)) {
+            return true;
+        } else {
+            if (objectType == CampaignMember.SObjectType
+                    && field == CampaignMember.CampaignId) {
+                return true;
+            } else if (permissionsService.canUpdate(new Set<SObjectField>{field})) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /*******************************************************************************************************
