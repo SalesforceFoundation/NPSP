@@ -109,7 +109,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             } else {
                 this.sections = formTemplate.layout.sections;
             }
-            this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+
+            if (this.batchId) {
+                this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+            }
         }
     }
 

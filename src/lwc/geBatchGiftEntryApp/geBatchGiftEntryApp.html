@@ -1,9 +1,12 @@
 <template>
-    <c-ge-batch-gift-entry-header
-            batch-id={recordId}
-            onbatchdryrun={handleBatchDryRun}></c-ge-batch-gift-entry-header>
-
-    <br/>
+    <template if:true={isBatchMode}>
+        <c-ge-batch-gift-entry-header
+                batch-id={recordId}
+                onbatchdryrun={handleBatchDryRun}
+                onedit={handleEditBatch}>
+        </c-ge-batch-gift-entry-header>
+        <br/>
+    </template>
 
     <c-ge-form-renderer
             batch-id={recordId}
@@ -11,8 +14,10 @@
             onsectionsretrieved={handleSectionsRetrieved}>
     </c-ge-form-renderer>
 
-    <c-ge-batch-gift-entry-table
-            batch-id={recordId}
-            onloaddata={handleLoadData}>
-    </c-ge-batch-gift-entry-table>
+    <template if:true={isBatchMode}>
+        <c-ge-batch-gift-entry-table
+                batch-id={recordId}
+                onloaddata={handleLoadData}>
+        </c-ge-batch-gift-entry-table>
+    </template>
 </template>

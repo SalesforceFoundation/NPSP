@@ -50,7 +50,7 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
                 break;
             case EDIT_BUTTON_LABEL:
                 //TODO:load batch into new hge batch creation/editing wizard when ready
-                this.navigateToBatchEditPage();
+                this.editBatch();
                 break;
         }
     }
@@ -77,5 +77,11 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
                 actionName: 'edit'
             }
         });
+    }
+
+    editBatch() {
+        this.dispatchEvent(new CustomEvent(
+            'edit', {detail: this.batchId}
+        ));
     }
 }

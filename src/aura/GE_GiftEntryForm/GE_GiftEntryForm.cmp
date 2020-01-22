@@ -1,0 +1,14 @@
+<aura:component
+        implements="force:hasSObjectName,force:hasRecordId,flexipage:availableForAllPageTypes"
+        access="global"
+        description="Aura component that wraps the geBatchGiftEntryApp LWC component to
+                     show modals using the overlayLibrary.">
+
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+
+    <c:geBatchGiftEntryApp aura:id="batchGiftEntryApp"
+                           recordId="{!v.recordId}"
+                           sObjectName="{!v.sObjectName}"
+                           oneditbatch="{!c.handleEditBatch}"/>
+
+</aura:component>

@@ -60,6 +60,9 @@ export default class geHome extends LightningElement {
         if (queryParameters && queryParameters.c__view) {
             this.view = queryParameters.c__view;
         }
+        if (this.view === SINGLE_GIFT_ENTRY) {
+            this.dispatchEvent(new CustomEvent('newsinglegift'));
+        }
     }
 
     /*******************************************************************************
@@ -79,6 +82,8 @@ export default class geHome extends LightningElement {
             this.cloneFormTemplate = event.detail.clone;
         } else if (this.view === SINGLE_GIFT_ENTRY && event.detail.donorTypeId) {
             this.donorId = event.detail.donorTypeId;
+        } else if (this.view === SINGLE_GIFT_ENTRY) {
+            this.dispatchEvent(new CustomEvent('newsinglegift'));
         } else {
             this.formTemplateId = undefined;
             this.donorId = undefined;

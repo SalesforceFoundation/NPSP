@@ -727,6 +727,7 @@
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
         <members>GE_GiftEntry</members>
+        <members>GE_GiftEntryForm</members>
         <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
