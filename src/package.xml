@@ -272,6 +272,7 @@
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_BatchGiftEntryController</members>
+        <members>GE_DefaultTemplate</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_LookupController</members>
@@ -3345,6 +3346,9 @@
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
+        <members>rdActiveSchedule</members>
+        <members>rdScheduleVisualizer</members>
+        <members>util</members>
         <members>utilCommon</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
@@ -3353,9 +3357,6 @@
         <members>utilInput</members>
         <members>utilPageHeader</members>
         <members>utilPageLevelMessage</members>
-        <members>rdActiveSchedule</members>
-        <members>rdScheduleVisualizer</members>
-        <members>util</members>
         <members>utilPlatformEventListener</members>
         <members>utilSearchableCombobox</members>
         <members>utilStencil</members>
