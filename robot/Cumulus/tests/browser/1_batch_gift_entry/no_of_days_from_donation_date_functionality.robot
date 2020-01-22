@@ -40,10 +40,10 @@ Match Based on Number of Days from Donation Date Functionality
     Wait Until Element Is Visible    text:All Gifts
     # Verify that the gift matched to existing opportunity and updated it to closed won status with gift date and payment is paid
     Go To Record Home    &{opp}[Id]
-    Confirm Field Value    Amount    contains    $100.00    
+    Navigate To And Validate Field Value    Amount    contains    $100.00
     ${date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Field Value    Close Date    contains    ${date}    
-    Confirm Field Value    Stage    contains    Closed Won    
+    Navigate To And Validate Field Value    Close Date    contains    ${date}
+    Navigate To And Validate Field Value    Stage    contains    Closed Won
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    ${pay_no}

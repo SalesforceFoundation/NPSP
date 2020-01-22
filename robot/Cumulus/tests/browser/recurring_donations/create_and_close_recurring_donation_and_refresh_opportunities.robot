@@ -60,4 +60,4 @@ Create and Close a Recurring Donation and Refresh Opportunities
     @{opportunity3} =            API Query Installment          &{recurringdonation}[Id]    (3)
     Go To Record Home            ${opportunity3}[0][Id]
     Select Tab                   Details
-    Confirm Field Value          Stage                          contains                    Closed Lost    
+    Navigate To And Validate Field Value          Stage                          contains                    Closed Lost

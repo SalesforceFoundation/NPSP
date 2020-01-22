@@ -49,6 +49,6 @@ Create Donation from a Contact and Delete Opportunity
     Select Tab                           Details
 
     # Perform Validations
-    Scroll To Validate Field Value   Membership Information    Total Gifts            contains         $0.00
-    Scroll To Validate Field Value   Membership Information    Total Number of Gifts  contains           0
+    Navigate To And Validate Field Value   Total Gifts            contains         $0.00    Membership Information
+    Navigate To And Validate Field Value   Total Number of Gifts  contains           0      Membership Information
 

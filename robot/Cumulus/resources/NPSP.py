@@ -264,12 +264,13 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()   
         
         
-    def scroll_to_validate_field_value(self, section, field,status,value):
+    def navigate_to_and_validate_field_value(self, field,status,value,section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
         """
-        section="text:"+section
-        self.selenium.scroll_element_into_view(section)
+        if section is not None:
+            section="text:"+section
+            self.selenium.scroll_element_into_view(section)
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
         for i in locators:
@@ -450,9 +451,10 @@ class NPSP(SalesforceRobotLibraryBase):
         else :    
             self.salesforce._populate_field(locator, value)
         
-    def validate_occurence_for(self,title,value):
-        self.select_tab("Related")
-        self.salesforce.load_related_list(title)
+    def validate_field_value_equals(self,value,title=None):
+        if title is not None:
+            self.select_tab("Related")
+            self.salesforce.load_related_list(title)
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
         actual_value=self.selenium.get_webelement(locator).text
         exp_value="("+value+")"

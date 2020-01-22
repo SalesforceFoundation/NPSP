@@ -56,8 +56,8 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
 
     # Perform the below Validations
 
-    Scroll To Validate Field Value         Membership Information    Total Gifts               contains          $150.00
-    Scroll To Validate Field Value         Membership Information    Total Number of Gifts     contains          2
+    Navigate To And Validate Field Value         Total Gifts               contains          $150.00    Membership Information
+    Navigate To And Validate Field Value         Total Number of Gifts     contains          2          Membership Information
 
     # Run the batch process to obtain all the soft credits
     Run Donations Batch Process
@@ -66,9 +66,9 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
     ...                                    Contact
     ...                                    object_id=${data}[contact1][Id]
 
-    Scroll To Validate Field Value     Soft Credit Total          Total Gifts             contains      $100.00
-    Scroll To Validate Field Value     Soft Credit Total          Total Number of Gifts   contains      1
+    Navigate To And Validate Field Value     Total Gifts              contains     $100.00  Soft Credit Total
+    Navigate To And Validate Field Value     Total Number of Gifts    contains     1    Soft Credit Total
 
-    Scroll To Validate Field Value     Household Donation Info    Soft Credit Total       contains      $50.00
-    Scroll To Validate Field Value     Household Donation Info    Total Number of Gifts   contains      1
+    Navigate To And Validate Field Value     Soft Credit Total        contains      $50.00  Household Donation Info
+    Navigate To And Validate Field Value     Total Number of Gifts    contains      1       Household Donation Info
 

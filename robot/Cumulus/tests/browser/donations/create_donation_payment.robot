@@ -18,7 +18,9 @@ Setup Test Data
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
-
+${opp_name}  Automationtest $100 donation
+${Amount}  100
+${Stage_Type}  Closed Won
 
 *** Test Cases ***
 
@@ -33,15 +35,24 @@ Create Donation and Opportunity and Create Payment Manually
 
     Click Object Button                             New
     Select Record Type                              Donation
+    Wait For Modal                                  New                       Opportunity: Donation
+    # Create a new Opportunity from the UI
 
-    Create Opportunities                            Sravani $100 donation
-    ...                                             ${data}[contact][LastName] Household
-    ...                                             Closed Won
+    Populate Modal Form
+    ...                                             Stage=${Stage_Type}
+    ...                                             Opportunity Name=${opp_name}
+    ...                                             Account Name=${data}[contact][LastName] Household
+    ...                                             Amount=${Amount}
+    ...                                             Do Not Automatically Create Payment=checked
+    Select Value From Dropdown                      Stage    ${Stage_Type}
+    Open Date Picker                                Close Date
+    Pick Date                                       Today
+    Click Modal Button                              Save
 
     Save Current Record ID For Deletion             Opportunity
     Current Page Should Be                          Detail                                  Opportunity
 
-    Validate Occurence For                          Payments                                0
+    Validate Field Value Equals                     0                                       Payments
 
     #Make A New Payment
 
@@ -55,7 +66,7 @@ Create Donation and Opportunity and Create Payment Manually
     Pick Date                                       Today
     Click Modal Button                              Save
 
-    Validate Occurence For                          Payments                                1
+    Validate Field Value Equals                     1                                       Payments
 
     Go To Page                                      Details
     ...                                             Contact
@@ -63,6 +74,6 @@ Create Donation and Opportunity and Create Payment Manually
 
     #Perform Validations
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Scroll To Validate Field Value    Donation Totals      Last Gift Date           contains       ${opp_date}
-    Scroll To Validate Field Value    Soft Credit Total    Total Gifts              contains       $100.00
-    Scroll To Validate Field Value    Soft Credit Total    Total Number of Gifts    contains       1
+    Navigate To And Validate Field Value    Last Gift Date           contains       ${opp_date}          Donation Totals
+    Navigate To And Validate Field Value    Total Gifts              contains       $100.00              Soft Credit Total
+    Navigate To And Validate Field Value    Total Number of Gifts    contains       1                    Soft Credit Total
