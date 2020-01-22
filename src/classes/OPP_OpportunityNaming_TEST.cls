@@ -293,7 +293,6 @@ private class OPP_OpportunityNaming_TEST
         );
 
         insert ons;
-        System.debug('details:' + ons);
 
         Account acc = new Account(Name='accname');
         insert acc;
@@ -338,6 +337,84 @@ private class OPP_OpportunityNaming_TEST
     }
 
     /*******************************************************************************************************
+    * @description Verify if opportunity naming format updates when amount is updated and when refresh name
+    * button is clicked when logged in user language is not English.
+    ********************************************************************************************************/
+    @isTest
+    public static void shouldUpdateOppNameWhenAmountIsUpdatedForNonEnglishUser() {
+        Opportunity queryOpp;
+
+        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} ',
+            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Contact_Donations.name()
+        );
+
+        insert ons;
+
+        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
+
+        Contact con = new Contact(LastName='conname');
+        insert con;
+
+        Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
+        //spanish language users to use for opp name formatting
+        User spanishLanguageUser = new User(
+            UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
+            Email = 'spanishlanguageuser@testorg.com',
+            Alias = 'spanis',
+            ProfileId = standardProfile.Id,
+            LastName = 'Testing',
+            LanguageLocaleKey = 'es',
+            LocaleSidKey = 'es',
+            EmailEncodingKey = 'UTF-8',
+            TimeZoneSidKey = 'America/Los_Angeles'
+        );
+
+
+        System.runAs(spanishLanguageUser) {
+            Opportunity opp = new Opportunity(
+            AccountId = getContact().AccountId,
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Name='temp',
+            Amount=8,
+            CloseDate = CLOSE_DATE,
+            npe01__Contact_Id_for_Role__c = con.id
+            );
+
+            insert opp;
+
+            List<Opportunity> oppCreated = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE Id = :opp.id];
+            String oppName = 'conname';
+            oppName += ' ' + '$8';
+            DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
+            oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
+            System.assertEquals(oppName, oppCreated[0].Name, 'The name should be calculated based on the setting.');
+
+        }
+
+        queryOpp = [SELECT Id, Name, RecordType.Name, Amount, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :getContact().accountId Limit 1];
+        queryOpp.Amount = 10;
+        update queryOpp;
+
+        ApexPages.StandardController sc = new ApexPages.StandardController(queryOpp);
+        OPP_OpportunityNamingBTN_CTRL ctrl = new OPP_OpportunityNamingBTN_CTRL(sc);
+
+        PageReference pageRef = Page.OPP_OpportunityNamingBTN;
+        pageRef.getParameters().put('id', String.valueOf(queryOpp.Id));
+        Test.setCurrentPage(pageRef);
+
+        ctrl.buttonClick();
+
+        String oppName = 'conname';
+        oppName += ' ' + '$10';
+        DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
+        oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
+        System.assertEquals(oppName, queryOpp.Name, 'The name should be updated after the refresh name button is clicked.');
+
+    }
+
+    /*******************************************************************************************************
     * @description Verify if opportunity naming format works when batch process is run and existing
     * opportunity is updated when logged in user language is not English.
     ********************************************************************************************************/
@@ -376,9 +453,8 @@ private class OPP_OpportunityNaming_TEST
             insert opp;
 
             List<Opportunity> oppCreated = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE Id = :opp.id];
-             System.debug('opportunity before name settings:' + OppCreated);
             String oppName = 'temp';
-            System.assertEquals(oppName, oppCreated[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+            System.assertEquals(oppName, oppCreated[0].Name, 'The name should not be formatted as no settings are there');
 
         }
 
@@ -392,19 +468,16 @@ private class OPP_OpportunityNaming_TEST
 
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
 
-        //Run the batch to check opp naming works for existing opportunity
         Test.startTest();
         STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
         ctrl.runBatch();
         Test.stopTest();
 
         queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :getContact().accountId];
-        System.debug('opportunity after name settings:' + queryOpp);
         String oppName = 'conname';
         DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
         oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
-        System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
-
+        System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated after the batch is run.');
 
     }
 
