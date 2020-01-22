@@ -23,7 +23,6 @@ export default class utilDualListbox extends LightningElement {
     @api max;
     @api showModalFooter = false;
     @api dedicatedListenerEventName;
-    @api targetComponentName;
 
     handleChange = (event) => {
         this.values = event.detail.value;
@@ -35,7 +34,7 @@ export default class utilDualListbox extends LightningElement {
     */
     handleSave() {
         const payload = { values: this.values, name: this.name };
-        const detail = { receiverComponent: this.targetComponentName, action: 'save', payload: payload };
+        const detail = { action: 'save', payload: payload };
         if (this.dedicatedListenerEventName) {
             fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
         } else {

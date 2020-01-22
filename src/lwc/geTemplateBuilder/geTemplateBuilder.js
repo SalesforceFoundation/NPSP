@@ -31,7 +31,7 @@ import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Sett
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
-const GIFT_ENTRY = 'Gift_Entry';
+const LANDING_PAGE_TAB_NAME = 'GE_Templates';
 const SORTED_BY = 'required';
 const SORT_ORDER = 'desc';
 const PICKLIST = 'Picklist';
@@ -63,11 +63,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         BATCH_HEADER_TAB: this.CUSTOM_LABELS.geTabBatchHeader
     });
 
-    @api formTemplateRecordId;
-
+    formTemplateRecordId;
     existingFormTemplateName;
     currentNamespace;
-    @api isClone = false;
     @track isLoading = true;
     @track isAccessible = true;
     @track activeTab = this.TabEnums.INFO_TAB;
@@ -130,6 +128,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         return this.currentNamespace ? `${this.currentNamespace}__` : '';
     }
 
+    get listViewCustomTabApiName() {
+        return this.currentNamespace ? `${this.namespace + LANDING_PAGE_TAB_NAME}` : LANDING_PAGE_TAB_NAME;
+    }
+
     init = async () => {
         try {
             const dataImportSettings = await getDataImportSettings();
@@ -140,13 +142,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.isLoading = false;
 
             } else if (dataImportSettings[fieldMappingApiName] === ADVANCED_MAPPING) {
+                await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
                 this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
+                // Check if we have query parameters in the url
                 const queryParameters = getQueryParameters();
-                // If we have no template record id, check if there's a record id in the url
-                if (!this.formTemplateRecordId) {
-                    this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
-                }
+                this.formTemplateRecordId = queryParameters.c__recordId;
 
                 if (this.formTemplateRecordId) {
                     let formTemplate = await retrieveFormTemplateById({
@@ -172,7 +173,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 }
 
                 // Clear out form template record id if cloning after retrieving all relevant data
-                if (queryParameters.c__clone || this.isClone) {
+                if (queryParameters.c__clone) {
                     this.formTemplateRecordId = null;
                 }
 
@@ -972,9 +973,41 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
+    * @description Navigates to the list view GE_Templates tab.
+    */
+    handleCancel() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: this.listViewCustomTabApiName
+            }
+        });
+    }
+
+    /*******************************************************************************
+    * @description Navigates to a record detail page by record id.
+    *
+    * @param {string} formTemplateRecordId: Form_Template__c record id.
+    */
+    navigateToRecordViewPage(formTemplateRecordId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: formTemplateRecordId,
+                actionName: 'view'
+            }
+        });
+    }
+
+    /*******************************************************************************
     * @description Navigates to Gift Entry landing page.
     */
     navigateToLandingPage() {
-        dispatch(this, 'changeview', { view: GIFT_ENTRY });
+        this[NavigationMixin.Navigate]({
+            type: 'standard__navItemPage',
+            attributes: {
+                apiName: this.listViewCustomTabApiName
+            }
+        });
     }
 }

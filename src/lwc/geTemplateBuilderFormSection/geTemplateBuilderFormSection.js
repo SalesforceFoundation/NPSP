@@ -48,22 +48,7 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     */
     handleEditFormSection(event) {
         event.stopPropagation();
-        const detail = {
-            componentProperties: {
-                modalData: {
-                    section: this.formSection,
-                    action: 'edit',
-                    receiverComponent: 'ge-template-builder',
-                },
-                dedicatedListenerEventName: 'geTemplateBuilderSectionModalBodyEvent',
-            },
-            modalProperties: {
-                componentName: 'geTemplateBuilderSectionModalBody',
-                header: this.CUSTOM_LABELS.geHeaderFormFieldsModalSectionSettings,
-                showCloseButton: true,
-            }
-        };
-        //const detail = { componentName: 'ge-templates', action: 'edit', section: this.formSection };
+        const detail = { action: 'edit', section: this.formSection };
         dispatch(this, 'togglemodal', detail);
     }
 

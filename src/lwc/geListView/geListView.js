@@ -3,6 +3,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuilder';
 import { format, sort, deepClone, checkNestedProperty } from 'c/utilCommon';
 import LibsMoment from 'c/libsMoment';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.upsertCustomColumnHeaders';
 import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
@@ -32,6 +33,7 @@ import DATA_IMPORT_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/DataImportBa
 
 const TEMPLATES = 'Templates';
 const BATCHES = 'Batches';
+const TEMPLATE_BUILDER_TAB_NAME = 'GE_Template_Builder';
 const SLDS_ICON_CATEGORY_STANDARD = 'standard';
 const DEFAULT_INCREMENT_BY = 10;
 const DEFAULT_LIMIT = 10;
@@ -581,7 +583,10 @@ export default class geListView extends LightningElement {
         let url;
 
         if (this.objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
-            url = `/lightning/n/npsp__GE_Gift_Entry?c__view=Template_Builder&c__formTemplateRecordId={0}`;
+            const builderTabApiName =
+                TemplateBuilderService.alignSchemaNSWithEnvironment(TEMPLATE_BUILDER_TAB_NAME);
+
+            url = `/lightning/n/${builderTabApiName}?c__recordId={0}`;
         } else {
             url = `/lightning/r/${this.objectApiName}/{0}/view`;
         }
@@ -644,8 +649,7 @@ export default class geListView extends LightningElement {
                 sourceLabel: this.CUSTOM_LABELS.geLabelCustomTableSourceFields,
                 selectedLabel: this.CUSTOM_LABELS.geLabelCustomTableSelectedFields,
                 showModalFooter: true,
-                dedicatedListenerEventName: 'geGiftEntryModalEvent',
-                targetComponentName: 'ge-templates',
+                dedicatedListenerEventName: 'geGiftEntryModalEvent'
             },
             modalProperties: {
                 componentName: 'utilDualListbox',

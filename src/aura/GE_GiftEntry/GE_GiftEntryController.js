@@ -6,7 +6,6 @@
     * input focus, and tabbing.
     */
     handleShowModal: function (component, event, helper) {
-        component.set('v.isLoading', true);
         const payload = event.getParams('detail');
 
         $A.createComponents([[`c:${payload.modalProperties.componentName}`, payload.componentProperties]],
@@ -18,9 +17,7 @@
                         header: payload.modalProperties.header || '',
                         showCloseButton: payload.modalProperties.showCloseButton || true,
                         cssClass: component.getName() + ' custom-modal ' + payload.modalProperties.cssClass,
-                        closeCallback: payload.modalProperties.closeCallback || function() {
-                            component.set('v.isLoading', false);
-                        },
+                        closeCallback: payload.modalProperties.closeCallback || {},
                         body: modalBody,
                     });
 
@@ -39,13 +36,12 @@
     handleModalEvent: function (component, event, helper) {
         const details = event.getParams('detail');
 
-        if (details) {
-            component.find('giftEntryHome').notify(details);
+        if (details.action === 'save') {
+            component.find('giftEntry').notify(details);
         }
 
         component.get('v.modal').then(modal => {
             modal.close();
-            component.set('v.isLoading', true);
         });
     },
 
@@ -56,7 +52,6 @@
     handleBatchWizardEvent: function (component, event, helper) {
         component.get('v.modal').then(modal => {
             modal.close();
-            component.set('v.isLoading', true);
         });
     }
 })

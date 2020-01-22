@@ -1820,7 +1820,7 @@
         <linkType>url</linkType>
         <masterLabel>New Gift</masterLabel>
         <openType>sidebar</openType>
-        <url>/lightning/n/{!$Setup.Package_Settings__c.Namespace_Prefix__c}GE_Gift_Entry?c__view=Single_Gift_Entry&amp;c__apiName=Contact&amp;c__donorRecordId={!Contact.Id}</url>
+        <url>/lightning/n/npsp__GE_Form_Renderer?c__apiName=Contact&amp;c__recordId={!Contact.Id}</url>
         <protected>false</protected>
     </webLinks>
     <webLinks>
