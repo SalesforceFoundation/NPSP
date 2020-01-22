@@ -20,8 +20,11 @@ const mode = {
 }
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
-    @api donorRecordId = '';
+
+    @api donorRecordId;
+    @api donorApiName;
     @api donorRecord;
+
     fieldNames = [];
     @track formTemplate;
     @track fieldMappings;
@@ -40,7 +43,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api pageLevelErrorMessageList = [];
     @track _dataRow; // Row being updated when in update mode
 
-    @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames'})
+    @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
     wiredGetRecordMethod({ error, data }) {
         if (data) {
             this.donorRecord = data;
@@ -58,20 +61,20 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return;
         }
 
-        // check if there is a record id in the url
-        this.donorRecordId = getQueryParameters().c__recordId;
-        const donorApiName = getQueryParameters().c__apiName;
-
         GeFormService.getFormTemplate().then(response => {
+            // check if there is a record id in the url
+            this.donorRecordId = getQueryParameters().c__donorRecordId;
+            this.donorApiName = getQueryParameters().c__apiName;
+
             // read the template header info
-            if(response !== null && typeof response !== 'undefined') {
-                this.formTemplate  = response.formTemplate;
+            if (response !== null && typeof response !== 'undefined') {
+                this.formTemplate = response.formTemplate;
                 this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
                 // get the target field names to be used by getRecord
-                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, donorApiName);
-            
-                if(isEmpty(this.donorRecordId)) {
+                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, this.donorApiName);
+
+                if (isEmpty(this.donorRecordId)) {
                     // if we don't have a donor record, it's ok to initialize the form now
                     // otherwise the form will be initialized after wiredGetRecordMethod completes
                     this.initializeForm(this.formTemplate);
@@ -104,7 +107,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         recordId: '$batchId',
         fields: FORM_TEMPLATE_FIELD
     })
-    wiredBatch({data, error}) {
+    wiredBatch({ data, error }) {
         if (data) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
         } else if (error) {
@@ -116,7 +119,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         recordId: '$formTemplateId',
         fields: TEMPLATE_JSON_FIELD
     })
-    wiredTemplate({data, error}) {
+    wiredTemplate({ data, error }) {
         if (data) {
             this.loadTemplate(
                 JSON.parse(data.fields[TEMPLATE_JSON_FIELD.fieldApiName].value));
@@ -125,7 +128,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    async loadTemplate(formTemplate){
+    async loadTemplate(formTemplate) {
         // With the change to using a Lookup field to connect a Batch to a Template,
         // we can use getRecord to get the Template JSON.  But the GeFormService
         // component still needs to be initialized with the field mappings, and the
@@ -140,7 +143,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.reset();
 
         // go back to the donor record page
-        if(isNotEmpty(this.donorRecordId)) {
+        if (isNotEmpty(this.donorRecordId)) {
             this.navigateToRecordPage(this.donorRecordId);
         }
     }
@@ -150,13 +153,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
-        if(!this.isFormValid(sectionsList)){
+        if (!this.isFormValid(sectionsList)) {
             return;
         }
 
         // disable the Save button
         event.target.disabled = true;
-        const enableSaveButton = function() {
+        const enableSaveButton = function () {
             this.disabled = false;
         }.bind(event.target);
 
@@ -179,7 +182,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         toggleSpinner();
                         reset();
                     },
-                    error: function() {
+                    error: function () {
                         enableSaveButton();
                         toggleSpinner();
                     }
@@ -205,7 +208,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                             // If there are no specific fields the error has to go to, put it on the page level error message.
                             for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
-                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
+                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, { index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex] }];
                             }
                         } else {
                             // If there is a specific field that each error is supposed to go to, show it on the field on the page.
@@ -240,28 +243,28 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                                 if (hiddenFieldList.length > 0) {
                                     let combinedFields = hiddenFieldList.join(', ');
 
-                                    this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {index: key, errorMessage: errorMessage + ' [' + combinedFields + ']'}];
+                                    this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, { index: key, errorMessage: errorMessage + ' [' + combinedFields + ']' }];
                                 }
                             }
                         }
                     } else {
-                        pageLevelErrorMessageList = [...pageLevelErrorMessageList, {index: 0, errorMessage: exceptionWrapper.errorMessage}];
+                        pageLevelErrorMessageList = [...pageLevelErrorMessageList, { index: 0, errorMessage: exceptionWrapper.errorMessage }];
                     }
 
                     // focus either the page level or field level error messsage somehow
-                    window.scrollTo(0,0);
-                }) ;
+                    window.scrollTo(0, 0);
+                });
         }
     }
 
-    isFormValid(sectionsList){
+    isFormValid(sectionsList) {
         let invalidFields = [];
         sectionsList.forEach(section => {
             const fields = section.getInvalidFields();
             invalidFields.push(...fields);
         });
 
-        if(invalidFields.length > 0){
+        if (invalidFields.length > 0) {
             let fieldListAsString = invalidFields.join(', ');
             showToast('Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
         }
