@@ -6,7 +6,7 @@ import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate, getPageAccess } from 'c/utilTemplateBuilder';
-import { getQueryParameters, isNotEmpty } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
@@ -53,7 +53,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    connectedCallback() {
+   connectedCallback() {
         this.checkPageAccess();
         if (this.isAccessible) {
             if (this.batchId) {
@@ -138,6 +138,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleCancel() {
         this.reset();
+
+        // go back to the donor record page
+        if(isNotEmpty(this.donorRecordId)) {
+            this.navigateToRecordPage(this.donorRecordId);
+        }
     }
 
     handleSave(event) {

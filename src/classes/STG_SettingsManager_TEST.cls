@@ -594,6 +594,45 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
+    * @description verify the RD2 constants closeactions contains select options when RD2 is enabled
+    * @return void
+    */
+    @isTest
+    private static void shouldReturnEnhancedRDCloseActionsWhenRD2IsEnabled() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        List<RD2_Constants.CloseActions> options = RD2_Constants.CloseActions.values();
+
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        panel.init();
+
+        System.assertEquals(options.size(), panel.listSORDCloseOptions.size(), 'Panel should return options');
+        for (Integer i = 0; i < options.size(); i++) {
+            System.assertEquals(options[i].name(), panel.listSORDCloseOptions[i].getValue(), 'Options should match');
+        }
+
+    }
+
+    /*********************************************************************************************************
+    * @description verify the Recurring Donations closeoptions contains the select options
+    * for Legacy Recurring Donations
+    * @return void
+    */
+    @isTest
+    private static void shouldReturnLegacyRDCloseActionsWhenRD2IsNotEnabled() {
+        List<RD_RecurringDonations.RecurringDonationCloseOptions> options = RD_RecurringDonations.RecurringDonationCloseOptions.values();
+
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        panel.init();
+
+        System.assertEquals(options.size(), panel.listSORDCloseOptions.size(), 'Panel should return options');
+        for (Integer i = 0; i < options.size(); i++) {
+            System.assertEquals(options[i].name(), panel.listSORDCloseOptions[i].getValue(), 'Options should match');
+        }
+
+    }
+
+    /*********************************************************************************************************
     * @description Tests the Run RD Batch panel
     * @return void
     */

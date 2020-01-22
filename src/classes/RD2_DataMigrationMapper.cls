@@ -36,21 +36,61 @@
 */
 public class RD2_DataMigrationMapper {
 
+    /**
+    * @description Defines mock "Day of Month" last day value for dry run data migration
+    */
+    private static final String DRY_RUN_DAY_OF_MONTH_LAST_DAY = '28';
+
+    /**
+    * @description Recurring Donation to convert to enhanced format
+    */
     private npe03__Recurring_Donation__c rd;
-    private List<Opportunity> opps;
+
+    /**
+    * @description Indicates data migration mode
+    */
+    private Boolean isDryRunMode = false;
+
+    /**
+    * @description All Opportunities related to the Recurring Donation
+    */
+    private List<Opportunity> allRelatedOpps;
+
+    /**
+    * @description Related Open Opportunities to void
+    */
+    public List<Opportunity> openOppsToVoid {
+        get {
+            if (openOppsToVoid == null) {
+                openOppsToVoid = getOpenOpportunitiesToVoid();
+            }
+            return openOppsToVoid;
+        }
+        private set;
+    }
 
     /**
      * @description Constructor
      */
-    public RD2_DataMigrationMapper(npe03__Recurring_Donation__c rd) {
+    public RD2_DataMigrationMapper(npe03__Recurring_Donation__c rd, Boolean isDryRunMode) {
         this.rd = rd;
+        this.isDryRunMode = isDryRunMode;
+    }
+
+    /**
+     * @description Constructor, used in test for the data migration mapping tests
+     */
+    @TestVisible
+    private RD2_DataMigrationMapper(npe03__Recurring_Donation__c rd) {
+        this(rd, false);
     }
 
     /**
      * @description Adds related Opportunities to the mapper
+     * @param opps Recurring Donation related Opportunities
      */
-    public RD2_DataMigrationMapper withRelatedOpportunities(List<Opportunity> opps) {
-        this.opps = opps;
+    public RD2_DataMigrationMapper withRelatedOpportunities(List<Opportunity> allRelatedOpps) {
+        this.allRelatedOpps = allRelatedOpps;
         return this;
     }
 
@@ -165,18 +205,19 @@ public class RD2_DataMigrationMapper {
     }
 
     /**
-     * @description Sets Recurring Donation Start Date field
+     * @description Sets Recurring Donation Start Date field as the earliest Opp Close Date.
+     * If the Recurring Donation has no Opportunity, the Start Date is Date Established.
      * @param rd Recurring Donation in the legacy format
      * @return void
      */
     private void setStartDate(npe03__Recurring_Donation__c rd) {
 
-        if (opps == null || opps.isEmpty()) {
+        if (allRelatedOpps == null || allRelatedOpps.isEmpty()) {
             rd.StartDate__c = rd.npe03__Date_Established__c;
 
         } else {
             Date startDate;
-            for (Opportunity opp : opps) {
+            for (Opportunity opp : allRelatedOpps) {
                 if (startDate == null || startDate > opp.CloseDate) {
                     startDate = opp.CloseDate;
                 }
@@ -203,7 +244,9 @@ public class RD2_DataMigrationMapper {
         if (rd.Always_Use_Last_Day_Of_Month__c == true
             || lastDaysOfMonth.contains(rd.Day_of_Month__c)
         ) {
-            rd.Day_of_Month__c = RD2_Constants.DAY_OF_MONTH_LAST_DAY;
+            rd.Day_of_Month__c = isDryRunMode
+                ? DRY_RUN_DAY_OF_MONTH_LAST_DAY
+                : RD2_Constants.DAY_OF_MONTH_LAST_DAY;
         }
     }
 
@@ -264,5 +307,39 @@ public class RD2_DataMigrationMapper {
         rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
     }
 
+    /**
+     * @description Extracts open installment Opportunities with Close Date >= today and
+     * return all but the Opportunity with the earliest Close Date.
+     * These Opportunities will become void (either closed lost or deleted).
+     * @return List<Opportunity> Open Opportunities
+     */
+    private List<Opportunity> getOpenOpportunitiesToVoid() {
+        List<Opportunity> opps = new List<Opportunity>();
+
+        if (allRelatedOpps == null || allRelatedOpps.isEmpty()
+            || rd.npe03__Open_Ended_Status__c != System.Label.npe03.RecurringDonationOpenStatus        
+        ) {
+            return opps;
+        }
+
+        final Date today = System.today();
+        for (Opportunity opp : allRelatedOpps) {
+            if (opp.IsClosed == false && opp.CloseDate >= today) {
+                opps.add(opp);
+            }
+        }
+
+        if (!opps.isEmpty()) {
+            // Exclude the earliest Close Date Open Opp.
+            // Opps are ordered by the Close Date.
+            opps.remove(0);
+        }
+
+        return opps;
+    }
+
+    /**
+     * @description Exception thrown when Recurring Donation cannot be converted to the enhanced format
+     */
     public class MigrationException extends Exception { }
 }
