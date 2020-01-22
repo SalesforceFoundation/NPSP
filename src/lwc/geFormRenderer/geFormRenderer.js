@@ -4,9 +4,8 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import geDonationTypeErrorLabel from '@salesforce/label/c.geErrorDonorTypeValidation';
-import geErrorDonorTypeValidationSingle from '@salesforce/label/c.geErrorDonorTypeValidationSingle';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
+import { geDonationTypeErrorLabel, geErrorDonorTypeValidationSingle } from 'c/geLabelService';
 import { CONTACT1, ACCOUNT1,
         DONATION_DONOR_FIELDS, DONATION_DONOR,
         showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
@@ -348,6 +347,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // init array replacement for custom label
         let validationErrorLabelReplacements = [ diRecord.donationDonorValue, diRecord.donationDonorLabel ];
+        const sizeErrorReplacementArray = 3;
 
         if (diRecord.donationDonorValue === DONATION_DONOR.isAccount1){
             if (diRecord.isAccount1ImportedPresent)
@@ -362,8 +362,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         // set message using replacement array - set label depending fields present on template
-        return validationErrorLabelReplacements.length===3 ? format(geErrorDonorTypeValidationSingle, validationErrorLabelReplacements) :
-                                                                format(geDonationTypeErrorLabel, validationErrorLabelReplacements);
+        return validationErrorLabelReplacements.length === sizeErrorReplacementArray ?
+                    format(geErrorDonorTypeValidationSingle, validationErrorLabelReplacements) :
+                        format(geDonationTypeErrorLabel, validationErrorLabelReplacements);
     }
 
     /**

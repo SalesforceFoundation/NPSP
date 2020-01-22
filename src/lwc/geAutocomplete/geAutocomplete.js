@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, isEmpty } from 'c/utilCommon';
 
 const COMBO_BOX_CLASS = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
 const INPUT_CLASS = 'slds-input slds-combobox__input';
@@ -77,15 +77,22 @@ export default class GeAutocomplete extends LightningElement {
         return !this.valid;
     }
 
+    /**
+     * set custom error on lookup field using message or a label as default
+     * @param message, String - custom message to display if needed
+     */
     @api
     setCustomError(message) {
-        if (message===undefined || message==='') {
+        if ( isEmpty(message) ) {
             message = this.CUSTOM_LABELS.geErrorCompleteThisField;
         }
         this.errorMessage = message;
         this.valid = false;
     }
 
+    /**
+     * clear error on lookup field
+     */
     @api
     clearCustomError() {
         this.valid = true;
