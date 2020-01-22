@@ -300,11 +300,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         Boolean hasPermission;
         String permission;
-
-        public UTIL_PermissionsMock(Boolean hasPermission, String permission) {
-            this.hasPermission = hasPermission;
-            this.permission = permission;
-        }
+        
         public UTIL_PermissionsMock(Boolean hasPermission) {
             this.hasPermission = hasPermission;
         }
@@ -314,14 +310,6 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
                 List<Object> listOfArgs) {
 
             Set<String> paramNames = new Set<String>(listOfParamNames);
-
-            if(permission == 'CRUD') {
-                if(!paramNames.contains('fieldName')) {
-                    hasPermission = hasPermission;
-                } else {
-                    hasPermission = true;
-                }
-            }
             
             switch on stubbedMethodName {
                 when 'canRead' {
