@@ -50,6 +50,9 @@ export default class GeFormFieldLookup extends LightningElement {
     @api
     reportValidity() {
         this.valid = this.checkValidity();
+        if (!this.valid) {
+            this.setCustomValidity();
+        }
     }
 
     /**
@@ -62,6 +65,22 @@ export default class GeFormFieldLookup extends LightningElement {
             return isNotEmpty(this.value);
         }
         return true;
+    }
+
+    /**
+     * Set custom validity - custom since geAutocomplete does not use lightning-input
+     * @param errorMessage, custom message for custom validity
+     */
+    @api
+    setCustomValidity(errorMessage) {
+        let autocomplete = this.template.querySelector('c-ge-autocomplete');
+        autocomplete.setCustomError(errorMessage);
+    }
+
+    @api
+    clearCustomValidity() {
+        let autocomplete = this.template.querySelector('c-ge-autocomplete');
+        autocomplete.clearCustomError();
     }
 
     /**

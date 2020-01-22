@@ -5155,6 +5155,39 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>This name has been used by another template. Please enter a unique name.</value>
     </labels>
     <labels>
+        <fullName>geErrorDonorTypeValidation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for gift entered without required donor info, 2 fields present</shortDescription>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
+        <!-- {1} = user label for the Donation Donor field -->
+        <!-- {2} = user label for Contact1: Contact1 Imported or Account1: Account1 Imported field -->
+        <!-- {3} = user label for Contact1: Contact1 Last Name or Account1: Account1 Name field  -->
+        <value>When you select {0} for {1}, you must enter information in at least one of the following fields: {2} or {3}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorDonorTypeValidationSingle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for gift entered without required donor info, 1 field present</shortDescription>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
+        <!-- {1} = user label for the Donation Donor field -->
+        <!-- {2} = user label for Contact1: Contact1 Imported, Account1: Account1 Imported, Contact1: Contact1 Last Name, or Account1: Account1 Name field -->
+        <value>When you select {0} for {1}, you must enter information in {2}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorDonorTypeInvalid</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for when Donation Donor doesn't match fields on the form</shortDescription>
+        <!-- {0} = the picklist value the user chooses (Contact1 or Account1) -->
+        <!-- {1} = user label for the Donation Donor field -->
+        <value>You've selected {0} for {1}, but the required {0} fields aren't available on your form. Please check with your administrator.</value>
+    </labels>
+    <labels>
         <fullName>geErrorFieldPermission</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
