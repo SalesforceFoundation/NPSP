@@ -7,8 +7,8 @@ import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import geLabelService from 'c/geLabelService';
 import { CONTACT1, ACCOUNT1,
-        DONATION_DONOR_FIELDS, DONATION_DONOR,
-        showToast,
+         DONATION_DONOR_FIELDS, DONATION_DONOR,
+         showToast,
          handleError,
          getRecordFieldNames,
          setRecordValuesOnTemplate,
