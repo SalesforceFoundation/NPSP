@@ -1,0 +1,26 @@
+<template>
+    <template if:false={isLoading}>
+        <lightning-layout multiple-rows="true">
+            <template if:true={isLoading}>
+                <lightning-spinner></lightning-spinner>
+            </template>
+
+            <lightning-layout-item padding="around-small"
+                                   size="12">
+                <p class="slds-text-body_regular">Select the record you want to update.
+                    <a onclick={handleNewOpportunity}> Alternatively, create a new Opportunity.</a>
+                </p>
+            </lightning-layout-item>
+
+            <template iterator:it={opportunities}>
+                <lightning-layout-item key={it.value.Id}
+                                       padding="around-small"
+                                       size="12">
+                    <c-ge-donation-matching-opportunity-card opportunity={it.value}
+                                                             onupdateselecteddonation={handleUpdateSelectedDonation}>
+                    </c-ge-donation-matching-opportunity-card>
+                </lightning-layout-item>
+            </template>
+        </lightning-layout>
+    </template>
+</template>

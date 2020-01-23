@@ -54,6 +54,23 @@ public with sharing class FORM_ServiceGiftEntry {
         return Database.query(queryString);
     }
 
+    @AuraEnabled(cacheable=true)
+    public static Opportunity[] retrieveOpportunities(String recordId) {
+        return [SELECT Id,
+                Name,
+                Amount,
+                CloseDate,
+                StageName,
+                (SELECT Id,
+                    npe01__Payment_Amount__c,
+                    npe01__Scheduled_Date__c,
+                    npe01__Paid__c,
+                    Name
+                FROM npe01__OppPayment__r)
+            FROM Opportunity
+            WHERE npsp__Primary_Contact__c = :recordId];
+    }
+
     /*******************************************************************************************************
     * @description Method retrieves custom Column Header List Custom Setting records for tables in the Gift
     * Entry landing page.
