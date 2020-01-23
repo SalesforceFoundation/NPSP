@@ -12,7 +12,6 @@ Suite Teardown  Delete Records and Close Browser
 Create a new account and enter payment information
     #Create a new account and enter payment information, then process batch
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -40,8 +39,7 @@ Create a new account and enter payment information
     Wait Until Modal Is Closed
     Fill BGE Form
     ...                       Donation Amount=20
-    Click Element With Locator    bge.field-input    Donation Date
-    Click BGE Button    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Wait For Locator    bge.title    Batch Gift Entry
     Verify Row Count    1 

@@ -15,7 +15,6 @@ ${camp_id}
 Create BGE Batch With Custom Fields
     #Create a BGE batch with default values and selecting different types of custom fields for Donation and Payment
     [tags]  stable
-    Set Window Size    1024    768
     # --------------------------------
     # Create Batch With Custom Fields
     # --------------------------------
@@ -68,10 +67,9 @@ Create New gift and process batch and validate
     ...    custom_phone=1234567890
     ...    custom_url=automation.com
     ...    custom_textarea=this is custom batch
-    Populate Campaign    Search Campaigns    ${campaign}[Name]
-    
-    Click Field And Select Date    Donation Date    Today
-    Click Field And Select Date    custom_date    Today
+    Populate Campaign    Search Campaigns    ${campaign}[Name]    
+    Select Date From Datepicker    Donation Date    Today
+    Select Date From Datepicker    custom_date    Today
     Select Value From BGE DD    custom_picklist    2
     Select Multiple Values From Duellist    bge.duellist2    custom_multipick    Available    1    2    3
     Click Duellist Button    custom_multipick    Move selection to Chosen

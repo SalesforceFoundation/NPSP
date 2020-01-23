@@ -12,7 +12,6 @@ Suite Teardown  Delete Records and Close Browser
 Select an opportunity for an account make grid changes and process it
     #Select an opportunity for an account, make grid changes, and process it
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -37,8 +36,7 @@ Select an opportunity for an account make grid changes and process it
     Click BGE Button    Update this Opportunity
     Fill BGE Form
     ...                       Donation Amount=20
-    Click Element With Locator    bge.field-input    Donation Date
-    Click BGE Button    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Sleep    2
     Verify Row Count    1

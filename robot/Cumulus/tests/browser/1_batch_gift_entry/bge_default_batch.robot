@@ -11,7 +11,6 @@ Suite Teardown  Delete Records and Close Browser
 BGE Batch With Default Values
     #Create a BGE batch with default values
     [tags]  stable
-    Set Window Size    1024    768
     ${batch} =           Generate Random String
     Go To Page                        Listing                      Batch_Gift_Entry
     Click BGE Button       New Batch
@@ -44,7 +43,7 @@ Create New gift and process batch and validate
     Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Fill BGE Form    Donation Amount=100
-    Click Field And Select Date    Donation Date    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process

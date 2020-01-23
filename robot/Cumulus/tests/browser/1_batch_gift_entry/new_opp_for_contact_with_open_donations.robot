@@ -12,7 +12,6 @@ Suite Teardown  Delete Records and Close Browser
 Create a new opportunity for a contact with open donations
     #Enter an account with open donations, then clear it and enter a contact with open donations, then choose to create a new opp and process it
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -46,7 +45,7 @@ Create a new opportunity for a contact with open donations
     Click Link    Alternatively, create a new Opportunity.
     Fill BGE Form
     ...                       Donation Amount=20
-    Click Field And Select Date    Donation Date    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     # Reload Page
     Verify Row Count    1

@@ -12,7 +12,6 @@ Suite Teardown  Delete Records and Close Browser
 Opportunity is Autoclosed when Overpaid
     [Documentation]    Create Open Opportunity and apply new payment of amount more than opportunity amount and confirm that opportunity is closed when batch is processed
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -42,7 +41,7 @@ Opportunity is Autoclosed when Overpaid
     Page Should Contain     You are currently applying a new Payment to Opportunity:&{opportunity}[Name]
     Fill BGE Form
     ...                       Donation Amount=101
-    Click Field And Select Date    Donation Date    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Verify Row Count    1
     Page Should Contain Link    &{opportunity}[Name]

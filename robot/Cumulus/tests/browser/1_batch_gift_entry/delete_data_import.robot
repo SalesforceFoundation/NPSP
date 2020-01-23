@@ -11,7 +11,6 @@ Suite Teardown  Delete Records and Close Browser
 
 Delete a Data Import
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    

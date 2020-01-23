@@ -12,7 +12,6 @@ Suite Teardown  Delete Records and Close Browser
 Dont select match for contact new donation with grid changes
     #Enter a donation for a contact that has an exact opp match, don't select the match, make grid changes, and process batch
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -38,7 +37,7 @@ Dont select match for contact new donation with grid changes
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
-    Click Field And Select Date    Donation Date    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Sleep    2
     Verify Row Count    1

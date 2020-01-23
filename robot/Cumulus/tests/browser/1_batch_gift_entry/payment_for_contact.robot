@@ -12,7 +12,6 @@ Suite Teardown  Delete Records and Close Browser
 Select a payment for a contact make grid changes and process it
     #Select a payment for a contact, make grid changes, and process it
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -42,7 +41,7 @@ Select a payment for a contact make grid changes and process it
     Click BGE Button    Update this Payment
     Fill BGE Form
     ...                       Donation Amount=10
-    Click Field And Select Date    Donation Date    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}

@@ -283,10 +283,10 @@ Click Data Import Button
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
     
-Click Field And Select Date
-    [Arguments]    ${field}    ${date}
-    Click Element With Locator    bge.field-input    ${field}    
-    Click BGE Button    ${date}    
+# Click Field And Select Date
+    # [Arguments]    ${field}    ${date}
+    # Click Element With Locator    bge.field-input    ${field}    
+    # Click BGE Button    ${date}    
      
 Process Data Import Batch
     [Documentation]        Go to NPSP Data Import Page and change view to 'To be Imported' and Process Batch

@@ -13,8 +13,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Best Match Donation Matching Behaviour
     
-    [tags]  stable
-    Set Window Size    1024    768  
+    [tags]  stable 
     Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
@@ -31,8 +30,7 @@ Best Match Donation Matching Behaviour
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
-    Click Element With Locator    bge.field-input    Donation Date
-    Click BGE Button    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
@@ -42,9 +40,7 @@ Best Match Donation Matching Behaviour
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=200
-    Click Element With Locator    bge.field-input    Donation Date
-    Wait For Datepicker
-    Click BGE Button    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Sleep    2
     Verify Row Count    2
@@ -78,7 +74,7 @@ Best Match Donation Matching Behaviour
     Confirm Field Value    Stage    contains    Closed Won    
     Select Tab    Related
     Load Related List    GAU Allocations
-    Click Link    ${pay_no}
+    Click Link With Text    ${pay_no}
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0

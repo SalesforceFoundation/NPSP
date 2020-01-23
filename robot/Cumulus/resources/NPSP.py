@@ -85,8 +85,7 @@ class NPSP(SalesforceRobotLibraryBase):
         """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
         self.search_field_by_value(loc, value)
         print(self.latest_api_version)       
-        if self.latest_api_version == 47.0:
-            self.selenium.click_link(value)
+        self.selenium.click_link(value)
             
 
     def click_record_button(self, title):
@@ -955,7 +954,6 @@ class NPSP(SalesforceRobotLibraryBase):
         """clicks on buttons for BGE"""  
         self.builtin.log("This test is using javascript to click on button as regular click wouldn't work with Summer19", "WARN")    
         locator=npsp_lex_locators['bge']['button'].format(text)
-        self.selenium.set_focus_to_element(locator)
         time.sleep(1)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
@@ -1342,9 +1340,13 @@ class NPSP(SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['delete_icon_record'].format(field,value)
         self.selenium.get_webelement(locator).click()        
         
-    def wait_for_datepicker(self):
-        locator="//div[contains()][./label[text()='Donation Date']/following-sibling::div/input]"   
-        self.selenium.wait_until_page_contains_element(locator) 
+    def select_date_from_datepicker(self,field,value):
+        field_loc=npsp_lex_locators["bge"]["field-input"].format(field)
+        self.selenium.click_element(field_loc)
+        locator=npsp_lex_locators["bge"]["datepicker_open"].format(field)  
+        self.selenium.wait_until_page_contains_element(locator)
+        self.click_bge_button(value)
+        self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")    
         
     def click_more_actions_button(self):
         """"""   
