@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { getQueryParameters } from 'c/utilCommon';
 import { dispatch } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -16,12 +16,13 @@ export default class geHome extends LightningElement {
     // Expose custom labels to template
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    view = GIFT_ENTRY;
-    formTemplateId;
-    cloneFormTemplate;
-    donorId;
+    @track view = GIFT_ENTRY;
+    @track formTemplateId;
+    @track cloneFormTemplate;
+    @track donorId;
+    @track isLoading;
+
     giftEntryTabName;
-    isLoading;
 
     get isLandingPage() {
         return this.view === GIFT_ENTRY ? true : false;
