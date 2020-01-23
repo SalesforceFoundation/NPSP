@@ -7,8 +7,12 @@ import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import geLabelService from 'c/geLabelService';
 import { CONTACT1, ACCOUNT1,
-        DONATION_DONOR_FIELDS, DONATION_DONOR,
-        showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
+         DONATION_DONOR_FIELDS, DONATION_DONOR,
+         showToast,
+         handleError,
+         getRecordFieldNames,
+         setRecordValuesOnTemplate,
+         getPageAccess } from 'c/utilTemplateBuilder';
 import { getQueryParameters, isEmpty, isNotEmpty, format } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -22,7 +26,7 @@ const mode = {
 }
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
-
+    CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
     @api donorRecordId;
     @api donorApiName;
     @api donorRecord;
@@ -44,6 +48,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     erroredFields = [];
     @api pageLevelErrorMessageList = [];
     @track _dataRow; // Row being updated when in update mode
+    @track isAccessible = true;
 
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
     wiredGetRecordMethod({ error, data }) {
@@ -55,34 +60,37 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    connectedCallback() {
-        if (this.batchId) {
-            // When the form is being used for Batch Gift Entry, the Form Template JSON
-            // uses the @wire service below to retrieve the Template using the Template Id
-            // stored on the Batch.
-            return;
-        }
-
-        GeFormService.getFormTemplate().then(response => {
-            // check if there is a record id in the url
-            this.donorRecordId = getQueryParameters().c__donorRecordId;
-            this.donorApiName = getQueryParameters().c__apiName;
-
-            // read the template header info
-            if (response !== null && typeof response !== 'undefined') {
-                this.formTemplate = response.formTemplate;
-                this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
-
-                // get the target field names to be used by getRecord
-                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, this.donorApiName);
-
-                if (isEmpty(this.donorRecordId)) {
-                    // if we don't have a donor record, it's ok to initialize the form now
-                    // otherwise the form will be initialized after wiredGetRecordMethod completes
-                    this.initializeForm(this.formTemplate);
-                }
+   connectedCallback() {
+        this.checkPageAccess();
+        if (this.isAccessible) {
+            if (this.batchId) {
+                // When the form is being used for Batch Gift Entry, the Form Template JSON
+                // uses the @wire service below to retrieve the Template using the Template Id
+                // stored on the Batch.
+                return;
             }
-        });
+
+            GeFormService.getFormTemplate().then(response => {
+                // check if there is a record id in the url
+                this.donorRecordId = getQueryParameters().c__donorRecordId;
+                this.donorApiName = getQueryParameters().c__apiName;
+
+                // read the template header info
+                if (response !== null && typeof response !== 'undefined') {
+                    this.formTemplate = response.formTemplate;
+                    this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+
+                    // get the target field names to be used by getRecord
+                    this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, this.donorApiName);
+
+                    if (isEmpty(this.donorRecordId)) {
+                        // if we don't have a donor record, it's ok to initialize the form now
+                        // otherwise the form will be initialized after wiredGetRecordMethod completes
+                        this.initializeForm(this.formTemplate);
+                    }
+                }
+            });
+        }
     }
 
     initializeForm(formTemplate, fieldMappings) {
@@ -208,14 +216,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     if (exceptionWrapper.exceptionType !== null && exceptionWrapper.exceptionType !== '') {
 
                         // Check to see if there are any field level errors
-                        if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined || Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
+                        if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined ||
+                            Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
 
-                            // If there are no specific fields the error has to go to, put it on the page level error message.
+                            // If there are no specific fields the error has to go to,
+                            // put it on the page level error message.
                             for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
-                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, { index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex] }];
+                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
+                                    {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
                             }
                         } else {
-                            // If there is a specific field that each error is supposed to go to, show it on the field on the page.
+                            // If there is a specific field that each error is supposed to go to,
+                            // show it on the field on the page.
                             // If it is not on the page to show, display it on the page level.
                             for (const key in exceptionWrapper.DMLErrorFieldNameMapping) {
 
@@ -306,7 +318,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if ( isEmpty(miniFieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value) ) {
             return false;
         }
-        
+
         // returns true when error message was generated
         return this.getDonorTypeValidationError( miniFieldWrapper, sectionsList );
     }
@@ -515,6 +527,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         return dataImportRecord;
+    }
+
+    /************************************************************************************
+     * @description This function retrieves page access based on the Advanced Mapping and
+     * Gift Entry feature gate.
+     */
+    checkPageAccess = async () => {
+        this.isAccessible = await getPageAccess();
     }
 
 }

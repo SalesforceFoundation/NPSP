@@ -30,6 +30,8 @@ import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO from '@salesforce/schema/DataImport
 import DI_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import DI_BATCH_GIFT_ENTRY_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
 import DI_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
+import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
+import GIFT_ENTRY_FEATURE_GATE_INFO from '@salesforce/schema/Gift_Entry_Settings__c.Enable_Gift_Entry__c';
 
 // Import schema for default form field element objects
 import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
@@ -53,9 +55,15 @@ import ACCOUNT_INFO from '@salesforce/schema/Account';
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
+import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
+import getGiftEntrySettings from
+        '@salesforce/apex/UTIL_CustomSettingsFacade.getGiftEntrySettings';
+
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
+
+const ADVANCED_MAPPING = 'Data Import Field Mapping';
 
 // relevant Donation_Donor custom validation fields
 const DONATION_DONOR_FIELDS = {
@@ -385,6 +393,20 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
     return sections;
 };
 
+/*******************************************************************************
+ * @description Method checks for page level access. Currently checks
+ * if Advanced Mapping is on from the Data Import Custom Settings and
+ * if the Gift Entry Feature Gate is turned on.
+ */
+const getPageAccess = async () => {
+    const dataImportSettings = await getDataImportSettings();
+    const giftEntryGateSettings = await getGiftEntrySettings();
+    const isAdvancedMappingOn =
+        dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
+    const isGiftEntryEnabled = giftEntryGateSettings[GIFT_ENTRY_FEATURE_GATE_INFO.fieldApiName];
+    return isAdvancedMappingOn && isGiftEntryEnabled;
+};
+
 export {
     DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -400,6 +422,7 @@ export {
     findMissingRequiredBatchFields,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
+    getPageAccess,
     CONTACT_INFO,
     ACCOUNT_INFO,
     DI_CONTACT1_IMPORTED_INFO,
