@@ -23,6 +23,9 @@ Setup Test Data
     &{contact2_fields} =	Create Dictionary  Email=test2@example.com  AccountId=${data}[contact1][AccountId]
     Setupdata   contact2   ${contact2_fields}
 
+    ${ns} =  Get NPSP Namespace Prefix
+    &{opportunity2_fields} =	Create Dictionary  Type=Donation   Name=Rollup test $50 donation    Amount=50   StageName=Closed Won   ${ns}Primary_Contact__c=${data}[contact2][Id]
+
     # Setup an opportunity for contact1 and contact2
     Setupdata   contact1   None     ${opportunity1_fields}
     Setupdata   contact2   None     ${opportunity2_fields}
@@ -30,7 +33,6 @@ Setup Test Data
 *** Variables ***
 &{contact1_fields}         Email=test@example.com
 &{opportunity1_fields}     Type=Donation   Name=Delete test $100 Donation   Amount=100  StageName=Closed Won
-&{opportunity2_fields}     Type=Donation   Name=Rollup test $50 donation    Amount=50   StageName=Closed Won
 
 *** Test Cases ***
 
@@ -45,7 +47,7 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
 
     Select Tab                             Related
 
-    Validate Values Under Relatedlist For  Contact Roles           ${data}[contact1][FirstName] ${data}[contact1][LastName]=Donor
+    Verify Related List Field Values       Contact Roles           ${data}[contact1][FirstName] ${data}[contact1][LastName]=Donor
     ...                                                            ${data}[contact2][FirstName] ${data}[contact2][LastName]=Household Member
 
     Go To Page                             Details

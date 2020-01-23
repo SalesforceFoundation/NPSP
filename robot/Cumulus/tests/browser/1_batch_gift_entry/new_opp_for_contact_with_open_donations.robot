@@ -82,4 +82,4 @@ Create a new opportunity for a contact with open donations
     Go To Record Home    &{contact}[Id]
     Select Tab     Related
     Load Related List    Opportunities
-    Validate Field Value Equals          2                         Opportunities
+    Validate Related Record Count        Opportunities      2

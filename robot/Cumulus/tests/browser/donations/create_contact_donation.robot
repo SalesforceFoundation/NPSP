@@ -49,5 +49,5 @@ Create Donation from a Contact
     Click Link                           ${value}
     Save Current Record ID For Deletion  Opportunity
     Current Page Should Be               Detail                    Opportunity
-    Validate Field Value Equals          1                         Payments
+    Validate Related Record Count        Payments                     1
 

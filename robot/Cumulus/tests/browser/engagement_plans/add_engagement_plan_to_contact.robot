@@ -16,7 +16,7 @@ Create a Contact and Add Engagement Plan
     Click Related List Button  Engagement Plans    New
     Populate Lookup Field    Engagement Plan Template    ${plan_name}
     Click Modal Button        Save
-    Validate Field Value Equals          1                         Engagement Plans
+    Validate Related Record Count    Engagement Plans   1
 
 Delete Engagement Plan
     [tags]  unstable
@@ -24,7 +24,7 @@ Delete Engagement Plan
     Click Element With Locator    toast-close
     Click Related Item Popup Link    Engagement Plans    ${plan_num}    Delete
     Click Modal Button        Delete
-    Validate Field Value Equals          0                         Engagement Plans
+    Validate Related Record Count          Engagement Plans       0
     
 Verify Tasks Exist Under Activity
     [tags]  unstable

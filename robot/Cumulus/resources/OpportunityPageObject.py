@@ -14,16 +14,6 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.location_should_contain("/lightning/r/Opportunity/",message="Current page is not a Opportunity detail view")
 
-    def validate_values_under_relatedlist_for(self, listname, **kwargs):
-        """
-        Navigate to one of the related list items specified and verify the values match the specified values as per the
-        dictionary key value input.
-        """
-        self.npsp.wait_for_locator("record.related.check_occurrence","Contact Roles", 2)
-        self.npsp.select_relatedlist(listname)
-        self.npsp.verify_related_list_field_values(**kwargs)
-
-
 @pageobject("Listing", "Opportunity")
 class OpportunityListingPage(BaseNPSPPage, ListingPage):
     object_name = "Opportunity"

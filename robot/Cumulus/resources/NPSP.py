@@ -451,10 +451,10 @@ class NPSP(SalesforceRobotLibraryBase):
         else :    
             self.salesforce._populate_field(locator, value)
         
-    def validate_field_value_equals(self,value,title=None):
-        if title is not None:
-            self.select_tab("Related")
-            self.salesforce.load_related_list(title)
+    def validate_related_record_count(self,title,value):
+
+        self.select_tab("Related")
+        self.salesforce.load_related_list(title)
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
         actual_value=self.selenium.get_webelement(locator).text
         exp_value="("+value+")"
@@ -504,8 +504,11 @@ class NPSP(SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['record']['related']['title'].format(title)
         self.selenium.get_webelement(locator).click()  
         
-    def verify_related_list_field_values(self, **kwargs):
+    def verify_related_list_field_values(self, listname=None, **kwargs):
         """verifies the values in the related list objects page"""
+        if listname is not None:
+            self.selenium.wait_until_page_contains(listname)
+            self.select_relatedlist(listname)
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
             self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
@@ -1237,15 +1240,28 @@ class NPSP(SalesforceRobotLibraryBase):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None):
-        """ Creates a contact if contact_data is passed
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None):
+        """ Creates an Account if account setup data is passed
+            Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
             Creates a contact and sets an opportunity simultaneously if both the
             contact_data and opportunity_data is specified
          """
 
         # get the data variable, or an empty dictionary if not set
+
         data = self.builtin.get_variable_value("${data}", {})
+        if account_data is not None:
+
+            # create the account
+            name = self.randomString(10);
+            rt_id = self.salesforce.get_record_type_id("Account","Organization")
+            account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
+            account_id = self.salesforce.salesforce_insert("Account", **account_data)
+            account = self.salesforce.salesforce_get("Contact",account_id)
+
+            # save the account object to data dictionary
+            data[name] = account
 
         if contact_data is not None:
 
@@ -1257,18 +1273,22 @@ class NPSP(SalesforceRobotLibraryBase):
             contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
             contact = self.salesforce.salesforce_get("Contact",contact_id)
 
-            # save the contact
+            # save the contact object to data dictionary
             data[name] = contact
 
         if opportunity_data is not None:
             # create opportunity
-            oppType = "Donation"
-            rt_id = self.salesforce.get_record_type_id("Opportunity","Donation")
-            date = datetime.now().strftime('%Y-%m-%d')
-            ns =  self.get_npsp_namespace_prefix()
-            key = ns+"Primary_Contact__c"
-            opportunity_data.update( {'AccountId' : data[name]["AccountId"],'CloseDate' : date, 'RecordTypeId': rt_id, 'npe01__Do_Not_Automatically_Create_Payment__c': 'true' , key : data[name]["Id"]} )
+            rt_id = self.salesforce.get_record_type_id("Opportunity",opportunity_data["Type"])
+            # if user did not specify any date value add the default value
+            if 'CloseDate' not in opportunity_data:
+                date = datetime.now().strftime('%Y-%m-%d')
+                opportunity_data.update({'CloseDate' : date})
+            if 'npe01__Do_Not_Automatically_Create_Payment__c' not in opportunity_data:
+                Automatically_create_key = 'npe01__Do_Not_Automatically_Create_Payment__c'
+                Automatically_create_value = 'true'
+                opportunity_data.update({Automatically_create_key : Automatically_create_value})
 
+            opportunity_data.update( {'AccountId' : data[name]["AccountId"], 'RecordTypeId': rt_id } )
             opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
             opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
 

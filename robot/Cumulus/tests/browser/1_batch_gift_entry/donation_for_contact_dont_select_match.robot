@@ -71,7 +71,7 @@ Dont select match for contact new donation with grid changes
     Go To Record Home    &{contact}[Id]
     Select Tab    Related
     Load Related List    Opportunities
-    Validate Field Value Equals          2                         Opportunities
+    Validate Related Record Count     Opportunities     2
 
     
    

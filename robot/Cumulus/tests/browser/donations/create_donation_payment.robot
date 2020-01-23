@@ -52,7 +52,7 @@ Create Donation and Opportunity and Create Payment Manually
     Save Current Record ID For Deletion             Opportunity
     Current Page Should Be                          Detail                                  Opportunity
 
-    Validate Field Value Equals                     0                                       Payments
+    Validate Related Record Count                   Payments                                0
 
     #Make A New Payment
 
@@ -66,7 +66,7 @@ Create Donation and Opportunity and Create Payment Manually
     Pick Date                                       Today
     Click Modal Button                              Save
 
-    Validate Field Value Equals                     1                                       Payments
+    Validate Related Record Count                   Payments                                      1
 
     Go To Page                                      Details
     ...                                             Contact
