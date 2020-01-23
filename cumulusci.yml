@@ -165,16 +165,15 @@ tasks:
     platformencryption_assign_permset:
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
-            apex: >
+            apex: >-
                 PermissionSet p = [
-                    SELECT Id, Name
-                    FROM PermissionSet
-                    WHERE Name = 'Encryption'
+                SELECT Id, Name
+                FROM PermissionSet
+                WHERE Name = 'Encryption'
                 ];
-
                 insert new PermissionSetAssignment(
-                    PermissionSetId = p.Id,
-                    AssigneeId = UserInfo.getUserId()
+                PermissionSetId = p.Id,
+                AssigneeId = UserInfo.getUserId()
                 );
 
     platformencryption_create_tenant_secret:
@@ -239,28 +238,28 @@ tasks:
         description: 'Runs execute anonymous to insert the default relationships'
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
-            apex: >
+            apex: >-
                 List<npe4__Relationship_Lookup__c> defaultRelationships = new List<npe4__Relationship_Lookup__c>{
-                    new npe4__Relationship_Lookup__c(Name = 'Father',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
-                    new npe4__Relationship_Lookup__c(Name = 'Mother',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
-                    new npe4__Relationship_Lookup__c(Name = 'Parent',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
-                    new npe4__Relationship_Lookup__c(Name = 'Son',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
-                    new npe4__Relationship_Lookup__c(Name = 'Daughter',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
-                    new npe4__Relationship_Lookup__c(Name = 'Child',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
-                    new npe4__Relationship_Lookup__c(Name = 'Aunt',npe4__Male__c = 'Nephew', npe4__Female__c = 'Niece', npe4__Neutral__c = 'Sibling\'s Child'),
-                    new npe4__Relationship_Lookup__c(Name = 'Uncle',npe4__Male__c = 'Nephew', npe4__Female__c = 'Niece', npe4__Neutral__c = 'Sibling\'s Child'),
-                    new npe4__Relationship_Lookup__c(Name = 'Husband',npe4__Male__c = 'Husband', npe4__Female__c = 'Wife', npe4__Neutral__c = 'Spouse'),
-                    new npe4__Relationship_Lookup__c(Name = 'Wife',npe4__Male__c = 'Husband', npe4__Female__c = 'Wife', npe4__Neutral__c = 'Spouse'),
-                    new npe4__Relationship_Lookup__c(Name = 'Partner',npe4__Male__c = 'Partner', npe4__Female__c = 'Partner', npe4__Neutral__c = 'Partner'),
-                    new npe4__Relationship_Lookup__c(Name = 'Cousin',npe4__Male__c = 'Cousin', npe4__Female__c = 'Cousin', npe4__Neutral__c = 'Cousin'),
-                    new npe4__Relationship_Lookup__c(Name = 'Grandmother',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
-                    new npe4__Relationship_Lookup__c(Name = 'Grandfather',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
-                    new npe4__Relationship_Lookup__c(Name = 'Grandparent',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
-                    new npe4__Relationship_Lookup__c(Name = 'Grandson',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
-                    new npe4__Relationship_Lookup__c(Name = 'Granddaughter',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
-                    new npe4__Relationship_Lookup__c(Name = 'Grandchild',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
-                    new npe4__Relationship_Lookup__c(Name = 'Employer',npe4__Male__c = 'Employee', npe4__Female__c = 'Employee', npe4__Neutral__c = 'Employee'),
-                    new npe4__Relationship_Lookup__c(Name = 'Employee',npe4__Male__c = 'Employer', npe4__Female__c = 'Employer', npe4__Neutral__c = 'Employer')
+                new npe4__Relationship_Lookup__c(Name = 'Father',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
+                new npe4__Relationship_Lookup__c(Name = 'Mother',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
+                new npe4__Relationship_Lookup__c(Name = 'Parent',npe4__Male__c = 'Son', npe4__Female__c = 'Daughter', npe4__Neutral__c = 'Child'),
+                new npe4__Relationship_Lookup__c(Name = 'Son',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
+                new npe4__Relationship_Lookup__c(Name = 'Daughter',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
+                new npe4__Relationship_Lookup__c(Name = 'Child',npe4__Male__c = 'Father', npe4__Female__c = 'Mother', npe4__Neutral__c = 'Parent'),
+                new npe4__Relationship_Lookup__c(Name = 'Aunt',npe4__Male__c = 'Nephew', npe4__Female__c = 'Niece', npe4__Neutral__c = 'Sibling\'s Child'),
+                new npe4__Relationship_Lookup__c(Name = 'Uncle',npe4__Male__c = 'Nephew', npe4__Female__c = 'Niece', npe4__Neutral__c = 'Sibling\'s Child'),
+                new npe4__Relationship_Lookup__c(Name = 'Husband',npe4__Male__c = 'Husband', npe4__Female__c = 'Wife', npe4__Neutral__c = 'Spouse'),
+                new npe4__Relationship_Lookup__c(Name = 'Wife',npe4__Male__c = 'Husband', npe4__Female__c = 'Wife', npe4__Neutral__c = 'Spouse'),
+                new npe4__Relationship_Lookup__c(Name = 'Partner',npe4__Male__c = 'Partner', npe4__Female__c = 'Partner', npe4__Neutral__c = 'Partner'),
+                new npe4__Relationship_Lookup__c(Name = 'Cousin',npe4__Male__c = 'Cousin', npe4__Female__c = 'Cousin', npe4__Neutral__c = 'Cousin'),
+                new npe4__Relationship_Lookup__c(Name = 'Grandmother',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
+                new npe4__Relationship_Lookup__c(Name = 'Grandfather',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
+                new npe4__Relationship_Lookup__c(Name = 'Grandparent',npe4__Male__c = 'Grandson', npe4__Female__c = 'Granddaughter', npe4__Neutral__c = 'Grandchild'),
+                new npe4__Relationship_Lookup__c(Name = 'Grandson',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
+                new npe4__Relationship_Lookup__c(Name = 'Granddaughter',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
+                new npe4__Relationship_Lookup__c(Name = 'Grandchild',npe4__Male__c = 'Grandfather', npe4__Female__c = 'Grandmother', npe4__Neutral__c = 'Grandparent'),
+                new npe4__Relationship_Lookup__c(Name = 'Employer',npe4__Male__c = 'Employee', npe4__Female__c = 'Employee', npe4__Neutral__c = 'Employee'),
+                new npe4__Relationship_Lookup__c(Name = 'Employee',npe4__Male__c = 'Employer', npe4__Female__c = 'Employer', npe4__Neutral__c = 'Employer')
                 };
                 insert defaultRelationships;
 
@@ -299,7 +298,7 @@ tasks:
         description: Configure NPSP Customizable Rollups to activate Incremental Rollups (unmanaged deploys only)
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
-            apex: >
+            apex: >-
                 STG_SettingsService.stgService.stgCRLP.AccountHardCreditNonSkew_Incremental__c = true;
                 STG_SettingsService.stgService.stgCRLP.ContactHardCreditNonSkew_Incremental__c = true;
                 STG_SettingsService.stgService.saveAll();
@@ -329,7 +328,7 @@ tasks:
         description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
-            apex: >
+            apex: >- 
                 %%%NAMESPACE%%%Error_Settings__c errSettings = %%%NAMESPACE%%%Error_Settings__c.getOrgDefaults();
                 errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
                 upsert errSettings;
@@ -592,7 +591,7 @@ flows:
             3:
                 task: execute_anon
                 options:
-                    apex: >
+                    apex: >-
                         npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
                         rdSettings.%%%NAMESPACE%%%isRecurringDonations2Enabled__c = true;
                         upsert rdSettings;
