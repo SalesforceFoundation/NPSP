@@ -263,6 +263,8 @@
         <members>FORM_BatchHeaderField</members>
         <members>FORM_Element</members>
         <members>FORM_Layout</members>
+        <members>FORM_PermissionValidator</members>
+        <members>FORM_PermissionsValidator_TEST</members>
         <members>FORM_RenderWrapper</members>
         <members>FORM_Section</members>
         <members>FORM_Service</members>
@@ -1981,7 +1983,11 @@
         <members>geDonorColumnLabel</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorExistingTemplateName</members>
+        <members>geErrorFLSBody</members>
+        <members>geErrorFLSHeader</members>
         <members>geErrorFieldPermission</members>
+        <members>geErrorObjectCRUDBody</members>
+        <members>geErrorObjectCRUDHeader</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>
         <members>geErrorPageLevelAdvancedMappingHeader</members>
         <members>geErrorPageLevelFieldPermission1</members>
@@ -2678,10 +2684,6 @@
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
-        <members>geErrorObjectCRUDHeader</members>
-        <members>getErrorObjectCRUDBody</members>
-        <members>geErrorFLSHeader</members>
-        <members>geErrorFLSBody</members>
         <name>CustomLabel</name>
     </types>
     <types>
