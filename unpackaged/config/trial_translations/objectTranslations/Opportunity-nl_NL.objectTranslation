@@ -31,7 +31,7 @@
     <name>Membership</name>
   </recordTypes>
   <layouts>
-    <layout>___NAMESPACE___Major Gift Layout</layout>
+    <layout>%%%NAMESPACE%%%Major Gift Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
@@ -46,7 +46,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>___NAMESPACE___Donation Layout</layout>
+    <layout>%%%NAMESPACE%%%Donation Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
@@ -65,7 +65,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>___NAMESPACE___Membership Layout</layout>
+    <layout>%%%NAMESPACE%%%Membership Layout</layout>
     <sections>
       <label>Velden</label>
       <section>Fields</section>
@@ -80,7 +80,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>___NAMESPACE___Grant Layout</layout>
+    <layout>%%%NAMESPACE%%%Grant Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
@@ -95,7 +95,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>___NAMESPACE___In-Kind Gift Layout</layout>
+    <layout>%%%NAMESPACE%%%In-Kind Gift Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
@@ -110,7 +110,7 @@
     </sections>
   </layouts>
   <layouts>
-    <layout>___NAMESPACE___Matching Gift Layout</layout>
+    <layout>%%%NAMESPACE%%%Matching Gift Layout</layout>
     <sections>
       <label>Gegevens van donatie</label>
       <section>Donation Information</section>
