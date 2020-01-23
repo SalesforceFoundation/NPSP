@@ -13,6 +13,15 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>Enable_Gift_Entry__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Setting for feature-gating the Gift Entry feature</description>
+        <externalId>false</externalId>
+        <label>Enable Gift Entry</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>Gift Entry Settings</label>
     <visibility>Public</visibility>
 </CustomObject>
