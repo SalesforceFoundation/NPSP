@@ -449,6 +449,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     clearErrors() {
 
         // Clear the page level error
+        this.hasPageLevelError = false;
         this.pageLevelErrorMessageList = [];
 
         // Clear the field level errors
