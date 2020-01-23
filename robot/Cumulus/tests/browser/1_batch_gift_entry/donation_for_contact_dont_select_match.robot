@@ -3,6 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
@@ -64,6 +65,7 @@ Dont select match for contact new donation with grid changes
     Select Window    ${value} | Salesforce    10
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
+    Current Page Should Be    Detail    Opportunity
     ${newopp_id}    Save Current Record ID For Deletion      Opportunity
     Verify Expected Values    nonns    Opportunity    ${newopp_id}
     ...    Amount=20.0
