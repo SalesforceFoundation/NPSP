@@ -1901,6 +1901,7 @@
         <members>commonFieldLabel</members>
         <members>commonNext</members>
         <members>commonNoItems</members>
+        <members>commonOpen</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonSave</members>
@@ -1940,7 +1941,6 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
-        <members>geActionOpen</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveFieldDown</members>

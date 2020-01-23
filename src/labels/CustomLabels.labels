@@ -4406,6 +4406,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Back</value>
     </labels>
     <labels>
+        <fullName>commonOpen</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Open button.</shortDescription>
+        <value>Open</value>
+    </labels>
+    <labels>
         <fullName>commonBatches</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4797,14 +4805,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>flsReadAccessError</shortDescription>
         <value>You do not have permissions to access {0}.</value>
-    </labels>
-    <labels>
-        <fullName>geActionOpen</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Open action label for Gift Entry batch mode.</shortDescription>
-        <value>Open</value>
     </labels>
     <labels>
         <fullName>geAssistiveActiveSection</fullName>
