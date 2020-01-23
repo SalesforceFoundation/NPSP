@@ -77,6 +77,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Levels_Settings__c orgLevelsSettings;
     static Gift_Entry_Settings__c orgGiftEntrySettings;
 
+
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after
     *   Record Type Settings have been fixed.
@@ -316,6 +317,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
     * in the database.
     */
+    @AuraEnabled
     public static Gift_Entry_Settings__c getGiftEntrySettings() {
         if(Test.isRunningTest() && giftEntrySettings == null) {
             giftEntrySettings = new Gift_Entry_Settings__c();
@@ -529,17 +531,21 @@ public without sharing class UTIL_CustomSettingsFacade {
     * @return Gift_Entry_Settings__c Org-level settings for Gift Entry.
     */
     public static Gift_Entry_Settings__c getOrgGiftEntrySettings() {
-        if(orgGiftEntrySettings == null) {
+        if (orgGiftEntrySettings == null) {
             orgGiftEntrySettings = Gift_Entry_Settings__c.getOrgDefaults();
 
-            if(orgGiftEntrySettings.Id == null) {
+            if (orgGiftEntrySettings.Id == null) {
                 orgGiftEntrySettings.Setupownerid = UserInfo.getOrganizationId();
-                if(!Test.isRunningTest())
+                if (!Test.isRunningTest()) {
                     upsert orgGiftEntrySettings;
+                }
+
             }
         }
         return orgGiftEntrySettings;
     }
+
+
 
     /*******************************************************************************************************
      * Private methods that will configure the default org-level custom settings.

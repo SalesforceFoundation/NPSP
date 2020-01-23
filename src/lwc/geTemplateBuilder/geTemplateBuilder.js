@@ -13,6 +13,7 @@ import {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     generateId,
+    getPageAccess,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
@@ -76,7 +77,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         description: null,
         batchHeaderFields: [],
         layout: null
-    }
+    };
     formLayout = {
         fieldMappingSetDevName: null,
         version: null,
@@ -132,57 +133,52 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            const dataImportSettings = await getDataImportSettings();
-            const fieldMappingApiName = FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName;
+            this.isAccessible = await getPageAccess();
+            this.isLoading = false;
+             if (this.isAccessible) {
+                    this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
-            if (dataImportSettings[fieldMappingApiName] !== ADVANCED_MAPPING) {
-                this.isAccessible = false;
-                this.isLoading = false;
+                    const queryParameters = getQueryParameters();
+                    // If we have no template record id, check if there's a record id in the url
+                    if (!this.formTemplateRecordId) {
+                        this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
+                    }
 
-            } else if (dataImportSettings[fieldMappingApiName] === ADVANCED_MAPPING) {
-                this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+                    if (this.formTemplateRecordId) {
+                        let formTemplate = await retrieveFormTemplateById({
+                            templateId: this.formTemplateRecordId
+                        });
 
-                const queryParameters = getQueryParameters();
-                // If we have no template record id, check if there's a record id in the url
-                if (!this.formTemplateRecordId) {
-                    this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
+                        this.existingFormTemplateName = formTemplate.name;
+                        this.formTemplate = formTemplate;
+                        this.batchHeaderFields = formTemplate.batchHeaderFields;
+                        this.formLayout = formTemplate.layout;
+                        this.formSections = this.formLayout.sections;
+
+                        this.catalogFieldsForTemplateEdit();
+                    }
+
+                    this.collectBatchHeaderFields();
+                    this.addRequiredBatchHeaderFields();
+                    this.validateBatchHeaderTab();
+                    this.handleDefaultFormFields();
+
+                    if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
+                        this.activeFormSectionId = this.formSections[0].id;
+                    }
+
+                    // Clear out form template record id if cloning after retrieving all relevant data
+                    if (queryParameters.c__clone || this.isClone) {
+                        this.formTemplateRecordId = null;
+                    }
+
+                    this.isLoading = false;
+                    this.isAccessible = true;
                 }
-
-                if (this.formTemplateRecordId) {
-                    let formTemplate = await retrieveFormTemplateById({
-                        templateId: this.formTemplateRecordId
-                    });
-
-                    this.existingFormTemplateName = formTemplate.name;
-                    this.formTemplate = formTemplate;
-                    this.batchHeaderFields = formTemplate.batchHeaderFields;
-                    this.formLayout = formTemplate.layout;
-                    this.formSections = this.formLayout.sections;
-
-                    this.catalogFieldsForTemplateEdit();
-                }
-
-                this.collectBatchHeaderFields();
-                this.addRequiredBatchHeaderFields();
-                this.validateBatchHeaderTab();
-                this.handleDefaultFormFields();
-
-                if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
-                    this.activeFormSectionId = this.formSections[0].id;
-                }
-
-                // Clear out form template record id if cloning after retrieving all relevant data
-                if (queryParameters.c__clone || this.isClone) {
-                    this.formTemplateRecordId = null;
-                }
-
-                this.isLoading = false;
-                this.isAccessible = true;
-            }
         } catch (error) {
             handleError(error);
         }
-    }
+    };
 
     /*******************************************************************************
     * @description Method builds and sorts a list of batch header fields for the
