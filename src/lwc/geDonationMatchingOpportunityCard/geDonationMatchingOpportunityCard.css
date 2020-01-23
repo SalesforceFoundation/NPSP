@@ -9,7 +9,7 @@
     border-radius: var(--lwc-button-border-radius,.25rem);
     line-height: var(--lwc-lineHeightButton,1.875rem);
     text-decoration: none;
-    color: var(--lwc-brandAccessible,rgb(0, 112, 210));
+    color: var(--lwc-brand-accessible,rgb(0, 112, 210));
     -webkit-appearance: none;
     white-space: normal;
     -webkit-user-select: none;
@@ -20,7 +20,7 @@
 
 .slds-button:hover {
     background-color: var(--lwc-colorBackgroundButtonDefaultHover,rgb(244, 246, 249));
-    color: var(--lwc-brandAccessibleActive,rgb(0, 95, 178));
+    color: var(--lwc-brand-accessible-active,rgb(0, 95, 178));
 }
 
 .slds-button_neutral {

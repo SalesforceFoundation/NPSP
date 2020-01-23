@@ -3323,6 +3323,9 @@
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
+        <members>geDonationMatching</members>
+        <members>geDonationMatchingOpportunityCard</members>
+        <members>geDonationMatchingPaymentCard</members>
         <members>geFormField</members>
         <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
@@ -3350,6 +3353,7 @@
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
         <members>util</members>
+        <members>utilCard</members>
         <members>utilCommon</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
