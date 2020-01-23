@@ -141,6 +141,53 @@ public class ALLO_Multicurrency_TEST {
     }
 
     /*********************************************************************************************************
+    * @description This multicurrency test only runs on multicurrency organizations, and does nothing
+    * otherwise. Verifies new allocations match currency code of Opportunities.
+    */
+    static testMethod void validateMulticurrencyAllocsMatchOppCurrency() {
+        //only run test in multicurrency orgs
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        setupISOCodes();
+
+        //if we don't have a non default currency, we can't run our test
+        if (nonDefaultCurrencyType == null)
+            return;
+
+        String usersDefaultCurrency = UTIL_Currency.getInstance().getDefaultCurrency();
+        System.debug('Default currency - ' + usersDefaultCurrency);
+
+        setupSettings(null);
+
+        Campaign cam = new Campaign(Name = 'foo', IsActive = true, CurrencyIsoCode = usersDefaultCurrency);
+        insert cam;
+
+        Account acc = new Account(Name = 'foo');
+        insert acc;
+
+        General_Accounting_Unit__c campaigngau = new General_Accounting_Unit__c(Name = 'foo');
+        insert campaigngau;
+
+        Allocation__c amountAllo = new Allocation__c(Campaign__c = cam.id, Percent__c = 100, General_Accounting_Unit__c = campaigngau.id);
+        insert amountAllo;
+
+        Opportunity opp = new Opportunity(Name = 'success', Amount = 10, AccountID = acc.id, CampaignId = cam.id, CloseDate = system.today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage(), CurrencyIsoCode = String.valueOf(nonDefaultCurrencyType.get('IsoCode')));
+        insert opp;
+
+        List<Opportunity> oppList = [SELECT Id, Amount, CurrencyIsoCode FROM Opportunity];
+        System.debug('Opportunities - ' + oppList);
+
+        //  where opportunity__c = :oppList[0].Id and CurrencyIsoCode != :usersDefaultCurrency
+        List<Allocation__c> queryAllo = [SELECT Id, Amount__c, CurrencyIsoCode FROM Allocation__c where opportunity__c = :oppList[0].Id];
+        System.debug('Allocation__c - ' + queryAllo);
+        System.assertEquals(nonDefaultCurrencyType.get('IsoCode'), oppList[0].CurrencyIsoCode, 'Opportunity should have a non-default currency type.');
+        System.assertEquals(nonDefaultCurrencyType.get('IsoCode'), queryAllo[0].CurrencyIsoCode, 'Allocation should have a non-default currency type.');
+        System.assertEquals(oppList[0].Amount, queryAllo[0].Amount__c, 'Opportunity and Allocation amounts should be equal for 100% allocation with the same currency.');
+    }
+
+    /*********************************************************************************************************
     * @description This multicurrency test only runs on multicurrency organizations, and does nothing 
     * otherwise. Verifies that rollups correctly convert amounts of different currencies.
     */
