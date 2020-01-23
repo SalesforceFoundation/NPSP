@@ -31,6 +31,7 @@ import DI_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_
 import DI_BATCH_GIFT_ENTRY_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
 import DI_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
+import GIFT_ENTRY_FEATURE_GATE_INFO from '@salesforce/schema/Gift_Entry_Settings__c.Enable_Gift_Entry__c';
 
 // Import schema for default form field element objects
 import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
@@ -402,7 +403,7 @@ const getPageAccess = async () => {
     const giftEntryGateSettings = await getGiftEntrySettings();
     const isAdvancedMappingOn =
         dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
-    const isGiftEntryEnabled = giftEntryGateSettings.Enable_Gift_Entry__c;
+    const isGiftEntryEnabled = giftEntryGateSettings[GIFT_ENTRY_FEATURE_GATE_INFO.fieldApiName];
     return isAdvancedMappingOn && isGiftEntryEnabled;
 };
 
