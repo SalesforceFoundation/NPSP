@@ -46,39 +46,55 @@ public with sharing class BGE_FormTemplate_TDTM extends TDTM_Runnable{
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
             TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        validateFormTemplateDeletion(newlist, oldlist, triggerAction);
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
+            validateFormTemplateDeletion( oldlist );
+        }
+
         return null;
     }
 
 
     /*******************************************************************************************************
      * @description Validates that a Form Template Record is not used by any Data Import Batch record
-     * (If it is, an error is added to the Form Template record)
-     * @param newlist the list of Form Templates from trigger new.
+     *              or defined as default on gift_entry custom setting
+     *              (If it is, an error is added to the Form Template record)
      * @param oldlist the list of Form Templates from trigger old.
-     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.)
      *******************************************************************************************************/
-    private void validateFormTemplateDeletion (List<SObject> newlist, List<SObject> oldlist,
-            TDTM_Runnable.Action triggerAction){
+    private void validateFormTemplateDeletion ( List<SObject> oldlist ){
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-            List<Form_Template__c> formTemplates = (List<Form_Template__c>) oldlist;
+        // aux vars
+        List<Form_Template__c>      formTemplates           = (List<Form_Template__c>) oldlist;
+        Gift_Entry_Settings__c      giftEntrySettings       = UTIL_CustomSettings_API.getGiftEntrySettings();
+        Map<Id, DataImportBatch__c> batchByFormTemplateId   = new Map<Id, DataImportBatch__c>();
 
-            Map<Id, DataImportBatch__c> batchByFormTemplateId = new Map<Id, DataImportBatch__c>();
+        // search data import batch records using the templates to be deleted
+        for (DataImportBatch__c batch : [
+                SELECT Form_Template__c
+                FROM DataImportBatch__c
+                WHERE Form_Template__c IN : formTemplates
+        ]) {
+            batchByFormTemplateId.put(batch.Form_Template__c, batch);
+        }
 
-            for (DataImportBatch__c batch : [
-                    SELECT Form_Template__c
-                    FROM DataImportBatch__c
-                    WHERE Form_Template__c IN : formTemplates
-            ]) {
-                batchByFormTemplateId.put(batch.Form_Template__c, batch);
+        // for every template record to be deleted
+        for (Form_Template__c formTemplate : formTemplates) {
+
+            // add error to records marked as default on gift entry settings
+            if ( String.isNotEmpty(giftEntrySettings.Default_Single_Gift_Entry_Template__c) &&
+                    (giftEntrySettings.Default_Single_Gift_Entry_Template__c.equals((String)formTemplate.Id) ||
+                        giftEntrySettings.Default_Single_Gift_Entry_Template__c.equals(formTemplate.Name)) ) {
+
+                formTemplate.addError( System.Label.geToastTemplateDeleteError );
+
+            // add error to template records related to any dataImportBatch record
+            } else if (batchByFormTemplateId.containsKey(formTemplate.Id)) {
+
+                formTemplate.addError(System.Label.geToastTemplateDeleteError);
+
             }
 
-            for (Form_Template__c formTemplate : formTemplates) {
-                if (batchByFormTemplateId.containsKey(formTemplate.Id)) {
-                    formTemplate.addError(System.Label.geToastTemplateDeleteError);
-                }
-            }
         }
     }
+
 }
