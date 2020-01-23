@@ -301,18 +301,7 @@ private class OPP_OpportunityNaming_TEST
 
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
         //spanish language users to use for opp name formatting
-        User spanishLanguageUser = new User(
-            UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
-            Email = 'spanishlanguageuser@testorg.com',
-            Alias = 'spanis',
-            ProfileId = standardProfile.Id,
-            LastName = 'Testing',
-            LanguageLocaleKey = 'es',
-            LocaleSidKey = 'es',
-            EmailEncodingKey = 'UTF-8',
-            TimeZoneSidKey = 'America/Los_Angeles'
-        );
-
+        User spanishLanguageUser = buildSpanishUser(standardProfile);
 
         System.runAs(spanishLanguageUser) {
             Opportunity opp = new Opportunity(
@@ -359,18 +348,7 @@ private class OPP_OpportunityNaming_TEST
 
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
         //spanish language users to use for opp name formatting
-        User spanishLanguageUser = new User(
-            UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
-            Email = 'spanishlanguageuser@testorg.com',
-            Alias = 'spanis',
-            ProfileId = standardProfile.Id,
-            LastName = 'Testing',
-            LanguageLocaleKey = 'es',
-            LocaleSidKey = 'es',
-            EmailEncodingKey = 'UTF-8',
-            TimeZoneSidKey = 'America/Los_Angeles'
-        );
-
+        User spanishLanguageUser = buildSpanishUser(standardProfile);
 
         System.runAs(spanishLanguageUser) {
             Opportunity opp = new Opportunity(
@@ -427,18 +405,7 @@ private class OPP_OpportunityNaming_TEST
 
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
         //spanish language users to use for opp name formatting
-        User spanishLanguageUser = new User(
-            UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
-            Email = 'spanishlanguageuser@testorg.com',
-            Alias = 'spanis',
-            ProfileId = standardProfile.Id,
-            LastName = 'Testing',
-            LanguageLocaleKey = 'es',
-            LocaleSidKey = 'es',
-            EmailEncodingKey = 'UTF-8',
-            TimeZoneSidKey = 'America/Los_Angeles'
-        );
-
+        User spanishLanguageUser = buildSpanishUser(standardProfile);
 
         System.runAs(spanishLanguageUser) {
             Opportunity opp = new Opportunity(
@@ -481,10 +448,31 @@ private class OPP_OpportunityNaming_TEST
 
     }
 
-    /****
-    * @description Returns contact record
-    * @return Contact
-    */
+    /*******************************************************************************************************
+     * @description builds a user with Language as Spanish
+     * @param standardProfile is the Profile
+     * @return User
+    ********************************************************************************************************/
+    private static User buildSpanishUser(Profile standardProfile) {
+        return
+            new User(
+            UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
+            Email = 'spanishlanguageuser@testorg.com',
+            Alias = 'spanis',
+            ProfileId = standardProfile.Id,
+            LastName = 'Testing',
+            LanguageLocaleKey = 'es',
+            LocaleSidKey = 'es',
+            EmailEncodingKey = 'UTF-8',
+            TimeZoneSidKey = 'America/Los_Angeles'
+        );
+
+    }
+
+    /*******************************************************************************************************
+     * @description Returns contact record
+     * @return Contact
+    ********************************************************************************************************/
     private static Contact getContact() {
         return [
             SELECT FirstName, LastName, AccountId, Account.Name
