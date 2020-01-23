@@ -22,21 +22,21 @@
             </lightning-layout-item>
         </lightning-layout>
 
-    <div if:true={showSpinner} class="spinnerContainer">
-        <lightning-spinner alternative-text={label.messageLoading} variant="brand" size="large"></lightning-spinner>
-    </div>
+        <div if:true={showSpinner} class="spinnerContainer">
+            <lightning-spinner alternative-text={label.messageLoading} variant="brand" size="large"></lightning-spinner>
+        </div>
 
-    <div class="slds-docked-form-footer ge-form-footer">
-        <lightning-button label={label.geCancel} title={label.geCancel} onclick={handleCancel} class="slds-m-left_x-small"></lightning-button>
-        <lightning-button
-                variant="brand"
-                label={saveActionLabel}
-                title={saveActionLabel}
-                onclick={handleSave}
-                class="slds-m-left_x-small"
-                disabled={isUpdateActionDisabled}>
-        </lightning-button>
-    </div>
+        <div class="slds-docked-form-footer ge-form-footer">
+            <lightning-button label={label.geCancel} title={label.geCancel} onclick={handleCancel} class="slds-m-left_x-small"></lightning-button>
+            <lightning-button
+                    variant="brand"
+                    label={saveActionLabel}
+                    title={saveActionLabel}
+                    onclick={handleSave}
+                    class="slds-m-left_x-small"
+                    disabled={isUpdateActionDisabled}>
+            </lightning-button>
+        </div>
     </template>
 
     <div class="slds-card slds-card_extension" if:false={isAccessible}>
