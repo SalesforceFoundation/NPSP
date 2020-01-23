@@ -284,7 +284,7 @@ private class OPP_OpportunityNaming_TEST
     * language other than English.
     ********************************************************************************************************/
     @isTest
-    public static void shouldFormatOppNameWhenInsertingForNonEnglishUser() {
+    private static void shouldFormatOppNameWhenInsertingForNonEnglishUser() {
 
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
             Name = 'foo',
@@ -330,7 +330,7 @@ private class OPP_OpportunityNaming_TEST
     * button is clicked when logged in user language is not English.
     ********************************************************************************************************/
     @isTest
-    public static void shouldUpdateOppNameWhenAmountIsUpdatedForNonEnglishUser() {
+    private static void shouldUpdateOppNameWhenAmountIsUpdatedForNonEnglishUser() {
         Opportunity queryOpp;
 
         Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
@@ -397,7 +397,7 @@ private class OPP_OpportunityNaming_TEST
     * opportunity is updated when logged in user language is not English.
     ********************************************************************************************************/
     @isTest
-    public static void shouldFormatOppNameWhenBatchRunForNonEnglishUser() {
+    private static void shouldFormatOppNameWhenBatchRunForNonEnglishUser() {
         List<Opportunity> queryOpp = new List<Opportunity>();
 
         Contact con = new Contact(LastName='conname');
