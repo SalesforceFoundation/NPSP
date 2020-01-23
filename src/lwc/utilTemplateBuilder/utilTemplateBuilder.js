@@ -55,8 +55,8 @@ import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
-import getGiftEntryFeatureGateSettings from
-        '@salesforce/apex/UTIL_CustomSettingsFacade.getGiftEntryFeatureGateSettings';
+import getGiftEntrySettings from
+        '@salesforce/apex/UTIL_CustomSettingsFacade.getGiftEntrySettings';
 
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
@@ -399,10 +399,10 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
  */
 const getPageAccess = async () => {
     const dataImportSettings = await getDataImportSettings();
-    const giftEntryFeatureGateSettings = await getGiftEntryFeatureGateSettings();
+    const giftEntryGateSettings = await getGiftEntrySettings();
     const isAdvancedMappingOn =
         dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
-    const isGiftEntryEnabled = giftEntryFeatureGateSettings.Enable_Gift_Entry__c;
+    const isGiftEntryEnabled = giftEntryGateSettings.Enable_Gift_Entry__c;
     return isAdvancedMappingOn && isGiftEntryEnabled;
 };
 
