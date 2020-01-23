@@ -23,15 +23,15 @@ ASC Reciprocal Relationship Test Case 1
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Soft Credit This Year    contains    $500.00    
-    Confirm Field Value    Soft Credit Total    contains    $500.00    
+    Navigate To And Validate Field Value    Soft Credit This Year    contains    $500.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $500.00
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Total Gifts This Year    contains    $500.00    
-    Confirm Field Value    Total Gifts    contains    $500.00    
-    Confirm Field Value    Soft Credit This Year    contains    $0.00    
-    Confirm Field Value    Soft Credit Total    contains    $0.00    
+    Navigate To And Validate Field Value    Total Gifts This Year    contains    $500.00
+    Navigate To And Validate Field Value   Total Gifts    contains    $500.00
+    Navigate To And Validate Field Value    Soft Credit This Year    contains    $0.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $0.00
     
 Test Case 2
     [tags]  unstable
@@ -57,12 +57,12 @@ Test Case 2
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Soft Credit This Year    contains    $500.00    
-    Confirm Field Value    Soft Credit Total    contains    $500.00    
+    Navigate To And Validate Field Value    Soft Credit This Year    contains    $500.00
+    Navigate To And Validate Field Value   Soft Credit Total    contains    $500.00
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Total Gifts This Year    contains    $500.00    
-    Confirm Field Value    Total Gifts    contains    $500.00    
-    Confirm Field Value    Soft Credit This Year    contains    $0.00    
-    Confirm Field Value    Soft Credit Total    contains    $0.00    
+    Navigate To And Validate Field Value    Total Gifts This Year    contains    $500.00
+    Navigate To And Validate Field Value    Total Gifts    contains    $500.00
+    Navigate To And Validate Field Value   Soft Credit This Year    contains    $0.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $0.00

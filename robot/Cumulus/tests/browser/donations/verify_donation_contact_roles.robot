@@ -1,38 +1,76 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
+
+***Keywords***
+
+
+# Set up all the required data for the test based on the keyword requests
+Setup Test Data
+    # Create contact1
+    Setupdata   contact1   ${contact1_fields}
+
+    # Create contact2 linked to contact1's household
+    &{contact2_fields} =	Create Dictionary  Email=test2@example.com  AccountId=${data}[contact1][AccountId]
+    Setupdata   contact2   ${contact2_fields}
+
+    ${ns} =  Get NPSP Namespace Prefix
+    &{opportunity2_fields} =	Create Dictionary  Type=Donation   Name=Rollup test $50 donation    Amount=50   StageName=Closed Won   ${ns}Primary_Contact__c=${data}[contact2][Id]
+
+    # Setup an opportunity for contact1 and contact2
+    Setupdata   contact1   None     ${opportunity1_fields}
+    Setupdata   contact2   None     ${opportunity2_fields}
+
+*** Variables ***
+&{contact1_fields}         Email=test@example.com
+&{opportunity1_fields}     Type=Donation   Name=Delete test $100 Donation   Amount=100  StageName=Closed Won
 
 *** Test Cases ***
 
 Create Donation from Contact and Verify Contact Roles on Opportunity Page
-    ${ns} =  Get NPSP Namespace Prefix
-    &{contact1} =  API Create Contact    Email=skristem@robot.com
-    Store Session Record    Account    &{contact1}[AccountId]
-    &{contact2} =  API Create Contact    AccountId=&{contact1}[AccountId]
-    &{opportunity} =  API Create Opportunity    &{Contact1}[AccountId]    Donation    Name=Role test $100 donation
-    Go To Record Home  &{opportunity}[Id]
-    Select Tab  Related
-    Wait For Locator    record.related.check_occurrence    Contact Roles    2
-    Select Relatedlist    Contact Roles
-    Verify Related List Field Values
-    ...                     &{contact1}[FirstName] &{contact1}[LastName]=Donor
-    ...                     &{contact2}[FirstName] &{contact2}[LastName]=Household Member  
-    &{opportunity2} =  API Create Opportunity    &{Contact2}[AccountId]    Donation    
-    ...            Name=Rollup test $50 donation    
-    ...            ${ns}Primary_Contact__c=&{contact2}[Id]
-    ...            Amount=50
-    Go To Record Home  &{contact1}[AccountId]
-    Select Tab    Details
-    Scroll Element Into View    text:Membership Information
-    Confirm Field Value           Total Gifts    contains    $150.00    
-    Confirm Field Value           Total Number of Gifts    contains    2    
+
+    [tags]                                 W-038461                 feature:Donations
+
+    Go To Page                             Detail
+    ...                                    Opportunity
+    ...                                    object_id=${data}[contact1_opportunity][Id]
+
+
+    Select Tab                             Related
+
+    Verify Related List Field Values       Contact Roles           ${data}[contact1][FirstName] ${data}[contact1][LastName]=Donor
+    ...                                                            ${data}[contact2][FirstName] ${data}[contact2][LastName]=Household Member
+
+    Go To Page                             Details
+    ...                                    Contact
+    ...                                    object_id=${data}[contact1][AccountId]
+
+    Select Tab                             Details
+
+    # Perform the below Validations
+
+    Navigate To And Validate Field Value         Total Gifts               contains          $150.00    Membership Information
+    Navigate To And Validate Field Value         Total Number of Gifts     contains          2          Membership Information
+
+    # Run the batch process to obtain all the soft credits
     Run Donations Batch Process
-    Go To Record Home  &{contact1}[Id]
-    Scroll Element Into View    text:Soft Credit Total
-    Confirm Field Value           Total Gifts    contains    $100.00    
-    Confirm Field Value           Total Number of Gifts    contains    1    
-    Scroll Element Into View    text:Household Donation Info
-    Confirm Field Value           Soft Credit Total    contains    $50.00    
-    Confirm Field Value           Number of Soft Credits    contains    1    
+
+    Go To Page                             Details
+    ...                                    Contact
+    ...                                    object_id=${data}[contact1][Id]
+
+    Navigate To And Validate Field Value     Total Gifts              contains     $100.00  Soft Credit Total
+    Navigate To And Validate Field Value     Total Number of Gifts    contains     1    Soft Credit Total
+
+    Navigate To And Validate Field Value     Soft Credit Total        contains      $50.00  Household Donation Info
+    Navigate To And Validate Field Value     Total Number of Gifts    contains      1       Household Donation Info
+

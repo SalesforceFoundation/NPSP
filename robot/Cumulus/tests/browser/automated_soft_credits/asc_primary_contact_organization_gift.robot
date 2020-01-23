@@ -25,5 +25,5 @@ Create ASC for Primary Contact on Organization Gift
     Go To Record Home    &{Contact}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Soft Credit This Year    contains    $50.00    
-    Confirm Field Value    Soft Credit Total    contains    $50.00    
+    Navigate To And Validate Field Value    Soft Credit This Year    contains    $50.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $50.00

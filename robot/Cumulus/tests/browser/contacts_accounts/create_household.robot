@@ -96,6 +96,5 @@ Create Household With additional details
     ${contact_id1} =                      Save Current Record ID For Deletion      Contact
     &{contact1}                           Verify Record Is Created In Database  Contact                        ${contact_id1}
     Store Session Record                  Account                               &{contact1}[AccountId]
-    Select Tab                            Details 
-    Confirm Field Value                   Work Email                            contains                       automation@example.com        
+    Navigate To And Validate Field Value  Work Email            contains        automation@example.com          Details
     
