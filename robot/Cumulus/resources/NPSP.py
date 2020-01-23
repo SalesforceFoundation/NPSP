@@ -1253,9 +1253,9 @@ class NPSP(SalesforceRobotLibraryBase):
         data = self.builtin.get_variable_value("${data}", {})
         if account_data is not None:
 
-            # create the account
+            # create the account based on the user input specified account type
             name = self.randomString(10);
-            rt_id = self.salesforce.get_record_type_id("Account","Organization")
+            rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
             account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
             account = self.salesforce.salesforce_get("Contact",account_id)
