@@ -5147,6 +5147,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Complete this field.</value>
     </labels>
     <labels>
+        <fullName>geEditBatchInfo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to edit batch information</shortDescription>
+        <value>Edit Batch Info</value>
+    </labels>
+    <labels>
         <fullName>geErrorExistingTemplateName</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
