@@ -310,13 +310,15 @@ const getRecordFieldNames = (formTemplate, fieldMappings) => {
 
     for (const section of formTemplate.layout.sections) {
         for (const element of section.elements) {
-            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
-                let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-                if (objectName === CONTACT_INFO.objectApiName || objectName === ACCOUNT_INFO.objectApiName) {
-                    let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
-                    fieldNames.push(`${objectName}.${fieldName}`);
-                }              
-            }     
+            if(element.elementType !== 'widget') {
+                for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                    let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+                    if (objectName === CONTACT_INFO.objectApiName || objectName === ACCOUNT_INFO.objectApiName) {
+                        let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                        fieldNames.push(`${objectName}.${fieldName}`);
+                    }
+                }
+            }
         }
     }
     return fieldNames;

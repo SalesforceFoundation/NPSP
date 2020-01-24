@@ -3,6 +3,7 @@ import {isNotEmpty, debouncify} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -27,10 +28,21 @@ export default class GeFormField extends LightningElement {
 
     handleValueChangeSync = (event) => {
         this.value = this.getValueFromChangeEvent(event);
-        const evt = new CustomEvent('change', {field: this.element, value: this.value});
+        const detail = {
+            element: this.element,
+            value: this.value,
+            targetFieldName: this.targetFieldName
+        };
+        const evt = new CustomEvent('valuechange', {detail, bubbles: true});
         this.dispatchEvent(evt);
         if(this.isRichText) {
             this.checkRichTextValidity();
+        }
+
+        if(this.sourceFieldAPIName === 'Donation_Amount__c') {
+            // fire event for reactive widget component containing the Data Import field API name and Value
+            // currently only used for the Donation Amount.
+            fireEvent(null, 'widgetData', { Donation_Amount__c: this.value });
         }
     };
 
@@ -47,11 +59,13 @@ export default class GeFormField extends LightningElement {
     }
 
     connectedCallback() {
-        if(this.targetFieldName !== undefined){
+        if(this.targetFieldName !== undefined) {
             // Construct an element object using the field name and mapping info
+            const required = this.fieldInfo.Is_Required || (this.element && this.element.required);
             this.element = {
+                ...this.element,
                 label: this.fieldInfo.Target_Field_Label,
-                required: this.fieldInfo.Is_Required,
+                required,
                 dataImportFieldMappingDevNames: [this.targetFieldName]
             };
         }
@@ -143,7 +157,6 @@ export default class GeFormField extends LightningElement {
 
         // TODO: Update for widget fields
         fieldAndValue[this.formElementName] = this.value;
-
         return fieldAndValue;
     }
 
@@ -241,10 +254,12 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    /**
+     * Set the value of the field.
+     * @param value Value to set on the field.
+     */
     @api
-    load(data) {
-        const value = data[this.sourceFieldAPIName];
-
+    setValue(value) {
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             if (value) {
@@ -257,6 +272,16 @@ export default class GeFormField extends LightningElement {
         } else {
             this.value = value;
         }
+    }
+
+    /**
+     * Load a value into the form field.
+     * @param data  An sObject potentially containing a value to load.
+     */
+    @api
+    load(data) {
+        const value = data[this.sourceFieldAPIName];
+        this.setValue(value);
     }
 
     @api

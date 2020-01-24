@@ -6,7 +6,8 @@ import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
 import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
-import { getQueryParameters, isNotEmpty } from 'c/utilCommon';
+import { getQueryParameters, isNotEmpty, isEmpty } from 'c/utilCommon';
+import { registerListener } from 'c/pubsubNoPageRef';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
@@ -39,6 +40,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     erroredFields = [];
     @api pageLevelErrorMessageList = [];
     @track _dataRow; // Row being updated when in update mode
+    @track widgetData = {}; // data that must be passed down to the allocations widget.
 
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({ error, data }) {
@@ -51,6 +53,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     connectedCallback() {
+
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
             // uses the @wire service below to retrieve the Template using the Template Id
@@ -64,13 +67,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         GeFormService.getFormTemplate().then(response => {
             // read the template header info
             if(response !== null && typeof response !== 'undefined') {
-                this.formTemplate  = response.formTemplate;
+                this.formTemplate = response.formTemplate;
                 this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
                 // get the target field names to be used by getRecord
                 this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings);
+                if (isEmpty(this.donorRecordId)) {
+                    this.initializeForm(this.formTemplate);
+                }
             }
         });
+        registerListener('widgetData', this.handleWidgetData, this);
     }
 
     initializeForm(formTemplate, fieldMappings) {
@@ -336,6 +343,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api
     get isUpdateActionDisabled() {
         return this._dataRow && this._dataRow[STATUS_FIELD.fieldApiName] === 'Imported';
+    }
+
+    /**
+     * Track widget data so that our widgets can react to the overall state of the form
+     * @param payload   An object to store in widgetData
+     */
+    handleWidgetData(payload) {
+        this.widgetData = {...this.widgetData, ...payload};
     }
 
     getData(sections) {

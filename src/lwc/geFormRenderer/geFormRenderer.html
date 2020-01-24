@@ -16,7 +16,7 @@
                 </c-util-page-level-message>
             </div>
             <template for:each={sections} for:item='section'>
-                <c-ge-form-section key={section.id} section={section}></c-ge-form-section>
+                <c-ge-form-section key={section.id} section={section} widget-data={widgetData}></c-ge-form-section>
             </template>
         </lightning-layout-item>
     </lightning-layout>

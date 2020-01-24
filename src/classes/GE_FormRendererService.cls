@@ -13,6 +13,16 @@ public with sharing class GE_FormRendererService {
         return renderWrapper;
     }
 
+    /**
+     * Get Allocations settings. Used to determine the default GAU, and if the default GAU is enabled.
+     * This result cannot be cached as there is the potential for an upsert operation when no allocation settings exist.
+     * @return An Allocation_Settings__c custom setting record
+     */
+    @AuraEnabled
+    public static Allocations_Settings__c getAllocationsSettings() {
+        return UTIL_CustomSettingsFacade.getAllocationsSettings();
+    }
+
 
     /**
      * This method creates a wrapper which contains the  template selected by name and a field mapping set.
@@ -158,7 +168,7 @@ public with sharing class GE_FormRendererService {
         Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
         BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
 
-        dynSourceGroup.name = additionalObjJSONFieldName;
+        //dynSourceGroup.name = additionalObjJSONFieldName;
         dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
 
         Map<String, Object> objMappingDevNameToObjList;
@@ -207,7 +217,7 @@ public with sharing class GE_FormRendererService {
 
         if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
             String dynSourceGroupString = JSON.serialize(dynSourceGroup);
-            diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
+            // diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
         }
     }
 

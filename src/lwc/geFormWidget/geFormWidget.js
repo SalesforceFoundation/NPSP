@@ -1,4 +1,5 @@
-import {LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
+import { isNotEmpty } from 'c/utilCommon';
 
 const PAYMENT_WIDGET = 'geFormWidgetPayment';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -8,6 +9,7 @@ export default class GeFormWidget extends LightningElement {
     // TODO: Could value be an array that matches the field mappings list passed to the widget?
     @track value = [];
     @api element;
+    @api widgetData;
 
     @api
     get widgetAndValues() {
@@ -44,6 +46,10 @@ export default class GeFormWidget extends LightningElement {
 
     get widgetNotFound(){
         return WIDGET_LIST.indexOf(this.element.componentName) < 0
+    }
+
+    get totalAmount() {
+        return isNotEmpty(this.widgetData.Donation_Amount__c) ? this.widgetData.Donation_Amount__c : 0;
     }
 
     checkValid() {

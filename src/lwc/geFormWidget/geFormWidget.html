@@ -7,7 +7,7 @@
         <c-ge-form-field data-id='widgetComponent' element={element}></c-ge-form-field>
     </template>
     <template if:true={isAllocation}>
-        <c-ge-form-widget-allocation data-id='widgetComponent' element={element}></c-ge-form-widget-allocation>
+        <c-ge-form-widget-allocation data-id='widgetComponent' element={element} total-amount={totalAmount}></c-ge-form-widget-allocation>
     </template>
     <!-- Used for testing validation -->
     <!-- <lightning-button label="Check if Valid" onclick={checkValid}></lightning-button> -->

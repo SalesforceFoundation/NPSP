@@ -59,6 +59,10 @@ const getQueryParameters = () => {
     return params;
 };
 
+const isNumeric = (value) => {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+};
+
 /*******************************************************************************
  * @description Checks if value parameter is a function
  *
@@ -315,6 +319,7 @@ export {
     getQueryParameters,
     isEmpty,
     isNotEmpty,
+    isNumeric,
     isFunction,
     isObject,
     isUndefined,

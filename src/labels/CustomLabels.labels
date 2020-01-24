@@ -4795,6 +4795,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Donation</value>
     </labels>
     <labels>
+        <fullName>geErrorAmountDoesNotMatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common error when a total doesn't match Donation Amount.</shortDescription>
+        <value>Total amount doesn't match the {0}</value>
+    </labels>
+    <labels>
         <fullName>geErrorCompleteThisField</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

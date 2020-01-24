@@ -1,4 +1,5 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
+import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 import { CONTACT_INFO, ACCOUNT_INFO, 
          DI_CONTACT1_IMPORTED_INFO, DI_ACCOUNT1_IMPORTED_INFO, 
@@ -53,6 +54,14 @@ class GeFormService {
                 .catch(error => {
                     handleError(error);
                 });
+        });
+    }
+
+    getAllocationSettings() {
+        return new Promise((resolve, reject) => {
+           getAllocationSettings()
+               .then(resolve)
+               .catch(handleError)
         });
     }
 

@@ -2,7 +2,9 @@ import {LightningElement, api, track} from 'lwc';
 
 export default class GeFormSection extends LightningElement {
     @api section;
+    @api widgetData;
     @track expanded = true;
+
 
     /**
      * Get the icon that should display next to the twistable section header

@@ -64,6 +64,7 @@ import geButtonFormFieldsModalDeleteSectionAndFields from '@salesforce/label/c.g
 import geButtonNewBatch from '@salesforce/label/c.geButtonNewBatch';
 import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
+import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
 import geErrorFieldPermission from '@salesforce/label/c.geErrorFieldPermission';
@@ -190,6 +191,7 @@ class GeLabelService {
         geButtonNewBatch,
         geButtonNewSingleGift,
         geButtonTemplatesTabCreateTemplate,
+        geErrorAmountDoesNotMatch,
         geErrorCompleteThisField,
         geErrorExistingTemplateName,
         geErrorFieldPermission,

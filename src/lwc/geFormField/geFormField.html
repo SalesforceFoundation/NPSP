@@ -6,7 +6,8 @@
             formatter={formatter}
             required={element.required}
             onchange={handleValueChange} 
-            label={fieldLabel}>
+            label={fieldLabel}
+            disabled={element.disabled}>
         </lightning-input>
     </template>
     <template if:true={isLookup}>
@@ -18,7 +19,8 @@
                                 required={element.required}
                                 id={element.id}
                                 object-describe-info={objectDescribeInfo}
-                                label={element.customLabel}>
+                                label={element.customLabel}
+                                disabled={element.disabled}>
         </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
