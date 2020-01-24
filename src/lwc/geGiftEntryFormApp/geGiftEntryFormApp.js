@@ -3,7 +3,7 @@ import GeFormService from 'c/geFormService';
 import {handleError} from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 
-export default class GeBatchGiftEntryApp extends LightningElement {
+export default class GeGiftEntryFormApp extends LightningElement {
     @api recordId;
     @api sObjectName;
 

@@ -3321,7 +3321,7 @@
         <members>bdiObjectMappings</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
-        <members>geBatchGiftEntryApp</members>
+        <members>geGiftEntryFormApp</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>

@@ -1,7 +1,7 @@
 <aura:component
         implements="force:hasSObjectName,force:hasRecordId,flexipage:availableForAllPageTypes"
         access="global"
-        description="Aura component that wraps the geBatchGiftEntryApp LWC component to
+        description="Aura component that wraps the geGiftEntryFormApp LWC component to
                      show modals using the overlayLibrary.">
 
     <aura:dependency resource="c:geBatchWizard"/>
@@ -14,7 +14,7 @@
     <c:utilDedicatedListener eventName="geBatchWizardEvent"
                              onreceiveevent="{!c.handleBatchWizardEvent}"/>
 
-    <c:geBatchGiftEntryApp aura:id="batchGiftEntryApp"
+    <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
                            recordId="{!v.recordId}"
                            sObjectName="{!v.sObjectName}"
                            oneditbatch="{!c.handleEditBatch}"/>
