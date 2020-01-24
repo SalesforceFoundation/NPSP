@@ -37,6 +37,8 @@
 //TODO: finish implementation of interface so other implementing classes can be used. this will require making classes global and a heirarchical setting that we don't yet have. TBD if this is necessary.
 public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
+    private static final SObjectType recordTypeSobjectType = UTIL_Describe.getSObjectType('RecordType');
+
     /*********************************************************************************************************
     * @description Left token for field names in Opportunity Naming Settings spec.
     */
@@ -85,7 +87,7 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             Opportunity queryOpp = mapOppsQuery.get(opp.id);
             Contact con = mapOppIdToCon.get(opp.id);
             Opportunity_Naming_Settings__c ons = getONS(queryOpp);
-
+System.debug('ONS=' + ons);
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c)) {
                 opp.Name = replaceFieldNamesWithValues(queryOpp, con, ons);
 
@@ -256,10 +258,10 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     * @param fields A set of strings of all fields from an opportunity naming spec.
     * @return string An opportunity query string.
     ********************************************************************************************************/
-    public static string getOppQuery(set<string> fields) {
-        fields.addAll(new set<string>{'id','name','recordtypeid', 'recordtype.name', 'account.npe01__systemisindividual__c'});
-        string result = 'SELECT ';
-        for (string field : getOppFields(fields)) {
+    public static String getOppQuery(Set<String> fields) {
+        fields.addAll(new Set<string>{'id','name','recordtypeid', 'tolabel(recordtype.name) RecordTypeLabel', 'account.npe01__systemisindividual__c'});
+        String result = 'SELECT ';
+        for (String field : getOppFields(fields)) {
             result += field + ', ';
         }
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization() && !result.containsIgnoreCase('currencyisocode')) {
@@ -355,8 +357,8 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
     * @param ons The opportunity naming setting that applies to this opportunity.
     * @return string The opportunity name for this opportunity.
     ********************************************************************************************************/
-    public static string replaceFieldNamesWithValues(Opportunity opp, Contact con, Opportunity_Naming_Settings__c ons) {
-        string result = ons.Opportunity_Name_Format__c;
+    public static String replaceFieldNamesWithValues(Opportunity opp, Contact con, Opportunity_Naming_Settings__c ons) {
+        String result = ons.Opportunity_Name_Format__c;
 
         //First, instantiate a new Pattern object looking for {!...} without any nested {'s.
         Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
@@ -366,17 +368,17 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
 
         while (MyMatcher.find()) {
             //get the fieldname without the {! }
-            string strField = ons.Opportunity_Name_Format__c.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
+            String strField = ons.Opportunity_Name_Format__c.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
 
             //separate cross object references, i.e. account.name
-            list<string> splitField = (strField.split('\\.',0));
+            List<String> splitField = (strField.split('\\.',0));
 
             //remove the field name itself to only include parent object references
-            string fieldName = splitField[splitField.size()-1];
+            String fieldName = splitField[splitField.size()-1];
             splitField.remove(splitField.size()-1);
 
             //use the correct sObject
-            sObject thisObj;
+            SObject thisObj;
             if (!splitField.isEmpty() && splitField[0].equalsIgnoreCase('contact')) {
                 thisObj = con;
                 splitField.remove(0);
@@ -385,14 +387,18 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             }
 
             //traverse parent relationships until the last one
-            for (string parentObj : splitField) {
-                if (thisObj!=null) {
-                    thisObj = thisObj.getsObject(parentObj);
+            for (String parentObj : splitField) {
+                if (thisObj != null) {
+                    thisObj = thisObj.getSObject(parentObj);
                 }
+            }
+            // For the RecordType object, use the result of toLabel(RecordType.Name) so the value is properly translated
+            if (thisObj != null && thisObj.getSObjectType() == recordTypeSobjectType) {
+                thisObj.put('Name', thisObj.get('RecordTypeLabel'));
             }
 
             //if this field is a date or datetime field, follow the format supplied in the settings
-            string val = getFieldValue(thisObj, fieldName, ons);
+            String val = getFieldValue(thisObj, fieldName, ons);
 
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
