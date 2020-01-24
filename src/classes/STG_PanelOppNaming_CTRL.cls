@@ -46,15 +46,24 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     */
     public string currentONSName {get;set;}
 
-    /*********************************************************************************************************
-    * @description Create string constant RECURRINGDONATIONINSTALLMENTNAME instead of hardcoding npsp.
+   /***
+    * @description Contains Recurring Donation Installment Name field API name
     */
-    public static final string RECURRINGDONATIONINSTALLMENTNAME = UTIL_Namespace.StrTokenNSPrefix('Recurring_Donation_Installment_Name__c');
+    private static String rdInstallmentFieldName {
+        get {
+            if (String.isBlank(rdInstallmentFieldName)) {
+                rdInstallmentFieldName = UTIL_Namespace.StrTokenNSPrefix('Recurring_Donation_Installment_Name__c');
+            }
+            return rdInstallmentFieldName;
+        }
+        set;
+    }
 
     /*********************************************************************************************************
-    * @description enum to specify behavior of how to handle attribution names on opportunity
+    * @description Specifies whether you want to apply these settings to Contact Donations,
+    * Organization Donations, or both Contact and Organization Donations.
     */
-    public enum oppAttributionNames {
+    public enum AttributionOptions {
         Both,
         Contact_Donations,
         Organization_Donations
@@ -186,7 +195,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
             if (listSOOpportunityNamingFormats == null) {
                 listSOOpportunityNamingFormats = new list<SelectOption>();
                 listSOOpportunityNamingFormats.add(new SelectOption('', Label.stgLabelDoNotRename));
-                listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate}' + '{!'+RECURRINGDONATIONINSTALLMENTNAME + '}', '{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate}' + '{!'+RECURRINGDONATIONINSTALLMENTNAME + '}'));
+                listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate}' + '{!' + rdInstallmentFieldName + '}', '{!Contact.Name} {!Amount} {!RecordType.Name} {!CloseDate}' + '{!' + rdInstallmentFieldName + '}'));
                 listSOOpportunityNamingFormats.add(new SelectOption('{!Account.Name} {!Amount} {!RecordType.Name} {!CloseDate}', '{!Account.Name} {!Amount} {!RecordType.Name} {!CloseDate}'));
                 listSOOpportunityNamingFormats.add(new SelectOption('{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}', '{!Contact.Name} {!RecordType.Name} {!CloseDate} {!Campaign.Name}'));
                 listSOOpportunityNamingFormats.add(new SelectOption(Label.stgLabelOther, Label.stgLabelOther));
@@ -210,12 +219,12 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     }
 
     /*********************************************************************************************************
-    * @description  Generate the list of SelectOptions for Opportunity Attribution from oppAttributionNames
+    * @description  Generate the list of SelectOptions for Opportunity Attribution from AttributionOptions
     */
     private static List<SelectOption> getOppAttributionOptions() {
         List<SelectOption> options = new List<SelectOption>();
 
-        for (oppAttributionNames option : oppAttributionNames.values()) {
+        for (AttributionOptions option : AttributionOptions.values()) {
             options.add(new SelectOption(option.name(), convertToAttributionNamingLabel(option.name())));
         }
 
@@ -228,13 +237,13 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
       return The converted custom label string
     */
     public static String convertToAttributionNamingLabel(String attributionOption) {
-        if (attributionOption == oppAttributionNames.Both.name()) {
+        if (attributionOption == AttributionOptions.Both.name()) {
             return Label.OppNamingBoth;
 
-        } else if(attributionOption == oppAttributionNames.Contact_Donations.name()) {
+        } else if(attributionOption == AttributionOptions.Contact_Donations.name()) {
             return Label.oppNamingIndividual;
 
-        } else if (attributionOption == oppAttributionNames.Organization_Donations.name()) {
+        } else if (attributionOption == AttributionOptions.Organization_Donations.name()) {
             return Label.oppNamingOrganizational;
         }
 

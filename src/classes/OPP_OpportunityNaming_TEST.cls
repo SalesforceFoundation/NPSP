@@ -39,6 +39,14 @@ private class OPP_OpportunityNaming_TEST
 {
     private static final Date CLOSE_DATE = Date.today().addDays(1);
 
+    /****
+     * @description Creates data required for unit tests
+     */
+    @TestSetup
+    private static void setUp() {
+        insert UTIL_UnitTestData_TEST.getContact();
+    }
+
     /*********************************************************************************************************
     * @description Returns an active record type id for the current profile.
     */
@@ -166,12 +174,12 @@ private class OPP_OpportunityNaming_TEST
             Name = 'foo',
             Opportunity_Record_Types__c = '',
             Opportunity_Name_Format__c = '{!Account.Name} {!Amount} {!Type} {!RecordType.Name}',
-            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Organization_Donations.name()
+            Attribution__c = STG_PanelOppNaming_CTRL.AttributionOptions.Organization_Donations.name()
         ));
         onsList.add(new Opportunity_Naming_Settings__c(
             Name = 'foo2',
             Opportunity_Name_Format__c = '{!Contact.Name} {!Contact.HasOptedOutOfFax} {!Type} {!RecordType.Name}',
-            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Contact_Donations.name()
+            Attribution__c = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name()
         ));
 
         if (hasActiveRecType())
@@ -258,7 +266,7 @@ private class OPP_OpportunityNaming_TEST
             Name='temp',
             Amount=8,
             CloseDate = Date.newInstance(2000, 1, 1),
-            npe01__Contact_Id_for_Role__c = con.id
+            npe01__Contact_Id_for_Role__c = getContact().id
         );
 
         Exception oppException;
@@ -286,38 +294,21 @@ private class OPP_OpportunityNaming_TEST
     @isTest
     private static void shouldFormatOppNameWhenInsertingForNonEnglishUser() {
 
-        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
-            Name = 'foo',
-            Opportunity_Name_Format__c = '{!Contact.Name} {!CloseDate} ',
-            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Both.name()
-        );
-
-        insert ons;
-
-        Account acc = new Account(Name='accname');
-        insert acc;
-        Contact con = new Contact(LastName='conname');
-        insert con;
+        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Both.name();
+        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
         //spanish language users to use for opp name formatting
         User spanishLanguageUser = buildSpanishUser(standardProfile);
 
         System.runAs(spanishLanguageUser) {
-            Opportunity opp = new Opportunity(
-            AccountId = acc.id,
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            Name='temp',
-            Amount=8,
-            CloseDate = CLOSE_DATE,
-            npe01__Contact_Id_for_Role__c = con.id
-            );
-
+            Opportunity opp =  buildOpportunity(getContact().Id);
             insert opp;
 
             List<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
 
-            String oppName = 'conname';
+            String oppName = getContact().Name;
+            oppName += ' ' + '$8';
             DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
             oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
             System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
@@ -333,37 +324,23 @@ private class OPP_OpportunityNaming_TEST
     private static void shouldUpdateOppNameWhenAmountIsUpdatedForNonEnglishUser() {
         Opportunity queryOpp;
 
-        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
-            Name = 'foo',
-            Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} ',
-            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Contact_Donations.name()
-        );
-
-        insert ons;
+        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
+        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
 
-        Contact con = new Contact(LastName='conname');
-        insert con;
+
 
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
         //spanish language users to use for opp name formatting
         User spanishLanguageUser = buildSpanishUser(standardProfile);
 
         System.runAs(spanishLanguageUser) {
-            Opportunity opp = new Opportunity(
-            AccountId = getContact().AccountId,
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            Name='temp',
-            Amount=8,
-            CloseDate = CLOSE_DATE,
-            npe01__Contact_Id_for_Role__c = con.id
-            );
-
+            Opportunity opp =  buildOpportunity(getContact().Id);
             insert opp;
 
             List<Opportunity> oppCreated = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE Id = :opp.id];
-            String oppName = 'conname';
+            String oppName = getContact().Name;
             oppName += ' ' + '$8';
             DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
             oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
@@ -384,7 +361,7 @@ private class OPP_OpportunityNaming_TEST
 
         ctrl.buttonClick();
 
-        String oppName = 'conname';
+        String oppName = getContact().Name;
         oppName += ' ' + '$10';
         DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
         oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
@@ -400,23 +377,12 @@ private class OPP_OpportunityNaming_TEST
     private static void shouldFormatOppNameWhenBatchRunForNonEnglishUser() {
         List<Opportunity> queryOpp = new List<Opportunity>();
 
-        Contact con = new Contact(LastName='conname');
-        insert con;
-
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
         //spanish language users to use for opp name formatting
         User spanishLanguageUser = buildSpanishUser(standardProfile);
 
         System.runAs(spanishLanguageUser) {
-            Opportunity opp = new Opportunity(
-            AccountId = getContact().AccountId,
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            Name='temp',
-            Amount=8,
-            CloseDate = CLOSE_DATE,
-            npe01__Contact_Id_for_Role__c = con.id
-            );
-
+            Opportunity opp =  buildOpportunity(getContact().Id);
             insert opp;
 
             List<Opportunity> oppCreated = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE Id = :opp.id];
@@ -425,13 +391,8 @@ private class OPP_OpportunityNaming_TEST
 
         }
 
-        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
-            Name = 'foo',
-            Opportunity_Name_Format__c = '{!Contact.Name} {!CloseDate} ',
-            Attribution__c = STG_PanelOppNaming_CTRL.oppAttributionNames.Contact_Donations.name()
-        );
-
-        insert ons;
+        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
+        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
 
@@ -441,7 +402,8 @@ private class OPP_OpportunityNaming_TEST
         Test.stopTest();
 
         queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :getContact().accountId];
-        String oppName = 'conname';
+        String oppName = getContact().Name;
+        oppName += ' ' + '$8';
         DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
         oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
         System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated after the batch is run.');
@@ -470,12 +432,44 @@ private class OPP_OpportunityNaming_TEST
     }
 
     /*******************************************************************************************************
+     * @description Creates Opportunity naming settings with specified attribution type
+     * @param valueByField A map of field name to value
+    ********************************************************************************************************/
+    private static void setUpOppNamingSettings(Map<String, Object> valueByField) {
+        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
+
+        );
+
+        for (String field : valueByField.keySet()) {
+            ons.put(field, valueByField.get(field));
+        }
+        insert ons;
+    }
+
+    /*******************************************************************************************************
+     * @description builds opportunity with specified fields
+     * @param contactId is the contact for the opportunity
+     * @return the opportunity for creation
+    ********************************************************************************************************/
+    private static Opportunity buildOpportunity(Id contactId) {
+        return new TEST_OpportunityBuilder()
+            .withName('temp')
+            .withAmount(8)
+            .withContact(ContactId)
+            .withClosedWonStage()
+            .withCloseDate(CLOSE_DATE)
+            .build();
+    }
+
+    /*******************************************************************************************************
      * @description Returns contact record
      * @return Contact
     ********************************************************************************************************/
     private static Contact getContact() {
         return [
-            SELECT FirstName, LastName, AccountId, Account.Name
+            SELECT Name, FirstName, LastName, AccountId, Account.Name
             FROM Contact
             LIMIT 1
         ];
