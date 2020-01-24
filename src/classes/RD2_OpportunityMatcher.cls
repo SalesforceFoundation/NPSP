@@ -31,26 +31,43 @@
 * @author Salesforce.org
 * @date 2020
 * @group Recurring Donations
-* @description Recurring Donation matcher for existing Opportunities and future installments
+* @description Recurring Donation existing Opportunities and future installments matcher
 *
 */
 public inherited sharing class RD2_OpportunityMatcher {
     /***
-     * @description A flag to mark Closed Lost Opps that are voided by the data migration.
-     * The flag is used to exclude (ignore) such Opps by the Opp service
+     * @description A flag to mark Closed Lost Opportunities voided by the data migration.
+     * The flag is used to exclude such Opps from yearly values as well as in Opp eval service
      * when determining if the next Opp with the same Close Date can be created.
      */
     public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = RD2_DataMigrationBase_BATCH.MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
+    /**
+     * @description Current date is the cut off date to filter out and evaluate current existing Opportunities.
+     * Moreover, it is used to determine projected installments as of the current date.
+     * It can be a past date, today or a future date when testing. 
+     * The current date is always today when used within RD batch scheduler.
+    */
     private Date currentDate;
+
+    /***
+    * @description Contains all filtered Opportunities and/or projected installments mapped by their Close Date
+    */
     private Map<Date, Record> recordByCloseDate = new Map<Date, Record>();//TODO more than one Opp on the same Close Date?
+
+    /***
+    * @description Contains Opportunities with Close Date >= current date
+    * and projected installments ordered by their Close Date
+    */
     private Map<Integer, Record> currentRecordByOrder {
         get {
             if (currentRecordByOrder == null) {
                 currentRecordByOrder = new Map<Integer, Record>();
-                Integer i = 0;
+
                 List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());
                 closeDates.sort();
+
+                Integer i = 0;
                 for (Date closeDate : closeDates) {
                     if (closeDate >= currentDate) {
                         currentRecordByOrder.put(i++, recordByCloseDate.get(closeDate));
@@ -62,10 +79,21 @@ public inherited sharing class RD2_OpportunityMatcher {
         set;
     }
 
+    /***
+     * @description Constructor
+     * @param currentDate Date representing current date
+     */
     public RD2_OpportunityMatcher(Date currentDate) {
         this.currentDate = currentDate;
     }
 
+    /***
+     * @description Filters Opportunities matching the provided year regardless if they are open or closed.
+     * Opportunities marked as Closed Lost in data migration are ignored.
+     * @param opps Recurring Donation Opportunities
+     * @param year Year filter criteria
+     * @return RD2_OpportunityMatcher This Opportunity matcher instance
+     */
     public RD2_OpportunityMatcher filterByYear(List<Opportunity> opps, Integer year) {
         for (Opportunity opp : opps) {
             if (opp.CloseDate.year() == year && !isClosedLostInMigration(opp)) {
@@ -75,6 +103,11 @@ public inherited sharing class RD2_OpportunityMatcher {
         return this;
     }
 
+    /***
+     * @description Filters Open Opportunities with Close Date greater or equal to the current date
+     * @param opps Recurring Donation Opportunities
+     * @return RD2_OpportunityMatcher This Opportunity matcher instance
+     */
     public RD2_OpportunityMatcher filterOpen(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
@@ -84,6 +117,12 @@ public inherited sharing class RD2_OpportunityMatcher {
         return this;
     }
 
+    /***
+     * @description Filters Opportunities with Close Date greater or equal to the current date.
+     * Opportunities marked as Closed Lost in data migration are ignored.
+     * @param opps Recurring Donation Opportunities
+     * @return RD2_OpportunityMatcher This Opportunity matcher instance
+     */
     public RD2_OpportunityMatcher filterCurrent(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             if (opp.CloseDate >= currentDate && !isClosedLostInMigration(opp)) {
@@ -93,17 +132,28 @@ public inherited sharing class RD2_OpportunityMatcher {
         return this;
     }
 
+    /***
+     * @description Determines if the Opportunity is marked as Closed Lost in data migration
+     * @param opp Recurring Donation Opportunity
+     * @return Boolean
+     */
     private Boolean isClosedLostInMigration(Opportunity opp) {
         return opp.isClosed
             && !opp.IsWon
             && opp.Recurring_Donation_Installment_Number__c == MIGRATION_INSTALLMENT_NUMBER_FLAG;
     }
 
+    /***
+     * @description Matches existing filtered Opportunities with projected installments
+     * and creates resulting Records.
+     * @param installments Recurring Donation projected installments
+     * @return RD2_OpportunityMatcher This Opportunity matcher instance
+     */
     public RD2_OpportunityMatcher match(List<RD2_ScheduleService.Installment> installments) {
-        for (Integer i = 0, size = installments.size(); i < size; i++) {
-            RD2_ScheduleService.Installment installment = installments[i];
-            Record matched = getMatchFor(installment.nextDonationDate, i);
+        for (Integer order = 0, size = installments.size(); order < size; order++) {
+            RD2_ScheduleService.Installment installment = installments[order];
 
+            Record matched = getMatchFor(installment.nextDonationDate, order);
             if (matched == null) {
                 recordByCloseDate.put(installment.nextDonationDate, new Record(installment));
             } else {
@@ -114,6 +164,13 @@ public inherited sharing class RD2_OpportunityMatcher {
         return this;
     }
 
+    /***
+     * @description Determines if the Opportunity matches a projected installment
+     * based on the installment Close Date and/or the installment Close Date order after the current date.
+     * @param closeDate Installment Close Date
+     * @param order Order of the installment starting from the current date
+     * @return Record Matched record
+     */
     private Record getMatchFor(Date closeDate, Integer order) {
         Record matched = recordByCloseDate.get(closeDate);
 
@@ -124,28 +181,63 @@ public inherited sharing class RD2_OpportunityMatcher {
         return currentRecordByOrder.get(order);
     }
 
+    /***
+     * @description Returns number of matched records
+     * @return Integer
+     */
     public Integer size() {
         return recordByCloseDate.size();
     }
 
+    /***
+     * @description Returns matched records containting Opportunities and/or installments
+     * @return List<Record>
+     */
     public List<Record> getRecords() {
         return recordByCloseDate.values();
     }
 
+    /***
+     * @description Wrapper for the extracted Opportunity based on the filter criteria
+     * and/or matching installment. The record can have both Opportunity and installment
+     * specified if they are matching, otherwise Opportunity only is specified for records
+     * with Close Date < current date and installment only is usually specified for 
+     * records with Close Date >= current date unless there is a matching future Opportunity.
+     * @return List<Record>
+     */
     public class Record {
+        /***
+        * @description Matching Opportunity (if any) defaulting Amount value to zero
+        */
         private Opportunity opp = new Opportunity(
             Amount = 0
         );
+        /***
+        * @description Matching installment (if any)
+        */
         private RD2_ScheduleService.Installment installment;
 
+        /***
+        * @description Constructor
+        * @param installment Recurring Donation projected installment not matching any existing Opportunity
+        */
         public Record(RD2_ScheduleService.Installment installment) {
             this.installment = installment;
         }
 
+        /***
+        * @description Constructor
+        * @param installment Recurring Donation existing Opportunity
+        */
         public Record(Opportunity opp) {
             this.opp = opp;
         }
 
+        /***
+        * @description Returns Amount either from the Opportunity or
+        * from the projected installment based on which one has the most recent correct value
+        * @return Decimal
+        */
         public Decimal getAmount() {
             Decimal amount = hasInstallment() && (isNew() || isOpen())
                 ? installment.installmentAmount
@@ -154,30 +246,58 @@ public inherited sharing class RD2_OpportunityMatcher {
             return amount == null ? 0 : amount;
         }
 
+        /***
+        * @description Determines if the record already exists
+        * @return Boolean
+        */
         public Boolean isNew() {
             return opp.Id == null;
         }
 
+        /***
+        * @description Determines if the record is an Open Opportunity
+        * @return Boolean
+        */
         public Boolean isOpen() {
             return opp.isClosed == false;
         }
 
+        /***
+        * @description Determines if the record is a Closed Lost Opportunity
+        * @return Boolean
+        */
         public Boolean isClosedLost() {
             return opp.isClosed == true && opp.isWon == false;
         }
 
+        /***
+        * @description Returns the Opportunity part (if any) of the matched record
+        * @return Opportunity
+        */
         public Opportunity getOpportunity() {
             return opp;
         }
 
+        /***
+        * @description Attaches the projected installment to the already existing future Opportunity
+        * @return void
+        */
         public void attachInstallment(RD2_ScheduleService.Installment installment) {
             this.installment = installment;
         }
 
+        /***
+        * @description Determines if the record has a matching projected installment
+        * @return Boolean
+        */
         public Boolean hasInstallment() {
             return installment != null;
         }
 
+        /***
+        * @description Returns the matching projected installment (if any)
+        * @return RD2_ScheduleService.Installment
+        */
         public RD2_ScheduleService.Installment getInstallment() {
             return installment;
         }

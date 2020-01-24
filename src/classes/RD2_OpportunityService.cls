@@ -232,13 +232,6 @@ public with sharing class RD2_OpportunityService {
     * @return Boolean
     */
     private Boolean syncOppWithSchedule(Opportunity opp, RD2_ScheduleService.Installment installment, String donorName) {
-        //An installment Opportunity should always have a matching RD Schedule installment.
-        //If the installment is null, this is most probably a programatic error.
-        if (installment == null) {
-            opp.addError(System.Label.RD2_ScheduleInstallmentIsRequired);
-            return true;
-        }
-
         Boolean isChanged = false;
 
         if (opp.Amount != installment.installmentAmount) {

@@ -34,9 +34,7 @@
 * @description Trigger on Recurring Donation Opportunities when enhanced Recurring Donations are enabled
 *
 */
-public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
-
-    
+public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {    
 
     /***
     * @description Trigger handler on Opportunities when Recurring Donation enhancement is enabled
@@ -57,14 +55,15 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         }
         
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
-        updateRecurringDonations(opps, oldOpps, triggerAction);
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
 
+        updateRecurringDonations(opps, oldOpps, triggerAction);
+
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return null;
     }
 
     /***
-    * @description Extracts Opps
+    * @description Updates Recurring Donation Opportunity dependent fields 
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.

@@ -37,8 +37,8 @@
 public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
-     * @description Indicates if Opp evaluation service will be skipped.
-     * The flag is currently applicable to migration since Opp evaluation service should not be executed on migration.
+     * @description Indicates if the Opp evaluation service will be skipped.
+     * The flag is currently applicable to migration since the Opp evaluation service should not be executed on migration.
      * For example, if an active RD has no Opp, no new Opp should be created during migration.
      * If the RD is closed, close action on Open Opps should not be applied when data migration is executed.
      */
@@ -63,10 +63,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Current date used as a cut off date to filter out and evaluate Opportunities
+     * @description Current date is the cut off date to filter out and evaluate existing Opportunities
      * and to determine if the next Opp should be created for a Recurring Donation.
-     * It is also used to calculate projected RD schedule installments as of the current date.
-     * It can be a date in past, today or a future date in testing. When executed from a scheduler,
+     * Moreover, it is used to calculate projected installments as of the current date.
+     * It can be a past date, today or a future date when testing. When executed from a scheduler,
      * the current date is always today.
     */
     private Date currentDate {
@@ -79,8 +79,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Beggining of the current or the fiscal year, whichever is earlier.
-     * Date is used to retrieve all Opportunities with Close Date after the year start.
+     * @description Beggining of the current calendar or fiscal year, whichever is earlier.
     */
     private Date startDate {
         get {
@@ -241,11 +240,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            RecurringDonation rdRecord = new RecurringDonation(rd)
-                .reviseNextDonationDate(scheduleService)
-                .reviseYearValues(yearValueProcessor);
+            RecurringDonation rdRecord = new RecurringDonation(rd);
 
-            if (rdRecord.isOutdated()) {
+            if (!rdRecord.isEnhancedFormat()) {
+                continue;
+            }
+            
+            if (rdRecord
+                .reviseNextDonationDate(scheduleService)
+                .reviseYearValues(yearValueProcessor)
+                .isOutdated()
+            ) {
                 outdatedRDs.add(rdRecord.getUpdate());
             }
 
@@ -277,7 +282,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Primary processor
+     * @description Updates Recurring Donation fields if outdated:
+     * Next Donation Date, Current Year Value and Next Year Value
      * @return RD2_OpportunityEvaluationService This service instance
      */
     public RD2_OpportunityEvaluationService updateRecurringDonations() {
@@ -291,11 +297,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         rds = null;//reset  Recurring Donation values and refetch Opps
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            RecurringDonation rdRecord = new RecurringDonation(rd)
-                .reviseNextDonationDate(scheduleService)
-                .reviseYearValues(yearValueProcessor);
+            RecurringDonation rdRecord = new RecurringDonation(rd);
 
-            if (rdRecord.isOutdated()) {
+            if (!rdRecord.isEnhancedFormat()) {
+                continue;
+            }
+            
+            if (rdRecord
+                .reviseNextDonationDate(scheduleService)
+                .reviseYearValues(yearValueProcessor)
+                .isOutdated()
+            ) {
                 outdatedRDs.add(rdRecord.getUpdate());
             }
         }
@@ -430,12 +442,22 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @description Recurring Donation SObject wrapper
      */
     public class RecurringDonation {
+        /**
+        * @description Recurring Donation record
+        */
         npe03__Recurring_Donation__c rd;
+        /**
+        * @description Indicates if the Recurring Donation has an Open Opportunity
+        */
         private Boolean hasOpenOpportunity;
+        /**
+        * @description Indicates if the Recurring Donation is outdated
+        */
         private Boolean isOutdated = false;
 
         /**
         * @description Constructor
+        * @param rd Recurring Donation record
         */
         public RecurringDonation(npe03__Recurring_Donation__c rd) {
             this.rd = rd;
@@ -447,10 +469,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return RecurringDonation This record instance
         */
         public RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
-            if (!isEnhancedFormat()) {
-                return this;
-            }
-
             Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
             if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
@@ -467,16 +485,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return RecurringDonation This record instance
         */
         public RecurringDonation reviseYearValues(YearValueProcessor processor) {
-            if (!isEnhancedFormat()) {
-                return this;
-            }
-
             Decimal value = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
             if (value != rd.CurrentYearValue__c) {
                 rd.CurrentYearValue__c = value;
                 isOutdated = true;
             }
-            
+
             value = processor.calcNextYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
             if (value != rd.NextYearValue__c) {
                 rd.NextYearValue__c = value;
@@ -574,21 +588,24 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
     * @description Recurring Donation processor calculating Current Year Value and Next Year Value
+    * NOTE: values are calculated based on the calendar year currently.
     */
     public class YearValueProcessor {
         /**
         * @description Recurring Donation Schedule Service
         */
         private RD2_ScheduleService scheduleService;
+
         /**
         * @description Date representing current date.
-        * It can be back-dated or future-dated during testing, but it defaults to today.
+        * It can be back-dated or future-dated during testing, but it defaults to today
+        * in the batch scheduler or if not provided in testing.
         * Date is populated from the Opp eval service.
         */
         private Date currentDate;
 
         /**
-        * @description Date at the beginning of the current year.
+        * @description Date at the beginning of the current calendar or fiscal year.
         * Used to retrieve current year Opportunities regardless if they are open or closed.
         */
         private Date currentYearStartDate {
@@ -602,8 +619,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
-        * @description Date at the end of the current year.
-        * Used to set end date for RD Schedule Installment Close Date.
+        * @description Date at the end of the current calendar or fiscal year.
+        * Used to set end date for projected installments' Close Date.
         */
         private Date currentYearEndDate {
             get {
@@ -616,7 +633,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
-        * @description Date at the beginning of the next year.
+        * @description Date at the beginning of the next calendar or fiscal year.
         * Used to retrieve next year Opportunities regardless if they are open or closed.
         */
         private Date nextYearStartDate {
@@ -630,8 +647,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
-        * @description Date at the end of the next year.
-        * Used to set end date for RD Schedule Installment Close Date.
+        * @description Date at the end of the next calendar or fiscal year.
+        * Used to set end date for projected installments' Close Date.
         */
         private Date nextYearEndDate {
             get {
@@ -654,7 +671,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
-        * @description Returns start date to filter open/closed Opportunities based on their Close Date
+        * @description Returns the earliest date to filter open/closed Opportunities based on their Close Date.
+        * If the current year is a calendar year, the current year start date is earlier than the current date.
+        * If the current year is a fiscal year, the current year start date is also earlier than the current date.
+        * So regardless if we calculate calendar or fiscal year values, we can use the current year start date 
+        * as the cut off date to get existing Opportunities in the Opp eval service .
         */
         public Date getStartDate() {
             return currentYearStartDate;
@@ -662,8 +683,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         /**
         * @description Calculates Current Year Value
-        * @param opps A Recurring Donation Opportunities retrieved by the Opp eval service
-        * @param schedules A Recurring Donation Schedules retrieved by the Opp eval service
+        * NOTE: the value is calculated based on the calendar year currently.
+        *
+        * @param opps A Recurring Donation Opportunities
+        * @param schedules A Recurring Donation Schedules
         * @return Decimal
         */
         public Decimal calcCurrentYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
@@ -672,8 +695,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         /**
         * @description Calculates Next Year Value
-        * @param opps A Recurring Donation Opportunities retrieved by the Opp eval service
-        * @param schedules A Recurring Donation Schedules retrieved by the Opp eval service
+        * NOTE: the value is calculated based on the calendar year currently.
+        *
+        * @param opps A Recurring Donation Opportunities
+        * @param schedules A Recurring Donation Schedules
         * @return Decimal
         */
         public Decimal calcNextYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
@@ -681,13 +706,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
-        * @description Calculates Current or Next Calendar Year Value.
-        * Start and End date belong to the same year.
-        *
-        * @param opps A Recurring Donation Opportunities retrieved by the Opp eval service
-        * @param schedules A Recurring Donation Schedules retrieved by the Opp eval service
-        * @param startDate Start date to project installment Opps from
-        * @param endDate End date is the end cutoff date for the projected installment Opps
+        * @description Calculates calendar Current or Next Year Value.
+        * @param opps A Recurring Donation Opportunities
+        * @param schedules A Recurring Donation Schedules
+        * @param startDate Start date is the start cutoff date for existing Opps and projected installments
+        * @param endDate End date is the end cutoff date for projected installments
         * @return Decimal
         */
         public Decimal calcCalendarYearValue(

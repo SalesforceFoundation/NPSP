@@ -353,10 +353,12 @@
         <members>RD2_OpportunityEvaluation_BATCH</members>
         <members>RD2_OpportunityEvaluation_TEST</members>
         <members>RD2_OpportunityMatcher</members>
+        <members>RD2_OpportunityMatcher_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_QueueableService</members>
         <members>RD2_RecurringDonationsOpp_TDTM</members>
+        <members>RD2_RecurringDonationsOpp_TEST</members>
         <members>RD2_RecurringDonations_TDTM</members>
         <members>RD2_RecurringDonations_TEST</members>
         <members>RD2_ScheduleService</members>
@@ -1534,7 +1536,6 @@
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
-        <members>RD2_ScheduleInstallmentIsRequired</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
