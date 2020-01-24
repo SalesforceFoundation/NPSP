@@ -297,9 +297,9 @@ private class OPP_OpportunityNaming_TEST
         String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Both.name();
         setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
-        Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
+        User standardUser = UTIL_UnitTestData_Test.createUserWithoutInsert('Standard User');
         //spanish language users to use for opp name formatting
-        User spanishLanguageUser = buildSpanishUser(standardProfile);
+        User spanishLanguageUser = buildSpanishUser(standardUser);
 
         System.runAs(spanishLanguageUser) {
             Opportunity opp =  buildOpportunity(getContact().Id);
@@ -329,11 +329,9 @@ private class OPP_OpportunityNaming_TEST
 
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
 
-
-
-        Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
+        User standardUser = UTIL_UnitTestData_Test.createUserWithoutInsert('Standard User');
         //spanish language users to use for opp name formatting
-        User spanishLanguageUser = buildSpanishUser(standardProfile);
+        User spanishLanguageUser = buildSpanishUser(standardUser);
 
         System.runAs(spanishLanguageUser) {
             Opportunity opp =  buildOpportunity(getContact().Id);
@@ -377,9 +375,9 @@ private class OPP_OpportunityNaming_TEST
     private static void shouldFormatOppNameWhenBatchRunForNonEnglishUser() {
         List<Opportunity> queryOpp = new List<Opportunity>();
 
-        Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
+        User standardUser = UTIL_UnitTestData_Test.createUserWithoutInsert('Standard User');
         //spanish language users to use for opp name formatting
-        User spanishLanguageUser = buildSpanishUser(standardProfile);
+        User spanishLanguageUser = buildSpanishUser(standardUser);
 
         System.runAs(spanishLanguageUser) {
             Opportunity opp =  buildOpportunity(getContact().Id);
@@ -415,20 +413,10 @@ private class OPP_OpportunityNaming_TEST
      * @param standardProfile is the Profile
      * @return User
     ********************************************************************************************************/
-    private static User buildSpanishUser(Profile standardProfile) {
-        return
-            new User(
-            UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
-            Email = 'spanishlanguageuser@testorg.com',
-            Alias = 'spanis',
-            ProfileId = standardProfile.Id,
-            LastName = 'Testing',
-            LanguageLocaleKey = 'es',
-            LocaleSidKey = 'es',
-            EmailEncodingKey = 'UTF-8',
-            TimeZoneSidKey = 'America/Los_Angeles'
-        );
-
+    private static User buildSpanishUser(User standardUser) {
+        standardUser.LanguageLocaleKey = 'es';
+        standardUser.LocaleSidKey = 'es';
+        return standardUser;
     }
 
     /*******************************************************************************************************
