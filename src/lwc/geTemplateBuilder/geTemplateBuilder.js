@@ -13,6 +13,7 @@ import {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     generateId,
+    getPageAccess,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
@@ -31,7 +32,7 @@ import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Sett
 const FORMAT_VERSION = '1.0';
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
-const LANDING_PAGE_TAB_NAME = 'GE_Templates';
+const GIFT_ENTRY = 'Gift_Entry';
 const SORTED_BY = 'required';
 const SORT_ORDER = 'desc';
 const PICKLIST = 'Picklist';
@@ -63,9 +64,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         BATCH_HEADER_TAB: this.CUSTOM_LABELS.geTabBatchHeader
     });
 
-    formTemplateRecordId;
+    @api formTemplateRecordId;
+
     existingFormTemplateName;
     currentNamespace;
+    @api isClone = false;
     @track isLoading = true;
     @track isAccessible = true;
     @track activeTab = this.TabEnums.INFO_TAB;
@@ -74,7 +77,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         description: null,
         batchHeaderFields: [],
         layout: null
-    }
+    };
     formLayout = {
         fieldMappingSetDevName: null,
         version: null,
@@ -128,62 +131,54 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         return this.currentNamespace ? `${this.currentNamespace}__` : '';
     }
 
-    get listViewCustomTabApiName() {
-        return this.currentNamespace ? `${this.namespace + LANDING_PAGE_TAB_NAME}` : LANDING_PAGE_TAB_NAME;
-    }
-
     init = async () => {
         try {
-            const dataImportSettings = await getDataImportSettings();
-            const fieldMappingApiName = FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName;
+            this.isAccessible = await getPageAccess();
+            this.isLoading = false;
+             if (this.isAccessible) {
+                    this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
-            if (dataImportSettings[fieldMappingApiName] !== ADVANCED_MAPPING) {
-                this.isAccessible = false;
-                this.isLoading = false;
+                    const queryParameters = getQueryParameters();
+                    // If we have no template record id, check if there's a record id in the url
+                    if (!this.formTemplateRecordId) {
+                        this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
+                    }
 
-            } else if (dataImportSettings[fieldMappingApiName] === ADVANCED_MAPPING) {
-                await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
-                this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+                    if (this.formTemplateRecordId) {
+                        let formTemplate = await retrieveFormTemplateById({
+                            templateId: this.formTemplateRecordId
+                        });
 
-                // Check if we have query parameters in the url
-                const queryParameters = getQueryParameters();
-                this.formTemplateRecordId = queryParameters.c__recordId;
+                        this.existingFormTemplateName = formTemplate.name;
+                        this.formTemplate = formTemplate;
+                        this.batchHeaderFields = formTemplate.batchHeaderFields;
+                        this.formLayout = formTemplate.layout;
+                        this.formSections = this.formLayout.sections;
 
-                if (this.formTemplateRecordId) {
-                    let formTemplate = await retrieveFormTemplateById({
-                        templateId: this.formTemplateRecordId
-                    });
+                        this.catalogFieldsForTemplateEdit();
+                    }
 
-                    this.existingFormTemplateName = formTemplate.name;
-                    this.formTemplate = formTemplate;
-                    this.batchHeaderFields = formTemplate.batchHeaderFields;
-                    this.formLayout = formTemplate.layout;
-                    this.formSections = this.formLayout.sections;
+                    this.collectBatchHeaderFields();
+                    this.addRequiredBatchHeaderFields();
+                    this.validateBatchHeaderTab();
+                    this.handleDefaultFormFields();
 
-                    this.catalogFieldsForTemplateEdit();
+                    if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
+                        this.activeFormSectionId = this.formSections[0].id;
+                    }
+
+                    // Clear out form template record id if cloning after retrieving all relevant data
+                    if (queryParameters.c__clone || this.isClone) {
+                        this.formTemplateRecordId = null;
+                    }
+
+                    this.isLoading = false;
+                    this.isAccessible = true;
                 }
-
-                this.collectBatchHeaderFields();
-                this.addRequiredBatchHeaderFields();
-                this.validateBatchHeaderTab();
-                this.handleDefaultFormFields();
-
-                if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
-                    this.activeFormSectionId = this.formSections[0].id;
-                }
-
-                // Clear out form template record id if cloning after retrieving all relevant data
-                if (queryParameters.c__clone) {
-                    this.formTemplateRecordId = null;
-                }
-
-                this.isLoading = false;
-                this.isAccessible = true;
-            }
         } catch (error) {
             handleError(error);
         }
-    }
+    };
 
     /*******************************************************************************
     * @description Method builds and sorts a list of batch header fields for the
@@ -973,41 +968,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     /*******************************************************************************
-    * @description Navigates to the list view GE_Templates tab.
-    */
-    handleCancel() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: this.listViewCustomTabApiName
-            }
-        });
-    }
-
-    /*******************************************************************************
-    * @description Navigates to a record detail page by record id.
-    *
-    * @param {string} formTemplateRecordId: Form_Template__c record id.
-    */
-    navigateToRecordViewPage(formTemplateRecordId) {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__recordPage',
-            attributes: {
-                recordId: formTemplateRecordId,
-                actionName: 'view'
-            }
-        });
-    }
-
-    /*******************************************************************************
     * @description Navigates to Gift Entry landing page.
     */
     navigateToLandingPage() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: this.listViewCustomTabApiName
-            }
-        });
+        dispatch(this, 'changeview', { view: GIFT_ENTRY });
     }
 }

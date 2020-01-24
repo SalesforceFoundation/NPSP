@@ -38,6 +38,8 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static final Date DEFAULT_ESTABLISHED_DATE = RD_RecurringDonations_TEST.DEFAULT_ESTABLISHED_DATE;
     private static final Date TODAY = System.today();
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final Integer NUM_INSTALLMENTS = 12;
+
 
     //test closing an opportunity for an open recurring donation
     @isTest
@@ -192,7 +194,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Contact c = buildContact(a.Id);
         insert c;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
@@ -401,13 +403,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void testErrorHandlingAllSysAdmins() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
             npe03__Error_Email_Notifications__c = ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS,
-            npe03__Opportunity_Forecast_Months__c = 12
+            npe03__Opportunity_Forecast_Months__c = NUM_INSTALLMENTS
         ));
 
         Account a = buildAccount();
         insert a;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(a.Id)
             .withAmount(100)
             .withInstallmentPeriodWeekly()
@@ -443,13 +445,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
         User u = [select id from User limit 1];
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
             npe03__Error_Email_Notifications__c = u.id,
-            npe03__Opportunity_Forecast_Months__c = 12
+            npe03__Opportunity_Forecast_Months__c = NUM_INSTALLMENTS
         ));
 
         Account a = buildAccount();
         insert a;
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(a.Id)
             .withAmount(100)
             .withInstallmentPeriodWeekly()
@@ -487,12 +489,12 @@ private with sharing class RD_RecurringDonations_TEST2 {
         UTIL_Debug.debug('GID IS: ' + g.id);
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
             npe03__Error_Email_Notifications__c = g.id,
-            npe03__Opportunity_Forecast_Months__c = 12
+            npe03__Opportunity_Forecast_Months__c = NUM_INSTALLMENTS
         ));
 
         Account a = buildAccount();
         insert a;
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(a.Id)
             .withAmount(100)
             .withInstallmentPeriodWeekly()
@@ -761,7 +763,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         insert cfm;
 
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(c.Id)
             .withAmount(100)
             .withInstallmentPeriodMonthly()
@@ -844,7 +846,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @isTest
     private static void testOpenEndedMonthlyEndDates_28th() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
-            npe03__Opportunity_Forecast_Months__c = 12,
+            npe03__Opportunity_Forecast_Months__c = NUM_INSTALLMENTS,
             npe03__Maximum_Donations__c = 50
         ));
 
@@ -853,7 +855,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName('test28th')
             .withContact(c.Id)
             .withAmount(100)
@@ -868,7 +870,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Test.stopTest();
 
         List<Opportunity> listOpp28th = [SELECT Id, CloseDate FROM Opportunity WHERE npe03__Recurring_Donation__r.Name = 'test28th' order by CloseDate];
-        System.assertEquals(12, listOpp28th.size(), 'There should be 12 Opps with a Close Date of the 28th');
+        System.assertEquals(NUM_INSTALLMENTS, listOpp28th.size(), 'There should be 12 Opps with a Close Date of the 28th');
         for (Opportunity opp : listOpp28th) {
             System.assertEquals(28, opp.CloseDate.Day(), 'The Opp.CloseDate.Day should be the 28th');
         }
@@ -878,7 +880,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void testOpenEndedMonthlyEndDates_30th() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
-                npe03__Opportunity_Forecast_Months__c = 12,
+                npe03__Opportunity_Forecast_Months__c = NUM_INSTALLMENTS,
                 npe03__Maximum_Donations__c = 50
             ));
 
@@ -900,7 +902,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         }
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName('test30th')
             .withContact(c.Id)
             .withAmount(100)
@@ -934,7 +936,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     private static void testOpenEndedMonthlyEndDates_EOM() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
-                npe03__Opportunity_Forecast_Months__c = 12,
+                npe03__Opportunity_Forecast_Months__c = NUM_INSTALLMENTS,
                 npe03__Maximum_Donations__c = 50
             ));
 
@@ -943,7 +945,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Account a = [SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :c.Id) LIMIT 1];
 
         // This should create Installments with a date of the 28th.
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withName('testEndOfMonth')
             .withContact(c.Id)
             .withAmount(100)
@@ -960,7 +962,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         // All Installments should be on the last day of the month
         List<Opportunity> listOppEnd = [SELECT Id, CloseDate FROM Opportunity WHERE npe03__Recurring_Donation__r.Name = 'testEndOfMonth' order by CloseDate];
-        System.assertEquals(12, listOppEnd.size(), 'There should be 12 Opps with a close date of the last day of the month');
+        System.assertEquals(NUM_INSTALLMENTS, listOppEnd.size(), 'There should be 12 Opps with a close date of the last day of the month');
         for (Opportunity opp : listOppEnd) {
             System.assertEquals(Date.DaysInMonth(opp.CloseDate.Year(), opp.CloseDate.Month()), opp.CloseDate.Day(),
                     'The Opps Close Date should be the very last day of the month: ' + opp.CloseDate);
@@ -975,7 +977,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withNextPaymentDate(nextDonationDate)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -998,7 +1000,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Date expectedDate = installmentDate;
         Date actualDate;
 
-        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withNextPaymentDate(nextDonationDate)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -1016,7 +1018,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withNextPaymentDate(null)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -1037,7 +1039,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Date expectedDate;
         Date actualDate;
 
-        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withNextPaymentDate(dateEstablished)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -1060,7 +1062,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withNextPaymentDate(nextDonationDate)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -1081,7 +1083,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Integer expectedDay;
         Integer actualDay;
 
-        npe03__Recurring_Donation__c recurringDonation = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c recurringDonation = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withNextPaymentDate(nextDonationDate)
             .withDateEstablished(dateEstablished)
             .withInstallmentPeriodMonthly()
@@ -1105,7 +1107,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void nextDonationDateIsGreaterOrEqualToDateEstablished() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withDateEstablished(Date.newInstance(2000, 11, 19)) //day is greater than Day of Month
             .withInstallmentPeriodMonthly()
             .withAlwaysUseLastDayOfMonth(false)
@@ -1127,7 +1129,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void nextDonationDateIsCalculatedBasedOnDayOfMonthAndCurrentNextDonationDate() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withDateEstablished(Date.newInstance(2000, 11, 19))
             .withNextPaymentDate(Date.newInstance(2000, 11, 21))
             .withInstallmentPeriodMonthly()
@@ -1164,7 +1166,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void closeDateIsCalculatedBasedOnDayOfMonthStartDateEndOfMonth() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withDateEstablished(Date.newInstance(2000, 9, 19))
             .withNextPaymentDate(Date.newInstance(2000, 9, 21))
             .withInstallmentPeriodMonthly()
@@ -1192,7 +1194,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     */
     @isTest
     private static void closeDateIsCalculatedBasedOnDayOfMonth() {
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withDateEstablished(Date.newInstance(2000, 7, 19))
             .withNextPaymentDate(Date.newInstance(2000, 7, 21))
             .withInstallmentPeriodMonthly()
@@ -1228,7 +1230,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             Name='Orphan2',
             npe03__Open_Ended_Status__c= Label.npe03.RecurringDonationOpenStatus
         ));
-        rdList.add(new TEST_RecurringDonationBuilder()
+        rdList.add(TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(con.Id)
             .withAmount(100)
             .withInstallments(2)
@@ -1251,7 +1253,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Test.stopTest();
 
         List<Opportunity> rdOpps = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c IN :rdList];
-        System.assertEquals(12,rdOpps.size(), 'Twelve opps should be created for the well formed recurring donation.');
+        System.assertEquals(NUM_INSTALLMENTS,rdOpps.size(), 'Twelve opps should be created for the well formed recurring donation.');
 
     }
 
@@ -1272,7 +1274,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the Recurring Donation
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
@@ -1344,7 +1346,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the First Recurring Donation
-        TEST_RecurringDonationBuilder rdBuilder = new TEST_RecurringDonationBuilder()
+        TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
@@ -1416,7 +1418,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         //--------------------------------
         // Setup the First Recurring Donation
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
@@ -1459,9 +1461,130 @@ private with sharing class RD_RecurringDonations_TEST2 {
         System.assertEquals(null, rd.npe03__Paid_Amount__c);
     }
 
+    /**
+    * @description Ensures that the DisableRollupsWhenCreatingInstallments__c flag is not used to disable
+    * legacy rollups in the RD Batch Job even if the field is set to True.
+    */
+    @IsTest
+    private static void shouldRecalcRollupsOnRdAfterBatchJobWithLegacyRollups() {
+
+        configureForBatchJobWithRollupDisableTests(false, true);
+        npe03__Recurring_Donation__c rd = createTestDataForRollupRecalcTest();
+        System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
+
+        Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
+        Test.stopTest();
+
+        System.assertEquals(NUM_INSTALLMENTS, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
+            'There should be ' + NUM_INSTALLMENTS + ' installment Opportunities created for this RD');
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertNotEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should NOT be null');
+    }
+
+    /**
+    * @description Ensures that when the DisableRollupsWhenCreatingInstallments__c flag is NOT set
+    * and CRLP is enabled, the rollups do execute properly when the RD Batch Job is run
+    */
+    @IsTest
+    private static void shouldRecalcRollupsOnRdAfterBatchJobWithCRLP() {
+
+        configureForBatchJobWithRollupDisableTests(true, false);
+        npe03__Recurring_Donation__c rd = createTestDataForRollupRecalcTest();
+        System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
+
+        Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
+        Test.stopTest();
+
+        System.assertEquals(NUM_INSTALLMENTS, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
+            'There should be ' + NUM_INSTALLMENTS + ' installment Opportunities created for this RD');
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertNotEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should NOT be null');
+    }
+
+    /**
+    * @description Ensures that when the DisableRollupsWhenCreatingInstallments__c flag IS set
+    * and CRLP is enabled, the rollups do NOT execute when the RD Batch Job is run
+    */
+    @IsTest
+    private static void shouldNotRecalcRollupsOnRdAfterBatchJobWithCRLP() {
+
+        configureForBatchJobWithRollupDisableTests(true, true);
+        npe03__Recurring_Donation__c rd = createTestDataForRollupRecalcTest();
+        System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
+
+        Database.executeBatch(new RD_RecurringDonations_BATCH(), 10);
+        Test.stopTest();
+
+        System.assertEquals(NUM_INSTALLMENTS, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
+            'There should be ' + NUM_INSTALLMENTS + ' installment Opportunities created for this RD');
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
+    }
 
     // Helpers
     ////////////
+
+    /**
+    * @description Configure Settings for validating the behavior of the DisableRollupsWhenCreatingInstallments__c
+    * setting in the RD Batch Job. Also mocks the CRLP settings for Legacy Recurring Donations, and
+    * disables the internal setting that would normally prevent a null field from being updated to a zero
+    * value during rollups. This is used to tell that rollups did or did not run in the batch job.
+    */
+    private static void configureForBatchJobWithRollupDisableTests(Boolean isCRLP, Boolean isDisableRollups) {
+
+        if (isCRLP) {
+            UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true
+            ));
+            CMT_UnitTestData_TEST.mockRecurringDonationRollupCMTValues();
+        }
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
+            DisableRollupsWhenCreatingInstallments__c = isDisableRollups,
+            npe03__Maximum_Donations__c = 50,
+            npe03__Opportunity_Forecast_Months__c = NUM_INSTALLMENTS,
+            npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
+            npe03__Add_Campaign_to_All_Opportunites__c = true
+        ));
+
+    }
+
+    /**
+    * @description Create a single Legacy Recurring Donation to use for validating
+    * the behavior of the DisableRollupsWhenCreatingInstallments__c setting in the RD Batch Job.
+    * Triggers are disabled to prevent an installment opp from being created since that is what we want to
+    * test in the batch job logic.
+    * @return Created Recurring Donation Record
+    */
+    private static npe03__Recurring_Donation__c createTestDataForRollupRecalcTest() {
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withContact(c.Id)
+            .withAmount(100)
+            .withDateEstablished(Date.today())
+            .withInstallmentPeriodMonthly()
+            .withAlwaysUseLastDayOfMonth(true)
+            .withOpenEndedStatusOpen()
+            .withOwnerId()
+            .withInstallments(null)
+            .build();
+        rd.npe03__Installments__c = null;   // force this to null because the default is 1
+        Test.startTest();
+
+        TDTM_TriggerHandler.disableTDTM = true;
+        insert rd;
+        TDTM_TriggerHandler.disableTDTM = false;
+
+        System.assertEquals(0, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
+            'There should be no installment Opportunities created for this RD');
+
+        return rdGateway.getRecord(rd.Id);
+    }
 
     /*******************************************************************************************************
     * @description Builds an account record with default values

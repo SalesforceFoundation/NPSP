@@ -38,7 +38,7 @@
                             <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
                         </span>
                     </div>
-                    <div class="slds-form-element__help" id={errorMsgId} if:true={invalid}>{CUSTOM_LABELS.geErrorCompleteThisField}</div>
+                    <div class="slds-form-element__help" id={errorMsgId} if:true={invalid}>{errorMessage}</div>
                     <div id={listBoxId} class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox" if:true={hasOptions}>
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                             <template for:each={options} for:item="option">

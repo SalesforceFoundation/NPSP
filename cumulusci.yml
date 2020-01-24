@@ -129,6 +129,7 @@ tasks:
             suites: robot/Cumulus/tests
             options:
                 outputdir: robot/Cumulus/results
+                tagstatlink: W-*:https://foundation.my.salesforce.com/search/SearchResults?asPhrase=1&searchType=1&sen=a2x&str=%1&search=Search:work item
 
     robot_libdoc:
         options:
@@ -760,6 +761,9 @@ orgs:
             config_file: orgs/beta_statecountry.json
         prerelease:
             config_file: orgs/prerelease.json
+        prerelease_namespaced:
+            config_file: orgs/prerelease.json
+            namespaced: True
         trial:
             config_file: orgs/trial.json
         enterprise:

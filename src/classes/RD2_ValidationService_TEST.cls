@@ -397,13 +397,5 @@ private with sharing class RD2_ValidationService_TEST {
             FROM Contact
         ];
     }
-
-    /***
-    * @description Builds an HouseHold Account
-    * @return HouseHold Account record
-    */
-    private static Account getHHAccount() {
-        return UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
-    }
-
+    
 }

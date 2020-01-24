@@ -77,6 +77,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Levels_Settings__c orgLevelsSettings;
     static Gift_Entry_Settings__c orgGiftEntrySettings;
 
+
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after
     *   Record Type Settings have been fixed.
@@ -316,6 +317,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
     * in the database.
     */
+    @AuraEnabled
     public static Gift_Entry_Settings__c getGiftEntrySettings() {
         if(Test.isRunningTest() && giftEntrySettings == null) {
             giftEntrySettings = new Gift_Entry_Settings__c();
@@ -529,17 +531,21 @@ public without sharing class UTIL_CustomSettingsFacade {
     * @return Gift_Entry_Settings__c Org-level settings for Gift Entry.
     */
     public static Gift_Entry_Settings__c getOrgGiftEntrySettings() {
-        if(orgGiftEntrySettings == null) {
+        if (orgGiftEntrySettings == null) {
             orgGiftEntrySettings = Gift_Entry_Settings__c.getOrgDefaults();
 
-            if(orgGiftEntrySettings.Id == null) {
+            if (orgGiftEntrySettings.Id == null) {
                 orgGiftEntrySettings.Setupownerid = UserInfo.getOrganizationId();
-                if(!Test.isRunningTest())
+                if (!Test.isRunningTest()) {
                     upsert orgGiftEntrySettings;
+                }
+
             }
         }
         return orgGiftEntrySettings;
     }
+
+
 
     /*******************************************************************************************************
      * Private methods that will configure the default org-level custom settings.
@@ -628,6 +634,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Opportunity_Forecast_Months__c = 12;
             settings.npe03__Update_Check_Interval__c = 90;
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
+            settings.DisableRollupsWhenCreatingInstallments__c = false;
 
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;
@@ -886,6 +893,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
         recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
         recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
+        recurringDonationsSettings.DisableRollupsWhenCreatingInstallments__c = settings.DisableRollupsWhenCreatingInstallments__c;
         recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
@@ -920,7 +928,6 @@ public without sharing class UTIL_CustomSettingsFacade {
             giftEntrySettings = new Gift_Entry_SEttings__c();
         }
 
-        giftEntrySettings.Default_Batch_Gift_Entry_Template__c = myGiftEntrySettings.Default_Batch_Gift_Entry_Template__c;
         giftEntrySettings.Default_Single_Gift_Entry_Template__c = myGiftEntrySettings.Default_Single_Gift_Entry_Template__c;
 
         orgGiftEntrySettings = giftEntrySettings;

@@ -1,6 +1,10 @@
 import logging
 import warnings
 import time
+import random
+import string
+from datetime import datetime
+
 
 from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
@@ -188,7 +192,7 @@ class NPSP(SalesforceRobotLibraryBase):
 #         drop_down = npsp_lex_locators['locating_delete_dropdown'].format(value)
 #         time.sleep(1)
 #         return drop_down
-    
+
     def select_row(self, value):
         """To select a row on object page based on name and open the dropdown"""
         locators = npsp_lex_locators['name']
@@ -208,6 +212,7 @@ class NPSP(SalesforceRobotLibraryBase):
                 drop_down = npsp_lex_locators['rel_loc_dd'].format(index + 1)
                 self.selenium.get_webelement(drop_down).click()
                 time.sleep(1)
+
 #     def select_row(self, value ):
 #         """To select a row on object page based on name and open the dropdown"""
 #         locators = npsp_lex_locators['name']
@@ -236,10 +241,7 @@ class NPSP(SalesforceRobotLibraryBase):
 #                 self.selenium.get_webelement(drop_down).click()
 #                 self.selenium.get_webelement(drop_down).click()      
                 
-    def delete_icon(self, field_name,value):  
-        """To click on x """
-        locator=npsp_lex_locators['delete_icon'].format(field_name,value)
-        self.selenium.get_webelement(locator).click() 
+
 
     def click_id(self, title):  
         locator=npsp_lex_locators['aff_id'].format(title)
@@ -262,10 +264,13 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()   
         
         
-    def confirm_field_value(self, field,status,value):
+    def navigate_to_and_validate_field_value(self, field,status,value,section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
         """
+        if section is not None:
+            section="text:"+section
+            self.selenium.scroll_element_into_view(section)
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
         for i in locators:
@@ -280,19 +285,7 @@ class NPSP(SalesforceRobotLibraryBase):
                 break
 
         assert list_found, "locator not found"  
- 
-            
-    def verify_field_value(self, field,value,status):
-        locator=npsp_lex_locators['check_field'].format(field)
-        actual_value=self.selenium.get_webelement(locator).text
-        if status.upper() == "Y":
-            assert value == actual_value, "Expected value to be {} but found {}".format(
-                value, actual_value
-            )
-        elif status.upper() == "N":
-             assert value != actual_value, "Expected value {} and actual value {} should not match".format(
-                value, actual_value
-            )         
+     
     
     
     def verify_record(self, name):
@@ -329,13 +322,13 @@ class NPSP(SalesforceRobotLibraryBase):
         locator= npsp_lex_locators['header'].format(value)
         self.selenium.page_should_contain_element(locator)    
         
-    def Verify_affiliated_contact(self,list_name,first_name,last_name, y):   
-        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case"""
-        name = first_name + ' ' + last_name
+    def verify_related_list(self,list_name,status,name):   
+        """If status is 'contains' then the specified related list should contain name
+                        'does not contain' then the specified related list should not contain name"""
         locator = self.salesforce.get_locator('record.related.link', list_name, name)
-        if y.upper()=="Y":
+        if status=="contains":
             self.selenium.page_should_contain_element(locator)
-        elif y.upper()=="N":
+        elif status=="does not contain":
             self.selenium.page_should_not_contain_element(locator)
         
     def fill_address_form(self, **kwargs):
@@ -422,15 +415,21 @@ class NPSP(SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['manage_hh_page']['address_link'].format(title)
         self.selenium.get_webelement(locator).click()      
     
-    def select_lightning_checkbox(self,title):
-        """Clicks on a checkbox using field name"""
+    def set_checkbutton_to(self,title,status):
+        """If status is 'checked' then checks the box if its not already checked. Prints a warning msg if already checked
+          'unchecked' then unchecks the box if its not already checked. Prints a warning msg if already unchecked
+        """
         cb_found=False
         locators = npsp_lex_locators["checkbox"].values()
 
         for i in locators:
             locator = i.format(title)
             if self.check_if_element_exists(locator):
-                self.selenium.get_webelement(locator).click()
+                checkbox=self.selenium.get_webelement(locator)
+                if (status == 'checked' and checkbox.is_selected() == False) or (status == 'unchecked' and checkbox.is_selected() == True):
+                    self.selenium.click_element(checkbox)
+                else:
+                    self.builtin.log("This checkbox is already in the expected status", "WARN")     
                 cb_found = True
                 break
 
@@ -452,7 +451,10 @@ class NPSP(SalesforceRobotLibraryBase):
         else :    
             self.salesforce._populate_field(locator, value)
         
-    def verify_occurrence(self,title,value):
+    def validate_related_record_count(self,title,value):
+
+        self.select_tab("Related")
+        self.salesforce.load_related_list(title)
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
         actual_value=self.selenium.get_webelement(locator).text
         exp_value="("+value+")"
@@ -502,8 +504,11 @@ class NPSP(SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['record']['related']['title'].format(title)
         self.selenium.get_webelement(locator).click()  
         
-    def verify_related_list_field_values(self, **kwargs):
-        """verifies the values in the related list objects page""" 
+    def verify_related_list_field_values(self, listname=None, **kwargs):
+        """verifies the values in the related list objects page"""
+        if listname is not None:
+            self.selenium.wait_until_page_contains(listname)
+            self.select_relatedlist(listname)
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
             self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
@@ -1230,6 +1235,70 @@ class NPSP(SalesforceRobotLibraryBase):
         self.salesforce.click_object_button("Edit")
         self.salesforce.wait_until_modal_is_open()
 
+    def randomString(self,stringLength=10):
+        """Generate a random string of fixed length """
+        letters = string.ascii_lowercase
+        return ''.join(random.choice(letters) for i in range(stringLength))
+
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None):
+        """ Creates an Account if account setup data is passed
+            Creates a contact if contact_data is passed
+            Creates an opportunity for the contact if opportunit_data is provided
+            Creates a contact and sets an opportunity simultaneously if both the
+            contact_data and opportunity_data is specified
+         """
+
+        # get the data variable, or an empty dictionary if not set
+
+        data = self.builtin.get_variable_value("${data}", {})
+        if account_data is not None:
+
+            # create the account based on the user input specified account type
+            name = self.randomString(10);
+            rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
+            account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
+            account_id = self.salesforce.salesforce_insert("Account", **account_data)
+            account = self.salesforce.salesforce_get("Contact",account_id)
+
+            # save the account object to data dictionary
+            data[name] = account
+
+        if contact_data is not None:
+
+            # create the contact
+            firstname = self.randomString(10);
+            lastname = self.randomString(10);
+
+            contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
+            contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
+            contact = self.salesforce.salesforce_get("Contact",contact_id)
+
+            # save the contact object to data dictionary
+            data[name] = contact
+
+        if opportunity_data is not None:
+            # create opportunity
+            rt_id = self.salesforce.get_record_type_id("Opportunity",opportunity_data["Type"])
+            # if user did not specify any date value add the default value
+            if 'CloseDate' not in opportunity_data:
+                date = datetime.now().strftime('%Y-%m-%d')
+                opportunity_data.update({'CloseDate' : date})
+            if 'npe01__Do_Not_Automatically_Create_Payment__c' not in opportunity_data:
+                Automatically_create_key = 'npe01__Do_Not_Automatically_Create_Payment__c'
+                Automatically_create_value = 'true'
+                opportunity_data.update({Automatically_create_key : Automatically_create_value})
+
+            opportunity_data.update( {'AccountId' : data[name]["AccountId"], 'RecordTypeId': rt_id } )
+            opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
+            opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
+
+            # save the opportunity
+            data[f"{name}_opportunity"] = opportunity
+
+        self.builtin.set_suite_variable('${data}', data)
+
+        return data
+
     def delete_record(self,value):
         """Select the row to be deleted on the listing page, click delete
            and wait till the focus is back on the listings page."""
@@ -1278,7 +1347,8 @@ class NPSP(SalesforceRobotLibraryBase):
             else:
                 raise Exception("Locator for {} is not found on the page".format(key))   
      
-    def verify_toast_message(self,value):       
+    def verify_toast_message(self,value):
+        """Verifies that toast contains specified value"""       
         locator=npsp_lex_locators["toast-msg"]
         ele=self.selenium.get_webelements(locator)
         found=False
@@ -1288,4 +1358,57 @@ class NPSP(SalesforceRobotLibraryBase):
                 found=True
                 print("Toast message verified")
                 break
-        assert found, "Expected Toast message not found on page"
+        assert found, "Expected Toast message {} not found on page".format(value)
+
+    def edit_record_field_value(self,field,value):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field and enters a value into the field"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
+        self.salesforce.populate_lookup_field(field,value)
+    
+    def edit_record_checkbox(self,field,status):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field
+           checks if status is 'checked' 
+           unchecks if status in 'unchecked'"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
+        self.set_checkbutton_to(field,status)    
+        
+    def save_record(self): 
+        """Saves record by clicking on footer button 'Save'"""
+        footer=npsp_lex_locators["record"]["footer"]
+        self.click_record_button("Save")
+        self.selenium.wait_until_page_does_not_contain_element(footer)
+        #Once the record is saved, scroll to top in order to be able to interact with elements above this
+        self.selenium.execute_javascript("window.scrollTo(0,0)")   
+    
+    def Delete_record_field_value(self,field,value):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field and delete the value by clicking on 'X'"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
+        locator=npsp_lex_locators['delete_icon'].format(field,value)
+        self.selenium.get_webelement(locator).click()    
