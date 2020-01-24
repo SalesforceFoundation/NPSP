@@ -64,10 +64,10 @@ public with sharing class BGE_FormTemplate_TDTM extends TDTM_Runnable{
     private void validateFormTemplateDeletion ( List<SObject> oldlist ){
 
         // aux vars
-        List<Form_Template__c>      formTemplates           = (List<Form_Template__c>) oldlist;
-        Gift_Entry_Settings__c      giftEntrySettings       = UTIL_CustomSettings_API.getGiftEntrySettings();
-        Map<Id, DataImportBatch__c> batchByFormTemplateId   = new Map<Id, DataImportBatch__c>();
-        String                      sLabelError             = System.Label.geToastTemplateDeleteError;
+        List<Form_Template__c> formTemplates = (List<Form_Template__c>) oldlist;
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettings_API.getGiftEntrySettings();
+        Map<Id, DataImportBatch__c> batchByFormTemplateId = new Map<Id, DataImportBatch__c>();
+        String labelError = System.Label.geToastTemplateDeleteError;
 
         // search data import batch records using the templates to be deleted
         for (DataImportBatch__c batch : [
@@ -86,12 +86,12 @@ public with sharing class BGE_FormTemplate_TDTM extends TDTM_Runnable{
                     (giftEntrySettings.Default_Single_Gift_Entry_Template__c.equals((String)formTemplate.Id) ||
                         giftEntrySettings.Default_Single_Gift_Entry_Template__c.equals(formTemplate.Name)) ) {
 
-                formTemplate.addError( sLabelError );
+                formTemplate.addError( labelError );
 
             // add error to template records related to any dataImportBatch record
             } else if (batchByFormTemplateId.containsKey(formTemplate.Id)) {
 
-                formTemplate.addError( sLabelError );
+                formTemplate.addError( labelError );
 
             }
 

@@ -256,12 +256,12 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldPreventDeletionOfTemplateReferencedByGiftEntry() {
 
         // aux vars
-        String sTemplateName    = 'fooName';
+        String templateName = 'fooName';
         AuraHandledException failure;
 
         // test data
-        FORM_Template template  = createSampleTemplate();
-        template.name           = sTemplateName;
+        FORM_Template template = createSampleTemplate();
+        template.name = templateName;
         String templateJSON = JSON.serialize(template);
         // form service init
         FORM_Service fs = new FORM_Service();
@@ -274,7 +274,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         // gift entry custom settings set up
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
-        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = sTemplateName;
+        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = templateName;
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
         // retrieve templates with id
