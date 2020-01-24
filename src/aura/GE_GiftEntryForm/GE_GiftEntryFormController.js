@@ -8,6 +8,7 @@
 
                     let modalReference = component.find('overlayLib').showCustomModal({
                         body: modalBody,
+                        cssClass: "slds-modal_large",
                     });
 
                     component.set('v.modal', modalReference);
