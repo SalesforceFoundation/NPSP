@@ -63,16 +63,16 @@ Best Match Donation Matching Behaviour
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${opp_id} =   Save Current Record ID For Deletion     Opportunity  
-    Confirm Field Value    Amount    contains    $200.00    
+    Navigate To And Validate Field Value    Amount    contains    $200.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Field Value    Close Date    contains    ${opp_date}    
-    Confirm Field Value    Stage    contains    Closed Won    
+    Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
+    Navigate To And Validate Field Value    Stage    contains    Closed Won
     # Verify that the gift matched to existing opportunity and updated it to closed won status and payment is paid
     Go To Record Home    &{opp_match}[Id]
-    Confirm Field Value    Amount    contains    $100.00    
+    Navigate To And Validate Field Value    Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Field Value    Close Date    contains    ${opp_date}    
-    Confirm Field Value    Stage    contains    Closed Won    
+    Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
+    Navigate To And Validate Field Value    Stage    contains    Closed Won
     Select Tab    Related
     Load Related List    GAU Allocations
     Click Link    ${pay_no}
@@ -83,10 +83,10 @@ Best Match Donation Matching Behaviour
     ...    npe01__Paid__c=True  
     # Verify that the opportunity that does not match is still in prospecting stage
     Go To Record Home    &{opp_dont_match}[Id]
-    Confirm Field Value    Amount    contains    $50.00    
+    Navigate To And Validate Field Value    Amount    contains    $50.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Field Value    Close Date    contains    ${opp_date}    
-    Confirm Field Value   Stage    contains    Prospecting    
+    Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
+    Navigate To And Validate Field Value    Stage         contains    Prospecting
 
 ***Keywords***
 Setup Test Data

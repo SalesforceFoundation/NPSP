@@ -36,4 +36,4 @@ Create Secondary Affiliation for Contact
     Click Button                      Save
     Go To Page                        Details                      Contact                 object_id=&{contact}[Id]
     Select Tab                        Details
-    Confirm Field Value                Primary Affiliation          contains                &{account}[Name]    
+    Navigate To And Validate Field Value                Primary Affiliation          contains                &{account}[Name]
