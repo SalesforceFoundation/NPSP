@@ -16,7 +16,7 @@ ${contact_id}
     Set Global Variable      ${level_name}
     Set Global Variable      ${level_id}
     Go To Record Home        ${level_id}
-    Confirm Field Value    Minimum Amount (>=)    contains    0.10    
+    Navigate To And Validate Field Value    Minimum Amount (>=)    contains    0.10
     Page Should Contain  0.9  # work around platform not showing the right number of decimals
 
 2 Edit Level and Verify Fields
@@ -41,9 +41,9 @@ ${contact_id}
     # Wait For Locator  breadcrumb  Level
     # Reload Page
     Wait Until Loading Is Complete
-    Confirm Field Value    Minimum Amount (>=)    contains    0.01    
-    Confirm Field Value    Maximum Amount (<)     contains    0.99    
-    Confirm Field Value    Source Field    contains    npo02__SmallestAmount__c    
+    Navigate To And Validate Field Value   Minimum Amount (>=)    contains    0.01
+    Navigate To And Validate Field Value    Maximum Amount (<)     contains    0.99
+    Navigate To And Validate Field Value    Source Field    contains    npo02__SmallestAmount__c
 
 3 Validate Level Assignment in Batch Job
     [tags]  unstable
@@ -60,7 +60,7 @@ ${contact_id}
     Click Record Button     Save
     Wait Until Loading Is Complete
     Scroll Element Into View    text:Donation Totals
-    Confirm Field Value           Smallest Gift    contains    $0.75    
+    Navigate To And Validate Field Value          Smallest Gift    contains    $0.75
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
@@ -71,7 +71,8 @@ ${contact_id}
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Verify Field Value      Level    ${level_name}    Y
+    Navigate To And Validate Field Value          Level    contains    ${level_name}
+
     # --------------------------------
     # Modify the SmallestGift field to change the applied level
     # --------------------------------
@@ -82,7 +83,7 @@ ${contact_id}
     Click Record Button     Save
     Wait Until Loading Is Complete
     Scroll Element Into View    text:Donation Totals
-    Confirm Field Value           Smallest Gift    contains    $2.00    
+    Navigate To And Validate Field Value           Smallest Gift    contains    $2.00
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
@@ -93,8 +94,9 @@ ${contact_id}
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Confirm Field Value           Level      does not contain         ${level_name}    
-    Verify Field Value      Previous Level      ${level_name}    Y
+    Navigate To And Validate Field Value           Level      does not contain         ${level_name}
+    Navigate To And Validate Field Value           Previous Level     contains         ${level_name}
+
 
 4 Delete Level and Validate Contact
     [tags]  unstable
@@ -106,4 +108,4 @@ ${contact_id}
     Click Link    link=Delete
     Click Modal Button    Delete
     Go To Record Home           ${contact_id}
-    Confirm Field Value    Level      does not contain    ${level_name}    
+    Navigate To And Validate Field Value    Level      does not contain    ${level_name}

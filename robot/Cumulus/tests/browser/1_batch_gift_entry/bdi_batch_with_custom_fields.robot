@@ -4,6 +4,8 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/DataImportPageObject.py
 Suite Teardown  Delete Records and Close Browser
 
 *** Keywords ***
@@ -46,7 +48,7 @@ Create Data Import Via API
     ...        ${org_ns}Custom_add_date__c=${date}
     ...        ${org_ns}custom_cont_num__c=9876543210
     Set Global Variable     &{data_import}       &{data_import}
-    Select App Launcher Tab   NPSP Data Imports
+    Go To Page        Listing       DataImport__c
     Change View To    To Be Imported
     Page Should Contain Link    &{data_import}[Name]
     Click Special Object Button       Start Data Import
