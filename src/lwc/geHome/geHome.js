@@ -19,7 +19,6 @@ export default class geHome extends LightningElement {
     @track view = GIFT_ENTRY;
     @track formTemplateId;
     @track cloneFormTemplate;
-    @track donorId;
     @track isLoading;
 
     giftEntryTabName;
@@ -30,10 +29,6 @@ export default class geHome extends LightningElement {
 
     get isTemplateBuilder() {
         return this.view === TEMPLATE_BUILDER ? true : false;
-    }
-
-    get isSingleGiftEntry() {
-        return this.view === SINGLE_GIFT_ENTRY ? true : false;
     }
 
     async connectedCallback() {
@@ -80,13 +75,10 @@ export default class geHome extends LightningElement {
         if (this.view === TEMPLATE_BUILDER && event.detail.formTemplateId) {
             this.formTemplateId = event.detail.formTemplateId;
             this.cloneFormTemplate = event.detail.clone;
-        } else if (this.view === SINGLE_GIFT_ENTRY && event.detail.donorTypeId) {
-            this.donorId = event.detail.donorTypeId;
         } else if (this.view === SINGLE_GIFT_ENTRY) {
             this.dispatchEvent(new CustomEvent('newsinglegift'));
         } else {
             this.formTemplateId = undefined;
-            this.donorId = undefined;
         }
     }
 
