@@ -1133,8 +1133,8 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
-        <members>Gift_Entry_Settings__c.Default_Batch_Gift_Entry_Template__c</members>
         <members>Gift_Entry_Settings__c.Default_Single_Gift_Entry_Template__c</members>
+        <members>Gift_Entry_Settings__c.Enable_Gift_Entry__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
         <members>Grant_Deadline__c.Grant_Deliverable_Close_Date__c</members>
         <members>Grant_Deadline__c.Grant_Deliverable_Requirements__c</members>
@@ -1981,6 +1981,9 @@
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>
         <members>geErrorCompleteThisField</members>
+        <members>geErrorDonorTypeInvalid</members>
+        <members>geErrorDonorTypeValidation</members>
+        <members>geErrorDonorTypeValidationSingle</members>
         <members>geErrorExistingTemplateName</members>
         <members>geErrorFieldPermission</members>
         <members>geErrorPageLevelAdvancedMappingBody</members>
@@ -3192,9 +3195,7 @@
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
-        <members>GE_Form_Renderer</members>
-        <members>GE_Template_Builder</members>
-        <members>GE_Templates</members>
+        <members>GE_Gift_Entry</members>
         <members>General_Accounting_Unit__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
@@ -3332,6 +3333,7 @@
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
         <members>geFormWidgetRow</members>
+        <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
         <members>geTemplateBuilder</members>

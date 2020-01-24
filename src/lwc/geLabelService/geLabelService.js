@@ -66,6 +66,9 @@ import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
+import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
+import geErrorDonorTypeValidationSingle from '@salesforce/label/c.geErrorDonorTypeValidationSingle';
+import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
 import geErrorFieldPermission from '@salesforce/label/c.geErrorFieldPermission';
 import geErrorPageLevelAdvancedMappingBody from '@salesforce/label/c.geErrorPageLevelAdvancedMappingBody';
 import geErrorPageLevelAdvancedMappingHeader from '@salesforce/label/c.geErrorPageLevelAdvancedMappingHeader';
@@ -191,6 +194,9 @@ class GeLabelService {
         geButtonNewSingleGift,
         geButtonTemplatesTabCreateTemplate,
         geErrorCompleteThisField,
+        geErrorDonorTypeValidation,
+        geErrorDonorTypeValidationSingle,
+        geErrorDonorTypeInvalid,
         geErrorExistingTemplateName,
         geErrorFieldPermission,
         geErrorPageLevelAdvancedMappingBody,

@@ -761,6 +761,9 @@ orgs:
             config_file: orgs/beta_statecountry.json
         prerelease:
             config_file: orgs/prerelease.json
+        prerelease_namespaced:
+            config_file: orgs/prerelease.json
+            namespaced: True
         trial:
             config_file: orgs/trial.json
         enterprise:
