@@ -6,7 +6,13 @@
 
     <aura:dependency resource="c:geBatchWizard"/>
 
-    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:overlayLibrary aura:id="giftEntryFormOverlayLib"/>
+    <!-- modal attribute is a reference to the modal created by lightning:overlayLibrary -->
+    <aura:attribute name="modal"
+                    type="Object"/>
+
+    <c:utilDedicatedListener eventName="geBatchWizardEvent"
+                             onreceiveevent="{!c.handleBatchWizardEvent}"/>
 
     <c:geBatchGiftEntryApp aura:id="batchGiftEntryApp"
                            recordId="{!v.recordId}"
