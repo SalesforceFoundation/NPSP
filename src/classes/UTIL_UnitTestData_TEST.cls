@@ -489,19 +489,13 @@ public class UTIL_UnitTestData_TEST {
      * @return User
      */
     public static User createNewUserWithRoleForTests(String strUsername, String strRolename) {
-        Profile p = [
-            SELECT Id
-            FROM Profile
-            WHERE Name = :PROFILE_STANDARD_USER
-        ];
-
         UserRole r;
         User u;
 
         // to work around mixed DML errors during tests, you must
         // create user roles and accounts in their own transactions.
         // got this hack from the web.
-        System.runAs(new User(Id = UserInfo.getUserId())) {
+        System.runAs(getCurrentUserForRunAs()) {
             Integer existingRoleCount = [
                 SELECT COUNT()
                 FROM UserRole
@@ -520,18 +514,9 @@ public class UTIL_UnitTestData_TEST {
                 insert r;
             }
 
-            u = new User(
-                Alias = 'jsmith',
-                Email = 'jsmith@acme.com',
-                EmailEncodingKey = 'UTF-8',
-                LanguageLocaleKey = 'en_US',
-                LastName = 'Smith',
-                LocaleSidKey = 'en_US',
-                ProfileId = p.Id,
-                TimeZoneSidKey = 'America/Los_Angeles',
-                UserRoleId = r.Id,
-                Username = strUsername
-            );
+            u = buildUser('Smith', PROFILE_STANDARD_USER);
+            u.UserRoleId = r.Id;
+            u.Username = strUsername;
 
             insert u;
         }
@@ -555,7 +540,7 @@ public class UTIL_UnitTestData_TEST {
     public static User createNewInactiveUserForTests(String strUsername) {
         User u = createNewUserForTests(strUsername);
 
-        System.runAs(new User(Id = UserInfo.getUserId())) {
+        System.runAs(UTIL_UnitTestData_TEST.getCurrentUserForRunAs())  {
             u.IsActive = false;
             update u;
         }
@@ -612,24 +597,24 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
-     * @description Set new User fields
+     * @description Build a new User using the Locale and Language settings from the Current User
      * @param lastName Last Name
      * @param profileName Profile Name
      * @return User
      */
     private static User buildUser(String lastName, String profileName) {
-        return buildUser(lastName, profileName, currentUser.LocaleSidKey);
+        return buildUser(lastName, profileName, UserInfo.getLocale());
     }
 
     /**
-     * @description Set new User fields
+     * @description Build a new User using the specified Locale.
      * @param lastName Last Name
      * @param profileName Profile Name
      * @param localSidKey An NPSP supported locale key (EN_us, es, de, fr, or NL_nl)
      * @return User
      */
     private static User buildUser(String lastName, String profileName, String localSidKey) {
-        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName];
+        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName LIMIT 1];
 
         String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
         String email = lastName.left(70) + '@email.npsp';
@@ -640,39 +625,23 @@ public class UTIL_UnitTestData_TEST {
             ProfileId = p.Id,
             Username = email,
             Alias = alias,
-            TimeZoneSidKey = currentUser.TimeZoneSidKey,
-            LocaleSidKey = (localSidKey != null ? localSidKey : currentUser.LocaleSidKey),
-            LanguageLocaleKey = currentUser.LanguageLocaleKey,
-            EmailEncodingKey = currentUser.EmailEncodingKey
+            TimeZoneSidKey = UserInfo.getTimeZone().toString(),
+            LocaleSidKey = (localSidKey != null ? localSidKey : UserInfo.getLocale()),
+            LanguageLocaleKey = UserInfo.getLanguage(),
+            EmailEncodingKey = 'ISO-8859-1'
         );
     }
 
     /**
-     * @description Retrieve the Current User record
+     * @description Retrieve the current User record
      */
-    private static User currentUser {
-        get {
-            if (currentUser == null) {
-                currentUser = [
-                    SELECT
-                        Id,
-                        LocaleSidKey,
-                        LanguageLocaleKey,
-                        TimeZoneSidKey,
-                        EmailEncodingKey
-                    FROM User
-                    WHERE Id = :UserInfo.getUserId()
-                    LIMIT 1
-                ];
-            }
-            return currentUser;
-        } set;
+    public static User getCurrentUserForRunAs() {
+        return new User(Id = UserInfo.getUserId());
     }
 
     // =====================================================================================================
     // Methods to configure Household Naming Settings
     // =====================================================================================================
-
 
     /*********************************************************************************************************
     * @description Turns on Automatic Household Naming

@@ -41,24 +41,30 @@ public class UTIL_RecordTypes_TEST {
     @isTest
     static void testRecTypes() {
         // try bogus values
-        Id bogus = UTIL_RecordTypes.GetRecordTypeId(Opportunity.SObjectType, 'Bogus');
-        bogus = UTIL_RecordTypes.GetRecordTypeId(Contact.SObjectType, 'Bogus');
+        Id bogus = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, 'Bogus');
+        bogus = UTIL_RecordTypes.getRecordTypeId(Contact.SObjectType, 'Bogus');
         bogus = UTIL_RecordTypes_API.GetRecordTypeId('Campaign', 'Bogus');
 
-        // try all the functions
-        Set<Id> oppRtSet = UTIL_RecordTypes_API.GetRecordTypeIdSet('Opportunity', (new Set<String>{'Bogus', 'Master', 'Grant'}));
-        List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.SObjectType);
-
         // check against queried rectypes
-        List<RecordType> ort = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND SObjectType='Opportunity' LIMIT 1];
-        if (!ort.isEmpty()) {
-            Id rtId = UTIL_RecordTypes.GetRecordTypeId(Opportunity.SObjectType, ort[0].name);
-            System.assertEquals(ort[0].id, rtId);
-            String rtName = UTIL_RecordTypes_API.GetRecordTypeName('Opportunity', ort[0].id);
-            System.assertEquals(ort[0].name, rtName);
+        List<RecordType> oppRTs = [
+            SELECT Id, toLabel(Recordtype.Name) FROM RecordType
+            WHERE IsActive = True
+            AND SobjectType = 'Opportunity'
+            LIMIT 1
+        ];
+        if (!oppRTs.isEmpty()) {
+            Id rtId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, oppRTs[0].Name);
+            System.debug('RecordType Name=' + oppRTs[0].Name);
+            System.assertEquals(oppRTs[0].Id, rtId, oppRTs[0].Name);
+            String rtName = UTIL_RecordTypes_API.GetRecordTypeName('Opportunity', oppRTs[0].Id);
+            System.assertEquals(oppRTs[0].Name, rtName);
 
-            // the sets above should contain something too
+            // try all the functions
+            Set<Id> oppRtSet = UTIL_RecordTypes_API.GetRecordTypeIdSet('Opportunity',
+                new Set<String>{'Bogus', 'Master', 'Grant', oppRTs[0].Name});
             System.assert(oppRtSet.size() > 0);
+
+            List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.SObjectType);
             System.assert(rtOptions.size() > 0);
         }
     }
