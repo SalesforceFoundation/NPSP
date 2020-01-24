@@ -678,34 +678,52 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
 
-    // @isTest
-    // private static void shouldUpdateOpenedOppContactAndAccountWhenRdContactAndAccountIsChange() {
-    //     RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+    /***
+    * @description Verifies when contact and/or account on Rd change, only open opp under the rd should reflect the change
+    * with new account/contact
+    */
+    @isTest
+    private static void shouldUpdateOpenedOppContactAndAccountWhenRdContactAndAccountIsChange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-    //     List<Account> accts = UTIL_UnitTestData_TEST.buildOrganizationAccounts(2);
-    //     insert accts;
+        setUpConfiguration();
 
-    //     npe03__Recurring_Donation__c rd = createRecurringDonation(accts[0]);
-    //     insert getOpportunityBuilder(rd)
-    //     .withCloseDate(CLOSE_DATE)
-    //     .withOpenStage()
-    //     .build();
+        List<Account> accts = UTIL_UnitTestData_TEST.buildOrganizationAccounts(2);
+        insert accts;
 
-    //     Contact primaryContact = getContact();
+        npe03__Recurring_Donation__c rd = createRecurringDonation(accts[0]);
 
-    //     Test.startTest();
-    //     rd.npe03__Organization__c = accts[1].Id;
-    //     rd.npe03__Contact__c = primaryContact.Id;
-    //     update rd;
-    //     Test.stopTest();
+        insert getOpportunityBuilder(rd)
+        .withCloseDate(TODAY.addMonths(1))
+        .withOpenStage()
+        .build();
 
-    //     List<Opportunity> opps = oppGateway.getRecords(rd);
-    //     System.assert(false, opps);
-    //     for (Opportunity opp : opps) {
-    //         System.assertEquals(accts[1].Id, opp.AccountId, 'Opportunity account should be updated to match rd organization');
-    //         System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Opportunity primary contact should be updated to match rd contact');
-    //     }
-    // }
+        insert getOpportunityBuilder(rd)
+        .withCloseDate(TODAY.addMonths(-1))
+        .withClosedWonStage()
+        .build();
+
+        Contact primaryContact = getContact();
+
+        Test.startTest();
+        rd.npe03__Organization__c = accts[1].Id;
+        rd.npe03__Contact__c = primaryContact.Id;
+        
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        for (Opportunity opp : opps) {
+            if (opp.isClosed == false) {
+                System.assertEquals(accts[1].Id, opp.AccountId, 'Open opportunity account should be updated to match rd organization');
+                System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Open opportunity primary contact should be updated to match rd contact');
+            } else {
+                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed Oppotrunity account should not be updated when rd is updated');
+                System.assertEquals(null, opp.Primary_Contact__c, 'Closed Oppotrunity primary contact should not be updated when rd is updated');
+            }
+        }
+    }
 
     // Helper Methods
     //////////////////
@@ -812,6 +830,7 @@ private with sharing class RD2_OpportunityService_TEST {
         return new TEST_OpportunityBuilder()
             .withContact(rd.npe03__Contact__c)
             .withRecurringDonation(rd.Id)
+            .withAccount(rd.npe03__Organization__c)
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1);
     }
