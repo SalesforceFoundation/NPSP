@@ -42,7 +42,7 @@ Create Donation from a Contact
     Select Window
     Page Scroll To Locator    record.related.check_occurrence    Payments
     Wait For Locator    record.related.viewall    Payments
-    Verify Occurrence    Payments    4
+    Validate Related Record Count         Payments                         4
     Click ViewAll Related List    Payments
     ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
