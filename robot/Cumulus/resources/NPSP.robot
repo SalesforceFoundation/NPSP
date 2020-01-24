@@ -170,19 +170,6 @@ New Contact for HouseHold
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
         
-    
-Create Opportunities
-    [Arguments]    ${opp_name}    ${hh_name}    ${stage}
-    Populate Form
-    ...                       Opportunity Name= ${opp_name}
-    ...                       Amount=100 
-    Select Value From Dropdown    Stage    ${stage}
-    Populate Lookup Field    Account Name    ${hh_name}
-    Open Date Picker    Close Date
-    Pick Date    Today
-    Set Checkbutton To    Do Not Automatically Create Payment    checked
-    Click Modal Button        Save
-
 Create Engagement Plan
     ${plan_name} =     Generate Random String
     Select App Launcher Tab  Engagement Plan Templates
