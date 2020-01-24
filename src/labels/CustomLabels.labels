@@ -4410,7 +4410,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Open button.</shortDescription>
+        <shortDescription>Open</shortDescription>
         <value>Open</value>
     </labels>
     <labels>
@@ -5650,7 +5650,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Update</shortDescription>
+        <shortDescription>Update</shortDescription>
         <value>Update</value>
     </labels>
     <labels>
