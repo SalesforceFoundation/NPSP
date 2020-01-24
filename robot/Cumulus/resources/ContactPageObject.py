@@ -49,3 +49,9 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         expectedstatus = ("{} is {}'s {}".format(contact1,contact2,relation))
         id,actualstatus = self.npsp.check_status(contact1)
         self.builtin.should_be_equal_as_strings(actualstatus,expectedstatus)
+
+    # def validate_field_value_under_section(self, section, fieldname, value):
+    #     section="text:"+section
+    #     self.selenium.scroll_element_into_view(section)
+    #     self.npsp.confirm_field_value(fieldname, "contains", value)
+
