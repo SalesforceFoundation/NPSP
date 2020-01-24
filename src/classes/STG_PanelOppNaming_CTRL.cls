@@ -211,43 +211,85 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     public static list<SelectOption> listSOOpportunityAttribution {
         get {
             if (listSOOpportunityAttribution == null) {
-                listSOOpportunityAttribution = getOppAttributionOptions();
+                listSOOpportunityAttribution = new AttributionSettings().getSelectOptions();
             }
             return listSOOpportunityAttribution;
         }
         private set;
     }
 
-    /*********************************************************************************************************
-    * @description  Generate the list of SelectOptions for Opportunity Attribution from AttributionOptions
-    */
-    private static List<SelectOption> getOppAttributionOptions() {
-        List<SelectOption> options = new List<SelectOption>();
 
-        for (AttributionOptions option : AttributionOptions.values()) {
-            options.add(new SelectOption(option.name(), convertToAttributionNamingLabel(option.name())));
+    /***
+    * @description Handles Opportunity Naming Settings Attribution options
+    */
+    public class AttributionSettings {
+
+        public String selectedOption { get; private set; }
+        public String selectedLabel { get; private set; }
+
+        /***
+        * @description Sets attribution value as configured in the Opportunity Naming Settings
+        */
+        public AttributionSettings withSelected(String selectedOption) {
+            this.selectedOption = selectedOption;
+            this.selectedLabel = getLabel(this.selectedOption);
+            return this;
         }
 
-        return options;
-    }
+        /***
+        * @description Contains Attribution API name to custom label mapping
+        */
+        private Map<String, String> labelByOption {
+            get {
+                if (labelByOption == null) {
+                    labelByOption = new Map<String, String>{
+                        AttributionOptions.Both.name() => System.Label.OppNamingBoth,
+                        System.Label.OppNamingBoth => System.Label.OppNamingBoth,
+                        'Both' => System.Label.OppNamingBoth,
 
-    /*********************************************************************************************************
-    * @description  Convert Attribution in opportunity naming settings to respected custom label
-      @param attributionOption the API Name will be converted into label
-      return The converted custom label string
-    */
-    public static String convertToAttributionNamingLabel(String attributionOption) {
-        if (attributionOption == AttributionOptions.Both.name()) {
-            return Label.OppNamingBoth;
+                        AttributionOptions.Contact_Donations.name() => System.Label.oppNamingIndividual,
+                        System.Label.oppNamingIndividual => System.Label.oppNamingIndividual,
+                        'Contact Donations' => System.Label.oppNamingIndividual,
 
-        } else if(attributionOption == AttributionOptions.Contact_Donations.name()) {
-            return Label.oppNamingIndividual;
-
-        } else if (attributionOption == AttributionOptions.Organization_Donations.name()) {
-            return Label.oppNamingOrganizational;
+                        AttributionOptions.Organization_Donations.name() => System.Label.oppNamingOrganizational,
+                        System.Label.oppNamingOrganizational => System.Label.oppNamingOrganizational,
+                        'Organization Donations' => System.Label.oppNamingOrganizational
+                    };
+                }
+                return labelByOption;
+            }
+            set;
         }
 
-        return '';
+        /***
+        * @description Generate the select options for attribution settings
+        */
+        public List<SelectOption> getSelectOptions() {
+            List<SelectOption> options = new List<SelectOption>();
+
+            for (AttributionOptions option : AttributionOptions.values()) {
+                options.add(new SelectOption(option.name(), getLabel(option.name())));
+            }
+
+            return options;
+        }
+
+        /***
+        * @description Map the attribution option to the custom label used in Opp naming or settings field option display
+        */
+        public String getLabel(String option) {
+            String label = labelByOption.get(option);
+
+            return String.isBlank(label) ? '' : label;
+        }
+
+        /***
+        * @description Returns true if attribution is applicable to both Contact and Organization Donations
+        */
+        public Boolean isBoth() {
+            return selectedLabel == System.Label.OppNamingBoth;
+        }
+
     }
 
     public class OpportunityNamingSetting {

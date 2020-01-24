@@ -188,24 +188,24 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                 }
             }
 
-            String oppAttributionValue = STG_PanelOppNaming_CTRL.convertToAttributionNamingLabel(ons.Attribution__c);
+            STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings() .withSelected(ons.Attribution__c);
 
             if (oppRecTypeIds.isEmpty()) {
                 mapOppIdSettings.put('', ons);
-                if (oppAttributionValue == Label.oppNamingBoth) {
+                if (attributionSettings.isBoth()) {
                     mapOppIdSettings.put(Label.oppNamingIndividual,ons);
                     mapOppIdSettings.put(Label.oppNamingOrganizational,ons);
                 } else {
-                    mapOppIdSettings.put(oppAttributionValue, ons);
+                    mapOppIdSettings.put(attributionSettings.selectedLabel, ons);
                 }
             } else {
                 for (Id recTypeId : oppRecTypeIds) {
                     mapOppIdSettings.put(recTypeId,ons);
-                    if (oppAttributionValue == Label.oppNamingBoth) {
+                    if (attributionSettings.isBoth()) {
                         mapOppIdSettings.put(Label.oppNamingIndividual+recTypeId,ons);
                         mapOppIdSettings.put(Label.oppNamingOrganizational+recTypeId,ons);
                     } else {
-                        mapOppIdSettings.put(oppAttributionValue+recTypeId, ons);
+                        mapOppIdSettings.put(attributionSettings.selectedLabel+recTypeId, ons);
                     }
                 }
             }
