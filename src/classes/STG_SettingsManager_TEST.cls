@@ -717,7 +717,7 @@ private with sharing class STG_SettingsManager_TEST {
         panel.init();
         Test.stopTest();
 
-        System.assertEquals(Label.stgInstallmentOppEnableAll, panel.selectedInstallmentCreateOption,
+        System.assertEquals(System.Label.stgInstallmentOppEnableAll, panel.selectedInstallmentCreateOption,
             'The installment opp displayed label should be set to Always Create Next Installment When Setting value is not recognizable');
     }
 
@@ -733,7 +733,7 @@ private with sharing class STG_SettingsManager_TEST {
         String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_ALWAYS_CREATE_NEXT);
         Test.stopTest();
 
-        System.assertEquals(Label.stgInstallmentOppEnableAll, convertedLabel,
+        System.assertEquals(System.Label.stgInstallmentOppEnableAll, convertedLabel,
             'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
@@ -749,7 +749,7 @@ private with sharing class STG_SettingsManager_TEST {
         String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_DISABLE_FIRST);
         Test.stopTest();
 
-        System.assertEquals(Label.stgInstallmentOppDisableFirst, convertedLabel,
+        System.assertEquals(System.Label.stgInstallmentOppDisableFirst, convertedLabel,
             'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
@@ -765,7 +765,7 @@ private with sharing class STG_SettingsManager_TEST {
         String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_DISABLE_ALL);
         Test.stopTest();
 
-        System.assertEquals(Label.stgInstallmentOppDisableAll, convertedLabel,
+        System.assertEquals(System.Label.stgInstallmentOppDisableAll, convertedLabel,
             'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 

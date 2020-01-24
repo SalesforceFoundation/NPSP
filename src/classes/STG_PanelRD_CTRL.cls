@@ -198,7 +198,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
             selectedInstallmentCreateOption = convertToInstallmentLabel(STG_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
 
             selectedInstallmentCreateOption = (String.isBlank(selectedInstallmentCreateOption))
-                ? Label.stgInstallmentOppEnableAll
+                ? System.Label.stgInstallmentOppEnableAll
                 : selectedInstallmentCreateOption;
 
             return selectedInstallmentCreateOption;
@@ -227,13 +227,13 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
     @TestVisible
     private String convertToInstallmentLabel(String installmentOption) {
         if (installmentOption == RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()) {
-            return Label.stgInstallmentOppEnableAll;
+            return System.Label.stgInstallmentOppEnableAll;
 
         } else if(installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()) {
-            return Label.stgInstallmentOppDisableFirst;
+            return System.Label.stgInstallmentOppDisableFirst;
 
         } else if (installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()) {
-            return Label.stgInstallmentOppDisableAll;
+            return System.Label.stgInstallmentOppDisableAll;
         }
 
         return '';
