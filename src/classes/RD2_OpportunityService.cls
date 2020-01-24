@@ -252,6 +252,8 @@ public with sharing class RD2_OpportunityService {
                 installmentByOppId.put(opp.Id, hasMatchingInstallment ? installments[i] : null);
 
                 Boolean isChanged = syncOppWithSchedule(opp, installmentByOppId.get(opp.Id), rd.npe03__Donor_Name__c);
+                isChanged = syncOppWithAccountAndContact(opp, rd) || isChanged;
+
                 if (isChanged) {
                     oppsToUpdate.add(opp);
                 }
@@ -320,6 +322,22 @@ public with sharing class RD2_OpportunityService {
         }
 
         return isChanged;
+    }
+
+    private Boolean syncOppWithAccountAndContact(Opportunity opp, npe03__Recurring_Donation__c rd) {
+        Boolean isChange = false;
+
+        if (opp.AccountId != rd.npe03__Organization__c) {
+            opp.AccountId = rd.npe03__Organization__c;
+            isChange = true;
+        }
+        
+        if (opp.Primary_Contact__c != rd.npe03__Contact__c) {
+            opp.Primary_Contact__c = rd.npe03__Contact__c;
+            isChange = true;
+        }
+
+        return isChange;
     }
 
     /***

@@ -76,6 +76,73 @@ private with sharing class UTIL_SObject_TEST {
             'An empty set should be returned when an empty list is passed.');
     }
 
+    /***
+    * @description Verifies Id fields is extracted and returned
+    */
+    @isTest
+    private static void shouldReturnIdSetOfTheTargetField() {
+        List<Opportunity> opps = buildOpportunities(3);
+
+        Test.startTest();
+            Set<Id> ids = UTIL_SObject.extractId(opps, Opportunity.AccountId);
+        Test.stopTest();
+
+        System.assertEquals(opps.size(), ids.size(), 'All target field Id should be returned');
+        for (Opportunity opp : opps) {
+            System.assert(ids.contains(opp.AccountId), 'Field Ids should be extracted');
+        }
+    }
+
+    /***
+    * @description Verifies String fields is extracted and returned
+    */
+    @isTest
+    private static void shouldReturnStringSetOfTheTargetField() {
+        List<Opportunity> opps = buildOpportunities(3);
+
+        Test.startTest();
+            Set<String> strings = UTIL_SObject.extractString(opps, Opportunity.Name);
+        Test.stopTest();
+
+        System.assertEquals(opps.size(), strings.size(), 'All target field String should be returned');
+        for (Opportunity opp : opps) {
+            System.assert(strings.contains(opp.Name), 'Field String should be extracted');
+        }
+    }
+
+    /***
+    * @description Verifies Datetime fields is extracted and returned
+    */
+    @isTest
+    private static void shouldReturnDatetimeSetOfTheTargetField() {
+        List<Opportunity> opps = buildOpportunities(3);
+
+        Test.startTest();
+            Set<Datetime> datetimes = UTIL_SObject.extractDatetime(opps, Opportunity.CloseDate);
+        Test.stopTest();
+
+        System.assertEquals(opps.size(), datetimes.size(), 'All target field Datetime should be returned');
+        for (Opportunity opp : opps) {
+            System.assert(datetimes.contains(opp.CloseDate), 'Field Datetime should be extracted');
+        }
+    }
+
+    /***
+    * @description Verifies Decimal fields is extracted and returned
+    */
+    @isTest
+    private static void shouldReturnDecimalSetOfTheTargetField() {
+        List<Opportunity> opps = buildOpportunities(3);
+
+        Test.startTest();
+            Set<Decimal> deciamls = UTIL_SObject.extractDecimal(opps, Opportunity.Amount);
+        Test.stopTest();
+
+        System.assertEquals(opps.size(), deciamls.size(), 'All target field Deciaml should be returned');
+        for (Opportunity opp : opps) {
+            System.assert(deciamls.contains(opp.Amount), 'Field Deciaml should be extracted');
+        }
+    }
 
     // Helpers
     ////////////////
@@ -87,13 +154,20 @@ private with sharing class UTIL_SObject_TEST {
     */
     private static List<Opportunity> buildOpportunities(Integer size) {
         List<Opportunity> opps = new List<Opportunity>();
+        List<Id> oppMockIds = UTIL_UnitTestData_TEST.mockIds(Opportunity.sObjectType, size);
+        List<Id> accountMockIds = UTIL_UnitTestData_TEST.mockIds(Account.sObjectType, size);
 
-        for (Id mockId : UTIL_UnitTestData_TEST.mockIds(Opportunity.sObjectType, size)) {
+        for (Integer i = 0; i < size; i++) {
             opps.add(new TEST_OpportunityBuilder()
-                .withId(mockId)
+                .withId(oppMockIds[i])
+                .withAccount(accountMockIds[i])
+                .withCloseDate(Date.today().addDays(i))
+                .withAmount(i)
+                .withName()
                 .build()
             );
         }
+
         return opps;
     }
 

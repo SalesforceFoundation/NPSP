@@ -678,7 +678,34 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
 
+    // @isTest
+    // private static void shouldUpdateOpenedOppContactAndAccountWhenRdContactAndAccountIsChange() {
+    //     RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+    //     List<Account> accts = UTIL_UnitTestData_TEST.buildOrganizationAccounts(2);
+    //     insert accts;
+
+    //     npe03__Recurring_Donation__c rd = createRecurringDonation(accts[0]);
+    //     insert getOpportunityBuilder(rd)
+    //     .withCloseDate(CLOSE_DATE)
+    //     .withOpenStage()
+    //     .build();
+
+    //     Contact primaryContact = getContact();
+
+    //     Test.startTest();
+    //     rd.npe03__Organization__c = accts[1].Id;
+    //     rd.npe03__Contact__c = primaryContact.Id;
+    //     update rd;
+    //     Test.stopTest();
+
+    //     List<Opportunity> opps = oppGateway.getRecords(rd);
+    //     System.assert(false, opps);
+    //     for (Opportunity opp : opps) {
+    //         System.assertEquals(accts[1].Id, opp.AccountId, 'Opportunity account should be updated to match rd organization');
+    //         System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Opportunity primary contact should be updated to match rd contact');
+    //     }
+    // }
 
     // Helper Methods
     //////////////////

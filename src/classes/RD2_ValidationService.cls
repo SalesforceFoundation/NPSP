@@ -35,39 +35,130 @@
 *
 */
 public with sharing class RD2_ValidationService {
+    /**
+    * @description new rds during the dml process
+    */
+    private List<npe03__Recurring_Donation__c> rds;
+
+    /**
+    * @description old rds during the dml process. oldRds should have the same size and same index as the rds
+    */
+    private List<npe03__Recurring_Donation__c> oldRds;
+
+    /**
+    * @description accounts on the Rds
+    */
+    private Map<Id,Account> rdAccounts {
+        get {
+            if (rdAccounts == null) {
+                rdAccounts = getRdAccounts();
+            }
+            return rdAccounts;
+        } set;
+    }
+
+    /**
+    * @description Constructor for the RD2_ValidationService class
+    * @param rds - new rds that will be validated
+    * @param oldRds - old rds that will be compared to
+    */
+    public RD2_ValidationService(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
+        this.rds = rds;
+        this.oldRds = oldRds;
+    }
+
+    /**
+    * @description Validate RD data on before insert
+    * @param rds the Reucrring Donations to validate
+    */
+    public void validateOnBeforeInsert() {
+        validateMissingData();
+    }
+
+    /**
+    * @description Validate RD data on before update
+    * @param rds the Reucrring Donations to validate
+    * @param oldRds the old list of Recurring Donations
+    */
+    public void validateOnBeforeUpdate() {
+        validateMissingData();
+        validateContactOrAccountChange();
+    }
+
+    /**
+    * @description Validate when contact or account is changed on update of rds
+    * @param rds the Reucrring Donations to validate
+    * @param oldRds the old list of Recurring Donations
+    */
+    private void validateContactOrAccountChange() {
+        Set<Id> noClosedOpp = getRdWithoutClosedOpp();
+
+        for(Integer i = 0; i < rds.size(); i++) {
+            npe03__Recurring_Donation__c rd = rds[i];
+            npe03__Recurring_Donation__c oldRd = oldRds[i];
+
+            if(rd.npe03__Organization__c == oldRd.npe03__Organization__c
+                && rd.npe03__Contact__c == oldRd.npe03__Contact__c) {
+                continue;
+            }
+
+            if (noClosedOpp.contains(rd.Id)
+                || isOrganizationChange(rdAccounts.get(rd.npe03__Organization__c), rdAccounts.get(oldRd.npe03__Organization__c))
+            ) {
+                continue;
+            }
+            
+            rd.addError(System.Label.RD2_CannotChangeContactOnRDWithClosedOpp);
+        }
+    }
+
+    /***
+    * @description Return true when both new and old account on the RD are organization accounts.
+    * @param newAcct - Account on the DML new RD
+    * @param oldAcct - Acocunt on the DML old RD
+    * @return - True when both new and old account are organization accounts
+    */
+    private Boolean isOrganizationChange(Account newAcct, Account oldAcct) {
+        return 
+            newAcct != null
+            && oldAcct != null
+            && newAcct.npe01__SYSTEMIsIndividual__c == false
+            && oldAcct.npe01__SYSTEMIsIndividual__c == false;
+    }
+
+    /***
+    * @description Get a Id group with RD that has no closed opportunity on it
+    * @return - A set of RD Ids that does not have any closed opp on it
+    */
+    private Set<Id> getRdWithoutClosedOpp() {
+        Set<Id> noClosedOpp = new Set<Id>();
+
+        for (npe03__Recurring_Donation__c rd : [
+            SELECT (
+                SELECT Id 
+                FROM npe03__Donations__r
+                WHERE IsClosed = true
+                LIMIT 1
+                )
+            FROM npe03__Recurring_Donation__c
+            WHERE Id IN : UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.Id)
+        ]) {
+            if (rd.npe03__Donations__r.isEmpty()) {
+                noClosedOpp.add(rd.Id);
+            }
+        }
+        
+        return noClosedOpp;
+    }
 
     /***
     * @description Validates missing data on Recurring Donation
     * @param rds the Recurring Donation to validate
     */
-    public void validate(List<npe03__Recurring_Donation__c> rds) {
-
-        Set<Id> accountIds = new Set<Id>();
-        Set<Id> contactIds = new Set<Id>();
-
-        for (npe03__Recurring_Donation__c rd : rds) {
-            if (rd.npe03__Organization__c != null) {
-                accountIds.add(rd.npe03__Organization__c);
-                contactIds.add(rd.npe03__Contact__c);
-            }
-        }
-        accountIds.remove(null);
-        contactIds.remove(null);
-
-        Map<Id,Account> accountsById = new Map<Id,Account>([
-            SELECT Id, npe01__SYSTEMIsIndividual__c,
-            (
-                SELECT Id
-                FROM Contacts
-                WHERE Id IN :contactIds
-            )
-            FROM Account
-            WHERE Id IN :accountIds
-            ]);
-
+    private void validateMissingData() {
         for (npe03__Recurring_Donation__c rd : rds) {
             validateActiveRecurringDonation(rd);
-            validateDonor(rd, accountsById.get(rd.npe03__Organization__c));
+            validateDonor(rd, rdAccounts.get(rd.npe03__Organization__c));
         }
     }
 
@@ -153,4 +244,28 @@ public with sharing class RD2_ValidationService {
         }
     }
 
+    /**
+    * @description - get account map on the RDs
+    */
+    private Map<Id, account> getRdAccounts() {
+        Set<Id> accountIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Organization__c);
+        Set<Id> contactIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Contact__c);
+
+        accountIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Organization__c));
+        contactIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Contact__c)); 
+
+        accountIds.remove(null);
+        contactIds.remove(null);
+
+        return new Map<Id,Account>([
+            SELECT Id, npe01__SYSTEMIsIndividual__c,
+            (
+                SELECT Id
+                FROM Contacts
+                WHERE Id IN :contactIds
+            )
+            FROM Account
+            WHERE Id IN :accountIds
+        ]);
+    }
 }

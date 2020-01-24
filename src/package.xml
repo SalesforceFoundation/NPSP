@@ -1483,6 +1483,7 @@
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
+        <members>RD2_CannotChangeContactOnRDWithClosedOpp</members>
         <members>RD2_CurrentScheduleTitle</members>
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
