@@ -683,7 +683,7 @@ private with sharing class RD2_OpportunityService_TEST {
     * with new account/contact
     */
     @isTest
-    private static void shouldUpdateOpenedOppContactAndAccountWhenRdContactAndAccountIsChange() {
+    private static void shouldUpdateOpenedOppDonorInfoWhenRdDonorInfoIsChange() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();

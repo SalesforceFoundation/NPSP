@@ -378,7 +378,7 @@ private with sharing class RD2_ValidationService_TEST {
     * @description Verifies Rd with closed opp cannot be updated when changing the household contact
     */
     @isTest
-    private static void shouldBlockRdWithClosedOppUpdateWhenHouseholdContactChange() {
+    private static void shouldBlockRdWithClosedOppUpdateWhenChangeHouseholdContact() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         List<Contact> householdContacts = getContacts();
 
@@ -407,10 +407,10 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies Rd with closed opp cannot be updated when changing from houshold contact to organization account
+    * @description Verifies Rd with closed opp cannot be updated when changing from household contact to organization account
     */
     @isTest
-    private static void shouldBlockRdUpdateWithClosedOppWhenHousheholdToOrganizationUpdate() {
+    private static void shouldBlockRdUpdateWithClosedOppWhenChangeDonorFromHouseholdToOrganization() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         List<Contact> householdContacts = getContacts();
 
@@ -442,10 +442,10 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies Rd can be updated to different contact when there is no closed opportunitiy under the Rd
+    * @description Verifies Rd can be updated to different contact when there is no closed opp under the Rd
     */
     @isTest
-    private static void shouldUpdateRdWithoutClosedOppWhenContactChange() {
+    private static void shouldUpdateRdWithoutClosedOppWhenDonorContactChange() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         List<Contact> householdContacts = getContacts();
 
@@ -461,10 +461,10 @@ private with sharing class RD2_ValidationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(householdContacts[1].Id, rd.npe03__Contact__c,
-            'The Rd should be successfully update with new contact');
+            'The Rd should be successfully updated with new contact');
     }
     /***
-    * @description Verifies Rd with closed opp can be update to different organization
+    * @description Verifies Rd with closed opp can be updated to different organization
     */
     @isTest
     private static void shouldUpdateRdWithClosedOppWhenOrganizationChange() {
@@ -490,12 +490,12 @@ private with sharing class RD2_ValidationService_TEST {
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(organizations[1].Id, rd.npe03__Organization__c,
-            'The Rd should be successfully update with new oorganization');
+            'The Rd should be successfully updated with new oorganization');
 
     }
 
     /***
-    * @description Verifies Rd with closed opp can be update to different contact when the Rd is under an organization account
+    * @description Verifies Rd with closed opp can be updated to different contact when the Rd is under an organization account
     */
     @isTest
     private static void shouldUpdateRdWithClosedOppWhenContactUnderOrganizationChange() {
