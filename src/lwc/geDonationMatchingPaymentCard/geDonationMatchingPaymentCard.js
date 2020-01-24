@@ -110,6 +110,10 @@ export default class geDonationMatchingPaymentCard extends LightningElement {
         return { fieldApiName: fieldApiName };
     }
 
+    /*******************************************************************************
+    * @description Method dispatches an event to notify geDonationMatching that an
+    * payment donation has been selected.
+    */
     handleUpdatePayment() {
         const detail = { objectApiName: PAYMENT_OBJECT.objectApiName, fields: deepClone(this.payment) };
         dispatch(this, 'updatepayment', detail);

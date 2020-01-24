@@ -115,15 +115,33 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
         return { fieldApiName: fieldApiName };
     }
 
+    /*******************************************************************************
+    * @description Method dispatches an event to notify geDonationMatching that a
+    * payment donation has been selected.
+    *
+    * @param {object} event: Custom Event object containing payment data.
+    */
     handleUpdatePayment(event) {
         dispatch(this, 'updateselecteddonation', event.detail);
     }
 
+    /*******************************************************************************
+    * @description Method dispatches an event to notify geDonationMatching that an
+    * opportunity donation has been selected.
+    *
+    * @param {object} event: Custom Event object containing opportunity data.
+    */
     handleUpdateOpportunity() {
         const detail = { objectApiName: OPPORTUNITY_OBJECT.objectApiName, fields: deepClone(this.opportunity) };
         dispatch(this, 'updateselecteddonation', detail);
     }
 
+    /*******************************************************************************
+    * @description Method dispatches an event to notify geDonationMatching that a
+    * new payment needs to be applied to the designated opportunity.
+    *
+    * @param {object} event: Custom Event object containing opportunity data.
+    */
     handleNewPayment() {
         const detail = { objectApiName: OPPORTUNITY_OBJECT.objectApiName, fields: deepClone(this.opportunity) };
         detail.fields.applyPayment = true;
