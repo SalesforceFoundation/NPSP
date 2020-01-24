@@ -132,13 +132,15 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param triggerAction BeforeInsert, BeforeUpdate, etc.
     */
     public void validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
-        RD2_ValidationService validationService = new RD2_ValidationService(rds, oldRds);
+        RD2_ValidationService validationService = new RD2_ValidationService(rds);
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            validationService.validateOnBeforeInsert();
+            validationService.validate();
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            validationService.validateOnBeforeUpdate();
+            validationService
+            .withOldRecurringDonations(oldRds)
+            .validateOnChange();
         }
     }
 

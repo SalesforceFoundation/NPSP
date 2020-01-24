@@ -251,8 +251,7 @@ public with sharing class RD2_OpportunityService {
                 Boolean hasMatchingInstallment = installments != null && (i + 1 <= installments.size());
                 installmentByOppId.put(opp.Id, hasMatchingInstallment ? installments[i] : null);
 
-                Boolean isChanged = syncOppWithSchedule(opp, installmentByOppId.get(opp.Id), rd.npe03__Donor_Name__c);
-                isChanged = syncOppWithAccountAndContact(opp, rd) || isChanged;
+                Boolean isChanged = syncOpportunity(opp, installmentByOppId.get(opp.Id), rd);
 
                 if (isChanged) {
                     oppsToUpdate.add(opp);
@@ -286,64 +285,50 @@ public with sharing class RD2_OpportunityService {
     }
 
     /***
-    * @description Updates Opportunity if it differs from the related Recurring Donation Schedule installment
+    * @description Updates Opportunity if it differs from it's related Recurring Donation and/or matching installment
     * @param opp Opportunity
     * @param installment Recurring Donation Schedule installment
-    * @param donorName Recurring Donation donor name
+    * @param rd Recurring Donation
     * @return Boolean
     */
-    private Boolean syncOppWithSchedule(Opportunity opp,  RD2_ScheduleService.Installment installment, String donorName) {  
-        //An installment Opportunity should always have a matching RD Schedule installment.
-        //If the installment is null, this is most probably a programatic error.
-        if (installment == null) {
-            opp.addError(System.Label.RD2_ScheduleInstallmentIsRequired);
-            return true;
-        }    
-
+    private Boolean syncOpportunity(Opportunity opp, RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd) {  
         Boolean isChanged = false;
-
-        if (opp.Amount != installment.installmentAmount) {
-            opp.Amount = installment.installmentAmount;
-            isChanged = true;
-        }
-
-        if (opp.CloseDate != installment.nextDonationDate) {
-            opp.CloseDate = installment.nextDonationDate;
-            opp.name = buildOpportunityName(donorName, opp);
-            isChanged = true;
-        }
-
-        if (installment.campaignId != null 
-            && opp.CampaignId != installment.campaignId 
-            && rdSettings.shouldSetInstallmentCampaign
-        ) {
-            opp.CampaignId = installment.campaignId;
-            isChanged = true;
-        }
-
-        return isChanged;
-    }
-
-    /***
-    * @desciption Sync opportunity with rd's acocunt and contact
-    * @param opp - The opportunity being sync
-    * @param rd - The recurring donation that will be used to sync
-    * @return Boolean - Indicate if the opportunity needs to have DML performed
-    */
-    private Boolean syncOppWithAccountAndContact(Opportunity opp, npe03__Recurring_Donation__c rd) {
-        Boolean isChange = false;
 
         if (opp.AccountId != rd.npe03__Organization__c) {
             opp.AccountId = rd.npe03__Organization__c;
-            isChange = true;
+            isChanged = true;
         }
         
         if (opp.Primary_Contact__c != rd.npe03__Contact__c) {
             opp.Primary_Contact__c = rd.npe03__Contact__c;
-            isChange = true;
+            isChanged = true;
         }
 
-        return isChange;
+        if (installment != null) { 
+            if (opp.Amount != installment.installmentAmount) {
+                opp.Amount = installment.installmentAmount;
+                isChanged = true;
+            }
+
+            if (opp.CloseDate != installment.nextDonationDate) {
+                opp.CloseDate = installment.nextDonationDate;
+                isChanged = true;
+            }
+
+            if (installment.campaignId != null 
+                && opp.CampaignId != installment.campaignId 
+                && rdSettings.shouldSetInstallmentCampaign
+            ) {
+                opp.CampaignId = installment.campaignId;
+                isChanged = true;
+            }
+        }
+
+        if (isChanged) {
+            opp.name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
+        }
+
+        return isChanged;
     }
 
     /***
