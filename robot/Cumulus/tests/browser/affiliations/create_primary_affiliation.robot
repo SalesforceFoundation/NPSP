@@ -26,9 +26,8 @@ Create Primary Affiliation for Contact
     Go To Page                           Details                      Contact                     object_id=&{contact}[Id]
     Select Tab                           Details
     Edit Record Field Value              Primary Affiliation          &{account}[Name]
-    Save Record        
-    Select Tab                           Related
-    Verify Occurrence                    Organization Affiliations    1
+    Save Record
+    Validate Related Record Count         Organization Affiliations                        1
     Verify Allocations                   Organization Affiliations    &{account}[Name]=Current 
     Click Related Item Link              Organization Affiliations    &{account}[Name]
     Save Current Record ID For Deletion  npe5__Affiliation__c    
