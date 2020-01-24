@@ -4,6 +4,8 @@
         description="Aura component that wraps the geBatchGiftEntryApp LWC component to
                      show modals using the overlayLibrary.">
 
+    <aura:dependency resource="c:geBatchWizard"/>
+
     <lightning:overlayLibrary aura:id="overlayLib"/>
 
     <c:geBatchGiftEntryApp aura:id="batchGiftEntryApp"
