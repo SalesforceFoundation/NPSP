@@ -51,19 +51,19 @@ Find Matching Gifts
     Go To Record Home  &{opportunity1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Matching Gift Information
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Matching Gift    contains    &{opportunity3}[Name]    
+    Navigate To And Validate Field Value    Matching Gift    contains    &{opportunity3}[Name]
     Go To Record Home  &{opportunity2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Matching Gift Information
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Matching Gift    contains    &{opportunity3}[Name]    
+    Navigate To And Validate Field Value    Matching Gift    contains    &{opportunity3}[Name]
     Run Donations Batch Process
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Total Gifts    contains    $50.00    
-    Confirm Field Value   Soft Credit Total    contains    $50.00    
+    Navigate To And Validate Field Value    Total Gifts    contains    $50.00
+    Navigate To And Validate Field Value   Soft Credit Total    contains    $50.00
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Total Gifts    contains    $25.00    
-    Confirm Field Value    Soft Credit Total    contains    $25.00    
+    Navigate To And Validate Field Value    Total Gifts    contains    $25.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $25.00
