@@ -3321,7 +3321,6 @@
         <members>bdiObjectMappings</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
-        <members>geGiftEntryFormApp</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
@@ -3334,6 +3333,7 @@
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
         <members>geFormWidgetRow</members>
+        <members>geGiftEntryFormApp</members>
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
