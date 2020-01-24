@@ -9,12 +9,12 @@ export default class utilCard extends LightningElement {
 
     renderedCallback() {
         if (this.footerSlot) {
-            this.showFooter = this.footerSlot.assignedElements().length !== 0;
+            this.showFooter = this.footerSlot.length !== 0;
         }
     }
 
     get footerSlot() {
-        return this.template.querySelector('slot[name=footer]');
+        return this.template.querySelectorAll('slot[name=footer]');
     }
 
     get hasIcon() {

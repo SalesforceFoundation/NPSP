@@ -68,7 +68,8 @@ public with sharing class FORM_ServiceGiftEntry {
                     Name
                 FROM npe01__OppPayment__r)
             FROM Opportunity
-            WHERE npsp__Primary_Contact__c = :recordId];
+            WHERE npsp__Primary_Contact__c = :recordId
+                OR AccountId = :recordId];
     }
 
     /*******************************************************************************************************

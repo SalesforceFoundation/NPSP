@@ -1,71 +1,49 @@
 /* eslint-disable no-console */
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { deepClone } from 'c/utilCommon';
-import retrieveOpportunities from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveOpportunities';
-import OPPORTUNITY_INFO from '@salesforce/schema/Opportunity';
+import { handleError } from 'c/utilTemplateBuilder';
+import geLabelService from 'c/geLabelService';
 
-import PAYMENT_INFO from '@salesforce/schema/npe01__OppPayment__c';
+import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
+import PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 
 export default class geDonationMatching extends LightningElement {
 
-    @api recordId;
+    // Expose custom labels to template
+    CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
+
+    @api opportunities;
     @api dedicatedListenerEventName;
+    @api receiverComponent;
 
     @track isLoading = true;
 
-    opportunities;
-
-    @wire(retrieveOpportunities, { recordId: '$recordId' })
-    wiredRetrieveOpportunities(response) {
-        if (response.data) {
-            console.log('data: ', response.data);
-            this.opportunities = response.data;
+    renderedCallback() {
+        if (this.isLoading) {
             this.isLoading = false;
-        }
-
-        if (response.error) {
-            console.error(response.error);
         }
     }
 
     handleUpdateSelectedDonation(event) {
-        console.log('handleUpdateSelectedDonation: ', deepClone(event.detail));
-
-        if (event.detail.objectApiName === PAYMENT_INFO.objectApiName) {
+        if (event.detail.objectApiName === PAYMENT_OBJECT.objectApiName) {
             this.handlePayment(event.detail.fields);
-        } else if (event.detail.objectApiName === OPPORTUNITY_INFO.objectApiName) {
+        } else if (event.detail.objectApiName === OPPORTUNITY_OBJECT.objectApiName) {
             this.handleOpportunity(event.detail.fields);
         }
     }
 
     handlePayment(fields) {
-        console.log('handlePayment');
-        const detail = { receiverComponent: 'ge-batch-gift-entry-app', payment: fields };
-        try {
-            fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
-        } catch (error) {
-            console.error(error);
-        }
+        const detail = { receiverComponent: this.receiverComponent, payment: fields };
+        fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
     }
 
     handleOpportunity(fields) {
-        console.log('handleOpportunity');
-        const detail = { receiverComponent: 'ge-batch-gift-entry-app', opportunity: fields };
-        try {
-            fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
-        } catch (error) {
-            console.error(error);
-        }
+        const detail = { receiverComponent: this.receiverComponent, opportunity: fields };
+        fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
     }
 
     handleNewOpportunity() {
-        console.log('updatePayment');
-        const detail = { receiverComponent: 'ge-batch-gift-entry-app', opportunity: { new: true } };
-        try {
-            fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
-        } catch (error) {
-            console.error(error);
-        }
+        const detail = { receiverComponent: this.receiverComponent, opportunity: { new: true } };
+        fireEvent(this.pageRef, this.dedicatedListenerEventName, detail);
     }
 }

@@ -1,5 +1,5 @@
 <template>
-    <c-util-card title={opportunity.Name}
+    <c-util-card title={opportunityComputedName}
                  icon-name="standard:opportunity"
                  icon-size="small">
         <template if:true={isLoading}>
@@ -25,7 +25,7 @@
                                                small-device-size="6"
                                                medium-device-size="6"
                                                large-device-size="7">
-                            {opportunity.Name}
+                            {opportunityNameDetails.value}
                         </lightning-layout-item>
 
                         <lightning-layout-item size="2"
@@ -38,7 +38,7 @@
                                                small-device-size="6"
                                                medium-device-size="6"
                                                large-device-size="7">
-                            {opportunity.Amount}
+                            {opportunityAmountDetails.value}
                         </lightning-layout-item>
                     </lightning-layout>
                 </lightning-layout-item>
@@ -59,7 +59,7 @@
                                                small-device-size="6"
                                                medium-device-size="6"
                                                large-device-size="7">
-                            {opportunity.CloseDate}
+                            {opportunityCloseDateDetails.value}
                         </lightning-layout-item>
 
                         <lightning-layout-item size="2"
@@ -72,7 +72,7 @@
                                                small-device-size="6"
                                                medium-device-size="6"
                                                large-device-size="7">
-                            {opportunity.StageName}
+                            {opportunityStageNameDetails.value}
                         </lightning-layout-item>
                     </lightning-layout>
                 </lightning-layout-item>
@@ -107,7 +107,7 @@
 
             <template if:false={hasPayments}>
                 <p class="slds-text-body_regular slds-text-align_center slds-p-vertical_large">
-                    This opportunity does not have any payments.
+                    {CUSTOM_LABELS.geBodyMatchingNoPayments}
                 </p>
             </template>
             <!-- END PAYMENT CARDS CONTENT -->
@@ -117,13 +117,13 @@
                     class="slds-button slds-button_neutral slds-button_extension slds-border_extension-bottom"
                     onclick={handleNewPayment}
                     data-id={opportunity.Name}>
-                Add new Payment
+                {CUSTOM_LABELS.geButtonMatchingNewPayment}
             </button>
             <button slot="footer"
                     class="slds-button slds-button_neutral slds-button_extension"
                     onclick={handleUpdateOpportunity}
                     data-id={opportunity.Name}>
-                Update this Opportunity
+                {CUSTOM_LABELS.geButtonMatchingUpdateOpportunity}
             </button>
             <!-- END FOOTER CONTENT -->
         </template>

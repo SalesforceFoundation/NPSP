@@ -1,27 +1,38 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getRecord } from 'lightning/uiRecordApi';
 import { dispatch, handleError } from 'c/utilTemplateBuilder';
 import { deepClone } from 'c/utilCommon';
+import geLabelService from 'c/geLabelService';
 
-import OPPORTUNITY_INFO from '@salesforce/schema/Opportunity';
-import OPPORTUNITY_NAME_INFO from '@salesforce/schema/Opportunity.Name';
-import OPPORTUNITY_AMOUNT_INFO from '@salesforce/schema/Opportunity.Amount';
-import OPPORTUNITY_CLOSE_DATE_INFO from '@salesforce/schema/Opportunity.CloseDate';
-import OPPORTUNITY_STAGE_NAME_INFO from '@salesforce/schema/Opportunity.StageName';
+import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
+import OPPORTUNITY_NAME_FIELD from '@salesforce/schema/Opportunity.Name';
+import OPPORTUNITY_AMOUNT_FIELD from '@salesforce/schema/Opportunity.Amount';
+import OPPORTUNITY_CLOSE_DATE_FIELD from '@salesforce/schema/Opportunity.CloseDate';
+import OPPORTUNITY_STAGE_NAME_FIELD from '@salesforce/schema/Opportunity.StageName';
+
+const FIELDS = [
+    OPPORTUNITY_NAME_FIELD,
+    OPPORTUNITY_AMOUNT_FIELD,
+    OPPORTUNITY_CLOSE_DATE_FIELD,
+    OPPORTUNITY_STAGE_NAME_FIELD,
+]
 
 export default class geDonationMatchingOpportunityCard extends LightningElement {
 
+    // Expose custom labels to template
+    CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
+
     @api opportunity;
 
-    @track isLoading = true;
+    @track opportunityObject;
+    @track wiredOpportunityRecord;
 
-    opportunityObject;
-
-    @wire(getObjectInfo, { objectApiName: OPPORTUNITY_INFO })
+    @wire(getObjectInfo, { objectApiName: OPPORTUNITY_OBJECT })
     wiredOpportunityObject(response) {
         if (response.data) {
+            console.log(deepClone(response.data));
             this.opportunityObject = response.data;
-            this.isLoading = false;
         }
 
         if (response.error) {
@@ -29,20 +40,51 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
         }
     }
 
+    @wire(getRecord, { recordId: '$opportunity.Id', fields: FIELDS })
+    wiredOpportunity(response) {
+        if (response.data) {
+            this.wiredOpportunityRecord = response.data;
+        }
+
+        if (response.error) {
+            handleError(response.error);
+        }
+    }
+
+    get isLoading() {
+        return this.opportunityObject && this.wiredOpportunityRecord ? false : true;
+    }
+
+    get opportunityComputedName() {
+        if (this.wiredOpportunityRecord) {
+            return geLabelService.format(this.CUSTOM_LABELS.geHeaderMatchingOpportunity,
+                [
+                    this.opportunityAmountDetails.value,
+                    this.opportunityCloseDateDetails.value,
+                    this.opportunityStageNameDetails.value
+                ]);
+        }
+        return '';
+    }
+
+    get opportunityObjectApiName() {
+        return OPPORTUNITY_OBJECT.objectApiName ? OPPORTUNITY_OBJECT.objectApiName : undefined;
+    }
+
     get opportunityAmountDetails() {
-        return this.getFieldDetails(OPPORTUNITY_AMOUNT_INFO);
+        return this.getFieldDetails(OPPORTUNITY_AMOUNT_FIELD, this.wiredOpportunityRecord);
     }
 
     get opportunityCloseDateDetails() {
-        return this.getFieldDetails(OPPORTUNITY_CLOSE_DATE_INFO);
+        return this.getFieldDetails(OPPORTUNITY_CLOSE_DATE_FIELD, this.wiredOpportunityRecord);
     }
 
     get opportunityStageNameDetails() {
-        return this.getFieldDetails(OPPORTUNITY_STAGE_NAME_INFO);
+        return this.getFieldDetails(OPPORTUNITY_STAGE_NAME_FIELD, this.wiredOpportunityRecord);
     }
 
     get opportunityNameDetails() {
-        return this.getFieldDetails(OPPORTUNITY_NAME_INFO);
+        return this.getFieldDetails(OPPORTUNITY_NAME_FIELD, this.wiredOpportunityRecord);
     }
 
     get hasPayments() {
@@ -55,30 +97,35 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
         return this.hasPayments ? this.opportunity.npe01__OppPayment__r : [];
     }
 
-    getFieldDetails(fieldInfo) {
+    getFieldDetails(fieldInfo, wiredOpportunityRecord) {
         const fieldApiName = fieldInfo.fieldApiName;
         const fields = this.opportunityObject.fields;
-        if (fields) {
-            // TODO: Use custom label for opportunity
-            return { label: `Opportunity ${fields[fieldApiName].label}`, value: this.opportunity[fieldApiName] };
+        if (fields && wiredOpportunityRecord) {
+            const value =
+                wiredOpportunityRecord.fields[fieldApiName].displayValue ||
+                wiredOpportunityRecord.fields[fieldApiName].value ||
+                '';
+
+            return {
+                label: `${this.opportunityObject.label} ${fields[fieldApiName].label}`,
+                fieldApiName: fieldApiName,
+                value: value,
+            };
         }
-        return null;
+        return { fieldApiName: fieldApiName };
     }
 
     handleUpdatePayment(event) {
-        console.log('handleUpdatePayment: ', deepClone(event.detail));
         dispatch(this, 'updateselecteddonation', event.detail);
     }
 
     handleUpdateOpportunity() {
-        console.log('handleUpdateOpportunity: ', deepClone(this.opportunity), OPPORTUNITY_INFO);
-        const detail = { objectApiName: OPPORTUNITY_INFO.objectApiName, fields: deepClone(this.opportunity) };
+        const detail = { objectApiName: OPPORTUNITY_OBJECT.objectApiName, fields: deepClone(this.opportunity) };
         dispatch(this, 'updateselecteddonation', detail);
     }
 
     handleNewPayment() {
-        console.log('handleUpdateOpportunity: ', deepClone(this.opportunity), OPPORTUNITY_INFO);
-        const detail = { objectApiName: OPPORTUNITY_INFO.objectApiName, fields: deepClone(this.opportunity) };
+        const detail = { objectApiName: OPPORTUNITY_OBJECT.objectApiName, fields: deepClone(this.opportunity) };
         detail.fields.applyPayment = true;
         dispatch(this, 'updateselecteddonation', detail);
     }

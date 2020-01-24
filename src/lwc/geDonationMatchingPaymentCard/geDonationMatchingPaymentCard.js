@@ -1,50 +1,116 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { dispatch } from 'c/utilTemplateBuilder';
+import { getRecord } from 'lightning/uiRecordApi';
+import { dispatch, handleError } from 'c/utilTemplateBuilder';
 import { deepClone } from 'c/utilCommon';
+import geLabelService from 'c/geLabelService';
 
 import PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
-import PAYMENT_AMOUNT_INFO from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
-import PAYMENT_SCHEDULED_DATE_INFO from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import PAYMENT_PAID_INFO from '@salesforce/schema/npe01__OppPayment__c.npe01__Paid__c';
-import PAYMENT_NAME_INFO from '@salesforce/schema/npe01__OppPayment__c.Name';
+import PAYMENT_AMOUNT_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
+import PAYMENT_SCHEDULED_DATE_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
+import PAYMENT_PAID_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Paid__c';
+import PAYMENT_NAME_FIELD from '@salesforce/schema/npe01__OppPayment__c.Name';
+
+const FIELDS = [
+    PAYMENT_AMOUNT_FIELD,
+    PAYMENT_SCHEDULED_DATE_FIELD,
+    PAYMENT_PAID_FIELD,
+    PAYMENT_NAME_FIELD,
+]
 
 export default class geDonationMatchingPaymentCard extends LightningElement {
 
+    // Expose custom labels to template
+    CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
+
     @api payment;
 
+    @track paymentObject;
+    @track wiredPaymentRecord;
+
     @wire(getObjectInfo, { objectApiName: PAYMENT_OBJECT })
-    wiredPaymentObject;
+    wiredPaymentObject(response) {
+        if (response.data) {
+            this.paymentObject = response.data;
+        }
+
+        if (response.error) {
+            handleError(response.error);
+        }
+    }
+
+    @wire(getRecord, { recordId: '$payment.Id', fields: FIELDS })
+    wiredPayment(response) {
+        if (response.data) {
+            this.wiredPaymentRecord = response.data;
+        }
+
+        if (response.error) {
+            handleError(response.error);
+        }
+    }
+
+    get isLoading() {
+        return this.paymentObject && this.wiredPaymentRecord ? false : true;
+    }
+
+    get paymentComputedName() {
+        if (this.wiredPaymentRecord) {
+            return geLabelService.format(this.CUSTOM_LABELS.geHeaderMatchingPayment,
+                [
+                    this.paymentAmountDetails.value,
+                    this.paymentScheduledDateDetails.value
+                ]);
+        }
+        return '';
+    }
+
+    get paymentObjectApiName() {
+        return PAYMENT_OBJECT.objectApiName ? PAYMENT_OBJECT.objectApiName : undefined;
+    }
 
     get paymentAmountDetails() {
-        return this.getFieldDetails(PAYMENT_AMOUNT_INFO);
+        return this.getFieldDetails(PAYMENT_AMOUNT_FIELD, this.wiredPaymentRecord);
     }
 
     get paymentScheduledDateDetails() {
-        return this.getFieldDetails(PAYMENT_SCHEDULED_DATE_INFO);
+        return this.getFieldDetails(PAYMENT_SCHEDULED_DATE_FIELD, this.wiredPaymentRecord);
     }
 
     get paymentPaidDetails() {
-        return this.getFieldDetails(PAYMENT_PAID_INFO);
+        return this.getFieldDetails(PAYMENT_PAID_FIELD, this.wiredPaymentRecord);
     }
 
     get paymentNameDetails() {
-        return this.getFieldDetails(PAYMENT_NAME_INFO);
+        return this.getFieldDetails(PAYMENT_NAME_FIELD, this.wiredPaymentRecord);
     }
 
-    getFieldDetails(fieldInfo) {
+    get paymentPaidComputedValue() {
+        return this.payment[PAYMENT_PAID_FIELD.fieldApiName] === true ?
+            this.CUSTOM_LABELS.commonYes :
+            this.CUSTOM_LABELS.commonNo;
+    }
+
+    getFieldDetails(fieldInfo, wiredPaymentRecord) {
         const fieldApiName = fieldInfo.fieldApiName;
-        if (this.wiredPaymentObject.data) {
-            const fields = this.wiredPaymentObject.data.fields;
-            if (fields) {
-                return { label: fields[fieldApiName].label, value: this.payment[fieldApiName] };
-            }
+        const fieldDescribes = this.paymentObject.fields;
+
+        if (fieldDescribes && wiredPaymentRecord) {
+            const value =
+                wiredPaymentRecord.fields[fieldApiName].displayValue ||
+                wiredPaymentRecord.fields[fieldApiName].value ||
+                '';
+
+            return {
+                label: fieldDescribes[fieldApiName].label,
+                fieldApiName: fieldApiName,
+                value: value,
+            };
         }
-        return null;
+        return { fieldApiName: fieldApiName };
     }
 
     handleUpdatePayment() {
-        console.log('handleUpdatePayment: ', deepClone(this.payment), PAYMENT_OBJECT);
         const detail = { objectApiName: PAYMENT_OBJECT.objectApiName, fields: deepClone(this.payment) };
         dispatch(this, 'updatepayment', detail);
     }
