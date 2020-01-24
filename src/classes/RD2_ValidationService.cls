@@ -51,16 +51,19 @@ public with sharing class RD2_ValidationService {
     private Map<Id,Account> accountsById {
         get {
             if (accountsById == null) {
-                accountsById = getaccountsById();
+                accountsById = getRdAccounts();
             }
             return accountsById;
         } set;
     }
 
+    /***
+    * @description A set of Rd Ids which the donor can be updated 
+    */
     private Set<Id> adjustableRdIds {
         get {
             if (adjustableRdIds == null) {
-                adjustableRdIds = getRdWithoutClosedOpp();
+                adjustableRdIds = getDonorAdjustableRDIds();
             }
             return adjustableRdIds;
         }
@@ -83,7 +86,7 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Validate RD data on before insert
-    * @param rds - The Reucrring Donations to validate
+    * @param rds - The Recurring Donations to validate
     */
     public void validate() {
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -94,7 +97,7 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Validate RD data on before update
-    * @param rds - The Reucrring Donations to validate
+    * @param rds - The Recurring Donations to validate
     * @param oldRds - The old list of Recurring Donations
     */
     public void validateOnChange() {
@@ -109,39 +112,28 @@ public with sharing class RD2_ValidationService {
         
     }
 
-    /**
-    * @description Validate when contact or account is changed on update of rds
-    * @param rds - The Reucrring Donations to validate
-    * @param oldRds - The old list of Recurring Donations
-    */
-    private void validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        if (rd.npe03__Organization__c == oldRd.npe03__Organization__c
-            && rd.npe03__Contact__c == oldRd.npe03__Contact__c) {
-            return;
-        }
-
-        if (adjustableRdIds.contains(rd.Id)
-            || isOrganizationChange(accountsById.get(rd.npe03__Organization__c), accountsById.get(oldRd.npe03__Organization__c))
-        ) {
-            return;
-        }
-        
-        rd.addError(System.Label.RD2_CannotChangeContactOnRDWithClosedOpp);
-        
-    }
 
     /***
-    * @description Return true when both new and old account on the RD are organization accounts.
-    * @param newAcct - Account on the DML new RD
-    * @param oldAcct - Acocunt on the DML old RD
-    * @return - True when both new and old account are organization accounts
+    * @description Validates installment data on Recurring Donation
+    * @param rd - The Recurring Donation to validate
     */
-    private Boolean isOrganizationChange(Account newAcct, Account oldAcct) {
-        return 
-            newAcct != null
-            && oldAcct != null
-            && newAcct.npe01__SYSTEMIsIndividual__c == false
-            && oldAcct.npe01__SYSTEMIsIndividual__c == false;
+    private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
+        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+            return;
+        }
+        if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
+            rd.addError(System.Label.RD2_AmountMustBeValid);
+        }
+
+        if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
+            rd.addError(
+                String.format(
+                    System.Label.RD2_InstallmentPeriodMustBeValid,
+                    new String[]{ rd.npe03__Installment_Period__c })
+            );
+        }
+
+        validateDayOfMonth(rd);
     }
 
     /***
@@ -166,30 +158,41 @@ public with sharing class RD2_ValidationService {
         } else if (!UTIL_SObject.extractIds(acct.Contacts).contains(rd.npe03__Contact__c)) {
             rd.addError(System.Label.RD_ContactMustBelongToAccount);
         }
+    }
 
+    /**
+    * @description Validate when contact or account is changed on update of rds
+    * @param rds - The Recurring Donations to validate
+    * @param oldRds - The old list of Recurring Donations
+    */
+    private void validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        if (rd.npe03__Organization__c == oldRd.npe03__Organization__c
+            && rd.npe03__Contact__c == oldRd.npe03__Contact__c) {
+            return;
+        }
+
+        if (adjustableRdIds.contains(rd.Id)
+            || isOrganizationChange(accountsById.get(rd.npe03__Organization__c), accountsById.get(oldRd.npe03__Organization__c))
+        ) {
+            return;
+        }
+        
+        rd.addError(System.Label.RD2_ContactChangeIsRestricted);
+        
     }
 
     /***
-    * @description Validates installment data on Recurring Donation
-    * @param rd - The Recurring Donation to validate
+    * @description Return true when both new and old account on the RD are organization accounts.
+    * @param newAcct - Account on the DML new RD
+    * @param oldAcct - Acocunt on the DML old RD
+    * @return - True when both new and old account are organization accounts
     */
-    private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
-            return;
-        }
-        if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
-            rd.addError(System.Label.RD2_AmountMustBeValid);
-        }
-
-        if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
-            rd.addError(
-                String.format(
-                    System.Label.RD2_InstallmentPeriodMustBeValid,
-                    new String[]{ rd.npe03__Installment_Period__c })
-            );
-        }
-
-        validateDayOfMonth(rd);
+    private Boolean isOrganizationChange(Account newAcct, Account oldAcct) {
+        return 
+            newAcct != null
+            && oldAcct != null
+            && newAcct.npe01__SYSTEMIsIndividual__c == false
+            && oldAcct.npe01__SYSTEMIsIndividual__c == false;
     }
 
     /***
@@ -228,8 +231,9 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description - Get account map on the RDs from both new and old recurring donation context
+    * @return - Map<Id, Account>
     */
-    private Map<Id, account> getaccountsById() {
+    private Map<Id, Account> getRdAccounts() {
         Set<Id> accountIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Organization__c);
         Set<Id> contactIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Contact__c);
 
@@ -253,9 +257,9 @@ public with sharing class RD2_ValidationService {
 
     /***
     * @description Get a Id group with RD that has no closed opportunity on it
-    * @return - A set of RD Ids that does not have any closed opp on it
+    * @return - Set<Id>
     */
-    private Set<Id> getRdWithoutClosedOpp() {
+    private Set<Id> getDonorAdjustableRDIds() {
         Set<Id> rdIds = new Set<Id>();
 
         for (npe03__Recurring_Donation__c rd : [

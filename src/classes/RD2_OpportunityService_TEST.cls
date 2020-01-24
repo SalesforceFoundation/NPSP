@@ -719,8 +719,8 @@ private with sharing class RD2_OpportunityService_TEST {
                 System.assertEquals(accts[1].Id, opp.AccountId, 'Open opportunity account should be updated to match rd organization');
                 System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Open opportunity primary contact should be updated to match rd contact');
             } else {
-                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed Oppotrunity account should not be updated when rd is updated');
-                System.assertEquals(null, opp.Primary_Contact__c, 'Closed Oppotrunity primary contact should not be updated when rd is updated');
+                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed Opportunity account should not be updated when rd is updated');
+                System.assertEquals(null, opp.Primary_Contact__c, 'Closed Opportunity primary contact should not be updated when rd is updated');
             }
         }
     }

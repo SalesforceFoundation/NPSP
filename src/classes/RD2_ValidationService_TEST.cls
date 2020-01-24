@@ -402,8 +402,8 @@ private with sharing class RD2_ValidationService_TEST {
             errMessage = e.getMessage();
         }
 
-        System.assert(errMessage.contains(System.Label.RD2_CannotChangeContactOnRDWithClosedOpp),
-            'RD update should fail due to existing closed opp with the message' + System.Label.RD2_CannotChangeContactOnRDWithClosedOpp);
+        System.assert(errMessage.contains(System.Label.RD2_ContactChangeIsRestricted),
+            'RD update should fail due to existing closed opp with the message' + System.Label.RD2_ContactChangeIsRestricted);
     }
 
     /***
@@ -437,8 +437,8 @@ private with sharing class RD2_ValidationService_TEST {
             errMessage = e.getMessage();
         }
 
-        System.assert(errMessage.contains(System.Label.RD2_CannotChangeContactOnRDWithClosedOpp),
-            'RD update should fail due to existing closed opp with the message' + System.Label.RD2_CannotChangeContactOnRDWithClosedOpp);
+        System.assert(errMessage.contains(System.Label.RD2_ContactChangeIsRestricted),
+            'RD update should fail due to existing closed opp with the message' + System.Label.RD2_ContactChangeIsRestricted);
     }
 
     /***

@@ -135,12 +135,12 @@ private with sharing class UTIL_SObject_TEST {
         List<Opportunity> opps = buildOpportunities(3);
 
         Test.startTest();
-            Set<Decimal> deciamls = UTIL_SObject.extractDecimal(opps, Opportunity.Amount);
+            Set<Decimal> decimals = UTIL_SObject.extractDecimal(opps, Opportunity.Amount);
         Test.stopTest();
 
-        System.assertEquals(opps.size(), deciamls.size(), 'All target field Deciaml should be returned');
+        System.assertEquals(opps.size(), decimals.size(), 'All target field Deciaml should be returned');
         for (Opportunity opp : opps) {
-            System.assert(deciamls.contains(opp.Amount), 'Field Deciaml should be extracted');
+            System.assert(decimals.contains(opp.Amount), 'Field Deciaml should be extracted');
         }
     }
 

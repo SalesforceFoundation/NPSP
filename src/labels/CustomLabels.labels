@@ -1527,11 +1527,11 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Enter a valid Amount. The Amount cannot be zero, negative, or blank.</value>
     </labels>
     <labels>
-        <fullName>RD2_CannotChangeContactOnRDWithClosedOpp</fullName>
+        <fullName>RD2_ContactChangeIsRestricted</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Validate RD Contact update when an closed opportunitiy exist on the RD</shortDescription>
+        <shortDescription>Validate Recurring Donation Contact/Account update is restrcited or not</shortDescription>
         <value>You can't change the Contact on a Recurring Donation that has Closed Opportunities.</value>
     </labels>
     <labels>
