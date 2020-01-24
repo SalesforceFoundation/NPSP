@@ -30,5 +30,5 @@ Create ASC for Affiliated Contact
     Go To Record Home    &{Contact}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Field Value    Soft Credit This Year    contains    $500.00    
-    Confirm Field Value    Soft Credit Total    contains    $500.00    
+    Navigate To And Validate Field Value   Soft Credit This Year    contains    $500.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $500.00

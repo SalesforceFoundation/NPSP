@@ -75,12 +75,11 @@ Create a new opportunity for a contact with open donations
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${newopp_id}    Save Current Record ID For Deletion    Opportunity    
-    Confirm Field Value   Amount    contains    $100.00    
+    Navigate To And Validate Field Value   Amount    contains    $100.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Field Value  Close Date    contains  ${opp_date}  
-    Confirm Field Value    Stage    contains    Closed Won    
+    Navigate To And Validate Field Value  Close Date    contains  ${opp_date}
+    Navigate To And Validate Field Value    Stage    contains    Closed Won
     Go To Record Home    &{contact}[Id]
     Select Tab     Related
     Load Related List    Opportunities
-    Verify Occurrence    Opportunities    2
-      
+    Validate Related Record Count        Opportunities      2
