@@ -49,12 +49,12 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         npe03__Recurring_Donation__c openRd = new npe03__Recurring_Donation__c(
             npe03__Amount__c = 100,
-            npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN
+            npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
         );
 
         npe03__Recurring_Donation__c closedRd = new npe03__Recurring_Donation__c(
             npe03__Amount__c = 1200,
-            npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_CLOSED
+            npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationClosedStatus
         );
 
         insert new List<npe03__Recurring_Donation__c>{ openRd, closedRd };

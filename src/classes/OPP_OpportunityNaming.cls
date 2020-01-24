@@ -87,7 +87,6 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
             Opportunity queryOpp = mapOppsQuery.get(opp.id);
             Contact con = mapOppIdToCon.get(opp.id);
             Opportunity_Naming_Settings__c ons = getONS(queryOpp);
-System.debug('ONS=' + ons);
             if (ons!=null && !string.isBlank(ons.Opportunity_Name_Format__c)) {
                 opp.Name = replaceFieldNamesWithValues(queryOpp, con, ons);
 

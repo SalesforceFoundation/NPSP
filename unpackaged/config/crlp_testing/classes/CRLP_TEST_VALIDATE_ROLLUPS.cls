@@ -810,9 +810,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             npe03__Contact__c = rdContact.Id,
             /*npe03__Organization__c = rdContact.AccountId,*/
             npe03__Amount__c = RD_AMOUNT_USD,
-            npe03__Installment_Period__c = RD_Constants.INSTALLMENT_PERIOD_MONTHLY,
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
             npe03__Date_Established__c = Date.Today().addMonths(-12),
-            npe03__Schedule_Type__c = RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY,
+            npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
             npe03__Open_Ended_Status__c = 'Open'
         );
         insert rd;
