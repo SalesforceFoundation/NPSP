@@ -1,6 +1,10 @@
 import logging
 import warnings
 import time
+import random
+import string
+from datetime import datetime
+
 
 from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
@@ -188,7 +192,7 @@ class NPSP(SalesforceRobotLibraryBase):
 #         drop_down = npsp_lex_locators['locating_delete_dropdown'].format(value)
 #         time.sleep(1)
 #         return drop_down
-    
+
     def select_row(self, value):
         """To select a row on object page based on name and open the dropdown"""
         locators = npsp_lex_locators['name']
@@ -208,6 +212,7 @@ class NPSP(SalesforceRobotLibraryBase):
                 drop_down = npsp_lex_locators['rel_loc_dd'].format(index + 1)
                 self.selenium.get_webelement(drop_down).click()
                 time.sleep(1)
+
 #     def select_row(self, value ):
 #         """To select a row on object page based on name and open the dropdown"""
 #         locators = npsp_lex_locators['name']
@@ -259,10 +264,13 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.get_webelement(locator).click()   
         
         
-    def confirm_field_value(self, field,status,value):
+    def navigate_to_and_validate_field_value(self, field,status,value,section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
         """
+        if section is not None:
+            section="text:"+section
+            self.selenium.scroll_element_into_view(section)
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
         for i in locators:
@@ -443,7 +451,10 @@ class NPSP(SalesforceRobotLibraryBase):
         else :    
             self.salesforce._populate_field(locator, value)
         
-    def verify_occurrence(self,title,value):
+    def validate_related_record_count(self,title,value):
+
+        self.select_tab("Related")
+        self.salesforce.load_related_list(title)
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
         actual_value=self.selenium.get_webelement(locator).text
         exp_value="("+value+")"
@@ -493,8 +504,11 @@ class NPSP(SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['record']['related']['title'].format(title)
         self.selenium.get_webelement(locator).click()  
         
-    def verify_related_list_field_values(self, **kwargs):
-        """verifies the values in the related list objects page""" 
+    def verify_related_list_field_values(self, listname=None, **kwargs):
+        """verifies the values in the related list objects page"""
+        if listname is not None:
+            self.selenium.wait_until_page_contains(listname)
+            self.select_relatedlist(listname)
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
             self.selenium.wait_until_page_contains_element(locator,error="Could not find the "+ name +" with value " + value + " on the page")
@@ -1220,6 +1234,70 @@ class NPSP(SalesforceRobotLibraryBase):
            and waits for the modal to open"""  
         self.salesforce.click_object_button("Edit")
         self.salesforce.wait_until_modal_is_open()
+
+    def randomString(self,stringLength=10):
+        """Generate a random string of fixed length """
+        letters = string.ascii_lowercase
+        return ''.join(random.choice(letters) for i in range(stringLength))
+
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None):
+        """ Creates an Account if account setup data is passed
+            Creates a contact if contact_data is passed
+            Creates an opportunity for the contact if opportunit_data is provided
+            Creates a contact and sets an opportunity simultaneously if both the
+            contact_data and opportunity_data is specified
+         """
+
+        # get the data variable, or an empty dictionary if not set
+
+        data = self.builtin.get_variable_value("${data}", {})
+        if account_data is not None:
+
+            # create the account based on the user input specified account type
+            name = self.randomString(10);
+            rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
+            account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
+            account_id = self.salesforce.salesforce_insert("Account", **account_data)
+            account = self.salesforce.salesforce_get("Contact",account_id)
+
+            # save the account object to data dictionary
+            data[name] = account
+
+        if contact_data is not None:
+
+            # create the contact
+            firstname = self.randomString(10);
+            lastname = self.randomString(10);
+
+            contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
+            contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
+            contact = self.salesforce.salesforce_get("Contact",contact_id)
+
+            # save the contact object to data dictionary
+            data[name] = contact
+
+        if opportunity_data is not None:
+            # create opportunity
+            rt_id = self.salesforce.get_record_type_id("Opportunity",opportunity_data["Type"])
+            # if user did not specify any date value add the default value
+            if 'CloseDate' not in opportunity_data:
+                date = datetime.now().strftime('%Y-%m-%d')
+                opportunity_data.update({'CloseDate' : date})
+            if 'npe01__Do_Not_Automatically_Create_Payment__c' not in opportunity_data:
+                Automatically_create_key = 'npe01__Do_Not_Automatically_Create_Payment__c'
+                Automatically_create_value = 'true'
+                opportunity_data.update({Automatically_create_key : Automatically_create_value})
+
+            opportunity_data.update( {'AccountId' : data[name]["AccountId"], 'RecordTypeId': rt_id } )
+            opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
+            opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
+
+            # save the opportunity
+            data[f"{name}_opportunity"] = opportunity
+
+        self.builtin.set_suite_variable('${data}', data)
+
+        return data
 
     def delete_record(self,value):
         """Select the row to be deleted on the listing page, click delete

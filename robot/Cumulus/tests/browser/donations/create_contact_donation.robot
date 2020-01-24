@@ -1,28 +1,53 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
+
+***Keywords***
+# Setup a contact with parameters specified
+Setup Test Data
+    Setupdata   contact   ${contact1_fields}
+
+*** Variables ***
+${Date}  10
+${Amount}  100
+${Stage_Type}  Closed Won
+&{contact1_fields}  Email=test@example.com
+
 
 *** Test Cases ***
 
 Create Donation from a Contact
-    [tags]  unstable
-    &{contact} =  API Create Contact    Email=skristem@robot.com
-    Store Session Record    Account    &{contact}[AccountId]
-    Go To Record Home  &{contact}[Id]
-    Click Object Button  New Donation
-    Populate Form
-    ...                       Amount=100
-    Select Value From Dropdown   Stage              Closed Won
-    Open Date Picker    Close Date
-    Pick Date    10
-    Click Modal Button        Save
-    ${value}    Return Locator Value    alert
-    Go To Object Home         Opportunity
-    Click Link    ${value}
-    Save Current Record ID For Deletion    Opportunity    
-    Select Tab    Related
-    Load Related List    Payments
-    Verify Occurrence    Payments    1
-    
+    [Documentation]                      Create Opportunity from Contact with closed-won status.
+
+    [tags]                               W-038461                 feature:Donations
+
+    Go To Page                           Details
+    ...                                  Contact
+    ...                                  object_id=${data}[contact][Id]
+
+    Click Object Button                  New Donation
+    Wait For Modal                       New                       Donation
+    Populate Modal Form
+    ...                                  Stage=${Stage_Type}
+    ...                                  Amount=${Amount}
+
+    Open Date Picker                     Close Date
+    Pick Date                            ${Date}
+    Click Modal Button                   Save
+    Wait Until Modal Is Closed
+    ${value}                             Return Locator Value      alert
+    Go To Page                           Listing                   Opportunity
+    Click Link                           ${value}
+    Save Current Record ID For Deletion  Opportunity
+    Current Page Should Be               Detail                    Opportunity
+    Validate Related Record Count        Payments                     1
+
