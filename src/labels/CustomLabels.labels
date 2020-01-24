@@ -5191,7 +5191,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button to open Review Donations modal and change Opportunity or Payment selection</shortDescription>
+        <shortDescription>Button to open Review Donations modal and change Opportunity/Payment selection</shortDescription>
         <value>Select a different donation.</value>
     </labels>
     <labels>
