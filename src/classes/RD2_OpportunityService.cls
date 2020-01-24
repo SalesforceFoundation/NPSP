@@ -324,6 +324,12 @@ public with sharing class RD2_OpportunityService {
         return isChanged;
     }
 
+    /***
+    * @desciption Sync opportunity with rd's acocunt and contact
+    * @param opp - The opportunity being sync
+    * @param rd - The recurring donation that will be used to sync
+    * @return Boolean - Indicate if the opportunity needs to have DML performed
+    */
     private Boolean syncOppWithAccountAndContact(Opportunity opp, npe03__Recurring_Donation__c rd) {
         Boolean isChange = false;
 

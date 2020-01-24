@@ -110,11 +110,11 @@ public with sharing class UTIL_SObject {
     */
     private static Object[] extractField(Type listType, List<SObject> records, String fieldName) {
         Object[] pluck  = (Object[]) listType.newInstance();
-        if(records == null || records.isEmpty()) {
+        if (records == null || records.isEmpty()) {
             return pluck;
         }
 
-        for(SObject record : records) {
+        for (SObject record : records) {
             pluck.add(record.get(fieldName));
         }
 

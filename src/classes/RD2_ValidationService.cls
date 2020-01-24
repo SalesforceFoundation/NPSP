@@ -36,17 +36,17 @@
 */
 public with sharing class RD2_ValidationService {
     /**
-    * @description new rds during the dml process
+    * @description New rds during the dml process
     */
     private List<npe03__Recurring_Donation__c> rds;
 
     /**
-    * @description old rds during the dml process. oldRds should have the same size and same index as the rds
+    * @description Old rds during the dml process. oldRds should have the same size and same index as the rds
     */
     private List<npe03__Recurring_Donation__c> oldRds;
 
     /**
-    * @description accounts on the Rds
+    * @description Accounts on the Rds
     */
     private Map<Id,Account> rdAccounts {
         get {
@@ -59,8 +59,8 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Constructor for the RD2_ValidationService class
-    * @param rds - new rds that will be validated
-    * @param oldRds - old rds that will be compared to
+    * @param rds - New rds that will be validated
+    * @param oldRds - Old rds that will be compared to
     */
     public RD2_ValidationService(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds) {
         this.rds = rds;
@@ -69,7 +69,7 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Validate RD data on before insert
-    * @param rds the Reucrring Donations to validate
+    * @param rds - The Reucrring Donations to validate
     */
     public void validateOnBeforeInsert() {
         validateMissingData();
@@ -77,8 +77,8 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Validate RD data on before update
-    * @param rds the Reucrring Donations to validate
-    * @param oldRds the old list of Recurring Donations
+    * @param rds - The Reucrring Donations to validate
+    * @param oldRds - The old list of Recurring Donations
     */
     public void validateOnBeforeUpdate() {
         validateMissingData();
@@ -87,17 +87,17 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Validate when contact or account is changed on update of rds
-    * @param rds the Reucrring Donations to validate
-    * @param oldRds the old list of Recurring Donations
+    * @param rds - The Reucrring Donations to validate
+    * @param oldRds - The old list of Recurring Donations
     */
     private void validateContactOrAccountChange() {
         Set<Id> noClosedOpp = getRdWithoutClosedOpp();
 
-        for(Integer i = 0; i < rds.size(); i++) {
+        for (Integer i = 0; i < rds.size(); i++) {
             npe03__Recurring_Donation__c rd = rds[i];
             npe03__Recurring_Donation__c oldRd = oldRds[i];
 
-            if(rd.npe03__Organization__c == oldRd.npe03__Organization__c
+            if (rd.npe03__Organization__c == oldRd.npe03__Organization__c
                 && rd.npe03__Contact__c == oldRd.npe03__Contact__c) {
                 continue;
             }
@@ -153,7 +153,7 @@ public with sharing class RD2_ValidationService {
 
     /***
     * @description Validates missing data on Recurring Donation
-    * @param rds the Recurring Donation to validate
+    * @param rds - The Recurring Donation to validate
     */
     private void validateMissingData() {
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -164,8 +164,8 @@ public with sharing class RD2_ValidationService {
 
     /***
     * @description Validates missing account or contact data on Recurring Donation
-    * @param rd the Recurring Donation to validate
-    * @param acct is the associated account for the Recurring Donation
+    * @param rd - The Recurring Donation to validate
+    * @param acct - The associated account for the Recurring Donation
     */
     private void validateDonor(npe03__Recurring_Donation__c rd, Account acct) {
         //either Account or Contact must be specified
@@ -189,7 +189,7 @@ public with sharing class RD2_ValidationService {
 
     /***
     * @description Validates installment data on Recurring Donation
-    * @param rd the Recurring Donation to validate
+    * @param rd - The Recurring Donation to validate
     */
     private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
@@ -212,7 +212,7 @@ public with sharing class RD2_ValidationService {
 
     /***
     * @description Validates Day of Month on Recurring Donation
-    * @param rd the Recurring Donation to validate
+    * @param rd - The Recurring Donation to validate
     */
     private void validateDayOfMonth(npe03__Recurring_Donation__c rd) {
         if (rd.npe03__Installment_Period__c != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
@@ -245,7 +245,7 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
-    * @description - get account map on the RDs
+    * @description - Get account map on the RDs from both new and old recurring donation context
     */
     private Map<Id, account> getRdAccounts() {
         Set<Id> accountIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Organization__c);

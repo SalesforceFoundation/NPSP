@@ -394,11 +394,11 @@ private with sharing class RD2_ValidationService_TEST {
 
         String errMessage = '';
 
-        try{
+        try {
             Test.startTest();
             update rd;
             Test.stopTest();
-        } catch(DmlException e) {
+        } catch (DmlException e) {
             errMessage = e.getMessage();
         }
 
@@ -429,11 +429,11 @@ private with sharing class RD2_ValidationService_TEST {
 
         String errMessage = '';
 
-        try{
+        try {
             Test.startTest();
             update rd;
             Test.stopTest();
-        } catch(DmlException e) {
+        } catch (DmlException e) {
             errMessage = e.getMessage();
         }
 
