@@ -34,7 +34,7 @@ Check Recurring Donation Autoname
     Go To Record Home            &{recurringdonation}[Id]
 
     #Check Recurring Donation Autoname
-    Confirm Field Value          Recurring Donation Name          contains           &{contact}[Name] $1,200 - Recurring          
+    Navigate To And Validate Field Value          Recurring Donation Name          contains           &{contact}[Name] $1,200 - Recurring
 
     #Turn off Autonaming to Reset Setting
     Salesforce Update            npe03__Recurring_Donations_Settings__c     ${recurringsettings}[0][Id]
