@@ -4,6 +4,7 @@ import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuil
 import { format, sort, deepClone, checkNestedProperty } from 'c/utilCommon';
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.upsertCustomColumnHeaders';
 import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
 import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
@@ -581,7 +582,8 @@ export default class geListView extends LightningElement {
         let url;
 
         if (this.objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
-            url = `/lightning/n/npsp__GE_Gift_Entry?c__view=Template_Builder&c__formTemplateRecordId={0}`;
+            const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment('GE_Gift_Entry');
+            url = `/lightning/n/${giftEntryTabName}?c__view=Template_Builder&c__formTemplateRecordId={0}`;
         } else {
             url = `/lightning/r/${this.objectApiName}/{0}/view`;
         }
