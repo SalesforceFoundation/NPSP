@@ -42,6 +42,10 @@ const USER = 'User';
 const URL = 'url';
 const _SELF = '_self';
 const SAVE = 'save';
+const EXCLUDED_COLUMN_HEADERS = [
+    'CloneSourceId',
+    'SystemModstamp'
+]
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 
@@ -368,10 +372,12 @@ export default class geListView extends LightningElement {
             let fieldDescribe = this.objectInfo.fields[key];
             let label = fieldDescribe.label;
 
-            options.push({
-                label: label,
-                value: fieldDescribe.apiName
-            });
+            if (!EXCLUDED_COLUMN_HEADERS.includes(fieldDescribe.apiName)) {
+                options.push({
+                    label: label,
+                    value: fieldDescribe.apiName
+                });
+            }
         });
 
         return options;
