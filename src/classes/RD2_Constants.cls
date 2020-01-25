@@ -82,7 +82,7 @@ public inherited sharing class RD2_Constants {
     public static final String RECURRING_TYPE_OPEN = 'Open';
 
     /**
-    * @description Returns all valid Installment Periods 
+    * @description Returns all valid Installment Periods
     */
     public static Set<String> allInstallmentPeriods {
         get {
