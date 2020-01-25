@@ -1,10 +1,8 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { dispatch, handleError } from 'c/utilTemplateBuilder';
 import { deepClone } from 'c/utilCommon';
 import geLabelService from 'c/geLabelService';
-
-import retrieveOpportunities from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveOpportunities';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const PAYMENT = 'payment';
@@ -26,17 +24,6 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
 
     @track donationType;
     @track opportunities;
-
-    @wire(retrieveOpportunities, { recordId: '$recordId' })
-    wiredRetrieveOpportunities(response) {
-        if (response.data) {
-            this.opportunities = response.data;
-        }
-
-        if (response.error) {
-            handleError(response.error);
-        }
-    }
 
     get reviewDonationsComputedClass() {
         let baseClass = ['slds-box', 'slds-theme_shade', 'slds-m-bottom_small'];
