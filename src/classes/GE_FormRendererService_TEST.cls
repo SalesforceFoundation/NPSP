@@ -56,15 +56,15 @@ private with sharing class GE_FormRendererService_TEST {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         Form_Template__c defaultTemplate = returnFormTemplate();
 
-        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = defaultTemplate.Name;
-
-        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
-        
         FORM_Template template = FORM_ServiceGiftEntry_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
         defaultTemplate.Template_JSON__c = templateJSON;
         
         insert defaultTemplate;
+
+        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = defaultTemplate.Id;
+
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
         FORM_RenderWrapper frw = GE_FormRendererService.getDefaultSGERenderWrapper();
         System.assert(frw.formTemplate != null);

@@ -177,22 +177,7 @@ public with sharing class FORM_ServiceGiftEntry {
 
         return template;
     }
-
-    /*******************************************************************************************************
-    * @description Method for retrieving the template by name
-    * @param templateName - the name of an existing form template 
-    */
-    public static FORM_Template retrieveFormTemplate(String templateName) {
-        FORM_Template template;
-
-        List<Form_Template__c> templateList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
-                                FROM Form_Template__c 
-                                WHERE Name = :templateName
-                                LIMIT 1];
-
-        return !templateList.isEmpty() ? deserializeFormTemplateFromObj(templateList[0]) : null;
-    }
-
+    
     /*******************************************************************************************************
     * @description Method for retrieving the current default template.
     */
@@ -201,8 +186,8 @@ public with sharing class FORM_ServiceGiftEntry {
         FORM_Template template;
         List<Form_Template__c> templateObjList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 
-                                WHERE Name =: giftEntrySettings.Default_Single_Gift_Entry_Template__c];
-        
+                                WHERE Id =: giftEntrySettings.Default_Single_Gift_Entry_Template__c];
+         
          if (!templateObjList.isEmpty()) {
             template = deserializeFormTemplateFromObj(templateObjList[0]);
         }
@@ -267,8 +252,11 @@ public with sharing class FORM_ServiceGiftEntry {
     */
     private static FORM_Template deserializeFormTemplateFromObj(Form_Template__c templateObj) {
         FORM_Template template;
+        System.debug(loggingLevel.ERROR, 'inside of deserialize');
+        System.debug(loggingLevel.ERROR, 'templateObj: ' + templateObj);
         if (templateObj != null && templateObj.Template_JSON__c != null) {
             template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
+            System.debug(loggingLevel.ERROR, 'deserialized template: ' + template);
         }
         return template;
     }

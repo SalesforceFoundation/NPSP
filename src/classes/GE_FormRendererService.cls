@@ -13,23 +13,6 @@ public with sharing class GE_FormRendererService {
         return renderWrapper;
     }
 
-
-    /**
-     * This method creates a wrapper which contains the  template selected by name and a field mapping set.
-     * If the template is not found, it returns a wrapper for the default template
-     * @param String templateName
-     * @return  A FORM_RenderWrapper containing the default template JSON.
-     */
-    public static FORM_RenderWrapper getRenderWrapper(String templateName) {
-        FORM_Service formService = new FORM_Service();
-
-        FORM_Template template = formService.retrieveFormTemplate(templateName);
-
-        FORM_RenderWrapper renderWrapper = wrapTemplate(template);
-
-        return renderWrapper;
-    }
-
     /**
      * This method creates a wrapper which contains the default SGE template and a field mapping set.
      *
@@ -51,6 +34,7 @@ public with sharing class GE_FormRendererService {
      * @return  A FORM_RenderWrapper containing the default template JSON.
      */
     private static FORM_RenderWrapper wrapTemplate(FORM_Template template) {
+        System.debug(loggingLevel.ERROR, 'template is: ' + template);
         if (template != null) {
             Boolean includeUnmappedFields = true;
             // Get the mapping service which will retrieve all the mappings
