@@ -604,9 +604,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     //if this is a multicurrency org, set the CurrencyIsoCode, no conversion is ever necessary
                     if (UserInfo.isMultiCurrencyOrganization()) {
                         if (allo.Amount__c != null && allo.Percent__c == null) {
-                            System.debug('Allocation currency - ' + (String)allo.get('CurrencyIsoCode'));
-                            System.debug('Opportunity currency - ' + (String)sObj.get('CurrencyIsoCode'));
-
                             allo.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
                                     (String)allo.get('CurrencyIsoCode'),
                                     (String)sObj.get('CurrencyIsoCode'),
