@@ -326,19 +326,14 @@ global without sharing class STG_InstallScript implements InstallHandler {
     }
 
     /*******************************************************************************************************
-    * @description update opportunity naming settings with new values in existing orgs
+    * @description Update Opportunity Naming Settings Attribution value to the AttributionOptions API value
     */
     private void updateOpportunityNamingSettings() {
         List <Opportunity_Naming_Settings__c> oppSettings = new List <Opportunity_Naming_Settings__c>();
-
-        Map<String,Opportunity_Naming_Settings__c> oppNameSettings;
-        oppNameSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings();
-
         STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings();
 
-        for (Opportunity_Naming_Settings__c ons : oppNameSettings.values()) {
-            attributionSettings.withSelected(ons.Attribution__c);
-            ons.Attribution__c = attributionSettings.selectedLabel;
+        for (Opportunity_Naming_Settings__c ons : UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values()) {
+            ons.Attribution__c = attributionSettings.withSelected(ons.Attribution__c).selectedOption;
             oppSettings.add(ons);
         }
 
