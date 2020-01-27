@@ -227,7 +227,7 @@ public inherited sharing class RD2_OpportunityMatcher {
 
         /***
         * @description Constructor
-        * @param installment Recurring Donation existing Opportunity
+        * @param opp Recurring Donation existing Opportunity
         */
         public Record(Opportunity opp) {
             this.opp = opp;
