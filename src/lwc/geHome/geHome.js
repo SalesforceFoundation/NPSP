@@ -109,8 +109,8 @@ export default class geHome extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Pass through method that receives an event from geListView to
-    * notify parent aura component to construct a modal.
+    * @description Pass through method that receives an event from child components
+    * to notify the parent aura component to construct a modal.
     *
     * @param {object} event: Event object containing a payload for the modal.
     */

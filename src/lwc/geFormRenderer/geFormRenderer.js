@@ -537,4 +537,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.isAccessible = await getPageAccess();
     }
 
+    /*******************************************************************************
+    * @description Pass through method that receives an event from geReviewDonations
+    * to notify the parent component to construct a modal for reviewing donations.
+    *
+    * @param {object} event: Event object containing a payload for the modal.
+    */
+    toggleModal(event) {
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail: event.detail }));
+    }
 }
