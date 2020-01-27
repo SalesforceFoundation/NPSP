@@ -97,7 +97,7 @@ public with sharing class FORM_PermissionValidator {
     private Boolean isValid(String objDevName, Set<AccessLevel> accessLevels) {
 
         SObjectType objType = ((SObject) Type.forName(objDevName).newInstance()).getSObjectType();
-        System.debug('OBJECT TYPE == ' + objType);
+        
         if((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
             && !permissionsService.canCreate(objType))
             || (accessLevels.contains(AccessLevel.VALIDATE_READ)
