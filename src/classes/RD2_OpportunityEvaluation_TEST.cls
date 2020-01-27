@@ -533,7 +533,51 @@ private class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(true, opps[0].isClosed && !opps[0].isWon, 'Existing Closed Lost Opp should stay closed');
     }
 
+    /**
+    * @description Verifies the next Opportunity on Recurring Donation is created
+    * when Installment Auto Creation Setting is set to Disable First Installment.
+    */
+    @IsTest
+    private static void shouldCreateNextOppWhenDisableFirstInstallment() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        String disableFirstOption = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => disableFirstOption
+        });
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'The next installment Opp should be created: ' + opps);
+    }
+ 
+    /**
+    * @description Verifies the next Opportunity on Recurring Donation is not created
+    * when Installment Auto Creation Setting is set to Disable All Installments.
+    */
+    @IsTest
+    private static void shouldNotCreateNextOppWhenDisableAllInstallments() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        String disableAllOption = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => disableAllOption
+        });
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+        
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(0, opps.size(), 'The next installment Opp should not be created: ' + opps);
+    }
 
     // Helpers
     //////////////

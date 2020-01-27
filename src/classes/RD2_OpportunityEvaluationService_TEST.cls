@@ -41,6 +41,13 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
+    /***
+    * @description Installment Opportunities Auto Creation Setting API value 
+    */
+    private static final String OPTION_NAME_DISABLE_FIRST = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
+    private static final String OPTION_NAME_DISABLE_ALL = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
+    private static final String OPTION_NAME_ALWAYS_CREATE_NEXT = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
+
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final Integer MONTHS_TO_DEC = START_DATE.monthsBetween(Date.newInstance(2019, 12, 15));
     private static final Integer MONTHS_TO_YEAR_END = START_DATE.monthsBetween(Date.newInstance(2020, 1, 1));
@@ -143,9 +150,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
 
-        System.assertEquals(false, evalService.needNextInstallment(rd1), 'Closed RD should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.needNextInstallment(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.needNextInstallment(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd1), 'Closed RD should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
     }
 
     /**
@@ -183,10 +190,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
 
-        System.assertEquals(true, evalService.needNextInstallment(rdNew),
+        System.assertEquals(true, evalService.isNewInstallmentCandidate(rdNew), 
             'RD having Schedules and no related Opp should be eligible for an Installment Opp');
 
-        System.assertEquals(false, evalService.needNextInstallment(rdOld),
+        System.assertEquals(false, evalService.isNewInstallmentCandidate(rdOld), 
             'RD having Schedules and a related Opp should not be eligible for an Installment Opp');
     }
 
@@ -245,13 +252,14 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(false, oppById.get(oldOpps[1].Id).isClosed, 'Open Opp should stay open');
     }
 
+
     /**
      * @description Sets up data to test open Installment Opportunity behaviour on RD close
      * @param closeAction Recurring Donation settings Open Opportunity Behaviour close action
      * @return npe03__Recurring_Donation__c Created Recurring Donation with related Opps
      */
-    private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {
-        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{
+    private static npe03__Recurring_Donation__c setupDataAndCloseRD(String closeAction) {        
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
             'npe03__Open_Opportunity_Behavior__c' => closeAction
         });
 
@@ -299,16 +307,148 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+    * @description Verifies on installment Opportunity is created on RD insert
+    * when Installment Auto Creation Setting is set to Disable First Installment.
+    */
+    @IsTest
+    private static void shouldNotCreateOppOnRDInsertWhenDisableFirstInstallment() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
+        });
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+        
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, opps.size(),
+            'No installment Opportunity should be created: ' + opps);
+    }
+
+    /**
+    * @description Verifies on installment Opportunity is not created on RD insert
+    * when Installment Auto Creation Setting is set to Disable All Installments.
+    */
+    @IsTest
+    private static void shouldNotCreateOppOnRDInsertWhenDisableAllInstallments() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_ALL
+        });
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, opps.size(),
+            'No installment Opportunity should be created: ' + opps);
+    }
+
+    /**
+    * @description Verifies on installment Opportunity is created
+    * when RD is updated, there is already a Closed current Opp 
+    * and Installment Auto Creation Setting is set to Disable First Installment.
+    */
+    @IsTest
+    private static void shouldCreateOppOnRDUpdateWhenClosedOppExistsAndDisableFirstInstallment() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_DISABLE_FIRST
+        });
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withName()
+            .withCloseDate(START_DATE.addMonths(1))
+            .withClosedWonStage()
+            .build();
+
+        rd.npe03__Amount__c = 2000;
+        
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(2, opps.size(), 
+            'A new Opportunity should be created: ' + opps);
+    }
+
+    /**
+    * @description Verifies on installment Opportunity is created on RD insert
+    * when Installment Auto Creation Setting is set to Always Create Next Installment.
+    */
+    @IsTest
+    private static void shouldCreateOppOnRDInsertWhenAlwaysCreateNextInstallment() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => OPTION_NAME_ALWAYS_CREATE_NEXT
+        });
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(),
+            'The installment Opportunity should be created: ' + opps);
+    }
+
+    /***
+    * @description Verifies on installment Opportunity is created on RD insert
+    * when Installment Auto Creation Setting is a random string that does not matched against any of the
+    * default value. The auto creation process will be treated the same as Always Create Next Installment.
+    */
+    @IsTest
+    private static void shouldCreateOppOnRDInsertWhenInstallmentCreateOptionIsRandomText() {
+        String randomText = 'RANDOM';
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => randomText
+        });
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(),
+            'The installment Opportunity should be created: ' + opps);
+    }
+
+    /**
      * @description Verifies no exception is thrown when RD is closed and
      * has no Opportunities
      */
     @IsTest
     private static void shouldNotThrowExceptionWhenRDIsClosedAndHasNoOpp() {
         Exception actualException;
-        String closeAction = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name();
-
-        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object>{
-            'npe03__Open_Opportunity_Behavior__c' => closeAction
+        
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'npe03__Open_Opportunity_Behavior__c' => RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
         });
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();

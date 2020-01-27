@@ -164,6 +164,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+    * @description Contains Ids of new Recurring Donations
+    */
+    @TestVisible
+    private Set<Id> newRDIds {
+        get {
+            if (newRDIds == null) {
+                newRDIds = getNewRDIds(this.rdIds);
+            }
+            return newRDIds;
+        } set;
+    }
+
+    /**
      * @description Sets batch context
      * @return RD2_OpportunityEvaluationService The service instance
      */
@@ -246,7 +259,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 continue;
             }
             
-            if (rdRecord
+            if (rdRecord       
+                .setIsNew(newRDIds.contains(rd.Id))
                 .reviseNextDonationDate(scheduleService)
                 .reviseYearValues(yearValueProcessor)
                 .isOutdated()
@@ -257,7 +271,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
 
-            } else if (needNextInstallment(rdRecord)) {
+            } else if (isNewInstallmentCandidate(rdRecord)) {
                 newOppRDs.add(rd);
 
             } else if (isUpdateContext(rdRecord)) {
@@ -287,8 +301,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     @TestVisible
-    private Boolean needNextInstallment(npe03__Recurring_Donation__c rd) {
-        return needNextInstallment(new RecurringDonation(rd));
+    private Boolean isNewInstallmentCandidate(npe03__Recurring_Donation__c rd) {
+        return isNewInstallmentCandidate(new RecurringDonation(rd));
     }
 
     /**
@@ -297,7 +311,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation record
      * @return Boolean
      */
-    private Boolean needNextInstallment(RecurringDonation rd) {
+    private Boolean isNewInstallmentCandidate(RecurringDonation rd) {
         Boolean hasMandatoryConditions = rd.isActive()
             && rd.hasNextDonationDate()
             && rd.hasSchedule();
@@ -400,6 +414,31 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return Database.query(soql);
     }
 
+    /**
+    * @description Determines which Recurring Donations are new
+    * @param rdIds All Recurring Donation Ids to be evaluated
+    * @return Set<Id> Ids of new Recurring Donations
+    */
+    private Set<Id> getNewRDIds(Set<Id> rdIds) {
+        Set<Id> newRDIds = new Set<Id>();
+
+        for (npe03__Recurring_Donation__c rd : [
+            SELECT Id,
+                (
+                    SELECT Id 
+                    FROM npe03__Donations__r 
+                    LIMIT 1
+                )
+            FROM npe03__Recurring_Donation__c
+            WHERE Id IN :rdIds
+        ]) {
+            if (rd.npe03__Donations__r.isEmpty()) {
+                newRDIds.add(rd.Id);
+            }
+        }
+        
+        return newRDIds;
+    }
 
     /**
      * @description Recurring Donation SObject wrapper
@@ -410,13 +449,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         */
         npe03__Recurring_Donation__c rd;
         /**
-        * @description Indicates if the Recurring Donation has an Open Opportunity
+        * @description Indicates if the Recurring Donation is a new record
         */
-        private Boolean hasOpenOpportunity;
+        private Boolean isNew;
         /**
         * @description Indicates if the Recurring Donation is outdated
         */
         private Boolean isOutdated = false;
+        /**
+        * @description Indicates if the Recurring Donation has an Open Opportunity
+        */
+        private Boolean hasOpenOpportunity;
 
         /**
         * @description Constructor
@@ -524,11 +567,23 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
+        * @description Sets property indicating the Recurring Donation is a new record
+        * @param isNew Indicates if the record is new
+        * @return Boolean
+        */
+        public RecurringDonation setIsNew(Boolean isNew) {
+            this.isNew = isNew;
+            return this;
+        }
+
+        /**
         * @description Indicates if the Recurring Donation is new, ie the RD has no installment Opp
         * @return Boolean
         */
         public Boolean isNew() {
-            return rd.npe03__Donations__r.isEmpty();
+            return isNew == null
+                ? rd.npe03__Donations__r.isEmpty()
+                : isNew;
         }
 
         /**

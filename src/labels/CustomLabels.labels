@@ -8375,6 +8375,14 @@ This process may take some time, but you can close this page and the process wil
         <value>The Opportunity record type assigned to the Recurring Donation's child Opportunities.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRDInstallmentCreateOptionMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help Text for Recurring Donation Setting Installment Opportunity Auto-Creation</shortDescription>
+        <value>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -8718,6 +8726,30 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <protected>false</protected>
         <shortDescription>stgHelpUseDatedConvRates</shortDescription>
         <value>When checked, Dated Exchange Rates are used for currency conversion. If unchecked, the standard exchange rate is used even if Advanced Currency Management is enabled.</value>
+    </labels>
+    <labels>
+        <fullName>stgInstallmentOppDisableAll</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disable Installments Auto-Creation process</shortDescription>
+        <value>Disable All Installments</value>
+    </labels>
+    <labels>
+        <fullName>stgInstallmentOppDisableFirst</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disable First Installment Auto-Creation on Create</shortDescription>
+        <value>Disable First Installment on Create</value>
+    </labels>
+    <labels>
+        <fullName>stgInstallmentOppEnableAll</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Always Create Next Installment</shortDescription>
+        <value>Always Create Next Installment</value>
     </labels>
     <labels>
         <fullName>stgInstallScriptError</fullName>

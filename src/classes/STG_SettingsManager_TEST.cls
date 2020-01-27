@@ -34,13 +34,20 @@
 * @description test code for all of Settings
 */
 @isTest
-public with sharing class STG_SettingsManager_TEST {
+private with sharing class STG_SettingsManager_TEST {
+    /***
+    * @description Installment Opportunities Auto Creation Setting API value 
+    */
+    private static final String OPTION_NAME_DISABLE_FIRST = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
+    private static final String OPTION_NAME_DISABLE_ALL = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
+    private static final String OPTION_NAME_ALWAYS_CREATE_NEXT = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
 
     /*********************************************************************************************************
     * @description Tests the Settings Manager page
     * @return void
     */
-    public static testMethod void testSettingsManager() {
+    @isTest
+    private static void testSettingsManager() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
         system.assertEquals('idPanelHome', STG_SettingsManager_CTRL.idPanelCurrent);
         system.assertEquals(null, ctrl.setPanelCurrent());
@@ -50,7 +57,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests setting up TDTM and the Schedulables
     * @return void
     */
-    public static testMethod void testRequiredJobsAreScheduledWhenNpspSettingsPageLoads() {
+    @isTest
+    private static void testRequiredJobsAreScheduledWhenNpspSettingsPageLoads() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
 
         Test.startTest();
@@ -73,7 +81,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests an exception message is displayed if the record type settings update throws an exception
     * @return void
     */
-    public static testMethod void testRecordTypeSettingsUpdateExceptionIsDisplayed() {
+    @isTest
+    private static void testRecordTypeSettingsUpdateExceptionIsDisplayed() {
         Test.setCurrentPage(Page.STG_SettingsManager);
 
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
@@ -172,7 +181,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the DataBoundMultiSelect control used in Settings
     * @return void
     */
-    public static testMethod void testDataBoundMultiSelect() {
+    @isTest
+    private static void testDataBoundMultiSelect() {
         STG_DataBoundMultiSelect_CTRL ctrl = new STG_DataBoundMultiSelect_CTRL();
         Contact con = new Contact();
         con.npo02__Naming_Exclusions__c = 'a;b;c';
@@ -190,7 +200,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the panel infrastructure and shared lists of SelectOptions
     * @return void
     */
-    public static testMethod void testPanel() {
+    @isTest
+    private static void testPanel() {
         STG_Panel ctrl = new STG_Panel();
         system.assertEquals(null, ctrl.idPanel());
         ctrl.isEditMode = true;
@@ -221,7 +232,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests that the Settings Service has each settings object loaded
     * @return void
     */
-    public static testMethod void testSettingsService() {
+    @isTest
+    private static void testSettingsService() {
     	STG_SettingsService svc = STG_SettingsService.stgService;
     	system.assertNotEquals(null, svc);
     	system.assertNotEquals(null, svc.stgCon);
@@ -242,7 +254,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Affiliations panel
     * @return void
     */
-    public static testMethod void testPanelAffl() {
+    @isTest
+    private static void testPanelAffl() {
     	STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
     	system.assertEquals('idPanelAffl', panel.idPanel());
     	STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
@@ -257,7 +270,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Allocations panel
     * @return void
     */
-    public static testMethod void testPanelAllo() {
+    @isTest
+    private static void testPanelAllo() {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
 
@@ -303,7 +317,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Batch Data Entry panel
     * @return void
     */
-    public static testMethod void testPanelBDE() {
+    @isTest
+    private static void testPanelBDE() {
         STG_PanelBDE_CTRL panel = new STG_PanelBDE_CTRL();
         system.assertEquals('idPanelBDE', panel.idPanel());
         STG_Panel.stgService.stgBDE.Opportunity_Naming__c = true;
@@ -318,7 +333,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Contact Roles panel
     * @return void
     */
-    public static testMethod void testPanelContactRoles() {
+    @isTest
+    private static void testPanelContactRoles() {
         STG_PanelContactRoles_CTRL panel = new STG_PanelContactRoles_CTRL();
         system.assertEquals('idPanelConRoles', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Enable_Opportunity_Contact_Role_Trigger__c = true;
@@ -337,7 +353,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Contacts panel
     * @return void
     */
-    public static testMethod void testPanelContacts() {
+    @isTest
+    private static void testPanelContacts() {
         String hhAccountRecTypeLabel = STG_PanelContacts_CTRL.strHHAccountRecordTypeLabel;
         String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;
 
@@ -364,7 +381,8 @@ public with sharing class STG_SettingsManager_TEST {
         Automatic Household Naming field is still turned off.
         The Page contains an error.
     **********************************************************************************************************/
-    private static testMethod void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
+    @isTest
+    private static void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
@@ -393,7 +411,8 @@ public with sharing class STG_SettingsManager_TEST {
         Automatic Household Naming field is turned on.
         The Page contains no error.
     **********************************************************************************************************/
-    private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
+    @isTest
+    private static void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
@@ -419,7 +438,8 @@ public with sharing class STG_SettingsManager_TEST {
         Household Naming batch has been run.
         The Page contains no error.
     **********************************************************************************************************/
-    private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
+    @isTest
+    private static void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
@@ -442,7 +462,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Leads panel
     * @return void
     */
-    public static testMethod void testPanelLeads() {
+    @isTest
+    private static void testPanelLeads() {
         STG_PanelLeads_CTRL panel = new STG_PanelLeads_CTRL();
         system.assertEquals('idPanelLeads', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Default_Opp_on_Convert__c = true;
@@ -457,7 +478,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Membership panel
     * @return void
     */
-    public static testMethod void testPanelMembership() {
+    @isTest
+    private static void testPanelMembership() {
         STG_PanelMembership_CTRL panel = new STG_PanelMembership_CTRL();
         system.assertEquals('idPanelMembership', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 10;
@@ -472,7 +494,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Run Opp Rollups Batch panel
     * @return void
     */
-    public static testMethod void testPanelOppBatch() {
+    @isTest
+    private static void testPanelOppBatch() {
         STG_PanelOppBatch_CTRL panel = new STG_PanelOppBatch_CTRL();
         system.assertEquals('idPanelOppBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -484,7 +507,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Donor Statistics panel
     * @return void
     */
-    public static testMethod void testPanelOppRollups() {
+    @isTest
+    private static void testPanelOppRollups() {
         STG_PanelOppRollups_CTRL panel = new STG_PanelOppRollups_CTRL();
         system.assertEquals('idPanelOppRollup', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 10;
@@ -499,7 +523,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Payments panel
     * @return void
     */
-    public static testMethod void testPanelOpps() {
+    @isTest
+    private static void testPanelOpps() {
         STG_PanelOpps_CTRL panel = new STG_PanelOpps_CTRL();
         system.assertEquals('idPanelOpp', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Payments_Enabled__c = true;
@@ -514,7 +539,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the opportunity naming panel
     * @return void
     */
-    public static testMethod void testPanelOppNaming() {
+    @isTest
+    private static void testPanelOppNaming() {
         STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
         system.assertEquals('idPanelOppNaming', panel.idPanel());
         panel.newONS();
@@ -529,7 +555,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Payment Mappings panel
     * @return void
     */
-    public static testMethod void testPanelPaymentMapping() {
+    @isTest
+    private static void testPanelPaymentMapping() {
         STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
         system.assertEquals('idPanelPaymentMapping', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -575,12 +602,14 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Recurring Donations panel
     * @return void
     */
-    public static testMethod void testPanelRD() {
+    @isTest
+    private static void testPanelRD() {
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
         system.assertEquals('idPanelRD', panel.idPanel());
         panel.init();
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
+        
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 10;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(10, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
@@ -610,7 +639,6 @@ public with sharing class STG_SettingsManager_TEST {
         for (Integer i = 0; i < options.size(); i++) {
             System.assertEquals(options[i].name(), panel.listSORDCloseOptions[i].getValue(), 'Options should match');
         }
-
     }
 
     /*********************************************************************************************************
@@ -629,14 +657,124 @@ public with sharing class STG_SettingsManager_TEST {
         for (Integer i = 0; i < options.size(); i++) {
             System.assertEquals(options[i].name(), panel.listSORDCloseOptions[i].getValue(), 'Options should match');
         }
+    }
 
+    /***
+    * @description Every Installment Auto Creation Setting option should be converted into SelectOption
+    */
+    @isTest
+    private static void shouldHaveValidSelectOptionsForInstallmentAutoCreationSetting() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+        List<String> optionValues = new List<String>();
+
+        Test.startTest();
+        for (SelectOption option : panel.installmentCreateOptions) {
+            optionValues.add(option.getValue());
+        }
+        Test.stopTest();
+
+        List<String> options = new List<String>();
+
+        for (RD2_Constants.InstallmentCreateOptions option : RD2_Constants.InstallmentCreateOptions.values()) {
+            options.add(option.name());
+        }
+
+        System.assertEquals(options, optionValues,
+            'Every Installment Creation Options should be in the list for selection');
+    }
+    /***
+    * @description The label currently being displayed should match the actual Installment Opp Auto Creation Setting
+    */
+    @isTest
+    private static void shouldHaveCorrectAutoCreationLabelDisplayed() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        panel.init();
+        Test.stopTest();
+
+        String currentOppSettingLabel = panel.convertToInstallmentLabel(
+            Stg_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
+        
+        System.assertEquals(currentOppSettingLabel, panel.selectedInstallmentCreateOption,
+            'The installment opp displayed label should matches the one stored in the NPSP setting');
+    }
+
+    /***
+    * @description The label currently being displayed should match the actual Installment Opp Auto Creation Setting
+    */
+    @isTest
+    private static void shouldDisplayAlwaysCreateWhenSettingIsNullOrRandomString() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Map<String, Object> rdSettingMap = new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => null
+        };
+
+        RD2_Settings_TEST.setUpConfiguration(rdSettingMap);
+
+        Test.startTest();
+        panel.init();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgInstallmentOppEnableAll, panel.selectedInstallmentCreateOption,
+            'The installment opp displayed label should be set to Always Create Next Installment When Setting value is not recognizable');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Always Allow Next Installment
+    * should be correctly conoverted to the respected label when displayed onto the RD panel 
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationAlwaysAllowToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_ALWAYS_CREATE_NEXT);
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgInstallmentOppEnableAll, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Disalbe First Installment
+    * should be correctly conoverted to the respected label when displayed onto the RD panel 
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationDisableFirstToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_DISABLE_FIRST);
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgInstallmentOppDisableFirst, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
+    }
+
+    /**
+    * @description Installment Auto Creation Settings - Disable All Installment
+    * should be correctly conoverted to the respected label when displayed onto the RD panel 
+    */
+    @isTest
+    private static void shouldConvertInstallmentOppAutoCreationDisableAllToLabel() {
+        STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
+
+        Test.startTest();
+        String convertedLabel = panel.convertToInstallmentLabel(OPTION_NAME_DISABLE_ALL);
+        Test.stopTest();
+
+        System.assertEquals(System.Label.stgInstallmentOppDisableAll, convertedLabel,
+            'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
     /*********************************************************************************************************
     * @description Tests the Run RD Batch panel
     * @return void
     */
-    public static testMethod void testPanelRDBatch() {
+    @isTest
+    private static void testPanelRDBatch() {
         STG_PanelRDBatch_CTRL panel = new STG_PanelRDBatch_CTRL();
         system.assertEquals('idPanelRDBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -648,7 +786,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the RD Custom Field Mapping panel
     * @return void
     */
-    public static testMethod void testPanelRDCustomFieldMapping() {
+    @isTest
+    private static void testPanelRDCustomFieldMapping() {
         STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
         system.assertEquals('idPanelRDFieldMap', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -684,7 +823,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the RD Custom Installments panel
     * @return void
     */
-    public static testMethod void testPanelRDCustomInstallment() {
+    @isTest
+    private static void testPanelRDCustomInstallment() {
         STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
         system.assertEquals('idPanelRDInstPd', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -722,7 +862,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Relationships panel
     * @return void
     */
-    public static testMethod void testPanelRel() {
+    @isTest
+    private static void testPanelRel() {
         STG_PanelRel_CTRL panel = new STG_PanelRel_CTRL();
         system.assertEquals('idPanelRel', panel.idPanel());
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = true;
@@ -767,7 +908,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Automatic Relationships panel
     * @return void
     */
-    public static testMethod void testPanelRelAuto() {
+    @isTest
+    private static void testPanelRelAuto() {
         STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
         system.assertEquals('idPanelRelAuto', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -809,7 +951,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Reciprocal Relationships panel
     * @return void
     */
-    public static testMethod void testPanelRelReciprocal() {
+    @isTest
+    private static void testPanelRelReciprocal() {
         STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
         system.assertEquals('idPanelRelReciprocal', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -847,7 +990,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the User Defined Rollups panel
     * @return void
     */
-    public static testMethod void testPanelUserRollup() {
+    @isTest
+    private static void testPanelUserRollup() {
         STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
         system.assertEquals('idPanelUserRollup', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -909,7 +1053,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the User Rollup Settings panel
     * @return void
     */
-    public static testMethod void TEST_userRollupSettings() {
+    @isTest
+    private static void TEST_userRollupSettings() {
         Test.setCurrentPageReference(new PageReference('Page.STG_SettingsManager'));
 
         //pass the controller into the extension
@@ -1015,7 +1160,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Customizable Rollups CRLP panel
     * @return void
     */
-    public static testMethod void testPanelCRLP() {
+    @isTest
+    private static void testPanelCRLP() {
         STG_PanelCustomizableRollup_CTRL panel = new STG_PanelCustomizableRollup_CTRL();
         System.assertEquals('idPanelCustomizableRollup', panel.idPanel());
         System.assertEquals(true, panel.isAdmin);
@@ -1061,7 +1207,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Schedule panel
     * @return void
     */
-    public static testMethod void testPanelSchedule() {
+    @isTest
+    private static void testPanelSchedule() {
         STG_PanelSchedule_CTRL panel = new STG_PanelSchedule_CTRL();
         system.assertEquals('idPanelSchedule', panel.idPanel());
         STG_Panel.stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = true;
@@ -1076,7 +1223,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Trigger Handler panel
     * @return void
     */
-    public static testMethod void testPanelTDTM() {
+    @isTest
+    private static void testPanelTDTM() {
         STG_PanelTDTM_CTRL panel = new STG_PanelTDTM_CTRL();
         system.assertEquals('idPanelTDTM', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());
@@ -1116,7 +1264,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Error Log panel
     * @return void
     */
-    public static testMethod void testPanelErrorLog() {
+    @isTest
+    private static void testPanelErrorLog() {
         STG_PanelErrorLog_CTRL panel = new STG_PanelErrorLog_CTRL();
         system.assertEquals('idPanelErrorLog', panel.idPanel());
         UTIL_SoqlListView_CTRL slv = new UTIL_SoqlListView_CTRL();
@@ -1152,7 +1301,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Health Check panel
     * @return void
     */
-    public static testMethod void testPanelHealthCheck() {
+    @isTest
+    private static void testPanelHealthCheck() {
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
         system.assertEquals('idPanelHealthCheck', panel.idPanel());
         system.assertEquals(null, panel.runDetector());
@@ -1162,7 +1312,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Level Assignment Batch panel
     * @return void
     */
-    public static testMethod void testPanelLvlAssignBatch() {
+    @isTest
+    private static void testPanelLvlAssignBatch() {
         STG_PanelLvlAssignBatch_CTRL panel = new STG_PanelLvlAssignBatch_CTRL();
         system.assertEquals('idPanelLvlAssignBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -1174,7 +1325,8 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests the Remove Duplicate Primary OCRs Batch panel.
     * @return void
     */
-    public static testMethod void testPanelPanelPrimaryContactRoleMergeBatch() {
+    @isTest
+    private static void testPanelPanelPrimaryContactRoleMergeBatch() {
         STG_PanelPrimaryContactRoleMerge_CTRL panel = new STG_PanelPrimaryContactRoleMerge_CTRL();
         system.assertEquals('idPanelPrimaryContactRoleMergeBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
