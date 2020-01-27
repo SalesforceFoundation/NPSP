@@ -1429,9 +1429,7 @@ class NPSP(SalesforceRobotLibraryBase):
     def click_more_actions_button(self):
         """"""   
         locator=npsp_lex_locators['link'].format("more actions","more actions")
-        self.selenium.click_element(locator)    
-        locator=npsp_lex_locators['delete_icon'].format(field,value)
-        self.selenium.get_webelement(locator).click()  
+        self.selenium.click_element(locator)     
         
         
     @capture_screenshot_on_error
