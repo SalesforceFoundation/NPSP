@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSetTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <valueTranslation>
+        <masterLabel>Existing Funding</masterLabel>
+        <translation>Bestehende Finanzierung</translation>
+    </valueTranslation>
+    <valueTranslation>
+        <masterLabel>New Funding</masterLabel>
+        <translation>Neue Finanzierung</translation>
+    </valueTranslation>
+</StandardValueSetTranslation>
