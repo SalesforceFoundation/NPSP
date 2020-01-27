@@ -121,7 +121,7 @@ export default class GeFormWidgetRow extends LightningElement {
         const totalForCalculation = isNumeric(total) ? total : this.totalAmount;
         if(event.detail.targetFieldName === 'Allocation__c.Percent__c') {
             // handle the percent field being updated
-            payload = this.handlePercentChange(event.detail, total);
+            payload = this.handlePercentChange(event.detail, totalForCalculation);
         } else if(event.detail.targetFieldName === 'Allocation__c.Amount__c') {
             // handle the Amount field being updated
             payload = this.handleAmountChange(event.detail);
