@@ -11,8 +11,7 @@ import { CONTACT1, ACCOUNT1,
          showToast,
          handleError,
          getRecordFieldNames,
-         setRecordValuesOnTemplate,
-         getPageAccess } from 'c/utilTemplateBuilder';
+         setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
 import { getQueryParameters, isEmpty, isNotEmpty, format } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -61,36 +60,33 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
    connectedCallback() {
-        this.checkPageAccess();
-        if (this.isAccessible) {
-            if (this.batchId) {
-                // When the form is being used for Batch Gift Entry, the Form Template JSON
-                // uses the @wire service below to retrieve the Template using the Template Id
-                // stored on the Batch.
-                return;
-            }
-
-            GeFormService.getFormTemplate().then(response => {
-                // check if there is a record id in the url
-                this.donorRecordId = getQueryParameters().c__donorRecordId;
-                this.donorApiName = getQueryParameters().c__apiName;
-
-                // read the template header info
-                if (response !== null && typeof response !== 'undefined') {
-                    this.formTemplate = response.formTemplate;
-                    this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
-
-                    // get the target field names to be used by getRecord
-                    this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, this.donorApiName);
-
-                    if (isEmpty(this.donorRecordId)) {
-                        // if we don't have a donor record, it's ok to initialize the form now
-                        // otherwise the form will be initialized after wiredGetRecordMethod completes
-                        this.initializeForm(this.formTemplate);
-                    }
-                }
-            });
+        if (this.batchId) {
+            // When the form is being used for Batch Gift Entry, the Form Template JSON
+            // uses the @wire service below to retrieve the Template using the Template Id
+            // stored on the Batch.
+            return;
         }
+
+        GeFormService.getFormTemplate().then(response => {
+            // check if there is a record id in the url
+            this.donorRecordId = getQueryParameters().c__donorRecordId;
+            this.donorApiName = getQueryParameters().c__apiName;
+
+            // read the template header info
+            if (response !== null && typeof response !== 'undefined') {
+                this.formTemplate = response.formTemplate;
+                this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+
+                // get the target field names to be used by getRecord
+                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, this.donorApiName);
+
+                if (isEmpty(this.donorRecordId)) {
+                    // if we don't have a donor record, it's ok to initialize the form now
+                    // otherwise the form will be initialized after wiredGetRecordMethod completes
+                    this.initializeForm(this.formTemplate);
+                }
+            }
+        });
     }
 
     initializeForm(formTemplate, fieldMappings) {
@@ -527,13 +523,4 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         return dataImportRecord;
     }
-
-    /************************************************************************************
-     * @description This function retrieves page access based on the Advanced Mapping and
-     * Gift Entry feature gate.
-     */
-    checkPageAccess = async () => {
-        this.isAccessible = await getPageAccess();
-    }
-
 }

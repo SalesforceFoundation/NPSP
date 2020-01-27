@@ -2,7 +2,6 @@ import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import storeFormTemplate from '@salesforce/apex/FORM_ServiceGiftEntry.storeFormTemplate';
 import retrieveFormTemplateById from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveFormTemplateById';
-import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -13,7 +12,6 @@ import {
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
     generateId,
-    getPageAccess,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
@@ -70,7 +68,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     currentNamespace;
     @api isClone = false;
     @track isLoading = true;
-    @track isAccessible = true;
     @track activeTab = this.TabEnums.INFO_TAB;
     @track formTemplate = {
         name: null,
@@ -133,48 +130,44 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            this.isAccessible = await getPageAccess();
             this.isLoading = false;
-             if (this.isAccessible) {
-                    this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+            this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
-                    const queryParameters = getQueryParameters();
-                    // If we have no template record id, check if there's a record id in the url
-                    if (!this.formTemplateRecordId) {
-                        this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
-                    }
+            const queryParameters = getQueryParameters();
+            // If we have no template record id, check if there's a record id in the url
+            if (!this.formTemplateRecordId) {
+                this.formTemplateRecordId = queryParameters.c__formTemplateRecordId;
+            }
 
-                    if (this.formTemplateRecordId) {
-                        let formTemplate = await retrieveFormTemplateById({
-                            templateId: this.formTemplateRecordId
-                        });
+            if (this.formTemplateRecordId) {
+                let formTemplate = await retrieveFormTemplateById({
+                    templateId: this.formTemplateRecordId
+                });
 
-                        this.existingFormTemplateName = formTemplate.name;
-                        this.formTemplate = formTemplate;
-                        this.batchHeaderFields = formTemplate.batchHeaderFields;
-                        this.formLayout = formTemplate.layout;
-                        this.formSections = this.formLayout.sections;
+                this.existingFormTemplateName = formTemplate.name;
+                this.formTemplate = formTemplate;
+                this.batchHeaderFields = formTemplate.batchHeaderFields;
+                this.formLayout = formTemplate.layout;
+                this.formSections = this.formLayout.sections;
 
-                        this.catalogFieldsForTemplateEdit();
-                    }
+                this.catalogFieldsForTemplateEdit();
+            }
 
-                    this.collectBatchHeaderFields();
-                    this.addRequiredBatchHeaderFields();
-                    this.validateBatchHeaderTab();
-                    this.handleDefaultFormFields();
+            this.collectBatchHeaderFields();
+            this.addRequiredBatchHeaderFields();
+            this.validateBatchHeaderTab();
+            this.handleDefaultFormFields();
 
-                    if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
-                        this.activeFormSectionId = this.formSections[0].id;
-                    }
+            if (!this.activeFormSectionId && this.formSections && this.formSections.length > 0) {
+                this.activeFormSectionId = this.formSections[0].id;
+            }
 
-                    // Clear out form template record id if cloning after retrieving all relevant data
-                    if (queryParameters.c__clone || this.isClone) {
-                        this.formTemplateRecordId = null;
-                    }
+            // Clear out form template record id if cloning after retrieving all relevant data
+            if (queryParameters.c__clone || this.isClone) {
+                this.formTemplateRecordId = null;
+            }
 
-                    this.isLoading = false;
-                    this.isAccessible = true;
-                }
+            this.isLoading = false;
         } catch (error) {
             handleError(error);
         }

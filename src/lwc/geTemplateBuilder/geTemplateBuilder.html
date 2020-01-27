@@ -2,8 +2,6 @@
     <template if:true={isLoading}>
         <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
     </template>
-
-    <template if:true={isAccessible}>
         <div role="main" class="main-container">
 
             <c-util-page-header>
@@ -167,14 +165,4 @@
                 </div>
             </template>
         </div>
-    </template>
-
-    <template if:false={isAccessible}>
-        <div class="slds-card slds-card_extension slds-p-around_large">
-            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
-                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
-                                 size="large">
-            </c-util-illustration>
-        </div>
-    </template>
 </template>

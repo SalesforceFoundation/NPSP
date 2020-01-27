@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { getQueryParameters } from 'c/utilCommon';
-import { dispatch } from 'c/utilTemplateBuilder';
+import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 
@@ -21,6 +21,7 @@ export default class geHome extends LightningElement {
     @track cloneFormTemplate;
     @track donorId;
     @track isLoading;
+    @track isAccessible = true;
 
     giftEntryTabName;
 
@@ -37,11 +38,14 @@ export default class geHome extends LightningElement {
     }
 
     async connectedCallback() {
-        this.isLoading = true;
-        await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
-        this.setGiftEntryTabName();
-        this.setInitialView();
-        this.isLoading = false;
+        this.isAccessible = await getPageAccess();
+        if (this.isAccessible) {
+            this.isLoading = true;
+            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
+            this.setGiftEntryTabName();
+            this.setInitialView();
+            this.isLoading = false;
+        }
     }
 
     /*******************************************************************************
