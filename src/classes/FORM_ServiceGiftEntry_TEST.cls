@@ -249,6 +249,53 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
     }
 
+    /**************************************************************************************************
+    * @description Confirms that a form template used as default on Gift Entry settings cannot be deleted.
+    */
+    @IsTest
+    static void shouldPreventDeletionOfTemplateReferencedByGiftEntry() {
+
+        // aux vars
+        String templateName = 'fooName';
+        AuraHandledException failure;
+
+        // test data
+        FORM_Template template = createSampleTemplate();
+        template.name = templateName;
+        String templateJSON = JSON.serialize(template);
+        // form service init
+        FORM_Service fs = new FORM_Service();
+        // insert form template using service
+        fs.storeFormTemplate(null,
+                template.name,
+                template.description,
+                template.version,
+                templateJSON);
+
+        // gift entry custom settings set up
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = templateName;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        // retrieve templates with id
+        Form_Template__c[] formTemplates = [SELECT Id, Name, Template_JSON__c FROM Form_Template__c];
+        System.assertEquals( formTemplates.size(), 1, 'We should have only 1 form temp record at this time' );
+
+        Test.startTest();
+            try {
+                // delete template using service
+                fs.deleteFormTemplates(new String[]{ formTemplates[0].Id });
+            } catch (AuraHandledException ex) {
+                failure = ex;
+            }
+        Test.stopTest();
+
+        formTemplates = [SELECT Id, Name FROM Form_Template__c];
+        System.assert( String.isNotBlank(failure.getMessage()), 'Aura Exception found' );
+        System.assertEquals( 1, formTemplates.size(), 'Template was not deleted' );
+
+    }
+
     //Utility method for creating a sample template.
     public static FORM_Template createSampleTemplate () {
         
