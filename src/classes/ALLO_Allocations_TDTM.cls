@@ -614,7 +614,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     }
 
                     if (allo.Percent__c != null) {
-                        allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
+                        allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2, System.RoundingMode.HALF_UP);
                     }
 
                     if (isPaymentAllocation == true && alloInMap != null) {
