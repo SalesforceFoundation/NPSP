@@ -550,7 +550,7 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+        runBatch(new RD2_OpportunityEvaluation_BATCH());
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'The next installment Opp should be created: ' + opps);
@@ -573,7 +573,7 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
         
-        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+        runBatch(new RD2_OpportunityEvaluation_BATCH());
         
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(0, opps.size(), 'The next installment Opp should not be created: ' + opps);

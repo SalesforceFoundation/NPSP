@@ -43,7 +43,9 @@ private class RD2_OpportunityMatcher_TEST {
     private static final Decimal RD_AMOUNT = 200;
 
     /**
-     * @description 
+     * @description Verifies Open/Closed Lost/Closed Won Opps are returned 
+	 * when their Close Date year matches specified year.
+	 * Opportunities Closed Lost in data migration are not returned.
      */
     @IsTest
     private static void shouldFilterAllOppsWhenCloseDateYearMatchesCurrentDateYear() {
@@ -96,7 +98,8 @@ private class RD2_OpportunityMatcher_TEST {
     }
 
     /**
-     * @description 
+     * @description Verifies Open Opps are returned 
+	 * when their Close Date is greater or equal to the current date (today).
      */
     @IsTest
     private static void shouldFilterOpenOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
@@ -139,7 +142,9 @@ private class RD2_OpportunityMatcher_TEST {
     }
 
     /**
-     * @description 
+     * @description Verifies Open/Closed Lost/Closed Won Opps are returned 
+	 * when their Close Date is greater or equal to the current date (today).
+	 * Opportunities Closed Lost in data migration are not returned.
      */
     @IsTest
     private static void shouldFilterAllOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
@@ -188,7 +193,8 @@ private class RD2_OpportunityMatcher_TEST {
     }
 
     /**
-     * @description 
+     * @description Verifies matching of Opportunities and projected installments
+	 * is applied by matching Close Date.
      */
     @IsTest
     private static void shouldMatchCurrentOppWithInstallmentByTheCloseDate() {
@@ -244,7 +250,9 @@ private class RD2_OpportunityMatcher_TEST {
     }
 
     /**
-     * @description 
+     * @description Verifies matching of Opportunities and projected installments
+	 * is applied by matching order of the installment Close Date from the current date
+	 * when existing filtered Opp cannot be matched by the Close Date.
      */
     @IsTest
     private static void shouldMatchCurrentOppWithInstallmentOrderIfCannotMatchByTheCloseDate() {
