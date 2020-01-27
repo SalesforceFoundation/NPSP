@@ -63,26 +63,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Indicates if the first installment Opportunity on a Recurring Donation should be created.
-     * If Opportunities are created from a batch, "Disable First Installment" is ignored and 
-     * the first installment is not created only if the setting is "Disable All Installments".
-     * @return Boolean
-     */
-    private Boolean isFirstInstallmentEnabled {
-        get {
-            if (isFirstInstallmentEnabled == null) {
-                if (isBatchContext) {
-                    isFirstInstallmentEnabled = !rdSettings.isDisableAllInstallments;
-                } else {
-                    isFirstInstallmentEnabled = rdSettings.isFirstInstallmentEnabled;
-                }
-            }
-            return isFirstInstallmentEnabled;
-        }
-        set;
-    }
-
-    /**
      * @description Current date used as a cut off date to filter out and evaluate Opportunities 
      * and to determine if the next Opp should be created for a Recurring Donation.
      * It is also used to calculate projected RD schedule installments as of the current date.
@@ -146,6 +126,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 rds = getRecurringDonations(this.rdIds);
             }
             return rds;
+        } set;
+    }
+
+    /**
+    * @description Contains Ids of new Recurring Donations
+    */
+    @TestVisible
+    private Set<Id> newRDIds {
+        get {
+            if (newRDIds == null) {
+                newRDIds = getNewRDIds(this.rdIds);
+            }
+            return newRDIds;
         } set;
     }
 
@@ -226,9 +219,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
 
-        for (npe03__Recurring_Donation__c rd : rds) {              
-            RecurringDonation rdRecord = new RecurringDonation(rd)
-                .revise(scheduleService); 
+        for (npe03__Recurring_Donation__c rd : rds) {
+            RecurringDonation rdRecord = new RecurringDonation(rd)         
+                .setIsNew(newRDIds.contains(rd.Id))
+                .revise(scheduleService);
 
             if (rdRecord.isOutdated()) {
                 outdatedRDs.add(rdRecord.getUpdate());
@@ -237,7 +231,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
 
-            } else if (needNextInstallment(rdRecord)) {
+            } else if (isNewInstallmentCandidate(rdRecord)) {
                 newOppRDs.add(rd);
             
             } else if (isUpdateContext(rdRecord)) {
@@ -263,13 +257,18 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description It will eventually be possible to create more than one installment opportunity
+     * for a recurring donation. This method returns a list of CloseDates to create installment
+     * opportunities for based on the RD schedule and existing Installment Opps.
+     * @param rd
+     * @return List<Date>
      * @description Indicates if a Recurring Donation requires a new installment Opp to be created.
      * @param rd Recurring Donation SObject
      * @return Boolean
      */
     @TestVisible
-    private Boolean needNextInstallment(npe03__Recurring_Donation__c rd) {
-        return needNextInstallment(new RecurringDonation(rd));
+    private Boolean isNewInstallmentCandidate(npe03__Recurring_Donation__c rd) {
+        return isNewInstallmentCandidate(new RecurringDonation(rd));
     }
 
     /**
@@ -278,7 +277,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation record
      * @return Boolean
      */
-    private Boolean needNextInstallment(RecurringDonation rd) {
+    private Boolean isNewInstallmentCandidate(RecurringDonation rd) {
         Boolean hasMandatoryConditions = rd.isActive()
             && rd.hasNextDonationDate()
             && rd.hasSchedule();
@@ -287,11 +286,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return false;
         }
 
-        if (rd.isNew()) {
-            return isFirstInstallmentEnabled;
+        if (isBatchContext) {
+            return !rdSettings.isDisableAllInstallments;
 
-        } else if (isBatchContext || !rd.hasOpenOpportunity(currentDate)) {
-            return rdSettings.isNextInstallmentEnabled;
+        } else if (rd.isNew()) {
+            return rdSettings.isFirstInstallmentEnabled;
+
+        } else if (!rd.hasOpenOpportunity(currentDate)) {
+            return rdSettings.isNextInstallmentEnabled;  
         }
 
         return false;
@@ -376,12 +378,38 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return Database.query(soql);
     }
 
+    /**
+    * @description Determines which Recurring Donations are new
+    * @param rdIds All Recurring Donation Ids to be evaluated
+    * @return Set<Id> Ids of new Recurring Donations
+    */
+    private Set<Id> getNewRDIds(Set<Id> rdIds) {
+        Set<Id> newRDIds = new Set<Id>();
+
+        for (npe03__Recurring_Donation__c rd : [
+            SELECT Id,
+                (
+                    SELECT Id 
+                    FROM npe03__Donations__r 
+                    LIMIT 1
+                )
+            FROM npe03__Recurring_Donation__c
+            WHERE Id IN :rdIds
+        ]) {
+            if (rd.npe03__Donations__r.isEmpty()) {
+                newRDIds.add(rd.Id);
+            }
+        }
+        
+        return newRDIds;
+    }
 
     /**
      * @description Recurring Donation SObject wrapper
      */
     public class RecurringDonation {
         npe03__Recurring_Donation__c rd;
+        private Boolean isNew;
         private Boolean hasOpenOpportunity;
         private Boolean isOutdated;
 
@@ -407,6 +435,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 isOutdated = true;
             }
 
+            return this;
+        }
+
+        /**
+        * @description Sets property indicating the Recurring Donation is a new record
+        * @param isNew Indicates if the record is new
+        * @return Boolean
+        */
+        public RecurringDonation setIsNew(Boolean isNew) {
+            this.isNew = isNew;
             return this;
         }
 
@@ -466,7 +504,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Boolean
         */
         public Boolean isNew() {
-            return rd.npe03__Donations__r.isEmpty();
+            return isNew == null
+                ? rd.npe03__Donations__r.isEmpty()
+                : isNew;
         }
 
         /**
