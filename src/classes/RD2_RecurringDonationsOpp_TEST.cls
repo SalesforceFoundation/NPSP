@@ -148,6 +148,36 @@ private class RD2_RecurringDonationsOpp_TEST {
             'Next Year Value should be unchanged');
     }
 
+    /**	
+     * @description Verifies Current Year Value is updated	
+     * when future open Opp Amount is changed. The Current Year Value
+     * takes the Opp Amount into consideration over the matching installment Amount.
+     */	
+    @IsTest	
+    private static void shouldUpdateCurrentYearValueWhenOppAmountIsUpdated() {	
+        final Decimal oppNewAmount = RD_AMOUNT + 100;
+        RD2_ScheduleService.currentDate = TODAY;	
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();	
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];	
+        Opportunity opp = getOpenOpportunity(rd);	
+
+        //users updates the future open Opp Amount
+        Test.startTest();	
+        opp.Amount = oppNewAmount;	
+        update opp;	
+        Test.stopTest();
+        
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(oppNewAmount, oppById.get(opp.Id).Amount, 'The Opp Amount should be as user specified it');	
+
+        rd = rdGateway.getRecord(rd.Id);	
+        System.assertEquals(rd.npe03__Amount__c * (MONTHS_TO_YEAR_END - 1) + oppNewAmount, rd.CurrentYearValue__c,	
+            'Current Year Value should use the future open Opp Amount over the matching installment Amount');	
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,	
+            'Next Year Value should be unchanged');	
+    }
+
 
     // Helpers
     ///////////////////

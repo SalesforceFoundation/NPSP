@@ -259,14 +259,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 continue;
             }
             
-            if (rdRecord       
+            rdRecord       
                 .setIsNew(newRDIds.contains(rd.Id))
-                .reviseNextDonationDate(scheduleService)
-                .reviseYearValues(yearValueProcessor)
-                .isOutdated()
-            ) {
-                outdatedRDs.add(rdRecord.getUpdate());
-            }
+                .reviseNextDonationDate(scheduleService);
 
             if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
@@ -286,11 +281,48 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         oppService.createOpportunities(newOppRDs);
         oppService.updateOpportunities(updateOppRDs);
         oppService.voidOpenOpportunities(closedRDs);
+        handleOutdatedRecurringDonations();
 
-        dbService.updateRecords(outdatedRDs);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
 
         dbService.processErrors();
+
+        return this;
+    }
+
+    /**
+     * @description Update Next Donation Date and Current/Next Year Value
+     * on Recurring Donations when they are not in sync with existing Opps and projected installments.
+     * @return RD2_OpportunityEvaluationService This service instance
+     */
+    public RD2_OpportunityEvaluationService handleOutdatedRecurringDonations() {
+        //do not evaluate Opps when override is set
+        if (skipEvaluationService) {
+            return this;
+        }
+
+        rds = null;//reset Recurring Donations so just created/updated Opps are retrieved
+
+        List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            RecurringDonation rdRecord = new RecurringDonation(rd);
+
+            if (!rdRecord.isEnhancedFormat()) {
+                continue;
+            }
+            
+            if (rdRecord       
+                .reviseNextDonationDate(scheduleService)
+                .reviseYearValues(yearValueProcessor)
+                .isOutdated()
+            ) {
+                outdatedRDs.add(rdRecord.getUpdate());
+            }
+        }
+
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        dbService.updateRecords(outdatedRDs);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
 
         return this;
     }
@@ -475,6 +507,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return RecurringDonation This record instance
         */
         public RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
+            if (isClosed()) {
+                return this;
+            }
+
             Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
             if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
@@ -746,7 +782,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
                 if (!record.isClosedLost()) {
-                    value += record.getAmount();//TODO currency
+                    value += record.getAmount();
                 }
             }
 

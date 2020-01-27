@@ -234,14 +234,14 @@ public inherited sharing class RD2_OpportunityMatcher {
         }
 
         /***
-        * @description Returns Amount either from the Opportunity or
-        * from the projected installment based on which one has the most recent correct value.
+        * @description Returns Amount either from the Opportunity if it exists 
+        * or from the projected installment.
         * If the future Opportunity is open and amount differs from the matching installment,
-        * the installment has precedence over the existing open Opportunity.
+        * the future Open Opp Amount has precedence over the installment Amount.
         * @return Decimal
         */
         public Decimal getAmount() {
-            Decimal amount = hasInstallment() && (isNew() || isOpen())
+            Decimal amount = hasInstallment() && isNew()
                 ? installment.installmentAmount
                 : opp.Amount;
 

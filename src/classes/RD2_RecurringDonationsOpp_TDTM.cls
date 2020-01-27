@@ -84,20 +84,10 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             rdIds = getRecurringDonationIds(oldOpps);
         }
-
-        if (rdIds.isEmpty()) {
-            return;
-        }
                                            
-        RD2_QueueableService.EvaluateInstallmentOpportunities service =
-            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds);
-
-        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-            System.enqueueJob(service);
-
-        } else {
-            service.executeOppEvaluationService();
-        }
+        new RD2_OpportunityEvaluationService()
+            .withRds(rdIds)
+            .handleOutdatedRecurringDonations();
     }
 
     /***
