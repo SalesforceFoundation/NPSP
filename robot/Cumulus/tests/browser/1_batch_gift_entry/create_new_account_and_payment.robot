@@ -57,9 +57,9 @@ Create a new account and enter payment information
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
     ${opp_id} =           Save Current Record ID For Deletion      Opportunity  
-    Confirm Field Value    Amount    contains    $20.00    
+    Navigate To And Validate Field Value    Amount    contains    $20.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    Confirm Field Value    Close Date    contains    ${opp_date}    
-    Confirm Field Value    Stage    contains    Closed Won    
+    Navigate To And Validate Field Value    Close Date    contains    ${opp_date}
+    Navigate To And Validate Field Value    Stage    contains    Closed Won
     Click Link With Text    text=${acc_name}
     ${account_id} =       Save Current Record ID For Deletion      Account

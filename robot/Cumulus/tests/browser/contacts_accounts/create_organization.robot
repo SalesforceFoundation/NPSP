@@ -32,10 +32,11 @@ Create Organization Foundation
     Current Page Should Be                 Details                               Account
     ${account_id}                          Save Current Record ID For Deletion   Account
     Verify Record Is Created In Database   Account                               ${account_id}    
-    Select Tab                             Details 
-    Confirm Field Value                    Phone                                 contains                                    1234567                                     
-    Confirm Field Value                    Billing Address                       contains                                    50 Fremont st                               
-    Confirm Field Value                    Description                           contains                                    Account created with Robot Automation       
+    Select Tab                             Details
+
+    Navigate To And Validate Field Value   Phone                contains         1234567
+    Navigate To And Validate Field Value   Billing Address      contains         50 Fremont st
+    Navigate To And Validate Field Value   Description          contains         Account created with Robot Automation
     
     #Verify Account is only displayed in expected views
     Go To Page                             Listing                               Account
