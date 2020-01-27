@@ -493,7 +493,59 @@ private class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(true, opps[0].isClosed && !opps[0].isWon, 'Existing Closed Lost Opp should stay closed');
     }
 
-    
+    /**
+    * @description When Installment Auto Creation Setting is set to Disable First Installment, 
+    * the installment should be created on RD when the nightly batch job run
+    */
+    @IsTest
+    private static void shouldCreateOppDuringBatchRunWhenDisableFirstInstallment() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        String disableFirstOption = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => disableFirstOption
+        });
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        Test.startTest();
+        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(),
+            'The next installment should be created during the batch run when Installment Auto Creation setting is ' + disableFirstOption);
+    }
+ 
+    /**
+    * @description When Installment Auto Creation Setting is set to Disable All Installments, 
+    * no installment should be created on inserted of RD and during nightly batch job
+    */
+    @IsTest
+    private static void shouldNotCreateOppDuringBatchRunWhenDiableAllInstallment() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        String disableAllOption = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'InstallmentOppAutoCreateOption__c' => disableAllOption
+        });
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+        
+        Test.startTest();
+        Database.executeBatch(new RD2_OpportunityEvaluation_BATCH());
+        Test.stopTest();
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, opps.size(),
+            'The installment opportunity should not be created when the Auto Creation Setting is' + disableAllOption);
+    }
 
     // Helpers
     //////////////
