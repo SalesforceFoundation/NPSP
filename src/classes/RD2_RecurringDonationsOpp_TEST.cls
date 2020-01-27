@@ -45,7 +45,6 @@ private class RD2_RecurringDonationsOpp_TEST {
     private static final Integer MONTHS_TO_YEAR_END = START_DATE.monthsBetween(Date.newInstance(2020, 1, 1));
     private static final String PAYMENT_CHECK = 'Check';
     private static final Decimal RD_AMOUNT = 100;
-    private static final Decimal OPP_NEW_AMOUNT = 200;
 
 
     /****
@@ -145,30 +144,6 @@ private class RD2_RecurringDonationsOpp_TEST {
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(rd.npe03__Amount__c * (MONTHS_TO_YEAR_END - 1), rd.CurrentYearValue__c,
             'Current Year Value should exclude deleted Opportunity');
-        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
-            'Next Year Value should be unchanged');
-    }
-
-    /**
-     * @description Verifies Current Year Value is updated
-     * when Opp Amount is changed
-     */
-    @IsTest
-    private static void shouldUpdateCurrentYearValueWhenOppAmountIsUpdated() {
-        RD2_ScheduleService.currentDate = TODAY;
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
-        Opportunity opp = getOpenOpportunity(rd);
-
-        Test.startTest();
-        opp.Amount = OPP_NEW_AMOUNT;
-        update opp;
-        Test.stopTest();
-
-        rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(rd.npe03__Amount__c * (MONTHS_TO_YEAR_END - 1) + OPP_NEW_AMOUNT, rd.CurrentYearValue__c,
-            'Current Year Value should include Opportunity changed Amount');
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be unchanged');
     }
