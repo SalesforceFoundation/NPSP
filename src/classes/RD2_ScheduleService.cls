@@ -516,9 +516,6 @@ public without sharing class RD2_ScheduleService {
     public List<ActiveSchedule> getVisualizedSchedules(npe03__Recurring_Donation__c rd) {
         List<ActiveSchedule> activeSchedules = new List<ActiveSchedule>();
         List<RecurringDonationSchedule__c> schedules = getExistingSchedules(rd);
-        if (schedules == null) {
-            return activeSchedules;
-        }
 
         Boolean first1stAnd15thFound = false;
         for (RecurringDonationSchedule__c schedule : schedules) {
@@ -680,8 +677,6 @@ public without sharing class RD2_ScheduleService {
 
     /***
     * @description Filters recurring donations to determine which need schedule updates
-    * If the active RD is updated, but the RD Start Date is unchanged, the RD Start Date is updated to the current date.
-    *
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction Trigger action (insert, updated,...)
@@ -700,12 +695,11 @@ public without sharing class RD2_ScheduleService {
 
             if (isScheduleUpdateNeeded(rd, oldRd)) {
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
-                    rd.StartDate__c == oldRd.StartDate__c &&
-                    rd.Status__c != RD2_Constants.STATUS_CLOSED
-                ) {
+                        rd.StartDate__c == null &&
+                        rd.Status__c != RD2_Constants.STATUS_CLOSED
+                        ) {
                     rd.StartDate__c = currentDate;
                 }
-
                 filteredRecurringDonations.put(rd.Id, rd);
             }
         }
