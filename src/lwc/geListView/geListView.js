@@ -1,12 +1,17 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getRecord } from 'lightning/uiRecordApi';
 import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuilder';
 import { format, sort, deepClone, checkNestedProperty } from 'c/utilCommon';
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 import upsertCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.upsertCustomColumnHeaders';
 import retrieveCustomColumnHeaders from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveCustomColumnHeaders';
 import retrieveRecords from '@salesforce/apex/FORM_ServiceGiftEntry.retrieveRecords';
+import userId from '@salesforce/user/Id';
+
+import USER_TIMEZONE_SID_KEY_FIELD from '@salesforce/schema/User.TimeZoneSidKey';
 
 import COLUMN_ID_INFO from '@salesforce/schema/Custom_Column_Header__c.Id';
 import COLUMN_NAME_INFO from '@salesforce/schema/Custom_Column_Header__c.Name';
@@ -41,6 +46,10 @@ const USER = 'User';
 const URL = 'url';
 const _SELF = '_self';
 const SAVE = 'save';
+const EXCLUDED_COLUMN_HEADERS = [
+    'CloneSourceId',
+    'SystemModstamp'
+]
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 
@@ -75,7 +84,11 @@ export default class geListView extends LightningElement {
     @track orderedByInfo;
 
     columnHeadersByFieldApiName;
+    currentUserId;
     isLoaded = false;
+
+    @wire(getRecord, { recordId: userId, fields: [USER_TIMEZONE_SID_KEY_FIELD] })
+    wiredUserRecord;
 
     get recordsToDisplay() {
         if (this.actions && this.columns.length === 1) {
@@ -367,10 +380,12 @@ export default class geListView extends LightningElement {
             let fieldDescribe = this.objectInfo.fields[key];
             let label = fieldDescribe.label;
 
-            options.push({
-                label: label,
-                value: fieldDescribe.apiName
-            });
+            if (!EXCLUDED_COLUMN_HEADERS.includes(fieldDescribe.apiName)) {
+                options.push({
+                    label: label,
+                    value: fieldDescribe.apiName
+                });
+            }
         });
 
         return options;
@@ -456,6 +471,13 @@ export default class geListView extends LightningElement {
     * @param {string} fieldApiName: Field Api Name of an sObject.
     */
     handleTypesAttribute(columnEntry, fieldApiName) {
+        const hasUserTimezoneData = this.wiredUserRecord.data &&
+            this.wiredUserRecord.data.fields &&
+            this.wiredUserRecord.data.fields.TimeZoneSidKey.value;
+        let timezone = hasUserTimezoneData ?
+            this.wiredUserRecord.data.fields.TimeZoneSidKey.value :
+            undefined;
+
         if (columnEntry.type === 'date') {
             columnEntry.typeAttributes = {
                 year: "numeric",
@@ -463,7 +485,8 @@ export default class geListView extends LightningElement {
                 day: "numeric",
                 hour: "numeric",
                 minute: "2-digit",
-                hour12: "true"
+                hour12: "true",
+                timeZone: timezone,
             }
         }
 
@@ -471,7 +494,8 @@ export default class geListView extends LightningElement {
             columnEntry.typeAttributes = {
                 year: "numeric",
                 month: "numeric",
-                day: "numeric"
+                day: "numeric",
+                timeZone: timezone,
             }
         }
 
@@ -581,7 +605,8 @@ export default class geListView extends LightningElement {
         let url;
 
         if (this.objectApiName === FORM_TEMPLATE_INFO.objectApiName) {
-            url = `/lightning/n/npsp__GE_Gift_Entry?c__view=Template_Builder&c__formTemplateRecordId={0}`;
+            const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment('GE_Gift_Entry');
+            url = `/lightning/n/${giftEntryTabName}?c__view=Template_Builder&c__formTemplateRecordId={0}`;
         } else {
             url = `/lightning/r/${this.objectApiName}/{0}/view`;
         }
