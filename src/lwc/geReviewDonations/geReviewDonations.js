@@ -21,9 +21,9 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     @api recordId = '0013D00000pwpJgQAI';
     @api dedicatedListenerEventName = 'geDonationMatchingEvent';
     @api selectedDonation;
+    @api opportunities;
 
     @track donationType;
-    @track opportunities;
 
     get reviewDonationsComputedClass() {
         let baseClass = ['slds-box', 'slds-theme_shade', 'slds-m-bottom_small'];
@@ -107,7 +107,8 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     */
     handleReviewDonations() {
         // TODO: Pass the opp and/or the payment id when updating donation selection
-        // TODO: Add CSS to highlight selected opp/payment card based on id as received in above TODO.=
+        // TODO: Add CSS to highlight selected opp/payment card based on id as received in above TODO.
+        const modalHeader = this.CUSTOM_LABELS.geHeaderMatchingReviewDonations;
         const modalConfig = {
             componentProperties: {
                 opportunities: deepClone(this.opportunities),
@@ -115,7 +116,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
             },
             modalProperties: {
                 cssClass: 'slds-modal_large',
-                header: 'Review Donations for Baby Yoda',
+                header: modalHeader,
                 componentName: 'geDonationMatching',
                 showCloseButton: true
             }
