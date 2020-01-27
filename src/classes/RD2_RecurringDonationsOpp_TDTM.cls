@@ -56,35 +56,55 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
 
-        updateRecurringDonations(opps, oldOpps, triggerAction);
+        evaluateOpportunities(opps, oldOpps, triggerAction);
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
         return null;
     }
 
     /***
-    * @description Updates Recurring Donation Opportunity dependent fields 
+    * @description Updates Recurring Donation fields depending on Opportunities
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
+    * @return void
     */
-    public void updateRecurringDonations(List<SObject> opps, List<SObject> oldOpps, TDTM_Runnable.Action triggerAction) {
+    public void evaluateOpportunities(List<SObject> opps, List<SObject> oldOpps, TDTM_Runnable.Action triggerAction) {
         if (RD2_OpportunityEvaluationService.skipEvaluationService) {
             return;
         }
 
         Set<Id> rdIds = new Set<Id>();
-
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             rdIds = getRecurringDonationIds(opps);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            rdIds = getRecurringDonationIds(opps, oldOpps);            
-        }//before delete//todo
+            rdIds = getRecurringDonationIds(opps, oldOpps);    
 
-        updateRecurringDonations(rdIds);
+        } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            rdIds = getRecurringDonationIds(oldOpps);
+        }
+
+        if (rdIds.isEmpty()) {
+            return;
+        }
+                                           
+        RD2_QueueableService.EvaluateInstallmentOpportunities service =
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds);
+
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+            System.enqueueJob(service);
+
+        } else {
+            service.executeOppEvaluationService();
+        }
     }
 
+    /***
+    * @description Returns Recurring Donation Ids from related created Opportunities
+    * @param opps Opportunities
+    * @return Set<Id> Related Recurring Donation Ids
+    */
     public Set<Id> getRecurringDonationIds(List<Opportunity> opps) {
         Set<Id> rdIds = new Set<Id>();
 
@@ -96,6 +116,12 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         return rdIds;
     }
 
+    /***
+    * @description Returns Recurring Donation Ids from updated Opportunities
+    * @param opps Opportunities
+    * @param oldOpps Opportunities containing values before the update
+    * @return Set<Id> Related Recurring Donation Ids
+    */
     public Set<Id> getRecurringDonationIds(List<Opportunity> opps, List<Opportunity> oldOpps) {
         Map<Id, Opportunity> oldOppById = new Map<Id, Opportunity>(oldOpps);
         Set<Id> rdIds = new Set<Id>();
@@ -113,6 +139,12 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         return rdIds;
     }
 
+    /***
+    * @description Indicates if the updated Opportunity has changed
+    * @param opp Opportunity
+    * @param oldOpp Opportunity containing values before the update
+    * @return Boolean
+    */
     private Boolean hasChanged(Opportunity opp, Opportunity oldOpp) {
         Boolean isAssignedToRD = opp.npe03__Recurring_Donation__c != null 
             || oldOpp.npe03__Recurring_Donation__c != null;
@@ -126,21 +158,5 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
             || opp.Amount != oldOpp.Amount
             || opp.CloseDate != oldOpp.CloseDate
             || opp.npe03__Recurring_Donation__c != oldOpp.npe03__Recurring_Donation__c;
-    }
-
-    private void updateRecurringDonations(Set<Id> rdIds) {
-        if (rdIds.isEmpty()) {
-            return;
-        }
-
-        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService()
-            .withRds(rdIds);
-                                           
-        if (System.isBatch() || System.isFuture()) {
-            evalService.updateRecurringDonations();
-        }
-        else {
-            evalService.updateRecurringDonations();//TODO                                       
-        }
     }
 }

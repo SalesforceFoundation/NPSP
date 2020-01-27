@@ -282,43 +282,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Updates Recurring Donation fields if outdated:
-     * Next Donation Date, Current Year Value and Next Year Value
-     * @return RD2_OpportunityEvaluationService This service instance
-     */
-    public RD2_OpportunityEvaluationService updateRecurringDonations() {
-        List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
-
-        //do not evaluate Opps when override is set
-        if (skipEvaluationService) {
-            return this;
-        }
-
-        rds = null;//reset  Recurring Donation values and refetch Opps
-
-        for (npe03__Recurring_Donation__c rd : rds) {
-            RecurringDonation rdRecord = new RecurringDonation(rd);
-
-            if (!rdRecord.isEnhancedFormat()) {
-                continue;
-            }
-            
-            if (rdRecord
-                .reviseNextDonationDate(scheduleService)
-                .reviseYearValues(yearValueProcessor)
-                .isOutdated()
-            ) {
-                outdatedRDs.add(rdRecord.getUpdate());
-            }
-        }
-
-        dbService.updateRecords(outdatedRDs);
-        dbService.processErrors();
-
-        return this;
-    }
-
-    /**
      * @description Indicates if a Recurring Donation requires a new installment Opp to be created.
      * @param rd Recurring Donation SObject
      * @return Boolean
@@ -721,7 +684,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             List<RD2_ScheduleService.Installment> installments =
                 scheduleService.getVisualizedInstallments(startDate, endDate, schedules);
-
+ 
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(startDate)
                 .filterByYear(opps, startDate.year())
                 .match(installments);
