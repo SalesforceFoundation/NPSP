@@ -54,7 +54,7 @@ private class RD2_RecurringDonationsOpp_TEST {
     @TestSetup
     private static void setUp() {
         Contact contact = UTIL_UnitTestData_TEST.getContact();
-		insert contact;
+        insert contact;
 
         RD2_ScheduleService.currentDate = TODAY;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -79,8 +79,8 @@ private class RD2_RecurringDonationsOpp_TEST {
     }
 
     /**
-     * @description Verifies Current Year Value is unchanged 
-	 * when open Opp is updated to Closed Won stage
+     * @description Verifies Current Year Value is unchanged
+     * when open Opp is updated to Closed Won stage
      */
     @IsTest
     private static void shouldNotChangeCurrentYearValueWhenOppIsUpdatedToClosedWon() {
@@ -100,11 +100,11 @@ private class RD2_RecurringDonationsOpp_TEST {
             'Current Year Value should be unchanged');
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be unchanged');
-	}
+    }
 
     /**
      * @description Verifies Current Year Value is updated
-	 * when open Opportunity is set to Closed Lost stage
+     * when open Opportunity is set to Closed Lost stage
      */
     @IsTest
     private static void shouldUpdateCurrentYearValueWhenOppIsUpdatedToClosedLost() {
@@ -124,11 +124,11 @@ private class RD2_RecurringDonationsOpp_TEST {
             'Current Year Value should exclude Closed Lost Opportunity');
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be unchanged');
-	}
+    }
 
     /**
      * @description Verifies Current Year Value is updated
-	 * when past Closed Won Opportunity is deleted
+     * when past Closed Won Opportunity is deleted
      */
     @IsTest
     private static void shouldUpdateCurrentYearValueWhenPastClosedWonOppIsDeleted() {
@@ -147,14 +147,14 @@ private class RD2_RecurringDonationsOpp_TEST {
             'Current Year Value should exclude deleted Opportunity');
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be unchanged');
-	}
+    }
 
     /**
      * @description Verifies Current Year Value is updated
-	 * when Opp Amount is changed
+     * when Opp Amount is changed
      */
     @IsTest
-    private static void shouldUpdateCurrentYearValueWhenOppAmountIsUpdated() {		
+    private static void shouldUpdateCurrentYearValueWhenOppAmountIsUpdated() {
         RD2_ScheduleService.currentDate = TODAY;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -171,10 +171,10 @@ private class RD2_RecurringDonationsOpp_TEST {
             'Current Year Value should include Opportunity changed Amount');
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be unchanged');
-	}
+    }
 
 
-	// Helpers
+    // Helpers
     ///////////////////
 
     /****
@@ -191,37 +191,37 @@ private class RD2_RecurringDonationsOpp_TEST {
 
     /****
     * @description Returns closed Opportunity assigned to the Recurring Donation
-	* @param rd Recurring Donation
+    * @param rd Recurring Donation
     * @return Opportunity
     */
     private static Opportunity getClosedOpportunity(npe03__Recurring_Donation__c rd) {
-		return getOpportunity(rd, true);
+        return getOpportunity(rd, true);
     }
 
     /****
     * @description Returns open Opportunity assigned to the Recurring Donation
-	* @param rd Recurring Donation
+    * @param rd Recurring Donation
     * @return Opportunity
     */
     private static Opportunity getOpenOpportunity(npe03__Recurring_Donation__c rd) {
-		return getOpportunity(rd, false);
+        return getOpportunity(rd, false);
     }
 
     /****
     * @description Returns Opportunity assigned to the Recurring Donation
-	* @param isClosed Specifies if the Opportunity is closed
-	* @param rd Recurring Donation
+    * @param isClosed Specifies if the Opportunity is closed
+    * @param rd Recurring Donation
     * @return Opportunity
     */
     private static Opportunity getOpportunity(npe03__Recurring_Donation__c rd, Boolean isClosed) {
-		for (Opportunity opp : oppGateway.getRecords(rd)) {
-			if (opp.isClosed == isClosed) {
-				return opp;
-			}
-		}
+        for (Opportunity opp : oppGateway.getRecords(rd)) {
+            if (opp.isClosed == isClosed) {
+                return opp;
+            }
+        }
 
-		System.assert(false, 'The Recurring Donation should have Opportunity to return');
-		return null;
+        System.assert(false, 'The Recurring Donation should have Opportunity to return');
+        return null;
     }
 
     /**

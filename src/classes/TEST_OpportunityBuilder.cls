@@ -208,7 +208,7 @@ public without sharing class TEST_OpportunityBuilder {
     public TEST_OpportunityBuilder withInstallmentNumber(Integer installmentNumber) {
         valuesByFieldName.put('Recurring_Donation_Installment_Number__c', installmentNumber);
         return this;
-    }     
+    }
 
     /***
     * @description Sets Recurring Donation Installment Number to the value set in data migration
@@ -217,7 +217,7 @@ public without sharing class TEST_OpportunityBuilder {
     */
     public TEST_OpportunityBuilder withInstallmentNumberMigrationFlag() {
         return withInstallmentNumber(RD2_DataMigrationBase_BATCH.MIGRATION_INSTALLMENT_NUMBER_FLAG);
-    }     
+    }
 
     /***
     * @description Sets the specified custom or standard field to the specified value
@@ -281,14 +281,14 @@ public without sharing class TEST_OpportunityBuilder {
      * @param opps Opportunities
      * @return void
      */
-	public static void setUneditableFields(List<Opportunity> opps) {
-		Set<String> closedStageNames = new Set<String>{
-			UTIL_UnitTestData_TEST.getClosedWonStage(),
-			UTIL_UnitTestData_TEST.getClosedLostStage()
-		};
+    public static void setUneditableFields(List<Opportunity> opps) {
+        Set<String> closedStageNames = new Set<String>{
+            UTIL_UnitTestData_TEST.getClosedWonStage(),
+            UTIL_UnitTestData_TEST.getClosedLostStage()
+        };
 
-		for (Integer i = 0, size = opps.size(); i < size; i++) {
-			if (!closedStageNames.contains(opps[i].StageName)) {
+        for (Integer i = 0, size = opps.size(); i < size; i++) {
+            if (!closedStageNames.contains(opps[i].StageName)) {
                 continue;
             }
 
@@ -296,7 +296,7 @@ public without sharing class TEST_OpportunityBuilder {
             objJson = objJson.left(objJson.length() - 1);
             objJson += ',"IsClosed":true,"IsWon":' + (opps[i].StageName ==  UTIL_UnitTestData_TEST.getClosedWonStage()) + '}';
             opps[i] = (Opportunity)JSON.deserialize(objJson, Opportunity.class);
-		}
-	}
+        }
+    }
 
 }

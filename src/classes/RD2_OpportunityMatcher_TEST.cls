@@ -37,285 +37,285 @@
 @IsTest(IsParallel=true)
 private class RD2_OpportunityMatcher_TEST {
 
-	private static final Date TODAY = Date.newInstance(2019, 9, 21);
-	private static final Integer CURRENT_YEAR = TODAY.year();
-	private static final ID RD_ID = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType);
+    private static final Date TODAY = Date.newInstance(2019, 9, 21);
+    private static final Integer CURRENT_YEAR = TODAY.year();
+    private static final ID RD_ID = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType);
     private static final Decimal RD_AMOUNT = 200;
 
     /**
-     * @description Verifies Open/Closed Lost/Closed Won Opps are returned 
-	 * when their Close Date year matches specified year.
-	 * Opportunities Closed Lost in data migration are not returned.
+     * @description Verifies Open/Closed Lost/Closed Won Opps are returned
+     * when their Close Date year matches specified year.
+     * Opportunities Closed Lost in data migration are not returned.
      */
     @IsTest
     private static void shouldFilterAllOppsWhenCloseDateYearMatchesCurrentDateYear() {
-		TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
-		List<Opportunity> opps = new List<Opportunity>{
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addYears(-1))
-				.withClosedWonStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(-2))//match
-				.withClosedLostStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(-1))//match
-				.withClosedWonStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY)//match
-				.withOpenStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(1))
-				.withClosedLostStage()
-				.withInstallmentNumberMigrationFlag()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addYears(1))
-				.withOpenStage()
-				.withInstallmentNumber(1)
-				.build()
-		};
-		TEST_OpportunityBuilder.setUneditableFields(opps);
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addYears(-1))
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(-2))//match
+                .withClosedLostStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(-1))//match
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)//match
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .withClosedLostStage()
+                .withInstallmentNumberMigrationFlag()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addYears(1))
+                .withOpenStage()
+                .withInstallmentNumber(1)
+                .build()
+        };
+        TEST_OpportunityBuilder.setUneditableFields(opps);
 
-		List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-			.filterByYear(opps, CURRENT_YEAR)
-			.getRecords();
+        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
+            .filterByYear(opps, CURRENT_YEAR)
+            .getRecords();
 
-		System.assertEquals(3, records.size(), 'Number of filtered Opportunities should match: ' + records);
+        System.assertEquals(3, records.size(), 'Number of filtered Opportunities should match: ' + records);
         for (RD2_OpportunityMatcher.Record record : records) {
-			System.assertEquals(CURRENT_YEAR, record.getOpportunity().CloseDate.year(), 'Opportunity Close Date Year should match');
-			System.assertNotEquals(opps[4].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
-		}
+            System.assertEquals(CURRENT_YEAR, record.getOpportunity().CloseDate.year(), 'Opportunity Close Date Year should match');
+            System.assertNotEquals(opps[4].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
+        }
     }
 
     /**
-     * @description Verifies Open Opps are returned 
-	 * when their Close Date is greater or equal to the current date (today).
+     * @description Verifies Open Opps are returned
+     * when their Close Date is greater or equal to the current date (today).
      */
     @IsTest
     private static void shouldFilterOpenOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
-		TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
-		List<Opportunity> opps = new List<Opportunity>{
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(-1))
-				.withOpenStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY)//match
-				.withOpenStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(1))
-				.withClosedLostStage()
-				.withInstallmentNumberMigrationFlag()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(2))//match
-				.withOpenStage()
-				.withInstallmentNumber(1)
-				.build()
-		};
-		TEST_OpportunityBuilder.setUneditableFields(opps);
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(-1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)//match
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .withClosedLostStage()
+                .withInstallmentNumberMigrationFlag()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(2))//match
+                .withOpenStage()
+                .withInstallmentNumber(1)
+                .build()
+        };
+        TEST_OpportunityBuilder.setUneditableFields(opps);
 
-		List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-			.filterCurrentOpen(opps)
-			.getRecords();
+        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
+            .filterCurrentOpen(opps)
+            .getRecords();
 
-		System.assertEquals(2, records.size(), 'Number of filtered Opportunities should match: ' + records);
+        System.assertEquals(2, records.size(), 'Number of filtered Opportunities should match: ' + records);
         for (RD2_OpportunityMatcher.Record record : records) {
-			System.assert(record.getOpportunity().CloseDate >= TODAY, 'Opportunity Close Date should be >= TODAY: ' + record);
-			System.assertNotEquals(opps[2].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
-		}
+            System.assert(record.getOpportunity().CloseDate >= TODAY, 'Opportunity Close Date should be >= TODAY: ' + record);
+            System.assertNotEquals(opps[2].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
+        }
     }
 
     /**
-     * @description Verifies Open/Closed Lost/Closed Won Opps are returned 
-	 * when their Close Date is greater or equal to the current date (today).
-	 * Opportunities Closed Lost in data migration are not returned.
+     * @description Verifies Open/Closed Lost/Closed Won Opps are returned
+     * when their Close Date is greater or equal to the current date (today).
+     * Opportunities Closed Lost in data migration are not returned.
      */
     @IsTest
     private static void shouldFilterAllOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
-		TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
-		List<Opportunity> opps = new List<Opportunity>{
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(-1))
-				.withClosedWonStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY)//match
-				.withOpenStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(1))
-				.withClosedLostStage()
-				.withInstallmentNumberMigrationFlag()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(1))//match
-				.withClosedLostStage()
-				.withInstallmentNumber(1)
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(2))//match
-				.withOpenStage()
-				.withInstallmentNumber(1)
-				.build()
-		};
-		TEST_OpportunityBuilder.setUneditableFields(opps);
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(-1))
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)//match
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))
+                .withClosedLostStage()
+                .withInstallmentNumberMigrationFlag()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))//match
+                .withClosedLostStage()
+                .withInstallmentNumber(1)
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(2))//match
+                .withOpenStage()
+                .withInstallmentNumber(1)
+                .build()
+        };
+        TEST_OpportunityBuilder.setUneditableFields(opps);
 
-		List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-			.filterCurrent(opps)
-			.getRecords();
+        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
+            .filterCurrent(opps)
+            .getRecords();
 
-		System.assertEquals(3, records.size(), 'Number of filtered Opportunities should match: ' + records);
+        System.assertEquals(3, records.size(), 'Number of filtered Opportunities should match: ' + records);
         for (RD2_OpportunityMatcher.Record record : records) {
-			System.assert(record.getOpportunity().CloseDate >= TODAY, 'Opportunity Close Date should be >= TODAY: ' + record);
-			System.assertNotEquals(opps[2].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
-		}
+            System.assert(record.getOpportunity().CloseDate >= TODAY, 'Opportunity Close Date should be >= TODAY: ' + record);
+            System.assertNotEquals(opps[2].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
+        }
     }
 
     /**
      * @description Verifies matching of Opportunities and projected installments
-	 * is applied by matching Close Date.
+     * is applied by matching Close Date.
      */
     @IsTest
     private static void shouldMatchCurrentOppWithInstallmentByTheCloseDate() {
-		TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
-		List<Opportunity> opps = new List<Opportunity>{
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(-1))
-				.withClosedWonStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY)//match
-				.withOpenStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(1))//match
-				.withClosedLostStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(2))//match
-				.withOpenStage()
-				.build()
-		};
-		TEST_OpportunityBuilder.setUneditableFields(opps);
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(-1))
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)//match
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1))//match
+                .withClosedLostStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(2))//match
+                .withOpenStage()
+                .build()
+        };
+        TEST_OpportunityBuilder.setUneditableFields(opps);
 
-		Integer numInstallments = 6;
-		List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
-			TODAY, numInstallments, new List<RecurringDonationSchedule__c>{ getSchedule() }
-		);
+        Integer numInstallments = 6;
+        List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
+            TODAY, numInstallments, new List<RecurringDonationSchedule__c>{ getSchedule() }
+        );
 
-		List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-			.filterCurrent(opps)
-			.match(installments)
-			.getRecords();
+        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
+            .filterCurrent(opps)
+            .match(installments)
+            .getRecords();
 
-		System.assertEquals(numInstallments, records.size(), 
-			'Only current and future matched records should be returned: ' + records);
-		for (Integer i = 0; i < numInstallments; i++) {
-			Opportunity opp = records[i].getOpportunity();
-			RD2_ScheduleService.Installment installment = records[i].getInstallment();
+        System.assertEquals(numInstallments, records.size(),
+            'Only current and future matched records should be returned: ' + records);
+        for (Integer i = 0; i < numInstallments; i++) {
+            Opportunity opp = records[i].getOpportunity();
+            RD2_ScheduleService.Installment installment = records[i].getInstallment();
 
-			if (i < 3) {
-				System.assertEquals(opps[i + 1].Name, opp.Name, 'The Opp should be assigned to the matched record');
-				System.assertEquals(opps[i + 1].CloseDate, installment.nextDonationDate, 'The Opp should match installment with the same Close Date');
-			} else {
-				System.assertEquals(true, records[i].isNew(), 'The installment should not have matching Opp');
-				System.assertEquals(installments[i].nextDonationDate, installment.nextDonationDate, 'The expected installment Close Date should match');
-			}
-		}
+            if (i < 3) {
+                System.assertEquals(opps[i + 1].Name, opp.Name, 'The Opp should be assigned to the matched record');
+                System.assertEquals(opps[i + 1].CloseDate, installment.nextDonationDate, 'The Opp should match installment with the same Close Date');
+            } else {
+                System.assertEquals(true, records[i].isNew(), 'The installment should not have matching Opp');
+                System.assertEquals(installments[i].nextDonationDate, installment.nextDonationDate, 'The expected installment Close Date should match');
+            }
+        }
     }
 
     /**
      * @description Verifies matching of Opportunities and projected installments
-	 * is applied by matching order of the installment Close Date from the current date
-	 * when existing filtered Opp cannot be matched by the Close Date.
+     * is applied by matching order of the installment Close Date from the current date
+     * when existing filtered Opp cannot be matched by the Close Date.
      */
     @IsTest
     private static void shouldMatchCurrentOppWithInstallmentOrderIfCannotMatchByTheCloseDate() {
-		TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
-		List<Opportunity> opps = new List<Opportunity>{
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(-1))
-				.withClosedWonStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY)//match
-				.withOpenStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(1).addDays(1))//match
-				.withClosedLostStage()
-				.build(),
-			oppBuilder
-				.withName()
-				.withCloseDate(TODAY.addMonths(2))//match
-				.withOpenStage()
-				.build()
-		};
-		TEST_OpportunityBuilder.setUneditableFields(opps);
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(-1))
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)//match
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1).addDays(1))//match
+                .withClosedLostStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(2))//match
+                .withOpenStage()
+                .build()
+        };
+        TEST_OpportunityBuilder.setUneditableFields(opps);
 
-		Integer numInstallments = 6;
-		List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
-			TODAY, numInstallments, new List<RecurringDonationSchedule__c>{ getSchedule() }
-		);
+        Integer numInstallments = 6;
+        List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
+            TODAY, numInstallments, new List<RecurringDonationSchedule__c>{ getSchedule() }
+        );
 
-		List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-			.filterCurrent(opps)
-			.match(installments)
-			.getRecords();
+        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
+            .filterCurrent(opps)
+            .match(installments)
+            .getRecords();
 
-		System.assertEquals(numInstallments, records.size(), 
-			'Only current and future matched records should be returned: ' + records);
-		for (Integer i = 0; i < numInstallments; i++) {
-			Opportunity opp = records[i].getOpportunity();
-			RD2_ScheduleService.Installment installment = records[i].getInstallment();
+        System.assertEquals(numInstallments, records.size(),
+            'Only current and future matched records should be returned: ' + records);
+        for (Integer i = 0; i < numInstallments; i++) {
+            Opportunity opp = records[i].getOpportunity();
+            RD2_ScheduleService.Installment installment = records[i].getInstallment();
 
-			if (i == 1) {
-				System.assertEquals(opps[2].Name, opp.Name, 'The Opp should be assigned to the matched record');
-				System.assertEquals(TODAY.addMonths(1).addDays(1), opp.CloseDate, 'The Opp Close Date should be unchanged');
-				System.assertEquals(TODAY.addMonths(1), installment.nextDonationDate, 'The installment Close Date should be unchanged');
-			} else if (i < 3) {
-				System.assertEquals(opps[i + 1].Name, opp.Name, 'The Opp should be assigned to the matched record');
-				System.assertEquals(opps[i + 1].CloseDate, installment.nextDonationDate, 'The Opp should match installment with the same Close Date');
-			} else {
-				System.assertEquals(true, records[i].isNew(), 'The installment should not have matching Opp');
-				System.assertEquals(installments[i].nextDonationDate, installment.nextDonationDate, 'The expected installment Close Date should match');
-			}
-		}
+            if (i == 1) {
+                System.assertEquals(opps[2].Name, opp.Name, 'The Opp should be assigned to the matched record');
+                System.assertEquals(TODAY.addMonths(1).addDays(1), opp.CloseDate, 'The Opp Close Date should be unchanged');
+                System.assertEquals(TODAY.addMonths(1), installment.nextDonationDate, 'The installment Close Date should be unchanged');
+            } else if (i < 3) {
+                System.assertEquals(opps[i + 1].Name, opp.Name, 'The Opp should be assigned to the matched record');
+                System.assertEquals(opps[i + 1].CloseDate, installment.nextDonationDate, 'The Opp should match installment with the same Close Date');
+            } else {
+                System.assertEquals(true, records[i].isNew(), 'The installment should not have matching Opp');
+                System.assertEquals(installments[i].nextDonationDate, installment.nextDonationDate, 'The expected installment Close Date should match');
+            }
+        }
     }
 
 
 
-	// Helpers
+    // Helpers
     ///////////////////
-	
+
     /**
      * @description Instantiate an Opp builder for the specified Recurring Donation
      * @return TEST_OpportunityBuilder New Opp builder
@@ -332,15 +332,15 @@ private class RD2_OpportunityMatcher_TEST {
      * @description Returns mock of Recurring Donation Schedule
      * @return RecurringDonationSchedule__c
      */
-	private static RecurringDonationSchedule__c getSchedule() {
-		return new RecurringDonationSchedule__c(
-			RecurringDonation__c = RD_ID,
-        	InstallmentAmount__c = RD_AMOUNT,
-        	InstallmentFrequency__c = 1,
-        	InstallmentPeriod__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY,
-        	StartDate__c = TODAY.addMonths(-2),
-			DayOfMonth__c = String.valueOf(TODAY.day())
-		);
-	}
+    private static RecurringDonationSchedule__c getSchedule() {
+        return new RecurringDonationSchedule__c(
+            RecurringDonation__c = RD_ID,
+            InstallmentAmount__c = RD_AMOUNT,
+            InstallmentFrequency__c = 1,
+            InstallmentPeriod__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY,
+            StartDate__c = TODAY.addMonths(-2),
+            DayOfMonth__c = String.valueOf(TODAY.day())
+        );
+    }
 
 }
