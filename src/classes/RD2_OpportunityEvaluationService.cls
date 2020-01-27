@@ -542,7 +542,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             hasOpenOpportunity = new RD2_OpportunityMatcher(currentDate)
-                .filterOpen(rd.npe03__Donations__r)
+                .filterCurrentOpen(rd.npe03__Donations__r)
                 .size() > 0;
 
             return hasOpenOpportunity;

@@ -276,4 +276,27 @@ public without sharing class TEST_OpportunityBuilder {
         return opps;
     }
 
+    /**
+     * @description Sets IsClosed and IsWon fields where applicable for specified Opportunities
+     * @param opps Opportunities
+     * @return void
+     */
+	public static void setUneditableFields(List<Opportunity> opps) {
+		Set<String> closedStageNames = new Set<String>{
+			UTIL_UnitTestData_TEST.getClosedWonStage(),
+			UTIL_UnitTestData_TEST.getClosedLostStage()
+		};
+
+		for (Integer i = 0, size = opps.size(); i < size; i++) {
+			if (!closedStageNames.contains(opps[i].StageName)) {
+                continue;
+            }
+
+            String objJson = JSON.serialize(opps[i]);
+            objJson = objJson.left(objJson.length() - 1);
+            objJson += ',"IsClosed":true,"IsWon":' + (opps[i].StageName ==  UTIL_UnitTestData_TEST.getClosedWonStage()) + '}';
+            opps[i] = (Opportunity)JSON.deserialize(objJson, Opportunity.class);
+		}
+	}
+
 }

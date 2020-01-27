@@ -108,7 +108,7 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @param opps Recurring Donation Opportunities
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
-    public RD2_OpportunityMatcher filterOpen(List<Opportunity> opps) {
+    public RD2_OpportunityMatcher filterCurrentOpen(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
