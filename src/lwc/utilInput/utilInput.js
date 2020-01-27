@@ -173,7 +173,7 @@ export default class utilInput extends LightningElement {
             this.value = event.target.checked;
         } else if (this.type && this.lightningInputType === SEARCH) {
             this.value = event.detail.value;
-        } else if (event.target && event.target.value) {
+        } else if (event.target) {
             this.value = event.target.value;
         }
 

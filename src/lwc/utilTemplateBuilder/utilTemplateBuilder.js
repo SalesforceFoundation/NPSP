@@ -33,6 +33,8 @@ import DI_BATCH_REQUIRED_TOTAL_TO_MATCH_INFO from '@salesforce/schema/DataImport
 import DI_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import DI_BATCH_GIFT_ENTRY_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
 import DI_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
+import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
+import GIFT_ENTRY_FEATURE_GATE_INFO from '@salesforce/schema/Gift_Entry_Settings__c.Enable_Gift_Entry__c';
 
 // Import schema for default form field element objects
 import DATA_IMPORT_INFO from '@salesforce/schema/DataImport__c';
@@ -47,15 +49,40 @@ import PAYMENT_METHOD_INFO from '@salesforce/schema/DataImport__c.Payment_Method
 import DI_ACCOUNT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import DI_CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import DI_DONATION_DONOR_INFO from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+// Additional schema needed for donation donor validation
+import DI_ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__c';
+import DI_CONTACT1_LAST_NAME_INFO from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 
 import CONTACT_INFO from '@salesforce/schema/Contact';
 import ACCOUNT_INFO from '@salesforce/schema/Account';
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
+import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
+import getGiftEntrySettings from
+        '@salesforce/apex/UTIL_CustomSettingsFacade.getGiftEntrySettings';
+
+// relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
 const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
+const ADVANCED_MAPPING = 'Data Import Field Mapping';
+
+// relevant Donation_Donor custom validation fields
+const DONATION_DONOR_FIELDS = {
+    account1ImportedField:  DI_ACCOUNT1_IMPORTED_INFO.fieldApiName,
+    account1NameField:      DI_ACCOUNT1_NAME_INFO.fieldApiName,
+    contact1ImportedField:  DI_CONTACT1_IMPORTED_INFO.fieldApiName,
+    contact1LastNameField:  DI_CONTACT1_LAST_NAME_INFO.fieldApiName,
+    donationDonorField:     DI_DONATION_DONOR_INFO.fieldApiName
+};
+
+// encapsulate Donation_Donor picklist values
+const DONATION_DONOR = {
+    isAccount1: ACCOUNT1,
+    isContact1: CONTACT1
+};
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
@@ -403,6 +430,20 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
     return sections;
 };
 
+/*******************************************************************************
+ * @description Method checks for page level access. Currently checks
+ * if Advanced Mapping is on from the Data Import Custom Settings and
+ * if the Gift Entry Feature Gate is turned on.
+ */
+const getPageAccess = async () => {
+    const dataImportSettings = await getDataImportSettings();
+    const giftEntryGateSettings = await getGiftEntrySettings();
+    const isAdvancedMappingOn =
+        dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
+    const isGiftEntryEnabled = giftEntryGateSettings[GIFT_ENTRY_FEATURE_GATE_INFO.fieldApiName];
+    return isAdvancedMappingOn && isGiftEntryEnabled;
+};
+
 export {
     DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -415,6 +456,8 @@ export {
     DI_DONATION_DONOR_INFO,
     CONTACT1,
     ACCOUNT1,
+    DONATION_DONOR_FIELDS,
+    DONATION_DONOR,
     dispatch,
     showToast,
     handleError,
@@ -426,4 +469,5 @@ export {
     checkPermissionErrors,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
+    getPageAccess,
 }

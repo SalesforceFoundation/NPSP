@@ -6,14 +6,19 @@ import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
-import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate, checkPermissionErrors } from 'c/utilTemplateBuilder';
-import { getQueryParameters, isEmpty, isNotEmpty } from 'c/utilCommon';
+import geLabelService from 'c/geLabelService';
+import { DONATION_DONOR_FIELDS, DONATION_DONOR,
+         handleError,
+         getRecordFieldNames,
+         setRecordValuesOnTemplate,
+         checkPermissionErrors,
+         getPageAccess } from 'c/utilTemplateBuilder';
+import { getQueryParameters, isEmpty, isNotEmpty, format } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
-import NPSP_DATA_IMPORT_BATCH_FIELD
-    from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
 const mode = {
     CREATE: 'create',
@@ -21,7 +26,7 @@ const mode = {
 }
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
-
+    CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
     @api donorRecordId;
     @api donorApiName;
     @api donorRecord;
@@ -52,6 +57,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     
     @track _dataRow; // Row being updated when in update mode
+    @track isAccessible = true;
 
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
     wiredGetRecordMethod({ error, data }) {
@@ -63,40 +69,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    connectedCallback() {
-        if (this.batchId) {
-            // When the form is being used for Batch Gift Entry, the Form Template JSON
-            // uses the @wire service below to retrieve the Template using the Template Id
-            // stored on the Batch.
-            return;
-        }
-
-        GeFormService.getFormTemplate().then(response => {
-            // check if there is a record id in the url
-            this.donorRecordId = getQueryParameters().c__donorRecordId;
-            this.donorApiName = getQueryParameters().c__apiName;
-
-            // read the template header info
-            if(response !== null && typeof response !== 'undefined') {
-                this.formTemplate = response.formTemplate;
-                this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
-
-                let errorObject = checkPermissionErrors(this.formTemplate);
-                if(errorObject) {
-                    this.setPermissionsError(errorObject);
-
-                    return;
-                }
-
-                // get the target field names to be used by getRecord
-                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings,                    this.donorApiName);
-                if(isEmpty(this.donorRecordId)) {
-                    // if we don't have a donor record, it's ok to initialize the form now
-                    // otherwise the form will be initialized after wiredGetRecordMethod completes
-                    this.initializeForm(this.formTemplate);
-                }
+   connectedCallback() {
+        this.checkPageAccess();
+        if (this.isAccessible) {
+            if (this.batchId) {
+                // When the form is being used for Batch Gift Entry, the Form Template JSON
+                // uses the @wire service below to retrieve the Template using the Template Id
+                // stored on the Batch.
+                return;
             }
-        });
+
+            GeFormService.getFormTemplate().then(response => {
+                // check if there is a record id in the url
+                this.donorRecordId = getQueryParameters().c__donorRecordId;
+                this.donorApiName = getQueryParameters().c__apiName;
+
+                // read the template header info
+                if(response !== null && typeof response !== 'undefined') {
+                    this.formTemplate = response.formTemplate;
+                    this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+
+                    let errorObject = checkPermissionErrors(this.formTemplate);
+                    if(errorObject) {
+                        this.setPermissionsError(errorObject);
+
+                        return;
+                    }
+
+                    // get the target field names to be used by getRecord
+                    this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings,                    this.donorApiName);
+                    if(isEmpty(this.donorRecordId)) {
+                        // if we don't have a donor record, it's ok to initialize the form now
+                        // otherwise the form will be initialized after wiredGetRecordMethod completes
+                        this.initializeForm(this.formTemplate);
+                    }
+                }
+            });
+        }
     }
 
     initializeForm(formTemplate, fieldMappings) {
@@ -183,10 +192,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleSave(event) {
+
         this.clearErrors();
 
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
+        // apply custom and standard field validation
         if (!this.isFormValid(sectionsList)) {
             return;
         }
@@ -238,14 +249,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     if (exceptionWrapper.exceptionType !== null && exceptionWrapper.exceptionType !== '') {
 
                         // Check to see if there are any field level errors
-                        if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined || Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
+                        if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined ||
+                            Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
 
-                            // If there are no specific fields the error has to go to, put it on the page level error message.
+                            // If there are no specific fields the error has to go to,
+                            // put it on the page level error message.
                             for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
-                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, { index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex] }];
+                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
+                                    {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
                             }
                         } else {
-                            // If there is a specific field that each error is supposed to go to, show it on the field on the page.
+                            // If there is a specific field that each error is supposed to go to,
+                            // show it on the field on the page.
                             // If it is not on the page to show, display it on the page level.
                             for (const key in exceptionWrapper.DMLErrorFieldNameMapping) {
 
@@ -291,7 +306,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    isFormValid(sectionsList) {
+    isFormValid(sectionsList){
+
+        // custom donor type validation
+        if (this.isDonorTypeInvalid(sectionsList)) {
+            return false;
+        }
+
+        // field validations
         let invalidFields = [];
         sectionsList.forEach(section => {
             const fields = section.getInvalidFields();
@@ -300,10 +322,147 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (invalidFields.length > 0) {
             let fieldListAsString = invalidFields.join(', ');
-            showToast('Invalid Form', 'The following fields are required: ' + fieldListAsString, 'error');
+            this.hasPageLevelError = true;
+            this.pageLevelErrorMessageList = [ {index: 0, errorMessage: `The following fields are required: ${fieldListAsString}`} ];
         }
 
         return invalidFields.length === 0;
+    }
+
+    /**
+     * validates donation donor type on sectionsList
+     * @param sectionsList, list of sections
+     * @returns {boolean|*} - true if form invalid, false otherwise
+     */
+    isDonorTypeInvalid( sectionsList ){
+
+        const DONATION_VALUES = [
+            DONATION_DONOR_FIELDS.donationDonorField,
+            DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField,
+            DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField
+        ];
+        // get label and value using apiName as key from fields for each section
+        let miniFieldWrapper = {};
+        sectionsList.forEach( section => {
+            miniFieldWrapper = { ...miniFieldWrapper, ...(section.getFieldValueAndLabel(DONATION_VALUES)) };
+        });
+
+        // if no donation donor selection, nothing to validate here yet
+        if ( isEmpty(miniFieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value) ) {
+            return false;
+        }
+
+        // returns true when error message was generated
+        return this.getDonorTypeValidationError( miniFieldWrapper, sectionsList );
+    }
+
+    /**
+     * helper class for isDonorTypeInvalid, contains majority of logic
+     * @param fieldWrapper - Array, field ui-label and value using field-api-name as key
+     * @param sectionsList - Array, all sections
+     * @returns {boolean} - true if error message was generated, false if otherwise
+     */
+    getDonorTypeValidationError( fieldWrapper, sectionsList ){
+
+        // get data import record helper
+        const di_record = this.getDataImportHelper( fieldWrapper );
+
+        // donation donor validation depending on selection and field presence
+        let isError = (di_record.donationDonorValue===DONATION_DONOR.isAccount1) ?
+                        di_record.isAccount1ImportedEmpty && di_record.isAccount1NameEmpty :
+                            di_record.donationDonorValue===DONATION_DONOR.isContact1 &&
+                                di_record.isContact1ImportedEmpty && di_record.isContact1LastNameEmpty;
+
+        // process error notification when error
+        if (isError) {
+            // highlight validation fields
+            this.highlightValidationErrorFields( di_record, sectionsList, ' ' );
+            // set page error
+            this.hasPageLevelError = true;
+            this.pageLevelErrorMessageList = [ {index: 0, errorMessage: this.getDonationDonorErrorLabel( di_record, fieldWrapper )} ];
+        }
+
+        return isError;
+    }
+
+    /**
+     * Set donation donor error message using custom label depending on field presence
+     * @param diRecord, Object - helper obj
+     * @param fieldWrapper, Array of fields with Values and Labels
+     * @returns {String}, formatted error message for donation donor validation
+     */
+    getDonationDonorErrorLabel( diRecord, fieldWrapper ){
+
+        // init array replacement for custom label
+        let validationErrorLabelReplacements = [ diRecord.donationDonorValue, diRecord.donationDonorLabel ];
+
+        if (diRecord.donationDonorValue === DONATION_DONOR.isAccount1) {
+            if (diRecord.isAccount1ImportedPresent)
+                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label);
+            if (diRecord.isAccount1NamePresent)
+                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].label);
+        } else {
+            if (diRecord.isContact1ImportedPresent)
+                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].label);
+            if (diRecord.isContact1LastNamePresent)
+                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label);
+        }
+
+        // set label depending fields present on template
+        let label;
+        switch (validationErrorLabelReplacements.length) {
+            case 2: label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeInvalid; break;
+            case 3: label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeValidationSingle; break;
+            case 4: label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeValidation; break;
+            default: label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeInvalid;
+        }
+
+        // set message using replacement array
+        return  format( label, validationErrorLabelReplacements);
+    }
+
+    /**
+     * highlight geForm fields on lSections using sError as message
+     * @param diRecord, Object - helper obj
+     * @param lSections, Array of geFormSection
+     * @param sError, String to set on setCustomValidity
+     */
+    highlightValidationErrorFields( diRecord, lSections, sError ) {
+
+        // prepare array to highlight fields that require attention depending on Donation_Donor
+        const highlightFields = [ DONATION_DONOR_FIELDS.donationDonorField,
+            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField : DONATION_DONOR_FIELDS.contact1ImportedField,
+            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField : DONATION_DONOR_FIELDS.contact1LastNameField
+        ];
+        lSections.forEach(section => {
+            section.setCustomValidityOnFields( highlightFields, sError );
+        });
+
+    }
+
+    /**
+     * helper object to minimize length of if statements and improve code legibility
+     * @param fieldWrapper, Array of fields with Values and Labels
+     * @returns Object, helper object to minimize length of if statements and improve code legibility
+     */
+    getDataImportHelper( fieldWrapper ) {
+
+        const dataImportRecord = {
+            // donation donor
+            donationDonorValue: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value,
+            donationDonorLabel: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].label,
+            // empty val checks
+            isAccount1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].value),
+            isContact1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].value),
+            isContact1LastNameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].value),
+            isAccount1NameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]) || isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].value),
+            // field presence
+            isAccount1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]),
+            isAccount1NamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]),
+            isContact1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]),
+            isContact1LastNamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField])
+        };
+        return dataImportRecord;
     }
 
     navigateToRecordPage(recordId) {
@@ -335,6 +494,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     clearErrors() {
 
         // Clear the page level error
+        this.hasPageLevelError = false;
         this.pageLevelErrorMessageList = [];
 
         // Clear the field level errors
@@ -400,6 +560,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         return dataImportRecord;
+    }
+
+    /************************************************************************************
+     * @description This function retrieves page access based on the Advanced Mapping and
+     * Gift Entry feature gate.
+     */
+    checkPageAccess = async () => {
+        this.isAccessible = await getPageAccess();
     }
 
 }

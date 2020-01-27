@@ -1,13 +1,10 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
-import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
+import { dispatch, handleError, showToast, getPageAccess } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 import { deleteRecord } from 'lightning/uiRecordApi';
-
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
-import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -144,30 +141,9 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     init = async () => {
-        this.isAccessible = await this.checkPageAccess();
-
-        if (this.isAccessible) {
-            this.isLoading = false;
-        }
-    }
-
-    /*******************************************************************************
-    * @description Method checks for page level access. Currently only checks
-    * if Advanced Mapping is on from the Data Import Custom Settings.
-    */
-    checkPageAccess = async () => {
-        const dataImportSettings = await getDataImportSettings();
-        const isAdvancedMappingOn =
-            dataImportSettings[FIELD_MAPPING_METHOD_FIELD_INFO.fieldApiName] === ADVANCED_MAPPING;
-        let hasPageAccess = false;
-
-        if (isAdvancedMappingOn) {
-            hasPageAccess = true;
-        } else {
-            this.isLoading = hasPageAccess = false;
-        }
-        return hasPageAccess;
-    }
+        this.isAccessible = await getPageAccess();
+        this.isLoading = false;
+    };
 
     /*******************************************************************************
     * @description Method handles actions for the Templates list view table.
