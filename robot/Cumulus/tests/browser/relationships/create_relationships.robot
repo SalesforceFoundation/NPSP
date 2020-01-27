@@ -60,8 +60,8 @@ Create Relationships for contacts
     ...                                 &{contact1}[FirstName] &{contact1}[LastName]
     ...                                 Child
 
-    Load Related List                   Relationships
-    Click Related Item Link             Relationships                                               &{contact2}[FirstName] &{contact2}[LastName]
+    # Load Related List                   Relationships
+    Click Related Table Item Link       Relationships                                               &{contact2}[FirstName] &{contact2}[LastName]
 
     Current Page Should Be              Details                                                     Relationship
     ${id}                               Get Current Record Id
