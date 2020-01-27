@@ -5,6 +5,9 @@ import { isEmpty, deepClone } from 'c/utilCommon';
 // Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
 
+// Import custom label service
+import GeLabelService from 'c/geLabelService';
+
 // Import schema for excluded template batch header fields
 import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
 import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
@@ -52,6 +55,7 @@ import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
+const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
 const ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS = [
     DI_BATCH_NAME_FIELD_INFO.fieldApiName
@@ -251,6 +255,7 @@ const showToast = (title, message, variant, mode, messageData) => {
 * @param {object} error: Event holding error details
 */
 const handleError = (error) => {
+    console.log('error', error);
     let message = commonUnknownError;
 
     // error.body is the error from apex calls
@@ -328,6 +333,38 @@ const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
 };
 
 /*******************************************************************************
+* @description this function will determine if a CRUD or FLS permission error page should display if a from   * template is returned with CRUD or FLS errors.
+* @param formTemplate: the form template
+*/
+const checkPermissionErrors = (formTemplate) => {
+    let templateStr = JSON.stringify(formTemplate);
+    let template = JSON.parse(templateStr);
+    if(!template.permissionErrors) {
+        return null;
+    }
+
+    let permissionErrors = new Array(template.permissionErrors);
+    let errorObject = {};
+
+    const FLS_ERROR_TYPE = 'FLS';
+    const CRUD_ERROR_TYPE = 'CRUD';
+
+    if(template.permissionErrors) {
+        errorObject.isPermissionError = true;
+    }
+
+    if(template.permissionErrorType === CRUD_ERROR_TYPE) {
+        errorObject.errorTitle = CUSTOM_LABELS.geErrorObjectCRUDHeader;
+        errorObject.errorMessage = GeLabelService.format                                                      (CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors);
+    } else if(template.permissionErrorType === FLS_ERROR_TYPE) {
+        errorObject.errorTitle = CUSTOM_LABELS.geErrorFLSHeader;
+        errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorFLSBody,                   permissionErrors);
+    }
+
+    return errorObject;
+};
+
+/*******************************************************************************
 * @description returns a copy of the form template that has record values on the element
 * stored in the recordValue attribute
 * in the format objectName.fieldName
@@ -371,6 +408,13 @@ export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
+    CONTACT_INFO,
+    ACCOUNT_INFO,
+    DI_CONTACT1_IMPORTED_INFO,
+    DI_ACCOUNT1_IMPORTED_INFO,
+    DI_DONATION_DONOR_INFO,
+    CONTACT1,
+    ACCOUNT1,
     dispatch,
     showToast,
     handleError,
@@ -379,13 +423,7 @@ export {
     lightningInputTypeByDataType,
     findMissingRequiredFieldMappings,
     findMissingRequiredBatchFields,
+    checkPermissionErrors,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
-    CONTACT_INFO,
-    ACCOUNT_INFO,
-    DI_CONTACT1_IMPORTED_INFO,
-    DI_ACCOUNT1_IMPORTED_INFO,
-    DI_DONATION_DONOR_INFO,
-    CONTACT1,
-    ACCOUNT1
 }

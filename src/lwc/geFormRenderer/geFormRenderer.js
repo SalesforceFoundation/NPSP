@@ -6,7 +6,7 @@ import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.labelGeUpdate';
-import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate } from 'c/utilTemplateBuilder';
+import { showToast, handleError, getRecordFieldNames, setRecordValuesOnTemplate, checkPermissionErrors } from 'c/utilTemplateBuilder';
 import { getQueryParameters, isEmpty, isNotEmpty } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -27,15 +27,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorRecord;
 
     fieldNames = [];
-    @track formTemplate;
-    @track fieldMappings;
     @api sections = [];
     @api showSpinner = false;
     @api batchId;
     @api submissions = [];
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
-
+    
+    @track isPermissionError = false;
+    @track permissionErrorTitle;
+    @track permissionErrorMessage;
+    @track formTemplate;
+    @track fieldMappings;
     @track ready = false;
     @track name = '';
     @track description = '';
@@ -43,9 +46,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track version = '';
     label = { messageLoading, geSave, geCancel };
     @track formTemplateId;
-    @track isPermissionError = false;
-    @track permissionErrorTitle = '';
-    @track permissionErrorMessage = '';
 
     label = { messageLoading, geSave, geCancel };
     erroredFields = [];
@@ -81,29 +81,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.formTemplate = response.formTemplate;
                 this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
+                let errorObject = checkPermissionErrors(this.formTemplate);
+                if(errorObject) {
+                    this.setPermissionsError(errorObject);
+
+                    return;
+                }
+
                 // get the target field names to be used by getRecord
                 this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings,                    this.donorApiName);
-
-                let permissionErrors = new Array(this.formTemplate.permissionErrors);
-
-                if(permissionErrors && this.formTemplate.permissionErrorType) {
-                    const FLS_ERROR_TYPE = 'FLS';
-                    const CRUD_ERROR_TYPE = 'CRUD';
-
-                    if(this.formTemplate.permissionErrorType === CRUD_ERROR_TYPE) {
-                        this.permissionErrorTitle = this.CUSTOM_LABELS.geErrorObjectCRUDHeader;
-                        this.permissionErrorMessage = GeLabelService.format                                       (this.CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors);
-                    } else if(this.formTemplate.permissionErrorType === FLS_ERROR_TYPE) {
-                        this.permissionErrorTitle = this.CUSTOM_LABELS.geErrorFLSHeader;
-                        this.permissionErrorMessage = GeLabelService.format(this.CUSTOM_LABELS.geErrorFLSBody,    permissionErrors);
-                    }
-                    this.isPermissionError = true;
-                } else {
-                    if(isEmpty(this.donorRecordId)) {
-                        // if we don't have a donor record, it's ok to initialize the form now
-                        // otherwise the form will be initialized after wiredGetRecordMethod completes
-                        this.initializeForm(this.formTemplate);
-                    }
+                if(isEmpty(this.donorRecordId)) {
+                    // if we don't have a donor record, it's ok to initialize the form now
+                    // otherwise the form will be initialized after wiredGetRecordMethod completes
+                    this.initializeForm(this.formTemplate);
                 }
             }
         });
@@ -115,6 +105,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.name = formTemplate.name;
         this.description = formTemplate.description;
         this.version = formTemplate.layout.version;
+        this.permissionErrorTitle = formTemplate.permissionErrors;
+
         if (typeof formTemplate.layout !== 'undefined'
             && Array.isArray(formTemplate.layout.sections)) {
 
@@ -126,6 +118,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.sections = formTemplate.layout.sections;
             }
             this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+        }
+    }
+
+    setPermissionsError(errorObject) {
+        if(errorObject) {
+            this.isPermissionError = true;
+            this.permissionErrorTitle = errorObject.errorTitle;
+            this.permissionErrorMessage = errorObject.errorMessage;
         }
     }
 
@@ -147,23 +147,31 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     })
     wiredTemplate({ data, error }) {
         if (data) {
-            this.loadTemplate(
-                JSON.parse(data.fields[TEMPLATE_JSON_FIELD.fieldApiName].value));
+            GeFormService.getFormTemplate().then(response => {
+                let errorObject = checkPermissionErrors(response.formTemplate);
+                if(errorObject) {
+                    this.dispatchEvent(new CustomEvent('permissionerror'));
+                    this.setPermissionsError(errorObject)
+                }
+                this.initializeForm(response.formTemplate);
+            });
         } else if (error) {
             handleError(error);
         }
     }
 
-    async loadTemplate(formTemplate) {
+    async loadTemplate() {
         // With the change to using a Lookup field to connect a Batch to a Template,
         // we can use getRecord to get the Template JSON.  But the GeFormService
         // component still needs to be initialized with the field mappings, and the
         // call to getFormTemplate() does that.
         // TODO: Maybe initialize GeFormService with the field mappings in its connected
         //       callback instead?
+
         await GeFormService.getFormTemplate();
-        this.initializeForm(formTemplate);
     }
+
+
 
     handleCancel() {
         this.reset();

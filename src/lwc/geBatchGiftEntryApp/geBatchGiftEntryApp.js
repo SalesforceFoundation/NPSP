@@ -5,6 +5,10 @@ import {handleError} from 'c/utilTemplateBuilder';
 export default class GeBatchGiftEntryApp extends LightningElement {
     @api recordId;
 
+    @track isPermissionError;
+    @track errorTitle;
+    @track errorMessage;
+
     handleSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
 
@@ -47,5 +51,9 @@ export default class GeBatchGiftEntryApp extends LightningElement {
     handleLoadData(event) {
         const form = this.template.querySelector('c-ge-form-renderer');
         form.load(event.detail);
+    }
+
+    handlePermissionErrors() {
+        this.isPermissionError = true;
     }
 }

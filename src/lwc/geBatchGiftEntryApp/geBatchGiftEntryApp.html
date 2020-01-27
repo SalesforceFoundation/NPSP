@@ -4,15 +4,17 @@
             onbatchdryrun={handleBatchDryRun}></c-ge-batch-gift-entry-header>
 
     <br/>
-
     <c-ge-form-renderer
             batch-id={recordId}
             onsubmit={handleSubmit}
-            onsectionsretrieved={handleSectionsRetrieved}>
+            onsectionsretrieved={handleSectionsRetrieved}
+            onpermissionerror={handlePermissionErrors}>
     </c-ge-form-renderer>
 
-    <c-ge-batch-gift-entry-table
-            batch-id={recordId}
-            onloaddata={handleLoadData}>
-    </c-ge-batch-gift-entry-table>
+    <templat if:false={isPermissionError}>
+        <c-ge-batch-gift-entry-table
+                batch-id={recordId}
+                onloaddata={handleLoadData}>
+        </c-ge-batch-gift-entry-table>
+    </templat>
 </template>
