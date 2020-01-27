@@ -276,6 +276,110 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
     }
 
+    /**************************************************************************************************
+    * @description Confirms that a form template used as default on Gift Entry settings cannot be deleted.
+    */
+    @IsTest
+    static void shouldPreventDeletionOfTemplateReferencedByGiftEntry() {
+
+        // aux vars
+        String templateName = 'fooName';
+        AuraHandledException failure;
+
+        // test data
+        FORM_Template template = createSampleTemplate();
+        template.name = templateName;
+        String templateJSON = JSON.serialize(template);
+        // form service init
+        FORM_Service fs = new FORM_Service();
+        // insert form template using service
+        fs.storeFormTemplate(null,
+                template.name,
+                template.description,
+                template.version,
+                templateJSON);
+
+        // gift entry custom settings set up
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = templateName;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        // retrieve templates with id
+        Form_Template__c[] formTemplates = [SELECT Id, Name, Template_JSON__c FROM Form_Template__c];
+        System.assertEquals( formTemplates.size(), 1, 'We should have only 1 form temp record at this time' );
+
+        Test.startTest();
+            try {
+                // delete template using service
+                fs.deleteFormTemplates(new String[]{ formTemplates[0].Id });
+            } catch (AuraHandledException ex) {
+                failure = ex;
+            }
+        Test.stopTest();
+
+        formTemplates = [SELECT Id, Name FROM Form_Template__c];
+        System.assert( String.isNotBlank(failure.getMessage()), 'Aura Exception found' );
+        System.assertEquals( 1, formTemplates.size(), 'Template was not deleted' );
+
+    }
+
+    //Utility method for creating a sample template.
+    public static FORM_Template createSampleTemplate () {
+        
+        FORM_Element field = new FORM_Element('FormField',
+                                        'True',
+                                        null,
+                                        'CustomLabel',
+                                        new String[]{});
+        
+        FORM_Element widget = new FORM_Element('FormWidget',
+                                            'DisplayRule',
+                                            'ComponentName',
+                                            new String[]{});
+        
+        FORM_Element[] elements = new FORM_Element[]{field,widget};
+
+        FORM_Section section = new FORM_Section('SectionLabel',
+                                                'Accordion',
+                                                'Expanded',
+                                                'True',
+                                                elements);
+        
+        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
+                                            new FORM_Section[]{section});
+
+
+        FORM_Template template = new FORM_Template('Sample Template',
+                                                'This is the description.',
+                                                '1.0',
+                                                layout);
+        return template;
+    }
+
+    //Utility method for creating sample column headers.
+    public static Custom_Column_Header__c[] createSampleColumnHeaders () {
+        
+        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
+        columnHeader.Name = 'sampleColumnHeader';
+        columnHeader.List_Name__c = 'Sample List';
+        columnHeader.Index__c = 0;
+        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
+
+        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
+        columnHeader2.Name = 'sampleColumnHeader2';
+        columnHeader2.List_Name__c = 'Sample List 2';
+        columnHeader2.Index__c = 0;
+        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
+
+        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
+        columnHeader3.Name = 'sampleColumnHeader3';
+        columnHeader3.List_Name__c = 'Sample List 2';
+        columnHeader3.Index__c = 1;
+        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
+
+        return new Custom_Column_Header__c[] { columnHeader, columnHeader2, columnHeader3 };
+    }
+
     /**********************************************************************************************
      * @description Utility method that creates an NPSP Data Import Batch
      *
