@@ -1421,8 +1421,8 @@ class NPSP(SalesforceRobotLibraryBase):
         """
         self.builtin.log("loading related list...", "DEBUG")
         self.salesforce.load_related_list(heading)
-        locator = lex_locators["record"]["related"]["link"].format(heading, title)
+        locator = npsp_lex_locators["record"]["related"]["link"].format(heading, title)
         self.builtin.log("clicking...", "DEBUG")
         self.salesforce._jsclick(locator)
         self.builtin.log("waiting...", "DEBUG")
-        self.wait_until_loading_is_complete()      
+        self.salesforce.wait_until_loading_is_complete()      
