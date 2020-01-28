@@ -5056,7 +5056,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message when an Opportunity has no Payments</shortDescription>
-        <value>This opportunity does not have any payments.</value>
+        <value>This Opportunity does not have any Payments.</value>
     </labels>
     <labels>
         <fullName>geBodyMatchingPendingDonation</fullName>
@@ -5071,7 +5071,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Body message in modal to review donations</shortDescription>
+        <shortDescription>Body for modal to review matching Opportunities and Payments</shortDescription>
         <value>Select the record you want to update.</value>
     </labels>
     <labels>
@@ -5167,7 +5167,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button to create a new Opportunity in modal to review donations</shortDescription>
+        <shortDescription>Button in Review Donations modal to create a new Opportunity</shortDescription>
         <value>Alternatively, create a new Opportunity.</value>
     </labels>
     <labels>
@@ -5175,7 +5175,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button to select Opportunity for Payment edits after donation selection</shortDescription>
+        <shortDescription>Button to add a new Payment to an Opportunity</shortDescription>
         <value>Add new Payment</value>
     </labels>
     <labels>
@@ -5199,7 +5199,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Update</shortDescription>
+        <shortDescription>Button to select an existing Opportunity to update</shortDescription>
         <value>Update this Opportunity</value>
     </labels>
     <labels>
@@ -5207,7 +5207,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button to select Opportunity for Payment edits during donation selection</shortDescription>
+        <shortDescription>Button to select an existing Payment to update</shortDescription>
         <value>Update this Payment</value>
     </labels>
     <labels>
@@ -5482,7 +5482,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for modal to review donations</shortDescription>
+        <shortDescription>Header for modal to review matching Opportunities and Payments</shortDescription>
         <!-- {0} = an Account or Contact record Name -->
         <value>Review Donations for {0}</value>
     </labels>
