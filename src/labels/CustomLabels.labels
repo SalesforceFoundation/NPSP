@@ -5056,7 +5056,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message when an Opportunity has no Payments</shortDescription>
-        <value>This opportunity does not have any payments.</value>
+        <value>This Opportunity does not have any Payments.</value>
     </labels>
     <labels>
         <fullName>geBodyMatchingPendingDonation</fullName>
