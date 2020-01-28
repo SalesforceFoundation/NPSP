@@ -4,7 +4,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import geUpdate from '@salesforce/label/c.labelGeUpdate';
+import geUpdate from '@salesforce/label/c.commonUpdate';
 import geLabelService from 'c/geLabelService';
 import { CONTACT1, ACCOUNT1,
          DONATION_DONOR_FIELDS, DONATION_DONOR,
