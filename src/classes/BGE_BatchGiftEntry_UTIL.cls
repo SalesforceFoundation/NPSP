@@ -306,7 +306,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             String errorMsg = Label.bgeFLSError + ' [' + truncateList(missingPermissions, 3) + ']';
             AuraHandledException ex = new AuraHandledException(errorMsg);
             ex.setMessage(errorMsg);
-            // throw ex;
+            throw ex;
         }
     }
 

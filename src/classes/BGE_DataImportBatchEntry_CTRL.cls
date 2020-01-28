@@ -94,12 +94,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
 
-        // check permissions on hard coded fields
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
-            UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
-            BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
-        );
-
         return JSON.serialize(dataImportModel);
     }
 
