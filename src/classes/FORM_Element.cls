@@ -64,6 +64,7 @@ public with sharing class FORM_Element {
         this.validationRule = validationRule;
         this.customLabel = customLabel;
         this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
+        this.required = false;
     }
 
     //Constructor for widget
@@ -75,5 +76,6 @@ public with sharing class FORM_Element {
         this.displayRule = displayRule;
         this.componentName = componentName;
         this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
+        this.required = false;
     }
 }
