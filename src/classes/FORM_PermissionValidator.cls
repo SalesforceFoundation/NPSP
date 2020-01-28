@@ -40,8 +40,8 @@ public with sharing class FORM_PermissionValidator {
         VALIDATE_READ, VALIDATE_CREATE, VALIDATE_UPDATE
     }
     
-    private final String OBJECT_CRUD_ERROR = 'CRUD';
-    private final String FLS_ERROR = 'FLS';
+    public static final String OBJECT_CRUD_ERROR = 'CRUD';
+    public static final String FLS_ERROR = 'FLS';
 
     FORM_Template template;
     Set<AccessLevel> accessLevels;

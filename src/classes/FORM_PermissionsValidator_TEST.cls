@@ -1,13 +1,10 @@
 @isTest
 private with sharing class FORM_PermissionsValidator_TEST {
 
-    private static final String OBJECT_CRUD = 'CRUD';
-    private static final String OBJECT_FLS = 'FLS';
-
     @isTest
     static void shouldRetrieveTemplateWithPermissionCRUD() {
-        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true, OBJECT_CRUD);
-        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,       utilPermissionsMockInstance);
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true,                         FORM_PermissionValidator.OBJECT_CRUD_ERROR);
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,         utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
         
         FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
@@ -27,8 +24,8 @@ private with sharing class FORM_PermissionsValidator_TEST {
 
     @isTest
     static void shouldRetrieveTemplateWithPermissionFLS() {
-        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true, OBJECT_FLS);
-        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,       utilPermissionsMockInstance);
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true,                         FORM_PermissionValidator.FLS_ERROR);
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,         utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
         
         FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
@@ -48,7 +45,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
     
     @isTest
     static void shouldRetrieveTemplateWithCRUDErrors() {
-        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(false, OBJECT_CRUD);
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(false,                        FORM_PermissionValidator.OBJECT_CRUD_ERROR);
         UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,
             utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
@@ -74,7 +71,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
 
     @isTest
     static void shouldRetrieveTemplateWithFLSErrors() {
-        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(false, OBJECT_FLS);
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(false,                      FORM_PermissionValidator.FLS_ERROR);
         UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class,       utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
         
@@ -115,7 +112,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
 
             Type objectFields = Type.forName('Set<SObjectField>');
 
-            if(permissionType == OBJECT_FLS && !paramTypes.contains(objectFields)) {
+            if(permissionType == FORM_PermissionValidator.FLS_ERROR && !paramTypes.contains(objectFields)) {
                 return true;
             } else {
                 return hasPermission;
