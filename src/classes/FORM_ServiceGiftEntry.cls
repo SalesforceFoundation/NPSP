@@ -208,7 +208,9 @@ public with sharing class FORM_ServiceGiftEntry {
             template = deserializeFormTemplateFromObj(templateObjList[0]);
 
             template = checkPermissions(template,
-                new Set<FORM_PermissionValidator.AccessLevel>                                                     {FORM_PermissionValidator.AccessLevel.VALIDATE_READ,                                          FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                new Set<FORM_PermissionValidator.AccessLevel>{
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
                     FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
             }
         return template;
@@ -219,8 +221,7 @@ public with sharing class FORM_ServiceGiftEntry {
     * @param template - the template to use for CRUD/FLS validation
     * @param accessLevels - a collection of CRUD/FLS validations to perform on the template (i.e. CREATE/UPDATE/READ)
     */
-    public static FORM_Template checkPermissions(FORM_Template template,
-            Set<FORM_PermissionValidator.AccessLevel> accessLevels){
+    public static FORM_Template checkPermissions(FORM_Template template, Set<FORM_PermissionValidator.AccessLevel> accessLevels){
         
         FORM_PermissionValidator validator = new FORM_PermissionValidator(template, accessLevels);
 

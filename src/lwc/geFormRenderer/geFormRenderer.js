@@ -85,12 +85,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.donorApiName = getQueryParameters().c__apiName;
 
                 // read the template header info
-                if(response !== null && typeof response !== 'undefined') {
+                if (response !== null && typeof response !== 'undefined') {
                     this.formTemplate = response.formTemplate;
                     this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
 
                     let errorObject = checkPermissionErrors(this.formTemplate);
-                    if(errorObject) {
+                    if (errorObject) {
                         this.setPermissionsError(errorObject);
 
                         return;
@@ -98,7 +98,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                     // get the target field names to be used by getRecord
                     this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings,                    this.donorApiName);
-                    if(isEmpty(this.donorRecordId)) {
+                    if (isEmpty(this.donorRecordId)) {
                         // if we don't have a donor record, it's ok to initialize the form now
                         // otherwise the form will be initialized after wiredGetRecordMethod completes
                         this.initializeForm(this.formTemplate);
@@ -131,7 +131,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     setPermissionsError(errorObject) {
-        if(errorObject) {
+        if (errorObject) {
             this.isPermissionError = true;
             this.permissionErrorTitle = errorObject.errorTitle;
             this.permissionErrorMessage = errorObject.errorMessage;
@@ -158,7 +158,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (data) {
             GeFormService.getFormTemplate().then(response => {
                 let errorObject = checkPermissionErrors(response.formTemplate);
-                if(errorObject) {
+                if (errorObject) {
                     this.dispatchEvent(new CustomEvent('permissionerror'));
                     this.setPermissionsError(errorObject)
                 }

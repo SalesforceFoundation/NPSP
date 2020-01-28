@@ -11,10 +11,10 @@
             onpermissionerror={handlePermissionErrors}>
     </c-ge-form-renderer>
 
-    <templat if:false={isPermissionError}>
+    <template if:false={isPermissionError}>
         <c-ge-batch-gift-entry-table
                 batch-id={recordId}
                 onloaddata={handleLoadData}>
         </c-ge-batch-gift-entry-table>
-    </templat>
+    </template>
 </template>

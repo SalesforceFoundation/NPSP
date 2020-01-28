@@ -282,7 +282,6 @@ const showToast = (title, message, variant, mode, messageData) => {
 * @param {object} error: Event holding error details
 */
 const handleError = (error) => {
-    console.log('error', error);
     let message = commonUnknownError;
 
     // error.body is the error from apex calls
@@ -366,7 +365,7 @@ const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
 const checkPermissionErrors = (formTemplate) => {
     let templateStr = JSON.stringify(formTemplate);
     let template = JSON.parse(templateStr);
-    if(!template.permissionErrors) {
+    if (!template.permissionErrors) {
         return null;
     }
 
@@ -376,14 +375,14 @@ const checkPermissionErrors = (formTemplate) => {
     const FLS_ERROR_TYPE = 'FLS';
     const CRUD_ERROR_TYPE = 'CRUD';
 
-    if(template.permissionErrors) {
+    if (template.permissionErrors) {
         errorObject.isPermissionError = true;
     }
 
-    if(template.permissionErrorType === CRUD_ERROR_TYPE) {
+    if (template.permissionErrorType === CRUD_ERROR_TYPE) {
         errorObject.errorTitle = CUSTOM_LABELS.geErrorObjectCRUDHeader;
         errorObject.errorMessage = GeLabelService.format                                                      (CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors);
-    } else if(template.permissionErrorType === FLS_ERROR_TYPE) {
+    } else if (template.permissionErrorType === FLS_ERROR_TYPE) {
         errorObject.errorTitle = CUSTOM_LABELS.geErrorFLSHeader;
         errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorFLSBody,                   permissionErrors);
     }

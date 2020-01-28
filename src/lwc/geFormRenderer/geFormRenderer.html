@@ -15,13 +15,13 @@
                         </ul>
                     </c-util-page-level-message>
                 </div>
-            <template if:true={isPermissionError}>
-                <c-util-illustration title={permissionErrorTitle}
-                                     message={permissionErrorMessage}
-                                     size='large'
-                                     variant='lake-mountain'>
-                </c-util-illustration>
-            </template>
+                <template if:true={isPermissionError}>
+                    <c-util-illustration title={permissionErrorTitle}
+                                        message={permissionErrorMessage}
+                                        size='large'
+                                        variant='lake-mountain'>
+                    </c-util-illustration>
+                </template>
             <template if:false={isPermissionError} for:each={sections} for:item='section'>
                 <c-ge-form-section key={section.id} section={section}></c-ge-form-section>
             </template>
