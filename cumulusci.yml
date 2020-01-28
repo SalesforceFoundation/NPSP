@@ -111,6 +111,13 @@ tasks:
         options:
             path: unpackaged/config/delete
 
+    deploy_trial_translations:
+        description: Deploys the translations for trial configured organizations
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/trial_translations
+            namespace_inject: $project_config.project__package__namespace
+
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
@@ -761,6 +768,9 @@ orgs:
             config_file: orgs/beta_statecountry.json
         prerelease:
             config_file: orgs/prerelease.json
+        prerelease_namespaced:
+            config_file: orgs/prerelease.json
+            namespaced: True
         trial:
             config_file: orgs/trial.json
         enterprise:

@@ -30,10 +30,10 @@ Create Secondary Affiliation for Contact
     [tags]                            W-037651                     feature:Affiliations     
     Go To Page                        Details                      Contact                 object_id=&{contact}[Id]
     Select Tab                        Related
-    Click Related Item Link           Organization Affiliations    &{account}[Name]
+    Click Related Table Item Link     Organization Affiliations    &{account}[Name]
     Current Page Should be            Details                      Affiliation
     Edit Record Checkbox              Primary                      checked
     Click Button                      Save
     Go To Page                        Details                      Contact                 object_id=&{contact}[Id]
     Select Tab                        Details
-    Confirm Field Value                Primary Affiliation          contains                &{account}[Name]    
+    Navigate To And Validate Field Value                Primary Affiliation          contains                &{account}[Name]
