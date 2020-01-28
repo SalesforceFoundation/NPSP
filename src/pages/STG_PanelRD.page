@@ -61,6 +61,20 @@
                     </apex:outputPanel>
                 </div>
             </div>
+            <div class="slds-form-element" style="{!IF(!isRD2Enabled, 'display:none', 'display:block')}">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.InstallmentOppAutoCreateOption__c.Label}" for="installmentCreateOption" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <div class="slds-form-element__control">
+                        <apex:outputText value="{!selectedInstallmentCreateOption}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                        <apex:selectList value="{!stgService.stgRD.InstallmentOppAutoCreateOption__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="installmentCreateOption" html-aria-describedby="{!$Component.installmentCreateOptionHelp}" styleClass="slds-select" >
+                            <apex:selectOptions value="{!installmentCreateOptions}" />
+                        </apex:selectList>
+                        <apex:outputPanel id="installmentCreateOptionHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDInstallmentCreateOptionMessage}" />
+                        </apex:outputPanel>
+                    </div>
+                </div>
+            </div>
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Record_Type__c.Label}" for="slRT" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">

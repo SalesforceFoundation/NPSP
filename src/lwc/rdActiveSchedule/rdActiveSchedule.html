@@ -13,7 +13,7 @@
 
         <div if:true={schedules}>
             <template for:each={schedules} for:item="schedule">
-                <div class="slds-m-around--large" key={schedule.scheduleNumber}>
+                <div class="slds-m-around--large slds-border_top" key={schedule.scheduleNumber}>
                     <article class="slds-tile slds-media slds-m-around--medium" >
                         <div class="slds-media__figure">
                           <span class="slds-icon_container" title={labels.AssistiveTextRecordIcon}>
@@ -61,7 +61,7 @@
                                         <lightning-formatted-text value={labels.lblStartDate}></lightning-formatted-text>
                                     </dt>
                                     <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
-                                        <lightning-formatted-date-time value={schedule.startDate} year="2-digit" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
+                                        <lightning-formatted-date-time value={schedule.startDate} year="numeric" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
                                     </dd>
 
                                     <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblEndDate}>
@@ -71,7 +71,7 @@
                                         <lightning-formatted-text value={labels.lblNone}></lightning-formatted-text>
                                     </dd>
                                     <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.endDate}>
-                                        <lightning-formatted-date-time value={schedule.endDate} year="2-digit" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
+                                        <lightning-formatted-date-time value={schedule.endDate} year="numeric" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
                                     </dd>
 
                                     <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPeriod}>

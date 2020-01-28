@@ -39,6 +39,8 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
 
+    private static final Date DATE_ESTABLISHED = Date.newInstance(2019, 9, 15);
+
     /****
     * @description Creates data required for unit tests
     */
@@ -332,10 +334,11 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies that start date is updated to current date on updated RD when appropriate
+    * @description Verifies that start date is NOT updated to current date on updated RD when appropriate
     */
     @isTest
-    private static void shouldOverrideStartDateWithCurrentDate() {
+    private static void shouldNotOverrideStartDateWithCurrentDate() {
+        Date startDate = Date.newInstance(2019, 10, 5);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
@@ -347,8 +350,8 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withDayOfMonth('10')
             .withInstallmentFrequency(1)
             .withStatus(RD2_Constants.STATUS_ACTIVE)
-            .withDateEstablished(Date.newInstance(2019, 6, 5))
-            .withStartDate(Date.newInstance(2019, 6, 5))
+            .withDateEstablished(DATE_ESTABLISHED)
+            .withStartDate(startDate)
             .build();
 
         Test.startTest();
@@ -358,8 +361,47 @@ private with sharing class RD2_RecurringDonations_TEST {
         update rd;
         Test.stopTest();
 
-        npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(Date.today(), rd2.StartDate__c, 'Start date should be today()');
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
+        System.assertEquals(2, rdSchedules.size(), 'Should be 2 schedules');
+        System.assertEquals(startDate, rdSchedules[0].StartDate__c, 'Original schedule Start Date should be unchanged');
+        System.assertEquals(startDate, rdSchedules[1].StartDate__c, 'New schedule Start Date should be original schedule Start Date');
+        System.assertEquals(startDate.addDays(-1), rdSchedules[0].EndDate__c, 'Original schedule End Date should be changed so the schedule is inactive');
+        System.assertEquals(null, rdSchedules[1].EndDate__c, 'New schedule End Date should be undefined');
+        System.assertEquals(50, rdSchedules[0].InstallmentAmount__c, 'Original amount should equal 50');
+        System.assertEquals(100, rdSchedules[1].InstallmentAmount__c, 'Updated amount should equal 100');
+    }
+
+    /****
+    * @description Validates start date on RD with empty current start date
+    */
+    @IsTest
+    private static void shouldSetStartDateToCurrentDateIfStartDateEmpty() {
+        Date startDate = Date.newInstance(2019, 11, 1);
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+                .withStartDate(startDate)
+                .build();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        insert rd;
+        Test.startTest();
+        rd.npe03__Amount__c = 250;
+        rd.StartDate__c = null;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(Date.today(), rd.StartDate__c, 'Next donation date should be today()');
+
+        List<RecurringDonationSchedule__c> rdSchedules = rdScheduleGateway.getRecords(rd);
+        System.assertEquals(2, rdSchedules.size(), 'Should be 2 schedules.');
+
+        System.assertEquals(startDate, rdSchedules[0].StartDate__c, 'Original schedule start date should be same as start date on recurring donation.');
+        System.assertEquals(Date.today().addDays(-1), rdSchedules[0].EndDate__c, 'Original schedule end date should be yesterday.');
+        System.assertEquals(Date.today(), rdSchedules[1].StartDate__c, 'Updated schedule start date should be today.');
+        System.assertEquals(null, rdSchedules[1].EndDate__c, 'Updated end date should be null.');
+        System.assertEquals(100, rdSchedules[0].InstallmentAmount__c, 'Original amount should equal 100.');
+        System.assertEquals(250, rdSchedules[1].InstallmentAmount__c, 'Updated amount should equal 250.');
     }
 
     /***
@@ -459,6 +501,60 @@ private with sharing class RD2_RecurringDonations_TEST {
 
     // Helpers
     ///////////////////
+
+    /****
+    * @description Returns Recurring Donation with Yearly Installment Period
+    */
+    private static TEST_RecurringDonationBuilder getRecurringDonationYearlyBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriodYearly();
+    }
+
+    /****
+    * @description Returns Recurring Donation with Monthly Installment Period
+    */
+    private static TEST_RecurringDonationBuilder getRecurringDonationMonthlyBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriodMonthly()
+                .withDayOfMonth('1');
+    }
+
+    /****
+    * @description Returns Recurring Donation with Weekly Installment Period
+    */
+    private static TEST_RecurringDonationBuilder getRecurringDonationWeeklyBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriodWeekly();
+    }
+
+    /****
+    * @description Returns Recurring Donation with Daily Installment Period
+    */
+    private static TEST_RecurringDonationBuilder getRecurringDonationDailyBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_DAILY);
+    }
+
+    /****
+    * @description Returns Recurring Donation with 1st and 15th Installment Period
+    */
+    private static TEST_RecurringDonationBuilder getRecurringDonationFirstAndFifteenthBuilder() {
+        return getRecurringDonationBaseBuilder()
+                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
+    }
+
+    /****
+    * @description Returns Recurring Donation with default values
+    */
+    private static TEST_RecurringDonationBuilder getRecurringDonationBaseBuilder() {
+        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+                .withContact(getContact().Id)
+                .withAmount(100)
+                .withPaymentMethod('Credit Card')
+                .withInstallmentFrequency(1)
+                .withDateEstablished(DATE_ESTABLISHED)
+                .withStartDate(DATE_ESTABLISHED);
+    }
 
     /****
     * @description Returns contact record
