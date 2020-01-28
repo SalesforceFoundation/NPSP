@@ -77,7 +77,7 @@ private with sharing class UTIL_SObject_TEST {
     }
 
     /***
-    * @description Verifies Id fields is extracted and returned
+    * @description Verifies specified Id type field values are extracted and returned.
     */
     @isTest
     private static void shouldReturnIdSetOfTheTargetField() {
@@ -94,7 +94,7 @@ private with sharing class UTIL_SObject_TEST {
     }
 
     /***
-    * @description Verifies String fields is extracted and returned
+    * @description Verifies specified String type field values are extracted and returned. 
     */
     @isTest
     private static void shouldReturnStringSetOfTheTargetField() {
@@ -111,7 +111,7 @@ private with sharing class UTIL_SObject_TEST {
     }
 
     /***
-    * @description Verifies Datetime fields is extracted and returned
+    * @description Verifies specified Datetime type field values are extracted and returned.
     */
     @isTest
     private static void shouldReturnDatetimeSetOfTheTargetField() {
@@ -128,7 +128,7 @@ private with sharing class UTIL_SObject_TEST {
     }
 
     /***
-    * @description Verifies Decimal fields is extracted and returned
+    * @description Verifies specified Decimal type field values are extracted and returned. 
     */
     @isTest
     private static void shouldReturnDecimalSetOfTheTargetField() {

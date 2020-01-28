@@ -285,7 +285,7 @@ public with sharing class RD2_OpportunityService {
     }
 
     /***
-    * @description Updates Opportunity if it differs from it's related Recurring Donation and/or matching installment
+    * @description Updates Opportunity if it differs from its related Recurring Donation and/or matching installment
     * @param opp Opportunity
     * @param installment Recurring Donation Schedule installment
     * @param rd Recurring Donation

@@ -463,6 +463,7 @@ private with sharing class RD2_ValidationService_TEST {
         System.assertEquals(householdContacts[1].Id, rd.npe03__Contact__c,
             'The Rd should be successfully updated with new contact');
     }
+    
     /***
     * @description Verifies Rd with closed opp can be updated to different organization
     */

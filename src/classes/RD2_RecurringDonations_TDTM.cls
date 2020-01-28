@@ -139,8 +139,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             validationService
-            .withOldRecurringDonations(oldRds)
-            .validateOnChange();
+                .withOldRecurringDonations(oldRds)
+                .validateOnChange();
         }
     }
 

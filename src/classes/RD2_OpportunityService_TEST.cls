@@ -679,11 +679,12 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verifies when contact and/or account on Rd change, only open opp under the rd should reflect the change
-    * with new account/contact
+    * @description Verifies Account and Primary Contact are changed on future open Opportunity 
+    * when related Recurring Donation donor Organization and Contact are changed. 
+    * Existing Closed Won/Lost, and past opened Opportunities should not be updated.
     */
     @isTest
-    private static void shouldUpdateOpenedOppDonorInfoWhenRdDonorInfoIsChange() {
+    private static void shouldUpdateFutureOpenedOppDonorInfoWhenRdDonorInfoIsChange() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
@@ -693,15 +694,26 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(accts[0]);
 
-        insert getOpportunityBuilder(rd)
-        .withCloseDate(TODAY.addMonths(1))
-        .withOpenStage()
-        .build();
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
 
-        insert getOpportunityBuilder(rd)
-        .withCloseDate(TODAY.addMonths(-1))
-        .withClosedWonStage()
-        .build();
+        List<Opportunity> opps =  new List<Opportunity>{
+            oppBuilder
+            .withCloseDate(TODAY.addMonths(1))
+            .withOpenStage()
+            .build(),
+
+            oppBuilder
+            .withCloseDate(TODAY.addMonths(-1))
+            .withClosedWonStage()
+            .build(),
+
+            oppBuilder
+            .withCloseDate(TODAY.addMonths(-1))
+            .withOpenStage()
+            .build()
+        };
+
+        insert opps;
 
         Contact primaryContact = getContact();
 
@@ -712,14 +724,14 @@ private with sharing class RD2_OpportunityService_TEST {
         update rd;
         Test.stopTest();
 
-        List<Opportunity> opps = oppGateway.getRecords(rd);
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
 
-        for (Opportunity opp : opps) {
-            if (opp.isClosed == false) {
+        for (Opportunity opp : oppById.values()) {
+            if (opp.Id == opps[0].Id) {
                 System.assertEquals(accts[1].Id, opp.AccountId, 'Open opportunity account should be updated to match rd organization');
                 System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Open opportunity primary contact should be updated to match rd contact');
             } else {
-                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed Opportunity account should not be updated when rd is updated');
+                 System.assertEquals(accts[0].Id, opp.AccountId, 'Closed Opportunity account should not be updated when rd is updated');
                 System.assertEquals(null, opp.Primary_Contact__c, 'Closed Opportunity primary contact should not be updated when rd is updated');
             }
         }

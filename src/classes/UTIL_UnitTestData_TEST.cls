@@ -387,8 +387,8 @@ public class UTIL_UnitTestData_TEST {
 
     /**
     * @description Build multiple Organization Accounts
-    * @param size - size of organization accounts being created
-    * @return - List<Account>
+    * @param size size of organization accounts being created
+    * @return List<Account>
     */
     public static List<Account> buildOrganizationAccounts(Integer size) {
         List<Account> organizations = new List<Account>();
