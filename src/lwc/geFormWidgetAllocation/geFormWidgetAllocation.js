@@ -77,7 +77,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     /**
      * Expected to return a map of Object API Name to array of records to be created from this widget
-     * @return {'Allocation__c' : [record1, record2, ...] }
+     * @return {'GAU_Allocation_1_abc123' : [record1, record2, ...] }
      */
     @api
     returnValues() {
@@ -87,12 +87,22 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
         if(rows !== null && typeof rows !== 'undefined') {
             rows.forEach(row => {
-                let rowRecord = row.getValues();
-                widgetRowValues.push(rowRecord);
+                // no need to send back default GAU, automatically allocated by trigger
+                // dataset attributes are always strings
+                if(row.dataset.defaultgau !== 'true') {
+                    let rowRecord = row.getValues();
+                    // need attributes to be able to deserialize this later.
+                    const rowWithAttributes = {
+                        attributes: { type: ALLOCATION_OBJECT.objectApiName},
+                        ...rowRecord
+                    };
+                    widgetRowValues.push(rowWithAttributes);
+                }
             });
         }
 
-        widgetData[ALLOCATION_OBJECT.objectApiName] = widgetRowValues;
+        // use custom metadata record name as key
+        widgetData['GAU_Allocation_1_416880fbf'] = widgetRowValues;
         // console.log(widgetData); 
         return widgetData;
     }

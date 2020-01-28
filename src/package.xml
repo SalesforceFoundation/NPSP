@@ -1979,6 +1979,7 @@
         <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>
+        <members>geErrorAmountDoesNotMatch</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
         <members>geErrorDonorTypeValidation</members>

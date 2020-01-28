@@ -136,13 +136,19 @@ class GeFormService {
      * @returns opportunityId
      */
     handleSave(sectionList, record) {
-        let diRecord = this.getDataImportRecord(sectionList, record);
+        const { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record);
 
-        const opportunityID = this.saveAndProcessGift(diRecord);
+        const opportunityID = this.saveAndProcessGift(diRecord, widgetValues);
 
         return opportunityID;
     }
 
+    /**
+     * Grab the data from the form fields and widgets, convert to a data import record.
+     * @param sectionList   List of ge-form-sections on the form
+     * @param record        Existing account or contact record to attach to the data import record
+     * @return {{widgetValues: {}, diRecord: {}}}
+     */
     getDataImportRecord(sectionList, record){
         // Gather all the data from the input
         let fieldData = {};
@@ -178,7 +184,7 @@ class GeFormService {
             }
         }
 
-        return diRecord;
+        return { diRecord, widgetValues };
     }
 
     saveAndDryRun(batchId, dataImport) {

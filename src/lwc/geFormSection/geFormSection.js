@@ -79,7 +79,8 @@ export default class GeFormSection extends LightningElement {
      * @param {fieldsArray},Array with sourceFieldAPIName field property
      * @param {errorMessage}, String custom error message for fields
      */
-    @api setCustomValidityOnFields( fieldsArray, errorMessage ) {
+    @api
+    setCustomValidityOnFields( fieldsArray, errorMessage ) {
 
         const fields = this.template.querySelectorAll('c-ge-form-field');
         if (fields !== null && typeof fields !== 'undefined') {

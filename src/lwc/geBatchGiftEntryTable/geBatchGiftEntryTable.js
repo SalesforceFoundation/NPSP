@@ -108,7 +108,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         const columns = [];
         sections.forEach(
             section => {
-                section.elements.forEach(
+                section.elements
+                    .filter(e => e.elementType === 'field')
+                    .forEach(
                     element => {
                         const column = {
                             label: element.label,

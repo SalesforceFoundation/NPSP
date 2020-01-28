@@ -141,69 +141,69 @@ public with sharing class GE_FormRendererService {
     * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records 
     * to be created.
     */
-    @TestVisible
-    private static void convertWidgetDataToObjectJSON(DataImport__c diRecord, String widgetData) {
-
-        if (String.isBlank(widgetData)) {
-            return;
-        }
-
-        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
-        Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
-        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
-
-        //dynSourceGroup.name = additionalObjJSONFieldName;
-        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
-
-        Map<String, Object> objMappingDevNameToObjList;
-
-        try {
-            objMappingDevNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
-        } catch(Exception e) {
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
-            
-            throw returnAuraException(JSONExceptionData);
-        }
-
-        // Create a map of sobject type to sobject list for processing
-        for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
-            Object objList = objMappingDevNameToObjList.get(objMappingDevName);
-
-            BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
-
-            String[] tempObjStrings = new String[]{};
-
-            //Reserializing the object strings to resolve platform issue with deserializing SObjects
-            for (Object obj : (List<Object>)objMappingDevNameToObjList.get(objMappingDevName)){
-                tempObjStrings.add(JSON.serialize(obj)); 
-            }      
-
-            if(tempObjStrings != null && tempObjStrings.size() > 0) {
-                
-                Integer i = 0;
-                //Loop through the sObjects and construct DI records to hold the data in the expected fields
-                for (String objString : tempObjStrings) {
-
-                    SObject sObj = (SObject)JSON.deserialize(objString, Sobject.class);
-
-                    i++;
-
-                    BDI_DynamicSource dynSource = new BDI_DynamicSource();
-                    dynSource.objectMappingDevName = objMapping.DeveloperName + 'temp' + i;
-                    dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
-                    dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
-                    dynSource.sourceObj = sObj;
-
-                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName,dynSource);                    
-                }
-            }
-        }
-
-        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
-            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
-            // diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
-        }
-    }
+//    @TestVisible
+//    private static void convertWidgetDataToObjectJSON(DataImport__c diRecord, String widgetData) {
+//
+//        if (String.isBlank(widgetData)) {
+//            return;
+//        }
+//
+//        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+//        Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
+//        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
+//
+//        dynSourceGroup.name = additionalObjJSONFieldName;
+//        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
+//
+//        Map<String, Object> objMappingDevNameToObjList;
+//
+//        try {
+//            objMappingDevNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
+//        } catch(Exception e) {
+//            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+//
+//            throw returnAuraException(JSONExceptionData);
+//        }
+//
+//        // Create a map of sobject type to sobject list for processing
+//        for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
+//            Object objList = objMappingDevNameToObjList.get(objMappingDevName);
+//
+//            BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
+//
+//            String[] tempObjStrings = new String[]{};
+//
+//            //Reserializing the object strings to resolve platform issue with deserializing SObjects
+//            for (Object obj : (List<Object>)objMappingDevNameToObjList.get(objMappingDevName)){
+//                tempObjStrings.add(JSON.serialize(obj));
+//            }
+//
+//            if(tempObjStrings != null && tempObjStrings.size() > 0) {
+//
+//                Integer i = 0;
+//                //Loop through the sObjects and construct DI records to hold the data in the expected fields
+//                for (String objString : tempObjStrings) {
+//
+//                    SObject sObj = (SObject)JSON.deserialize(objString, Sobject.class);
+//
+//                    i++;
+//
+//                    BDI_DynamicSource dynSource = new BDI_DynamicSource();
+//                    dynSource.objectMappingDevName = objMapping.DeveloperName + 'temp' + i;
+//                    dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
+//                    dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
+//                    dynSource.sourceObj = sObj;
+//
+//                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName,dynSource);
+//                }
+//            }
+//        }
+//
+//        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
+//            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
+//            // diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
+//        }
+//    }
 
 
     // VERSION USING TARGET OBJECT AS WIDGET SOURCE
@@ -217,13 +217,14 @@ public with sharing class GE_FormRendererService {
     * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records 
     * to be created.
     */
-    /*
     @TestVisible
     private static void convertWidgetDataToObjectJSON(DataImport__c diRecord, String widgetData) {
 
         if (String.isBlank(widgetData)) {
             return;
         }
+
+        String additionalObjJSONFieldName = 'Additional_Object_JSON__c';
 
         BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
         Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
@@ -267,9 +268,9 @@ public with sharing class GE_FormRendererService {
                     DataImport__c tempDI = new DataImport__c();
 
                     //Reverse mapping the fields back onto a tempDI Record that respresents the source obj.
-                    for (BDI_FieldMapping fieldMapping: fieldMappings){
-                        Object value = sObj.get(fieldmapping.Target_Field_API_Name);
-                        tempDI.put(fieldmapping.Source_Field_API_Name, value);
+                    for (BDI_FieldMapping fieldMapping : fieldMappings) {
+                        Object value = sObj.get(fieldMapping.Target_Field_API_Name);
+                        tempDI.put(fieldMapping.Source_Field_API_Name, value);
                     }
 
                     BDI_DynamicSource dynSource = new BDI_DynamicSource();
@@ -288,7 +289,6 @@ public with sharing class GE_FormRendererService {
             diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
         }
     }
-    */
 
     /*******************************************************************************************************
     * @description Takes a Data Import record and saves it to the database.

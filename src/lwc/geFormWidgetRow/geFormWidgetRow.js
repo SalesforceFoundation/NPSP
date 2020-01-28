@@ -10,7 +10,6 @@ export default class GeFormWidgetRow extends LightningElement {
     @api disabled;
     @api totalAmount;
     @api remainingAmount;
-    @api isDefault;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -20,7 +19,12 @@ export default class GeFormWidgetRow extends LightningElement {
         let widgetFieldAndValues = {};
         if(fields !== null && typeof fields !== 'undefined') {
             fields.forEach(field => {
-                widgetFieldAndValues = { ...widgetFieldAndValues, ...(field.fieldAndValue) };
+                const { fieldAndValue } = field;
+                // convert full field names to local field names for processing
+                Object.entries(fieldAndValue).forEach(([fieldName,fieldValue]) => {
+                    const localFieldName = this.getLocalFieldName(fieldName);
+                    widgetFieldAndValues = { ...widgetFieldAndValues, ...{[localFieldName]: fieldValue}};
+                });
             });
         }
         // console.log(widgetFieldAndValues); 
@@ -163,15 +167,25 @@ export default class GeFormWidgetRow extends LightningElement {
 
     /**
      * If a value is populated for the field in this.rowRecord, return it.
-     *
      * @param fullFieldName e.g. Allocation__c.General_Accounting_Unit__c
      */
     getDefaultForField(fullFieldName) {
-       const parts = fullFieldName.split('.');
-       if(parts && parts.length === 2) {
-           const localFieldName = parts[1];
-           return this.rowRecord[localFieldName];
-       }
+        const localFieldName = this.getLocalFieldName(fullFieldName);
+        if (localFieldName) {
+            return this.rowRecord[localFieldName];
+        }
+    }
+
+    /**
+     * Extract the local field name from a full field name
+     * @param fullFieldName example: 'Allocation__c.General_Accounting_Unit__c'
+     * @return {*|string}   example: 'General_Accounting_Unit__c'
+     */
+    getLocalFieldName(fullFieldName) {
+        const parts = fullFieldName.split('.');
+        if(parts && parts.length === 2) {
+            return parts[1];
+        }
     }
 
     /**

@@ -64,7 +64,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     connectedCallback() {
 
-this.checkPageAccess();
+        this.checkPageAccess();
         if (this.isAccessible) {
             if (this.batchId) {
                 // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -527,18 +527,18 @@ this.checkPageAccess();
     }
 
     getData(sections) {
-        let dataImportRecord =
+        let { diRecord } =
             GeFormService.getDataImportRecord(sections);
 
-        if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
-            dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        if (!diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
+            diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
 
         if (this._dataRow) {
-            dataImportRecord.Id = this._dataRow.Id;
+            diRecord.Id = this._dataRow.Id;
         }
 
-        return dataImportRecord;
+        return diRecord;
     }
 
     /************************************************************************************
