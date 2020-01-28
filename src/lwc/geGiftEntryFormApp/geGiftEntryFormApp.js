@@ -1,9 +1,11 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 import {handleError} from 'c/utilTemplateBuilder';
+import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 
-export default class GeBatchGiftEntryApp extends LightningElement {
+export default class GeGiftEntryFormApp extends LightningElement {
     @api recordId;
+    @api sObjectName;
 
     @track isPermissionError;
     @track errorTitle;
@@ -56,4 +58,13 @@ export default class GeBatchGiftEntryApp extends LightningElement {
     handlePermissionErrors() {
         this.isPermissionError = true;
     }
+    handleEditBatch() {
+        this.dispatchEvent(new CustomEvent('editbatch'));
+    }
+
+    get isBatchMode() {
+        return this.sObjectName &&
+            this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
+    }
+
 }
