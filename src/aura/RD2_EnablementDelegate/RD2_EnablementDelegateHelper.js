@@ -383,6 +383,11 @@
             return;
         }
 
+        const state = component.get("v.state");
+        if (state === undefined || state === null) {
+            return;
+        }
+
         const errorDetail = event.getParam('errorDetail');
         if (errorDetail === undefined
             || errorDetail === null
@@ -394,8 +399,7 @@
         this.clearError(component);
 
         if (section === 'dryRun') {
-            const enablementState = component.get("v.state");
-            this.handleError(component, response.getError(), !enablementState.isConfirmed ? 'dryRun' : 'migration');
+            this.handleError(component, response.getError(), !state.isConfirmed ? 'dryRun' : 'migration');
 
         } else {
             this.handleError(component, errorDetail, section);
