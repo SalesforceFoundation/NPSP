@@ -108,10 +108,12 @@ public with sharing class RD2_ValidationService {
             npe03__Recurring_Donation__c oldRd = oldRds[i];
 
             validateActiveRecurringDonation(rd);
-            validateDonor(rd, accountById.get(rd.npe03__Organization__c));
-            validateDonorChange(rd, oldRd);
+            
+            Boolean donorChangeApprove = validateDonorChange(rd, oldRd);
+            if (donorChangeApprove) {
+                validateDonor(rd, accountById.get(rd.npe03__Organization__c));
+            }
         }
-        
     }
 
     /***
@@ -162,23 +164,31 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
-    * @description Validate when contact or account is changed on update of rds
+    * @description Validate when contact or account change is permitted on update of rd
     * @param rds The Recurring Donations to validate
     * @param oldRds The old list of Recurring Donations
+    * @return Boolean True when the validation pass, otherwise, false
     */
-    private void validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+    private Boolean validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        Boolean isValid = false;
+
         if (rd.npe03__Organization__c == oldRd.npe03__Organization__c
             && rd.npe03__Contact__c == oldRd.npe03__Contact__c) {
-            return;
+            isValid = true;
         }
 
         if (adjustableRdIds.contains(rd.Id)
             || isOrganizationChange(accountById.get(rd.npe03__Organization__c), accountById.get(oldRd.npe03__Organization__c))
         ) {
-            return;
+            isValid = true;
         }
+
+        if (isValid == false) {
+            rd.addError(System.Label.RD2_ContactChangeIsRestricted);
+        }
+
+        return isValid;
         
-        rd.addError(System.Label.RD2_ContactChangeIsRestricted);
         
     }
 
@@ -189,6 +199,7 @@ public with sharing class RD2_ValidationService {
     * @return Boolean True when both new and old account are organization accounts
     */
     private Boolean isOrganizationChange(Account newAcct, Account oldAcct) {
+        System.debug(newAcct + 'dsafdsaf' + oldAcct);
         return 
             newAcct != null
             && oldAcct != null
