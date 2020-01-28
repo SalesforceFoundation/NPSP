@@ -3,7 +3,17 @@ import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import { isNumeric, isNotEmpty } from 'c/utilCommon';
 import { registerListener } from 'c/pubsubNoPageRef';
+
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
+import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
+import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
+import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
+const GENERAL_ACCOUNT_UNIT = GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName;
+
+import ALLOC_DEFAULT_FIELD from '@salesforce/schema/Allocations_Settings__c.Default__c';
+import ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD from '@salesforce/schema/Allocations_Settings__c.Default_Allocations_Enabled__c';
+const ALLOC_SETTINGS_DEFAULT = ALLOC_DEFAULT_FIELD.fieldApiName;
+const ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED = ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD.fieldApiName;
 
 export default class GeFormWidgetAllocation extends LightningElement {
     @api element;
@@ -22,9 +32,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
     connectedCallback() {
         // Represents the fields in a row of the widget
         this.fieldList = [
-            {'mappedField':'Allocation__c.General_Accounting_Unit__c', 'size':4, 'required': true},
-            {'mappedField':'Allocation__c.Amount__c', 'size':3},
-            {'mappedField':'Allocation__c.Percent__c', 'size':3}
+            {'mappedField':`${ALLOCATION_OBJECT.objectApiName}.${GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName}`,
+                'size':4, 'required': true},
+            {'mappedField':`${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`, 'size':3},
+            {'mappedField':`${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`, 'size':3}
         ];
         registerListener('allocationValueChange', this.handleValueChange, this);
         this.init();
@@ -102,7 +113,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
 
         // use custom metadata record name as key
-        widgetData['GAU_Allocation_1_416880fbf'] = widgetRowValues;
+        widgetData['GAU_Allocation_1_d646a6549'] = widgetRowValues;
         // console.log(widgetData); 
         return widgetData;
     }
@@ -127,7 +138,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             // default GAU should be locked.
             element.disabled = true;
             row.isDefaultGAU = true;
-            record.General_Accounting_Unit__c = this.allocationSettings.Default__c;
+            record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
         }
 
         row = {
@@ -148,7 +159,12 @@ export default class GeFormWidgetAllocation extends LightningElement {
         const { rowIndex, payload } = event;
         const record = this.rowList[rowIndex].record;
         this.rowList[rowIndex].record = {...record, ...payload}; // update record in rowList with new values
-        if(this.allocationSettings.Default_Allocations_Enabled__c && this.remainingAmount >= 0) {
+
+        const hasRemainingAmount =
+            this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
+            this.remainingAmount >= 0;
+
+        if(hasRemainingAmount) {
             this.allocateDefaultGAU();
         }
 
@@ -172,7 +188,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     allocateDefaultGAU() {
         const defaultRow = this.template.querySelector('[data-defaultgau=true]');
-        defaultRow.setFieldValue('Allocation__c.Amount__c', this.remainingAmount);
+        defaultRow.setFieldValue(
+            `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
+            this.remainingAmount);
     }
 
     /**
@@ -188,7 +206,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * @return {Boolean} True when component valid
      */
     validate() {
-        const message = GeLabelService.format(this.CUSTOM_LABELS.geErrorAmountDoesNotMatch, [this.donationAmountCustomLabel]);
+        const message = GeLabelService.format(
+            this.CUSTOM_LABELS.geErrorAmountDoesNotMatch,
+            [this.donationAmountCustomLabel]);
 
         if(this.isUnderAllocated) {
             // if no default GAU and under-allocated, display warning
@@ -229,16 +249,18 @@ export default class GeFormWidgetAllocation extends LightningElement {
     get allocatedAmount() {
         const amount = this.rowList
             .filter(row => {
-                const defaultGAUId = this.allocationSettings.Default__c;
+                const defaultGAUId = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
                 if(isNotEmpty(defaultGAUId)) {
                     // don't include default GAU when calculating remaining amount if one is defined.
-                    return row.record['General_Accounting_Unit__c'] !== defaultGAUId;
+                    return row.record[GENERAL_ACCOUNT_UNIT] !== defaultGAUId;
                 }
 
                 return true;
             })
             .reduce((accumulator, current) => {
-                const currentAmount = current.record['Allocation__c.Amount__c'];
+                const currentAmount =
+                    current.record[`${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`];
+
                 if(isNumeric(currentAmount)) {
                     // prefix + to ensure operand is treated as a number
                     return (+currentAmount + accumulator);
@@ -258,7 +280,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     get hasDefaultGAU() {
         return this.allocationSettings
-            && this.allocationSettings.Default_Allocations_Enabled__c === true;
+            && this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] === true;
     }
 
     get hasAlert() {
