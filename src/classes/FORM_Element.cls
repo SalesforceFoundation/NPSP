@@ -42,6 +42,7 @@ public with sharing class FORM_Element {
     @AuraEnabled public String customLabel;
     @AuraEnabled public String componentName;
     @AuraEnabled public String[] dataImportFieldMappingDevNames;
+    @AuraEnabled public String dataImportObjectMappingDevName;
     @AuraEnabled public String fieldApiName;
     @AuraEnabled public String objectApiName;
 

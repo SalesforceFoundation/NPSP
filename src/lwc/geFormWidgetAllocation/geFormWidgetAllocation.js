@@ -1,7 +1,7 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import { isNumeric, isNotEmpty } from 'c/utilCommon';
+import { isNumeric, isNotEmpty, getLikeMatchByKey } from 'c/utilCommon';
 import { registerListener } from 'c/pubsubNoPageRef';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
@@ -325,3 +325,33 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
 }
+
+const getAllocationWidgetDefinition = (objectMappingByDevName, fieldMappingByDevName) => {
+    const GAU_ALLOCATION_DEVELOPER_NAME_STUB = 'GAU_Allocation_1_';
+    const FIELD_DEVELOPER_NAME_STUBS = [
+        'GAU_Allocation_1_GAU_',
+        'GAU_Allocation_1_Amount_',
+        'GAU_Allocation_1_Percent_'
+    ]
+
+    return {
+        objectMappingDeveloperNameStubs: GAU_ALLOCATION_DEVELOPER_NAME_STUB,
+        fieldMappingDeveloperNameStubs: FIELD_DEVELOPER_NAME_STUBS,
+    }
+
+    /*const gauObjectMappingDeveloperName = getLikeMatchByKey(
+        objectMappingByDevName,
+        GAU_ALLOCATION_DEVELOPER_NAME_STUB,
+        true);
+
+    const fieldMappingDeveloperNames = FIELD_DEVELOPER_NAME_STUBS.map(stub => {
+        return getLikeMatchByKey(fieldMappingByDevName, stub, true);
+    });
+
+    return {
+        objectMappingDeveloperName: gauObjectMappingDeveloperName,
+        fieldMappingDeveloperNames: fieldMappingDeveloperNames
+    }*/
+}
+
+export { getAllocationWidgetDefinition }

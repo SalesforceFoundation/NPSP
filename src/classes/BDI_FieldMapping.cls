@@ -55,6 +55,9 @@ public virtual with sharing class BDI_FieldMapping {
     @AuraEnabled public Boolean Is_Required;
     // Used for the Form Template Builder and Renderer
     @AuraEnabled public String Element_Type = 'field';
+    // Used for Form Template Builder and Widgets
+    @AuraEnabled public String Widget_Object_Mapping_Developer_Name;
+    @AuraEnabled public String[] Widget_Field_Mapping_Developer_Names;
 
     public BDI_FieldMapping() {
 
