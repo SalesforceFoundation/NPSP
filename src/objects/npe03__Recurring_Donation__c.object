@@ -60,9 +60,9 @@
     </fields>
     <fields>
         <fullName>CurrentYearValue__c</fullName>
-        <description>The total amount of this Recurring Donation for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</description>
+        <description>This Recurring Donation&quot;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The total amount of this Recurring Donation for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</inlineHelpText>
+        <inlineHelpText>This Recurring Donation&quot;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</inlineHelpText>
         <label>Current Year Value</label>
         <precision>18</precision>
         <required>false</required>
@@ -258,9 +258,9 @@
     </fields>
     <fields>
         <fullName>NextYearValue__c</fullName>
-        <description>The total amount of this Recurring Donation for the next calendar or fiscal year (read only).</description>
+        <description>This Recurring Donation&quot;s total expected amount for the next calendar or fiscal year (read only).</description>
         <externalId>false</externalId>
-        <inlineHelpText>The total amount of this Recurring Donation for the next calendar or fiscal year (read only).</inlineHelpText>
+        <inlineHelpText>This Recurring Donation&quot;s total expected amount for the next calendar or fiscal year (read only).</inlineHelpText>
         <label>Next Year Value</label>
         <precision>18</precision>
         <required>false</required>

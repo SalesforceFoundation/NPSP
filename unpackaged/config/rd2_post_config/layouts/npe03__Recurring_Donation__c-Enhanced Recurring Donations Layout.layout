@@ -24,6 +24,10 @@
                 <behavior>Required</behavior>
                 <field>npe03__Amount__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>%%%NAMESPACE%%%CurrentYearValue__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -41,6 +45,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>npe03__Recurring_Donation_Campaign__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>%%%NAMESPACE%%%NextYearValue__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
