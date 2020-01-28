@@ -1532,7 +1532,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Validate RD Contact/Account update when a closed opportunity exists on the RD</shortDescription>
-        <value>You can't change the donor information on a Recurring Donation that has Closed Opportunities.</value>
+        <value>You can't change the Household Account or Contact on a Recurring Donation that has Closed Opportunities.</value>
     </labels>
     <labels>
         <fullName>RD2_CurrentScheduleTitle</fullName>
