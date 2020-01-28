@@ -71,7 +71,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
         // Query the Batch to determine which set of fields will be needed.
         // Batches created using BGE_DataImportBatchEntry store fields used by its Data
-        // Import records in Active_Fields__c, while Batches created in geBatchGiftEntryApp
+        // Import records in Active_Fields__c, while Batches created in GE_GiftEntry
         // use fields included in the Form_Template__c record related to the Batch.
         DataImportBatch__c batch = [
                 SELECT Batch_Gift_Entry_Version__c,
