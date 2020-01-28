@@ -100,7 +100,6 @@ public with sharing class FORM_PermissionValidator {
                 }
             }
         }
-        System.debug('ERROR MAP == ' + permissionErrorsBySObject);
         handlePermissionsErrors(permissionErrorsBySObject);
         return template;
     }
@@ -136,10 +135,6 @@ public with sharing class FORM_PermissionValidator {
     private Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
 
         SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
-        System.debug('OBJECT DEV NAME == ' + objDevName);
-        System.debug('OBJECT TYPE == ' + objectType);
-        System.debug('OBJECT TYPE FIELDS == ' + objectType.getDescribe().fields);
-        System.debug('FIELD DEV NAME == ' + fieldDevName);
         SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
         Set<SObjectField> fields = new Set<SObjectField>{objField};
 
