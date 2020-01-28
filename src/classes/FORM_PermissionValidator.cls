@@ -42,6 +42,7 @@ public with sharing class FORM_PermissionValidator {
     
     public static final String OBJECT_CRUD_ERROR = 'CRUD';
     public static final String FLS_ERROR = 'FLS';
+    public static final String DATA_IMPORT_OBJECT = 'DataImport__c';
 
     FORM_Template template;
     Set<AccessLevel> accessLevels;
@@ -69,9 +70,23 @@ public with sharing class FORM_PermissionValidator {
 
                         String targetObjDevName = fieldMapping.Target_Object_API_Name;
                         String targetFieldDevName = fieldMapping.Target_Field_API_Name;
+                        String sourceObjDevName = DATA_IMPORT_OBJECT;
+                        String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
+
+                        if(!isValid(sourceObjDevName, accessLevels)) {
+                            permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
+                        }
 
                         if(!isValid(targetObjDevName, accessLevels)) {
                             permissionErrorsBySObject.put(targetObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
+                        }
+
+                        if(!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
+                            if(permissionErrorsBySObject.containsKey(sourceObjDevName)) {
+                                permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
+                            } else {
+                                permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{sourceFieldDevName});
+                            }
                         }
                         
                         if(!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
@@ -85,6 +100,7 @@ public with sharing class FORM_PermissionValidator {
                 }
             }
         }
+        System.debug('ERROR MAP == ' + permissionErrorsBySObject);
         handlePermissionsErrors(permissionErrorsBySObject);
         return template;
     }
@@ -120,6 +136,10 @@ public with sharing class FORM_PermissionValidator {
     private Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
 
         SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
+        System.debug('OBJECT DEV NAME == ' + objDevName);
+        System.debug('OBJECT TYPE == ' + objectType);
+        System.debug('OBJECT TYPE FIELDS == ' + objectType.getDescribe().fields);
+        System.debug('FIELD DEV NAME == ' + fieldDevName);
         SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
         Set<SObjectField> fields = new Set<SObjectField>{objField};
 
