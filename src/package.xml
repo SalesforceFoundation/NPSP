@@ -1909,6 +1909,7 @@
         <members>commonTemplate</members>
         <members>commonTemplates</members>
         <members>commonUnknownError</members>
+        <members>commonUpdate</members>
         <members>commonViewAll</members>
         <members>commonViewMore</members>
         <members>commonWarning</members>
@@ -2180,7 +2181,6 @@
         <members>isARequiredField</members>
         <members>labelGeCancel</members>
         <members>labelGeSave</members>
-        <members>labelGeUpdate</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>
