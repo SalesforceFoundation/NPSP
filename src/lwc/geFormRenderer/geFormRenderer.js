@@ -17,7 +17,6 @@ import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone } from 'c/ut
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
-import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
@@ -53,7 +52,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api submissions = [];
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
-    
+
     @track isPermissionError = false;
     @track permissionErrorTitle;
     @track permissionErrorMessage;
@@ -70,7 +69,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     label = { messageLoading, geSave, geCancel };
     erroredFields = [];
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    
+
     @track _dataRow; // Row being updated when in update mode
     @track isAccessible = true;
     @track opportunities;
@@ -168,33 +167,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         recordId: '$batchId',
         fields: FORM_TEMPLATE_FIELD
     })
-    wiredBatch({ data, error }) {
+    wiredBatch({data, error}) {
         if (data) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
+            GeFormService.getFormTemplateById(this.formTemplateId)
+                .then(template => {
+                    let errorObject = checkPermissionErrors(template);
+                    if (errorObject) {
+                        this.dispatchEvent(new CustomEvent('permissionerror'));
+                        this.setPermissionsError(errorObject);
+                    }
+                    this.initializeForm(template);
+                })
+                .catch(err => {
+                    handleError(err);
+                });
         } else if (error) {
             handleError(error);
         }
     }
 
-    @wire(getRecord, {
-        recordId: '$formTemplateId',
-        fields: TEMPLATE_JSON_FIELD
-    })
-    wiredTemplate({ data, error }) {
-        if (data) {
-            GeFormService.getFormTemplate().then(response => {
-                let errorObject = checkPermissionErrors(response.formTemplate);
-                if (errorObject) {
-                    this.dispatchEvent(new CustomEvent('permissionerror'));
-                    this.setPermissionsError(errorObject)
-                }
-                this.initializeForm(response.formTemplate);
-            });
-        } else if (error) {
-            handleError(error);
-        }
-    }
-    
     handleCancel() {
         this.reset();
 
