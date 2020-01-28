@@ -31,7 +31,6 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     @wire(getObjectInfo, { objectApiName: OPPORTUNITY_OBJECT })
     wiredOpportunityObject(response) {
         if (response.data) {
-            console.log(deepClone(response.data));
             this.opportunityObject = response.data;
         }
 

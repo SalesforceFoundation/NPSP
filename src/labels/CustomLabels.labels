@@ -5483,6 +5483,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for modal to review donations</shortDescription>
+        <!-- {0} = an Account or Contact record Name -->
         <value>Review Donations for {0}</value>
     </labels>
     <labels>
