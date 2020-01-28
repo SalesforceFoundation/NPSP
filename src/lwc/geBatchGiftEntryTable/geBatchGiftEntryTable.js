@@ -13,7 +13,7 @@ import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBa
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
-import geActionOpen from '@salesforce/label/c.geActionOpen';
+import commonOpen from '@salesforce/label/c.commonOpen';
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
@@ -41,7 +41,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         type: 'action',
         typeAttributes: {
             rowActions: [
-                {label: geActionOpen, name: 'open'},
+                {label: commonOpen, name: 'open'},
                 {label: bgeActionDelete, name: 'delete'}
             ],
             menuAlignment: 'auto'
