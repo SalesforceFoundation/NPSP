@@ -5071,7 +5071,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Body message in modal to review donations</shortDescription>
+        <shortDescription>Body for modal to review matching Opportunities and Payments</shortDescription>
         <value>Select the record you want to update.</value>
     </labels>
     <labels>
