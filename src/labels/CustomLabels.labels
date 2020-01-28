@@ -2691,6 +2691,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error: record not created, missing required fields:</value>
     </labels>
     <labels>
+        <fullName>bdiAdvancedMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Advanced Mapping settings page</shortDescription>
+        <value>Advanced Mapping for Data Import &amp; Gift Entry</value>
+    </labels>
+    <labels>
         <fullName>bdiBatchException</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2833,14 +2841,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiCreated</shortDescription>
         <value>Created</value>
-    </labels>
-    <labels>
-        <fullName>bdiAdvancedMapping</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Data Import Advanced Mapping Summary</shortDescription>
-        <value>Data Import Advanced Mapping</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
