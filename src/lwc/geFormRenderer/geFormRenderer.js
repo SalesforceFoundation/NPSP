@@ -4,7 +4,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
-import geUpdate from '@salesforce/label/c.labelGeUpdate';
+import geUpdate from '@salesforce/label/c.commonUpdate';
 import geLabelService from 'c/geLabelService';
 import { DONATION_DONOR_FIELDS, DONATION_DONOR,
          handleError,
@@ -109,7 +109,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             } else {
                 this.sections = formTemplate.layout.sections;
             }
-            this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+
+            if (this.batchId) {
+                this.dispatchEvent(new CustomEvent('sectionsretrieved'));
+            }
         }
     }
 
