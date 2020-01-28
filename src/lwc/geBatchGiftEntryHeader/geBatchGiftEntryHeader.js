@@ -5,7 +5,7 @@ import {NavigationMixin} from 'lightning/navigation';
 import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
 import BATCH_DRY_RUN_LABEL from '@salesforce/label/c.bgeBatchDryRun';
 import PROCESS_BATCH_LABEL from '@salesforce/label/c.bgeProcessBatch';
-import EDIT_BUTTON_LABEL from '@salesforce/label/c.stgBtnEdit';
+import EDIT_BATCH_INFO_LABEL from '@salesforce/label/c.geEditBatchInfo';
 import TAB_HEADER_LABEL from '@salesforce/label/c.bgeTabHeader';
 
 import alignClassNSWithEnvironment
@@ -16,7 +16,7 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
 
     batchDryRunLabel = BATCH_DRY_RUN_LABEL;
     processBatchLabel = PROCESS_BATCH_LABEL;
-    editButtonLabel = EDIT_BUTTON_LABEL;
+    editButtonLabel = EDIT_BATCH_INFO_LABEL;
     tabHeaderLabel = TAB_HEADER_LABEL;
     bdiDataImportPageName;
 
@@ -48,9 +48,8 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
             case PROCESS_BATCH_LABEL:
                 this.navigateToDataImportProcessingPage();
                 break;
-            case EDIT_BUTTON_LABEL:
-                //TODO:load batch into new hge batch creation/editing wizard when ready
-                this.navigateToBatchEditPage();
+            case EDIT_BATCH_INFO_LABEL:
+                this.editBatch();
                 break;
         }
     }
@@ -77,5 +76,11 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
                 actionName: 'edit'
             }
         });
+    }
+
+    editBatch() {
+        this.dispatchEvent(new CustomEvent(
+            'edit', {detail: this.batchId}
+        ));
     }
 }

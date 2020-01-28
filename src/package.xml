@@ -727,6 +727,7 @@
         <members>CRLP_SelectField</members>
         <members>CRLP_Tooltip</members>
         <members>GE_GiftEntry</members>
+        <members>GE_GiftEntryForm</members>
         <members>GE_TemplateBuilder</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
@@ -1900,6 +1901,7 @@
         <members>commonFieldLabel</members>
         <members>commonNext</members>
         <members>commonNoItems</members>
+        <members>commonOpen</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonSave</members>
@@ -1907,6 +1909,7 @@
         <members>commonTemplate</members>
         <members>commonTemplates</members>
         <members>commonUnknownError</members>
+        <members>commonUpdate</members>
         <members>commonViewAll</members>
         <members>commonViewMore</members>
         <members>commonWarning</members>
@@ -1939,7 +1942,6 @@
         <members>exceptionValidationRule</members>
         <members>flsError</members>
         <members>flsReadAccessError</members>
-        <members>geActionOpen</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveFieldDown</members>
@@ -1981,6 +1983,7 @@
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>
         <members>geEnableGiftEntrySuccess</members>
+        <members>geEditBatchInfo</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
         <members>geErrorDonorTypeValidation</members>
@@ -2180,7 +2183,6 @@
         <members>isARequiredField</members>
         <members>labelGeCancel</members>
         <members>labelGeSave</members>
-        <members>labelGeUpdate</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>
@@ -3321,7 +3323,6 @@
         <members>bdiObjectMappings</members>
         <members>geAutocomplete</members>
         <members>geAutocompleteOption</members>
-        <members>geBatchGiftEntryApp</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
@@ -3334,6 +3335,7 @@
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
         <members>geFormWidgetRow</members>
+        <members>geGiftEntryFormApp</members>
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
