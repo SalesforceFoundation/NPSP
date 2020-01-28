@@ -1900,6 +1900,7 @@
         <members>commonError</members>
         <members>commonFieldLabel</members>
         <members>commonNext</members>
+        <members>commonNo</members>
         <members>commonNoItems</members>
         <members>commonOpen</members>
         <members>commonReadMore</members>
@@ -1913,6 +1914,7 @@
         <members>commonViewAll</members>
         <members>commonViewMore</members>
         <members>commonWarning</members>
+        <members>commonYes</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
         <members>conMergeErrNoPersonAccounts</members>
@@ -1966,6 +1968,12 @@
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
+        <members>geBodyMatchingApplyNewPayment</members>
+        <members>geBodyMatchingNewOpportunity</members>
+        <members>geBodyMatchingNoPayments</members>
+        <members>geBodyMatchingPendingDonation</members>
+        <members>geBodyMatchingSelectRecord</members>
+        <members>geBodyMatchingUpdatingDonation</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
         <members>geButtonBuilderNavBackFormFields</members>
@@ -1976,6 +1984,12 @@
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
         <members>geButtonFormFieldsModalDeleteSectionAndFields</members>
+        <members>geButtonMatchingNewOpportunity</members>
+        <members>geButtonMatchingNewPayment</members>
+        <members>geButtonMatchingReviewDonations</members>
+        <members>geButtonMatchingUpdateDonationSelection</members>
+        <members>geButtonMatchingUpdateOpportunity</members>
+        <members>geButtonMatchingUpdatePayment</members>
         <members>geButtonNewBatch</members>
         <members>geButtonNewSingleGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
@@ -2009,6 +2023,9 @@
         <members>geHeaderFormFieldsModalSectionSettings</members>
         <members>geHeaderFormFieldsRightCol</members>
         <members>geHeaderGiftEntry</members>
+        <members>geHeaderMatchingOpportunity</members>
+        <members>geHeaderMatchingPayment</members>
+        <members>geHeaderMatchingReviewDonations</members>
         <members>geHeaderNewSection</members>
         <members>geHeaderNewTemplate</members>
         <members>geHeaderPageLevelError</members>
@@ -3324,6 +3341,9 @@
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
+        <members>geDonationMatching</members>
+        <members>geDonationMatchingOpportunityCard</members>
+        <members>geDonationMatchingPaymentCard</members>
         <members>geFormField</members>
         <members>geFormFieldLookup</members>
         <members>geFormFieldPicklist</members>
@@ -3337,6 +3357,7 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
         <members>geTemplateBuilderFormField</members>
@@ -3352,6 +3373,7 @@
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
         <members>util</members>
+        <members>utilCard</members>
         <members>utilCommon</members>
         <members>utilDedicatedListener</members>
         <members>utilDualListbox</members>
