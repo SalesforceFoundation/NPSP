@@ -1531,8 +1531,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Validate RD Contact update when a closed opportunity exists on the RD</shortDescription>
-        <value>You can't change the Contact on a Recurring Donation that has Closed Opportunities.</value>
+        <shortDescription>Validate RD Contact/Account update when a closed opportunity exists on the RD</shortDescription>
+        <value>You can't change the donor information on a Recurring Donation that has Closed Opportunities.</value>
     </labels>
     <labels>
         <fullName>RD2_CurrentScheduleTitle</fullName>
