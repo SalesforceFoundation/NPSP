@@ -39,6 +39,8 @@ private class OPP_OpportunityNaming_TEST
 {
     private static final Date CLOSE_DATE = Date.today().addDays(1);
 
+    private static final Datetime CONVERT_CLOSE_DATE = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
+
     /****
      * @description Creates data required for unit tests
      */
@@ -309,8 +311,7 @@ private class OPP_OpportunityNaming_TEST
 
             String oppName = getContact().Name;
             oppName += ' ' + '$8';
-            DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
-            oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
+            oppName +=  ' ' + CONVERT_CLOSE_DATE.format('yyyy.MM.dd');
             System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
         }
 
@@ -340,8 +341,7 @@ private class OPP_OpportunityNaming_TEST
             List<Opportunity> oppCreated = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE Id = :opp.id];
             String oppName = getContact().Name;
             oppName += ' ' + '$8';
-            DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
-            oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
+            oppName +=  ' ' + CONVERT_CLOSE_DATE.format('yyyy.MM.dd');
             System.assertEquals(oppName, oppCreated[0].Name, 'The name should be calculated based on the setting.');
 
         }
@@ -361,8 +361,7 @@ private class OPP_OpportunityNaming_TEST
 
         String oppName = getContact().Name;
         oppName += ' ' + '$10';
-        DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
-        oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
+        oppName +=  ' ' + CONVERT_CLOSE_DATE.format('yyyy.MM.dd');
         System.assertEquals(oppName, queryOpp.Name, 'The name should be updated after the refresh name button is clicked.');
 
     }
@@ -402,8 +401,7 @@ private class OPP_OpportunityNaming_TEST
         queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :getContact().accountId];
         String oppName = getContact().Name;
         oppName += ' ' + '$8';
-        DateTime closeDatetime = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
-        oppName +=  ' ' + closeDatetime.format('yyyy.MM.dd');
+        oppName +=  ' ' + CONVERT_CLOSE_DATE.format('yyyy.MM.dd');
         System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated after the batch is run.');
 
     }
