@@ -351,7 +351,7 @@ const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
             }
         }
     }
-    return fieldNames;
+    return fieldNames.length !== 0 ? fieldNames : ['Id'];
 };
 
 /*******************************************************************************
