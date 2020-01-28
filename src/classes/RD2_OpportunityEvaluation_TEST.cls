@@ -43,6 +43,7 @@ private class RD2_OpportunityEvaluation_TEST {
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
+    private static final Integer MONTHS_TO_YEAR_END = START_DATE.monthsBetween(Date.newInstance(2020, 1, 1));
 
     /****
     * @description Creates data required for unit tests
@@ -90,20 +91,36 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-     * @description Verifies closed Recurring Donations are not processed in the Opp evaluation batch
+     * @description Verifies closed Recurring Donations are processed in the Opp evaluation batch
      */
     @IsTest
-    private static void shouldNotProcessClosedRDs() {
+    private static void shouldProcessClosedRDs() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        final Date today = START_DATE.addMonths(1);
+        RD2_ScheduleService.currentDate = today;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withStatusClosed()
             .build();
         insert rd;
 
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        insert getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(START_DATE)
+            .build();
 
-        assertBatchJobIteration(0);
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        assertBatchJobIteration(1);
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated for a Closed RD');
+        System.assertEquals(0, rd.NextYearValue__c,
+            'Next Year Value should be zero for a Closed RD');
     }
 
     /**
@@ -333,9 +350,8 @@ private class RD2_OpportunityEvaluation_TEST {
     private static void shouldCreateNextOppWhenRDNextDonationDateIsOutdated() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        final Date prevCloseDate = START_DATE;
-        Date today = prevCloseDate.addDays(1);
-        final Date nextDonationDate = prevCloseDate.addMonths(1);
+        Date today = START_DATE.addDays(1);
+        final Date nextDonationDate = START_DATE.addMonths(1);
         RD2_ScheduleService.currentDate = today;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
@@ -343,7 +359,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         insert getOpportunityBuilder(rd)
             .withOpenStage()
-            .withCloseDate(prevCloseDate)
+            .withCloseDate(START_DATE)
             .build();
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
@@ -361,12 +377,12 @@ private class RD2_OpportunityEvaluation_TEST {
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(nextCloseDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should match');
+        System.assertEquals(nextCloseDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be updated');
 
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         System.assertEquals(2, oppById.size(), 'New Opp should be created: ' + oppById.values());
 
-        System.assertEquals(prevCloseDate, oppById.remove(opps[0].Id).CloseDate,
+        System.assertEquals(START_DATE, oppById.remove(opps[0].Id).CloseDate,
             'Close Date should be unchanged for the existing Opp');
         System.assertEquals(nextCloseDate, oppById.values()[0].CloseDate,
             'Close Date on the new Opp should match next Close Date after today');
@@ -406,8 +422,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         configInvalidOppRecordTypeId();
 
-        final Date today = START_DATE.addMonths(1).addDays(1);
-        final Date nextCloseDate = START_DATE.addMonths(2);
+        final Date today = START_DATE.addMonths(1).addDays(1);//after Oct Close Date
         RD2_ScheduleService.currentDate = today;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
@@ -422,6 +437,12 @@ private class RD2_OpportunityEvaluation_TEST {
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'An error should be created: ' + errors);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c * 2, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated to include installments for the rest of the year');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated for the next year projected installments');
     }
 
     /**
@@ -539,21 +560,38 @@ private class RD2_OpportunityEvaluation_TEST {
     */
     @IsTest
     private static void shouldCreateNextOppWhenDisableFirstInstallment() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        String disableFirstOption = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
-
-        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
-            'InstallmentOppAutoCreateOption__c' => disableFirstOption
-        });
-        
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
-        insert rd;
-
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
+        npe03__Recurring_Donation__c rd = runInstallmentCreateTestFor(
+            RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()
+        );
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(1, opps.size(), 'The next installment Opp should be created: ' + opps);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated for the current year');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated for the next year projected installments');
+    }
+
+    /**
+    * @description Verifies the next Opportunity on Recurring Donation is created
+    * when Installment Auto Creation Setting is set to Always Create Next Installment.
+    */
+    @IsTest
+    private static void shouldCreateNextOppWhenAlwaysCreateNextInstallment() {
+        npe03__Recurring_Donation__c rd = runInstallmentCreateTestFor(
+            RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()
+        );
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'The next installment Opp should be created: ' + opps);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated for the current year');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated for the next year projected installments');
     }
  
     /**
@@ -561,23 +599,76 @@ private class RD2_OpportunityEvaluation_TEST {
     * when Installment Auto Creation Setting is set to Disable All Installments.
     */
     @IsTest
-    private static void shouldNotCreateNextOppWhenDisableAllInstallments() {
+    private static void shouldNotCreateNextOppWhenDisableAllInstallments() {        
+        npe03__Recurring_Donation__c rd = runInstallmentCreateTestFor(
+            RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()
+        );
+        
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(0, opps.size(), 'The next installment Opp should not be created: ' + opps);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated for the current year');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated for the next year projected installments');
+    }
+
+    /**
+    * @description Created the Recurring Donation and executes the batch for the specified RD settings option
+    * @param createOption Installment Opportunity Create option
+    * @return npe03__Recurring_Donation__c
+    */
+    private static npe03__Recurring_Donation__c runInstallmentCreateTestFor(String createOption) {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        String disableAllOption = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
-
         RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
-            'InstallmentOppAutoCreateOption__c' => disableAllOption
+            'InstallmentOppAutoCreateOption__c' => createOption
         });
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
         
-        runBatch(new RD2_OpportunityEvaluation_BATCH());
-        
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(0, opps.size(), 'The next installment Opp should not be created: ' + opps);
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        return rd;
     }
+
+    /**
+     * @description Verifies Current and Next Year Values are updated by the nightly batch
+     * when the current/next year changes
+     */
+    @IsTest
+    private static void shouldUpdateYearValuesWhenYearChanges() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Date today = START_DATE.addMonths(1);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(START_DATE)
+            .build();
+
+        today = Date.newInstance(2020, 1, 1);//New Year
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated for the new current year');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated for the next year projected installments');
+    }
+
+
+
 
     // Helpers
     //////////////

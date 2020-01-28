@@ -250,7 +250,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
-        List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
             RecurringDonation rdRecord = new RecurringDonation(rd);

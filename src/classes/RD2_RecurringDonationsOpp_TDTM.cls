@@ -84,6 +84,10 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             rdIds = getRecurringDonationIds(oldOpps);
         }
+
+        if (rdIds.isEmpty()) {
+            return;
+        }
                                            
         new RD2_OpportunityEvaluationService()
             .withRds(rdIds)
