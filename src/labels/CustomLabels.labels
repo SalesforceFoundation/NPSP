@@ -5482,7 +5482,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for modal to review donations</shortDescription>
+        <shortDescription>Header for modal to review matching Opportunities and Payments</shortDescription>
         <value>Review Donations for {0}</value>
     </labels>
     <labels>
