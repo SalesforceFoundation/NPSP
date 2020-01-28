@@ -81,8 +81,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     private Data_Import_Settings__c dataImportSettings { get; set; }
 
+    private Gift_Entry_Settings__c giftEntrySettings { get; set; }
+
     /*******************************************************************************************************
-    * @description Boolean used for toggle value in the visualforce page
+    * @description Boolean used for the Advanced Mapping toggle value in the visualforce page
     */
     public Boolean isAdvancedMappingEnabled {
         get {
@@ -90,6 +92,17 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 return true;
             }
             return false;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description Boolean used for the Gift Entry toggle value in the visualforce page
+    */
+    public Boolean isGiftEntryEnabled {
+        get{
+            giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+            return giftEntrySettings.Enable_Gift_Entry__c;
         }
         set;
     }
@@ -214,6 +227,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             dataImportSettings =
                 BDI_MigrationMappingUtility.updateCustomSettings(BDI_MigrationMappingUtility.HELP_TEXT,
                     String.valueOf(Metadata.DeployStatus.Succeeded));
+            disableGiftEntry();
             addPageMessage(ApexPages.Severity.INFO, Label.stgDeploymentHelpTextMappingEnabled);
         } catch (Exception e) {
             addPageMessage(ApexPages.Severity.ERROR,
@@ -343,5 +357,43 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     private void addPageMessage(ApexPages.Severity severity, String message) {
         ApexPages.addMessage(new ApexPages.Message(severity, message));
+    }
+
+    /*******************************************************************************************************
+    * @description Action Method to enable Gift Entry
+    * @return null
+    */
+    public PageReference enableGiftEntry() {
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        if (!giftEntrySettings.Enable_Gift_Entry__c) {
+                giftEntrySettings.Enable_Gift_Entry__c = true;
+            try{
+                upsert giftEntrySettings;
+                addPageMessage(ApexPages.Severity.CONFIRM, System.Label.geDisableGiftEntryInfo);
+            }catch(DmlException e){
+                addPageMessage(ApexPages.Severity.ERROR,
+                        e.getDmlMessage(0));
+            }
+        }
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Action Method to disable Gift Entry
+    * @return null
+    */
+    public PageReference disableGiftEntry() {
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        if (giftEntrySettings.Enable_Gift_Entry__c) {
+                giftEntrySettings.Enable_Gift_Entry__c = false;
+            try{
+                upsert giftEntrySettings;
+                addPageMessage(ApexPages.Severity.INFO, System.Label.geEnableGiftEntrySuccess);
+            }catch(DmlException e){
+                addPageMessage(ApexPages.Severity.ERROR,
+                        e.getDmlMessage(0));
+            }
+        }
+        return null;
     }
 }

@@ -1977,8 +1977,10 @@
         <members>geButtonNewBatch</members>
         <members>geButtonNewSingleGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
+        <members>geDisableGiftEntryInfo</members>
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>
+        <members>geEnableGiftEntrySuccess</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
         <members>geErrorDonorTypeValidation</members>

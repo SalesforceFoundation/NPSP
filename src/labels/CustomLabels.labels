@@ -5123,12 +5123,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Create Template</value>
     </labels>
     <labels>
-        <fullName>geDonorColumnLabel</fullName>
+        <fullName>geDisableGiftEntryInfo</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
-        <value>Donor</value>
+        <shortDescription>Toast reporting Gift Entry is disabled</shortDescription>
+        <value>Gift Entry Disabled</value>
     </labels>
     <labels>
         <fullName>geDonationColumnLabel</fullName>
@@ -5137,6 +5137,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Label for column in batch gift entry table that links to the matched Gift.</shortDescription>
         <value>Donation</value>
+    </labels>
+    <labels>
+        <fullName>geDonorColumnLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
+        <value>Donor</value>
+    </labels>
+    <labels>
+        <fullName>geEnableGiftEntrySuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast reporting Gift Entry is enabled</shortDescription>
+        <value>Gift Entry Enabled</value>
     </labels>
     <labels>
         <fullName>geErrorCompleteThisField</fullName>
