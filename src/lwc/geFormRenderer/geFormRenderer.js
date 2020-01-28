@@ -15,7 +15,6 @@ import { getQueryParameters, isEmpty, isNotEmpty, format } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
-import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
@@ -120,36 +119,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         recordId: '$batchId',
         fields: FORM_TEMPLATE_FIELD
     })
-    wiredBatch({ data, error }) {
+    wiredBatch({data, error}) {
         if (data) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
+            GeFormService.getFormTemplateById(this.formTemplateId)
+                .then(template => {
+                    this.initializeForm(template);
+                })
+                .catch(err => {
+                    handleError(err);
+                });
         } else if (error) {
             handleError(error);
         }
-    }
-
-    @wire(getRecord, {
-        recordId: '$formTemplateId',
-        fields: TEMPLATE_JSON_FIELD
-    })
-    wiredTemplate({ data, error }) {
-        if (data) {
-            this.loadTemplate(
-                JSON.parse(data.fields[TEMPLATE_JSON_FIELD.fieldApiName].value));
-        } else if (error) {
-            handleError(error);
-        }
-    }
-
-    async loadTemplate(formTemplate) {
-        // With the change to using a Lookup field to connect a Batch to a Template,
-        // we can use getRecord to get the Template JSON.  But the GeFormService
-        // component still needs to be initialized with the field mappings, and the
-        // call to getFormTemplate() does that.
-        // TODO: Maybe initialize GeFormService with the field mappings in its connected
-        //       callback instead?
-        await GeFormService.getFormTemplate();
-        this.initializeForm(formTemplate);
     }
 
     handleCancel() {
