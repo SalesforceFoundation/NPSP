@@ -369,6 +369,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 giftEntrySettings.Enable_Gift_Entry__c = true;
             try {
                 upsert giftEntrySettings;
+                GE_DefaultTemplate.createDefaultTemplate();
                 addPageMessage(ApexPages.Severity.CONFIRM, System.Label.geEnableGiftEntrySuccess);
             } catch(DmlException e) {
                 addPageMessage(ApexPages.Severity.ERROR,
