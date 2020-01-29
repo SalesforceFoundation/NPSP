@@ -3466,6 +3466,7 @@
         <name>ReportType</name>
     </types>
     <types>
+        <members>DefaultGiftEntryTemplate</members>
         <members>CumulusStaticResources</members>
         <name>StaticResource</name>
     </types>
