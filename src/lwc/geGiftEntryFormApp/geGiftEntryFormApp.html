@@ -11,7 +11,8 @@
     <c-ge-form-renderer
             batch-id={recordId}
             onsubmit={handleSubmit}
-            onsectionsretrieved={handleSectionsRetrieved}>
+            onsectionsretrieved={handleSectionsRetrieved}
+            ontogglemodal={handleReviewDonationsModal}>
     </c-ge-form-renderer>
 
     <template if:true={isBatchMode}>

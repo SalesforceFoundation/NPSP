@@ -1,9 +1,16 @@
 <template>
     <template if:true={isAccessible}>
         <lightning-layout multiple-rows='true' class='ge-form-container slds-p-bottom_medium'>
-            <lightning-layout-item size='12'>
-                <c-ge-review-donations ontogglemodal={toggleModal}></c-ge-review-donations>
-            </lightning-layout-item>
+
+            <template if:true={hasPendingDonations}>
+                <lightning-layout-item size='12'>
+                    <c-ge-review-donations ontogglemodal={toggleModal}
+                                           onchangeselecteddonation={handleChangeSelectedDonation}
+                                           opportunities={opportunities}>
+                    </c-ge-review-donations>
+                </lightning-layout-item>
+            </template>
+
             <lightning-layout-item size='12' class='slds-card'>
                 <div if:true={hasPageLevelError} class="slds-size_1-of-1 slds-card slds-p-around_small">
                     <c-util-page-level-message variant='error'>
@@ -20,7 +27,10 @@
                     </c-util-page-level-message>
                 </div>
                 <template for:each={sections} for:item='section'>
-                    <c-ge-form-section key={section.id} section={section}></c-ge-form-section>
+                    <c-ge-form-section key={section.id}
+                                       section={section}
+                                       onchangelookup={handleChangeLookup}>
+                    </c-ge-form-section>
                 </template>
             </lightning-layout-item>
         </lightning-layout>

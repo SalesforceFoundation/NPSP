@@ -23,7 +23,7 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     // Expose custom labels to template
     CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
 
-    @api opportunity;
+    @api opportunityWrapper;
 
     @track opportunityObject;
     @track wiredOpportunityRecord;
@@ -52,6 +52,10 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
 
     get isLoading() {
         return this.opportunityObject && this.wiredOpportunityRecord ? false : true;
+    }
+
+    get opportunity() {
+        return this.opportunityWrapper.opportunity;
     }
 
     get opportunityComputedName() {
@@ -87,13 +91,12 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     }
 
     get hasPayments() {
-        return this.opportunity &&
-            this.opportunity.npe01__OppPayment__r &&
-            this.opportunity.npe01__OppPayment__r.length > 0;
+        return this.opportunityWrapper.unpaidPayments &&
+            this.opportunityWrapper.unpaidPayments.length > 0;
     }
 
     get opportunityPayments() {
-        return this.hasPayments ? this.opportunity.npe01__OppPayment__r : [];
+        return this.hasPayments ? this.opportunityWrapper.unpaidPayments : [];
     }
 
     getFieldDetails(fieldInfo, wiredOpportunityRecord) {

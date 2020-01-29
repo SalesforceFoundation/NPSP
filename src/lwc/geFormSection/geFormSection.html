@@ -22,7 +22,9 @@
                         padding='around-small' 
                         size='6' 
                         medium-device-size='3'>
-                    <c-ge-form-field element={element}></c-ge-form-field>
+                    <c-ge-form-field element={element}
+                                     onchangelookup={handleChangeLookup}>
+                    </c-ge-form-field>
                 </lightning-layout-item>
             </template>
             <template if:true={element.componentName}>

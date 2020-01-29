@@ -26,8 +26,22 @@ export default class GeFormField extends LightningElement {
 
     handleValueChangeSync = (event) => {
         this.value = this.getValueFromChangeEvent(event);
+        // TODO: The custom event below isn't carrying up any of the assigned properties (field and value)
+        // We need to set a detail property in the custom event holding whatever we want to pass in custom event.
         const evt = new CustomEvent('change', {field: this.element, value: this.value});
         this.dispatchEvent(evt);
+
+        if (this.isLookup) {
+            const detail = {
+                recordId: this.value,
+                fieldApiName: this.element.fieldApiName
+            }
+            const changeLookupEvent = new CustomEvent(
+                'changelookup',
+                { detail: detail });
+            this.dispatchEvent(changeLookupEvent);
+        }
+
         if(this.isRichText) {
             this.checkRichTextValidity();
         }

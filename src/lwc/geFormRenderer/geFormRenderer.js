@@ -20,6 +20,19 @@ import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JS
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
+import getOpenDonations from '@salesforce/apex/GE_FormRendererService.getOpenDonations';
+import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DATA_IMPORT_CONTACT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.DonationImported__c';
+import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
+import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
+import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
+
+// Labels are used in BDI_MatchDonations class
+import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
+import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
+import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
+
 const mode = {
     CREATE: 'create',
     UPDATE: 'update'
@@ -49,6 +62,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api pageLevelErrorMessageList = [];
     @track _dataRow; // Row being updated when in update mode
     @track isAccessible = true;
+    @track opportunities;
+    @track selectedDonation;
+    @track blankDataImportRecord;
+
+    get hasPendingDonations() {
+        return this.opportunities && this.opportunities.length > 0 ? true : false;
+    }
 
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
     wiredGetRecordMethod({ error, data }) {
@@ -204,9 +224,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }));
         } else {
-            GeFormService.handleSave(sectionsList, this.donorRecord).then(opportunityId => {
-                this.navigateToRecordPage(opportunityId);
-            })
+            GeFormService.handleSave(sectionsList, this.donorRecord, this.blankDataImportRecord)
+                .then(opportunityId => {
+                    this.navigateToRecordPage(opportunityId);
+                })
                 .catch(error => {
 
                     this.toggleSpinner();
@@ -548,5 +569,71 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     */
     toggleModal(event) {
         this.dispatchEvent(new CustomEvent('togglemodal', { detail: event.detail }));
+    }
+
+    // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
+    handleChangeLookup(event) {
+        const detail = event.detail;
+        const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
+        const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+
+        if (detail.recordId && (detail.fieldApiName === account || detail.fieldApiName === contact)) {
+            console.log('IS A DONOR LOOKUP FIELD CHANGE');
+            const donationType = detail.fieldApiName === account ? 'account' : 'contact';
+            getOpenDonations({ donorId: detail.recordId, donorType: donationType})
+                .then(response => {
+                    if (isNotEmpty(response)) {
+                        this.opportunities = JSON.parse(response);
+                    } else {
+                        this.opportunities = undefined;
+                    }
+                })
+                .catch(error => {
+                    handleError(error);
+                });
+        } else {
+            this.selectedDonation = undefined;
+            this.opportunities = undefined;
+        }
+    }
+
+    handleChangeSelectedDonation(event) {
+        const selectedDonation = event.detail.selectedDonation;
+        const donationType = event.detail.donationType;
+
+        let blankDataImportRecord = {};
+
+        const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
+        const donationImportStatus = DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName;
+        const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
+        const paymentImportStatus = DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName;
+
+        if (selectedDonation) {
+            if (donationType === 'opportunity') {
+                blankDataImportRecord[donationImported] = selectedDonation.Id;
+
+                if (selectedDonation.applyPayment) {
+                    blankDataImportRecord[donationImportStatus] = applyNewPayment;
+                } else {
+                    blankDataImportRecord[donationImportStatus] = userSelectedMatch;
+                }
+            } else if (donationType === 'payment') {
+                blankDataImportRecord[paymentImported] = selectedDonation.Id;
+                blankDataImportRecord[paymentImportStatus] = userSelectedMatch;
+                blankDataImportRecord[donationImported] = selectedDonation.npe01__Opportunity__c;
+                blankDataImportRecord[donationImportStatus] = userSelectedMatch;
+            }
+
+        } else {
+            blankDataImportRecord[donationImportStatus] = userSelectedNewOpp;
+        }
+        blankDataImportRecord = {
+            ...blankDataImportRecord,
+            npsp__Expected_Count_of_Gifts__c: 0,
+            npsp__Expected_Total_Batch_Amount__c: 0,
+            npsp__RequireTotalMatch__c: false,
+        }
+        this.blankDataImportRecord = blankDataImportRecord;
+        console.log('Prepopulated Data Import: ', blankDataImportRecord);
     }
 }

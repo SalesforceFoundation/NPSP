@@ -150,4 +150,11 @@ export default class GeFormSection extends LightningElement {
         });
     }
 
+    handleChangeLookup(event) {
+        const recordId = event.detail;
+        const changeLookupEvent = new CustomEvent(
+            'changelookup',
+            { detail: recordId });
+        this.dispatchEvent(changeLookupEvent);
+    }
 }
