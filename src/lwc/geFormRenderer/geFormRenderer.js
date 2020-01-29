@@ -592,6 +592,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
         if (detail.recordId && (detail.fieldApiName === account || detail.fieldApiName === contact)) {
+            // TODO: Future handle Account/Contact priority depending on value of Data Import: Donation Donor.
             const donorType = detail.fieldApiName === account ? 'Account' : 'Contact';
             this.selectedDonorId = detail.recordId;
             this.selectedDonorType = donorType;
