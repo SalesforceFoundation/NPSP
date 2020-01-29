@@ -2,6 +2,11 @@ import {LightningElement, api, track} from 'lwc';
 import {fireEvent, registerListener} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 import {isEmpty, isNotEmpty, isNumeric} from 'c/utilCommon';
+import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
+import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
+import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
+const ALLOCATION_AMOUNT = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
+const ALLOCATION_PERCENT = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
 
 export default class GeFormWidgetRow extends LightningElement {
     @api rowIndex;
@@ -50,10 +55,10 @@ export default class GeFormWidgetRow extends LightningElement {
      */
     @api
     reallocateByPercent(totalDonation) {
-        const percent = this.rowRecord['Allocation__c.Percent__c'];
+        const percent = this.rowRecord[ALLOCATION_PERCENT];
         if(isNumeric(percent) && percent >= 0) {
             const detail = {
-                targetFieldName: 'Allocation__c.Percent__c',
+                targetFieldName: ALLOCATION_PERCENT,
                 value: percent
             };
             this.handleChange({ detail }, totalDonation);
@@ -82,20 +87,20 @@ export default class GeFormWidgetRow extends LightningElement {
     handlePercentChange(detail, total) {
         const { targetFieldName, value } = detail;
         let payload = { [targetFieldName]: value };
-        if(isNumeric(value) && value > 0 && !this.isFieldDisabled('Allocation__c.Amount__c')) {
+        if(isNumeric(value) && value > 0 && !this.isFieldDisabled(ALLOCATION_AMOUNT)) {
             // if a percent is entered, the amount field should be disabled
-            this.disableField('Allocation__c.Amount__c');
+            this.disableField(ALLOCATION_AMOUNT);
         } else if(isEmpty(value) || value === 0) {
-            if(this.isFieldDisabled('Allocation__c.Amount__c')) {
-                this.enableField('Allocation__c.Amount__c');
+            if(this.isFieldDisabled(ALLOCATION_AMOUNT)) {
+                this.enableField(ALLOCATION_AMOUNT);
             }
         }
 
         // calculate what percent of the total we should set this row's allocation to
         const amount = this.calculateAmount(value, total);
-        this.setFieldValue('Allocation__c.Amount__c', amount);
+        this.setFieldValue(ALLOCATION_AMOUNT, amount);
         // add the allocation amount to the update event
-        payload['Allocation__c.Amount__c'] = amount;
+        payload[ALLOCATION_AMOUNT] = amount;
         return payload;
     }
 
@@ -107,8 +112,8 @@ export default class GeFormWidgetRow extends LightningElement {
     handleAmountChange(detail) {
         const { targetFieldName, value } = detail;
         let payload = { [targetFieldName]: value };
-        if(isNumeric(value) && value > 0 && !this.isFieldDisabled('Allocation__c.Percent__c')) {
-            this.disableField('Allocation__c.Percent__c');
+        if(isNumeric(value) && value > 0 && !this.isFieldDisabled(ALLOCATION_PERCENT)) {
+            this.disableField(ALLOCATION_PERCENT);
         }
 
         return payload;
@@ -123,10 +128,10 @@ export default class GeFormWidgetRow extends LightningElement {
         let payload;
         // if a total was passed in, use it for calculating percent allocations, otherwise use this.totalAmount
         const totalForCalculation = isNumeric(total) ? total : this.totalAmount;
-        if(event.detail.targetFieldName === 'Allocation__c.Percent__c') {
+        if(event.detail.targetFieldName === ALLOCATION_PERCENT) {
             // handle the percent field being updated
             payload = this.handlePercentChange(event.detail, totalForCalculation);
-        } else if(event.detail.targetFieldName === 'Allocation__c.Amount__c') {
+        } else if(event.detail.targetFieldName === ALLOCATION_AMOUNT) {
             // handle the Amount field being updated
             payload = this.handleAmountChange(event.detail);
         }
