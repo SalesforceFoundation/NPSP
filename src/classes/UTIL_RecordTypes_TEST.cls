@@ -54,7 +54,6 @@ public class UTIL_RecordTypes_TEST {
         ];
         if (!oppRTs.isEmpty()) {
             Id rtId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, oppRTs[0].Name);
-            System.debug('RecordType Name=' + oppRTs[0].Name);
             System.assertEquals(oppRTs[0].Id, rtId, oppRTs[0].Name);
             String rtName = UTIL_RecordTypes_API.GetRecordTypeName('Opportunity', oppRTs[0].Id);
             System.assertEquals(oppRTs[0].Name, rtName);
