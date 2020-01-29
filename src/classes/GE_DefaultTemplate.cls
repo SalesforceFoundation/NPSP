@@ -129,10 +129,14 @@ public with sharing class GE_DefaultTemplate {
                     if (updatedDevNameMap.containsKey(partialDevName)) {
                         element.dataImportFieldMappingDevNames.set(0, updatedDevNameMap.get(partialDevName));
                     } else {
-                        String namespacedFullDevName = UTIL_Namespace.StrTokenNSPrefix(element.dataImportFieldMappingDevNames.get(0));
+                        String fullDevName = element.dataImportFieldMappingDevNames.get(0);
+
+                        if (fullDevName.endsWith('__c')) {
+                            fullDevName = UTIL_Namespace.StrTokenNSPrefix(fullDevName);
+                        }
 
                         // If it is a DI field, apply the namespace, if there is one. 
-                        element.dataImportFieldMappingDevNames.set(0, namespacedFullDevName);
+                        element.dataImportFieldMappingDevNames.set(0, fullDevName);
                     }
                 }
             }
@@ -142,7 +146,10 @@ public with sharing class GE_DefaultTemplate {
         List<FORM_BatchHeaderField> batchHeaderFieldList = defaultTemplate.batchHeaderFields;
         
         for (FORM_BatchHeaderField batchHeaderField : batchHeaderFieldList) {
-            batchHeaderField.apiName = UTIL_Namespace.StrTokenNSPrefix(batchHeaderField.apiName);
+
+            if (batchHeaderField.apiName.endsWith('__c')) {
+                batchHeaderField.apiName = UTIL_Namespace.StrTokenNSPrefix(batchHeaderField.apiName);
+            }
         }
 
         newDefaultTemplate.Name = defaultTemplate.name;
