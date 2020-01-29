@@ -3345,6 +3345,7 @@
         <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>geTemplates</members>
+        <members>geWidgetService</members>
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>
