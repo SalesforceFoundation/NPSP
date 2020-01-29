@@ -111,13 +111,7 @@ class GeTemplateBuilderService {
     addWidgetsPlaceholder = (fieldMappingByDevName, objectMappingByDevName, fieldMappingsByObjMappingDevName) => {
 
         GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
-        console.log('GeWidgetService: ', GeWidgetService.WidgetDefinitions.geFormWidgetAllocation);
-        const allocationWidgetDefinition = GeWidgetService.WidgetDefinitions.geFormWidgetAllocation;
-
-        /*const allocationWidgetDefinition = getAllocationWidgetDefinition(
-            objectMappingByDevName,
-            fieldMappingByDevName);
-        console.log('allocationWidgetDefinition: ', allocationWidgetDefinition);*/
+        const allocationWidgetDefinition = GeWidgetService.definitions.geFormWidgetAllocation;
 
         fieldMappingByDevName.geFormWidgetAllocation = {
             DeveloperName: 'geFormWidgetAllocation',
