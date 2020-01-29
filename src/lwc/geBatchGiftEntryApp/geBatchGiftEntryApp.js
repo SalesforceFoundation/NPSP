@@ -1,6 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
-import {handleError} from 'c/utilTemplateBuilder';
 
 export default class GeBatchGiftEntryApp extends LightningElement {
     @api recordId;
@@ -21,8 +20,7 @@ export default class GeBatchGiftEntryApp extends LightningElement {
                 }
             )
             .catch(error => {
-                handleError(error);
-                event.detail.error();
+                event.detail.error(error);
             });
     }
 
