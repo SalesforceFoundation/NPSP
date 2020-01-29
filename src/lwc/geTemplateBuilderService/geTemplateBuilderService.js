@@ -2,6 +2,7 @@ import getFieldMappingSet from '@salesforce/apex/BDI_MappingServiceAdvanced.getF
 import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
+import GeWidgetService from 'c/geWidgetService';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
@@ -100,16 +101,16 @@ class GeTemplateBuilderService {
         return name;
     }
 
-    // TODO: Replace or delete later when actual widgets are in place.
     /*******************************************************************************
     * @description Placeholder method for mocking widgets in the UI.
     *
     * @param {object} fieldMappingByDevName: Map of field mappings.
     * @param {object} objectMappingByDevName: Map of object mappings.
     */
-    addWidgetsPlaceholder = (fieldMappingByDevName,
-        objectMappingByDevName,
-        fieldMappingsByObjMappingDevName) => {
+    addWidgetsPlaceholder = (fieldMappingByDevName, objectMappingByDevName, fieldMappingsByObjMappingDevName) => {
+
+        GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
+        const allocationWidgetDefinition = GeWidgetService.definitions.geFormWidgetAllocation;
 
         fieldMappingByDevName.geFormWidgetAllocation = {
             DeveloperName: 'geFormWidgetAllocation',
@@ -118,6 +119,8 @@ class GeTemplateBuilderService {
             Target_Field_Label: 'Allocations',
             Required: 'No',
             Element_Type: 'widget',
+            Widget_Object_Mapping_Developer_Name: allocationWidgetDefinition.objectMappingDeveloperName,
+            Widget_Field_Mapping_Developer_Names: allocationWidgetDefinition.fieldMappingDeveloperNames
         }
 
         objectMappingByDevName.Widgets = {
