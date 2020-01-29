@@ -42,7 +42,6 @@ public with sharing class FORM_PermissionValidator {
     
     public static final String OBJECT_CRUD_ERROR = 'CRUD';
     public static final String FLS_ERROR = 'FLS';
-    public static final String DATA_IMPORT_OBJECT = 'DataImport__c';
 
     FORM_Template template;
     Set<AccessLevel> accessLevels;
@@ -70,7 +69,7 @@ public with sharing class FORM_PermissionValidator {
                         
                         String targetObjDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Object_API_Name);
                         String targetFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Field_API_Name);
-                        String sourceObjDevName = UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT);
+                        String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
                         String sourceFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Source_Field_API_Name);
 
                         if(!isValid(sourceObjDevName, accessLevels)) {
