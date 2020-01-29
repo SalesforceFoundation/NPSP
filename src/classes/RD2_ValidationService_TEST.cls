@@ -478,9 +478,9 @@ private with sharing class RD2_ValidationService_TEST {
         insert rd;
 
         insert getOpportunityBuilder(rd)
-        .withCloseDate(rd.npe03__Next_Payment_Date__c.addMonths(-1))
-        .withClosedWonStage()
-        .build();
+            .withCloseDate(rd.npe03__Next_Payment_Date__c.addMonths(-1))
+            .withClosedWonStage()
+            .build();
 
         rd.npe03__Organization__c = organizations[1].Id;
 
@@ -573,7 +573,8 @@ private with sharing class RD2_ValidationService_TEST {
      * @return TEST_RecurringDonationBuilder instance
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
-        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+        return 
+            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withDefaultValues()
             .withAmount(100)
             .withPaymentMethod('Check')
@@ -582,7 +583,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withCalculateNextDonationDate();
     }
 
-        /**
+    /**
      * @description Instantiate an Opp builder for the specified Recurring Donation
      * @param rd Recurring Donation
      * @return TEST_OpportunityBuilder New Opp builder

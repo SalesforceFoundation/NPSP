@@ -109,8 +109,8 @@ public with sharing class RD2_ValidationService {
 
             validateActiveRecurringDonation(rd);
             
-            Boolean donorChangeApprove = validateDonorChange(rd, oldRd);
-            if (donorChangeApprove) {
+            Boolean isValid = validateDonorChange(rd, oldRd);
+            if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
         }
@@ -199,7 +199,6 @@ public with sharing class RD2_ValidationService {
     * @return Boolean True when both new and old account are organization accounts
     */
     private Boolean isOrganizationChange(Account newAcct, Account oldAcct) {
-        System.debug(newAcct + 'dsafdsaf' + oldAcct);
         return 
             newAcct != null
             && oldAcct != null
