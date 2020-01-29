@@ -1,8 +1,6 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
-import { CONTACT_INFO, ACCOUNT_INFO, 
-         DI_CONTACT1_IMPORTED_INFO, DI_ACCOUNT1_IMPORTED_INFO, 
-         DI_DONATION_DONOR_INFO, CONTACT1, ACCOUNT1, handleError } from 'c/utilTemplateBuilder';
+import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunRow
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 import {api} from "lwc";
@@ -153,17 +151,6 @@ class GeFormService {
                 if (value) {
                     diRecord[fieldWrapper.Source_Field_API_Name] = value;
                 }
-            }
-        }
-
-        if (record) {
-            // set the bdi imported fields for contact or account
-            if (record.apiName === CONTACT_INFO.objectApiName) {
-                diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
-                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = CONTACT1;
-            } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
-                diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
-                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = ACCOUNT1;
             }
         }
 
