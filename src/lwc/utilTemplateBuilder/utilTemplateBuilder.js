@@ -338,7 +338,7 @@ const generateId = () => {
 * @param apiName: the sObject api name
 */
 const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
-    let fieldNames = [];
+    let fieldNames = ['Id'];
 
     for (const section of formTemplate.layout.sections) {
         for (const element of section.elements) {
@@ -351,7 +351,7 @@ const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
             }
         }
     }
-    return fieldNames.length !== 0 ? fieldNames : ['Id'];
+    return fieldNames;
 };
 
 /*******************************************************************************
@@ -374,6 +374,7 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
 
     sections.forEach(section => {
         const elements = section.elements;
+  
         elements.forEach(element => {
             // set an empty default value
             element.recordValue = '';
@@ -387,6 +388,31 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
                     // get the record value and store it in the element
                     element.recordValue = record.fields[fieldName].value;
                 }
+
+                // di fields
+                if (objectName === DATA_IMPORT_INFO.objectApiName) {
+                    // set the value for the contact/account 1 imported
+                    if (element.fieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName &&
+                            record.apiName === CONTACT_INFO.objectApiName ||
+                            element.fieldApiName === DI_ACCOUNT1_IMPORTED_INFO.fieldApiName &&
+                            record.apiName === ACCOUNT_INFO.objectApiName) {
+                        element.defaultValue = record.id;
+                    }
+
+                    // set the value for donor type
+                    if (element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName) {
+                        if (record.apiName === CONTACT_INFO.objectApiName) {
+                            element.defaultValue = CONTACT1;
+                        }
+
+                        if (record.apiName === ACCOUNT_INFO.objectApiName) {
+                            element.defaultValue = ACCOUNT1;
+                        }
+                    }
+                }
+
+                
+
             }
         });
     });
