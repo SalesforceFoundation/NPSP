@@ -113,7 +113,7 @@
             </visibilityRule>
         </componentInstances>
         <componentInstances>
-            <componentName>geBatchGiftEntryApp</componentName>
+            <componentName>GE_GiftEntryForm</componentName>
             <visibilityRule>
                 <booleanFilter>1 AND 2</booleanFilter>
                 <criteria>

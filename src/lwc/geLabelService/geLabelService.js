@@ -16,6 +16,7 @@ import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
 import commonNext from '@salesforce/label/c.commonNext';
+import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
@@ -27,6 +28,7 @@ import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import commonViewAll from '@salesforce/label/c.commonViewAll';
 import commonViewMore from '@salesforce/label/c.commonViewMore';
 import commonWarning from '@salesforce/label/c.commonWarning';
+import commonYes from '@salesforce/label/c.commonYes';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
 import geAssistiveFieldDown from '@salesforce/label/c.geAssistiveFieldDown';
@@ -51,6 +53,12 @@ import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geBodyFormFieldsModalDeleteSection from '@salesforce/label/c.geBodyFormFieldsModalDeleteSection';
 import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
+import geBodyMatchingApplyNewPayment from '@salesforce/label/c.geBodyMatchingApplyNewPayment';
+import geBodyMatchingNewOpportunity from '@salesforce/label/c.geBodyMatchingNewOpportunity';
+import geBodyMatchingNoPayments from '@salesforce/label/c.geBodyMatchingNoPayments';
+import geBodyMatchingPendingDonation from '@salesforce/label/c.geBodyMatchingPendingDonation';
+import geBodyMatchingSelectRecord from '@salesforce/label/c.geBodyMatchingSelectRecord';
+import geBodyMatchingUpdatingDonation from '@salesforce/label/c.geBodyMatchingUpdatingDonation';
 import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
 import geBodyTemplatesTabDescription from '@salesforce/label/c.geBodyTemplatesTabDescription';
 import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
@@ -61,14 +69,20 @@ import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFields
 import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormFieldsCollapseAll';
 import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
 import geButtonFormFieldsModalDeleteSectionAndFields from '@salesforce/label/c.geButtonFormFieldsModalDeleteSectionAndFields';
+import geButtonMatchingNewOpportunity from '@salesforce/label/c.geButtonMatchingNewOpportunity';
+import geButtonMatchingNewPayment from '@salesforce/label/c.geButtonMatchingNewPayment';
+import geButtonMatchingReviewDonations from '@salesforce/label/c.geButtonMatchingReviewDonations';
+import geButtonMatchingUpdateDonationSelection from '@salesforce/label/c.geButtonMatchingUpdateDonationSelection';
+import geButtonMatchingUpdateOpportunity from '@salesforce/label/c.geButtonMatchingUpdateOpportunity';
+import geButtonMatchingUpdatePayment from '@salesforce/label/c.geButtonMatchingUpdatePayment';
 import geButtonNewBatch from '@salesforce/label/c.geButtonNewBatch';
 import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
-import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
+import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
 import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
 import geErrorDonorTypeValidationSingle from '@salesforce/label/c.geErrorDonorTypeValidationSingle';
-import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
+import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
 import geErrorFieldPermission from '@salesforce/label/c.geErrorFieldPermission';
 import geErrorPageLevelAdvancedMappingBody from '@salesforce/label/c.geErrorPageLevelAdvancedMappingBody';
 import geErrorPageLevelAdvancedMappingHeader from '@salesforce/label/c.geErrorPageLevelAdvancedMappingHeader';
@@ -91,6 +105,9 @@ import geHeaderFormFieldsModalRenameSection from '@salesforce/label/c.geHeaderFo
 import geHeaderFormFieldsModalSectionSettings from '@salesforce/label/c.geHeaderFormFieldsModalSectionSettings';
 import geHeaderFormFieldsRightCol from '@salesforce/label/c.geHeaderFormFieldsRightCol';
 import geHeaderGiftEntry from '@salesforce/label/c.geHeaderGiftEntry';
+import geHeaderMatchingOpportunity from '@salesforce/label/c.geHeaderMatchingOpportunity';
+import geHeaderMatchingPayment from '@salesforce/label/c.geHeaderMatchingPayment';
+import geHeaderMatchingReviewDonations from '@salesforce/label/c.geHeaderMatchingReviewDonations';
 import geHeaderNewSection from '@salesforce/label/c.geHeaderNewSection';
 import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import geHeaderPageLevelError from '@salesforce/label/c.geHeaderPageLevelError';
@@ -146,6 +163,7 @@ class GeLabelService {
         commonError,
         commonFieldLabel,
         commonNext,
+        commonNo,
         commonNoItems,
         commonReadMore,
         commonRequired,
@@ -157,6 +175,7 @@ class GeLabelService {
         commonViewAll,
         commonViewMore,
         commonWarning,
+        commonYes,
         geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
         geAssistiveFieldDown,
@@ -166,6 +185,7 @@ class GeLabelService {
         geAssistiveFormFieldsRemoveField,
         geAssistiveFormFieldsSectionEdit,
         geAssistiveModalCancelAndDiscard,
+        geAssistiveRemoveSelectedOption,
         geAssistiveSectionDown,
         geAssistiveSectionUp,
         geAssistiveShowMenu,
@@ -180,6 +200,12 @@ class GeLabelService {
         geBodyFormFieldsLeftColAdditional,
         geBodyFormFieldsModalDeleteSection,
         geBodyFormFieldsRightCol,
+        geBodyMatchingApplyNewPayment,
+        geBodyMatchingNewOpportunity,
+        geBodyMatchingNoPayments,
+        geBodyMatchingPendingDonation,
+        geBodyMatchingSelectRecord,
+        geBodyMatchingUpdatingDonation,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,
         geButtonBuilderNavBackFormFields,
@@ -190,13 +216,19 @@ class GeLabelService {
         geButtonFormFieldsCollapseAll,
         geButtonFormFieldsExpandAll,
         geButtonFormFieldsModalDeleteSectionAndFields,
+        geButtonMatchingNewOpportunity,
+        geButtonMatchingNewPayment,
+        geButtonMatchingReviewDonations,
+        geButtonMatchingUpdateDonationSelection,
+        geButtonMatchingUpdateOpportunity,
+        geButtonMatchingUpdatePayment,
         geButtonNewBatch,
         geButtonNewSingleGift,
         geButtonTemplatesTabCreateTemplate,
         geErrorCompleteThisField,
+        geErrorDonorTypeInvalid,
         geErrorDonorTypeValidation,
         geErrorDonorTypeValidationSingle,
-        geErrorDonorTypeInvalid,
         geErrorExistingTemplateName,
         geErrorFieldPermission,
         geErrorPageLevelAdvancedMappingBody,
@@ -220,6 +252,9 @@ class GeLabelService {
         geHeaderFormFieldsModalSectionSettings,
         geHeaderFormFieldsRightCol,
         geHeaderGiftEntry,
+        geHeaderMatchingOpportunity,
+        geHeaderMatchingPayment,
+        geHeaderMatchingReviewDonations,
         geHeaderNewSection,
         geHeaderNewTemplate,
         geHeaderPageLevelError,
@@ -232,7 +267,6 @@ class GeLabelService {
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
-        geAssistiveRemoveSelectedOption,
         geSearchPlaceholder,
         geSelectPlaceholder,
         geTabBatchHeader,

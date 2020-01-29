@@ -1,9 +1,11 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 import {handleError} from 'c/utilTemplateBuilder';
+import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 
-export default class GeBatchGiftEntryApp extends LightningElement {
+export default class GeGiftEntryFormApp extends LightningElement {
     @api recordId;
+    @api sObjectName;
 
     handleSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
@@ -48,4 +50,14 @@ export default class GeBatchGiftEntryApp extends LightningElement {
         const form = this.template.querySelector('c-ge-form-renderer');
         form.load(event.detail);
     }
+
+    handleEditBatch() {
+        this.dispatchEvent(new CustomEvent('editbatch'));
+    }
+
+    get isBatchMode() {
+        return this.sObjectName &&
+            this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
+    }
+
 }
