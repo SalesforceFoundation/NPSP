@@ -294,7 +294,9 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
         public String getLabel(String option) {
             String label = labelByOption.get(option);
 
-            return String.isBlank(label) ? '' : label;
+            return String.isBlank(label)
+                ? String.isBlank(option) ? '' : option
+                : label;
         }
 
         /***

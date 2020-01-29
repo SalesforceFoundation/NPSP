@@ -35,7 +35,7 @@
 * @description Test class for Opportunity Naming.
 */
 @isTest
-private class OPP_OpportunityNaming_TEST
+public with sharing class OPP_OpportunityNaming_TEST
 {
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
     private static final Date CLOSE_DATE = Date.today().addDays(1);
@@ -384,6 +384,143 @@ private class OPP_OpportunityNaming_TEST
             'The name should be generated after the batch is run.');
     }
 
+    /***
+    * @description Verifies Attribution value specified in settings is correctly
+    * converted to the expected AttributionOption and label
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnSelectedOptionAndLabel() {
+        STG_PanelOppNaming_CTRL.AttributionOptions option = STG_PanelOppNaming_CTRL.AttributionOptions.Both;
+        String label = System.Label.oppNamingBoth;
+
+        assertSelectedAttribution(System.Label.oppNamingBoth, option, label);
+        assertSelectedAttribution(option.name(), option, label);
+
+        option = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations;
+        label = System.Label.oppNamingIndividual;
+
+        assertSelectedAttribution(System.Label.oppNamingIndividual, option, label);
+        assertSelectedAttribution(option.name(), option, label);
+        assertSelectedAttribution('Contact Donations', option, label);
+
+        option = STG_PanelOppNaming_CTRL.AttributionOptions.Organization_Donations;
+        label = System.Label.oppNamingOrganizational;
+
+        assertSelectedAttribution(System.Label.oppNamingOrganizational, option, label);
+        assertSelectedAttribution(option.name(), option, label);
+        assertSelectedAttribution('Organization Donations', option, label);
+    }
+
+    /***
+    * @description Verifies expected AttributionOption is null and label is blank
+    * when settings Attribution is null
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnBlankLabelWhenAttributionIsNull() {
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(null);
+
+        System.assertEquals(null, attributionSettings.selectedOption,
+            'The selected Attribution option should be null'
+        );
+
+        System.assertEquals('', attributionSettings.selectedLabel,
+            'The selected Attribution label should be blank'
+        );
+    }
+
+    /***
+    * @description Verifies expected AttributionOption and label are the same as
+    * settings Attribution value when it is not recognized as the AttributionOption
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnValueAsIsWhenAttributionIsNotAnOption() {
+        String attribution = 'foo';
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(attribution);
+
+        System.assertEquals(attribution, attributionSettings.selectedOption,
+            'The selected Attribution option should match input value'
+        );
+
+        System.assertEquals(attribution, attributionSettings.selectedLabel,
+            'The selected Attribution label should match input value when option is not recognized'
+        );
+    }
+
+    /***
+    * @description Asserts Attribution value specified in settings is correctly
+    * converted to the expected AttributionOption and label
+    * @param attribution Attribution value as provied in the settings
+    * @param option Epxected Attribution option
+    * @param label Expected Attribution label
+    * @return void
+    */
+    private static void assertSelectedAttribution(String attribution, STG_PanelOppNaming_CTRL.AttributionOptions option, String label) {
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(attribution);
+
+        System.assertEquals(option.name(), attributionSettings.selectedOption,
+            'The selected Attribution option should match'
+        );
+
+        System.assertEquals(label, attributionSettings.selectedLabel,
+            'The selected Attribution label should match'
+        );
+    }
+
+    /***
+    * @description Verifies attribution options are returned as SelectOptions
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnSelectOptions() {
+        List<STG_PanelOppNaming_CTRL.AttributionOptions> options = STG_PanelOppNaming_CTRL.AttributionOptions.values();
+
+        List<SelectOption> selectOptions = STG_PanelOppNaming_CTRL.listSOOpportunityAttribution;
+
+        System.assertEquals(options.size(), selectOptions.size(), 'Panel should return options');
+        for (Integer i = 0; i < options.size(); i++) {
+            System.assertEquals(options[i].name(), selectOptions[i].getValue(), 'Options should match');
+        }
+    }
+
+    /***
+    * @description Verifies isBoth() returns true when settings Attribution value is Both
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnTrueWhenOptionIsBoth() {
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(STG_PanelOppNaming_CTRL.AttributionOptions.Both.name());
+
+        System.assertEquals(true, attributionSettings.isBoth(),
+            'The selected Attribution option should be Both'
+        );
+
+        attributionSettings.withSelected(System.Label.oppNamingBoth);
+
+        System.assertEquals(true, attributionSettings.isBoth(),
+            'The selected Attribution option should be Both'
+        );
+    }
+
+    /***
+    * @description Verifies isBoth() returns false when settings Attribution value is not Both
+    */
+    @isTest
+    private static void attributionSettingsShouldReturnFalseWhenOptionIsNotBoth() {
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+            .withSelected(STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name());
+
+        System.assertEquals(false, attributionSettings.isBoth(),
+            'The selected Attribution option should not be Both'
+        );
+
+        attributionSettings.withSelected(System.Label.oppNamingOrganizational);
+
+        System.assertEquals(false, attributionSettings.isBoth(),
+            'The selected Attribution option should not be Both'
+        );
+    }
 
     // Helpers
     //////////////

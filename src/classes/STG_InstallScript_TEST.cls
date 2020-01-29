@@ -449,21 +449,39 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(emailInvocations, actualEmailInvocations, 'Email Invocations should not increase');
     }
 
-    /*********************************************************************************************************
-    @description
-        Verify if attribution in opportunity naming settings gets updated with new value post push install
-    **********************************************************************************************************/
+    /***
+    * @description Verifies Oportunity naming Settings Attribution gets updated with
+    * API AttributionOptions enum value post push install
+    */
     @isTest
-    public static void verifyAttTypeRefreshInOppNamingSettingsAfterPushInstall() {
-        createSomeDefaultSettings();
-        Opportunity_Naming_Settings__c configOppSettings = buildOppSettingsWithExistingValues();
+    public static void shouldUpdateOppNamingSettingsAttribution() {
+        OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{
+            'Attribution__c' => System.Label.oppNamingIndividual
+        });
+
         Test.testInstall(new STG_InstallScript(), new Version(1,0), true);
-        verifyAllSettingsCreated();
-        //verify if attribution type got updated post running install script
-        Opportunity_Naming_Settings__c afterScriptConfig = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values();
 
-        System.assertEquals(STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name(), afterScriptConfig.Attribution__c , 'The Attribution types in settings should match');
+        Opportunity_Naming_Settings__c settings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values()[0];
 
+        System.assertEquals(STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name(), settings.Attribution__c,
+            'The Attribution should be updated to the AttributionOptions value');
+    }
+
+    /***
+    * @description Verifies no error is raised when Oportunity naming Settings Attribution
+    * is empty post push install
+    */
+    @isTest
+    public static void shouldNotThrowExceptionWhenOppNamingSettingsAttributionIsEmpty() {
+        OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{
+            'Attribution__c' => null
+        });
+
+        Test.testInstall(new STG_InstallScript(), new Version(1,0), true);
+
+        Opportunity_Naming_Settings__c settings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values()[0];
+
+        System.assertEquals(null, settings.Attribution__c, 'The Attribution should stay empty');
     }
 
     /*********************************************************************************************************
@@ -645,21 +663,6 @@ public with sharing class STG_InstallScript_TEST {
                 Rollups_AcctContactSoftCredit_Batch_Size__c = null
             )
         );
-    }
-
-    /*********************************************************************************************************
-    @description
-        Create a new Opportunity Naming settings with Label values
-    **********************************************************************************************************/
-    private static Opportunity_Naming_Settings__c buildOppSettingsWithExistingValues() {
-        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
-        Name = 'foo',
-        Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate}',
-        Attribution__c = System.Label.oppNamingIndividual
-        );
-        insert ons;
-        return ons;
-
     }
 
     private static npe03__Recurring_Donation__c createRecurringDonation() {
