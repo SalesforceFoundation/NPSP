@@ -88,7 +88,7 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Filters Opportunities matching the provided year regardless if they are open or closed.
+     * @description Filters Opportunities matching the provided calendar year regardless if they are open or closed.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
      * @param year Year filter criteria
