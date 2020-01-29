@@ -760,6 +760,8 @@ orgs:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
             config_file: orgs/beta_multicurrency.json
+        beta_nonenglish:
+            config_file: orgs/beta_nonenglish.json
         beta_personaccounts:
             config_file: orgs/beta_personaccounts.json
         beta_platformencryption:
