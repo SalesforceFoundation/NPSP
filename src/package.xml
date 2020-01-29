@@ -277,6 +277,7 @@
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_GiftEntryCtrl</members>
+        <members>GE_GiftEntryFormCtrl</members>
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
         <members>GE_TemplateBuilderCtrl</members>

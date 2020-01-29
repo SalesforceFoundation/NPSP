@@ -169,7 +169,7 @@ public with sharing class GE_DefaultTemplate {
      */
     public static Form_Template__c buildDefaultTemplate() {
         FORM_Template__c newDefaultTemplate = new FORM_Template__c();
-        List<StaticResource> defaultTemplateSRList = [Select Id, Body FROM StaticResource Where Name = 'DefaultTemplate' limit 1];
+        List<StaticResource> defaultTemplateSRList = [Select Id, Body FROM StaticResource Where Name = 'DefaultGiftEntryTemplate' limit 1];
         String defaultTemplateSRJSON = '';
 
         if (!defaultTemplateSRList.isEmpty()) {

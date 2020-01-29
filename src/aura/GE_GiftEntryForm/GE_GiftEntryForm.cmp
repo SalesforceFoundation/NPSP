@@ -11,12 +11,17 @@
     <aura:attribute name="modal"
                     type="Object"/>
 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="finishedInit" type="Boolean" default="false"/>
+
     <c:utilDedicatedListener eventName="geBatchWizardEvent"
-                             onreceiveevent="{!c.handleBatchWizardEvent}"/>
+                            onreceiveevent="{!c.handleBatchWizardEvent}"/>
 
-    <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
-                           recordId="{!v.recordId}"
-                           sObjectName="{!v.sObjectName}"
-                           oneditbatch="{!c.handleEditBatch}"/>
-
+    
+    <aura:renderIf isTrue="{!v.finishedInit}">
+        <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
+                        recordId="{!v.recordId}"
+                        sObjectName="{!v.sObjectName}"
+                        oneditbatch="{!c.handleEditBatch}"/>
+    </aura:renderIf>
 </aura:component>
