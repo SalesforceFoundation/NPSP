@@ -405,9 +405,7 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
                     if (element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName) {
                         if (record.apiName === CONTACT_INFO.objectApiName) {
                             element.defaultValue = CONTACT1;
-                        }
-
-                        if (record.apiName === ACCOUNT_INFO.objectApiName) {
+                        } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
                             element.defaultValue = ACCOUNT1;
                         }
                     }
