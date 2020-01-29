@@ -1411,4 +1411,18 @@ class NPSP(SalesforceRobotLibraryBase):
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
         locator=npsp_lex_locators['delete_icon'].format(field,value)
-        self.selenium.get_webelement(locator).click()    
+        self.selenium.get_webelement(locator).click()  
+        
+        
+    @capture_screenshot_on_error
+    def click_related_table_item_link(self, heading, title):
+        """Clicks a table header field link in the related list identified with the specified heading.
+           This keyword will automatically call `Wait until loading is complete`
+        """
+        self.builtin.log("loading related list...", "DEBUG")
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["link"].format(heading, title)
+        self.builtin.log("clicking...", "DEBUG")
+        self.salesforce._jsclick(locator)
+        self.builtin.log("waiting...", "DEBUG")
+        self.salesforce.wait_until_loading_is_complete()      
