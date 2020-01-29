@@ -13,13 +13,26 @@ import { DONATION_DONOR_FIELDS, DONATION_DONOR,
          setRecordValuesOnTemplate,
          checkPermissionErrors,
          getPageAccess } from 'c/utilTemplateBuilder';
-import { getQueryParameters, isEmpty, isNotEmpty, format } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+
+import getOpenDonations from '@salesforce/apex/GE_FormRendererService.getOpenDonations';
+import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DATA_IMPORT_CONTACT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.DonationImported__c';
+import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
+import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
+import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
+
+// Labels are used in BDI_MatchDonations class
+import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
+import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
+import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
 
 const mode = {
     CREATE: 'create',
@@ -60,6 +73,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     
     @track _dataRow; // Row being updated when in update mode
     @track isAccessible = true;
+    @track opportunities;
+    @track selectedDonation;
+    @track blankDataImportRecord;
+    @track selectedDonorId;
+    @track selectedDonorType;
+
+    get hasPendingDonations() {
+        return this.opportunities && this.opportunities.length > 0 ? true : false;
+    }
 
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
     wiredGetRecordMethod({ error, data }) {
@@ -83,9 +105,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             GeFormService.getFormTemplate().then(response => {
                 // check if there is a record id in the url
-                this.donorRecordId = getQueryParameters().c__donorRecordId;
-                this.donorApiName = getQueryParameters().c__apiName;
-
+                this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
+                this.selectedDonorType = this.donorApiName = getQueryParameters().c__apiName;
                 // read the template header info
                 if (response !== null && typeof response !== 'undefined') {
                     this.formTemplate = response.formTemplate;
@@ -173,20 +194,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             handleError(error);
         }
     }
-
-    async loadTemplate() {
-        // With the change to using a Lookup field to connect a Batch to a Template,
-        // we can use getRecord to get the Template JSON.  But the GeFormService
-        // component still needs to be initialized with the field mappings, and the
-        // call to getFormTemplate() does that.
-        // TODO: Maybe initialize GeFormService with the field mappings in its connected
-        //       callback instead?
-
-        await GeFormService.getFormTemplate();
-    }
-
-
-
+    
     handleCancel() {
         this.reset();
 
@@ -225,7 +233,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const reset = () => this.reset();
 
         if (this.batchId) {
-            const data = this.getData(sectionsList);
+            let data = this.getData(sectionsList);
+
+            // Apply selected donation fields to data import record
+            if (this.blankDataImportRecord) {
+                data = { ...data, ...this.blankDataImportRecord };
+            }
 
             this.dispatchEvent(new CustomEvent('submit', {
                 detail: {
@@ -242,9 +255,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }));
         } else {
-            GeFormService.handleSave(sectionsList, this.donorRecord).then(opportunityId => {
-                this.navigateToRecordPage(opportunityId);
-            })
+            GeFormService.handleSave(sectionsList, this.donorRecord, this.blankDataImportRecord)
+                .then(opportunityId => {
+                    this.navigateToRecordPage(opportunityId);
+                })
                 .catch(error => {
 
                     this.toggleSpinner();
@@ -595,4 +609,116 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         );
     }
 
+    /*******************************************************************************
+    * @description Pass through method that receives an event from geReviewDonations
+    * to notify the parent component to construct a modal for reviewing donations.
+    *
+    * @param {object} event: Event object containing a payload for the modal.
+    */
+    toggleModal(event) {
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail: event.detail }));
+    }
+
+    @wire(getOpenDonations, { donorId: '$selectedDonorId', donorType: '$selectedDonorType'})
+    wiredOpenDonations({ error, data }) {
+        if (data) {
+            this.opportunities = isNotEmpty(data) ? JSON.parse(data) : undefined;
+        }
+    }
+
+    // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
+    handleChangeLookup(event) {
+        const detail = event.detail;
+        const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
+        const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+
+        if (detail.recordId && (detail.fieldApiName === account || detail.fieldApiName === contact)) {
+            // TODO: Future handle Account/Contact priority depending on value of Data Import: Donation Donor.
+            const donorType = detail.fieldApiName === account ? 'Account' : 'Contact';
+            this.selectedDonorId = detail.recordId;
+            this.selectedDonorType = donorType;
+        } else if (detail.fieldApiName === account || detail.fieldApiName === contact) {
+            this.selectedDonation = undefined;
+            this.opportunities = undefined;
+            this.selectedDonorId = undefined;
+            this.selectedDonorType = undefined;
+        } else {
+            this.selectedDonorId = undefined;
+            this.selectedDonorType = undefined;
+        }
+    }
+
+    handleChangeSelectedDonation(event) {
+        const selectedDonation = event.detail.selectedDonation;
+        const donationType = event.detail.donationType;
+
+        let blankDataImportRecord = {};
+
+        const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
+        const donationImportStatus = DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName;
+        const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
+        const paymentImportStatus = DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName;
+
+        if (selectedDonation) {
+            if (donationType === 'opportunity') {
+                blankDataImportRecord[donationImported] = selectedDonation.Id;
+
+                if (selectedDonation.applyPayment) {
+                    blankDataImportRecord[donationImportStatus] = applyNewPayment;
+                } else {
+                    blankDataImportRecord[donationImportStatus] = userSelectedMatch;
+                }
+                blankDataImportRecord[paymentImported] = undefined;
+                blankDataImportRecord[paymentImportStatus] = undefined;
+            } else if (donationType === 'payment') {
+                blankDataImportRecord[paymentImported] = selectedDonation.Id;
+                blankDataImportRecord[paymentImportStatus] = userSelectedMatch;
+                blankDataImportRecord[donationImported] = selectedDonation.npe01__Opportunity__c;
+                blankDataImportRecord[donationImportStatus] = userSelectedMatch;
+            }
+
+        } else {
+            blankDataImportRecord[donationImportStatus] = userSelectedNewOpp;
+        }
+
+        this.blankDataImportRecord = blankDataImportRecord;
+
+        this.applyFieldValuesFromSelectedDonation(blankDataImportRecord);
+    }
+
+    applyFieldValuesFromSelectedDonation(blankDataImportRecord) {
+        let previousFieldValues = {};
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        sectionsList.forEach(section => {
+            previousFieldValues = { ...previousFieldValues, ...section.values };
+        });
+
+        let newFieldValues = { ...previousFieldValues, ...blankDataImportRecord };
+
+        let sections = deepClone(this.sections);
+        sections.forEach(
+            section => {
+                section.elements.forEach(
+                    element => {
+                        const fieldMappingDevName = element.dataImportFieldMappingDevNames[0];
+                        const fieldApiName = element.fieldApiName;
+
+                        if (newFieldValues.hasOwnProperty(fieldApiName)) {
+                            element.defaultValue = newFieldValues[fieldApiName];
+                        } else if (newFieldValues.hasOwnProperty(fieldMappingDevName)) {
+                            element.defaultValue = newFieldValues[fieldMappingDevName];
+                        }
+                    }
+                );
+            }
+        );
+
+        // Workaround to force rerendering of the form.
+        let that = this;
+        this.sections = [];
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        setTimeout(() => {
+            that.sections = sections;
+        }, 1, that, sections);
+    }
 }

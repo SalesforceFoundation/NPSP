@@ -12,7 +12,8 @@
             batch-id={recordId}
             onsubmit={handleSubmit}
             onsectionsretrieved={handleSectionsRetrieved}
-            onpermissionerror={handlePermissionErrors}>
+            onpermissionerror={handlePermissionErrors}
+            ontogglemodal={handleReviewDonationsModal}>
     </c-ge-form-renderer>
 
     <template if:false={isPermissionError}>
