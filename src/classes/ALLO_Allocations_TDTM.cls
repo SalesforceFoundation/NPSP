@@ -538,8 +538,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         for (SObject sObj : listSObjs) {
 
             //if we have recurring donation or campaign allocations
-            if ((sObj instanceof npe01__OppPayment__c && mapWrapper.containsKey((Id)sObj.get('npe01__Opportunity__c'))) || !(sObj instanceof npe01__OppPayment__c) && ((sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c'))) ||
-                (sObj.get('CampaignId') != null && mapWrapper.containsKey((Id)sObj.get('CampaignId'))))) {
+            if ((sObj instanceof npe01__OppPayment__c && mapWrapper.containsKey((Id)sObj.get('npe01__Opportunity__c'))) ||
+                    !(sObj instanceof npe01__OppPayment__c) && ((sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c'))) ||
+                                                                (sObj.get('CampaignId') != null && mapWrapper.containsKey((Id)sObj.get('CampaignId'))))) {
 
                 alloWrapper wrap;
                 Map<Id, Allocation__c> GAUtoAlloMapping = new Map<Id, Allocation__c>();
@@ -601,7 +602,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         allo.Percent__c = alloPercent.setScale(2, System.RoundingMode.HALF_UP);
                     }
 
-                    //if this is a multicurrency org, set the CurrencyIsoCode, no conversion is ever necessary
+                    //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode
                     if (UserInfo.isMultiCurrencyOrganization()) {
                         if (allo.Amount__c != null && allo.Percent__c == null) {
                             allo.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
@@ -613,8 +614,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         allo.put('CurrencyIsoCode', sObj.get('CurrencyIsoCode'));
                     }
 
-                    if (allo.Percent__c != null) {
-                        allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2, System.RoundingMode.HALF_UP);
+                    if (allo.Percent__c != null && allo.Amount__c == null) {
+                        allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
                     }
 
                     if (isPaymentAllocation == true && alloInMap != null) {
