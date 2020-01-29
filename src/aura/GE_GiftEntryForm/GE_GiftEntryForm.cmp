@@ -14,10 +14,8 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="finishedInit" type="Boolean" default="false"/>
-
     <c:utilDedicatedListener eventName="geBatchWizardFormEvent"
-                            onreceiveevent="{!c.handleBatchWizardEvent}"/>
-
+                             onreceiveevent="{!c.handleBatchWizardEvent}"/>
     
     <!--<aura:renderIf isTrue="{!v.finishedInit}"> -->
         <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
