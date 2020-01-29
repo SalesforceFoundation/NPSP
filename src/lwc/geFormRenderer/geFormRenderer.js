@@ -65,6 +65,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track opportunities;
     @track selectedDonation;
     @track blankDataImportRecord;
+    @track selectedDonorId;
+    @track selectedDonationType;
 
     get hasPendingDonations() {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
@@ -169,6 +171,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // TODO: Maybe initialize GeFormService with the field mappings in its connected
         //       callback instead?
         await GeFormService.getFormTemplate();
+        this.formTemplate = formTemplate;
         this.initializeForm(formTemplate);
     }
 
@@ -207,7 +210,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const reset = () => this.reset();
 
         if (this.batchId) {
-            const data = this.getData(sectionsList);
+            let data = this.getData(sectionsList);
+
+            // Apply selected donation fields to data import record
+            if (this.blankDataImportRecord) {
+                data = { ...data, ...this.blankDataImportRecord };
+            }
 
             this.dispatchEvent(new CustomEvent('submit', {
                 detail: {
@@ -571,6 +579,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.dispatchEvent(new CustomEvent('togglemodal', { detail: event.detail }));
     }
 
+    @wire(getOpenDonations, { donorId: '$selectedDonorId', donorType: '$selectedDonationType'})
+    wiredOpenDonations({ error, data }) {
+        if (data) {
+            this.opportunities = isNotEmpty(data) ? JSON.parse(data) : undefined;
+        }
+    }
+
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
         const detail = event.detail;
@@ -578,22 +593,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
         if (detail.recordId && (detail.fieldApiName === account || detail.fieldApiName === contact)) {
-            console.log('IS A DONOR LOOKUP FIELD CHANGE');
             const donationType = detail.fieldApiName === account ? 'account' : 'contact';
-            getOpenDonations({ donorId: detail.recordId, donorType: donationType})
-                .then(response => {
-                    if (isNotEmpty(response)) {
-                        this.opportunities = JSON.parse(response);
-                    } else {
-                        this.opportunities = undefined;
-                    }
-                })
-                .catch(error => {
-                    handleError(error);
-                });
+            this.selectedDonorId = detail.recordId;
+            this.selectedDonationType = donationType;
         } else {
             this.selectedDonation = undefined;
             this.opportunities = undefined;
+            this.selectedDonorId = undefined;
+            this.selectedDonationType = undefined;
         }
     }
 
@@ -627,13 +634,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         } else {
             blankDataImportRecord[donationImportStatus] = userSelectedNewOpp;
         }
-        blankDataImportRecord = {
-            ...blankDataImportRecord,
-            npsp__Expected_Count_of_Gifts__c: 0,
-            npsp__Expected_Total_Batch_Amount__c: 0,
-            npsp__RequireTotalMatch__c: false,
-        }
+
         this.blankDataImportRecord = blankDataImportRecord;
-        console.log('Prepopulated Data Import: ', blankDataImportRecord);
     }
 }
