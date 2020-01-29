@@ -6,14 +6,13 @@ import geSave from '@salesforce/label/c.labelGeSave';
 import geCancel from '@salesforce/label/c.labelGeCancel';
 import geUpdate from '@salesforce/label/c.commonUpdate';
 import geLabelService from 'c/geLabelService';
-import { CONTACT1, ACCOUNT1,
-         DONATION_DONOR_FIELDS, DONATION_DONOR,
-         showToast,
+import { DONATION_DONOR_FIELDS, DONATION_DONOR,
          handleError,
          getRecordFieldNames,
          setRecordValuesOnTemplate,
          getPageAccess } from 'c/utilTemplateBuilder';
 import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone } from 'c/utilCommon';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
@@ -37,6 +36,7 @@ const mode = {
     CREATE: 'create',
     UPDATE: 'update'
 }
+const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
@@ -180,6 +180,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // go back to the donor record page
         if (isNotEmpty(this.donorRecordId)) {
             this.navigateToRecordPage(this.donorRecordId);
+        } else {
+            // go back to the gift entry landing page;
+            this.navigateToLandingPage();
         }
     }
 
@@ -566,6 +569,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      */
     checkPageAccess = async () => {
         this.isAccessible = await getPageAccess();
+    }
+
+    /*******************************************************************************
+    * @description Navigates to Gift Entry landing page.
+    */
+    navigateToLandingPage() {
+        const giftEntryTabName = TemplateBuilderService.alignSchemaNSWithEnvironment(GIFT_ENTRY_TAB_NAME);
+        let url = `/lightning/n/${giftEntryTabName}`;
+
+        this[NavigationMixin.Navigate]({
+                type: 'standard__webPage',
+                attributes: {
+                    url: url
+                }
+            },
+            true
+        );
     }
 
     /*******************************************************************************
