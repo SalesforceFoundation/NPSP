@@ -100,7 +100,6 @@ private class OPP_OpportunityNaming_TEST
         OPP_OpportunityNamingBTN_CTRL ctrl = new OPP_OpportunityNamingBTN_CTRL(sc);
 
         PageReference pageRef = Page.OPP_OpportunityNamingBTN;
-        pageRef.getParameters().put('Id', String.valueOf(opp.Id));
         Test.setCurrentPage(pageRef);
 
         ctrl.buttonClick();
