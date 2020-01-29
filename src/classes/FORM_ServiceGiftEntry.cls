@@ -252,11 +252,8 @@ public with sharing class FORM_ServiceGiftEntry {
     */
     private static FORM_Template deserializeFormTemplateFromObj(Form_Template__c templateObj) {
         FORM_Template template;
-        System.debug(loggingLevel.ERROR, 'inside of deserialize');
-        System.debug(loggingLevel.ERROR, 'templateObj: ' + templateObj);
         if (templateObj != null && templateObj.Template_JSON__c != null) {
             template = (FORM_Template)JSON.deserialize(templateObj.Template_JSON__c, FORM_Template.class);
-            System.debug(loggingLevel.ERROR, 'deserialized template: ' + template);
         }
         return template;
     }

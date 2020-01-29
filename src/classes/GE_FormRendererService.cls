@@ -34,7 +34,6 @@ public with sharing class GE_FormRendererService {
      * @return  A FORM_RenderWrapper containing the default template JSON.
      */
     private static FORM_RenderWrapper wrapTemplate(FORM_Template template) {
-        System.debug(loggingLevel.ERROR, 'template is: ' + template);
         if (template != null) {
             Boolean includeUnmappedFields = true;
             // Get the mapping service which will retrieve all the mappings
