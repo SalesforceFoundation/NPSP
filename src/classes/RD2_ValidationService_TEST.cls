@@ -573,8 +573,7 @@ private with sharing class RD2_ValidationService_TEST {
      * @return TEST_RecurringDonationBuilder instance
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
-        return 
-            TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withDefaultValues()
             .withAmount(100)
             .withPaymentMethod('Check')
