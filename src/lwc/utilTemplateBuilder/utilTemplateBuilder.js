@@ -410,9 +410,6 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
                         }
                     }
                 }
-
-                
-
             }
         });
     });
