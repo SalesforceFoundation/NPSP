@@ -67,11 +67,11 @@ public with sharing class FORM_PermissionValidator {
                 for (String fieldDevName : element.dataImportFieldMappingDevNames) {
                     if(fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
                         BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
-
-                        String targetObjDevName = fieldMapping.Target_Object_API_Name;
-                        String targetFieldDevName = fieldMapping.Target_Field_API_Name;
-                        String sourceObjDevName = DATA_IMPORT_OBJECT;
-                        String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
+                        
+                        String targetObjDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Object_API_Name);
+                        String targetFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Field_API_Name);
+                        String sourceObjDevName = UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT);
+                        String sourceFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Source_Field_API_Name);
 
                         if(!isValid(sourceObjDevName, accessLevels)) {
                             permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
@@ -133,6 +133,9 @@ public with sharing class FORM_PermissionValidator {
     * @param accessLevels - the levels of access to validate on the SObject
     */
     private Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
+        
+        system.debug('OBJ DEV NAME == ' + objDevName);
+        system.debug('FIELD DEV NAME == ' + fieldDevName);
 
         SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
         SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
