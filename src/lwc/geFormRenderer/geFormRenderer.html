@@ -14,7 +14,6 @@
             <lightning-layout-item size='12' class='slds-card'>
                 <div if:true={hasPageLevelError} class="slds-size_1-of-1 slds-card slds-p-around_small">
                     <c-util-page-level-message variant='error'>
-
                         <ul slot="body"
                             class="slds-list_dotted slds-text-color_error">
                             <template for:each={pageLevelErrorMessageList}
@@ -26,14 +25,21 @@
                         </ul>
                     </c-util-page-level-message>
                 </div>
-                <template for:each={sections} for:item='section'>
+                <template if:true={isPermissionError}>
+                    <c-util-illustration title={permissionErrorTitle}
+                                        message={permissionErrorMessage}
+                                        size='large'
+                                        variant='lake-mountain'>
+                    </c-util-illustration>
+                </template>
+                <template if:false={isPermissionError} for:each={sections} for:item='section'>
                     <c-ge-form-section key={section.id}
                                        section={section}
                                        onchangelookup={handleChangeLookup}>
                     </c-ge-form-section>
                 </template>
-            </lightning-layout-item>
-        </lightning-layout>
+        </lightning-layout-item>
+    </lightning-layout>
 
         <div if:true={showSpinner} class="spinnerContainer">
             <lightning-spinner alternative-text={label.messageLoading} variant="brand" size="large"></lightning-spinner>
