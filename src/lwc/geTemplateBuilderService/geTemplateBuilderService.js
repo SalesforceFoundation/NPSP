@@ -2,7 +2,6 @@ import getFieldMappingSet from '@salesforce/apex/BDI_MappingServiceAdvanced.getF
 import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.getNamespaceWrapper';
 import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
-import { getAllocationWidgetDefinition } from 'c/geFormWidgetAllocation';
 import GeWidgetService from 'c/geWidgetService';
 
 class GeTemplateBuilderService {
