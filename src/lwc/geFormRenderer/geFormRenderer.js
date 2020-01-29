@@ -158,30 +158,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleSave_SingleGiftEntry(sectionsList) {
+    handleSaveSingleGiftEntry(sectionsList,enableSaveButton,toggleSpinner) {
+
+        // handle error on callback from promise
+        const handleCatchError = (err) => this.handleCatchOnSave(err);
 
         GeFormService.handleSave(sectionsList, this.donorRecord).then(opportunityId => {
             this.navigateToRecordPage(opportunityId);
         }).catch(error => {
-            this.handleCatchOnSave(error);
+            enableSaveButton();
+            toggleSpinner();
+            handleCatchError(error);
         });
 
     }
 
-    handleSave_BatchGiftEntry(sectionsList) {
+    handleSaveBatchGiftEntry(sectionsList,enableSaveButton,toggleSpinner) {
 
         // reset function for callback
         const reset = () => this.reset();
+        // handle error on callback from promise
+        const handleCatchError = (err) => this.handleCatchOnSave(err);
         // di data
         const data = this.getData(sectionsList);
-        // handle error on callback
-        const handleError = (err) => this.handleCatchOnSave(err);
 
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
                 data: data,
-                success: () => reset(),
-                error: (error) => handleError(error)
+                success: () => {
+                    enableSaveButton();
+                    toggleSpinner();
+                    reset();
+                },
+                error: (error) => {
+                    enableSaveButton();
+                    toggleSpinner();
+                    handleCatchError(error);
+                }
             }
         }));
 
@@ -251,7 +264,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // focus either the page level or field level error messsage somehow
         window.scrollTo(0, 0);
-
     }
 
     handleSave(event) {
@@ -266,23 +278,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return;
         }
 
-        // disable the Save button
+        // show the spinner
+        this.toggleSpinner();
+        // callback used to toggle spinner after Save promise
+        const toggleSpinner = () => this.toggleSpinner();
+        // disable the Save button and set callback to use after Save promise
         event.target.disabled = true;
         const enableSaveButton = function () {
             this.disabled = false;
         }.bind(event.target);
 
-        // show the spinner
-        this.toggleSpinner();
-        // callback used to toggle spinner after save
-        const toggleSpinner = () => this.toggleSpinner();
-
         // handle save depending mode
-        this.batchId ? this.handleSave_BatchGiftEntry(sectionsList) : this.handleSave_SingleGiftEntry(sectionsList);
-
-        // enable save && toggle spinner off
-        enableSaveButton();
-        this.toggleSpinner();
+        this.batchId ? this.handleSaveBatchGiftEntry(sectionsList) : this.handleSaveSingleGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
 
     }
 
