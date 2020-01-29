@@ -158,11 +158,32 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleSave_SingleGiftEntry() {
+    handleSave_SingleGiftEntry(sectionsList) {
+
+        GeFormService.handleSave(sectionsList, this.donorRecord).then(opportunityId => {
+            this.navigateToRecordPage(opportunityId);
+        }).catch(error => {
+            this.handleCatchOnSave(error);
+        });
 
     }
 
-    handleSave_BatchGiftEntry() {
+    handleSave_BatchGiftEntry(sectionsList) {
+
+        // reset function for callback
+        const reset = () => this.reset();
+        // di data
+        const data = this.getData(sectionsList);
+        // handle error on callback
+        const handleError = (err) => this.handleCatchOnSave(err);
+
+        this.dispatchEvent(new CustomEvent('submit', {
+            detail: {
+                data: data,
+                success: () => reset(),
+                error: (error) => handleError(error)
+            }
+        }));
 
     }
 
@@ -256,40 +277,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // callback used to toggle spinner after save
         const toggleSpinner = () => this.toggleSpinner();
 
-        if (this.batchId) {
-
-            // reset function for callback
-            const reset = () => this.reset();
-            // di data
-            const data = this.getData(sectionsList);
-            // handle error on callback
-            const handleError = (err) => this.handleCatchOnSave(err);
-
-            this.dispatchEvent(new CustomEvent('submit', {
-                detail: {
-                    data: data,
-                    success: function () {
-                        reset();
-                    },
-                    error: function ( error ) {
-                        handleError(error);
-                    }
-                }
-            }));
-
-        } else {
-
-            GeFormService.handleSave(sectionsList, this.donorRecord).then(opportunityId => {
-                this.navigateToRecordPage(opportunityId);
-            }).catch(error => {
-                this.handleCatchOnSave(error);
-            });
-
-        }
+        // handle save depending mode
+        this.batchId ? this.handleSave_BatchGiftEntry(sectionsList) : this.handleSave_SingleGiftEntry(sectionsList);
 
         // enable save && toggle spinner off
         enableSaveButton();
-        toggleSpinner();
+        this.toggleSpinner();
 
     }
 
