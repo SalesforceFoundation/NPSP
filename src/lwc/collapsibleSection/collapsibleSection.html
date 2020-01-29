@@ -1,0 +1,16 @@
+<template>
+    <div class={outerDivClass}>
+        <h3 class="slds-section__title">
+            <button aria-controls={localId} aria-expanded={ariaExpanded} class="slds-button slds-section__title-action" onclick={handleToggleClick}>
+                <lightning-icon size="x-small"
+                                icon-name="utility:switch"
+                                class="slds-section__title-action-icon slds-button__icon slds-button__icon_left">
+                </lightning-icon>
+                <span class="slds-truncate" title={sectionTitle}>{sectionTitle}</span>
+            </button>
+        </h3>
+        <div aria-hidden={collapsed} class="slds-section__content" id={localId}>
+            <slot></slot>
+        </div>
+    </div>
+</template>
