@@ -1,4 +1,26 @@
 ({
+    
+    doInit: function(cmp) {
+        var action = cmp.get("c.createDefaultTemplate");
+
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+
+            if (state === "SUCCESS") {
+
+                cmp.set('v.finishedInit', true);
+            }
+            else if (state === "INCOMPLETE") {
+                // do something
+            }
+            else if (state === "ERROR") {
+                
+            }
+        });
+
+        $A.enqueueAction(action);
+    },    
+    
     /*******************************************************************************
     * @description Receives an event from lightning web component geTemplates
     * to open a modal using the aura overlay library. We're opting to use this library

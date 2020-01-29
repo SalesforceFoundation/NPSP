@@ -1,7 +1,8 @@
-<aura:component implements="force:appHostable">
+<aura:component controller="GE_GiftEntryCtrl" implements="force:appHostable">
     <aura:dependency resource="c:geBatchWizard" />
     <aura:dependency resource="c:geTemplateBuilderSectionModalBody" />
     <aura:dependency resource="c:utilDualListbox" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <lightning:overlayLibrary aura:id="overlayLib" />
 
@@ -11,6 +12,10 @@
     <!-- modal attribute is a reference to the modal created by lightning:overlayLibrary -->
     <aura:attribute name="modal"
                     type="Object" />
+
+    <aura:attribute name="finishedInit" 
+                    type="Boolean"
+                    default="false"/>
 
     <c:utilDedicatedListener eventName="geGiftEntryModalEvent"
                              onreceiveevent="{!c.handleModalEvent}" />
@@ -24,6 +29,8 @@
                            size="medium" />
     </aura:if>
 
-    <c:geHome aura:id="giftEntryHome"
-              ontogglemodal="{!c.handleShowModal}" />
+    <aura:renderIf isTrue="{!v.finishedInit}">
+        <c:geHome aura:id="giftEntryHome"
+            ontogglemodal="{!c.handleShowModal}" />
+    </aura:renderIf>
 </aura:component>
