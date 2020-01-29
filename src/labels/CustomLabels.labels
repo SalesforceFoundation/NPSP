@@ -4478,6 +4478,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Next</value>
     </labels>
     <labels>
+        <fullName>commonNo</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No</shortDescription>
+        <value>No</value>
+    </labels>
+    <labels>
         <fullName>commonNoItems</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4580,6 +4588,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Warning</shortDescription>
         <value>Warning</value>
+    </labels>
+    <labels>
+        <fullName>commonYes</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Yes</shortDescription>
+        <value>Yes</value>
     </labels>
     <labels>
         <fullName>conFailedAccountCreate</fullName>
@@ -5039,6 +5055,54 @@ Use Gift Entry templates to enter single gifts or batches of gifts. All gifts en
 If preferred, you can disable Gift Entry and instead use older Batch Gift Entry (or Single Gift Entry, if using GEM).</value>
     </labels>
     <labels>
+        <fullName>geBodyMatchingApplyNewPayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message about applying a new Payment to an Opportunity</shortDescription>
+        <value>You are currently adding a new Payment to Opportunity: </value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingNewOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message about creating a new Opportunity</shortDescription>
+        <value>You are currently creating a new Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingNoPayments</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when an Opportunity has no Payments</shortDescription>
+        <value>This Opportunity does not have any Payments.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingPendingDonation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when an existing gift found</shortDescription>
+        <value>This donor has pending donations.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingSelectRecord</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body for modal to review matching Opportunities and Payments</shortDescription>
+        <value>Select the record you want to update.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyMatchingUpdatingDonation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message about Payment or Opportunity that will be updated</shortDescription>
+        <value>You are currently updating: </value>
+    </labels>
+    <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5117,6 +5181,54 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Button to delete a section and remove its fields</shortDescription>
         <value>Delete Section and Fields</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingNewOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button in Review Donations modal to create a new Opportunity</shortDescription>
+        <value>Alternatively, create a new Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingNewPayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to add a new Payment to an Opportunity</shortDescription>
+        <value>Add new Payment</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingReviewDonations</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to open Review Donations modal</shortDescription>
+        <value>Review Donations</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingUpdateDonationSelection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to open Review Donations modal and change Opportunity/Payment selection</shortDescription>
+        <value>Select a different donation.</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingUpdateOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to select an existing Opportunity to update</shortDescription>
+        <value>Update this Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>geButtonMatchingUpdatePayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to select an existing Payment to update</shortDescription>
+        <value>Update this Payment</value>
     </labels>
     <labels>
         <fullName>geButtonNewBatch</fullName>
@@ -5408,6 +5520,33 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Top of all Gift Entry pages</shortDescription>
         <value>Gift Entry</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderMatchingReviewDonations</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for modal to review matching Opportunities and Payments</shortDescription>
+        <!-- {0} = an Account or Contact record Name -->
+        <value>Review Donations for {0}</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderMatchingOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label with key Opportunity information</shortDescription>
+        <!-- {0} = Opportunity Amount {1} = Opportunity Close Date {2} = Opportunity Stage -->
+        <value>{0} on {1} ({2})</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderMatchingPayment</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label with key Payment information</shortDescription>
+        <!-- {0} = Payment Amount {1} = Payment Close Date -->
+        <value>{0} on {1}</value>
     </labels>
     <labels>
         <fullName>geHeaderNewSection</fullName>
