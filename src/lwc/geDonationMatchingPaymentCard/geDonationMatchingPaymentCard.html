@@ -3,7 +3,7 @@
                  icon-name="utility:currency"
                  icon-size="small">
         <template if:true={isLoading}>
-            <lightning-spinner></lightning-spinner>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
         </template>
 
         <template if:false={isLoading}>
