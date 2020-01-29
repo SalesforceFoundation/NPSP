@@ -555,6 +555,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 //get wrapper for parent object, preferring recurring donation over campaign allocations if they exist
                 else if (sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c')))
                     wrap = mapWrapper.get((Id)sObj.get('npe03__Recurring_Donation__c'));
+
                 else
                     wrap = mapWrapper.get((Id)sObj.get('CampaignId'));
 
@@ -566,6 +567,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     // If it's a payment, don't filter out the active allocations.
                     if (sObj instanceof npe01__OppPayment__c) {
                         listAlloForInsert.add(allo);
+
                     } else {
                         if (allo.General_Accounting_Unit__r.Active__c) {
                             listAlloForInsert.add(allo);
@@ -579,6 +581,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 //reparent the cloned allocation to the opportunity
                 for (Allocation__c allo : listAlloForInsert) {
                     Allocation__c alloInMap;
+                    Boolean isPercentOnly = false;
 
                     if (isPaymentAllocation == true && GAUtoAlloMapping.containsKey(allo.General_Accounting_Unit__c)) {
                         alloInMap = GAUtoAlloMapping.get(allo.General_Accounting_Unit__c);
@@ -589,8 +592,14 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     allo.Campaign__c = null;
                     if (sObj instanceof Opportunity) {
                         allo.Opportunity__c = sObj.Id;
+
                     } else {
                         allo.Payment__c = sObj.Id;
+                    }
+
+                    if (allo.Percent__c != null) {
+                        allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
+                        isPercentOnly = true;
                     }
 
                     //Calculate proportional amount for non-percentage based Payment allocations
@@ -604,7 +613,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                     //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode
                     if (UserInfo.isMultiCurrencyOrganization()) {
-                        if (allo.Amount__c != null && allo.Percent__c == null) {
+                        if (allo.Amount__c != null && !isPercentOnly) {
                             allo.Amount__c = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
                                     (String)allo.get('CurrencyIsoCode'),
                                     (String)sObj.get('CurrencyIsoCode'),
@@ -612,10 +621,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             );
                         }
                         allo.put('CurrencyIsoCode', sObj.get('CurrencyIsoCode'));
-                    }
-
-                    if (allo.Percent__c != null && allo.Amount__c == null) {
-                        allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
                     }
 
                     if (isPaymentAllocation == true && alloInMap != null) {
@@ -631,6 +636,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     if (isPaymentAllocation == true) {
                         if (alloInMap != null) {
                             GAUtoAlloMapping.put(alloInMap.General_Accounting_Unit__c, alloInMap);
+
                         } else {
                             GAUtoAlloMapping.put(allo.General_Accounting_Unit__c, allo);
                         }
@@ -643,7 +649,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     listAlloForInsert = GAUtoAlloMapping.values();
                 }
 
-
                 //if our remainder is negative, only create percentage based allocations
                 if ((amount >= 0 && remainder < 0)||(amount < 0 && remainder > 0)) {
                     remainder = amount;
@@ -655,6 +660,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             remainder-=allo.Amount__c;
                         }
                     }
+
                     if (settings.Default_Allocations_Enabled__c) {
                         Allocation__c defaultAllo = makeDefaultAllocation(sObj);
                         defaultAllo.Amount__c = remainder;
@@ -667,10 +673,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     defaultAllo.Amount__c = remainder;
                     dmlWrapper.objectsToInsert.add(defaultAllo);
                     dmlWrapper.objectsToInsert.addAll((List<SObject>)listAlloForInsert);
+
                 //add objects to DML wrapper in all other cases (no remainder, or positive remainder without default allocations enabled)
                 } else {
                     dmlWrapper.objectsToInsert.addAll((List<SObject>)listAlloForInsert);
                 }
+
             //if we have no campaign or recurring donation allocations and defaults are enabled, create them for each payment/opportunity
             } else if (settings.Default_Allocations_Enabled__c) {
                 dmlWrapper.objectsToInsert.add(makeDefaultAllocation(sObj));
