@@ -1967,6 +1967,7 @@
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
+        <members>geBodyGiftEntryHelp</members>
         <members>geBodyMatchingApplyNewPayment</members>
         <members>geBodyMatchingNewOpportunity</members>
         <members>geBodyMatchingNoPayments</members>
@@ -1992,9 +1993,11 @@
         <members>geButtonNewBatch</members>
         <members>geButtonNewSingleGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
+        <members>geDisableGiftEntryInfo</members>
         <members>geDonationColumnLabel</members>
         <members>geDonorColumnLabel</members>
         <members>geEditBatchInfo</members>
+        <members>geEnableGiftEntrySuccess</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
         <members>geErrorDonorTypeValidation</members>

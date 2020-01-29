@@ -2691,6 +2691,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error: record not created, missing required fields:</value>
     </labels>
     <labels>
+        <fullName>bdiAdvancedMapping</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Advanced Mapping settings page</shortDescription>
+        <value>Advanced Mapping for Data Import &amp; Gift Entry</value>
+    </labels>
+    <labels>
         <fullName>bdiBatchException</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2833,14 +2841,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiCreated</shortDescription>
         <value>Created</value>
-    </labels>
-    <labels>
-        <fullName>bdiAdvancedMapping</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Data Import Advanced Mapping Summary</shortDescription>
-        <value>Data Import Advanced Mapping</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
@@ -5043,6 +5043,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering the sections or fields.</value>
     </labels>
     <labels>
+        <fullName>geBodyGiftEntryHelp</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Information about enabling Gift Entry in NPSP Settings</shortDescription>
+        <value>Before you enable Gift Entry, you must enable Advanced Mapping.
+&lt;br/&gt;&lt;br/&gt;
+Use Gift Entry templates to enter single gifts or batches of gifts. All gifts entered through the older Batch Gift Entry tool are not displayed in Gift Entry and vice versa.
+&lt;br/&gt;&lt;br/&gt;
+If preferred, you can disable Gift Entry and instead use older Batch Gift Entry (or Single Gift Entry, if using GEM).</value>
+    </labels>
+    <labels>
         <fullName>geBodyMatchingApplyNewPayment</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5243,12 +5255,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Create Template</value>
     </labels>
     <labels>
-        <fullName>geDonorColumnLabel</fullName>
+        <fullName>geDisableGiftEntryInfo</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
-        <value>Donor</value>
+        <shortDescription>Toast reporting Gift Entry is disabled</shortDescription>
+        <value>Gift Entry Disabled</value>
     </labels>
     <labels>
         <fullName>geDonationColumnLabel</fullName>
@@ -5257,6 +5269,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Label for column in batch gift entry table that links to the matched Gift.</shortDescription>
         <value>Donation</value>
+    </labels>
+    <labels>
+        <fullName>geDonorColumnLabel</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for column in batch gift entry table that links to the Account or Contact.</shortDescription>
+        <value>Donor</value>
+    </labels>
+    <labels>
+        <fullName>geEnableGiftEntrySuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Toast reporting Gift Entry is enabled</shortDescription>
+        <value>Gift Entry Enabled</value>
     </labels>
     <labels>
         <fullName>geErrorCompleteThisField</fullName>
