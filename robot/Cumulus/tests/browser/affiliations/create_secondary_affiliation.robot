@@ -32,5 +32,5 @@ Create Secondary Affiliation for Contact
     Wait Until Modal Is Closed
     Validate Related Record Count        Organization Affiliations          1
     Verify Allocations                   Organization Affiliations        &{account}[Name]=Current 
-    Click Related Item Link              Organization Affiliations        &{account}[Name]
+    Click Related Table Item Link        Organization Affiliations        &{account}[Name]
     Save Current Record ID For Deletion  npe5__Affiliation__c    

@@ -58,5 +58,10 @@
             modal.close();
             component.set('v.isLoading', true);
         });
-    }
+    },
+
+    handleNewSingleGift: function(component, event){
+        component.set('v.isGiftEntryMode', true);
+    },
+
 })

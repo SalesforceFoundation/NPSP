@@ -1,0 +1,52 @@
+.slds-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    background: transparent;
+    background-clip: border-box;
+    border: var(--lwc-borderWidthThin,1px) solid transparent;
+    border-radius: var(--lwc-button-border-radius,.25rem);
+    line-height: var(--lwc-lineHeightButton,1.875rem);
+    text-decoration: none;
+    color: var(--lwc-brand-accessible,rgb(0, 112, 210));
+    -webkit-appearance: none;
+    white-space: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.slds-button:hover {
+    background-color: var(--lwc-colorBackgroundButtonDefaultHover,rgb(244, 246, 249));
+    color: var(--lwc-brand-accessible-active,rgb(0, 95, 178));
+}
+
+.slds-button_neutral {
+    padding-left: var(--lwc-spacingMedium,1rem);
+    padding-right: var(--lwc-spacingMedium,1rem);
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center;
+    border: var(--lwc-borderWidthThin,1px) solid var(--lwc-color-border-primary,rgb(221, 219, 218));
+    transition: border .15s linear;
+    border-color: var(--lwc-button-color-border-primary,rgb(221, 219, 218));
+    background-color: var(--lwc-button-color-background-primary,rgb(255, 255, 255));
+}
+
+.slds-button_extension {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border: none;
+    border-radius: 0.25rem;
+}
+
+.slds-border_extension-bottom {
+    border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));
+    border-radius: 0;
+}

@@ -41,7 +41,7 @@ Test Case 2
     &{relation} =  API Create Relationship    &{contact1}[Id]    &{contact2}[Id]    Coworker    ${ns}Related_Opportunity_Contact_Role__c=Soft Credit
     Go To Record Home    &{contact2}[Id]
     Select Tab  Related
-    Click Related Item Link    Relationships    &{contact1}[FirstName] &{contact1}[LastName]
+    Click Related Table Item Link    Relationships    &{contact1}[FirstName] &{contact1}[LastName]
     Click Button    title=Edit Related Opportunity Contact Role
     Wait For Locator  record.edit_form
     Select Value From Dropdown   Related Opportunity Contact Role              Soft Credit
