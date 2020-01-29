@@ -133,9 +133,6 @@ public with sharing class FORM_PermissionValidator {
     * @param accessLevels - the levels of access to validate on the SObject
     */
     private Boolean isValid(String objDevName, String fieldDevName, Set<AccessLevel> accessLevels) {
-        
-        system.debug('OBJ DEV NAME == ' + objDevName);
-        system.debug('FIELD DEV NAME == ' + fieldDevName);
 
         SObjectType objectType = UTIL_Describe.getSObjectType(objDevName);
         SObjectField objField = objectType.getDescribe().fields.getMap().get(fieldDevName);
