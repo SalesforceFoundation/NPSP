@@ -105,30 +105,37 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
             for (FORM_Section formSection : t.layout.sections) {
                 for (FORM_Element formElement : formSection.elements) {
-
-                    // Get the field mapping, used to reference the source field
-                    String fieldMappingName = formElement.dataImportFieldMappingDevNames[0];
-                    BDI_FieldMapping fieldMapping =
-                            fieldMappingByDevName.get(fieldMappingName);
-                    if (fieldMapping == null) {
+                    if (formElement.dataImportFieldMappingDevNames == null) {
                         continue;
                     }
+                    // Get the field mappings, used to reference the source fields
+                    for (String fieldMappingName :
+                            formElement.dataImportFieldMappingDevNames) {
 
-                    // Add the source fields used in the Template
-                    if (!fieldApiNames.contains(fieldMapping.Source_Field_API_Name.toLowerCase())) {
-                        fieldApiNames.add(fieldMapping.Source_Field_API_Name.toLowerCase());
-                    }
+                        BDI_FieldMapping fieldMapping =
+                                fieldMappingByDevName.get(fieldMappingName);
+                        if (fieldMapping == null) {
+                            continue;
+                        }
 
-                    // Add the Name fields on the related object(s) for all Lookup fields,
-                    // used as display value(s) for Lookup fields loaded in the Form UI
-                    if (fieldMapping.Source_Field_Data_Type == 'REFERENCE') {
-                        String relatedObjNameField = String.join(new List<String>{
-                                fieldMapping.Source_Field_API_Name.replace('__c', '__r'),
-                                'Name'
-                        }, '.'
-                        ).toLowerCase();
-                        if (!fieldApiNames.contains(relatedObjNameField)) {
-                            fieldApiNames.add(relatedObjNameField);
+                        // Add the source fields used in the Template
+                        if (!fieldApiNames.contains(
+                                fieldMapping.Source_Field_API_Name.toLowerCase())) {
+                            fieldApiNames.add(
+                                    fieldMapping.Source_Field_API_Name.toLowerCase());
+                        }
+
+                        // Add the Name fields on the related object(s) for all Lookup fields,
+                        // used as display value(s) for Lookup fields loaded in the Form UI
+                        if (fieldMapping.Source_Field_Data_Type == 'REFERENCE') {
+                            String relatedObjNameField = String.join(new List<String>{
+                                    fieldMapping.Source_Field_API_Name.replace('__c', '__r'),
+                                    'Name'
+                            }, '.'
+                            ).toLowerCase();
+                            if (!fieldApiNames.contains(relatedObjNameField)) {
+                                fieldApiNames.add(relatedObjNameField);
+                            }
                         }
                     }
                 }
