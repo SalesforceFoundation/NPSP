@@ -81,6 +81,4 @@ Create a new opportunity for a contact with open donations
     Navigate To And Validate Field Value  Close Date    contains  ${opp_date}
     Navigate To And Validate Field Value    Stage    contains    Closed Won
     Go To Record Home    &{contact}[Id]
-    Select Tab     Related
-    Load Related List    Opportunities
     Validate Related Record Count        Opportunities      2

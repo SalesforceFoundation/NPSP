@@ -38,7 +38,7 @@ Change Name Display Settings on Manage Household Page
     Go To Page                              Details
     ...                                     Account
     ...                                     object_id=&{contact1}[AccountId]
-    Click Link                              link=Manage Household
+    Click Actions Link                      Manage Household
     Go To Page                              Custom                                                              ManageHousehold
     Add contact                             Existing                                                            &{contact2}[FirstName] &{contact2}[LastName]
     Current Page Should Be                  Details                                                             Account

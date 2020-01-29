@@ -32,7 +32,7 @@ Add New Contact to Existing Household
     ...                                 Account
     ...                                 object_id=&{contact}[AccountId]
 
-    Click Link                          link=Manage Household
+    Click Actions Link                  Manage Household
     Go To Page                          Custom                            ManageHousehold
 
     Add contact                         New                               ${first_name} ${last_name}

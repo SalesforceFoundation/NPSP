@@ -41,7 +41,7 @@ Add New Address to Household
     ...                                  Account
     ...                                  object_id=&{contact1}[AccountId]
 
-    Click Link                           link=Manage Household
+    Click Actions Link                   Manage Household
     Current Page Should Be               Custom                             ManageHousehold
     Select Frame And Click Element       Manage Household
     ...                                  span_button

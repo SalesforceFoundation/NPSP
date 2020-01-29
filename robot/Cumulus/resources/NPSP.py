@@ -1444,3 +1444,8 @@ class NPSP(SalesforceRobotLibraryBase):
         self.salesforce._jsclick(locator)
         self.builtin.log("waiting...", "DEBUG")
         self.salesforce.wait_until_loading_is_complete()      
+
+    def click_actions_link(self,title):
+        """Clicks on the link in the actions container on top right corner of the page using Javascript"""
+        locator=npsp_lex_locators["link-title"].format(title)
+        self.salesforce._jsclick(locator)

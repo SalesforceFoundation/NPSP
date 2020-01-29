@@ -105,11 +105,11 @@ npsp_lex_locators={
     'field': "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//input",
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
     'field-value':"//div[contains(@class,'slds-form-element')][./label[text()='{}']]/div/span",
-    'header':'//h1/div[contains(@title,"{}")]',
+    'header':'//h1//child::div/span[text()="{}"]',
     'check_related_list_item':'//article[.//span[text() = "{}"]]/descendant::tbody//th//a[text()="{}"]',
     'detail_page': {
         'section_header':'//h3//span[text()="{}"]',
-        'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a/div[contains(@class, "slds")]',
+        'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a//div[contains(@class, "slds")]',
         'field':'//h3[contains(@class, "slds-section__title")][.//span[text()="{}"]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//span[text()="{}"]',
         'field-value':{
             'verify_field_value1':'//div[contains(@class, "forcePageBlockItem")]/div/div//span[text()="{}"]/../../div[2]/span/span[text() = "{}"]',
