@@ -338,7 +338,7 @@ const generateId = () => {
 * @param apiName: the sObject api name
 */
 const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
-    let fieldNames = ['Id'];
+    let fieldNames = [`${apiName}.Id`];
 
     for (const section of formTemplate.layout.sections) {
         for (const element of section.elements) {

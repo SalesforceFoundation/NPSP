@@ -58,4 +58,8 @@ export default class GeGiftEntryFormApp extends LightningElement {
             this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
     }
 
+    handleReviewDonationsModal(event) {
+        this.dispatchEvent(new CustomEvent('togglereviewdonationsmodal', { detail: event.detail }));
+    }
+
 }
