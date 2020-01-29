@@ -1,4 +1,5 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api, track, wire} from 'lwc';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import { isNumeric, isNotEmpty } from 'c/utilCommon';
@@ -26,17 +27,42 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
+    // need labels for field list
+    @wire(getObjectInfo, { objectApiName: ALLOCATION_OBJECT })
+    wiredObjectInfo({data, error}) {
+        // Represents the fields in a row of the widget
+        if(data) {
+            this.fieldList = [
+                {
+                    mappedField: `${ALLOCATION_OBJECT.objectApiName}.${GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName}`,
+                    size: 4,
+                    element: {
+                        required: true,
+                        customLabel: data.fields[GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName].label
+                    }
+                },
+                {
+                    mappedField: `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`,
+                    size: 3,
+                    element: {
+                        customLabel: data.fields[AMOUNT_FIELD.fieldApiName].label,
+                    }
+                },
+                {
+                    mappedField: `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`,
+                    size: 3,
+                    element: {
+                        customLabel: data.fields[PERCENT_FIELD.fieldApiName].label
+                    }
+                }
+            ];
+        }
+    }
+
     /**
     * @description Initializes the component
     */
     connectedCallback() {
-        // Represents the fields in a row of the widget
-        this.fieldList = [
-            {'mappedField':`${ALLOCATION_OBJECT.objectApiName}.${GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName}`,
-                'size':4, 'required': true},
-            {'mappedField':`${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`, 'size':3},
-            {'mappedField':`${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`, 'size':3}
-        ];
         registerListener('allocationValueChange', this.handleValueChange, this);
         this.init();
     }
@@ -75,7 +101,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     @api
     isValid() {
-        // TODO: Move this method to the service class?
+
         let fieldIsValid = true;
         if(this.element.required) {
             return this.value !== null 

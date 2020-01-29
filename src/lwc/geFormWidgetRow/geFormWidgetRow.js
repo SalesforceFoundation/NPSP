@@ -206,7 +206,7 @@ export default class GeFormWidgetRow extends LightningElement {
                     element: {
                         ...element,
                         disabled: true,
-                        defaultValue: this.getDefaultForField(f.mappedField)
+                        defaultValue: this.getDefaultForField(f.mappedField) // only needed for default GAU for now
                     }
                 };
             });
