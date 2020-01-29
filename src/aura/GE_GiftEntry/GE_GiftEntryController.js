@@ -34,7 +34,7 @@
 
     /*******************************************************************************
     * @description Handles receipt of events from utilDedicatedListener component
-    * and notifies the geTemplates component.
+    * and notifies the geHome component.
     */
     handleModalEvent: function (component, event, helper) {
         const details = event.getParams('detail');
@@ -48,7 +48,7 @@
 
     /*******************************************************************************
     * @description Handles receipt of events from utilDedicatedListener component
-    * and notifies the geTemplates component.
+    * and closes the current modal.
     */
     handleBatchWizardEvent: function (component, event, helper) {
         helper.handleCloseModal(component);
