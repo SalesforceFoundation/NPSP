@@ -150,8 +150,8 @@ public with sharing class FORM_PermissionValidator {
         }
     }
 
-    /*******************************************************************************************************
-    * @description Performs FLS update validation, taking master-detail relationships and campaign lookups      into account
+    /**********************************************************************************************************
+    * @description Performs FLS update validation, taking master-detail relationships and campaign lookups into account 
     * @param objectType - SObjectType of the object
     * @param field - SObjectField type to validate
     */
