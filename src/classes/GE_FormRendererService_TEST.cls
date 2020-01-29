@@ -44,7 +44,7 @@ private with sharing class GE_FormRendererService_TEST {
     private static void createAndProcessDataImportRecord() {
         DataImport__c di = BDI_DataImport_TEST.newDI('First', 'Last', 100);
         // TODO: Update this test to take a Additional Object string, and also process that
-        Id oppId = GE_FormRendererService.saveAndProcessSingleGift(di, null);
+        Id oppId = GE_FormRendererService.saveAndProcessSingleGift(di, null, false);
         System.assert(oppId != null);
     }
 
@@ -56,7 +56,8 @@ private with sharing class GE_FormRendererService_TEST {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         Form_Template__c defaultTemplate = returnFormTemplate();
 
-        FORM_Template template = FORM_ServiceGiftEntry_TEST.createSampleTemplate();
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+
         String templateJSON = JSON.serialize(template);
         defaultTemplate.Template_JSON__c = templateJSON;
         

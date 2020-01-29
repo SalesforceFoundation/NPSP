@@ -49,7 +49,7 @@
                         header: payload.modalProperties.header || '',
                         showCloseButton: payload.modalProperties.showCloseButton || true,
                         cssClass: component.getName() + ' custom-modal ' + payload.modalProperties.cssClass,
-                        closeCallback: payload.modalProperties.closeCallback || function() {
+                        closeCallback: payload.modalProperties.closeCallback || function () {
                             component.set('v.isLoading', false);
                         },
                         body: modalBody,
@@ -65,7 +65,7 @@
 
     /*******************************************************************************
     * @description Handles receipt of events from utilDedicatedListener component
-    * and notifies the geTemplates component.
+    * and notifies the geHome component.
     */
     handleModalEvent: function (component, event, helper) {
         const details = event.getParams('detail');
@@ -74,25 +74,18 @@
             component.find('giftEntryHome').notify(details);
         }
 
-        component.get('v.modal').then(modal => {
-            modal.close();
-            component.set('v.isLoading', true);
-        });
+        helper.handleCloseModal(component);
     },
 
     /*******************************************************************************
     * @description Handles receipt of events from utilDedicatedListener component
-    * and notifies the geTemplates component.
+    * and closes the current modal.
     */
     handleBatchWizardEvent: function (component, event, helper) {
-        component.get('v.modal').then(modal => {
-            modal.close();
-            component.set('v.isLoading', true);
-        });
+        helper.handleCloseModal(component);
     },
 
     handleNewSingleGift: function(component, event){
         component.set('v.isGiftEntryMode', true);
-    },
-
+    }
 })
