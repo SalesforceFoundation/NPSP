@@ -134,7 +134,10 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     * @param {object} event: Custom Event object containing opportunity data.
     */
     handleUpdateOpportunity() {
-        const detail = { objectApiName: OPPORTUNITY_OBJECT.objectApiName, fields: deepClone(this.opportunity) };
+        const detail = {
+            objectApiName: OPPORTUNITY_OBJECT.objectApiName,
+            fields: deepClone(this.opportunity)
+        };
         dispatch(this, 'updateselecteddonation', detail);
     }
 
@@ -145,7 +148,10 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     * @param {object} event: Custom Event object containing opportunity data.
     */
     handleNewPayment() {
-        const detail = { objectApiName: OPPORTUNITY_OBJECT.objectApiName, fields: deepClone(this.opportunity) };
+        const detail = {
+            objectApiName: OPPORTUNITY_OBJECT.objectApiName,
+            fields: deepClone(this.opportunity)
+        };
         detail.fields.applyPayment = true;
         dispatch(this, 'updateselecteddonation', detail);
     }

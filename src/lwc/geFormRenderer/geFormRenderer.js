@@ -13,7 +13,7 @@ import { CONTACT1, ACCOUNT1,
          getRecordFieldNames,
          setRecordValuesOnTemplate,
          getPageAccess } from 'c/utilTemplateBuilder';
-import { getQueryParameters, isEmpty, isNotEmpty, format } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone } from 'c/utilCommon';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
@@ -596,9 +596,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const donationType = detail.fieldApiName === account ? 'account' : 'contact';
             this.selectedDonorId = detail.recordId;
             this.selectedDonationType = donationType;
-        } else {
+        } else if (detail.fieldApiName === account || detail.fieldApiName === contact) {
             this.selectedDonation = undefined;
             this.opportunities = undefined;
+            this.selectedDonorId = undefined;
+            this.selectedDonationType = undefined;
+        } else {
             this.selectedDonorId = undefined;
             this.selectedDonationType = undefined;
         }
@@ -624,6 +627,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 } else {
                     blankDataImportRecord[donationImportStatus] = userSelectedMatch;
                 }
+                blankDataImportRecord[paymentImported] = undefined;
+                blankDataImportRecord[paymentImportStatus] = undefined;
             } else if (donationType === 'payment') {
                 blankDataImportRecord[paymentImported] = selectedDonation.Id;
                 blankDataImportRecord[paymentImportStatus] = userSelectedMatch;
@@ -636,5 +641,43 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         this.blankDataImportRecord = blankDataImportRecord;
+
+        this.applyFieldValuesFromSelectedDonation(blankDataImportRecord);
+    }
+
+    applyFieldValuesFromSelectedDonation(blankDataImportRecord) {
+        let previousFieldValues = {};
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        sectionsList.forEach(section => {
+            previousFieldValues = { ...previousFieldValues, ...section.values };
+        });
+
+        let newFieldValues = { ...previousFieldValues, ...blankDataImportRecord };
+
+        let sections = deepClone(this.sections);
+        sections.forEach(
+            section => {
+                section.elements.forEach(
+                    element => {
+                        const fieldMappingDevName = element.dataImportFieldMappingDevNames[0];
+                        const fieldApiName = element.fieldApiName;
+
+                        if (newFieldValues.hasOwnProperty(fieldApiName)) {
+                            element.defaultValue = newFieldValues[fieldApiName];
+                        } else if (newFieldValues.hasOwnProperty(fieldMappingDevName)) {
+                            element.defaultValue = newFieldValues[fieldMappingDevName];
+                        }
+                    }
+                );
+            }
+        );
+
+        // Workaround to force rerendering of the form.
+        let that = this;
+        this.sections = [];
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        setTimeout(() => {
+            that.sections = sections;
+        }, 1, that, sections);
     }
 }
