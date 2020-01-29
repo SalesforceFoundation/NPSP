@@ -275,14 +275,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             // TODO Handle Past Due Installment
         }
 
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        toggleTriggerState(false);
+
         // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
         oppService.createOpportunities(newOppRDs);
         oppService.updateOpportunities(updateOppRDs);
         oppService.voidOpenOpportunities(closedRDs);
         handleOutdatedRecurringDonations();
 
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+        toggleTriggerState(true);
 
         dbService.processErrors();
 
@@ -319,11 +320,21 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
         }
 
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        toggleTriggerState(false);
         dbService.updateRecords(outdatedRDs);
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+        toggleTriggerState(true);
 
         return this;
+    }
+
+    /**
+     * @description Activate or deactive RD2 triggers
+     * @param isActive Indicates if triggers are active
+     * @return void
+     */
+    private void toggleTriggerState(Boolean isActive) {
+        TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', isActive);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RD2_RecurringDonationsOpp_TDTM', isActive);
     }
 
     /**
