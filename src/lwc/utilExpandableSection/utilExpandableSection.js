@@ -4,7 +4,8 @@ export default class utilExpandableSection extends LightningElement {
 
     @api id;
     @api label;
-    @track isExpanded = false;
+    @api isCollapsed = false;
+    @api alternativeText;
     @track hasSlotContent = false;
 
     get containerClass() {
@@ -20,7 +21,7 @@ export default class utilExpandableSection extends LightningElement {
     get iconClass() {
         let classItems = ['slds-p-right_small', 'icon-transition'];
 
-        if (this.isExpanded) {
+        if (this.isCollapsed) {
             classItems = [...classItems, 'icon-transition_is-open'];
         }
 
@@ -30,7 +31,7 @@ export default class utilExpandableSection extends LightningElement {
     get sectionClass() {
         let classItems = ['section-transition'];
 
-        if (!this.isExpanded) {
+        if (!this.isCollapsed) {
             classItems = [...classItems, 'section-transition_is-closed'];
         }
 
@@ -38,15 +39,15 @@ export default class utilExpandableSection extends LightningElement {
     }
 
     get ariaExpanded() {
-        return this.isExpanded ? true : false;
+        return this.isCollapsed ? true : false;
     }
 
     get ariaHidden() {
-        return this.isExpanded ? false : true;
+        return this.isCollapsed ? false : true;
     }
 
     toggleSection() {
-        this.isExpanded = !this.isExpanded;
+        this.isCollapsed = !this.isCollapsed;
     }
 
     handleSlotChange() {

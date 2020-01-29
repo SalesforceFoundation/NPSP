@@ -72,6 +72,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
     }
 
+    get title() {
+        return this.donorRecord ? `Gift by ${this.donorRecord.fields.Name.value}` : 'New Gift';
+    }
+
+    get isSingleGiftEntry() {
+        return this.batchId ? false : true;
+    }
+
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
     wiredGetRecordMethod({ error, data }) {
         if (data) {

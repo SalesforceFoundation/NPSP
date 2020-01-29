@@ -1,41 +1,36 @@
 <template>
-    <button class='slds-size_1-of-1 slds-text-align_left slds-page-header slds-page-header__title'
-            aria-expanded='true'
-            onclick={toggleExpand}>
-        <h2>
-            <lightning-icon icon-name={iconName} 
-                class='slds-p-right_x-small'    
-                size='x-small'
-                alternative-text='{altTextLabel}'>
-            </lightning-icon>
-            {section.label}
-        </h2>
-    </button>
-    <lightning-layout multiple-rows='true'>
-        <template for:each={section.elements} for:item='element'>
-            <!-- TODO: It would be great to make the layout sizing more dynamic, 
-            but the lightning-layout-item needs to be in the same component as the lightning-layout.
-            Maybe size numbers should be passed as part of the "element"? -->
-            <template if:false={element.componentName}>
-                <lightning-layout-item key={element.id}
-                        class={sectionClassName}
-                        padding='around-small' 
-                        size='6' 
-                        medium-device-size='3'>
-                    <c-ge-form-field element={element}
-                                     onchangelookup={handleChangeLookup}>
-                    </c-ge-form-field>
-                </lightning-layout-item>
+    <c-util-expandable-section id={section.id}
+                               label={section.label}
+                               class="test-class"
+                               alternative-text={altTextLabel}
+                               is-collapsed={collapsed}>
+        <lightning-layout multiple-rows='true'>
+            <template for:each={section.elements}
+                      for:item='element'>
+                <!-- TODO: It would be great to make the layout sizing more dynamic, 
+                                    but the lightning-layout-item needs to be in the same component as the lightning-layout.
+                                    Maybe size numbers should be passed as part of the "element"? -->
+                <template if:false={element.componentName}>
+                    <lightning-layout-item key={element.id}
+                                           class={sectionClassName}
+                                           padding='around-small'
+                                           size='6'
+                                           medium-device-size='3'>
+                        <c-ge-form-field element={element}
+                                         onchangelookup={handleChangeLookup}>
+                        </c-ge-form-field>
+                    </lightning-layout-item>
+                </template>
+                <template if:true={element.componentName}>
+                    <lightning-layout-item key={element.id}
+                                           class={sectionClassName}
+                                           padding='around-small'
+                                           size='12'
+                                           medium-device-size='12'>
+                        <c-ge-form-widget element={element}></c-ge-form-widget>
+                    </lightning-layout-item>
+                </template>
             </template>
-            <template if:true={element.componentName}>
-                <lightning-layout-item key={element.id}
-                        class={sectionClassName}
-                        padding='around-small' 
-                        size='12' 
-                        medium-device-size='12'>
-                    <c-ge-form-widget element={element}></c-ge-form-widget>
-                </lightning-layout-item>
-            </template>
-        </template>
-    </lightning-layout>
+        </lightning-layout>
+    </c-util-expandable-section>
 </template>
