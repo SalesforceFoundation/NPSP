@@ -191,6 +191,9 @@ public with sharing class GE_FormRendererService {
     * @description Run the DataImport process on a single gift
     * @param @param diRecord DataImport record to be processed
     * @param isDryRun Boolean to set if the process should only return import results and not process
+    * @param updateGift Boolean to determine our matching criteria.
+    *                   true = "single match or create" and means we are updating
+    *                   false = "do not match"
     * @return void
     */
     public static void runGiftProcess(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
@@ -280,7 +283,6 @@ public with sharing class GE_FormRendererService {
         try {
             // CRUD / FLS of this operation already verified by checkCRUDFLS()
             List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
-            System.debug('unpaidPayments: ' + unpaidPayments.size());
             Set<Id> oppIdsWithUnpaidPayments = new Set<Id>();
             for (npe01__OppPayment__c payment : unpaidPayments) {
                 oppIdsWithUnpaidPayments.add(payment.npe01__Opportunity__c);
@@ -320,8 +322,7 @@ public with sharing class GE_FormRendererService {
 
             return JSON.serialize(opportunityWrappers);
         } catch (Exception ex){
-            //throw new AuraHandledException(System.Label.Error + ': ' + ex.getMessage());
-            System.debug(ex.getMessage());
+            returnAuraException(ex.getMessage());
         }
 
         return null;

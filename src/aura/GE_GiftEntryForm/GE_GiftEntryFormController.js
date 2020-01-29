@@ -7,7 +7,7 @@
 
         $A.createComponents([["c:geBatchWizard", {
                 recordId: component.get('v.recordId'),
-                dedicatedListenerEventName: 'geBatchWizardEvent',
+                dedicatedListenerEventName: 'geBatchWizardFormEvent',
             }]],
             function (components, status, errorMessage) {
                 if (status === "SUCCESS") {
