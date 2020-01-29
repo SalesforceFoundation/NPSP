@@ -221,12 +221,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined ||
                 Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
 
+                // validation rules on Target Objects shows up here
+                // unfortunately currently it doesnt bring field info yet
+                if ( isNotEmpty(exceptionWrapper.errorMessage) &&
+                        isNotEmpty(JSON.parse(exceptionWrapper.errorMessage).errorMessage) ) {
+                    this.pageLevelErrorMessageList = [{
+                        index: 0,
+                        errorMessage: JSON.parse(exceptionWrapper.errorMessage).errorMessage
+                    }];
+                }
+
                 // If there are no specific fields the error has to go to,
                 // put it on the page level error message.
                 for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
                     this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
-                        {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
+                        {index: dmlIndex+1, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
                 }
+
             } else {
                 // If there is a specific field that each error is supposed to go to,
                 // show it on the field on the page.
