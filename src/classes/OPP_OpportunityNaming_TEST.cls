@@ -37,9 +37,10 @@
 @isTest
 private class OPP_OpportunityNaming_TEST
 {
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
     private static final Date CLOSE_DATE = Date.today().addDays(1);
-
-    private static final Datetime CONVERT_CLOSE_DATE = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day());
+    private static final String CLOSE_DATE_FORMATTED = Datetime.newInstance(CLOSE_DATE.year(), CLOSE_DATE.month(), CLOSE_DATE.day()).format('yyyy.MM.dd');
+    private static final Decimal OPP_AMOUNT = 8;
 
     /****
      * @description Creates data required for unit tests
@@ -289,170 +290,153 @@ private class OPP_OpportunityNaming_TEST
 
     }
 
-    /*******************************************************************************************************
-    * @description Verify if opportunity naming format works when creating opportunity using a user with
-    * language other than English.
-    ********************************************************************************************************/
+     /***
+    * @description Verify the Opportunity name is generated when
+    * non-English user creates an Opportunity
+    */
     @isTest
-    private static void shouldFormatOppNameWhenInsertingForNonEnglishUser() {
-
+    private static void shouldGenerateOppNameWhenNonEnglishUserCreatesAnOpp() {
         String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Both.name();
         setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
-        User standardUser = UTIL_UnitTestData_Test.createUserWithoutInsert('Standard User');
-        //spanish language users to use for opp name formatting
-        User spanishLanguageUser = buildSpanishUser(standardUser);
+        Contact contact = getContact();
 
-        System.runAs(spanishLanguageUser) {
-            Opportunity opp =  buildOpportunity(getContact().Id);
+        System.runAs(buildSpanishUser()) {
+            Opportunity opp = buildOpportunity(contact.Id);
             insert opp;
 
-            List<Opportunity> queryOpp = [SELECT Name FROM Opportunity WHERE Id = :opp.id];
+            String oppName = oppGateway.getRecord(opp.Id).Name;
 
-            String oppName = getContact().Name;
-            oppName += ' ' + '$8';
-            oppName +=  ' ' + CONVERT_CLOSE_DATE.format('yyyy.MM.dd');
-            System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated based on the setting; missing fields should be excluded.');
+            String expectedName = contact.Name
+                + ' $' + OPP_AMOUNT
+                + ' ' + CLOSE_DATE_FORMATTED;
+            System.assertEquals(expectedName, oppName, 'The name should be generated based on the setting; missing fields should be excluded.');
         }
-
     }
 
-    /*******************************************************************************************************
-    * @description Verify if opportunity naming format updates when amount is updated and when refresh name
-    * button is clicked when logged in user language is not English.
-    ********************************************************************************************************/
+    /***
+    * @description Verify the Opportunity name is re-generated when
+    * non-English user clicks refresh name button
+    */
     @isTest
-    private static void shouldUpdateOppNameWhenAmountIsUpdatedForNonEnglishUser() {
-        Opportunity queryOpp;
-
+    private static void shouldGenerateOppNameWhenNonEnglishUserClicksRefreshName() {
         String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
         setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
-        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
+        Contact contact = getContact();
+        Opportunity opp;
 
-        User standardUser = UTIL_UnitTestData_Test.createUserWithoutInsert('Standard User');
-        //spanish language users to use for opp name formatting
-        User spanishLanguageUser = buildSpanishUser(standardUser);
-
-        System.runAs(spanishLanguageUser) {
-            Opportunity opp =  buildOpportunity(getContact().Id);
+        System.runAs(buildSpanishUser()) {
+            opp = buildOpportunity(contact.Id);
             insert opp;
-
-            List<Opportunity> oppCreated = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE Id = :opp.id];
-            String oppName = getContact().Name;
-            oppName += ' ' + '$8';
-            oppName +=  ' ' + CONVERT_CLOSE_DATE.format('yyyy.MM.dd');
-            System.assertEquals(oppName, oppCreated[0].Name, 'The name should be calculated based on the setting.');
-
         }
 
-        queryOpp = [SELECT Id, Name, RecordType.Name, Amount, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :getContact().accountId Limit 1];
-        queryOpp.Amount = 10;
-        update queryOpp;
+        Decimal newAmount = OPP_AMOUNT + 10;
+        opp = oppGateway.getRecord(opp.Id);
+        opp.Amount = newAmount;
+        update opp;
 
-        ApexPages.StandardController sc = new ApexPages.StandardController(queryOpp);
+        ApexPages.StandardController sc = new ApexPages.StandardController(opp);
         OPP_OpportunityNamingBTN_CTRL ctrl = new OPP_OpportunityNamingBTN_CTRL(sc);
 
         PageReference pageRef = Page.OPP_OpportunityNamingBTN;
-        pageRef.getParameters().put('id', String.valueOf(queryOpp.Id));
+        pageRef.getParameters().put('id', String.valueOf(opp.Id));
         Test.setCurrentPage(pageRef);
 
         ctrl.buttonClick();
 
-        String oppName = getContact().Name;
-        oppName += ' ' + '$10';
-        oppName +=  ' ' + CONVERT_CLOSE_DATE.format('yyyy.MM.dd');
-        System.assertEquals(oppName, queryOpp.Name, 'The name should be updated after the refresh name button is clicked.');
-
+        String expectedName = contact.Name
+            + ' $' + newAmount
+            + ' ' + CLOSE_DATE_FORMATTED;
+        System.assertEquals(expectedName, opp.Name, 'The name should be updated after the refresh name button is clicked.');
     }
 
-    /*******************************************************************************************************
-    * @description Verify if opportunity naming format works when batch process is run and existing
-    * opportunity is updated when logged in user language is not English.
-    ********************************************************************************************************/
+    /***
+    * @description Verify the Opportunity name is generated
+    * when non-English user executes the Opp Naming batch
+    */
     @isTest
-    private static void shouldFormatOppNameWhenBatchRunForNonEnglishUser() {
-        List<Opportunity> queryOpp = new List<Opportunity>();
+    private static void shouldGenerateOppNameWhenNonEnglishUserExecutesTheBatch() {
+        Opportunity opp;
+        Contact contact = getContact();
 
-        User standardUser = UTIL_UnitTestData_Test.createUserWithoutInsert('Standard User');
-        //spanish language users to use for opp name formatting
-        User spanishLanguageUser = buildSpanishUser(standardUser);
-
-        System.runAs(spanishLanguageUser) {
-            Opportunity opp =  buildOpportunity(getContact().Id);
+        System.runAs(buildSpanishUser()) {
+            opp = buildOpportunity(contact.Id);
+            String originalOppName = opp.Name;
             insert opp;
 
-            List<Opportunity> oppCreated = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE Id = :opp.id];
-            String oppName = 'temp';
-            System.assertEquals(oppName, oppCreated[0].Name, 'The name should not be formatted as no settings are there');
+            System.assertEquals(originalOppName, oppGateway.getRecord(opp.Id).Name,
+                'The name should not be generated since naming is not configured in settings');
 
+            String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
+            setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+
+            Test.startTest();
+            STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
+            ctrl.runBatch();
+            Test.stopTest();
         }
 
-        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
-        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
-
-        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
-
-        Test.startTest();
-        STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
-        ctrl.runBatch();
-        Test.stopTest();
-
-        queryOpp = [SELECT Name, RecordType.Name, Account.npe01__SYSTEMIsIndividual__c FROM Opportunity WHERE AccountId = :getContact().accountId];
-        String oppName = getContact().Name;
-        oppName += ' ' + '$8';
-        oppName +=  ' ' + CONVERT_CLOSE_DATE.format('yyyy.MM.dd');
-        System.assertEquals(oppName, queryOpp[0].Name, 'The name should be calculated after the batch is run.');
-
+        String expectedName = contact.Name
+            + ' $' + OPP_AMOUNT
+            + ' ' + CLOSE_DATE_FORMATTED;
+        System.assertEquals(expectedName, oppGateway.getRecord(opp.Id).Name,
+            'The name should be generated after the batch is run.');
     }
 
-    /*******************************************************************************************************
-     * @description builds a user with Language as Spanish
-     * @param standardProfile is the Profile
+
+    // Helpers
+    //////////////
+
+    /***
+     * @description Builds a user using Spanish language and locale
      * @return User
-    ********************************************************************************************************/
-    private static User buildSpanishUser(User standardUser) {
-        standardUser.LanguageLocaleKey = 'es';
-        standardUser.LocaleSidKey = 'es';
-        return standardUser;
+     */
+    private static User buildSpanishUser() {
+        User usr = UTIL_UnitTestData_Test.createUserWithoutInsert('Standard User');
+
+        usr.LanguageLocaleKey = 'es';
+        usr.LocaleSidKey = 'es';
+        return usr;
     }
 
-    /*******************************************************************************************************
-     * @description Creates Opportunity naming settings with specified attribution type
-     * @param valueByField A map of field name to value
-    ********************************************************************************************************/
-    private static void setUpOppNamingSettings(Map<String, Object> valueByField) {
-        Opportunity_Naming_Settings__c ons = new Opportunity_Naming_Settings__c(
+    /***
+     * @description Creates Opportunity naming settings
+     * @param valueByField Other field values mapped by their field name
+     * @return void
+     */
+    public static void setUpOppNamingSettings(Map<String, Object> valueByField) {
+        Opportunity_Naming_Settings__c settings = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
-
         );
 
         for (String field : valueByField.keySet()) {
-            ons.put(field, valueByField.get(field));
+            settings.put(field, valueByField.get(field));
         }
-        insert ons;
+        insert settings;
+
+        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
     }
 
-    /*******************************************************************************************************
-     * @description builds opportunity with specified fields
-     * @param contactId is the contact for the opportunity
-     * @return the opportunity for creation
-    ********************************************************************************************************/
+    /***
+     * @description Builds opportunity with specified fields
+     * @param contactId The contact assigned to the opportunity
+     * @return Opportunity
+     */
     private static Opportunity buildOpportunity(Id contactId) {
         return new TEST_OpportunityBuilder()
-            .withName('temp')
-            .withAmount(8)
-            .withContact(ContactId)
+            .withAmount(OPP_AMOUNT)
+            .withContact(contactId)
             .withClosedWonStage()
             .withCloseDate(CLOSE_DATE)
             .build();
     }
 
-    /*******************************************************************************************************
+    /***
      * @description Returns contact record
      * @return Contact
-    ********************************************************************************************************/
+     */
     private static Contact getContact() {
         return [
             SELECT Name, FirstName, LastName, AccountId, Account.Name

@@ -325,7 +325,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         updateOpportunityNamingSettings();
     }
 
-    /*******************************************************************************************************
+    /***
     * @description Update Opportunity Naming Settings Attribution value to the AttributionOptions API value
     */
     public static void updateOpportunityNamingSettings() {

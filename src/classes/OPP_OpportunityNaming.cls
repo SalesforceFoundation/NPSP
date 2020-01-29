@@ -188,7 +188,8 @@ public with sharing class OPP_OpportunityNaming implements OPP_INaming {
                 }
             }
 
-            STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings() .withSelected(ons.Attribution__c);
+            STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings()
+                .withSelected(ons.Attribution__c);
 
             if (oppRecTypeIds.isEmpty()) {
                 mapOppIdSettings.put('', ons);
