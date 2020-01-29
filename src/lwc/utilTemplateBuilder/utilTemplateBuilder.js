@@ -387,6 +387,19 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
                     // get the record value and store it in the element
                     element.recordValue = record.fields[fieldName].value;
                 }
+
+                // Handle account/contact imported fields
+                const targetFieldApiName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+                const isAccountImportedField =
+                    targetFieldApiName === DI_ACCOUNT1_IMPORTED_INFO.fieldApiName &&
+                    record.apiName === ACCOUNT_INFO.objectApiName;
+                const isContactImportedField =
+                    targetFieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName &&
+                    record.apiName === CONTACT_INFO.objectApiName;
+
+                if (isAccountImportedField || isContactImportedField) {
+                    element.defaultValue = record.id;
+                }
             }
         });
     });

@@ -66,7 +66,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track selectedDonation;
     @track blankDataImportRecord;
     @track selectedDonorId;
-    @track selectedDonationType;
+    @track selectedDonorType;
 
     get hasPendingDonations() {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
@@ -94,9 +94,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             GeFormService.getFormTemplate().then(response => {
                 // check if there is a record id in the url
-                this.donorRecordId = getQueryParameters().c__donorRecordId;
-                this.donorApiName = getQueryParameters().c__apiName;
-
+                this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
+                this.selectedDonorType = this.donorApiName = getQueryParameters().c__apiName;
                 // read the template header info
                 if (response !== null && typeof response !== 'undefined') {
                     this.formTemplate = response.formTemplate;
@@ -579,7 +578,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.dispatchEvent(new CustomEvent('togglemodal', { detail: event.detail }));
     }
 
-    @wire(getOpenDonations, { donorId: '$selectedDonorId', donorType: '$selectedDonationType'})
+    @wire(getOpenDonations, { donorId: '$selectedDonorId', donorType: '$selectedDonorType'})
     wiredOpenDonations({ error, data }) {
         if (data) {
             this.opportunities = isNotEmpty(data) ? JSON.parse(data) : undefined;
@@ -593,17 +592,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
         if (detail.recordId && (detail.fieldApiName === account || detail.fieldApiName === contact)) {
-            const donationType = detail.fieldApiName === account ? 'account' : 'contact';
+            const donorType = detail.fieldApiName === account ? 'Account' : 'Contact';
             this.selectedDonorId = detail.recordId;
-            this.selectedDonationType = donationType;
+            this.selectedDonorType = donorType;
         } else if (detail.fieldApiName === account || detail.fieldApiName === contact) {
             this.selectedDonation = undefined;
             this.opportunities = undefined;
             this.selectedDonorId = undefined;
-            this.selectedDonationType = undefined;
+            this.selectedDonorType = undefined;
         } else {
             this.selectedDonorId = undefined;
-            this.selectedDonationType = undefined;
+            this.selectedDonorType = undefined;
         }
     }
 

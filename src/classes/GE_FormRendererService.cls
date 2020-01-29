@@ -259,9 +259,9 @@ public with sharing class GE_FormRendererService {
         }
 
         String relationshipField;
-        if (donorType == 'account') {
+        if (donorType == 'Account') {
             relationshipField = 'AccountId';
-        } else if (donorType == 'contact') {
+        } else if (donorType == 'Contact') {
             relationshipField = 'npsp__Primary_Contact__c';
         }
 

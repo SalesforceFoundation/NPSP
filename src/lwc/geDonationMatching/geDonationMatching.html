@@ -3,7 +3,7 @@
         <lightning-layout multiple-rows="true"
                           class="slds-p-around_small">
             <template if:true={isLoading}>
-                <lightning-spinner></lightning-spinner>
+                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
             </template>
 
             <lightning-layout-item class="slds-p-horizontal_small"
