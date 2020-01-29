@@ -139,7 +139,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
 
         // use custom metadata record name as key
-        widgetData['GAU_Allocation_1_d646a6549'] = widgetRowValues;
+        widgetData[this.element.dataImportObjectMappingDevName] = widgetRowValues;
         // console.log(widgetData); 
         return widgetData;
     }
@@ -203,7 +203,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     reallocateByPercent(totalDonation) {
         const rows = this.template.querySelectorAll('c-ge-form-widget-row');
-        if(isNotEmpty(rows)) {
+        if(rows.length > 0) {
             rows.forEach(row => row.reallocateByPercent(totalDonation));
         }
     }
