@@ -36,6 +36,10 @@
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>npe03__Recurring_Donation__c.Close_Recurring_Donation</members>
+        <name>QuickAction</name>
+    </types>
+    <types>
         <members>npe03__Recurring_Donation__c-Enhanced Recurring Donations Layout</members>
         <name>Layout</name>
     </types>

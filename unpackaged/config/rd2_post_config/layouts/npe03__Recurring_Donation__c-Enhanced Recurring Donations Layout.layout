@@ -133,6 +133,9 @@
         <quickActionListItems>
             <quickActionName>NewTask</quickActionName>
         </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>npe03__Recurring_Donation__c.Close_Recurring_Donation</quickActionName>
+        </quickActionListItems>
     </quickActionList>
     <relatedLists>
         <fields>OPPORTUNITY.NAME</fields>
