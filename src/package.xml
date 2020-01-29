@@ -757,7 +757,6 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
-        <members>geFormRendererPlaceholder</members>
         <members>modalFooter</members>
         <members>modalHeader</members>
         <members>pageNotification</members>
