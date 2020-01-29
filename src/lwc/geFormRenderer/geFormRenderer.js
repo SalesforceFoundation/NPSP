@@ -158,7 +158,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleSaveSingleGiftEntry(sectionsList,enableSaveButton,toggleSpinner) {
+    handleSaveSingleGiftEntry(sectionsList,enableSave,toggle) {
 
         // handle error on callback from promise
         const handleCatchError = (err) => this.handleCatchOnSave(err);
@@ -166,14 +166,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         GeFormService.handleSave(sectionsList, this.donorRecord).then(opportunityId => {
             this.navigateToRecordPage(opportunityId);
         }).catch(error => {
-            enableSaveButton();
-            toggleSpinner();
+            enableSave();
+            toggle();
             handleCatchError(error);
         });
 
     }
 
-    handleSaveBatchGiftEntry(sectionsList,enableSaveButton,toggleSpinner) {
+    handleSaveBatchGiftEntry(sectionsList,enableSave,toggle) {
 
         // reset function for callback
         const reset = () => this.reset();
@@ -186,13 +186,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             detail: {
                 data: data,
                 success: () => {
-                    enableSaveButton();
-                    toggleSpinner();
+                    enableSave();
+                    toggle();
                     reset();
                 },
                 error: (error) => {
-                    enableSaveButton();
-                    toggleSpinner();
+                    enableSave();
+                    toggle();
                     handleCatchError(error);
                 }
             }
@@ -289,7 +289,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }.bind(event.target);
 
         // handle save depending mode
-        this.batchId ? this.handleSaveBatchGiftEntry(sectionsList) : this.handleSaveSingleGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
+        if (this.batchId) {
+            this.handleSaveBatchGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
+        } else {
+            this.handleSaveSingleGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
+        }
 
     }
 
