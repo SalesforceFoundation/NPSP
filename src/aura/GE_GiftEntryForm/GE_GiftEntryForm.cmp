@@ -11,7 +11,7 @@
     <aura:attribute name="modal"
                     type="Object"/>
 
-    <c:utilDedicatedListener eventName="geBatchWizardEvent"
+    <c:utilDedicatedListener eventName="geBatchWizardFormEvent"
                              onreceiveevent="{!c.handleBatchWizardEvent}"/>
 
     <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
