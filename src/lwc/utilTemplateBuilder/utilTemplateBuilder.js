@@ -381,6 +381,8 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
 
             for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+
+                // set the field values for contact and account
                 if (objectName === record.apiName) {
                     // field name from the mappings
                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
@@ -389,7 +391,7 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
                     element.recordValue = record.fields[fieldName].value;
                 }
 
-                // di fields
+                // set the values for the donor di fields
                 if (objectName === DATA_IMPORT_INFO.objectApiName) {
                     // set the value for the contact/account 1 imported
                     if (element.fieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName &&
