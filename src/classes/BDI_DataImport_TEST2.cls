@@ -1599,8 +1599,6 @@ private with sharing class BDI_DataImport_TEST2 {
 
         listDI = getDIs();
 
-        System.debug(listDI);
-
         // The first import fails, because there would be two new 1x1 Contacts under the same Account
         System.assertEquals(label.bdiErrorOneToOneMultiContact, listDI[0].Contact1ImportStatus__c);
         // The second import succeeds because there is only one 1x1 Contact specified
