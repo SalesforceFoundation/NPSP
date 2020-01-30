@@ -8,7 +8,7 @@ import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
 const ALLOCATION_AMOUNT = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
 const ALLOCATION_PERCENT = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
 
-export default class GeFormWidgetRow extends LightningElement {
+export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowIndex;
     @api rowRecord;
     @api fieldList;
@@ -32,7 +32,6 @@ export default class GeFormWidgetRow extends LightningElement {
                 });
             });
         }
-        // console.log(widgetFieldAndValues); 
         return widgetFieldAndValues;
     }
 

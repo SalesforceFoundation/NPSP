@@ -2,9 +2,9 @@
     <lightning-layout>
         <template for:each={mergedFieldList} for:item='field'>
             <lightning-layout-item key={field.mappedField}
-                    class='slds-p-right_large'
-                    size='6' 
-                    medium-device-size={field.size}>
+                                   class='slds-p-right_large'
+                                   size='6'
+                                   medium-device-size={field.size}>
                 <c-ge-form-field target-field-name={field.mappedField}
                                  onvaluechange={handleChange}
                                  element={field.element}

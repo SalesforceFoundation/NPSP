@@ -12,7 +12,7 @@
             </lightning-layout-item>
         </lightning-layout>
         <template for:each={rowList} for:item='row' for:index='index'>
-            <c-ge-form-widget-row
+            <c-ge-form-widget-row-allocation
                     data-defaultgau={row.isDefaultGAU}
                     field-list={fieldList}
                     key={row.element.key}
@@ -23,7 +23,7 @@
                     disabled={row.element.disabled}
                     onremove={handleRemove}
                     onvaluechange={handleChange}>
-            </c-ge-form-widget-row>
+            </c-ge-form-widget-row-allocation>
         </template>
         <lightning-layout class="slds-p-top--medium slds-m-top--medium slds-border--top">
             <lightning-layout-item size='3'>

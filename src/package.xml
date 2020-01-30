@@ -3332,7 +3332,7 @@
         <members>geFormService</members>
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
-        <members>geFormWidgetRow</members>
+        <members>geFormWidgetRowAllocation</members>
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>

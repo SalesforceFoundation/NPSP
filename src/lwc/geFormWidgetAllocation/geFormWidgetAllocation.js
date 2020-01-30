@@ -119,7 +119,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     @api
     returnValues() {
-        const rows = this.template.querySelectorAll('c-ge-form-widget-row');
+        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
         let widgetData = {};
         let widgetRowValues = [];
 
@@ -141,7 +141,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
         // use custom metadata record name as key
         widgetData[this.element.dataImportObjectMappingDevName] = widgetRowValues;
-        // console.log(widgetData); 
         return widgetData;
     }
 
@@ -203,7 +202,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * @param totalDonation
      */
     reallocateByPercent(totalDonation) {
-        const rows = this.template.querySelectorAll('c-ge-form-widget-row');
+        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
         if(rows.length > 0) {
             rows.forEach(row => row.reallocateByPercent(totalDonation));
         }
