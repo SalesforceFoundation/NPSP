@@ -3,6 +3,7 @@ import { getQueryParameters } from 'c/utilCommon';
 import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
+import createDefaultTemplate from '@salesforce/apex/GE_DefaultTemplate.createDefaultTemplate';
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
@@ -36,6 +37,7 @@ export default class geHome extends LightningElement {
         this.isAccessible = await getPageAccess();
         if (this.isAccessible) {
             this.isLoading = true;
+            createDefaultTemplate();
             await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.setGiftEntryTabName();
             this.setInitialView();

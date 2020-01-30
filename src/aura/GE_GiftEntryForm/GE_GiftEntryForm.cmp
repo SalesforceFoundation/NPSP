@@ -1,4 +1,4 @@
-<aura:component controller="GE_GiftEntryFormCtrl" implements="force:hasSObjectName,force:hasRecordId,flexipage:availableForAllPageTypes"
+<aura:component implements="force:hasSObjectName,force:hasRecordId,flexipage:availableForAllPageTypes"
                 access="global"
                 description="Aura component that wraps the geGiftEntryFormApp LWC component to
                     show modals using the overlayLibrary.">
@@ -9,18 +9,14 @@
     <aura:attribute name="modal"
                     type="Object" />
 
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
-    <aura:attribute name="finishedInit" type="Boolean" default="false"/>
     <c:utilDedicatedListener eventName="geDonationMatchingEvent"
                             onreceiveevent="{!c.closeModal}" />
     <c:utilDedicatedListener eventName="geBatchWizardFormEvent"
                             onreceiveevent="{!c.closeModal}" />
     
-    <aura:renderIf isTrue="{!v.finishedInit}">
-        <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
-                            recordId="{!v.recordId}"
-                            sObjectName="{!v.sObjectName}"
-                            oneditbatch="{!c.handleEditBatch}"
-                            ontogglereviewdonationsmodal="{!c.handleReviewDonationsModal}" />
-    </aura:renderIf>
+    <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
+                        recordId="{!v.recordId}"
+                        sObjectName="{!v.sObjectName}"
+                        oneditbatch="{!c.handleEditBatch}"
+                        ontogglereviewdonationsmodal="{!c.handleReviewDonationsModal}" />
 </aura:component>

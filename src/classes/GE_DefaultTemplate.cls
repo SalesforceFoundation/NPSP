@@ -37,16 +37,14 @@
 
 public with sharing class GE_DefaultTemplate {
     static final String ELEMENT_TYPE_FIELD = 'field';
-
-    public GE_DefaultTemplate() {
-
-    }
-
+    
     /**
-     * @description This method determines if there is a default template, if not, it will create a new template and update the custom setting with 
+     * @description This method determines if there is a default template, 
+     * if not, it will create a new template and update the custom setting with 
      * the newly created template's ID as the default template. 
      *
      */
+    @auraEnabled
     public static void createDefaultTemplate() {
         if (!hasDefaultTemplate()) {
             Form_Template__c newDefaultTemplate = buildDefaultTemplate();
@@ -88,14 +86,17 @@ public with sharing class GE_DefaultTemplate {
     }
 
     /**
-     * @description This method builds a new default template using the base JSON string. It will update the base JSON string with the updated field mapping dev names.
+     * @description This method builds a new default template using the base JSON string. 
+     * It will update the base JSON string with the updated field mapping dev names.
      *   
      *
      * @return A new Form template that is ready to be saved into the DB and used. 
      */
     public static Form_Template__c buildDefaultTemplate() {
         FORM_Template__c newDefaultTemplate = new FORM_Template__c();
-        List<StaticResource> defaultTemplateSRList = [Select Id, Body FROM StaticResource Where Name = 'DefaultGiftEntryTemplate' limit 1];
+        List<StaticResource> defaultTemplateSRList = [SELECT Id, Body 
+                                                        FROM StaticResource 
+                                                        WHERE Name = 'DefaultGiftEntryTemplate' limit 1];
         String defaultTemplateSRJSON = '';
 
         if (!defaultTemplateSRList.isEmpty()) {
@@ -160,15 +161,17 @@ public with sharing class GE_DefaultTemplate {
     }
 
     /**
-     * @description This method builds a mapping of partial dev name to the full dev name using the org's field mapping custom metadata records. 
+     * @description This method builds a mapping of partial dev name to 
+     * the full dev name using the org's field mapping custom metadata records. 
      *
-     * @return A mapping of partial dev name to full dev name. e.g. Account1_Name -> Account1_Name_ee63cf9df
+     * @return A mapping of partial dev name to full dev name. 
+     * e.g. Account1_Name -> Account1_Name_ee63cf9df
      */
     public static Map<String, String> getCurrentDevNameMapping() {
         // Get the org's migrated field mappings. 
-        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = [Select Id, MasterLabel, DeveloperName, Target_Field_API_Name__c, Source_Field_API_Name__c, Target_Object_Mapping__r.Object_API_Name__c
-                                                            FROM Data_Import_Field_Mapping__mdt 
-                                                            Where Data_Import_Field_Mapping_Set__r.DeveloperName = 'Migrated_Custom_Field_Mapping_Set' Limit 1000];
+        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = [SELECT Id, MasterLabel, DeveloperName, Target_Field_API_Name__c, Source_Field_API_Name__c, Target_Object_Mapping__r.Object_API_Name__c
+                                                                    FROM Data_Import_Field_Mapping__mdt 
+                                                                    WHERE Data_Import_Field_Mapping_Set__r.DeveloperName = 'Migrated_Custom_Field_Mapping_Set' Limit 1000];
 
         // A map which contains the partial dev name to the org's full dev name.
         // An example would like this:

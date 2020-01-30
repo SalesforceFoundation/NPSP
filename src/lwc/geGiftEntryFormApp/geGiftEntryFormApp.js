@@ -2,6 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
 import {handleError} from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
+import createDefaultTemplate from '@salesforce/apex/GE_DefaultTemplate.createDefaultTemplate';
 
 export default class GeGiftEntryFormApp extends LightningElement {
     @api recordId;
@@ -10,6 +11,10 @@ export default class GeGiftEntryFormApp extends LightningElement {
     @track isPermissionError;
     @track errorTitle;
     @track errorMessage;
+
+    async connectedCallback() {
+        createDefaultTemplate();
+    }
 
     handleSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');

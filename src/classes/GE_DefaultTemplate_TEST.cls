@@ -45,7 +45,8 @@ public with sharing class GE_DefaultTemplate_TEST {
         try {
             GE_DefaultTemplate.buildDefaultTemplate();
         } catch (Exception e) {
-            System.Assert(false, 'There was an error deserializing the Base JSON to the current FORM_Layout structure');
+            System.Assert(false, 'There was an error deserializing the Base ' + 
+                                  'JSON to the current FORM_Layout structure');
         }
     }   
 }
