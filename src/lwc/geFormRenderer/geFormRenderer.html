@@ -1,14 +1,22 @@
 <template>
-    <template if:true={isAccessible}>
         <lightning-layout multiple-rows='true' class='ge-form-container slds-p-bottom_medium'>
+
+            <template if:true={hasPendingDonations}>
+                <lightning-layout-item size='12'>
+                    <c-ge-review-donations ontogglemodal={toggleModal}
+                                           onchangeselecteddonation={handleChangeSelectedDonation}
+                                           opportunities={opportunities}>
+                    </c-ge-review-donations>
+                </lightning-layout-item>
+            </template>
+
             <lightning-layout-item size='12' class='slds-card'>
                 <div if:true={hasPageLevelError} class="slds-size_1-of-1 slds-card slds-p-around_small">
                     <c-util-page-level-message variant='error'>
-
                         <ul slot="body"
                             class="slds-list_dotted slds-text-color_error">
                             <template for:each={pageLevelErrorMessageList}
-                                        for:item="errorMessageWrapper">
+                                      for:item="errorMessageWrapper">
                                 <li key={errorMessageWrapper.index}>
                                     {errorMessageWrapper.errorMessage}
                                 </li>
@@ -16,8 +24,18 @@
                         </ul>
                     </c-util-page-level-message>
                 </div>
-                <template for:each={sections} for:item='section'>
-                    <c-ge-form-section key={section.id} section={section}></c-ge-form-section>
+                <template if:true={isPermissionError}>
+                    <c-util-illustration title={permissionErrorTitle}
+                                         message={permissionErrorMessage}
+                                         size='large'
+                                         variant='lake-mountain'>
+                    </c-util-illustration>
+                </template>
+                <template if:false={isPermissionError} for:each={sections} for:item='section'>
+                    <c-ge-form-section key={section.id}
+                                       section={section}
+                                       onchangelookup={handleChangeLookup}>
+                    </c-ge-form-section>
                 </template>
             </lightning-layout-item>
         </lightning-layout>
@@ -27,7 +45,11 @@
         </div>
 
         <div class="slds-docked-form-footer ge-form-footer">
-            <lightning-button label={label.geCancel} title={label.geCancel} onclick={handleCancel} class="slds-m-left_x-small"></lightning-button>
+            <lightning-button label={label.geCancel}
+                              title={label.geCancel}
+                              onclick={handleCancel}
+                              class="slds-m-left_x-small">
+            </lightning-button>
             <lightning-button
                     variant="brand"
                     label={saveActionLabel}
@@ -37,15 +59,4 @@
                     disabled={isUpdateActionDisabled}>
             </lightning-button>
         </div>
-    </template>
-
-    <div class="slds-card slds-card_extension" if:false={isAccessible}>
-        <div class="slds-p-top_x-large">
-            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
-                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
-                                 size='large'
-                                 variant='lake-mountain'>
-            </c-util-illustration>
-        </div>
-    </div>
 </template>

@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { getQueryParameters } from 'c/utilCommon';
-import { dispatch } from 'c/utilTemplateBuilder';
+import { dispatch, getPageAccess } from 'c/utilTemplateBuilder';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 
@@ -20,6 +20,7 @@ export default class geHome extends LightningElement {
     @track formTemplateId;
     @track cloneFormTemplate;
     @track isLoading;
+    @track isAccessible = true;
 
     giftEntryTabName;
 
@@ -32,11 +33,14 @@ export default class geHome extends LightningElement {
     }
 
     async connectedCallback() {
-        this.isLoading = true;
-        await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
-        this.setGiftEntryTabName();
-        this.setInitialView();
-        this.isLoading = false;
+        this.isAccessible = await getPageAccess();
+        if (this.isAccessible) {
+            this.isLoading = true;
+            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
+            this.setGiftEntryTabName();
+            this.setInitialView();
+            this.isLoading = false;
+        }
     }
 
     /*******************************************************************************
@@ -106,8 +110,8 @@ export default class geHome extends LightningElement {
     }
 
     /*******************************************************************************
-    * @description Pass through method that receives an event from geListView to
-    * notify parent aura component to construct a modal.
+    * @description Pass through method that receives an event from child components
+    * to notify the parent aura component to construct a modal.
     *
     * @param {object} event: Event object containing a payload for the modal.
     */

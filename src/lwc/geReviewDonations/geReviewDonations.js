@@ -141,6 +141,13 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
         } else {
             this.selectedDonation = this.donationType = undefined;
         }
+
+        const detail = {
+            selectedDonation: this.selectedDonation,
+            donationType: this.donationType
+        }
+
+        dispatch(this, 'changeselecteddonation', detail);
     }
 
     /*******************************************************************************

@@ -4,6 +4,7 @@ import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunRow
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 import {api} from "lwc";
+import { isNotEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
     from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
 
@@ -96,10 +97,14 @@ class GeFormService {
      * @param widgetValues
      * @returns {Promise<Id>}
      */
-    saveAndProcessGift(createdDIRecord, widgetValues) {
+    saveAndProcessGift(createdDIRecord, widgetValues, hasUserSelectedDonation = false) {
         const widgetDataString = JSON.stringify(widgetValues);
         return new Promise((resolve, reject) => {
-            saveAndProcessGift({diRecord: createdDIRecord, widgetData: widgetDataString})
+            saveAndProcessGift({
+                    diRecord: createdDIRecord,
+                    widgetData: widgetDataString,
+                    updateGift: hasUserSelectedDonation
+                })
                 .then((result) => {
                     resolve(result);
                 })
@@ -115,15 +120,17 @@ class GeFormService {
      * @param sectionList
      * @returns opportunityId
      */
-    handleSave(sectionList, record) {
-        let diRecord = this.getDataImportRecord(sectionList, record);
+    handleSave(sectionList, record, dataImportRecord) {
+        let diRecord = this.getDataImportRecord(sectionList, record, dataImportRecord);
 
-        const opportunityID = this.saveAndProcessGift(diRecord);
+        const hasUserSelectedDonation = isNotEmpty(dataImportRecord);
+
+        const opportunityID = this.saveAndProcessGift(diRecord, {}, hasUserSelectedDonation);
 
         return opportunityID;
     }
 
-    getDataImportRecord(sectionList, record){
+    getDataImportRecord(sectionList, record, dataImportRecord){
         // Gather all the data from the input
         let fieldData = {};
         let widgetValues = {};
@@ -143,9 +150,14 @@ class GeFormService {
                 // Get the field mapping wrapper with the CMT record name (this is the key variable).
                 let fieldWrapper = this.getFieldMappingWrapper(key);
 
-                diRecord[fieldWrapper.Source_Field_API_Name] = value;
+                if (value) {
+                    diRecord[fieldWrapper.Source_Field_API_Name] = value;
+                }
             }
         }
+
+        // Include any fields from a user selected donation
+        diRecord = { ...diRecord, ...dataImportRecord };
 
         return diRecord;
     }

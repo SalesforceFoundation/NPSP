@@ -7,6 +7,10 @@ export default class GeGiftEntryFormApp extends LightningElement {
     @api recordId;
     @api sObjectName;
 
+    @track isPermissionError;
+    @track errorTitle;
+    @track errorMessage;
+
     handleSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
 
@@ -51,6 +55,9 @@ export default class GeGiftEntryFormApp extends LightningElement {
         form.load(event.detail);
     }
 
+    handlePermissionErrors() {
+        this.isPermissionError = true;
+    }
     handleEditBatch() {
         this.dispatchEvent(new CustomEvent('editbatch'));
     }
@@ -58,6 +65,10 @@ export default class GeGiftEntryFormApp extends LightningElement {
     get isBatchMode() {
         return this.sObjectName &&
             this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
+    }
+
+    handleReviewDonationsModal(event) {
+        this.dispatchEvent(new CustomEvent('togglereviewdonationsmodal', { detail: event.detail }));
     }
 
 }
