@@ -1,12 +1,11 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
-import { CONTACT_INFO, ACCOUNT_INFO, 
-         DI_CONTACT1_IMPORTED_INFO, DI_ACCOUNT1_IMPORTED_INFO, 
-         DI_DONATION_DONOR_INFO, CONTACT1, ACCOUNT1, handleError } from 'c/utilTemplateBuilder';
+import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunRow
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 import {api} from "lwc";
+import { isNotEmpty } from 'c/utilCommon';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -116,10 +115,14 @@ class GeFormService {
      * @param widgetValues
      * @returns {Promise<Id>}
      */
-    saveAndProcessGift(createdDIRecord, widgetValues) {
+    saveAndProcessGift(createdDIRecord, widgetValues, hasUserSelectedDonation = false) {
         const widgetDataString = JSON.stringify(widgetValues);
         return new Promise((resolve, reject) => {
-            saveAndProcessGift({diRecord: createdDIRecord, widgetData: widgetDataString})
+            saveAndProcessGift({
+                    diRecord: createdDIRecord,
+                    widgetData: widgetDataString,
+                    updateGift: hasUserSelectedDonation
+                })
                 .then((result) => {
                     resolve(result);
                 })
@@ -135,10 +138,12 @@ class GeFormService {
      * @param sectionList
      * @returns opportunityId
      */
-    handleSave(sectionList, record) {
-        const { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record);
+    handleSave(sectionList, record, dataImportRecord) {
+        const { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record, dataImportRecord);
 
-        const opportunityID = this.saveAndProcessGift(diRecord, widgetValues);
+        const hasUserSelectedDonation = isNotEmpty(dataImportRecord);
+
+        const opportunityID = this.saveAndProcessGift(diRecord, widgetValues, hasUserSelectedDonation);
 
         return opportunityID;
     }
@@ -149,7 +154,7 @@ class GeFormService {
      * @param record        Existing account or contact record to attach to the data import record
      * @return {{widgetValues: {}, diRecord: {}}}
      */
-    getDataImportRecord(sectionList, record){
+    getDataImportRecord(sectionList, record, dataImportRecord){
         // Gather all the data from the input
         let fieldData = {};
         let widgetValues = {};
@@ -169,20 +174,14 @@ class GeFormService {
                 // Get the field mapping wrapper with the CMT record name (this is the key variable).
                 let fieldWrapper = this.getFieldMappingWrapper(key);
 
-                diRecord[fieldWrapper.Source_Field_API_Name] = value;
+                if (value) {
+                    diRecord[fieldWrapper.Source_Field_API_Name] = value;
+                }
             }
         }
 
-        if (record) {
-            // set the bdi imported fields for contact or account
-            if (record.apiName === CONTACT_INFO.objectApiName) {
-                diRecord[DI_CONTACT1_IMPORTED_INFO.fieldApiName] = record.id;
-                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = CONTACT1;
-            } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
-                diRecord[DI_ACCOUNT1_IMPORTED_INFO.fieldApiName] = record.id;
-                diRecord[DI_DONATION_DONOR_INFO.fieldApiName] = ACCOUNT1;
-            }
-        }
+        // Include any fields from a user selected donation
+        diRecord = { ...diRecord, ...dataImportRecord };
 
         return { diRecord, widgetValues };
     }

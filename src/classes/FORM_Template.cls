@@ -41,6 +41,8 @@ public with sharing class FORM_Template {
     @AuraEnabled public String description;
     @AuraEnabled public String version;
     @AuraEnabled public FORM_Layout layout;
+    @AuraEnabled public String permissionErrorType;
+    @AuraEnabled public String permissionErrors;
 
     /* Additional props PS */
     @AuraEnabled public FORM_BatchHeaderField[] batchHeaderFields;

@@ -44,11 +44,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldReturnCorrectNumberOfRecords() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template0 = createSampleTemplate();
+        FORM_Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
         fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
 
-        FORM_Template template1 = createSampleTemplate();
+        FORM_Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON1 = JSON.serialize(template1);
         fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
 
@@ -62,11 +62,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldDeleteFormTemplatesWithGivenIds() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template0 = createSampleTemplate();
+        FORM_Template template0 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON0 = JSON.serialize(template0);
         fs.storeFormTemplate(null,template0.name, template0.description, template0.version, templateJSON0);
 
-        FORM_Template template1 = createSampleTemplate();
+        FORM_Template template1 = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON1 = JSON.serialize(template1);
         fs.storeFormTemplate(null,template1.name, template1.description, template1.version, templateJSON1);
 
@@ -87,7 +87,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldCommitAndRetrieveTemplate() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template = createSampleTemplate();
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
         giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = template.name;
 
@@ -109,7 +109,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldRetrieveColumnHeaderBasedOnListName() {
 
         Test.startTest();
-        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        Custom_Column_Header__c[] allHeaders = UTIL_UnitTestData_TEST.createSampleColumnHeaders();
         insert allHeaders;
         Test.stopTest();
 
@@ -127,7 +127,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldPersistOnlyTheSelectedColumnHeadersForTheGivenList() {
 
         Test.startTest();
-        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        Custom_Column_Header__c[] allHeaders = UTIL_UnitTestData_TEST.createSampleColumnHeaders();
         insert allHeaders;
         Test.stopTest();
 
@@ -161,7 +161,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldRetrieveRecordsBasedOnAQueryString() {
 
         Test.startTest();
-        Custom_Column_Header__c[] allHeaders = createSampleColumnHeaders();
+        Custom_Column_Header__c[] allHeaders = UTIL_UnitTestData_TEST.createSampleColumnHeaders();
         insert allHeaders;
         Test.stopTest();
 
@@ -184,7 +184,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldReturnFalseForExistingFormTemplateName() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template = createSampleTemplate();
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
         fs.storeFormTemplate(null,template.name, template.description, template.version, templateJSON);
 
@@ -206,6 +206,33 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             'New template names should return true from `FORM_ServiceGiftEntry.checkNameUniqueness`');
     }
 
+    @isTest
+    static void shouldRetrieveSGETemplateWithPermission() {
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock(true);
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
+            UTIL_Permissions.class,
+            utilPermissionsMockInstance);
+        UTIL_Permissions.setInstance(utilPermissionsMock);
+
+        FORM_Service fs = new FORM_Service();
+
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+
+        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        giftEntrySettings.Default_Single_Gift_Entry_Template__c = 'Sample Template';
+        insert giftEntrySettings;
+        
+        String templateJSON = JSON.serialize(template);
+        fs.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+        
+        UTIL_UnitTestData_TEST.createSampleFieldMappings();
+        
+        FORM_Template updatedTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
+
+        System.assert(String.isBlank(updatedTemplate.permissionErrors), 'There should be no permission errors     when the user has all required CRUD and FLS permissions.');
+        System.assertEquals(updatedTemplate.permissionErrorType, null, 'The template should not have a            permission error type if the user has all required CRUD and FLS permissions.');
+    }
+
     /**************************************************************************************************
     * @description Confirms that a form template used by any Data Import Batch cannot be deleted.
     */
@@ -213,7 +240,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     static void shouldPreventDeletionOfTemplateInUse() {
         FORM_Service fs = new FORM_Service();
 
-        FORM_Template template = createSampleTemplate();
+        FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         String templateJSON = JSON.serialize(template);
         fs.storeFormTemplate(null,
                 template.name,
@@ -371,5 +398,35 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         batch.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
         batch.Process_Using_Scheduled_Job__c = autoProcess;
         return batch;
+    }
+
+    private class UTIL_PermissionsMock implements StubProvider {
+
+        Boolean hasPermission;
+        String permission;
+        
+        public UTIL_PermissionsMock(Boolean hasPermission) {
+            this.hasPermission = hasPermission;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            Set<String> paramNames = new Set<String>(listOfParamNames);
+            
+            switch on stubbedMethodName {
+                when 'canRead' {
+                    return hasPermission;
+                }
+                when 'canCreate' {
+                    return hasPermission;
+                }
+                when 'canUpdate' {
+                    return hasPermission;
+                }
+            }
+            return null;
+        }
     }
 }

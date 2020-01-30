@@ -5,6 +5,9 @@ import { isEmpty, deepClone } from 'c/utilCommon';
 // Import schema for additionally required fields for the template batch header
 import DI_BATCH_NAME_FIELD_INFO from '@salesforce/schema/DataImportBatch__c.Name';
 
+// Import custom label service
+import GeLabelService from 'c/geLabelService';
+
 // Import schema for excluded template batch header fields
 import DI_BATCH_PROCESS_SIZE_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Process_Size__c';
 import DI_BATCH_RUN_ROLLUPS_WHILE_PROCESSING_INFO from '@salesforce/schema/DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c'
@@ -62,6 +65,7 @@ import getGiftEntrySettings from
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
+const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
 
@@ -287,7 +291,7 @@ const handleError = (error) => {
         message = error;
     } else if (error.message) {
         message = error.message;
-    } else if (error.body || error.detail) {
+    } else if ((error.body && error.body.output) || error.detail) {
         if (Array.isArray(error.body) &&
             !error.body.output.errors) {
             message = error.body.map(e => e.message).join(', ');
@@ -338,7 +342,7 @@ const generateId = () => {
 * @param apiName: the sObject api name
 */
 const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
-    let fieldNames = [];
+    let fieldNames = [`${apiName}.Id`];
 
     for (const section of formTemplate.layout.sections) {
         for (const element of section.elements) {
@@ -354,6 +358,38 @@ const getRecordFieldNames = (formTemplate, fieldMappings, apiName) => {
         }
     }
     return fieldNames;
+};
+
+/*******************************************************************************
+* @description this function will determine if a CRUD or FLS permission error page should display if a from   * template is returned with CRUD or FLS errors.
+* @param formTemplate: the form template
+*/
+const checkPermissionErrors = (formTemplate) => {
+    let templateStr = JSON.stringify(formTemplate);
+    let template = JSON.parse(templateStr);
+    if (!template.permissionErrors) {
+        return null;
+    }
+
+    let permissionErrors = new Array(template.permissionErrors);
+    let errorObject = {};
+
+    const FLS_ERROR_TYPE = 'FLS';
+    const CRUD_ERROR_TYPE = 'CRUD';
+
+    if (template.permissionErrors) {
+        errorObject.isPermissionError = true;
+    }
+
+    if (template.permissionErrorType === CRUD_ERROR_TYPE) {
+        errorObject.errorTitle = CUSTOM_LABELS.geErrorObjectCRUDHeader;
+        errorObject.errorMessage = GeLabelService.format                                                      (CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors);
+    } else if (template.permissionErrorType === FLS_ERROR_TYPE) {
+        errorObject.errorTitle = CUSTOM_LABELS.geErrorFLSHeader;
+        errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorFLSBody,                   permissionErrors);
+    }
+
+    return errorObject;
 };
 
 /*******************************************************************************
@@ -376,18 +412,41 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
 
     sections.forEach(section => {
         const elements = section.elements;
+  
         elements.forEach(element => {
             // set an empty default value
             element.recordValue = '';
 
             for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
                 let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+
+                // set the field values for contact and account
                 if (objectName === record.apiName) {
                     // field name from the mappings
                     let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
 
                     // get the record value and store it in the element
                     element.recordValue = record.fields[fieldName].value;
+                }
+
+                // set the values for the donor di fields
+                if (objectName === DATA_IMPORT_INFO.objectApiName) {
+                    // set the value for the contact/account 1 imported
+                    if (element.fieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName &&
+                            record.apiName === CONTACT_INFO.objectApiName ||
+                            element.fieldApiName === DI_ACCOUNT1_IMPORTED_INFO.fieldApiName &&
+                            record.apiName === ACCOUNT_INFO.objectApiName) {
+                        element.defaultValue = record.id;
+                    }
+
+                    // set the value for donor type
+                    if (element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName) {
+                        if (record.apiName === CONTACT_INFO.objectApiName) {
+                            element.defaultValue = CONTACT1;
+                        } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
+                            element.defaultValue = ACCOUNT1;
+                        }
+                    }
                 }
             }
         });
@@ -414,17 +473,6 @@ export {
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
     DEFAULT_BATCH_HEADER_FIELDS,
     EXCLUDED_BATCH_HEADER_FIELDS,
-    dispatch,
-    showToast,
-    handleError,
-    generateId,
-    inputTypeByDescribeType,
-    lightningInputTypeByDataType,
-    findMissingRequiredFieldMappings,
-    findMissingRequiredBatchFields,
-    getRecordFieldNames,
-    setRecordValuesOnTemplate,
-    getPageAccess,
     CONTACT_INFO,
     ACCOUNT_INFO,
     DI_CONTACT1_IMPORTED_INFO,
@@ -433,5 +481,17 @@ export {
     CONTACT1,
     ACCOUNT1,
     DONATION_DONOR_FIELDS,
-    DONATION_DONOR
+    DONATION_DONOR,
+    dispatch,
+    showToast,
+    handleError,
+    generateId,
+    inputTypeByDescribeType,
+    lightningInputTypeByDataType,
+    findMissingRequiredFieldMappings,
+    findMissingRequiredBatchFields,
+    checkPermissionErrors,
+    getRecordFieldNames,
+    setRecordValuesOnTemplate,
+    getPageAccess,
 }
