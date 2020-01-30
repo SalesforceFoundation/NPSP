@@ -24,6 +24,7 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
 
     @api opportunityWrapper;
+    @api selectedDonationId;
 
     @track opportunityObject;
     @track wiredOpportunityRecord;
@@ -97,6 +98,18 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
 
     get opportunityPayments() {
         return this.hasPayments ? this.opportunityWrapper.unpaidPayments : [];
+    }
+
+    get isSelectedDonation() {
+        return this.selectedDonationId &&
+            this.opportunity &&
+            this.opportunity.Id === this.selectedDonationId ?
+            true :
+            false;
+    }
+
+    get computedCardCssClass() {
+        return this.isSelectedDonation ? 'slds-card_extension_active' : '';
     }
 
     getFieldDetails(fieldInfo, wiredOpportunityRecord) {

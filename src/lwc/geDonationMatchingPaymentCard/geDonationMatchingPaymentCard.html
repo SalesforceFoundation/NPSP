@@ -1,7 +1,8 @@
 <template>
     <c-util-card title={paymentComputedName}
                  icon-name="utility:currency"
-                 icon-size="small">
+                 icon-size="small"
+                 css-class={computedCardCssClass}>
         <template if:true={isLoading}>
             <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
         </template>

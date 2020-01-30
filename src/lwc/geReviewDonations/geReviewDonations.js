@@ -111,8 +111,6 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     * overlay library.
     */
     handleReviewDonations() {
-        // TODO: Pass the opp and/or the payment id when updating donation selection
-        // TODO: Add CSS to highlight selected opp/payment card based on id as received in above TODO.
         const donorRecordName = this.donor ? this.donor.fields.Name.value : '';
         const modalHeader = geLabelService.format(
             this.CUSTOM_LABELS.geHeaderMatchingReviewDonations,
@@ -121,6 +119,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
             componentProperties: {
                 opportunities: deepClone(this.opportunities),
                 dedicatedListenerEventName: this.dedicatedListenerEventName,
+                selectedDonationId: this.hasSelectedDonation ? this.selectedDonation.Id : undefined
             },
             modalProperties: {
                 cssClass: 'slds-modal_large',
