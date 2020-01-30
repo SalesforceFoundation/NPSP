@@ -1,13 +1,12 @@
 import { LightningElement, track, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import { dispatch, handleError, showToast, getPageAccess } from 'c/utilTemplateBuilder';
+import { dispatch, handleError, showToast } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
 import { deleteRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_INFO from '@salesforce/schema/Form_Template__c';
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import TEMPLATE_LAST_MODIFIED_DATE_INFO from '@salesforce/schema/Form_Template__c.LastModifiedDate';
 
-const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const SUCCESS = 'success';
 const IS_LOADING = 'isLoading';
 const EVENT_TOGGLE_MODAL = 'togglemodal';
@@ -137,13 +136,8 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     connectedCallback() {
-        this.init();
-    }
-
-    init = async () => {
-        this.isAccessible = await getPageAccess();
         this.isLoading = false;
-    };
+    }
 
     /*******************************************************************************
     * @description Method handles actions for the Templates list view table.
