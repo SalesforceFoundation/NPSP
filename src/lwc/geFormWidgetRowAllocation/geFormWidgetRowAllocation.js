@@ -113,6 +113,8 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         let payload = { [targetFieldName]: value };
         if(isNumeric(value) && value > 0 && !this.isFieldDisabled(ALLOCATION_PERCENT)) {
             this.disableField(ALLOCATION_PERCENT);
+        } else if(isEmpty(value) || value === 0) {
+            this.enableField(ALLOCATION_PERCENT);
         }
 
         return payload;
