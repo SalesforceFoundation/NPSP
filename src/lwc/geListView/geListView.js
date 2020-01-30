@@ -258,13 +258,15 @@ export default class geListView extends LightningElement {
                 const columnEntry = this.columnEntriesByName[this.sortedBy];
                 let orderedByFieldApiName;
 
-                if (checkNestedProperty(this.columnEntriesByName[this.sortedBy],
-                    'typeAttributes', 'label', 'fieldName')) {
-                    orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
-                } else {
-                    orderedByFieldApiName = columnEntry.fieldName;
+                if (columnEntry) {
+                    if (checkNestedProperty(this.columnEntriesByName[this.sortedBy],
+                        'typeAttributes', 'label', 'fieldName')) {
+                        orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
+                    } else {
+                        orderedByFieldApiName = columnEntry.fieldName;
+                    }
+                    orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
                 }
-                orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
             }
 
             let formTemplates = await retrieveRecords({
