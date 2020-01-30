@@ -541,10 +541,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             if (isPaymentRecord && mapWrapper.containsKey((Id)sObj.get('npe01__Opportunity__c'))) {
                 copyRecurringDonationCampaignAndPaymentAllocations(sObj);
 
-            } else if (sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c'))) {
+            } else if (isPaymentRecord && sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c'))) {
                 copyRecurringDonationCampaignAndPaymentAllocations(sObj);
 
-            } else if (sObj.get('CampaignId') != null && mapWrapper.containsKey((Id)sObj.get('CampaignId'))) {
+            } else if (isPaymentRecord && sObj.get('CampaignId') != null && mapWrapper.containsKey((Id)sObj.get('CampaignId'))) {
                 copyRecurringDonationCampaignAndPaymentAllocations(sObj);
 
             } else if (settings.Default_Allocations_Enabled__c) {
