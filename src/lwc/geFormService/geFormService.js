@@ -1,6 +1,4 @@
-import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
-import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunRow
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 import {api} from "lwc";
@@ -36,23 +34,12 @@ class GeFormService {
     fieldMappings;
     objectMappings;
 
-    /**
-     * Retrieve the default form render wrapper.
-     * @returns {Promise<FORM_RenderWrapper>}
-     */
     @api
-    getFormTemplate() {
-        return new Promise((resolve, reject) => {
-            getRenderWrapper({})
-                .then((result) => {
-                    this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
-                    this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
-                    resolve(result);
-                })
-                .catch(error => {
-                    handleError(error);
-                });
-        });
+    setMappings(fieldMappingSetWrapper) {
+        this.fieldMappings =
+            fieldMappingSetWrapper.fieldMappingByDevName;
+        this.objectMappings =
+            fieldMappingSetWrapper.objectMappingByDevName;
     }
 
     /**
@@ -178,10 +165,6 @@ class GeFormService {
         return new Promise((resolve, reject) => {
             getFormRenderWrapper({templateId: templateId})
                 .then(renderWrapper => {
-                    this.fieldMappings =
-                        renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
-                    this.objectMappings =
-                        renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
                     resolve(renderWrapper);
                 })
                 .catch(err => {
