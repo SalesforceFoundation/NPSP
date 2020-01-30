@@ -35,6 +35,7 @@
 * @description Form Service implementations specifically used for gift entry use cases.
 */
 public with sharing class FORM_ServiceGiftEntry {
+    
 
     /*******************************************************************************************************
     * @description Method retrieves records based on a query string.
@@ -205,9 +206,26 @@ public with sharing class FORM_ServiceGiftEntry {
         
          if (!templateObjList.isEmpty()) {
             template = deserializeFormTemplateFromObj(templateObjList[0]);
-        }
 
+            template = checkPermissions(template,
+                new Set<FORM_PermissionValidator.AccessLevel>{
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
+            }
         return template;
+    }
+
+    /*******************************************************************************************************
+    * @description Method for validating CRUD/FLS permissions for a template
+    * @param template - the template to use for CRUD/FLS validation
+    * @param accessLevels - a collection of CRUD/FLS validations to perform on the template (i.e. CREATE/UPDATE/READ)
+    */
+    public static FORM_Template checkPermissions(FORM_Template template, Set<FORM_PermissionValidator.AccessLevel> accessLevels){
+        
+        FORM_PermissionValidator validator = new FORM_PermissionValidator(template, accessLevels);
+
+        return validator.validateTemplate();
     }
 
     /*******************************************************************************************************
