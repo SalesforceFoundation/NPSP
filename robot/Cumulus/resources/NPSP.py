@@ -24,7 +24,7 @@ from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
 
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
-
+from BaseObjects import BaseNPSPPage
 
 from locators_48 import npsp_lex_locators as locators_48
 from locators_47 import npsp_lex_locators as locators_47
@@ -36,7 +36,7 @@ locators_by_api_version = {
 npsp_lex_locators = {}
 
 @selenium_retry
-class NPSP(SalesforceRobotLibraryBase):
+class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = 1.0
@@ -1039,6 +1039,7 @@ class NPSP(SalesforceRobotLibraryBase):
     def click_link_with_text(self, text):
         self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
         locator = npsp_lex_locators['link-text'].format(text)
+        self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)  
     
@@ -1214,7 +1215,8 @@ class NPSP(SalesforceRobotLibraryBase):
         
     def save_current_record_id_for_deletion(self,object_name): 
         """Gets the current page record id and stores it for specified object 
-           in order to delete record during suite teardown """   
+           in order to delete record during suite teardown """  
+        self.pageobjects.current_page_should_be("Details",object_name)    
         id=self.salesforce.get_current_record_id()
         self.salesforce.store_session_record(object_name,id)   
         return id
