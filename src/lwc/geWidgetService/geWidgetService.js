@@ -1,5 +1,17 @@
-import { getAllocationWidgetDevNameStubs } from 'c/geFormWidgetAllocation';
 import { getLikeMatchByKey } from 'c/utilCommon';
+
+/*******************************************************************************
+* @description Stubs of object and field mapping developer names. Used to collect
+* the org specific mapping developer names for the widget geFormWidgetAllocation.
+*/
+const ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS = {
+    objectMappingDeveloperNameStubs: 'GAU_Allocation_1_',
+    fieldMappingDeveloperNameStubs: [
+        'GAU_Allocation_1_GAU_',
+        'GAU_Allocation_1_Amount_',
+        'GAU_Allocation_1_Percent_'
+    ]
+}
 
 class GeWidgetService {
     objectMappingByDevName = null;
@@ -15,24 +27,14 @@ class GeWidgetService {
     }
 
     /*******************************************************************************
-    * @description Getter for the geFormWidgetAllocation object and field mapping
-    * developer name stubs.
-    */
-    get allocationWidgetStubs() {
-        return getAllocationWidgetDevNameStubs(
-            this.objectMappingByDevName,
-            this.fieldMappingByDevName);
-    }
-
-    /*******************************************************************************
     * @description Getter all widget definitions
     * (org specific object and field mapping developer names)
     */
     get definitions() {
         return {
             geFormWidgetAllocation: this.getMappingDeveloperNames(
-                this.allocationWidgetStubs.objectMappingDeveloperNameStubs,
-                this.allocationWidgetStubs.fieldMappingDeveloperNameStubs),
+                ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS.objectMappingDeveloperNameStubs,
+                ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS.fieldMappingDeveloperNameStubs),
             //geFormWidgetSomethingElse: this.getMappingDeveloperNames...
         }
     }
