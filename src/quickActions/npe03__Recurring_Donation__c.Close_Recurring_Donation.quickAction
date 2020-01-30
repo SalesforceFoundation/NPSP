@@ -21,6 +21,6 @@
         </quickActionLayoutColumns>
         <quickActionLayoutColumns/>
     </quickActionLayout>
-    <successMessage>This Recurring Donation has been closed and no future opportunities will be created</successMessage>
+    <successMessage>This Recurring Donation has been closed and no future installment Opportunities will be created.</successMessage>
     <type>Update</type>
 </QuickAction>
