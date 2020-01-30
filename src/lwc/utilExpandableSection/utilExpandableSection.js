@@ -6,6 +6,7 @@ export default class utilExpandableSection extends LightningElement {
     @api label;
     @api isCollapsed = false;
     @api alternativeText;
+    @api bodyClass;
     @track hasSlotContent = false;
 
     get containerClass() {
@@ -33,6 +34,12 @@ export default class utilExpandableSection extends LightningElement {
 
         if (!this.isCollapsed) {
             classItems = [...classItems, 'section-transition_is-closed'];
+        } else {
+            // Apply provided css class to body if section is expanded
+            if (this.bodyClass) {
+                let bodyClass = this.bodyClass.split(' ');
+                classItems = [...classItems, ...bodyClass];
+            }
         }
 
         return classItems.join(' ');

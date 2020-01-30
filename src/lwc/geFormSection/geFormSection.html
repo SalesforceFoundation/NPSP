@@ -2,7 +2,8 @@
     <c-util-expandable-section id={section.id}
                                label={section.label}
                                alternative-text={altTextLabel}
-                               is-collapsed={collapsed}>
+                               is-collapsed={collapsed}
+                               body-class="slds-m-bottom_large">
         <lightning-layout multiple-rows='true'>
             <template for:each={section.elements}
                       for:item='element'>
@@ -12,12 +13,13 @@
                 <template if:false={element.componentName}>
                     <lightning-layout-item key={element.id}
                                            class={sectionClassName}
-                                           padding='around-small'
                                            size='6'
                                            medium-device-size='3'>
-                        <c-ge-form-field element={element}
-                                         onchangelookup={handleChangeLookup}>
-                        </c-ge-form-field>
+                        <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
+                            <c-ge-form-field element={element}
+                                             onchangelookup={handleChangeLookup}>
+                            </c-ge-form-field>
+                        </article>
                     </lightning-layout-item>
                 </template>
                 <template if:true={element.componentName}>
