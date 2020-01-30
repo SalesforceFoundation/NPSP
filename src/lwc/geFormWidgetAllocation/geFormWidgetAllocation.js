@@ -297,6 +297,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return amount;
     }
 
+    get showRemainingAmount() {
+        return this.hasDefaultGAU === false && this.remainingAmount >= 0;
+    }
+
     get remainingAmount() {
         if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
             return this.totalAmount - this.allocatedAmount;

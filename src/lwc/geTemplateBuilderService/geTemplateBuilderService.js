@@ -121,12 +121,12 @@ class GeTemplateBuilderService {
             Element_Type: 'widget',
             Widget_Object_Mapping_Developer_Name: allocationWidgetDefinition.objectMappingDeveloperName,
             Widget_Field_Mapping_Developer_Names: allocationWidgetDefinition.fieldMappingDeveloperNames
-        }
+        };
 
         objectMappingByDevName.Widgets = {
             DeveloperName: 'Widgets',
             MasterLabel: 'Widgets'
-        }
+        };
 
         fieldMappingsByObjMappingDevName.Widgets = [
             fieldMappingByDevName.geFormWidgetAllocation
