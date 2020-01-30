@@ -318,7 +318,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if(isNotEmpty(this.alertBanner.level)) {
             const warningIcon = 'utility:warning';
             const errorIcon = 'utility:error';
-            switch(alert.level) {
+            switch(this.alertBanner.level) {
                 case 'error':
                     return errorIcon;
                 case 'warning':
@@ -333,7 +333,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if(isNotEmpty(this.alertBanner.level)) {
             const warningClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning';
             const errorClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error';
-            switch(alert.level) {
+            switch(this.alertBanner.level) {
                 case 'error':
                     return errorClass;
                 case 'warning':
