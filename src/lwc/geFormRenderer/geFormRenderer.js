@@ -547,9 +547,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     reset() {
         this._dataRow = undefined;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
 
         sectionsList.forEach(section => {
             section.reset();
+        });
+
+        widgetList.forEach( widget => {
+            widget.reset();
         });
     }
 

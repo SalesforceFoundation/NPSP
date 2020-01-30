@@ -21,7 +21,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track alertBanner = {}; // { level: ('error', 'warning'), message: String }
     @track rowList = [];
     @track fieldList = [];
-    @track value;
     @track allocationSettings;
     @track _totalAmount;
 
@@ -69,7 +68,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
 
     init = async () => {
-        this.allocationSettings = await GeFormService.getAllocationSettings();
+        if(!this.allocationSettings) {
+            this.allocationSettings = await GeFormService.getAllocationSettings();
+        }
         if(this.hasDefaultGAU) {
             this.addRow(true);
         }
@@ -142,6 +143,12 @@ export default class GeFormWidgetAllocation extends LightningElement {
         // use custom metadata record name as key
         widgetData[this.element.dataImportObjectMappingDevName] = widgetRowValues;
         return widgetData;
+    }
+
+    @api
+    reset() {
+        this.rowList = [];
+        this.init();
     }
 
     /**
