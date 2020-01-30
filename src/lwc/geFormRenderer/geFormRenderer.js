@@ -468,16 +468,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let label;
         switch (validationErrorLabelReplacements.length) {
             case 2:
-                label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeInvalid;
+                label = this.CUSTOM_LABELS.geErrorDonorTypeInvalid;
                 break;
             case 3:
-                label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeValidationSingle;
+                label = this.CUSTOM_LABELS.geErrorDonorTypeValidationSingle;
                 break;
             case 4:
-                label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeValidation;
+                label = this.CUSTOM_LABELS.geErrorDonorTypeValidation;
                 break;
             default:
-                label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeInvalid;
+                label = this.CUSTOM_LABELS.geErrorDonorTypeInvalid;
         }
 
         // set message using replacement array
