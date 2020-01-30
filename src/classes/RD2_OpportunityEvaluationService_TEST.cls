@@ -888,6 +888,58 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+     * @description The Current and Next Year Value should exclude future Closed Lost Opps.
+     */
+    @IsTest
+    private static void yearValuesShouldExcludeFutureClosedLostOpp() {        
+        //set current date override
+        final Date today = START_DATE.addMonths(1).addDays(1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1))//past Opp
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(2))//future Opp but Closed Lost
+                .withClosedLostStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(3))//Dec Opp
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Test.startTest();
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        rd.StartDate__c = today;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        Decimal expectedValue = RD_AMOUNT//Opp with the past Close Date is not updated
+            + 0//the next future Closed Lost Opp is excluded
+            + RD_NEW_AMOUNT;//future Opp with Close Date in Dec is updated
+
+        System.assertEquals(expectedValue, rd.CurrentYearValue__c,
+            'Current Year Value should not include future Closed Lost Opp');
+        System.assertEquals(RD_NEW_AMOUNT * 12, rd.NextYearValue__c,
+            'Next Year Value should not double count an installment when the matching Opp exists');
+    }
+
+    /**
      * @description The calendar Current and Next Year Value should not count projected installments after RD is Closed
      */
     @IsTest
@@ -930,6 +982,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Amount__c, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
             'Next Year Value should include next year Closed Won amounts when RD is Closed');
     }
+
 
 
 

@@ -241,9 +241,9 @@ public inherited sharing class RD2_OpportunityMatcher {
         * @return Decimal
         */
         public Decimal getAmount() {
-            Decimal amount = hasInstallment() && isNew()
+            Decimal amount = (hasInstallment() && isNew())
                 ? installment.installmentAmount
-                : opp.Amount;
+                : (isClosedLost() ? 0 : opp.Amount);
 
             return amount == null ? 0 : amount;
         }
