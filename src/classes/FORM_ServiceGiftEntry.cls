@@ -187,7 +187,7 @@ public with sharing class FORM_ServiceGiftEntry {
         FORM_Template template;
         List<Form_Template__c> templateObjList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 
-                                WHERE Id =: giftEntrySettings.Default_Single_Gift_Entry_Template__c];
+                                WHERE Id =: giftEntrySettings.Default_Gift_Entry_Template__c];
          
          if (!templateObjList.isEmpty()) {
             template = deserializeFormTemplateFromObj(templateObjList[0]);

@@ -928,7 +928,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             giftEntrySettings = new Gift_Entry_SEttings__c();
         }
 
-        giftEntrySettings.Default_Single_Gift_Entry_Template__c = myGiftEntrySettings.Default_Single_Gift_Entry_Template__c;
+        giftEntrySettings.Default_Gift_Entry_Template__c = myGiftEntrySettings.Default_Gift_Entry_Template__c;
 
         orgGiftEntrySettings = giftEntrySettings;
 

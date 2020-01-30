@@ -63,7 +63,7 @@ private with sharing class GE_FormRendererService_TEST {
         
         insert defaultTemplate;
 
-        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = defaultTemplate.Id;
+        giftEntryCustomSetting.Default_Gift_Entry_Template__c = defaultTemplate.Id;
 
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 

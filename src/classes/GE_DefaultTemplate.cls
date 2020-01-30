@@ -50,11 +50,11 @@ public with sharing class GE_DefaultTemplate {
     public static void createDefaultTemplate() {
         if (!hasDefaultTemplate()) {
             Form_Template__c newDefaultTemplate = buildDefaultTemplate();
-
+            
             insert newDefaultTemplate;
 
             Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
-            giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = newDefaultTemplate.Id;
+            giftEntryCustomSetting.Default_Gift_Entry_Template__c = newDefaultTemplate.Id;
 
             update giftEntryCustomSetting;
         }
@@ -71,12 +71,12 @@ public with sharing class GE_DefaultTemplate {
         Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
         Boolean hasDefaultTemplate = false;
 
-        if (giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c != null && giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c != '') {
+        if (giftEntryCustomSetting.Default_Gift_Entry_Template__c != null && giftEntryCustomSetting.Default_Gift_Entry_Template__c != '') {
             
             // If there is an ID already stored, try to get this particular template. 
             List<Form_Template__c> templateList = [SELECT Id, Name 
                                                     FROM Form_Template__c 
-                                                    WHERE Id =: giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c];
+                                                    WHERE Id =: giftEntryCustomSetting.Default_Gift_Entry_Template__c];
 
             // IF there is an associated template, there is a valid default template. 
             if (!templateList.isEmpty()){ 

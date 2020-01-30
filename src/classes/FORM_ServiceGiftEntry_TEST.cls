@@ -89,7 +89,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
-        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = template.name;
+        giftEntryCustomSetting.Default_Gift_Entry_Template__c = template.name;
 
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
@@ -219,7 +219,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
 
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
-        giftEntrySettings.Default_Single_Gift_Entry_Template__c = 'Sample Template';
+        giftEntrySettings.Default_Gift_Entry_Template__c = 'Sample Template';
         insert giftEntrySettings;
         
         String templateJSON = JSON.serialize(template);
@@ -301,7 +301,7 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         // gift entry custom settings set up
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
-        giftEntryCustomSetting.Default_Single_Gift_Entry_Template__c = templateName;
+        giftEntryCustomSetting.Default_Gift_Entry_Template__c = templateName;
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
         // retrieve templates with id
