@@ -13,6 +13,10 @@ export default class GeGiftEntryFormApp extends LightningElement {
     objectMappingsByDevName;
     isReady = false;
 
+    @track isPermissionError;
+    @track errorTitle;
+    @track errorMessage;
+
     /**
      * Initialize the app by retrieving the default form render wrapper, which contains
      * the default form template and the field mappings from Advanced Mapping.
@@ -34,10 +38,6 @@ export default class GeGiftEntryFormApp extends LightningElement {
             handleError(error);
         }
     }
-
-    @track isPermissionError;
-    @track errorTitle;
-    @track errorMessage;
 
     handleSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
