@@ -18,6 +18,7 @@ import commonOpen from '@salesforce/label/c.commonOpen';
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
     @track ready = false;
+    @api fieldMappingsByDevName = null;
 
     _batchLoaded = false;
     @track data = [];
@@ -110,11 +111,15 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             section => {
                 section.elements.forEach(
                     element => {
+                        const fieldMappingDevName =
+                            element.dataImportFieldMappingDevNames[0];
+                        const sourceFieldName =
+                            this.fieldMappingsByDevName[fieldMappingDevName]
+                                .Source_Field_API_Name;
+
                         const column = {
                             label: element.label,
-                            fieldName: GeFormService.getFieldMappingWrapper(
-                                element.dataImportFieldMappingDevNames[0]
-                            ).Source_Field_API_Name,
+                            fieldName: sourceFieldName,
                             type: GeFormService.getInputTypeFromDataType(
                                 element.dataType
                             ) === 'date' ? 'date-local' :

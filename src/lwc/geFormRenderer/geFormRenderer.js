@@ -45,7 +45,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorApiName;
     @api donorRecord;
 
+    @track formTemplateId = null;
+    @track formTemplate = null;
+    @api defaultTemplate = null;
+
     fieldNames = [];
+    @api fieldMappingsByDevName = null;
     @api sections = [];
     @api showSpinner = false;
     @api batchId;
@@ -56,16 +61,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track isPermissionError = false;
     @track permissionErrorTitle;
     @track permissionErrorMessage;
-    @track formTemplate;
-    @track fieldMappings;
     @track ready = false;
     @track name = '';
     @track description = '';
     @track mappingSet = '';
     @track version = '';
-    label = { messageLoading, geSave, geCancel };
-    @track formTemplateId;
-
     label = { messageLoading, geSave, geCancel };
     erroredFields = [];
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -86,49 +86,48 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     wiredGetRecordMethod({ error, data }) {
         if (data) {
             this.donorRecord = data;
-            this.initializeForm(this.formTemplate, this.fieldMappings);
+            this.initializeForm(this.formTemplate, this.fieldMappingsByDevName);
         } else if (error) {
             console.error(JSON.stringify(error));
         }
     }
 
    connectedCallback() {
-        this.checkPageAccess();
-        if (this.isAccessible) {
-            if (this.batchId) {
-                // When the form is being used for Batch Gift Entry, the Form Template JSON
-                // uses the @wire service below to retrieve the Template using the Template Id
-                // stored on the Batch.
-                return;
-            }
+       this.checkPageAccess();
+       if (this.isAccessible) {
+           if (this.batchId) {
+               // When the form is being used for Batch Gift Entry, the Form Template
+               // is retrieved using the Template Id stored on the Batch.
+               return;
+           } else {
+               this.formTemplate = this.defaultTemplate;
 
-            GeFormService.getFormTemplate().then(response => {
-                // check if there is a record id in the url
-                this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
-                this.selectedDonorType = this.donorApiName = getQueryParameters().c__apiName;
-                // read the template header info
-                if (response !== null && typeof response !== 'undefined') {
-                    this.formTemplate = response.formTemplate;
-                    this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+               let errorObject = checkPermissionErrors(this.formTemplate);
+               if (errorObject) {
+                   this.setPermissionsError(errorObject);
 
-                    let errorObject = checkPermissionErrors(this.formTemplate);
-                    if (errorObject) {
-                        this.setPermissionsError(errorObject);
+                   return;
+               }
 
-                        return;
-                    }
+               // check if there is a record id in the url
+               this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
+               this.selectedDonorType = this.donorApiName = getQueryParameters().c__apiName;
 
-                    // get the target field names to be used by getRecord
-                    this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings,                    this.donorApiName);
-                    if (isEmpty(this.donorRecordId)) {
-                        // if we don't have a donor record, it's ok to initialize the form now
-                        // otherwise the form will be initialized after wiredGetRecordMethod completes
-                        this.initializeForm(this.formTemplate);
-                    }
-                }
-            });
-        }
-    }
+               // get the target field names to be used by getRecord
+               this.fieldNames = getRecordFieldNames(
+                   this.formTemplate,
+                   this.fieldMappingsByDevName,
+                   this.donorApiName
+               );
+
+               if (isEmpty(this.donorRecordId)) {
+                   // if we don't have a donor record, it's ok to initialize the form now
+                   // otherwise the form will be initialized after wiredGetRecordMethod completes
+                   this.initializeForm(this.formTemplate);
+               }
+           }
+       }
+   }
 
     initializeForm(formTemplate, fieldMappings) {
         // read the template header info

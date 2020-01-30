@@ -1,11 +1,39 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api, track, wire} from 'lwc';
 import GeFormService from 'c/geFormService';
 import {handleError} from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
+import getFormRenderWrapper
+    from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
 
 export default class GeGiftEntryFormApp extends LightningElement {
     @api recordId;
     @api sObjectName;
+    defaultTemplate = null;
+    fieldMappingsByDevName;
+    objectMappingsByDevName;
+    isReady = false;
+
+    /**
+     * Initialize the app by retrieving the default form render wrapper, which contains
+     * the default form template and the field mappings from Advanced Mapping.
+     */
+    @wire(getFormRenderWrapper, {templateId: null})
+    initializeDefaultTemplateAndMappings({data, error}){
+        if (data) {
+            this.defaultTemplate = data.formTemplate;
+
+            this.fieldMappingsByDevName =
+                data.fieldMappingSetWrapper.fieldMappingByDevName;
+            this.objectMappingsByDevName =
+                data.fieldMappingSetWrapper.objectMappingByDevName;
+
+            GeFormService.setMappings(data.fieldMappingSetWrapper);
+
+            this.isReady = true;
+        } else if(error) {
+            handleError(error);
+        }
+    }
 
     @track isPermissionError;
     @track errorTitle;
