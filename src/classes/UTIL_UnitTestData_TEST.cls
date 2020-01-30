@@ -439,6 +439,74 @@ public class UTIL_UnitTestData_TEST {
         insert listConT;
     }
 
+    //Utility method for creating a sample template.
+    public static FORM_Template createSampleTemplate () {
+        
+        FORM_Element field = new FORM_Element('FormField',
+                                              'True',
+                                               null,
+                                               'CustomLabel',
+                                               new List<String>{'Account_1_Name','Account_1_Country'});
+        
+        FORM_Element widget = new FORM_Element('FormWidget',
+                                               'DisplayRule',
+                                               'ComponentName',
+                                                new List<String>{'Contact_1_First_Name',                        'Contact_1_Last_Name'});
+        
+        FORM_Element[] elements = new FORM_Element[]{field,widget};
+
+        FORM_Section section = new FORM_Section('SectionLabel',
+                                                'Accordion',
+                                                'Expanded',
+                                                'True',
+                                                elements);
+        
+        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
+                                            new FORM_Section[]{section});
+
+        FORM_Template template = new FORM_Template('Sample Template',
+                                                   'This is the description.',
+                                                   '1.0',
+                                                   layout);
+        return template;
+    }
+
+    //Utility method for creating sample column headers.
+    public static List<Custom_Column_Header__c> createSampleColumnHeaders () {
+        
+        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
+        columnHeader.Name = 'sampleColumnHeader';
+        columnHeader.List_Name__c = 'Sample List';
+        columnHeader.Index__c = 0;
+        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
+
+        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
+        columnHeader2.Name = 'sampleColumnHeader2';
+        columnHeader2.List_Name__c = 'Sample List 2';
+        columnHeader2.Index__c = 0;
+        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
+
+        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
+        columnHeader3.Name = 'sampleColumnHeader3';
+        columnHeader3.List_Name__c = 'Sample List 2';
+        columnHeader3.Index__c = 1;
+        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
+
+        return new List<Custom_Column_Header__c> { columnHeader, columnHeader2, columnHeader3 };
+    }
+
+    // Method to create instance of field mappings to use in test data
+    public static BDI_MappingServiceAdvanced createSampleFieldMappings() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =                                                            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+        
+        return mappingService;
+    }
 
     /**
      * @description Create Engagement Plan Templates for unit testing.
