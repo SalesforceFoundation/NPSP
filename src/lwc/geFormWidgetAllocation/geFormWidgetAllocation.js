@@ -351,24 +351,3 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
 }
-
-/*******************************************************************************
-* @description Method returns stubs of object and field mapping developer names.
-* Used to collect the org specific mapping developer names in the
-* GeWidgetService component.
-*/
-const getAllocationWidgetDevNameStubs = () => {
-    const GAU_ALLOCATION_DEVELOPER_NAME_STUB = 'GAU_Allocation_1_';
-    const FIELD_DEVELOPER_NAME_STUBS = [
-        'GAU_Allocation_1_GAU_',
-        'GAU_Allocation_1_Amount_',
-        'GAU_Allocation_1_Percent_'
-    ];
-
-    return {
-        objectMappingDeveloperNameStubs: GAU_ALLOCATION_DEVELOPER_NAME_STUB,
-        fieldMappingDeveloperNameStubs: FIELD_DEVELOPER_NAME_STUBS,
-    }
-}
-
-export { getAllocationWidgetDevNameStubs }
