@@ -92,6 +92,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.reallocateByPercent(value);
             // assign remainder to default GAU
             this.allocateDefaultGAU();
+            this.validate();
         }
     }
 
