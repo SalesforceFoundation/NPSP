@@ -1,15 +1,14 @@
 <template>
     <c-util-expandable-section id={section.id}
                                label={section.label}
-                               class="test-class"
                                alternative-text={altTextLabel}
                                is-collapsed={collapsed}>
         <lightning-layout multiple-rows='true'>
             <template for:each={section.elements}
                       for:item='element'>
                 <!-- TODO: It would be great to make the layout sizing more dynamic, 
-                                    but the lightning-layout-item needs to be in the same component as the lightning-layout.
-                                    Maybe size numbers should be passed as part of the "element"? -->
+                    but the lightning-layout-item needs to be in the same component as the lightning-layout.
+                    Maybe size numbers should be passed as part of the "element"? -->
                 <template if:false={element.componentName}>
                     <lightning-layout-item key={element.id}
                                            class={sectionClassName}

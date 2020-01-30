@@ -2,8 +2,8 @@ import { LightningElement, api, track, wire } from 'lwc';
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
-import geSave from '@salesforce/label/c.labelGeSave';
-import geCancel from '@salesforce/label/c.labelGeCancel';
+import geSave from '@salesforce/label/c.geButtonSaveNewGift';
+import geCancel from '@salesforce/label/c.geButtonCancelAndClear';
 import geUpdate from '@salesforce/label/c.commonUpdate';
 import geLabelService from 'c/geLabelService';
 import { DONATION_DONOR_FIELDS, DONATION_DONOR,
