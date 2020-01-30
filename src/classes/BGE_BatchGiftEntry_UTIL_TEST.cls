@@ -92,10 +92,8 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
                 new FORM_Element(
                         'widget', '', '', '',
                         new String[]{
-                                UTIL_Namespace.alignSchemaNSWithEnvironment(
-                                        'Account_2_Country'),
-                                UTIL_Namespace.alignSchemaNSWithEnvironment(
-                                        'Account_2_City')
+                                'Account_2_Country',
+                                'Account_2_City'
                         });
 
         FORM_Section formSection =
