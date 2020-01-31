@@ -64,14 +64,14 @@
                 </template>
 
                 <article class='slds-align_absolute-center slds-p-vertical_small'>
-                    <lightning-button label={label.geCancel}
-                                      title={label.geCancel}
+                    <lightning-button label={cancelButtonText}
+                                      title={cancelButtonText}
                                       onclick={handleCancel}
                                       class='slds-m-left_x-small'>
                     </lightning-button>
                     <lightning-button variant='brand'
-                                      label={saveActionLabel}
-                                      title={saveActionLabel}
+                                      label={saveButtonText}
+                                      title={saveButtonText}
                                       onclick={handleSave}
                                       class='slds-m-left_x-small'
                                       disabled={isUpdateActionDisabled}>
@@ -82,7 +82,7 @@
 
         <div if:true={showSpinner}
              class='spinnerContainer'>
-            <lightning-spinner alternative-text={label.messageLoading}
+            <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
                                variant='brand'
                                size='large'>
             </lightning-spinner>

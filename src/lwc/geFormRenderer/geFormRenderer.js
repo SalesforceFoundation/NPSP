@@ -3,9 +3,6 @@ import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
-import geSave from '@salesforce/label/c.geButtonSaveNewGift';
-import geCancel from '@salesforce/label/c.geButtonCancelAndClear';
-import geUpdate from '@salesforce/label/c.commonUpdate';
 import { DONATION_DONOR_FIELDS, DONATION_DONOR,
     handleError,
     getRecordFieldNames,
@@ -60,11 +57,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track description = '';
     @track mappingSet = '';
     @track version = '';
-    label = { messageLoading, geSave, geCancel };
     @track formTemplateId;
 
     erroredFields = [];
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
 
     @track _dataRow; // Row being updated when in update mode
     @track isAccessible = true;
@@ -84,6 +80,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     get isSingleGiftEntry() {
         return this.batchId ? false : true;
+    }
+
+    get cancelButtonText() {
+        return this.isSingleGiftEntry ?
+            this.CUSTOM_LABELS.commonCancel :
+            this.CUSTOM_LABELS.geButtonCancelAndClear;
+    }
+
+    get saveButtonText() {
+        return this.isSingleGiftEntry ?
+            this.CUSTOM_LABELS.commonSave :
+            this.CUSTOM_LABELS.geButtonSaveNewGift;
     }
 
     @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
@@ -576,10 +584,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get saveActionLabel() {
         switch (this.mode) {
             case mode.UPDATE:
-                return geUpdate;
+                return this.CUSTOM_LABELS.commonUpdate;
                 break;
             default:
-                return geSave;
+                return this.CUSTOM_LABELS.geButtonSaveNewGift;
         }
     }
 
