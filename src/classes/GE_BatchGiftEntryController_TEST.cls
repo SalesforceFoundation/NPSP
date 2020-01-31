@@ -33,7 +33,7 @@ private with sharing class GE_BatchGiftEntryController_TEST {
      * totals with the new row.
      */
     @isTest
-    private static void saveAndDryRunRow_test() {
+    private static void testShouldSaveAndDryRunRow() {
 
         // required setting
         UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -51,19 +51,6 @@ private with sharing class GE_BatchGiftEntryController_TEST {
 
         List<DataImportBatch__c> result = [SELECT Id FROM DataImportBatch__c];
         System.assertEquals( result.size(), 1 );
-
-    }
-
-    /*******************************************************************************************************
-    * @description
-    *
-    */
-    @isTest
-    private static void alignClassNSWithEnvironment_test() {
-
-        // TODO: placeholder... actual implementation needed
-        String result = GE_BatchGiftEntryController.alignClassNSWithEnvironment('foo');
-        System.assertNotEquals( result, null, 'Result should be ...' );
 
     }
 
