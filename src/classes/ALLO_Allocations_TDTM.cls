@@ -528,10 +528,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Creates allocations by copying from campaign or recurring donation allocations to Opps,
-    * or from Opportunitys to Payments. Adjusts default allocation if enabled.
+    * @description Determines whether it is necessary to copy allocations from campaign, recurring donation
+    * or opportunity and calls method to do so if required.
     * @param listSObjs A list of Opportunities or Payments.
-    * @return void This method modifies class variables and doesn't return anything.
+    * @return void
     ********************************************************************************************************/
     private void copyRecurringDonationCampaignAndPaymentAllocations(List<SObject> listSObjs) {
 
@@ -553,6 +553,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Creates allocations by copying from campaign or recurring donation allocations to Opps,
+    * or from Opportunitys to Payments. Adjusts default allocation if enabled.
+    * @param sObj Opportunity or Payment.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
     private void copyRecurringDonationCampaignAndPaymentAllocations(SObject sObj) {
         alloWrapper wrap;
         Map<Id, Allocation__c> GAUtoAlloMapping = new Map<Id, Allocation__c>();
