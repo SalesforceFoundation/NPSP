@@ -9,7 +9,7 @@
         <div slot="actions"
              class="slds-button-group"
              role="group">
-            <lightning-button-group if:true={isAccessible}>
+            <lightning-button-group>
                 <lightning-button label={CUSTOM_LABELS.geButtonNewBatch}
                                   title={CUSTOM_LABELS.geButtonNewBatch}
                                   variant="neutral"
@@ -33,16 +33,7 @@
             </lightning-spinner>
         </template>
 
-        <div if:false={isAccessible}
-             class=slds-p-top_x-large>
-            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
-                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
-                                 size='large'
-                                 variant='lake-mountain'>
-            </c-util-illustration>
-        </div>
 
-        <template if:true={isAccessible}>
             <lightning-tabset active-tab-value={CUSTOM_LABELS.commonTemplates}>
 
                 <lightning-tab value={CUSTOM_LABELS.commonBatches}
@@ -111,6 +102,5 @@
                     </template>
                 </lightning-tab>
             </lightning-tabset>
-        </template>
     </div>
 </template>
