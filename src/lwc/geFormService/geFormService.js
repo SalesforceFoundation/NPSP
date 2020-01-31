@@ -208,6 +208,9 @@ class GeFormService {
                         renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings =
                         renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
+                    this.fieldTargetMappings =
+                        renderWrapper.fieldMappingSetWrapper.fieldMappingByTargetFieldName;
+
                     resolve(renderWrapper);
                 })
                 .catch(err => {
