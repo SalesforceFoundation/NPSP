@@ -15,7 +15,6 @@ import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone } from 'c/ut
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
-import TEMPLATE_JSON_FIELD from '@salesforce/schema/Form_Template__c.Template_JSON__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
@@ -162,28 +161,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         recordId: '$batchId',
         fields: FORM_TEMPLATE_FIELD
     })
-    wiredBatch({ data, error }) {
+    wiredBatch({data, error}) {
         if (data) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
-        } else if (error) {
-            handleError(error);
-        }
-    }
-
-    @wire(getRecord, {
-        recordId: '$formTemplateId',
-        fields: TEMPLATE_JSON_FIELD
-    })
-    wiredTemplate({ data, error }) {
-        if (data) {
-            GeFormService.getFormTemplate().then(response => {
-                let errorObject = checkPermissionErrors(response.formTemplate);
-                if (errorObject) {
-                    this.dispatchEvent(new CustomEvent('permissionerror'));
-                    this.setPermissionsError(errorObject)
-                }
-                this.initializeForm(response.formTemplate);
-            });
+            GeFormService.getFormTemplateById(this.formTemplateId)
+                .then(template => {
+                    let errorObject = checkPermissionErrors(template);
+                    if (errorObject) {
+                        this.dispatchEvent(new CustomEvent('permissionerror'));
+                        this.setPermissionsError(errorObject)
+                    }
+                    this.initializeForm(template);
+                })
+                .catch(err => {
+                    handleError(err);
+                });
         } else if (error) {
             handleError(error);
         }
@@ -192,12 +184,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     handleCancel() {
         this.reset();
 
-        // go back to the donor record page
-        if (isNotEmpty(this.donorRecordId)) {
-            this.navigateToRecordPage(this.donorRecordId);
-        } else {
-            // go back to the gift entry landing page;
-            this.navigateToLandingPage();
+        // if not in batch mode, go back to point of origin
+        if (isEmpty(this.batchId)) {
+            if (isNotEmpty(this.donorRecordId)) {
+                // go back to the donor record page
+                this.navigateToRecordPage(this.donorRecordId);
+            } else {
+                // go back to the gift entry landing page;
+                this.navigateToLandingPage();
+            }
         }
     }
 
