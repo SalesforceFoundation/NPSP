@@ -201,10 +201,135 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    handleSaveSingleGiftEntry(sectionsList,enableSave,toggle) {
+
+        // handle error on callback from promise
+        const handleCatchError = (err) => this.handleCatchOnSave(err);
+
+        GeFormService.handleSave(sectionsList, this.donorRecord, this.blankDataImportRecord).then(opportunityId => {
+            this.navigateToRecordPage(opportunityId);
+        }).catch(error => {
+            enableSave();
+            toggle();
+            handleCatchError(error);
+        });
+
+    }
+
+    handleSaveBatchGiftEntry(sectionsList,enableSave,toggle) {
+
+        // reset function for callback
+        const reset = () => this.reset();
+        // handle error on callback from promise
+        const handleCatchError = (err) => this.handleCatchOnSave(err);
+
+        // di data for save
+        let data = this.getData(sectionsList);
+        // Apply selected donation fields to data import record
+        if (this.blankDataImportRecord) {
+            data = { ...data, ...this.blankDataImportRecord };
+        }
+
+        this.dispatchEvent(new CustomEvent('submit', {
+            detail: {
+                data: data,
+                success: () => {
+                    enableSave();
+                    toggle();
+                    reset();
+                },
+                error: (error) => {
+                    enableSave();
+                    toggle();
+                    handleCatchError(error);
+                }
+            }
+        }));
+
+    }
+
+    @api
+    handleCatchOnSave( error ) {
+
+        // var inits
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        const exceptionWrapper = JSON.parse(error.body.message);
+        const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
+        this.hasPageLevelError = true;
+
+        if (isNotEmpty(exceptionWrapper.exceptionType)) {
+
+            // Check to see if there are any field level errors
+            if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined ||
+                Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
+
+                // validation rules on Target Objects shows up here
+                // unfortunately currently it doesnt bring field info yet
+                if ( isNotEmpty(exceptionWrapper.errorMessage) &&
+                        isNotEmpty(JSON.parse(exceptionWrapper.errorMessage).errorMessage) ) {
+                    this.pageLevelErrorMessageList = [{
+                        index: 0,
+                        errorMessage: JSON.parse(exceptionWrapper.errorMessage).errorMessage
+                    }];
+                }
+
+                // If there are no specific fields the error has to go to,
+                // put it on the page level error message.
+                for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
+                    this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
+                        {index: dmlIndex+1, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
+                }
+
+            } else {
+                // If there is a specific field that each error is supposed to go to,
+                // show it on the field on the page.
+                // If it is not on the page to show, display it on the page level.
+                for (const key in exceptionWrapper.DMLErrorFieldNameMapping) {
+
+                    // List of fields with this error
+                    let fieldList = exceptionWrapper.DMLErrorFieldNameMapping[key];
+                    // Error message for the field.
+                    let errorMessage = exceptionWrapper.DMLErrorMessageMapping[key];
+                    // Errored fields that are not displayed
+                    let hiddenFieldList = [];
+
+                    fieldList.forEach(fieldWithError => {
+
+                        // Go to the field and set the error message using setCustomValidity
+                        if (fieldWithError in allDisplayedFields) {
+                            let fieldInput = allDisplayedFields[fieldWithError];
+                            this.erroredFields.push(fieldInput);
+                            fieldInput.setCustomValidity(errorMessage);
+                        } else {
+                            // Keep track of errored fields that are not displayed.
+                            hiddenFieldList.push(fieldWithError);
+                        }
+
+                    });
+
+                    // If there are hidden fields, display the error message at the page level.
+                    // With the fields noted.
+                    if (hiddenFieldList.length > 0) {
+                        let combinedFields = hiddenFieldList.join(', ');
+                        this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
+                                                            { index: key, errorMessage: errorMessage + ' [' + combinedFields + ']' }];
+                    }
+                }
+            }
+        } else {
+            this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
+                                                { index: 0, errorMessage: exceptionWrapper.errorMessage }];
+        }
+
+        // focus either the page level or field level error messsage somehow
+        window.scrollTo(0, 0);
+    }
+
     handleSave(event) {
 
+        // clean errors present on form
         this.clearErrors();
-
+        // get sections on form
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         // apply custom and standard field validation
@@ -212,120 +337,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return;
         }
 
-        // disable the Save button
+        // show the spinner
+        this.toggleSpinner();
+        // callback used to toggle spinner after Save promise
+        const toggleSpinner = () => this.toggleSpinner();
+        // disable the Save button and set callback to use after Save promise
         event.target.disabled = true;
         const enableSaveButton = function () {
             this.disabled = false;
         }.bind(event.target);
 
-        // show the spinner
-        this.toggleSpinner();
-
-        // callback used to toggle spinner after save
-        const toggleSpinner = () => this.toggleSpinner();
-
-        const reset = () => this.reset();
-
+        // handle save depending mode
         if (this.batchId) {
-            let data = this.getData(sectionsList);
-
-            // Apply selected donation fields to data import record
-            if (this.blankDataImportRecord) {
-                data = {...data, ...this.blankDataImportRecord};
-            }
-
-            this.dispatchEvent(new CustomEvent('submit', {
-                detail: {
-                    data: data,
-                    success: function () {
-                        enableSaveButton();
-                        toggleSpinner();
-                        reset();
-                    },
-                    error: function () {
-                        enableSaveButton();
-                        toggleSpinner();
-                    }
-                }
-            }));
+            this.handleSaveBatchGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
         } else {
-            GeFormService.handleSave(sectionsList, this.donorRecord, this.blankDataImportRecord)
-                .then(opportunityId => {
-                    this.navigateToRecordPage(opportunityId);
-                })
-                .catch(error => {
-
-                    this.toggleSpinner();
-
-                    // Show on top if it is a page level
-                    this.hasPageLevelError = true;
-                    const exceptionWrapper = JSON.parse(error.body.message);
-                    const allDisplayedFields = this.getDisplayedFieldsMappedByAPIName(sectionsList);
-
-                    if (exceptionWrapper.exceptionType !== null && exceptionWrapper.exceptionType !== '') {
-
-                        // Check to see if there are any field level errors
-                        if (Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === undefined ||
-                            Object.entries(exceptionWrapper.DMLErrorFieldNameMapping).length === 0) {
-
-                            // If there are no specific fields the error has to go to,
-                            // put it on the page level error message.
-                            for (const dmlIndex in exceptionWrapper.DMLErrorMessageMapping) {
-                                this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList,
-                                    {index: dmlIndex, errorMessage: exceptionWrapper.DMLErrorMessageMapping[dmlIndex]}];
-                            }
-                        } else {
-                            // If there is a specific field that each error is supposed to go to,
-                            // show it on the field on the page.
-                            // If it is not on the page to show, display it on the page level.
-                            for (const key in exceptionWrapper.DMLErrorFieldNameMapping) {
-
-                                // List of fields with this error
-                                let fieldList = exceptionWrapper.DMLErrorFieldNameMapping[key];
-
-                                // Error message for the field.
-                                let errorMessage = exceptionWrapper.DMLErrorMessageMapping[key];
-
-                                // Errored fields that are not displayed
-                                let hiddenFieldList = [];
-
-                                fieldList.forEach(fieldWithError => {
-                                    // Go to the field and set the error message using setCustomValidity
-                                    if (fieldWithError in allDisplayedFields) {
-                                        let fieldInput = allDisplayedFields[fieldWithError];
-                                        this.erroredFields.push(fieldInput);
-
-                                        fieldInput.setCustomValidity(errorMessage);
-                                    } else {
-
-                                        // Keep track of errored fields that are not displayed.
-                                        hiddenFieldList.push(fieldWithError);
-                                    }
-                                });
-
-                                // If there are hidden fields, display the error message at the page level.
-                                // With the fields noted.
-                                if (hiddenFieldList.length > 0) {
-                                    let combinedFields = hiddenFieldList.join(', ');
-
-                                    this.pageLevelErrorMessageList = [...this.pageLevelErrorMessageList, {
-                                        index: key,
-                                        errorMessage: errorMessage + ' [' + combinedFields + ']'
-                                    }];
-                                }
-                            }
-                        }
-                    } else {
-                        this.pageLevelErrorMessageList = [...pageLevelErrorMessageList, {
-                            index: 0,
-                            errorMessage: exceptionWrapper.errorMessage
-                        }];
-                    }
-
-                    // focus either the page level or field level error messsage somehow
-                    window.scrollTo(0, 0);
-                });
+            this.handleSaveSingleGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
         }
+
     }
 
     isFormValid(sectionsList) {
@@ -440,16 +468,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let label;
         switch (validationErrorLabelReplacements.length) {
             case 2:
-                label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeInvalid;
+                label = this.CUSTOM_LABELS.geErrorDonorTypeInvalid;
                 break;
             case 3:
-                label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeValidationSingle;
+                label = this.CUSTOM_LABELS.geErrorDonorTypeValidationSingle;
                 break;
             case 4:
-                label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeValidation;
+                label = this.CUSTOM_LABELS.geErrorDonorTypeValidation;
                 break;
             default:
-                label = geLabelService.CUSTOM_LABELS.geErrorDonorTypeInvalid;
+                label = this.CUSTOM_LABELS.geErrorDonorTypeInvalid;
         }
 
         // set message using replacement array

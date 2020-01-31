@@ -3,7 +3,7 @@ import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAl
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunRow
-    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
+    from '@salesforce/apex/GE_BatchGiftEntryController.saveAndDryRunRow';
 import {api} from "lwc";
 import { isNotEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
