@@ -23,9 +23,9 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         
     def open_main_menu(self,title): 
         """Waits for the menu item to load and clicks to expand menu""" 
-        self.selenium.wait_until_page_contains("System Tools", 
-                                               error="System Tools link was not found on the page")  
-        self.npsp.click_link_with_text("System Tools")
+        self.selenium.wait_until_page_contains(title, 
+                                               error=f"{title} link was not found on the page")  
+        self.npsp.click_link_with_text(title)
         
    
     def click_toggle_button(self, page_name):

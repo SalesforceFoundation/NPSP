@@ -236,18 +236,22 @@ Create GAU
     [Return]           ${gau_name}    
 
 Run Donations Batch Process
-    Open NPSP Settings  Bulk Data Processes  Rollup Donations Batch
-    Click Settings Button    idPanelOppBatch    Run Batch
+    Open NPSP Settings          Bulk Data Processes                Rollup Donations Batch
+    Click Settings Button       idPanelOppBatch                    Run Batch
     # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Account_AccSoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Contact_SoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Account_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Contact_BATCH    Completed
-    Wait For Locator    npsp_settings.status    RLLP_OppAccRollup_BATCH    Completed
-    Wait For Locator    npsp_settings.status    RLLP_OppContactRollup_BATCH    Completed
-    Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
-    Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
+    Wait For Batch To Process    RLLP_OppAccRollup_BATCH            Completed
+    Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
+    Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
+    Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
+    # Wait For Locator    npsp_settings.status    RLLP_OppAccRollup_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    RLLP_OppContactRollup_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
      
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
@@ -255,14 +259,14 @@ Scroll Page To Location
 
 Open NPSP Settings
     [Arguments]    ${topmenu}    ${submenu}
-    Select App Launcher Tab      NPSP Settings
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Choose Frame    Nonprofit Success Pack Settings
-    Wait Until Element Is Visible  text:${topmenu}
-    # Click Link With Text    text=${topmenu}
-    Click Element With Locator    npsp_settings.side_panel    idPanelBulkProcesses
-    Wait Until Element Is Visible  text:${submenu}
-    Click Link With Text    text=${submenu}
+    Go To Page                Custom         NPSP_Settings
+    Open Main Menu            ${topmenu}
+    Click Link With Text      ${submenu}
+    # Wait Until Element Is Visible  text:${topmenu}
+    # # Click Link With Text    text=${topmenu}
+    # Click Element With Locator    npsp_settings.side_panel    idPanelBulkProcesses
+    # Wait Until Element Is Visible  text:${submenu}
+    # Click Link With Text    text=${submenu}
     Sleep  1
     
 Click Data Import Button

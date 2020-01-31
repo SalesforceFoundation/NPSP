@@ -12,7 +12,7 @@ Create Open Recurring Donation With Monthly Installment
 
     &{contact} =                 API Create Contact    Email=skristem@robot.com		
     Go To Record Home            &{contact}[Id]		
-    Click Link                   link=Show more actions		
+    Click More Actions Button		
     Click Link                   link=New Open Recurring Donation		
     Wait Until Modal Is Open		
     Populate Form		

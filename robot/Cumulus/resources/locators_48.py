@@ -152,6 +152,9 @@ npsp_lex_locators={
         'select':'//select[contains(@id,"{}")]',
         
     },
+    'recurring_donations':{
+        'actions-link':'//a[@title="{}" or @name="{}"]',
+        },
     'payments':{
         'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",       
         'no_payments':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[3]',
