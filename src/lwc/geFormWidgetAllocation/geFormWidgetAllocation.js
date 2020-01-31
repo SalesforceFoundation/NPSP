@@ -304,7 +304,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     get showRemainingAmount() {
-        return this.hasDefaultGAU === false && this.remainingAmount >= 0;
+        return this.hasDefaultGAU === false && this.remainingAmount > 0;
     }
 
     get remainingAmount() {
@@ -351,6 +351,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
                     return errorClass;
             }
         }
+    }
+
+    get footerClass() {
+        return this.rowList.length > 0 ? "slds-p-top--medium slds-m-top--medium slds-border--top"
+            : "slds-p-top--medium slds-m-top--medium";
     }
 
     /**
