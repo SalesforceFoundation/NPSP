@@ -924,7 +924,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
     public static Gift_Entry_Settings__c getGiftEntrySettingsForTests(Gift_Entry_Settings__c myGiftEntrySettings) {
         if (giftEntrySettings == null) {
-            giftEntrySettings = new Gift_Entry_SEttings__c();
+            giftEntrySettings = new Gift_Entry_Settings__c();
         }
 
         giftEntrySettings.Default_Gift_Entry_Template__c = myGiftEntrySettings.Default_Gift_Entry_Template__c;

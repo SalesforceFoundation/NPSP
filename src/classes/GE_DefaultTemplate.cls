@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2020, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2019
+* @date 2020
 * @group BGE
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Class to create a default template when needed
@@ -166,9 +166,11 @@ public with sharing class GE_DefaultTemplate {
      */
     public static Map<String, String> getCurrentDevNameMapping() {
         // Get the org's migrated field mappings. 
-        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = [SELECT Id, MasterLabel, DeveloperName, Target_Field_API_Name__c, Source_Field_API_Name__c, Target_Object_Mapping__r.Object_API_Name__c
+        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = [SELECT Id, MasterLabel, DeveloperName, 
+                                                                            Target_Field_API_Name__c, Source_Field_API_Name__c, 
+                                                                            Target_Object_Mapping__r.Object_API_Name__c
                                                                     FROM Data_Import_Field_Mapping__mdt 
-                                                                    WHERE Data_Import_Field_Mapping_Set__r.DeveloperName = 'Migrated_Custom_Field_Mapping_Set' Limit 1000];
+                                                                    WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME Limit 1000];
 
         // A map which contains the partial dev name to the org's full dev name.
         // An example would like this:
