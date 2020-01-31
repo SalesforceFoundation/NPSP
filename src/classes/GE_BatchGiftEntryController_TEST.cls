@@ -5,9 +5,9 @@ private with sharing class GE_BatchGiftEntryController_TEST {
     * @description Sets up a new NPSP_Data_Import_Batch__c Record
     * @return Id of the new NPSP_Data_Import_Batch__c
     */
-    private static Id createDataImportBatch() {
+    private static Id createDataImportBatch( String batchName ) {
         DataImportBatch__c dataImportBatch = new DataImportBatch__c();
-        dataImportBatch.Name = 'Batch 1';
+        dataImportBatch.Name = batchName;
 
         insert dataImportBatch;
         return (Id)dataImportBatch.Id;
@@ -19,14 +19,15 @@ private with sharing class GE_BatchGiftEntryController_TEST {
     * @param lastname the lastname to specify for Contact1
     * @return DataImport__c the new Data Import record
     */
-    public static DataImport__c newDI(String firstname, String lastname) {
+    public static DataImport__c newDI(String firstname, String lastname, Id batchId) {
         return new DataImport__c(
                 Contact1_Firstname__c = firstname,
                 Contact1_Lastname__c = lastname,
-                Contact1_Personal_Email__c = firstname + '@' + lastname + '.com'
+                Contact1_Personal_Email__c = firstname + '@' + lastname + '.com',
+                NPSP_Data_Import_Batch__c = batchId
         );
     }
-    
+
     /*******************************************************************************************************
      * @description Saves the data import record, dry runs the record, and returns updated
      * totals with the new row.
@@ -34,13 +35,18 @@ private with sharing class GE_BatchGiftEntryController_TEST {
     @isTest
     private static void saveAndDryRunRow_test() {
 
+        // required setting
+        UTIL_CustomSettingsFacade.getDataImportSettings();
+        // aux vars
         String firstName = 'fooName';
         String lastName = 'fooLastName';
-        Id batchId = createDataImportBatch();
-        DataImport__c di = newDI( firstName, lastName );
+        String batchName = 'fooBatch';
+        // test data
+        Id batchId = createDataImportBatch( batchName );
+        DataImport__c di = newDI( firstName, lastName, batchId );
 
         Test.startTest();
-            GE_BatchGiftEntryController.saveAndDryRunRow(batchId,di);
+        GE_BatchGiftEntryController.saveAndDryRunRow(batchId,di);
         Test.stopTest();
 
         List<DataImportBatch__c> result = [SELECT Id FROM DataImportBatch__c];
@@ -49,16 +55,16 @@ private with sharing class GE_BatchGiftEntryController_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Saves the data import record, dry runs the record, and returns updated
-    * totals with the new row.
+    * @description
+    *
     */
     @isTest
     private static void alignClassNSWithEnvironment_test() {
+
         // TODO: placeholder... actual implementation needed
-        Test.stopTest();
-            String result = GE_BatchGiftEntryController.alignClassNSWithEnvironment('foo');
-            System.assertNotEquals( result, null, 'Result should be ...' );
-        Test.startTest();
+        String result = GE_BatchGiftEntryController.alignClassNSWithEnvironment('foo');
+        System.assertNotEquals( result, null, 'Result should be ...' );
+
     }
 
 }
