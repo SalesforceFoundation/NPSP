@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,33 +15,33 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
 * @date 2014
 * @group Settings
-* @description Install Script for the NPSP package. 
+* @description Install Script for the NPSP package.
 */
 global without sharing class STG_InstallScript implements InstallHandler {
-    
+
     @TestVisible
-    private enum InstallAction { 
-        POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT, 
-        INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
+    private enum InstallAction {
+        POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT,
+        INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS,
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
         UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
-        CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL, 
+        CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL,
         CREATE_OPP_STAGE_TO_STATE_RECORDS
     }
 
@@ -61,7 +61,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             // Populate Recurring Donation Installment Number on Opportunity for fresh installs;
             // This also covers upgrades from v2
             executeAction(InstallAction.POPULATE_RD_INSTALLMENT_NUMBER, logger);
-            
+
             executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
 
         // Upgrade of existing Cumulus installation
@@ -93,7 +93,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
     private void executeAction(InstallAction action, ErrorLogger logger) {
 
-        Savepoint sp = Database.setSavepoint();  
+        Savepoint sp = Database.setSavepoint();
 
         try {
             if (action == InstallAction.POPULATE_RD_INSTALLMENT_NUMBER) {
@@ -129,9 +129,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
         } catch(Exception e) {
             Database.rollback(sp);
-            
+
             logger.add(e);
-        } 
+        }
     }
 
     /*******************************************************************************************************
@@ -139,11 +139,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * runs every single time the NPSP Settings page is loaded).
     * @return void
     */
-    global void runNewOrgScript() {      
+    global void runNewOrgScript() {
         //Get the mapping from old settings to the new TDTM default setup
-        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();           
-        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time) 
-        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);        
+        Map<String, String> npspToCumulusMap = TDTM_DefaultConfig.getNpspToCumulusMap();
+        //Read existing NPSP trigger configuration and turn off NPSP flags (so no work needs to be done next time)
+        Map<String, Boolean> existingTriggerConfig = getExistingNpspTriggerConfig(npspToCumulusMap);
         //Setup the new configuration
         setupTdtmConfig(npspToCumulusMap, existingTriggerConfig);
     }
@@ -175,9 +175,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
      * @return
      */
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
-        
+
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
-        
+
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
         npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
         npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
@@ -191,7 +191,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getOrgDataImportSettings();
 
         UTIL_Debug.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
- 
+
         for(String setting : npspToCumulusMap.keySet()) {
             if(setting.startsWith('npe01')) {
                 if(npe01Settings != null && npe01Settings.get(setting) != null) {
@@ -203,7 +203,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 }
             } else if(setting.startsWith('npo02')) {
                 if(npo02Settings != null && npo02Settings.get(setting) != null) {
-                    npspExistingSettings.put(setting, (Boolean)npo02Settings.get(setting));            
+                    npspExistingSettings.put(setting, (Boolean)npo02Settings.get(setting));
                     if(npo02Settings.get(setting) == true)
                         npo02Settings.put(setting, false); //Deactivating flag
                     continue;
@@ -224,7 +224,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 }
             }
         }
-        
+
         //Deactivate NPSP flags - getInstance returns an empty object if the custom setting has no records
         List<SObject> npspCustomSettings = new List<SObject>();
         if(npe01Settings != null) npspCustomSettings.add(npe01Settings);
@@ -236,25 +236,25 @@ global without sharing class STG_InstallScript implements InstallHandler {
             if(!Test.isRunningTest())
                 update npspCustomSettings;
         }
-        
+
         return npspExistingSettings;
     }
-    
-    private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {        
+
+    private void setupTdtmConfig(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {
         //First we insert all TDTM records as active
-        insertTdtmDefaults(null);   
+        insertTdtmDefaults(null);
         //Now we can deactive only those that were flagged as inactive in NPSP
         deactivateMatchingTdtm(npspToCumulusMap, existingTriggerConfig);
     }
-    
+
     /*******************************************************************************************************
     * @description Inserts the default TDTM records, if necessary. Updates those that need to be updated, since the last package
     * upgrade. Public just for testing purposes (it should otherwise be private).
     * @return void
     */
     public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {
-        if (defaultHandlers == null) defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();  
-        List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c, Load_Order__c, Trigger_Action__c, User_Managed__c 
+        if (defaultHandlers == null) defaultHandlers = TDTM_DefaultConfig.getDefaultRecords();
+        List<Trigger_Handler__c> existingHandlers = [select Class__c, Object__c, Load_Order__c, Trigger_Action__c, User_Managed__c
                                                        from Trigger_Handler__c];
 
         List<Trigger_Handler__c> handlersToInsert = new List<Trigger_Handler__c>();
@@ -271,7 +271,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 i++;
             }
         }
-        
+
         //Insert those that are in the list of default handlers but aren't in the database
         for(Trigger_Handler__c defaultHandler : defaultHandlers) {
             Boolean alreadyExists = false;
@@ -280,39 +280,39 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     alreadyExists = true;
                     //Determine if order or action has changed (compare old load order with new load order, old action with new action)
                     //Filter to only those that have not been flagged as user-managed
-                    if(!existingHandler.User_Managed__c && (defaultHandler.Load_Order__c != existingHandler.Load_Order__c || 
+                    if(!existingHandler.User_Managed__c && (defaultHandler.Load_Order__c != existingHandler.Load_Order__c ||
                     defaultHandler.Trigger_Action__c != existingHandler.Trigger_Action__c)) {
                         existingHandler.Load_Order__c = defaultHandler.Load_Order__c;
                         existingHandler.Trigger_Action__c = defaultHandler.Trigger_Action__c;
                         handlersToUpdate.add(existingHandler);
                     }
                     break;
-                } 
+                }
             }
             if(!alreadyExists)
-                handlersToInsert.add(defaultHandler); 
-        }    
+                handlersToInsert.add(defaultHandler);
+        }
         if(handlersToInsert.size() > 0) insert handlersToInsert;
         if(handlersToUpdate.size() > 0) update handlersToUpdate;
         if(handlersToDelete.size() > 0) delete handlersToDelete;
     }
-    
+
     private static void deactivateMatchingTdtm(Map<String, String> npspToCumulusMap, Map<String, Boolean> existingTriggerConfig) {
         List<String> handlerSettingsToUpdate = new List<String>();
-        
+
         for(String flag : existingTriggerConfig.keySet()) {
-            Boolean active = existingTriggerConfig.get(flag);           
-            String mapsTo = npspToCumulusMap.get(flag);         
+            Boolean active = existingTriggerConfig.get(flag);
+            String mapsTo = npspToCumulusMap.get(flag);
             if(active)
                handlerSettingsToUpdate.add(mapsTo);
         }
-        
-        List<Trigger_Handler__c> handlersToUpdate = [select Active__c, Class__c from Trigger_Handler__c where Class__c 
+
+        List<Trigger_Handler__c> handlersToUpdate = [select Active__c, Class__c from Trigger_Handler__c where Class__c
                                                      IN :handlerSettingsToUpdate];
         for(Trigger_Handler__c handler : handlersToUpdate) {
             handler.Active__c = false;
         }
-        if(handlersToUpdate.size() > 0) update handlersToUpdate; 
+        if(handlersToUpdate.size() > 0) update handlersToUpdate;
     }
 
     /*******************************************************************************************************
@@ -322,6 +322,22 @@ global without sharing class STG_InstallScript implements InstallHandler {
     private void createNewDefaultCustomSettingRecords() {
         updateDefaultRollupSettings();
         updateDefaultOrgContactsSettings();
+        updateOpportunityNamingSettings();
+    }
+
+    /***
+    * @description Update Opportunity Naming Settings Attribution value to the AttributionOptions API value
+    */
+    public static void updateOpportunityNamingSettings() {
+        List <Opportunity_Naming_Settings__c> oppSettings = new List <Opportunity_Naming_Settings__c>();
+        STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings();
+
+        for (Opportunity_Naming_Settings__c ons : UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values()) {
+            ons.Attribution__c = attributionSettings.withSelected(ons.Attribution__c).selectedOption;
+            oppSettings.add(ons);
+        }
+
+        update oppSettings;
     }
 
     /*******************************************************************************************************
@@ -337,7 +353,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     }
 
     /*******************************************************************************************************
-    * @description Ensure that any default Org Rollup Settigns are updated for custom settings 
+    * @description Ensure that any default Org Rollup Settigns are updated for custom settings
     * objects accordingly.  There was a swap of custom setting fields to get the account soft credit settings
     * pointed to the corresponding setting
     */
@@ -354,11 +370,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
             rollupSettings.Rollups_AcctContactSoftCredit_Batch_Size__c = currentAccountSoftCreditBatchSize;
             isUpdateNeeded = true;
         }
-        
+
         if (isUpdateNeeded) {
             update rollupSettings;
         }
-        
+
     }
 
     /*******************************************************************************************************
@@ -373,8 +389,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     }
 
     /*******************************************************************************************************
-    * @description Creates the finalized opp stage to state record based on what value is set as the 
-    * "Opportunity Stage for When Fully Paid" 
+    * @description Creates the finalized opp stage to state record based on what value is set as the
+    * "Opportunity Stage for When Fully Paid"
     */
     private void createOppStageToStateRecordsIfNecessary() {
 
@@ -460,7 +476,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 mail.setSenderDisplayName(ERR_Notifier.EMAIL_SENDER_NAME);
                 mail.setSubject('NPSP Install Errors');
 
-                mail.setPlainTextBody(buildEmailBody());  
+                mail.setPlainTextBody(buildEmailBody());
 
                 mail.setToAddresses(new String[] { ERR_Notifier.EMAIL_SYSTEM_ERRORS_TO, getUserEmail() });
 
@@ -477,7 +493,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         * @return String
         */
         private String getUserEmail() {
-            String userEmail = [SELECT Id, Email FROM User WHERE Id =:installContext.installerID()].Email;  
+            String userEmail = [SELECT Id, Email FROM User WHERE Id =:installContext.installerID()].Email;
             return UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
         }
 
@@ -496,7 +512,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             for (Exception e : exceptions) {
                 bodyString += '\n' + e.getMessage() +
-                    '\nError stack trace: \n' + e.getStackTraceString() + 
+                    '\nError stack trace: \n' + e.getStackTraceString() +
                     '\n\n';
             }
 
