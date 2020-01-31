@@ -166,7 +166,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
             GeFormService.getFormTemplateById(this.formTemplateId)
                 .then(template => {
-                    let errorObject = checkPermissionErrors(response.formTemplate);
+                    let errorObject = checkPermissionErrors(template);
                     if (errorObject) {
                         this.dispatchEvent(new CustomEvent('permissionerror'));
                         this.setPermissionsError(errorObject)
