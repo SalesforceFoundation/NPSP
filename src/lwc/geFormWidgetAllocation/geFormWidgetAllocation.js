@@ -99,19 +99,18 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     /**
      * Expected to return true if widget fields are valid, false otherwise
+     * Currently only check to see if the GAU Lookup is filled in
      * @return Boolean
      */
     @api
     isValid() {
-
-        let fieldIsValid = true;
-        if(this.element.required) {
-            return this.value !== null 
-                && typeof this.value !== 'undefined' 
-                && this.value !== ''
-                && fieldIsValid;
+        const rows = this.template.querySelectorAll('c-ge-form-widget-row-allocation');
+        for(const row of rows) {
+            if(!row.isValid()) {
+                return false;
+            }
         }
-        return fieldIsValid;
+        return true;
     }
 
     /**

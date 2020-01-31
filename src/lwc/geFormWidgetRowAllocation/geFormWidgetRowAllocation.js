@@ -5,8 +5,10 @@ import {isEmpty, isNotEmpty, isNumeric} from 'c/utilCommon';
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
+import GAU_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 const ALLOCATION_AMOUNT = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
 const ALLOCATION_PERCENT = `${ALLOCATION_OBJECT.objectApiName}.${PERCENT_FIELD.fieldApiName}`;
+const ALLOCATION_GAU = `${ALLOCATION_OBJECT.objectApiName}.${GAU_FIELD.fieldApiName}`;
 
 export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowIndex;
@@ -62,6 +64,12 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
             };
             this.handleChange({ detail }, totalDonation);
         }
+    }
+
+    @api
+    isValid() {
+        const gauField = this.getFieldByName(ALLOCATION_GAU);
+        return gauField.isValid();
     }
 
     /**
