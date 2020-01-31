@@ -87,7 +87,7 @@ private with sharing class FORM_PermissionsValidator_TEST {
             + 'permission error type should be \'CRUD\' when the user does not '
             + 'have CRUD permissions.'); 
 
-        System.assert(updatedTemplate.permissionErrors.contains('Account'), 'The '
+        System.assert(updatedTemplate.permissionErrors.contains(Account.SObjectType.getDescribe().getLabel()), 'The '
             + 'permissions error should contain the Account object, which the user does not '
             + 'have access to.'); 
 /*      // Should we be checking the widget permissions right now??
