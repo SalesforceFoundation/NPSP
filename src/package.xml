@@ -3206,6 +3206,7 @@
         <members>Opportunity.New_Payment</members>
         <members>Opportunity.Quick_Update</members>
         <members>npe01__OppPayment__c.Quick_Update</members>
+        <members>npe03__Recurring_Donation__c.Close_Recurring_Donation</members>
         <members>npe03__Recurring_Donation__c.New_Opportunity</members>
         <members>npe03__Recurring_Donation__c.Quick_Update</members>
         <members>npo02__Household__c.Update_Household</members>

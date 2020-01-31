@@ -131,7 +131,10 @@
     </layoutSections>
     <quickActionList>
         <quickActionListItems>
-            <quickActionName>NewTask</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewTask</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Close_Recurring_Donation</quickActionName>
         </quickActionListItems>
     </quickActionList>
     <relatedLists>
