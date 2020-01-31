@@ -92,13 +92,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     connectedCallback() {
+        registerListener('widgetData', this.handleWidgetData, this);
+
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
             // uses the @wire service below to retrieve the Template using the Template Id
             // stored on the Batch.
             return;
         }
-        registerListener('widgetData', this.handleWidgetData, this);
 
         GeFormService.getFormTemplate().then(response => {
             // check if there is a record id in the url
