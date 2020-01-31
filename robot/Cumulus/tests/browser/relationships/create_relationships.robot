@@ -64,7 +64,7 @@ Create Relationships for contacts
     # Load Related List                   Relationships
     Click Related Table Item Link       Relationships                                               &{contact2}[FirstName] &{contact2}[LastName]
 
-    Current Page Should Be              Details                                                     Relationship
+    Current Page Should Be              Details                                                     npe4__Relationship__c
     ${id}                               Get Current Record Id
     Save Current Record ID For Deletion  npe4__Relationship__c
 

@@ -3,6 +3,8 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/DataImportPageObject.py
+...             robot/Cumulus/resources/PaymentPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 

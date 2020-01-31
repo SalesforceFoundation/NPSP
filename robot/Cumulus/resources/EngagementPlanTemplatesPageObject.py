@@ -28,7 +28,7 @@ class EngagementPlanListPage(BaseNPSPPage, DetailPage):
         """
         Waits for the current page to be a Data Import list view
         """
-        self.selenium.wait_until_location_contains("/view",timeout=60, message="Records list view did not load in 1 min")
+        self.selenium.wait_until_location_contains("/view",timeout=60, message="Records detail view did not load in 1 min")
         self.selenium.location_should_contain("Engagement_Plan_Template__c",message="Current page is not an Engagement Plan record view")
                     
     

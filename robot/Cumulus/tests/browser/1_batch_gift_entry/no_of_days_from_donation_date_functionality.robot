@@ -3,6 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/PaymentPageObject.py
 Library         DateTime
 Suite Setup      Run keywords
 ...             Open Test Browser

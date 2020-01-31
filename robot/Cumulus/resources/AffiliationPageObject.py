@@ -4,13 +4,13 @@ from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
-@pageobject("Listing", "Affiliation")
+@pageobject("Listing", "npe5__Affiliation__c")
 class AffiliationListingPage(BaseNPSPPage, ListingPage):
     object_name = "npe5__Affiliation__c"
 
 
     
-@pageobject("Details", "Affiliation")
+@pageobject("Details", "npe5__Affiliation__c")
 class AffiliationDetailPage(BaseNPSPPage,DetailPage ):
     object_name = "npe5__Affiliation__c"
 
