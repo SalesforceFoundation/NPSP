@@ -6,6 +6,8 @@ import saveAndDryRunRow
     from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
 import {api} from "lwc";
 import { isNotEmpty } from 'c/utilCommon';
+import getFormRenderWrapper
+    from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -194,6 +196,35 @@ class GeFormService {
                 })
                 .catch(error => {
                     reject(error);
+                });
+        });
+    }
+
+    getFormRenderWrapper(templateId) {
+        return new Promise((resolve, reject) => {
+            getFormRenderWrapper({templateId: templateId})
+                .then(renderWrapper => {
+                    this.fieldMappings =
+                        renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
+                    this.objectMappings =
+                        renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
+                    resolve(renderWrapper);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+
+    }
+
+    getFormTemplateById(templateId) {
+        return new Promise((resolve, reject) => {
+            this.getFormRenderWrapper(templateId)
+                .then(renderWrapper => {
+                    resolve(renderWrapper.formTemplate);
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
