@@ -418,34 +418,36 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
             // set an empty default value
             element.recordValue = '';
 
-            for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
-                let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
-
-                // set the field values for contact and account
-                if (objectName === record.apiName) {
-                    // field name from the mappings
-                    let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
-
-                    // get the record value and store it in the element
-                    element.recordValue = record.fields[fieldName].value;
-                }
-
-                // set the values for the donor di fields
-                if (objectName === DATA_IMPORT_INFO.objectApiName) {
-                    // set the value for the contact/account 1 imported
-                    if (element.fieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName &&
-                            record.apiName === CONTACT_INFO.objectApiName ||
-                            element.fieldApiName === DI_ACCOUNT1_IMPORTED_INFO.fieldApiName &&
-                            record.apiName === ACCOUNT_INFO.objectApiName) {
-                        element.defaultValue = record.id;
+            if (element.elementType === 'field') {
+                for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
+                    let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
+    
+                    // set the field values for contact and account
+                    if (objectName === record.apiName) {
+                        // field name from the mappings
+                        let fieldName = fieldMappings[fieldMappingDevName].Target_Field_API_Name;
+    
+                        // get the record value and store it in the element
+                        element.recordValue = record.fields[fieldName].value;
                     }
-
-                    // set the value for donor type
-                    if (element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName) {
-                        if (record.apiName === CONTACT_INFO.objectApiName) {
-                            element.defaultValue = CONTACT1;
-                        } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
-                            element.defaultValue = ACCOUNT1;
+    
+                    // set the values for the donor di fields
+                    if (objectName === DATA_IMPORT_INFO.objectApiName) {
+                        // set the value for the contact/account 1 imported
+                        if (element.fieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName &&
+                                record.apiName === CONTACT_INFO.objectApiName ||
+                                element.fieldApiName === DI_ACCOUNT1_IMPORTED_INFO.fieldApiName &&
+                                record.apiName === ACCOUNT_INFO.objectApiName) {
+                            element.defaultValue = record.id;
+                        }
+    
+                        // set the value for donor type
+                        if (element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName) {
+                            if (record.apiName === CONTACT_INFO.objectApiName) {
+                                element.defaultValue = CONTACT1;
+                            } else if (record.apiName === ACCOUNT_INFO.objectApiName) {
+                                element.defaultValue = ACCOUNT1;
+                            }
                         }
                     }
                 }
