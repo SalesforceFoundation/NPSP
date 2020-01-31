@@ -45,21 +45,16 @@ public with sharing class GE_DefaultTemplate {
      * the newly created template's ID as the default template. 
      *
      */
-    @AuraEnabled
-    public static void createDefaultTemplate() {
-        try {
-            if (!hasDefaultTemplate()) {
-                Form_Template__c newDefaultTemplate = buildDefaultTemplate();
-                
-                insert newDefaultTemplate;
+    public static void createDefaultTemplateIfNecessary() {
+        if (!hasDefaultTemplate()) {
+            Form_Template__c newDefaultTemplate = buildDefaultTemplate();
+            
+            insert newDefaultTemplate;
 
-                Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
-                giftEntryCustomSetting.Default_Gift_Entry_Template__c = newDefaultTemplate.Id;
+            Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+            giftEntryCustomSetting.Default_Gift_Entry_Template__c = newDefaultTemplate.Id;
 
-                update giftEntryCustomSetting;
-            }
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            update giftEntryCustomSetting;
         }
     }
 

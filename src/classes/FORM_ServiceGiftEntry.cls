@@ -183,7 +183,7 @@ public with sharing class FORM_ServiceGiftEntry {
     * @description Method for retrieving the current default template.
     */
     public static FORM_Template retrieveDefaultSGEFormTemplate() {
-        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
         FORM_Template template;
         List<Form_Template__c> templateObjList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 

@@ -60,7 +60,7 @@ import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
 import getDataImportSettings from '@salesforce/apex/UTIL_CustomSettingsFacade.getDataImportSettings';
 import getGiftEntrySettings from
-        '@salesforce/apex/UTIL_CustomSettingsFacade.getGiftEntrySettings';
+        '@salesforce/apex/GE_GiftEntry_UTIL.getGiftEntrySettings';
 
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';

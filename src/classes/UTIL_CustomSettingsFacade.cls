@@ -317,7 +317,6 @@ public without sharing class UTIL_CustomSettingsFacade {
     * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
     * in the database.
     */
-    @AuraEnabled
     public static Gift_Entry_Settings__c getGiftEntrySettings() {
         if(Test.isRunningTest() && giftEntrySettings == null) {
             giftEntrySettings = new Gift_Entry_Settings__c();

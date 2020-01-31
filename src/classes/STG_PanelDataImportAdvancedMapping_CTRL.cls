@@ -101,7 +101,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     */
     public Boolean isGiftEntryEnabled {
         get {
-            giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+            giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
             return giftEntrySettings.Enable_Gift_Entry__c;
         }
         set;
@@ -364,12 +364,11 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * @return null
     */
     public PageReference enableGiftEntry() {
-        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
         if (!giftEntrySettings.Enable_Gift_Entry__c) {
                 giftEntrySettings.Enable_Gift_Entry__c = true;
             try {
                 upsert giftEntrySettings;
-                GE_DefaultTemplate.createDefaultTemplate();
                 addPageMessage(ApexPages.Severity.CONFIRM, System.Label.geEnableGiftEntrySuccess);
             } catch(DmlException e) {
                 addPageMessage(ApexPages.Severity.ERROR,
@@ -384,7 +383,7 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * @return null
     */
     public PageReference disableGiftEntry() {
-        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
         if (giftEntrySettings.Enable_Gift_Entry__c) {
                 giftEntrySettings.Enable_Gift_Entry__c = false;
             try {
