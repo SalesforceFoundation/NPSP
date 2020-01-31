@@ -5,7 +5,7 @@ from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
 
-@pageobject("Details", "Relationship")
+@pageobject("Details", "npe4__Relationship__c")
 class RelationshipDetailPage(BaseNPSPPage, DetailPage):
     object_name = "npe4__Relationship__c"
 
