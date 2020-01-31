@@ -89,39 +89,42 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    connectedCallback() {
-        if (this.batchId) {
-            // When the form is being used for Batch Gift Entry, the Form Template
-            // is retrieved using the Template Id stored on the Batch.
-            return;
-        } else {
-            this.formTemplate = this.defaultTemplate;
+   connectedCallback() {
+       this.checkPageAccess();
+       if (this.isAccessible) {
+           if (this.batchId) {
+               // When the form is being used for Batch Gift Entry, the Form Template
+               // is retrieved using the Template Id stored on the Batch.
+               return;
+           } else {
+               this.formTemplate = this.defaultTemplate;
 
-            let errorObject = checkPermissionErrors(this.formTemplate);
-            if (errorObject) {
-                this.setPermissionsError(errorObject);
+               let errorObject = checkPermissionErrors(this.formTemplate);
+               if (errorObject) {
+                   this.setPermissionsError(errorObject);
 
-                return;
-            }
+                   return;
+               }
 
-            // check if there is a record id in the url
-            this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
-            this.selectedDonorType = this.donorApiName = getQueryParameters().c__apiName;
+               // check if there is a record id in the url
+               this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
+               this.selectedDonorType = this.donorApiName = getQueryParameters().c__apiName;
 
-            // get the target field names to be used by getRecord
-            this.fieldNames = getRecordFieldNames(
-                this.formTemplate,
-                this.fieldMappingsByDevName,
-                this.donorApiName
-            );
+               // get the target field names to be used by getRecord
+               this.fieldNames = getRecordFieldNames(
+                   this.formTemplate,
+                   this.fieldMappingsByDevName,
+                   this.donorApiName
+               );
 
-            if (isEmpty(this.donorRecordId)) {
-                // if we don't have a donor record, it's ok to initialize the form now
-                // otherwise the form will be initialized after wiredGetRecordMethod completes
-                this.initializeForm(this.formTemplate);
-            }
-        }
-    }
+               if (isEmpty(this.donorRecordId)) {
+                   // if we don't have a donor record, it's ok to initialize the form now
+                   // otherwise the form will be initialized after wiredGetRecordMethod completes
+                   this.initializeForm(this.formTemplate);
+               }
+           }
+       }
+   }
 
     initializeForm(formTemplate, fieldMappings) {
         // read the template header info
