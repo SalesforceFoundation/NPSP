@@ -308,6 +308,8 @@ const handleError = (error) => {
             Array.isArray(error.detail.output.errors)) {
             message = error.detail.output.errors.map(e => e.message).join(', ');
         }
+    } else if (error.body.message) {
+        message = error.body.message;
     }
 
     showToast(commonError, message, 'error', 'sticky');
