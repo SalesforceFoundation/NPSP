@@ -89,12 +89,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
 
         FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
-        giftEntryCustomSetting.Default_Gift_Entry_Template__c = template.name;
-
-        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
         String templateJSON = JSON.serialize(template);
-        fs.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+        String storedFormTemplateId = FORM_ServiceGiftEntry.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+        giftEntryCustomSetting.Default_Gift_Entry_Template__c = storedFormTemplateId;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
         FORM_Template templateResult = fs.retrieveDefaultSGEFormTemplate();
         String templateResultJSON = JSON.serialize(templateResult);
@@ -214,16 +213,14 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
             utilPermissionsMockInstance);
         UTIL_Permissions.setInstance(utilPermissionsMock);
 
-        FORM_Service fs = new FORM_Service();
-
         FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
-
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
-        giftEntrySettings.Default_Gift_Entry_Template__c = 'Sample Template';
-        insert giftEntrySettings;
-        
         String templateJSON = JSON.serialize(template);
-        fs.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+        String storedFormTemplateId = FORM_ServiceGiftEntry.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+        
+        giftEntrySettings.Default_Gift_Entry_Template__c = storedFormTemplateId;
+        
+        insert giftEntrySettings;
         
         UTIL_UnitTestData_TEST.createSampleFieldMappings();
         
@@ -293,15 +290,15 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         // form service init
         FORM_Service fs = new FORM_Service();
         // insert form template using service
-        fs.storeFormTemplate(null,
-                template.name,
-                template.description,
-                template.version,
-                templateJSON);
+        String templateId = FORM_ServiceGiftEntry.storeFormTemplate(null,
+                                                                    template.name,
+                                                                    template.description,
+                                                                    template.version,
+                                                                    templateJSON);
 
         // gift entry custom settings set up
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
-        giftEntryCustomSetting.Default_Gift_Entry_Template__c = templateName;
+        giftEntryCustomSetting.Default_Gift_Entry_Template__c = templateId;
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
         // retrieve templates with id

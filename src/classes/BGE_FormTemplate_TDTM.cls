@@ -83,8 +83,7 @@ public with sharing class BGE_FormTemplate_TDTM extends TDTM_Runnable{
 
             // add error to records marked as default on gift entry settings
             if ( String.isNotEmpty(giftEntrySettings.Default_Gift_Entry_Template__c) &&
-                    (giftEntrySettings.Default_Gift_Entry_Template__c.equals((String)formTemplate.Id) ||
-                        giftEntrySettings.Default_Gift_Entry_Template__c.equals(formTemplate.Name)) ) {
+                    (giftEntrySettings.Default_Gift_Entry_Template__c.equals((String)formTemplate.Id)) ) {
 
                 formTemplate.addError( labelError );
 
