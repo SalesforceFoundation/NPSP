@@ -417,10 +417,10 @@ const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
         const elements = section.elements;
   
         elements.forEach(element => {
-            // set an empty default value
-            element.recordValue = '';
-
             if (element.elementType === 'field') {
+                // set an empty default value
+                element.recordValue = '';
+
                 for (const fieldMappingDevName of element.dataImportFieldMappingDevNames) {
                     let objectName = fieldMappings[fieldMappingDevName].Target_Object_API_Name;
     
