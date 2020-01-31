@@ -37,6 +37,7 @@
 
 public with sharing class GE_DefaultTemplate {
     static final String ELEMENT_TYPE_FIELD = 'field';
+    static final String TEMPLATE_VERSION = '1.0';
     
     /**
      * @description This method determines if there is a default template, 
@@ -67,7 +68,6 @@ public with sharing class GE_DefaultTemplate {
             
         // Get the gift entry custom setting to check for the default template.             
         Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
-        Boolean hasDefaultTemplate = false;
 
         if (giftEntryCustomSetting.Default_Gift_Entry_Template__c != null && giftEntryCustomSetting.Default_Gift_Entry_Template__c != '') {
             
@@ -76,13 +76,11 @@ public with sharing class GE_DefaultTemplate {
                                                     FROM Form_Template__c 
                                                     WHERE Id =: giftEntryCustomSetting.Default_Gift_Entry_Template__c];
 
-            // IF there is an associated template, there is a valid default template. 
-            if (!templateList.isEmpty()){ 
-                hasDefaultTemplate = true;
-            }
+            // If there is an associated template, there is a valid default template. 
+            return templateList.isEmpty() ? false : true;
         }
 
-        return hasDefaultTemplate;
+        return false;
     }
 
     /**
@@ -156,7 +154,7 @@ public with sharing class GE_DefaultTemplate {
         newDefaultTemplate.Name = defaultTemplate.name;
         newDefaultTemplate.Description__c = defaultTemplate.description;
         newDefaultTemplate.Template_JSON__c = JSON.serialize(defaultTemplate);
-        newDefaultTemplate.Format_Version__c = '1.0';
+        newDefaultTemplate.Format_Version__c = TEMPLATE_VERSION;
         return newDefaultTemplate;
     }
 
