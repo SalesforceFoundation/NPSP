@@ -303,10 +303,19 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return amount;
     }
 
+    /**
+     * Show remaining amount when under-allocated and no default GAU is present, or when over-allocated.
+     * @return {boolean}
+     */
     get showRemainingAmount() {
-        return this.hasDefaultGAU === false && this.remainingAmount > 0;
+        return (this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0;
     }
 
+    /**
+     * Remaining amount that can be allocated into non-default GAU. If default GAU is present, this
+     * is the amount allocated to the default GAU.
+     * @return {number}
+     */
     get remainingAmount() {
         if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
             return this.totalAmount - this.allocatedAmount;
@@ -359,7 +368,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     /**
-     * Retrieve the custom label for donation amount from the form template JSON
+     * TODO: Retrieve the custom label for donation amount from the form template JSON
      */
     get donationAmountCustomLabel() {
         return 'Donation Amount';
