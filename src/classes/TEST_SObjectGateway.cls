@@ -171,6 +171,22 @@ public class TEST_SObjectGateway {
     * @description Retrieves Opportunities
     */
     public class OpportunityGateway {
+        private Set<String> fields = new Set<String>{
+            'Name',
+            'AccountId',
+            'RecordTypeId',
+            'Amount',
+            'CampaignId',
+            'CloseDate',
+            'StageName',
+            'IsClosed',
+            'IsWon',
+            'Closed_Lost_Reason__c',
+            'npe03__Recurring_Donation__c',
+            'Recurring_Donation_Installment_Number__c',
+            'npe01__Contact_Id_for_Role__c',
+            'Primary_Contact__c'
+        };
 
         /***
         * @description Retrieves Opportunities for the related Recurring Donation
@@ -187,19 +203,39 @@ public class TEST_SObjectGateway {
         * @return List<Opportunity>
         */
         public List<Opportunity> getRecords(List<npe03__Recurring_Donation__c> rds) {
-            return [
-                SELECT
-                    Name, AccountId, RecordTypeId,
-                    Amount, CampaignId, CloseDate,
-                    StageName, isClosed, isWon,
-                    Closed_Lost_Reason__c,
-                    npe03__Recurring_Donation__c, 
-                    Recurring_Donation_Installment_Number__c,
-                    npe01__Contact_Id_for_Role__c, 
-                    Primary_Contact__c
-                FROM Opportunity
-                WHERE npe03__Recurring_Donation__c IN :rds
-            ];
+            String soql = new UTIL_Query()
+                .withFrom(Opportunity.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe03__Recurring_Donation__c IN :rds')
+                .build();
+
+            return (List<Opportunity>) Database.query(soql);
+        }
+
+        /***
+        * @description Retrieves Opportunity for specified Opportunity Id
+        * @param oppId An Opportunity Id
+        * @return Opportunity
+        */
+        public Opportunity getRecord(Id oppId) {
+            List<Opportunity> opps = getRecords(new Set<Id>{ oppId });
+
+            return opps == null || opps.isEmpty() ? null : opps[0];
+        }
+
+        /***
+        * @description Retrieves Opportunities for specified Opportunity Ids
+        * @param oppIds Opportunity Ids
+        * @return List<Opportunity>
+        */
+        public List<Opportunity> getRecords(Set<Id> oppIds) {
+            String soql = new UTIL_Query()
+                .withFrom(Opportunity.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('Id IN :oppIds')
+                .build();
+
+            return (List<Opportunity>) Database.query(soql);
         }
     }
 
@@ -267,7 +303,7 @@ public class TEST_SObjectGateway {
                 .withWhere('ApexClass.Name = :className')
                 .withLimit(1)
                 .build();
-            
+
             List<SObject> records = Database.query(soql);
             return records == null  || records.isEmpty() ? null : (AsyncApexJob) records[0];
         }
