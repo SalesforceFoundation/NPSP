@@ -32,16 +32,26 @@
 * @date 2019
 * @group BGE
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description Controller for the geTemplateBuilder Lightning Web Component.
+* @description Class to contain utility methods that pertain to Gift Entry
 */
+public with sharing class GE_GiftEntry_UTIL {
 
-public with sharing class GE_TemplateBuilderCtrl {
     /**
-     * @description Retrieves the default SGE render wrapper for gift entry.
-     * @return      A render wrapper containing a template and information about the object/field mappings.
+     * @description This method will create a default template
+     * if it is necessary and then return the Gift_Entry_Settings__c 
+     * custom setting  for use. 
+     *
+     * @return Returns whether or not there is an existing default template. 
      */
     @AuraEnabled
-    public static FORM_RenderWrapper retrieveDefaultSGERenderWrapper() {
-        return GE_FormRendererService.getDefaultSGERenderWrapper();
+    public static Gift_Entry_Settings__c getGiftEntrySettings() {
+        try {
+            GE_DefaultTemplate.createDefaultTemplateIfNecessary();
+            Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+
+            return giftEntryCustomSetting;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 }
