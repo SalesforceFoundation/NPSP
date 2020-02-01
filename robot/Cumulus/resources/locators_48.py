@@ -19,6 +19,7 @@ npsp_lex_locators={
         'footer':"//div[@class='footer active' or contains(@class,'footer-visible')]",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//*[text()='{}']",
         'month_pick':"//div[@class='dateBar']//a[@title='{}']",
+        'activity-button':'//button[contains(@class,"{}")]',
         'edit_button':'//*[@title="{}"]',
         'edit_form': 'css: div.forcePageBlockItemEdit',
         'flexipage_edit_form': 'css: force-record-layout-item.slds-is-editing',
@@ -142,7 +143,6 @@ npsp_lex_locators={
         'dropdown':'//div[contains(@class,"slds-p-top_small")]/label[text()="{}"]/following-sibling::div/select',
         'checkbox':'//div[contains(@class,"slds-p-top_small")]/label[@class="slds-checkbox"][./span/following-sibling::{}[text()="{}"]/]',
         'button':'//div[contains(@class,"slds-button-group")][.//span[text()="toTask {}"]]/button[contains(text(),"{}")]',
-        'activity-button':'//button[contains(@class,"{}")]',
         'check_eng_plan':'//h2/a/span[@title="{}"]//ancestor::div[contains(@class, "slds-card__header slds-grid")]/following-sibling::div//tbody/tr/th/div/a',
         'dd':'//h2/a/span[@title="{}"]//ancestor::div[contains(@class,"slds-card__header slds-grid")]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//lightning-primitive-icon',
         'tasks':'//div[contains(@class,"slds-section__content")]/ul/li//a[text()="{}"]',
@@ -152,7 +152,7 @@ npsp_lex_locators={
         'select':'//select[contains(@id,"{}")]',
         
     },
-    'recurring_donations':{
+    'custom_objects':{
         'actions-link':'//a[@title="{}" or @name="{}"]',
         },
     'payments':{

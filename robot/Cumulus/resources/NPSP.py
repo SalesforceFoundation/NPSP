@@ -464,6 +464,17 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             exp_value, actual_value
         )  
         
+    def verify_occurence(self,title,value):
+        self.salesforce.load_related_list(title)
+        time.sleep(1) 
+        locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
+        actual_value=self.selenium.get_webelement(locator).text
+        exp_value="("+value+")"
+        assert exp_value == actual_value, "Expected value to be {} but found {}".format(
+            exp_value, actual_value
+        )
+           
+        
     def check_record_related_item(self,title,value):
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
         self.selenium.wait_until_page_contains_element(locator)
@@ -581,13 +592,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def verify_eng_plan_exists(self,name, delete=None):  
         """verifies that the Engagement Plans related list has a plan stored under it and clicks on dropdown if True is passed as 2nd argument"""
-        locator = npsp_lex_locators['engagement_plan']['check_eng_plan'].format(name)
+        locator = npsp_lex_locators['record']['related']['link'].format('Engagement Plans',name)
         self.selenium.page_should_contain_element(locator) 
-        plan=self.selenium.get_webelement(locator).text   
-        if delete == "True":
-               locator = npsp_lex_locators['engagement_plan']['dd'].format(name)
-               self.selenium.get_webelement(locator).click()      
+        plan=self.selenium.get_webelement(locator).text       
         return plan
+    
     
     def check_activity_tasks(self, *args):
         """verifies that the specified tasks are present under activity tab """
@@ -1451,3 +1460,16 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Clicks on the link in the actions container on top right corner of the page using Javascript"""
         locator=npsp_lex_locators["link-title"].format(title)
         self.salesforce._jsclick(locator)
+     
+    def click_more_activity_button(self): 
+        """Clicks on View More button on Activity tab of the record""" 
+        locator = npsp_lex_locators["record"]["activity-button"].format('showMoreButton') 
+        self.salesforce._jsclick(locator) 
+        
+    def click_show_more_actions_button(self,title):
+        """Clicks on more actions dropdown and click the given title"""   
+        locator=npsp_lex_locators['link-contains'].format("more actions")
+        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains(title)
+        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
+        self.selenium.click_link(link_locator)     

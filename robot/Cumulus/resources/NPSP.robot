@@ -191,8 +191,8 @@ Create Engagement Plan
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
     Click Button    Save
-    Wait Until Location Contains    /view
-    ${ns} =  Get NPSP Namespace Prefix
+    ${ns} =  Get NPSP Namespace Prefix    
+    Current Page Should be       Details   Engagement_Plan_Template__c
     Save Current Record ID For Deletion    ${ns}Engagement_Plan_Template__c
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     

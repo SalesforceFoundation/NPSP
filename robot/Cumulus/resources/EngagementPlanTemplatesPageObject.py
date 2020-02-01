@@ -21,7 +21,7 @@ class EngagementPlanListPage(BaseNPSPPage, ListingPage):
     
     
 @pageobject("Details", "Engagement_Plan_Template__c")
-class EngagementPlanListPage(BaseNPSPPage, DetailPage):
+class EngagementPlanDetailPage(BaseNPSPPage, DetailPage):
 
     
     def _is_current_page(self):
