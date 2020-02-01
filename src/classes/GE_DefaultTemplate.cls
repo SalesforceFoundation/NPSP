@@ -68,12 +68,15 @@ public with sharing class GE_DefaultTemplate {
         // Get the gift entry custom setting to check for the default template.             
         Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
 
-        if (giftEntryCustomSetting.Default_Gift_Entry_Template__c != null && giftEntryCustomSetting.Default_Gift_Entry_Template__c != '') {
+        if (giftEntryCustomSetting.Default_Gift_Entry_Template__c != null && 
+            giftEntryCustomSetting.Default_Gift_Entry_Template__c != '') {
             
             // If there is an ID already stored, try to get this particular template. 
-            List<Form_Template__c> templateList = [SELECT Id, Name 
-                                                    FROM Form_Template__c 
-                                                    WHERE Id =: giftEntryCustomSetting.Default_Gift_Entry_Template__c];
+            List<Form_Template__c> templateList = [SELECT 
+                        Id, 
+                        Name 
+                FROM Form_Template__c 
+                WHERE Id =: giftEntryCustomSetting.Default_Gift_Entry_Template__c];
 
             // If there is an associated template, there is a valid default template. 
             return templateList.isEmpty() ? false : true;
@@ -91,9 +94,12 @@ public with sharing class GE_DefaultTemplate {
      */
     public static Form_Template__c buildDefaultTemplate() {
         FORM_Template__c newDefaultTemplate = new FORM_Template__c();
-        List<StaticResource> defaultTemplateSRList = [SELECT Id, Body 
-                                                        FROM StaticResource 
-                                                        WHERE Name = 'DefaultGiftEntryTemplate' limit 1];
+        List<StaticResource> defaultTemplateSRList = [SELECT 
+                    Id, 
+                    Body 
+            FROM StaticResource 
+            WHERE Name = 'DefaultGiftEntryTemplate' limit 1];
+
         String defaultTemplateSRJSON = '';
 
         if (!defaultTemplateSRList.isEmpty()) {
@@ -166,11 +172,17 @@ public with sharing class GE_DefaultTemplate {
      */
     public static Map<String, String> getCurrentDevNameMapping() {
         // Get the org's migrated field mappings. 
-        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = [SELECT Id, MasterLabel, DeveloperName, 
-                                                                            Target_Field_API_Name__c, Source_Field_API_Name__c, 
-                                                                            Target_Object_Mapping__r.Object_API_Name__c
-                                                                    FROM Data_Import_Field_Mapping__mdt 
-                                                                    WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME Limit 1000];
+        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = 
+            [SELECT Id, 
+                    MasterLabel, 
+                    DeveloperName,
+                    Target_Field_API_Name__c, 
+                    Source_Field_API_Name__c,
+                    Target_Object_Mapping__r.Object_API_Name__c
+            FROM Data_Import_Field_Mapping__mdt 
+            WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: 
+                BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME 
+            LIMIT 1000];
 
         // A map which contains the partial dev name to the org's full dev name.
         // An example would like this:

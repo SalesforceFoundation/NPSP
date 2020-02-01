@@ -91,7 +91,12 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
 
         String templateJSON = JSON.serialize(template);
-        String storedFormTemplateId = FORM_ServiceGiftEntry.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+        String storedFormTemplateId = FORM_ServiceGiftEntry.storeFormTemplate(null, 
+            template.name, 
+            template.description, 
+            template.version, 
+            templateJSON);
+
         giftEntryCustomSetting.Default_Gift_Entry_Template__c = storedFormTemplateId;
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
@@ -216,7 +221,11 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         FORM_Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
         String templateJSON = JSON.serialize(template);
-        String storedFormTemplateId = FORM_ServiceGiftEntry.storeFormTemplate(null, template.name, template.description, template.version, templateJSON);
+        String storedFormTemplateId = FORM_ServiceGiftEntry.storeFormTemplate(null, 
+            template.name, 
+            template.description, 
+            template.version, 
+            templateJSON);
         
         giftEntrySettings.Default_Gift_Entry_Template__c = storedFormTemplateId;
         
@@ -226,8 +235,10 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         
         FORM_Template updatedTemplate = FORM_ServiceGiftEntry.retrieveDefaultSGEFormTemplate();
 
-        System.assert(String.isBlank(updatedTemplate.permissionErrors), 'There should be no permission errors     when the user has all required CRUD and FLS permissions.');
-        System.assertEquals(updatedTemplate.permissionErrorType, null, 'The template should not have a            permission error type if the user has all required CRUD and FLS permissions.');
+        System.assert(String.isBlank(updatedTemplate.permissionErrors), 
+            'There should be no permission errors when the user has all required CRUD and FLS permissions.');
+        System.assertEquals(updatedTemplate.permissionErrorType, null, 
+            'The template should not have a permission error type if the user has all required CRUD and FLS permissions.');
     }
 
     /**************************************************************************************************
@@ -291,10 +302,10 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         FORM_Service fs = new FORM_Service();
         // insert form template using service
         String templateId = FORM_ServiceGiftEntry.storeFormTemplate(null,
-                                                                    template.name,
-                                                                    template.description,
-                                                                    template.version,
-                                                                    templateJSON);
+            template.name,
+            template.description,
+            template.version,
+            templateJSON);
 
         // gift entry custom settings set up
         Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
@@ -302,8 +313,13 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
 
         // retrieve templates with id
-        Form_Template__c[] formTemplates = [SELECT Id, Name, Template_JSON__c FROM Form_Template__c];
-        System.assertEquals( formTemplates.size(), 1, 'We should have only 1 form temp record at this time' );
+        Form_Template__c[] formTemplates = [SELECT Id, 
+                    Name, 
+                    Template_JSON__c 
+            FROM Form_Template__c];
+
+        System.assertEquals( formTemplates.size(), 1, 
+            'We should have only 1 form temp record at this time' );
 
         Test.startTest();
             try {
@@ -324,32 +340,32 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
     public static FORM_Template createSampleTemplate () {
         
         FORM_Element field = new FORM_Element('FormField',
-                                        'True',
-                                        null,
-                                        'CustomLabel',
-                                        new String[]{});
+            'True',
+            null,
+            'CustomLabel',
+            new String[]{});
         
         FORM_Element widget = new FORM_Element('FormWidget',
-                                            'DisplayRule',
-                                            'ComponentName',
-                                            new String[]{});
+            'DisplayRule',
+            'ComponentName',
+            new String[]{});
         
         FORM_Element[] elements = new FORM_Element[]{field,widget};
 
         FORM_Section section = new FORM_Section('SectionLabel',
-                                                'Accordion',
-                                                'Expanded',
-                                                'True',
-                                                elements);
+            'Accordion',
+            'Expanded',
+            'True',
+            elements);
         
         FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
-                                            new FORM_Section[]{section});
-
+            new FORM_Section[]{section});
 
         FORM_Template template = new FORM_Template('Sample Template',
-                                                'This is the description.',
-                                                '1.0',
-                                                layout);
+            'This is the description.',
+            '1.0',
+            layout);
+
         return template;
     }
 
@@ -390,8 +406,8 @@ public with sharing class FORM_ServiceGiftEntry_TEST {
         batch.Name = name;
         batch.Batch_Process_Size__c = 200;
         batch.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
-        batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
-                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + 
+                ';' + UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         batch.Donation_Matching_Behavior__c = BDI_DataImport_API.BestMatchOrCreate;
         batch.Process_Using_Scheduled_Job__c = autoProcess;
         return batch;
