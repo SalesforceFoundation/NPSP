@@ -178,32 +178,17 @@ public with sharing class FORM_ServiceGiftEntry {
 
         return template;
     }
-
-    /*******************************************************************************************************
-    * @description Method for retrieving the template by name
-    * @param templateName - the name of an existing form template 
-    */
-    public static FORM_Template retrieveFormTemplate(String templateName) {
-        FORM_Template template;
-
-        List<Form_Template__c> templateList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
-                                FROM Form_Template__c 
-                                WHERE Name = :templateName
-                                LIMIT 1];
-
-        return !templateList.isEmpty() ? deserializeFormTemplateFromObj(templateList[0]) : null;
-    }
-
+    
     /*******************************************************************************************************
     * @description Method for retrieving the current default template.
     */
     public static FORM_Template retrieveDefaultSGEFormTemplate() {
-        Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+        Gift_Entry_Settings__c giftEntrySettings = GE_GiftEntry_UTIL.getGiftEntrySettings();
         FORM_Template template;
         List<Form_Template__c> templateObjList = [SELECT Id, Name, Format_Version__c, Template_JSON__c 
                                 FROM Form_Template__c 
-                                WHERE Name =: giftEntrySettings.Default_Single_Gift_Entry_Template__c];
-        
+                                WHERE Id =: giftEntrySettings.Default_Gift_Entry_Template__c];
+         
          if (!templateObjList.isEmpty()) {
             template = deserializeFormTemplateFromObj(templateObjList[0]);
 

@@ -42,7 +42,7 @@ public with sharing class FORM_PermissionValidator {
     
     public static final String OBJECT_CRUD_ERROR = 'CRUD';
     public static final String FLS_ERROR = 'FLS';
-
+    public static final String FIELD_ELEMENT_TYPE = 'field';
     FORM_Template template;
     Set<AccessLevel> accessLevels;
     UTIL_Permissions permissionsService = UTIL_Permissions.getInstance();
@@ -63,36 +63,39 @@ public with sharing class FORM_PermissionValidator {
         BDI_FieldMappingSet fieldMappings =  BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
         for (FORM_Section section : template.layout.sections) {
             for (FORM_Element element : section.elements) {
-                for (String fieldDevName : element.dataImportFieldMappingDevNames) {
-                    if(fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
-                        BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
-                        
-                        String targetObjDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Object_API_Name);
-                        String targetFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Field_API_Name);
-                        String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
-                        String sourceFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Source_Field_API_Name);
 
-                        if(!isValid(sourceObjDevName, accessLevels)) {
-                            permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
-                        }
+                if (element.elementType == FIELD_ELEMENT_TYPE) {
+                    for (String fieldDevName : element.dataImportFieldMappingDevNames) {
+                        if(fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
+                            BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
+                            
+                            String targetObjDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Object_API_Name);
+                            String targetFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Field_API_Name);
+                            String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
+                            String sourceFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Source_Field_API_Name);
 
-                        if(!isValid(targetObjDevName, accessLevels)) {
-                            permissionErrorsBySObject.put(targetObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
-                        }
-
-                        if(!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
-                            if(permissionErrorsBySObject.containsKey(sourceObjDevName)) {
-                                permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
-                            } else {
-                                permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{sourceFieldDevName});
+                            if(!isValid(sourceObjDevName, accessLevels)) {
+                                permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
                             }
-                        }
-                        
-                        if(!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
-                            if(permissionErrorsBySObject.containsKey(targetObjDevName)) {
-                                permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
-                            } else {
-                                permissionErrorsBySObject.put(targetObjDevName, new Set<String>{targetFieldDevName});
+
+                            if(!isValid(targetObjDevName, accessLevels)) {
+                                permissionErrorsBySObject.put(targetObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
+                            }
+
+                            if(!isValid(sourceObjDevName, sourceFieldDevName, accessLevels)) {
+                                if(permissionErrorsBySObject.containsKey(sourceObjDevName)) {
+                                    permissionErrorsBySObject.get(sourceObjDevName).add(sourceFieldDevName);
+                                } else {
+                                    permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{sourceFieldDevName});
+                                }
+                            }
+                            
+                            if(!isValid(targetObjDevName, targetFieldDevName, accessLevels)) {
+                                if(permissionErrorsBySObject.containsKey(targetObjDevName)) {
+                                    permissionErrorsBySObject.get(targetObjDevName).add(targetFieldDevName);
+                                } else {
+                                    permissionErrorsBySObject.put(targetObjDevName, new Set<String>{targetFieldDevName});
+                                }
                             }
                         }
                     }
