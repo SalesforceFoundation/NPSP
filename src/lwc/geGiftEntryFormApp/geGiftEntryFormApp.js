@@ -1,6 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
 import GeFormService from 'c/geFormService';
-import {handleError} from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 
 export default class GeGiftEntryFormApp extends LightningElement {
@@ -27,8 +26,7 @@ export default class GeGiftEntryFormApp extends LightningElement {
                 }
             )
             .catch(error => {
-                handleError(error);
-                event.detail.error();
+                event.detail.error(error);
             });
     }
 
