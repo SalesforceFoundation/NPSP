@@ -11,7 +11,6 @@
     <!-- modal attribute is a reference to the modal created by lightning:overlayLibrary -->
     <aura:attribute name="modal"
                     type="Object" />
-
     <aura:attribute name="isGiftEntryMode" type="Boolean" default="false"/>
 
     <c:utilDedicatedListener eventName="geGiftEntryModalEvent"
@@ -31,8 +30,8 @@
 
         <aura:set attribute="else">
             <c:geHome aura:id="giftEntryHome"
-                      ontogglemodal="{!c.handleShowModal}"
-                      onnewsinglegift="{!c.handleNewSingleGift}"/>
+                    ontogglemodal="{!c.handleShowModal}"
+                    onnewsinglegift="{!c.handleNewSingleGift}"/>
         </aura:set>
     </aura:if>
 </aura:component>
