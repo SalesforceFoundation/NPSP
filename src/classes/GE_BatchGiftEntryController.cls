@@ -56,4 +56,36 @@ public with sharing class GE_BatchGiftEntryController {
             );
         }
     }
+
+    /*******************************************************************************************************
+    * @description Saves the data import record, dry runs the record, and returns updated
+    * totals with the new row.
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @param dataImport: the NPSP_Data_Import__c record to update
+    * @return String serialized DataImportModel
+    */
+    @AuraEnabled
+    public static String saveAndDryRunRow(Id batchId, DataImport__c dataImport) {
+
+        try {
+
+            if (String.isNotBlank(dataImport.Id)) {
+                Database.update(dataImport);
+            } else {
+                Database.insert(dataImport);
+            }
+
+            return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
+
+        } catch (Exception ex) {
+
+            // create custom lwc exception and throw it
+            String jsonExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+            AuraHandledException auraHandled = new AuraHandledException(jsonExceptionData);
+            auraHandled.setMessage(jsonExceptionData);
+            throw auraHandled;
+
+        }
+    }
+
 }

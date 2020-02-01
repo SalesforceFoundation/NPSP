@@ -1,6 +1,6 @@
 import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
 import saveAndDryRunRow
-    from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.saveAndDryRunRow';
+    from '@salesforce/apex/GE_BatchGiftEntryController.saveAndDryRunRow';
 import {api} from "lwc";
 import { isNotEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
