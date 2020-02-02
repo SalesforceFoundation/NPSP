@@ -16,13 +16,13 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 # Setup a contact with parameters specified
 Setup Test Data
-    Setupdata   contact   ${contact1_fields}    None    None
+    Setupdata   contact   contact_data=${contact_fields}
 
 *** Variables ***
 ${task1}  Task_1
 ${task2}  Task_2
 ${sub_task1}  subtask1
-&{contact1_fields}  Email=test@example.com
+&{contact_fields}  Email=test@example.com
 &{fields}  Name=Automation_Plan    task1=Task_1    task2=Task_2
 
 

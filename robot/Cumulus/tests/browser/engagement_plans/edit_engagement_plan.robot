@@ -15,7 +15,7 @@ Suite Teardown  Delete Records and Close Browser
 ***Keywords***
 # Setup a contact with parameters specified
 Setup Test Data
-    Setupdata   engagement   None    None    None    ${engagement_fields}
+    Setupdata   engagement  engagement_data=${engagement_fields}
 
 *** Variables ***
 ${task1}  Task_1
