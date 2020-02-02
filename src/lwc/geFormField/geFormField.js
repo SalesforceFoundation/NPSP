@@ -3,6 +3,7 @@ import {isNotEmpty, debouncify} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -74,6 +75,7 @@ export default class GeFormField extends LightningElement {
             this._defaultValue = defaultValue;
             this.value = defaultValue;
         }
+        this.fieldsToQuery();
     }
 
     getValueFromChangeEvent(event) {
@@ -168,6 +170,24 @@ export default class GeFormField extends LightningElement {
     get fieldInfo() {
         return GeFormService.getFieldMappingWrapper(this.formElementName);
     }
+
+    fieldsToQuery() {
+        const fmwrap = this.fieldInfo;
+        const omw = this.objectInfo;
+        const odn = this.objectDevName;
+        const allFm = GeFormService.fieldMappings;
+        const allOm = GeFormService.objectMappings;
+        TemplateBuilderService.init().then(() =>
+        {console.log(TemplateBuilderService.fieldMappingsByObjMappingDevName)});
+        // const allFmByOmName = TemplateBuilderService.fieldMappingsByObjMappingDevName;
+    // const result =
+        //     this.fieldInfo.objectMappingByDevName[this.objectDevName]
+        //         .map(({Source_Field_API_Name}) => Source_Field_API_Name);
+        console.log('*** ' + 'in fieldsToQuery' + ' ***');
+        // return result;
+        // return this.objectInfo.
+    }
+
 
     get fieldDescribeInfo() {
         if(this.objectDescribeInfo) {

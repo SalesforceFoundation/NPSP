@@ -126,6 +126,7 @@ export default class GeFormSection extends LightningElement {
     }
 
     handleChangeLookup(event) {
+        //Does this event do anything? do we needit?
         const changeLookupEvent = new CustomEvent(
             'changelookup',
             { detail: event.detail });
