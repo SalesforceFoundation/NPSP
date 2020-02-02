@@ -1141,7 +1141,7 @@ class NPSP(SalesforceRobotLibraryBase):
         list=self.selenium.get_webelements(locator)
         title=list[0].text
         self.salesforce.click_related_item_popup_link(heading, title, link)
-        
+
     def verify_field_values(self,**kwargs):
         """Verifies values in the specified fields""" 
         for key, value in kwargs.items():
@@ -1240,41 +1240,56 @@ class NPSP(SalesforceRobotLibraryBase):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None):
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, engagement_data=None, task_data=None):
         """ Creates an Account if account setup data is passed
             Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
             Creates a contact and sets an opportunity simultaneously if both the
             contact_data and opportunity_data is specified
          """
-
         # get the data variable, or an empty dictionary if not set
-
         data = self.builtin.get_variable_value("${data}", {})
-        if account_data is not None:
 
+        if account_data is not None:
             # create the account based on the user input specified account type
             name = self.randomString(10);
             rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
             account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
-            account = self.salesforce.salesforce_get("Contact",account_id)
-
+            account = self.salesforce.salesforce_get("Account",account_id)
             # save the account object to data dictionary
             data[name] = account
 
         if contact_data is not None:
-
             # create the contact
             firstname = self.randomString(10);
             lastname = self.randomString(10);
-
             contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
             contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
             contact = self.salesforce.salesforce_get("Contact",contact_id)
-
             # save the contact object to data dictionary
             data[name] = contact
+
+        if engagement_data is not None:
+            # set up enegagement template based on the user input specified and link the contact to the engagement template
+            engagement_id = self.salesforce.salesforce_insert("npsp__Engagement_Plan_Template__c", **engagement_data)
+            engagement = self.salesforce.salesforce_get("npsp__Engagement_Plan_Template__c",engagement_id)
+            if task_data is not None:
+                taskdata = {}
+                for field, possible_values in task_data.items():
+                    taskdata.update( {'Name' : task_data.get(field), 'npsp__Engagement_Plan_Template__c': engagement_id } )
+                    self.salesforce.salesforce_insert("npsp__Engagement_Plan_Task__c", **taskdata )
+
+            if name.lower() == 'contact':
+                testdata={}
+                testdata.update( {'npsp__Contact__c' : data[name]["Id"], 'npsp__Engagement_Plan_Template__c': engagement_id } )
+                self.salesforce.salesforce_insert("npsp__Engagement_Plan__c", **testdata)
+
+            # save the account object to data dictionary
+            if name.lower() == 'contact':
+                data[f"{name}_engagement"] = engagement
+            else:
+                data[name] = engagement
 
         if opportunity_data is not None:
             # create opportunity
@@ -1291,7 +1306,6 @@ class NPSP(SalesforceRobotLibraryBase):
             opportunity_data.update( {'AccountId' : data[name]["AccountId"], 'RecordTypeId': rt_id } )
             opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
             opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
-
             # save the opportunity
             data[f"{name}_opportunity"] = opportunity
 
