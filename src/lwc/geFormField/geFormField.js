@@ -178,7 +178,15 @@ export default class GeFormField extends LightningElement {
         const allFm = GeFormService.fieldMappings;
         const allOm = GeFormService.objectMappings;
         TemplateBuilderService.init().then(() =>
-        {console.log(TemplateBuilderService.fieldMappingsByObjMappingDevName)});
+        {
+            // console.log(TemplateBuilderService.fieldMappingsByObjMappingDevName);
+const a =           TemplateBuilderService.fieldMappingsByObjMappingDevName[this.objectDevName];
+            console.log('a: ', a);
+            const b = a.map(({Source_Field_API_Name}) => Source_Field_API_Name);
+            console.log('b: ', b);
+            // const fields = TemplateBuilderService.fieldMappingsByObjMappingDevName[this.objectDevName].map(({Source_Field_API_Name}) => Source_Field_API_Name);
+            // console.log('fields: ', fields);
+        });
         // const allFmByOmName = TemplateBuilderService.fieldMappingsByObjMappingDevName;
     // const result =
         //     this.fieldInfo.objectMappingByDevName[this.objectDevName]
@@ -186,6 +194,7 @@ export default class GeFormField extends LightningElement {
         console.log('*** ' + 'in fieldsToQuery' + ' ***');
         // return result;
         // return this.objectInfo.
+        return b;
     }
 
 
