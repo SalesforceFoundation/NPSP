@@ -372,7 +372,7 @@ private with sharing class RD2_ValidationService_TEST {
         List<Contact> householdContacts = getContacts();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withContact(householdContacts[0])
+            .withContact(householdContacts[0].Id)
             .build();
         insert rd;
 
@@ -406,7 +406,7 @@ private with sharing class RD2_ValidationService_TEST {
         List<Contact> householdContacts = getContacts();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withContact(householdContacts[0])
+            .withContact(householdContacts[0].Id)
             .build();
         insert rd;
 
@@ -443,7 +443,7 @@ private with sharing class RD2_ValidationService_TEST {
         List<Contact> householdContacts = getContacts();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withContact(householdContacts[0])
+            .withContact(householdContacts[0].Id)
             .build();
         insert rd;
         
@@ -470,7 +470,7 @@ private with sharing class RD2_ValidationService_TEST {
         insert organizations;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withAccount(organizations[0])
+            .withAccount(organizations[0].Id)
             .build();
         insert rd;
 
@@ -504,7 +504,7 @@ private with sharing class RD2_ValidationService_TEST {
         insert organization;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withAccount(organization)
+            .withAccount(organization.Id)
             .build();
         insert rd;
 
@@ -535,11 +535,7 @@ private with sharing class RD2_ValidationService_TEST {
     * @return Contact
     */
     private static Contact getContact() {
-        return [
-            SELECT FirstName, LastName, AccountId, Account.Name
-            FROM Contact
-            LIMIT 1
-        ];
+        return getContacts()[0];
     }
 
     /****
