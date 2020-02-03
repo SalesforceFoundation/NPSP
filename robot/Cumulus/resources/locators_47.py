@@ -6,6 +6,7 @@ npsp_lex_locators={
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'obj-header':"//h1//*[text()='{}']",
     'placeholder': "//*[contains(@placeholder,'{}')]",
+    'engagement_template': 'css:div#brandBand_1',
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
     },
