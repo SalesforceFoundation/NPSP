@@ -1246,6 +1246,7 @@ class NPSP(SalesforceRobotLibraryBase):
             Creates an opportunity for the contact if opportunit_data is provided
             Creates a contact and sets an opportunity simultaneously if both the
             contact_data and opportunity_data is specified
+            Creates a contact and sets up an engagement plan with both contact and engagement plan information is provided
          """
         # get the data variable, or an empty dictionary if not set
         data = self.builtin.get_variable_value("${data}", {})
@@ -1274,18 +1275,19 @@ class NPSP(SalesforceRobotLibraryBase):
             # set up enegagement template based on the user input specified and link the contact to the engagement template
             engagement_id = self.salesforce.salesforce_insert("npsp__Engagement_Plan_Template__c", **engagement_data)
             engagement = self.salesforce.salesforce_get("npsp__Engagement_Plan_Template__c",engagement_id)
+            # Add tasks to engagement if tast_data information is provided
             if task_data is not None:
                 taskdata = {}
                 for field, possible_values in task_data.items():
                     taskdata.update( {'Name' : task_data.get(field), 'npsp__Engagement_Plan_Template__c': engagement_id } )
                     self.salesforce.salesforce_insert("npsp__Engagement_Plan_Task__c", **taskdata )
-
+            # If the keyword is contact, link the contact to the engagement plan created
             if name.lower() == 'contact':
                 testdata={}
                 testdata.update( {'npsp__Contact__c' : data[name]["Id"], 'npsp__Engagement_Plan_Template__c': engagement_id } )
                 self.salesforce.salesforce_insert("npsp__Engagement_Plan__c", **testdata)
 
-            # save the account object to data dictionary
+            # save the engagement object to data dictionary
             if name.lower() == 'contact':
                 data[f"{name}_engagement"] = engagement
             else:
