@@ -43,6 +43,7 @@ private class RD2_DataMigration_TEST {
     private static String LOG_CONTEXT = 'RunDataMigrationTest';
     private static Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.RecurringDonationScheduleGateway rdScheduleGateway = new TEST_SObjectGateway.RecurringDonationScheduleGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
     private static final TEST_SObjectGateway.AsyncApexJobGateway jobGateway = new TEST_SObjectGateway.AsyncApexJobGateway();
@@ -1506,6 +1507,32 @@ private class RD2_DataMigration_TEST {
         assertBatchSummarySuccess(jobId, 1);
     }
 
+    /**
+     * @description Verifies a closed Recurring Donation with
+     * empty Date Established and Next Donation Date fields can be converted to enhanced format
+     */
+    @IsTest
+    private static void shouldConvertClosedRDWhenDateEstablishedAndNextDonationDateAreEmpty() {
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withContact(getContact().Id)
+            .withAmount(AMOUNT_VALUE)
+            .withInstallmentPeriodMonthly()
+            .withDateEstablished(null)
+            .withNextDonationDate(null)
+            .withDayOfMonth(null)
+            .withOpenEndedStatusClosed()
+            .build();
+        insert rd;
+
+        Id jobId = runDataMigration();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
+
+        assertEnhancedFormat(getRecords());
+
+        assertBatchSummarySuccess(jobId, 1);
+    }
 
     /**
      * @description Verifies Recurring Donations and their Open Opportunities are attempted to be migrated
