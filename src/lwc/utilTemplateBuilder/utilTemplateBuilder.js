@@ -65,6 +65,8 @@ import getGiftEntrySettings from
 // relevant Donation_Donor picklist values
 const CONTACT1 = 'Contact1';
 const ACCOUNT1 = 'Account1';
+
+// cache custom labels 
 const CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
 const ADVANCED_MAPPING = 'Data Import Field Mapping';
@@ -382,11 +384,11 @@ const checkPermissionErrors = (formTemplate) => {
     }
 
     if (template.permissionErrorType === CRUD_ERROR_TYPE) {
-        errorObject.errorTitle = this.CUSTOM_LABELS.geErrorObjectCRUDHeader;
-        errorObject.errorMessage = GeLabelService.format(this.CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors);   
+        errorObject.errorTitle = CUSTOM_LABELS.geErrorObjectCRUDHeader;
+        errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorObjectCRUDBody, permissionErrors);   
     } else if (template.permissionErrorType === FLS_ERROR_TYPE) {
-        errorObject.errorTitle = this.CUSTOM_LABELS.geErrorFLSHeader;
-        errorObject.errorMessage = GeLabelService.format(this.CUSTOM_LABELS.geErrorFLSBody, permissionErrors); 
+        errorObject.errorTitle = CUSTOM_LABELS.geErrorFLSHeader;
+        errorObject.errorMessage = GeLabelService.format(CUSTOM_LABELS.geErrorFLSBody, permissionErrors); 
     }
 
     return errorObject;
