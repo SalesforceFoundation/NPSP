@@ -3,10 +3,11 @@
     <customSettingsType>Hierarchy</customSettingsType>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>Default_Single_Gift_Entry_Template__c</fullName>
+        <fullName>Default_Gift_Entry_Template__c</fullName>
         <description>The name of the template to use for the Single Gift Entry page.</description>
         <externalId>false</externalId>
-        <label>Default Single Gift Entry Template</label>
+        <inlineHelpText>This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts.</inlineHelpText>
+        <label>Default Gift Entry Template</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

@@ -14,17 +14,6 @@ public with sharing class GE_FormRendererService {
     }
 
     /**
-     * Get Allocations settings. Used to determine the default GAU, and if the default GAU is enabled.
-     * This result cannot be cached as there is the potential for an upsert operation when no allocation settings exist.
-     * @return An Allocation_Settings__c custom setting record
-     */
-    @AuraEnabled
-    public static Allocations_Settings__c getAllocationsSettings() {
-        return UTIL_CustomSettingsFacade.getAllocationsSettings();
-    }
-
-
-    /**
      * This method creates a wrapper which contains the  template selected by name and a field mapping set.
      * If the template is not found, it returns a wrapper for the default template
      * @param String templateName
@@ -75,6 +64,16 @@ public with sharing class GE_FormRendererService {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Get Allocations settings. Used to determine the default GAU, and if the default GAU is enabled.
+     * This result cannot be cached as there is the potential for an upsert operation when no allocation settings exist.
+     * @return An Allocation_Settings__c custom setting record
+     */
+    @AuraEnabled
+    public static Allocations_Settings__c getAllocationsSettings() {
+        return UTIL_CustomSettingsFacade.getAllocationsSettings();
     }
 
     /*******************************************************************************************************
@@ -133,12 +132,12 @@ public with sharing class GE_FormRendererService {
     //VERSION THAT ASSUMES THE OBJECTS IN WIDGET DATA ARE DATAIMPORT__C OBJECTS
     /*******************************************************************************************************
     * @description Takes in a Data Import record and widget data then converts the widget data, which is in
-    * a JSON map of objectMappingDevName to temp DataImport Sobject list, and reverse maps it into temp DI 
-    * records which are then wrapped in dynamic source classes which allow the data for the records 
+    * a JSON map of objectMappingDevName to temp DataImport Sobject list, and reverse maps it into temp DI
+    * records which are then wrapped in dynamic source classes which allow the data for the records
     * to be processed as if they were normal BDI additional objects.
     * @param diRecord - The DataImport__c record, as filled in by the user, which will have its Additional Object
     * JSON field populated with the Dynamic Source Group JSON.
-    * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records 
+    * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records
     * to be created.
     */
 //    @TestVisible
@@ -210,11 +209,11 @@ public with sharing class GE_FormRendererService {
     /*******************************************************************************************************
     * @description Takes in a Data Import record and widget data then converts the widget data, which is in
     * a JSON map of objectMappingDevName to target Sobject list, and reverse maps it into temp DI records which are
-    * then wrapped in dynamic source classes which allow the data for the records to be processed as if 
+    * then wrapped in dynamic source classes which allow the data for the records to be processed as if
     * they were normal BDI additional objects.
     * @param diRecord - The DataImport__c record, as filled in by the user, which will have its Additional Object
     * JSON field populated with the Dynamic Source Group JSON.
-    * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records 
+    * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records
     * to be created.
     */
     @TestVisible
@@ -253,11 +252,11 @@ public with sharing class GE_FormRendererService {
 
             //Reserializing the object strings to resolve platform issue with deserializing SObjects
             for (Object obj : (List<Object>)objMappingDevNameToObjList.get(objMappingDevName)){
-                tempObjStrings.add(JSON.serialize(obj)); 
-            }      
+                tempObjStrings.add(JSON.serialize(obj));
+            }
 
             if(tempObjStrings != null && tempObjStrings.size() > 0) {
-                
+
                 Integer i = 0;
                 //Loop through the sObjects and construct DI records to hold the data in the expected fields
                 for (String objString : tempObjStrings) {
@@ -279,7 +278,7 @@ public with sharing class GE_FormRendererService {
                     dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
                     dynSource.sourceObj = tempDI;
 
-                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName,dynSource);                    
+                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName,dynSource);
                 }
             }
         }

@@ -275,9 +275,12 @@
         <members>GAU_TDTM_TEST</members>
         <members>GE_BatchGiftEntryController</members>
         <members>GE_BatchGiftEntryController_TEST</members>
+        <members>GE_DefaultTemplate</members>
+        <members>GE_DefaultTemplate_TEST</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_FormServiceController</members>
+        <members>GE_GiftEntry_UTIL</members>
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
         <members>GE_TemplateBuilderCtrl</members>
@@ -1136,7 +1139,7 @@
         <members>General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c</members>
         <members>General_Accounting_Unit__c.Total_Allocations__c</members>
         <members>General_Accounting_Unit__c.Total_Number_of_Allocations__c</members>
-        <members>Gift_Entry_Settings__c.Default_Single_Gift_Entry_Template__c</members>
+        <members>Gift_Entry_Settings__c.Default_Gift_Entry_Template__c</members>
         <members>Gift_Entry_Settings__c.Enable_Gift_Entry__c</members>
         <members>Grant_Deadline__c.Grant_Deadline_Due_Date__c</members>
         <members>Grant_Deadline__c.Grant_Deliverable_Close_Date__c</members>
@@ -3476,6 +3479,7 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
+        <members>DefaultGiftEntryTemplate</members>
         <name>StaticResource</name>
     </types>
     <types>

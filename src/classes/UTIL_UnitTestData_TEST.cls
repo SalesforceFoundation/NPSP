@@ -442,13 +442,13 @@ public class UTIL_UnitTestData_TEST {
     //Utility method for creating a sample template.
     public static FORM_Template createSampleTemplate () {
         
-        FORM_Element field = new FORM_Element('FormField',
+        FORM_Element field = new FORM_Element('field',
                                               'True',
                                                null,
                                                'CustomLabel',
                                                new List<String>{'Account_1_Name','Account_1_Country'});
         
-        FORM_Element widget = new FORM_Element('FormWidget',
+        FORM_Element widget = new FORM_Element('widget',
                                                'DisplayRule',
                                                'ComponentName',
                                                 new List<String>{'Contact_1_First_Name',                        'Contact_1_Last_Name'});
