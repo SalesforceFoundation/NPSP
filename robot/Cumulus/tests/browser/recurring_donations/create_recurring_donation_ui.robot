@@ -19,10 +19,10 @@ Create Open Recurring Donation With Monthly Installment
     ...                          Recurring Donation Name= Robot Recurring Donation		
     ...                          Amount=100
     Select Value From Dropdown   Installment Period              Monthly
-    Click Modal Button           Save		
+    Click Modal Button           Save
+    Wait Until Modal Is Closed		
     Reload Page		
-    Select Tab  Related		
-    Load Related List            Recurring Donations		
+    Select Tab  Related				
     Check Related List Values    Recurring Donations    Robot Recurring Donation		
     Load Related List            Opportunities		
     Click ViewAll Related List   Opportunities		

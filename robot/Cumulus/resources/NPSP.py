@@ -586,6 +586,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
+        self.salesforce.load_related_list(list_name)
         for value in args:
             locator = npsp_lex_locators['check_related_list_item'].format(list_name,value)
             self.selenium.page_should_contain_element(locator)
