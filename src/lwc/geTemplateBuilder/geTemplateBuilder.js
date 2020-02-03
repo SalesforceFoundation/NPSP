@@ -98,7 +98,14 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     wiredBatchDataImportObject({ error, data }) {
         if (data) {
             this.diBatchInfo = data;
-            this.init();
+
+            if (this.connected) {
+                // We need to be connected before we can initialize this component.
+                this.init();
+            } else {
+                // So if we haven't connected yet, queue it up.
+                this.needToInit = true;
+            }
         } else if (error) {
             handleError(this, error);
         }
@@ -126,6 +133,14 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     get namespace() {
         return this.currentNamespace ? `${this.currentNamespace}__` : '';
+    }
+
+    connectedCallback() {
+        this.connected = true;
+
+        if (this.needToInit) {
+            this.init();
+        }
     }
 
     init = async () => {
