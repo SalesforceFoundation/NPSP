@@ -4,6 +4,7 @@ import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
 import { fireEvent } from 'c/pubsubNoPageRef';
+import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -53,7 +54,7 @@ export default class GeFormField extends LightningElement {
             this.checkRichTextValidity();
         }
 
-        if(this.sourceFieldAPIName === 'Donation_Amount__c') {
+        if(this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
             // fire event for reactive widget component containing the Data Import field API name and Value
             // currently only used for the Donation Amount.
             fireEvent(null, 'widgetData', { Donation_Amount__c: this.value });
