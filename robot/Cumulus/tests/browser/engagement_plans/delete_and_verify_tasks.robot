@@ -23,7 +23,6 @@ Setup Test Data
 &{engagement_fields}  Name=testplan1
 &{task_fields}  Task1=Task_1    Task2=Task_2
 
-
 *** Test Cases ***
 
 Delete An Engagement Plan

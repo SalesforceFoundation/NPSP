@@ -162,7 +162,6 @@ New Contact for HouseHold
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
         
-
 Create Level
     ${level_name}=    Generate Random String
     Select App Launcher Tab  Levels

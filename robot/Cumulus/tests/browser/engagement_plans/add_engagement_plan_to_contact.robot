@@ -13,6 +13,7 @@ Suite Setup     Run keywords
 ...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
+
 ***Keywords***
 # Setup a contact with parameters specified
 Setup Test Data
@@ -24,7 +25,6 @@ ${task2}  Task_2
 ${sub_task1}  subtask1
 &{contact_fields}  Email=test@example.com
 &{fields}  Name=Automation_Plan    task1=Task_1    task2=Task_2
-
 
 *** Test Cases ***
 

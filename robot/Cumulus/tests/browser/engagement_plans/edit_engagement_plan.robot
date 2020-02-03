@@ -25,7 +25,6 @@ ${sub_task1}  subtask1
 &{engagement_fields}  Name=AutomationTestPlan
 &{edit_fields}  Name=testplan1    task1=Task_1    task2=Task_2
 
-
 *** Test Cases ***
 
 Create Engagement Plan And Edit the Plan

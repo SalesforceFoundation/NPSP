@@ -1288,6 +1288,7 @@ class NPSP(SalesforceRobotLibraryBase):
                 self.salesforce.salesforce_insert("npsp__Engagement_Plan__c", **testdata)
 
             # save the engagement object to data dictionary
+
             if name.lower() == 'contact':
                 data[f"{name}_engagement"] = engagement
             else:
