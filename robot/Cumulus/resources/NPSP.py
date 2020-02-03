@@ -1208,8 +1208,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['object_dd']
         view=npsp_lex_locators['link'].format(view_name,view_name)
         self.selenium.wait_until_page_contains("List Views")
-        self.selenium.get_webelement(locator).click()  
-        self.selenium.click_element(view)
+        self.selenium.get_webelement(locator).click()
+        element = self.selenium.driver.find_element_by_xpath(view)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
         self.selenium.wait_until_page_contains(view_name)
         
 

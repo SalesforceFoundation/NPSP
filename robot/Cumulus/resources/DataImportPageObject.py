@@ -46,8 +46,12 @@ class DataImportDetailPage(BaseNPSPPage, DetailPage):
     def edit_record(self):
         """From the actions dropdown select edit action and wait for modal to open"""
         locator=npsp_lex_locators['link-contains'].format("more actions")
-        self.selenium.click_link(locator)
+        buttons=self.selenium.get_webelements(locator)
+        for button in buttons:
+            if button.is_displayed():
+                self.selenium.click_link(button)
         dd=npsp_lex_locators['data_imports']['actions_dd']
+        print(f"locator is {dd}")
         self.selenium.wait_until_page_contains_element(dd, error="Show more actions dropdown didn't open in 30 sec")
         self.selenium.click_link("Edit")
         self.salesforce.wait_until_modal_is_open()
