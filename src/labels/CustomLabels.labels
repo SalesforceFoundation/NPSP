@@ -8388,7 +8388,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>The Opportunity record type assigned to the Recurring Donation's installment Opportunities.</value>
+        <value>The Opportunity record type assigned to the Recurring Donation&apos;s installment Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDInstallmentCreateOptionMessage</fullName>
