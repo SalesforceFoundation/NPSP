@@ -137,6 +137,8 @@ public with sharing class GE_DefaultTemplate {
 
                         if (fullDevName.endsWith('__c')) {
                             fullDevName = UTIL_Namespace.StrTokenNSPrefix(fullDevName);
+                            element.fieldApiName = UTIL_Namespace.StrTokenNSPrefix(element.fieldApiName);
+                            element.objectApiName = UTIL_Namespace.StrTokenNSPrefix(element.objectApiName);
                         }
 
                         // If it is a DI field, apply the namespace, if there is one. 
