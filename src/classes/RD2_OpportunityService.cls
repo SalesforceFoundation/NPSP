@@ -212,7 +212,7 @@ public with sharing class RD2_OpportunityService {
 
                 installmentByOppId.put(opp.Id, installment);
 
-                Boolean isChanged = syncOppWithSchedule(opp, installment, rd.npe03__Donor_Name__c);
+                Boolean isChanged = syncOpportunity(opp, installmentByOppId.get(opp.Id), rd);
                 if (isChanged) {
                     oppsToUpdate.add(opp);
                 }
@@ -228,29 +228,44 @@ public with sharing class RD2_OpportunityService {
     * @description Updates Opportunity if it differs from the related Recurring Donation Schedule installment
     * @param opp Opportunity
     * @param installment Recurring Donation Schedule installment
-    * @param donorName Recurring Donation donor name
+    * @param rd Recurring Donation
     * @return Boolean
     */
-    private Boolean syncOppWithSchedule(Opportunity opp, RD2_ScheduleService.Installment installment, String donorName) {
+    private Boolean syncOpportunity(Opportunity opp, RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd) {  
         Boolean isChanged = false;
 
-        if (opp.Amount != installment.installmentAmount) {
-            opp.Amount = installment.installmentAmount;
+        if (opp.AccountId != rd.npe03__Organization__c) {
+            opp.AccountId = rd.npe03__Organization__c;
+            isChanged = true;
+        }
+        
+        if (opp.Primary_Contact__c != rd.npe03__Contact__c) {
+            opp.Primary_Contact__c = rd.npe03__Contact__c;
             isChanged = true;
         }
 
-        if (opp.CloseDate != installment.nextDonationDate) {
-            opp.CloseDate = installment.nextDonationDate;
-            opp.name = buildOpportunityName(donorName, opp);
-            isChanged = true;
+        if (installment != null) { 
+            if (opp.Amount != installment.installmentAmount) {
+                opp.Amount = installment.installmentAmount;
+                isChanged = true;
+            }
+
+            if (opp.CloseDate != installment.nextDonationDate) {
+                opp.CloseDate = installment.nextDonationDate;
+                isChanged = true;
+            }
+
+            if (installment.campaignId != null 
+                && opp.CampaignId != installment.campaignId 
+                && rdSettings.shouldSetInstallmentCampaign
+            ) {
+                opp.CampaignId = installment.campaignId;
+                isChanged = true;
+            }
         }
 
-        if (installment.campaignId != null
-            && opp.CampaignId != installment.campaignId
-            && rdSettings.shouldSetInstallmentCampaign
-        ) {
-            opp.CampaignId = installment.campaignId;
-            isChanged = true;
+        if (isChanged) {
+            opp.name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
         }
 
         return isChanged;

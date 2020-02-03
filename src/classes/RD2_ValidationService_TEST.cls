@@ -36,6 +36,8 @@
 */
 @isTest(IsParallel=true)
 private with sharing class RD2_ValidationService_TEST {
+    private static final Date START_DATE = Date.newInstance(2019, 9, 15);
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
     /****
      * @description Creates data required for unit tests
@@ -361,6 +363,170 @@ private with sharing class RD2_ValidationService_TEST {
         }
     }
 
+    /***
+    * @description Verifies Rd with closed opp cannot be updated when changing the household contact
+    */
+    @isTest
+    private static void shouldBlockRdWithClosedOppUpdateWhenChangeHouseholdContact() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        List<Contact> householdContacts = getContacts();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(householdContacts[0])
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+        .withCloseDate(rd.npe03__Next_Payment_Date__c.addMonths(-1))
+        .withClosedWonStage()
+        .build();
+
+        rd.npe03__Contact__c = householdContacts[1].Id;
+
+        String errMessage = '';
+
+        try {
+            Test.startTest();
+            update rd;
+            Test.stopTest();
+        } catch (DmlException e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(errMessage.contains(System.Label.RD2_ContactChangeIsRestricted),
+            'RD update should fail due to existing closed opp with the message' + System.Label.RD2_ContactChangeIsRestricted);
+    }
+
+    /***
+    * @description Verifies Rd with closed opp cannot be updated when changing from household contact to organization account
+    */
+    @isTest
+    private static void shouldBlockRdUpdateWithClosedOppWhenChangeDonorFromHouseholdToOrganization() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        List<Contact> householdContacts = getContacts();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(householdContacts[0])
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+        .withCloseDate(rd.npe03__Next_Payment_Date__c.addMonths(-1))
+        .withClosedWonStage()
+        .build();
+
+        Account organizationAcct = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert organizationAcct;
+
+        rd.npe03__Organization__c = organizationAcct.Id;
+
+        String errMessage = '';
+
+        try {
+            Test.startTest();
+            update rd;
+            Test.stopTest();
+        } catch (DmlException e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(errMessage.contains(System.Label.RD2_ContactChangeIsRestricted),
+            'RD update should fail due to existing closed opp with the message' + System.Label.RD2_ContactChangeIsRestricted);
+    }
+
+    /***
+    * @description Verifies Rd can be updated to different contact when there is no closed opp under the Rd
+    */
+    @isTest
+    private static void shouldUpdateRdWithoutClosedOppWhenDonorContactChange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        List<Contact> householdContacts = getContacts();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(householdContacts[0])
+            .build();
+        insert rd;
+        
+        rd.npe03__Contact__c = householdContacts[1].Id;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(householdContacts[1].Id, rd.npe03__Contact__c,
+            'The Rd should be successfully updated with new contact');
+    }
+    
+    /***
+    * @description Verifies Rd with closed opp can be updated to different organization
+    */
+    @isTest
+    private static void shouldUpdateRdWithClosedOppWhenOrganizationChange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        List<Account> organizations = UTIL_UnitTestData_TEST.buildOrganizationAccounts(2);
+        insert organizations;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withAccount(organizations[0])
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withCloseDate(rd.npe03__Next_Payment_Date__c.addMonths(-1))
+            .withClosedWonStage()
+            .build();
+
+        rd.npe03__Organization__c = organizations[1].Id;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(organizations[1].Id, rd.npe03__Organization__c,
+            'The Rd should be successfully updated with new oorganization');
+
+    }
+
+    /***
+    * @description Verifies Rd with closed opp can be updated to different contact when the Rd is under an organization account
+    */
+    @isTest
+    private static void shouldUpdateRdWithClosedOppWhenContactUnderOrganizationChange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Contact householdContact = getContact();
+
+        Account organization = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert organization;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withAccount(organization)
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+        .withCloseDate(rd.npe03__Next_Payment_Date__c.addMonths(-1))
+        .withClosedWonStage()
+        .build();
+
+        rd.npe03__Contact__c = householdContact.Id;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(organization.Id, rd.npe03__Organization__c,
+            'The Rd should be under the same organization');
+        System.assertEquals(householdContact.Id, rd.npe03__Contact__c,
+            'The Rd should have the household contact as its primary contact');
+    }
+
     // Helper Methods
     /////////////////////
 
@@ -393,14 +559,25 @@ private with sharing class RD2_ValidationService_TEST {
      * @return TEST_RecurringDonationBuilder instance
      */
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
-        final Date startDate = Date.newInstance(2019, 9, 15);
-
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withDefaultValues()
-            .withAmount(10)
+            .withAmount(100)
             .withPaymentMethod('Check')
-            .withDateEstablished(startDate)
-            .withStartDate(startDate);
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withCalculateNextDonationDate();
     }
-    
+
+    /**
+     * @description Instantiate an Opp builder for the specified Recurring Donation
+     * @param rd Recurring Donation
+     * @return TEST_OpportunityBuilder New Opp builder
+     */
+    private static TEST_OpportunityBuilder getOpportunityBuilder(npe03__Recurring_Donation__c rd) {
+        return new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1);
+    }
 }

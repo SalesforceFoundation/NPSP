@@ -678,7 +678,69 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
 
+    /***
+    * @description Verifies Account and Primary Contact are changed on future opened Opportunity 
+    * when related Recurring Donation donor Organization and Contact are changed. 
+    * Existing Closed Won/Lost, and past opened Opportunities should not be updated.
+    */
+    @isTest
+    private static void shouldUpdateFutureOpenOppWhenRDDonorIsChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        setUpConfiguration();
+
+        List<Account> accts = UTIL_UnitTestData_TEST.buildOrganizationAccounts(2);
+        insert accts;
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(accts[0]);
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+
+        List<Opportunity> opps =  new List<Opportunity>{
+            oppBuilder
+                .withCloseDate(TODAY.addMonths(-2))
+                .withClosedWonStage()
+                .build(),
+
+            oppBuilder
+                .withCloseDate(TODAY.addMonths(-1))
+                .withOpenStage()
+                .build(),
+
+            oppBuilder
+                .withCloseDate(TODAY)
+                .withOpenStage()
+                .build(),
+
+            oppBuilder
+                .withCloseDate(TODAY.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+
+        insert opps;
+
+        Contact primaryContact = getContact();
+
+        Test.startTest();
+        rd.npe03__Organization__c = accts[1].Id;
+        rd.npe03__Contact__c = primaryContact.Id;
+        
+        update rd;
+        Test.stopTest();
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+
+        for (Opportunity opp : oppById.values()) {
+            if (opp.Id == opps[0].Id || opp.Id == opps[1].Id) {
+                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed and past Opportunity account should not be updated when RD is updated');
+                System.assertEquals(null, opp.Primary_Contact__c, 'Closed and past Opportunity primary contact should not be updated when RD is updated');
+            } else {
+                System.assertEquals(accts[1].Id, opp.AccountId, 'Open opportunity account should be updated to match RD organization');
+                System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Open opportunity primary contact should be updated to match RD contact');
+            }
+        }
+    }
 
     // Helper Methods
     //////////////////
@@ -785,6 +847,7 @@ private with sharing class RD2_OpportunityService_TEST {
         return new TEST_OpportunityBuilder()
             .withContact(rd.npe03__Contact__c)
             .withRecurringDonation(rd.Id)
+            .withAccount(rd.npe03__Organization__c)
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1);
     }
