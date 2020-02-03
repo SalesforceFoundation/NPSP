@@ -30,7 +30,10 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
                 // convert full field names to local field names for processing
                 Object.entries(fieldAndValue).forEach(([fieldName,fieldValue]) => {
                     const localFieldName = this.getLocalFieldName(fieldName);
-                    widgetFieldAndValues = { ...widgetFieldAndValues, ...{[localFieldName]: fieldValue}};
+                    if(isNotEmpty(fieldValue)) {
+                        // no need to populate fields with values that are blank / empty
+                        widgetFieldAndValues = {...widgetFieldAndValues, ...{[localFieldName]: fieldValue}};
+                    }
                 });
             });
         }
