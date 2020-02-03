@@ -29,7 +29,9 @@ Setup Test Data
 Delete An Engagement Plan
     [Documentation]                      Create a contact with an engagement plan set
     ...                                  Navigate to the contact details page and delete the engagement plan
+    ...                                  Verify that the engagement plan is deleted successfully.
     ...                                  Verify that there are no engagement plans for the contact
+    [tags]                               W-038641                 feature:Engagements
 
     Go To Page                                          Details
     ...                                                 Contact

@@ -101,14 +101,6 @@ API Create Relationship
     &{relation} =     Salesforce Get  npe4__Relationship__c  ${rel_id}
     [return]         &{relation}
     
-     
-# API Create Engagement Plan
-    # [Arguments]      ${plan_name}     &{fields}    
-    # ${opp_id} =  Salesforce Insert    npsp__Engagement_Plan_Template__c
-    # ...               Name=${plan_name}
-    # ...               npsp__Description__c=This plan is created via Automation 
-    # ...               &{fields}
-
 API Create Recurring Donation
     [Arguments]        &{fields}
     ${ns} =            Get Npsp Namespace Prefix
@@ -170,31 +162,7 @@ New Contact for HouseHold
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
         
-Create Engagement Plan
-    ${plan_name} =     Generate Random String
-    Select App Launcher Tab  Engagement Plan Templates
-    Click Special Object Button       New
-    Wait For Locator    frame    Manage Engagement Plan Template
-    # Choose Frame    Manage Engagement Plan Template
-    # Wait For Locator    id    idName
-    Select Frame And Click Element    Manage Engagement Plan Template    id    idName
-    Enter Eng Plan Values    idName    ${plan_name}
-    Enter Eng Plan Values    idDesc    This plan is created via Automation  
-    Click Button    Add Task
-    Wait Until Page Contains  Task 1
-    Enter Task Id and Subject    Task 1    ${task1}
-    Click Task Button    1    Add Dependent Task
-    Enter Task Id and Subject    Task 1-1    ${sub_task}
-    Click Button    Add Task
-    Wait Until Page Contains  Task 2
-    Enter Task Id and Subject    Task 2    ${task2}
-    Page Scroll To Locator    button    Save
-    Click Button    Save
-    Wait Until Location Contains    /view
-    ${ns} =  Get NPSP Namespace Prefix
-    Save Current Record ID For Deletion    ${ns}Engagement_Plan_Template__c
-    [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
-    
+
 Create Level
     ${level_name}=    Generate Random String
     Select App Launcher Tab  Levels

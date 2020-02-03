@@ -27,9 +27,9 @@ Create Engagement Plan Template And verify save
     [Documentation]                      Create an engagement plan and later edit it to add tasks
     ...                                  Navigate to the engagement plan and verify the tasks added
     ...                                  Persist.
+    [tags]                               W-038641                 feature:Engagements
 
     Select App Launcher Tab                                                    Engagement Plan Templates
-
     Current Page Should Be                          Listing                    EngagementTemplate
     click special object button                     New
     Current Page Should Be                          Custom                     CreateEngagement
