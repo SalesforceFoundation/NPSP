@@ -183,14 +183,6 @@ Create Level
     ${level_id} =   Save Current Record ID For Deletion  Level__c  
     [Return]    ${level_id}  ${level_name}
 
-Verify Engagement Plan
-    [Arguments]       ${plan_name}     @{others}
-    Select App Launcher Tab  Engagement Plan Templates
-    Click Link    link=${plan_name}
-    Check Field Value    Engagement Plan Template Name    ${plan_name}
-    Select Tab    Related
-    Check Related List Values    Engagement Plan Tasks      @{others}
-
 Create GAU
     ${gau_name} =         Generate Random String
     Select App Launcher Tab    General Accounting Units
