@@ -4,13 +4,13 @@
   nickname: theGAU
   just_once: True
   fields:
-    name: The GAU
+    name: The RD GAU
 
 - object: Campaign
   nickname: theCampaign
   just_once: True
   fields:
-    name: The Campaign
+    name: The RD Campaign
     IsActive: True
 
 - macro: Standard_RD_Fields
@@ -23,7 +23,7 @@
     npe03__Date_Established__c:
       date_between:
         start_date: 2018-01-01
-        end_date: 2020-01-10
+        end_date: 2020-01-30
     npe03__Recurring_Donation_Campaign__c:
       random_choice:
         - choice:
@@ -36,7 +36,7 @@
     npe03__Contact__c:
       random_choice:
         - choice:
-            probability: 95%
+            probability: 98%
             pick:
               - object: Contact
                 fields:
@@ -45,7 +45,7 @@
                   LastName:
                     fake: last_name
         - choice:
-            probability: 5%
+            probability: 2%
             pick: ""
     npe03__Organization__c:
       if:
@@ -85,7 +85,7 @@
     __fake_field:
       - random_choice:
           - choice:
-              probability: 16%
+              probability: 18%
               pick:
                 - object: npe03__Recurring_Donation__c
                   include: Standard_RD_Fields
@@ -110,7 +110,7 @@
                     npe03__Schedule_Type__c: Multiply By
                     Always_Use_Last_Day_Of_Month__c: True
           - choice:             # Monthly / Multiply By: No DayOfMonth or LastDay
-              probability: 48%
+              probability: 52%
               pick:
                 - object: npe03__Recurring_Donation__c
                   include: Standard_RD_Fields
@@ -120,7 +120,7 @@
                     npe03__Installment_Period__c: Monthly
                     npe03__Schedule_Type__c: Multiply By
           - choice:           # Monthly / Divide By: Has a "Day Of Month" value
-              probability: 4%
+              probability: 5%
               pick:
                 - object: npe03__Recurring_Donation__c
                   include: Standard_RD_Fields
@@ -168,7 +168,7 @@
                         max: 24
 
           - choice:
-              probability: 8%
+              probability: 1%
               pick:
                 - object: npe03__Recurring_Donation__c
                   include: Standard_RD_Fields
@@ -178,7 +178,7 @@
                     npe03__Installment_Period__c: Weekly
 
           - choice:
-              probability: 2%
+              probability: 1%
               pick:
                 - object: npe03__Recurring_Donation__c
                   include: Standard_RD_Fields
@@ -189,7 +189,7 @@
 
 
           - choice:           # << None >> / Monthly / Divide By
-              probability: 17%
+              probability: 18%
               pick:
                 - object: npe03__Recurring_Donation__c
                   include: Standard_RD_Fields
@@ -204,7 +204,7 @@
                         max: 24
 
           - choice:
-              probability: 2%
+              probability: 1%
               pick:
                 - object: npe03__Recurring_Donation__c
                   include: Standard_RD_Fields
