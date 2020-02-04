@@ -141,7 +141,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 break
             
         assert b_found, "{} related list with button {} not found.".format(heading, button_title)
-                  
+     
+    @capture_screenshot_on_error              
     def click_related_list_dd_button(self, heading, dd_title, button_title):
         """ To Click on a related list dropdown button.
             Pass the list name, dd name and button name"""

@@ -16,7 +16,7 @@ Find Matching Gifts
     &{contact1} =  API Create Contact    Email=automation@example.com
     &{opportunity1} =  API Create Opportunity    &{Contact1}[AccountId]    Donation    Name=&{Contact1}[FirstName] $50 donation    Amount=50
     Go To Record Home  &{opportunity1}[Id]
-    Click Link    link=Show more actions
+    Click More Actions Button
     Click Link    link=Edit
     Populate Lookup Field    Matching Gift Account    &{Org}[Name]
     Select Value From Dropdown   Matching Gift Status              Potential
@@ -25,7 +25,7 @@ Find Matching Gifts
     &{opportunity2} =  API Create Opportunity    &{Contact2}[AccountId]    Donation    Name=&{Contact2}[FirstName] $25 donation    Amount=25
     &{opportunity3} =  API Create Opportunity    &{Org}[Id]    MatchingGift    Name=&{Org}[Name] $75 matching gift    Amount=75
     Go To Record Home  &{opportunity3}[Id]
-    Click Link    link=Show more actions
+    Click More Actions Button
     Click Link    link=Find Matched Gifts
     Choose Frame    vfFrameId
     Page Should Contain Link    &{Contact1}[FirstName] $50 donation    limit=1
