@@ -25,6 +25,7 @@ BGE Batch With Default Values
     Wait For Locator    bge.title    Batch Gift Entry
     Verify Title    Batch Gift Entry    ${batch}
     ${ns} =  Get NPSP Namespace Prefix
+    Current Page Should Be    Details    DataImportBatch__c
     ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c 
     Verify Expected Batch Values    ${batch_id}
     ...    Batch_Process_Size__c=50.0

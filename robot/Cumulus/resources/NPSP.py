@@ -1228,7 +1228,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def save_current_record_id_for_deletion(self,object_name): 
         """Gets the current page record id and stores it for specified object 
            in order to delete record during suite teardown """  
-        self.pageobjects.current_page_should_be("Details",object_name)    
+#         self.pageobjects.current_page_should_be("Details",object_name)    
         id=self.salesforce.get_current_record_id()
         self.salesforce.store_session_record(object_name,id)   
         return id

@@ -166,7 +166,7 @@ New Contact for HouseHold
     Wait Until Modal Is Closed
     Go To Object Home         Contact
     Click Link                link= ${first_name} ${last_name}
-    Wait Until Location Contains    /view
+    Current Page Should be    Details    Contact
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
         
@@ -211,8 +211,7 @@ Create Level
     Enter Level Dd Values    Previous Level Field    Previous Level
     Set Focus To Element   xpath: //input[@value='Save']
     Click Button  Save
-    Unselect Frame
-    Wait For Locator  obj-header  Level
+    Current Page Should be    Details    Level__c
     ${level_id} =   Save Current Record ID For Deletion  Level__c  
     [Return]    ${level_id}  ${level_name}
 

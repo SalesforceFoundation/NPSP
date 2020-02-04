@@ -3,6 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
@@ -35,7 +36,7 @@ Find Matching Gifts
     Click Button With Value    Search
     Set Checkbutton To     &{Contact2}[FirstName] $25 donation    checked
     Click Button With Value    Save 
-    Reload Page
+    Current Page Should Be    Details    Opportunity
     Select Tab    Related  
     Verify Related Object Field Values    Contact Roles
     ...                     &{contact1}[FirstName] &{contact1}[LastName]=Matched Donor

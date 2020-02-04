@@ -3,6 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/LevelsPageObject.py
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -37,12 +38,9 @@ ${contact_id}
     Set Focus To Element   xpath: //input[@value='Save']
     Click Button  Save
     #adding a workaround to go back to levels tab due to core issue
-    Unselect Frame
-    Select App Launcher Tab  Levels
-    Click Link    link=${level_name}
+    Current Page Should Be     Details    Level__c
     # Wait For Locator  breadcrumb  Level
     # Reload Page
-    Wait Until Loading Is Complete
     Navigate To And Validate Field Value   Minimum Amount (>=)    contains    0.01
     Navigate To And Validate Field Value    Maximum Amount (<)     contains    0.99
     Navigate To And Validate Field Value    Source Field    contains    npo02__SmallestAmount__c
@@ -105,7 +103,7 @@ ${contact_id}
     # --------------------------------
     # Delete the Level and validate that it was removed from the Contact
     # --------------------------------
-    Click Link    link=${level_name}
+    Go To Page               Details               Level__c                                object_id=${level_id}
     Click Link    link=Show more actions
     Click Link    link=Delete
     Click Modal Button    Delete

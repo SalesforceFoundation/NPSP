@@ -55,6 +55,7 @@ Opportunity is Autoclosed when Overpaid
     # Click Link    ${value}
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
+    Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=101.0

@@ -47,10 +47,8 @@ Create Donation and Opportunity and Create Payment Manually
     Open Date Picker                                Close Date
     Pick Date                                       Today
     Click Modal Button                              Save
-
-    Save Current Record ID For Deletion             Opportunity
     Current Page Should Be                          Detail                                  Opportunity
-
+    Save Current Record ID For Deletion             Opportunity
     Validate Related Record Count                   Payments                                0
 
     #Make A New Payment
