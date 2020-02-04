@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-import { dispatch, handleError } from 'c/utilTemplateBuilder';
+import { handleError } from 'c/utilTemplateBuilder';
 import { deepClone } from 'c/utilCommon';
 import geLabelService from 'c/geLabelService';
 
@@ -137,7 +137,7 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     * @param {object} event: Custom Event object containing payment data.
     */
     handleUpdatePayment(event) {
-        dispatch(this, 'updateselecteddonation', event.detail);
+        this.dispatchEvent(new CustomEvent('updateselecteddonation', { detail: event.detail }));
     }
 
     /*******************************************************************************
@@ -151,7 +151,7 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
             objectApiName: OPPORTUNITY_OBJECT.objectApiName,
             fields: deepClone(this.opportunity)
         };
-        dispatch(this, 'updateselecteddonation', detail);
+        this.dispatchEvent(new CustomEvent('updateselecteddonation', { detail }));
     }
 
     /*******************************************************************************
@@ -166,6 +166,6 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
             fields: deepClone(this.opportunity)
         };
         detail.fields.applyPayment = true;
-        dispatch(this, 'updateselecteddonation', detail);
+        this.dispatchEvent(new CustomEvent('updateselecteddonation', { detail }));
     }
 }

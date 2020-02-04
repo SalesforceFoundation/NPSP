@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-import { dispatch, handleError } from 'c/utilTemplateBuilder';
+import { handleError } from 'c/utilTemplateBuilder';
 import { deepClone } from 'c/utilCommon';
 import geLabelService from 'c/geLabelService';
 
@@ -129,6 +129,6 @@ export default class geDonationMatchingPaymentCard extends LightningElement {
     */
     handleUpdatePayment() {
         const detail = { objectApiName: PAYMENT_OBJECT.objectApiName, fields: deepClone(this.payment) };
-        dispatch(this, 'updatepayment', detail);
+        this.dispatchEvent(new CustomEvent('updatepayment', { detail }));
     }
 }
