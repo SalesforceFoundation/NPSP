@@ -273,13 +273,13 @@
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
-        <members>GE_BatchGiftEntryController</members>
-        <members>GE_BatchGiftEntryController_TEST</members>
         <members>GE_DefaultTemplate</members>
         <members>GE_DefaultTemplate_TEST</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_FormServiceController</members>
+        <members>GE_GiftEntryController</members>
+        <members>GE_GiftEntryController_TEST</members>
         <members>GE_GiftEntry_UTIL</members>
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
