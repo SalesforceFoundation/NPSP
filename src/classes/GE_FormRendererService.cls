@@ -155,7 +155,7 @@ public with sharing class GE_FormRendererService {
         Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
         BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
 
-        dynSourceGroup.name = 'Additional_Object_JSON__c';
+        dynSourceGroup.name = DataImport__c.Additional_Object_JSON__c.getDescribe().getName();
         dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
 
         Map<String, Object> objMappingDevNameToObjList;

@@ -363,8 +363,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     get footerClass() {
-        return this.rowList.length > 0 ? "slds-p-top--medium slds-m-top--medium slds-border--top"
-            : "slds-p-top--medium slds-m-top--medium";
+        return this.rowList.length > 0 ? 'slds-p-top--medium slds-m-top--medium slds-border--top'
+            : 'slds-p-top--medium slds-m-top--medium';
     }
 
     /**
