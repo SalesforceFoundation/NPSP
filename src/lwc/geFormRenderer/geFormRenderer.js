@@ -18,7 +18,6 @@ import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
-import DATA_IMPORT_ADDITIONAL_OBJECT_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 
 import getOpenDonations from '@salesforce/apex/GE_FormRendererService.getOpenDonations';
 import DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.Account1Imported__c';
