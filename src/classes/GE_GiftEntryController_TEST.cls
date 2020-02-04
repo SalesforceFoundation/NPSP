@@ -1,5 +1,5 @@
 @isTest
-private with sharing class GE_BatchGiftEntryController_TEST {
+private with sharing class GE_GiftEntryController_TEST {
 
     /*********************************************************************************************************
     * @description Sets up a new NPSP_Data_Import_Batch__c Record
@@ -29,11 +29,22 @@ private with sharing class GE_BatchGiftEntryController_TEST {
     }
 
     /*******************************************************************************************************
+     * @description Confirm that the DataImport process used in Gift Entry works
+     */
+    @isTest
+    private static void createAndProcessDataImportRecord() {
+        DataImport__c di = BDI_DataImport_TEST.newDI('First', 'Last', 100);
+        // TODO: Update this test to take a Additional Object string, and also process that
+        Id oppId = GE_GiftEntryController.saveAndProcessDataImport(di, null, false);
+        System.assert(oppId != null);
+    }
+
+    /*******************************************************************************************************
      * @description Saves the data import record, dry runs the record, and returns updated
      * totals with the new row.
      */
     @isTest
-    private static void testShouldSaveAndDryRunRow() {
+    private static void testShouldSaveAndDryRunDataImport() {
 
         // required setting
         UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -46,7 +57,7 @@ private with sharing class GE_BatchGiftEntryController_TEST {
         DataImport__c di = newDI( firstName, lastName, batchId );
 
         Test.startTest();
-        GE_BatchGiftEntryController.saveAndDryRunRow(batchId,di);
+        GE_GiftEntryController.saveAndDryRunDataImport(batchId,di);
         Test.stopTest();
 
         List<DataImportBatch__c> result = [SELECT Id FROM DataImportBatch__c];

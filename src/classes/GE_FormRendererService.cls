@@ -1,3 +1,39 @@
+/*
+    Copyright (c) 2020, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2020
+* @group HGE
+* @group-content
+* @description Controller for the Gift Entry Form
+*/
 public with sharing class GE_FormRendererService {
 
     @AuraEnabled
@@ -80,33 +116,10 @@ public with sharing class GE_FormRendererService {
     }
 
     /*******************************************************************************************************
-    * @description Takes a Data Import record from the Gift Entry form and saves it to the database.
-    * @param diRecord - The DataImport__c record, as filled in by the user.
-    * @return The Id of the new Opportunity record, created from the Data Import
+    * @description Work in Progress to deliver widget behaviors
+    * @return Widget data
     */
-    @AuraEnabled
-    public static Id saveAndProcessSingleGift(DataImport__c diRecord, String widgetData, Boolean updateGift) {
-
-        // Check for widget data and convert it to the correct format for processing
-        String additionalObjectJSON = convertWidgetDataToObjectJSON(widgetData);
-        diRecord.Additional_Object_JSON__c = additionalObjectJSON;
-
-        // Save the Data Import record to the Database
-        diRecord = saveDataImport(diRecord);
-
-        // Run the BDI process on this new Data Import
-        runGiftProcess(diRecord, false, updateGift);
-
-        // Get the ID of the created Opportunity so we can return it
-        Id oppId = getOpportunityIdFromImport(diRecord.Id);
-
-        return oppId;
-
-    }
-
-    private static String convertWidgetDataToObjectJSON(String widgetData) {
-        // System.debug('widgetData: '); 
-        // System.debug(widgetData); 
+    public static String convertWidgetDataToObjectJSON(String widgetData) {
 
         if(String.isBlank(widgetData)){
             return null;
@@ -119,7 +132,7 @@ public with sharing class GE_FormRendererService {
         } catch(Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
             
-            throw returnAuraException(JSONExceptionData);
+            throw GE_GiftEntryController.returnAuraException(JSONExceptionData);
         }
 
         // Create a map of sobject type to sobject list for processing
@@ -152,85 +165,6 @@ public with sharing class GE_FormRendererService {
         // JSON.serialize(dynSourceGroupA);
 
         return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Takes a Data Import record and saves it to the database.
-    * @param diRecord - The DataImport__c record, as filled in by the user.
-    * @return The DataImport__c record that was saved
-    */
-    private static DataImport__c saveDataImport(DataImport__c diRecord) {
-        try {
-            insert diRecord;
-            return diRecord;
-        } catch(Exception e) {
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
-
-            throw returnAuraException(JSONExceptionData);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Run the DataImport process on a single gift
-    * @param @param diRecord DataImport record to be processed
-    * @param isDryRun Boolean to set if the process should only return import results and not process
-    * @param updateGift Boolean to determine our matching criteria.
-    *                   true = "single match or create" and means we are updating
-    *                   false = "do not match"
-    * @return void
-    */
-    public static void runGiftProcess(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
-        Id diRecordId = diRecord.Id;
-
-        Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
-
-        List<DataImport__c> listDI = new List<DataImport__c>{diRecord};
-
-        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
-    }
-
-    /*******************************************************************************************************
-    * @description Return the imported Opportunity (Donation) from a DataImport process
-    * @param diObjId Id of DataImport object that created or matching this Opportunity
-    * @return Id of the Opportunity
-    */
-    private static String getOpportunityIdFromImport(Id diRecordId) {
-        try {
-            DataImport__c di = [
-                    SELECT DonationImported__c,
-                            FailureInformation__c
-                    FROM DataImport__c
-                    WHERE Id = :diRecordId
-            ];
-            if(di.FailureInformation__c != null) {
-                String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(di.FailureInformation__c);
-
-                throw returnAuraException(JSONExceptionData);
-            }
-            return di.DonationImported__c;
-        } catch(Exception e) {
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
-
-            throw returnAuraException(JSONExceptionData);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Set DataImport Settings that are important to Gift Entry matching
-    * @return Data_Import_Settings__c diSettings object used to process gifts
-    */
-    private static Data_Import_Settings__c getGiftEntrySettings(Boolean updateGift) {
-        Data_Import_Settings__c diSettings = Data_Import_Settings__c.getOrgDefaults();
-        // If we are updating an existing gift, set the matching logic accordingly
-        diSettings.Donation_Matching_Behavior__c = 
-            updateGift ? BDI_DataImport_API.ExactMatchOrCreate : BDI_DataImport_API.DoNotMatch;
-        return diSettings;
-    }
-
-    private static AuraHandledException returnAuraException(String errorMsg) {
-        AuraHandledException ex = new AuraHandledException(errorMsg);
-        ex.setMessage(errorMsg);
-        return ex;
     }
 
     /*******************************************************************************************************
@@ -305,7 +239,7 @@ public with sharing class GE_FormRendererService {
 
             return JSON.serialize(opportunityWrappers);
         } catch (Exception ex){
-            returnAuraException(ex.getMessage());
+            GE_GiftEntryController.returnAuraException(ex.getMessage());
         }
 
         return null;
