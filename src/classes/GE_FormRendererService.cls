@@ -148,16 +148,14 @@ public with sharing class GE_FormRendererService {
     public static String convertWidgetDataToObjectJSON(String widgetData) {
 
         if (String.isBlank(widgetData)) {
-            return;
+            return null;
         }
-
-        String additionalObjJSONFieldName = 'Additional_Object_JSON__c';
 
         BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
         Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
         BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
 
-        dynSourceGroup.name = additionalObjJSONFieldName;
+        dynSourceGroup.name = 'Additional_Object_JSON__c';
         dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
 
         Map<String, Object> objMappingDevNameToObjList;
@@ -215,8 +213,9 @@ public with sharing class GE_FormRendererService {
 
         if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
             String dynSourceGroupString = JSON.serialize(dynSourceGroup);
-            diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
+            return dynSourceGroupString;
         }
+        return null;
     }
 
     /*******************************************************************************************************

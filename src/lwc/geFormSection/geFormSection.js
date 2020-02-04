@@ -6,14 +6,6 @@ export default class GeFormSection extends LightningElement {
     @track collapsed = false;
 
     /**
-     * Get the icon that should display next to the twistable section header
-     * @returns {string} containing the icon name from SLDS
-     */
-    get iconName() {
-        return this.collapsed ? 'utility:chevronright' : 'utility:chevrondown';
-    }
-
-    /**
      * Get the alternative text that represents the section expand/collapse button
      * @returns {string} containing the section expand alternative text
      */
@@ -38,7 +30,8 @@ export default class GeFormSection extends LightningElement {
      * @param requestedFields - Array of API Field Names to get information
      * @returns {Array} - field value and ui-label using api-field-name as key
      */
-    @api getFieldValueAndLabel( requestedFields ) {
+    @api
+    getFieldValueAndLabel( requestedFields ) {
 
         const fields = this.template.querySelectorAll('c-ge-form-field');
         let dataImportFieldAndLabels = {};
