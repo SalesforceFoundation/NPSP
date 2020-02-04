@@ -21,4 +21,9 @@ class AffiliationDetailPage(BaseNPSPPage,DetailPage ):
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Record view did not open in 1 min")
         self.selenium.location_should_contain("/lightning/r/npe5__Affiliation__c/",message="Current page is not an Affiliation record view")
     
- 
+
+    def save_affiliation_record(self):
+        """Saves the affiliation record and waits until save mode is exited"""
+        self.selenium.click_button("Save")
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_does_not_contain_element(footer)

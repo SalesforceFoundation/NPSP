@@ -33,7 +33,7 @@ Create Secondary Affiliation for Contact
     Click Related Table Item Link     Organization Affiliations    &{account}[Name]
     Current Page Should be            Details                      npe5__Affiliation__c
     Edit Record Checkbox              Primary                      checked
-    Click Button                      Save
+    Save Affiliation Record
     Go To Page                        Details                      Contact                 object_id=&{contact}[Id]
     Select Tab                        Details
     Navigate To And Validate Field Value                Primary Affiliation          contains                &{account}[Name]
