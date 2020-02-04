@@ -8,7 +8,7 @@ import { DONATION_DONOR_FIELDS, DONATION_DONOR,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     checkPermissionErrors } from 'c/utilTemplateBuilder';
-import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone, isUndefined } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -677,24 +677,48 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
-        const detail = event.detail;
+        const recordId = event.detail.recordId;
+        const lookupFieldApiName = event.detail.fieldApiName;
         const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
         const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+        const lookupDonorType = lookupFieldApiName === account ? 'Account' : 'Contact';
 
-        if (detail.recordId && (detail.fieldApiName === account || detail.fieldApiName === contact)) {
-            // TODO: Future handle Account/Contact priority depending on value of Data Import: Donation Donor.
-            const donorType = detail.fieldApiName === account ? 'Account' : 'Contact';
-            this.selectedDonorId = detail.recordId;
-            this.selectedDonorType = donorType;
-        } else if (detail.fieldApiName === account || detail.fieldApiName === contact) {
-            this.selectedDonation = undefined;
-            this.opportunities = undefined;
-            this.selectedDonorId = undefined;
-            this.selectedDonorType = undefined;
-        } else {
-            this.selectedDonorId = undefined;
-            this.selectedDonorType = undefined;
+        if (lookupFieldApiName === account || lookupFieldApiName === contact) {
+            let donorType = this.getCurrentlySelectedDonorType();
+
+            if (donorType && donorType === lookupDonorType) {
+                if (recordId) {
+                    this.selectedDonorId = recordId;
+                    this.selectedDonorType = donorType;
+                } else {
+                    this.selectedDonation = undefined;
+                    this.opportunities = undefined;
+                    this.selectedDonorId = undefined;
+                    this.selectedDonorType = undefined;
+                }
+            }
         }
+    }
+
+    getCurrentlySelectedDonorType() {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        let donorType;
+
+        if (!this.selectedDonorType) {
+            let sectionData = this.getData(sectionsList);
+            donorType = sectionData[DONATION_DONOR_FIELDS.donationDonorField];
+
+            if (isUndefined(donorType)) {
+                // Highlight donor type field if none is selected
+                this.isDonorTypeInvalid(sectionsList);
+            } else {
+                donorType = donorType === 'Account1' ? 'Account' : 'Contact';
+            }
+        } else {
+            donorType = this.selectedDonorType;
+        }
+
+        return donorType;
     }
 
     handleChangeSelectedDonation(event) {
