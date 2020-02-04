@@ -72,7 +72,7 @@ export default class GeFormField extends LightningElement {
     }
 
     connectedCallback() {
-        if(this.targetFieldName !== undefined) {
+        if(isNotEmpty(this.targetFieldName)) {
             // Construct an element object using the field name and mapping info
             const required = this.fieldInfo.Is_Required || (this.element && this.element.required);
             this.element = {
@@ -186,7 +186,7 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldInfo() {
-        return this.targetFieldName !== undefined ?
+        return isNotEmpty(this.targetFieldName) ?
             GeFormService.getFieldMappingWrapperFromTarget(this.targetFieldName) :
             GeFormService.getFieldMappingWrapper(this.formElementName);
     }
