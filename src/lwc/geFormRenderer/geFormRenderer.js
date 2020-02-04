@@ -225,15 +225,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const handleCatchError = (err) => this.handleCatchOnSave(err);
 
         // di data for save
-        let data = this.getData(sectionsList);
+        let { diRecord, widgetValues } = this.getData(sectionsList);
         // Apply selected donation fields to data import record
         if (this.blankDataImportRecord) {
-            data = { ...data, ...this.blankDataImportRecord };
+            diRecord = { ...diRecord, ...this.blankDataImportRecord };
         }
 
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
-                data: data,
+                data: { diRecord, widgetValues },
                 success: () => {
                     enableSave();
                     toggle();
@@ -591,15 +591,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     reset() {
         this._dataRow = undefined;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-
         sectionsList.forEach(section => {
             section.reset();
         });
-
-        widgetList.forEach( widget => {
-            widget.reset();
-        });
+        this.widgetData = {};
     }
 
     get mode() {
@@ -634,10 +629,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let { diRecord, widgetValues } =
             GeFormService.getDataImportRecord(sections);
 
-        if(widgetValues) {
-            diRecord[DATA_IMPORT_ADDITIONAL_OBJECT_FIELD.fieldApiName] = JSON.stringify(widgetValues);
-        }
-
         if (!diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
             diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
@@ -646,7 +637,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             diRecord.Id = this._dataRow.Id;
         }
 
-        return diRecord;
+        return {diRecord, widgetValues};
     }
 
     /*******************************************************************************

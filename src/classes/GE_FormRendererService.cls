@@ -129,83 +129,6 @@ public with sharing class GE_FormRendererService {
 
     }
 
-    //VERSION THAT ASSUMES THE OBJECTS IN WIDGET DATA ARE DATAIMPORT__C OBJECTS
-    /*******************************************************************************************************
-    * @description Takes in a Data Import record and widget data then converts the widget data, which is in
-    * a JSON map of objectMappingDevName to temp DataImport Sobject list, and reverse maps it into temp DI
-    * records which are then wrapped in dynamic source classes which allow the data for the records
-    * to be processed as if they were normal BDI additional objects.
-    * @param diRecord - The DataImport__c record, as filled in by the user, which will have its Additional Object
-    * JSON field populated with the Dynamic Source Group JSON.
-    * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records
-    * to be created.
-    */
-//    @TestVisible
-//    private static void convertWidgetDataToObjectJSON(DataImport__c diRecord, String widgetData) {
-//
-//        if (String.isBlank(widgetData)) {
-//            return;
-//        }
-//
-//        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
-//        Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
-//        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
-//
-//        dynSourceGroup.name = additionalObjJSONFieldName;
-//        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
-//
-//        Map<String, Object> objMappingDevNameToObjList;
-//
-//        try {
-//            objMappingDevNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
-//        } catch(Exception e) {
-//            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
-//
-//            throw returnAuraException(JSONExceptionData);
-//        }
-//
-//        // Create a map of sobject type to sobject list for processing
-//        for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
-//            Object objList = objMappingDevNameToObjList.get(objMappingDevName);
-//
-//            BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
-//
-//            String[] tempObjStrings = new String[]{};
-//
-//            //Reserializing the object strings to resolve platform issue with deserializing SObjects
-//            for (Object obj : (List<Object>)objMappingDevNameToObjList.get(objMappingDevName)){
-//                tempObjStrings.add(JSON.serialize(obj));
-//            }
-//
-//            if(tempObjStrings != null && tempObjStrings.size() > 0) {
-//
-//                Integer i = 0;
-//                //Loop through the sObjects and construct DI records to hold the data in the expected fields
-//                for (String objString : tempObjStrings) {
-//
-//                    SObject sObj = (SObject)JSON.deserialize(objString, Sobject.class);
-//
-//                    i++;
-//
-//                    BDI_DynamicSource dynSource = new BDI_DynamicSource();
-//                    dynSource.objectMappingDevName = objMapping.DeveloperName + 'temp' + i;
-//                    dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
-//                    dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
-//                    dynSource.sourceObj = sObj;
-//
-//                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName,dynSource);
-//                }
-//            }
-//        }
-//
-//        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
-//            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
-//            // diRecord.put(additionalObjJSONFieldName,dynSourceGroupString);
-//        }
-//    }
-
-
-    // VERSION USING TARGET OBJECT AS WIDGET SOURCE
     /*******************************************************************************************************
     * @description Takes in a Data Import record and widget data then converts the widget data, which is in
     * a JSON map of objectMappingDevName to target Sobject list, and reverse maps it into temp DI records which are
@@ -216,8 +139,7 @@ public with sharing class GE_FormRendererService {
     * @param widgetData - a String representing a Map of Object Mapping Dev Name to an object list of the records
     * to be created.
     */
-    @TestVisible
-    private static void convertWidgetDataToObjectJSON(DataImport__c diRecord, String widgetData) {
+    public static void convertWidgetDataToObjectJSON(DataImport__c diRecord, String widgetData) {
 
         if (String.isBlank(widgetData)) {
             return;

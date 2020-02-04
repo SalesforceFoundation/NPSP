@@ -9,7 +9,8 @@ export default class GeFormWidget extends LightningElement {
     @api element;
     @api widgetData;
 
-    @api reset() {
+    @api
+    reset() {
         this.widgetComponent.reset();
     }
 

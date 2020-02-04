@@ -46,7 +46,7 @@ private with sharing class GE_BatchGiftEntryController_TEST {
         DataImport__c di = newDI( firstName, lastName, batchId );
 
         Test.startTest();
-        GE_BatchGiftEntryController.saveAndDryRunRow(batchId,di);
+        GE_BatchGiftEntryController.saveAndDryRunRow(batchId,di, '');
         Test.stopTest();
 
         List<DataImportBatch__c> result = [SELECT Id FROM DataImportBatch__c];

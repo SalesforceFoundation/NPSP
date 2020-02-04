@@ -82,8 +82,9 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * @return {Number}
      */
     calculateAmount(percentValue, total) {
-        const factor = +percentValue / 100;
-        const amountInCents = Math.round((total * factor) * 100);
+        const factor = +percentValue / 100; // force conversion to number with + prefix operator
+        const totalInCents = total * 100; // convert to cents instead of dollars, avoids floating point problems
+        const amountInCents = Math.round(totalInCents * factor);
         return (amountInCents / 100);
     }
 

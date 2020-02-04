@@ -65,10 +65,10 @@ public with sharing class GE_BatchGiftEntryController {
     * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static String saveAndDryRunRow(Id batchId, DataImport__c dataImport) {
+    public static String saveAndDryRunRow(Id batchId, DataImport__c dataImport, String widgetData) {
 
         try {
-
+            GE_FormRendererService.convertWidgetDataToObjectJSON(dataImport, widgetData);
             if (String.isNotBlank(dataImport.Id)) {
                 Database.update(dataImport);
             } else {

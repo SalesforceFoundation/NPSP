@@ -3,7 +3,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import { isNumeric, isNotEmpty, getLikeMatchByKey } from 'c/utilCommon';
-import { registerListener } from 'c/pubsubNoPageRef';
+import {fireEvent, registerListener} from 'c/pubsubNoPageRef';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';

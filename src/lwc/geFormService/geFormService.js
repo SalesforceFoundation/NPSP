@@ -188,9 +188,9 @@ class GeFormService {
         return { diRecord, widgetValues };
     }
 
-    saveAndDryRun(batchId, dataImport) {
+    saveAndDryRun(batchId, dataImport, widgetData) {
         return new Promise((resolve, reject) => {
-            saveAndDryRunRow({batchId: batchId, dataImport: dataImport})
+            saveAndDryRunRow({batchId, dataImport, widgetData})
                 .then((result) => {
                     resolve(JSON.parse(result));
                 })
