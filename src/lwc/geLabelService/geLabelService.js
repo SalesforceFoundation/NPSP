@@ -65,6 +65,7 @@ import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilde
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
 import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
 import geButtonBuilderNavFormFields from '@salesforce/label/c.geButtonBuilderNavFormFields';
+import geButtonCancelAndClear from '@salesforce/label/c.geButtonCancelAndClear';
 import geButtonFormFieldsAddSection from '@salesforce/label/c.geButtonFormFieldsAddSection';
 import geButtonFormFieldsCollapseAll from '@salesforce/label/c.geButtonFormFieldsCollapseAll';
 import geButtonFormFieldsExpandAll from '@salesforce/label/c.geButtonFormFieldsExpandAll';
@@ -77,6 +78,7 @@ import geButtonMatchingUpdateOpportunity from '@salesforce/label/c.geButtonMatch
 import geButtonMatchingUpdatePayment from '@salesforce/label/c.geButtonMatchingUpdatePayment';
 import geButtonNewBatch from '@salesforce/label/c.geButtonNewBatch';
 import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
+import geButtonSaveNewGift from '@salesforce/label/c.geButtonSaveNewGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
@@ -92,6 +94,7 @@ import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPa
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
+import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
 import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeaderRightCol';
 import geHeaderBatchSelectTemplate from '@salesforce/label/c.geHeaderBatchSelectTemplate';
@@ -111,6 +114,7 @@ import geHeaderMatchingReviewDonations from '@salesforce/label/c.geHeaderMatchin
 import geHeaderNewSection from '@salesforce/label/c.geHeaderNewSection';
 import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import geHeaderPageLevelError from '@salesforce/label/c.geHeaderPageLevelError';
+import geHeaderSingleGiftEntry from '@salesforce/label/c.geHeaderSingleGiftEntry';
 import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
@@ -220,6 +224,7 @@ class GeLabelService {
         geButtonBuilderNavBackTemplateInfo,
         geButtonBuilderNavBatchHeader,
         geButtonBuilderNavFormFields,
+        geButtonCancelAndClear,
         geButtonFormFieldsAddSection,
         geButtonFormFieldsCollapseAll,
         geButtonFormFieldsExpandAll,
@@ -232,6 +237,7 @@ class GeLabelService {
         geButtonMatchingUpdatePayment,
         geButtonNewBatch,
         geButtonNewSingleGift,
+        geButtonSaveNewGift,
         geButtonTemplatesTabCreateTemplate,
         geErrorCompleteThisField,
         geErrorDonorTypeInvalid,
@@ -247,6 +253,7 @@ class GeLabelService {
         geErrorPageLevelMissingRequiredGroupFields,
         geErrorRequiredField,
         geHeaderBatchEnterInfo,
+        geHeaderBatchGiftEntry,
         geHeaderBatchHeaderLeftCol,
         geHeaderBatchHeaderRightCol,
         geHeaderBatchSelectTemplate,
@@ -266,6 +273,7 @@ class GeLabelService {
         geHeaderNewSection,
         geHeaderNewTemplate,
         geHeaderPageLevelError,
+        geHeaderSingleGiftEntry,
         geHeaderTemplateInfoLeftCol,
         geHelpTextBatchHeaderFieldLabelLabel,
         geHelpTextFormFieldsFieldCustomLabel,
