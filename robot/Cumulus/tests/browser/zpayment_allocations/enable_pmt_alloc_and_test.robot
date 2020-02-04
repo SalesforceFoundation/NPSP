@@ -21,7 +21,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Click Link    &{payment}[Name]    
     Select Window
     Select Tab    Related
-    Load Page Object        Detail    npe01__OppPayment__c
+    Load Page Object        Details    npe01__OppPayment__c
     Verify Payment Allocations    
     ...    &{def_gau}[Name]=$100.00
     Click Wrapper Related List Button    Payment Allocations    New
