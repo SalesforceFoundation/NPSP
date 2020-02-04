@@ -1,9 +1,9 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
-import saveAndProcessGift from '@salesforce/apex/GE_FormRendererService.saveAndProcessSingleGift';
+import saveAndProcessDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndProcessDataImport';
 import { handleError } from 'c/utilTemplateBuilder';
-import saveAndDryRunRow
-    from '@salesforce/apex/GE_BatchGiftEntryController.saveAndDryRunRow';
+import saveAndDryRunDataImport
+    from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import {api} from "lwc";
 import { isNotEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
@@ -117,10 +117,10 @@ class GeFormService {
      * @param widgetValues
      * @returns {Promise<Id>}
      */
-    saveAndProcessGift(createdDIRecord, widgetValues, hasUserSelectedDonation = false) {
+    saveAndProcessDataImport(createdDIRecord, widgetValues, hasUserSelectedDonation = false) {
         const widgetDataString = JSON.stringify(widgetValues);
         return new Promise((resolve, reject) => {
-            saveAndProcessGift({
+            saveAndProcessDataImport({
                     diRecord: createdDIRecord,
                     widgetData: widgetDataString,
                     updateGift: hasUserSelectedDonation
@@ -145,7 +145,7 @@ class GeFormService {
 
         const hasUserSelectedDonation = isNotEmpty(dataImportRecord);
 
-        const opportunityID = this.saveAndProcessGift(diRecord, widgetValues, hasUserSelectedDonation);
+        const opportunityID = this.saveAndProcessDataImport(diRecord, widgetValues, hasUserSelectedDonation);
 
         return opportunityID;
     }
@@ -190,7 +190,7 @@ class GeFormService {
 
     saveAndDryRun(batchId, dataImport, widgetData) {
         return new Promise((resolve, reject) => {
-            saveAndDryRunRow({batchId, dataImport, widgetData})
+            saveAndDryRunDataImport({batchId, dataImport, widgetData})
                 .then((result) => {
                     resolve(JSON.parse(result));
                 })

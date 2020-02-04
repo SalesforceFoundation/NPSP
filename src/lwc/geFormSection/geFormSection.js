@@ -3,15 +3,14 @@ import {LightningElement, api, track} from 'lwc';
 export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
-    @track expanded = true;
-
+    @track collapsed = false;
 
     /**
      * Get the icon that should display next to the twistable section header
      * @returns {string} containing the icon name from SLDS
      */
     get iconName() {
-        return this.expanded ? 'utility:chevrondown' : 'utility:chevronright';
+        return this.collapsed ? 'utility:chevronright' : 'utility:chevrondown';
     }
 
     /**
@@ -20,23 +19,6 @@ export default class GeFormSection extends LightningElement {
      */
     get altTextLabel() {
         return 'Toggle ' + this.section.label;
-    }
-
-    /**
-     * Get the css classname for the body of the twistable section, show/hide when closed/open
-     * @returns {string} 'collapsed' when the section is closed
-     */
-    get sectionClassName() {
-        return this.expanded ? '' : 'collapsed';
-    }
-
-    /**
-     * When twistable section header is clicked, collapse/expand it
-     * @param event
-     */
-    toggleExpand(event) {
-        event.preventDefault();
-        this.expanded = !this.expanded;
     }
 
     @api

@@ -273,13 +273,13 @@
         <members>FORM_Template</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
-        <members>GE_BatchGiftEntryController</members>
-        <members>GE_BatchGiftEntryController_TEST</members>
         <members>GE_DefaultTemplate</members>
         <members>GE_DefaultTemplate_TEST</members>
         <members>GE_FormRendererService</members>
         <members>GE_FormRendererService_TEST</members>
         <members>GE_FormServiceController</members>
+        <members>GE_GiftEntryController</members>
+        <members>GE_GiftEntryController_TEST</members>
         <members>GE_GiftEntry_UTIL</members>
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
@@ -1987,6 +1987,7 @@
         <members>geButtonBuilderNavBackTemplateInfo</members>
         <members>geButtonBuilderNavBatchHeader</members>
         <members>geButtonBuilderNavFormFields</members>
+        <members>geButtonCancelAndClear</members>
         <members>geButtonFormFieldsAddSection</members>
         <members>geButtonFormFieldsCollapseAll</members>
         <members>geButtonFormFieldsExpandAll</members>
@@ -1999,6 +2000,7 @@
         <members>geButtonMatchingUpdatePayment</members>
         <members>geButtonNewBatch</members>
         <members>geButtonNewSingleGift</members>
+        <members>geButtonSaveNewGift</members>
         <members>geButtonTemplatesTabCreateTemplate</members>
         <members>geDisableGiftEntryInfo</members>
         <members>geDonationColumnLabel</members>
@@ -2024,6 +2026,7 @@
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
         <members>geErrorRequiredField</members>
         <members>geHeaderBatchEnterInfo</members>
+        <members>geHeaderBatchGiftEntry</members>
         <members>geHeaderBatchHeaderLeftCol</members>
         <members>geHeaderBatchHeaderRightCol</members>
         <members>geHeaderBatchSelectTemplate</members>
@@ -2043,6 +2046,7 @@
         <members>geHeaderNewSection</members>
         <members>geHeaderNewTemplate</members>
         <members>geHeaderPageLevelError</members>
+        <members>geHeaderSingleGiftEntry</members>
         <members>geHeaderTemplateInfoLeftCol</members>
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
@@ -2210,8 +2214,6 @@
         <members>hhCmpDedupeNoReport</members>
         <members>hhCmpDedupeStatus</members>
         <members>isARequiredField</members>
-        <members>labelGeCancel</members>
-        <members>labelGeSave</members>
         <members>labelListViewFirst</members>
         <members>labelListViewLast</members>
         <members>labelListViewNext</members>

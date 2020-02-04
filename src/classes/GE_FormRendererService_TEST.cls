@@ -38,17 +38,6 @@
 private with sharing class GE_FormRendererService_TEST {
 
     /*******************************************************************************************************
-     * @description Confirm that the DataImport process used in Gift Entry works
-     */
-    @isTest
-    private static void createAndProcessDataImportRecord() {
-        DataImport__c di = BDI_DataImport_TEST.newDI('First', 'Last', 100);
-        // TODO: Update this test to take a Additional Object string, and also process that
-        Id oppId = GE_FormRendererService.saveAndProcessSingleGift(di, null, false);
-        System.assert(oppId != null);
-    }
-
-    /*******************************************************************************************************
      * @description Confirm that a default FORM_RenderWrapper is correctly returned
      */
     @isTest
