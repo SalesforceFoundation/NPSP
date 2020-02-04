@@ -40,7 +40,6 @@ Create Household With Name Only
     ...                                   First Name=${first_name}
     ...                                   Last Name=${last_name}
     Click Modal Button                    Save
-    Verify Toast Message                  Contact "${first_name} ${last_name}" was created.
     Wait Until Modal Is Closed
     Current Page Should Be                Details                               Contact
     

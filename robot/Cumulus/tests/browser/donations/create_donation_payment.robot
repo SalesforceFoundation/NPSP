@@ -39,7 +39,6 @@ Create Donation and Opportunity and Create Payment Manually
     # Create a new Opportunity from the UI
 
     Populate Modal Form
-    ...                                             Stage=${Stage_Type}
     ...                                             Opportunity Name=${opp_name}
     ...                                             Account Name=${data}[contact][LastName] Household
     ...                                             Amount=${Amount}

@@ -1243,7 +1243,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def select_value_from_dropdown(self,dropdown,value): 
         """Select given value in the dropdown field"""
         locator = npsp_lex_locators['record']['list'].format(dropdown)
-        self.selenium.set_focus_to_element(locator)
+        self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
         self.selenium.click_link(value) 
