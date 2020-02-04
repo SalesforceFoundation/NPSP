@@ -42,6 +42,18 @@ export default class GeFormField extends LightningElement {
             this.dispatchEvent(changeLookupEvent);
         }
 
+        if (this.isPicklist) {
+            const detail = {
+                value: this.value,
+                fieldApiName: this.element.fieldApiName
+            }
+
+            const changePicklistEvent = new CustomEvent(
+                'changepicklist',
+                { detail: detail });
+            this.dispatchEvent(changePicklistEvent);
+        }
+
         if(this.isRichText) {
             this.checkRichTextValidity();
         }

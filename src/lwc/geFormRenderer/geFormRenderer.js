@@ -675,6 +675,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    handleChangePicklist(event) {
+        const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
+        const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+        const donorTypeFieldApiName = DONATION_DONOR_FIELDS.donationDonorField;
+        const picklistFieldApiName = event.detail.fieldApiName;
+        const picklistValue = event.detail.value;
+
+        if (picklistFieldApiName === donorTypeFieldApiName) {
+            const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+            const sectionData = this.getData(sectionsList);
+            const picklistDonorType = picklistValue === 'Account1' ? 'Account' : 'Contact';
+            const recordId = picklistDonorType === 'Account' ? sectionData[account] : sectionData[contact];
+
+            this.setReviewDonationsDonorProperties(recordId, picklistDonorType);
+        }
+    }
+
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
         const recordId = event.detail.recordId;
@@ -687,15 +704,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             let donorType = this.getCurrentlySelectedDonorType();
 
             if (donorType && donorType === lookupDonorType) {
-                if (recordId) {
-                    this.selectedDonorId = recordId;
-                    this.selectedDonorType = donorType;
-                } else {
-                    this.selectedDonation = undefined;
-                    this.opportunities = undefined;
-                    this.selectedDonorId = undefined;
-                    this.selectedDonorType = undefined;
-                }
+                this.setReviewDonationsDonorProperties(recordId, donorType);
             }
         }
     }
@@ -719,6 +728,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
 
         return donorType;
+    }
+
+    setReviewDonationsDonorProperties(recordId, donorType) {
+        if (recordId) {
+            this.selectedDonorId = recordId;
+            this.selectedDonorType = donorType;
+        } else {
+            this.selectedDonation = undefined;
+            this.opportunities = undefined;
+            this.selectedDonorId = undefined;
+            this.selectedDonorType = undefined;
+        }
     }
 
     handleChangeSelectedDonation(event) {
