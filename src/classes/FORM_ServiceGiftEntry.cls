@@ -175,6 +175,12 @@ public with sharing class FORM_ServiceGiftEntry {
                                 LIMIT 1];
         
         template = deserializeFormTemplateFromObj(templateObj);
+        
+        template = checkPermissions(template,
+                new Set<FORM_PermissionValidator.AccessLevel>{
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_READ,
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_CREATE,
+                    FORM_PermissionValidator.AccessLevel.VALIDATE_UPDATE});
 
         return template;
     }
