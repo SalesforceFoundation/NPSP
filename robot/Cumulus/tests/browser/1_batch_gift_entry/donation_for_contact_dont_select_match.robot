@@ -72,8 +72,6 @@ Dont select match for contact new donation with grid changes
     ...    CloseDate=${date}
     ...    StageName=Closed Won
     Go To Record Home    &{contact}[Id]
-    Select Tab    Related
-    Load Related List    Opportunities
     Validate Related Record Count     Opportunities     2
 
     
