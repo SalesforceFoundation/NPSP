@@ -5151,6 +5151,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Next: Form Fields</value>
     </labels>
     <labels>
+        <fullName>geButtonCancelAndClear</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cancel and clear form</shortDescription>
+        <value>Cancel &amp; Clear Form</value>
+    </labels>
+    <labels>
         <fullName>geButtonFormFieldsAddSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5245,6 +5253,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Enter a single gift button</shortDescription>
         <value>New Single Gift</value>
+    </labels>
+    <labels>
+        <fullName>geButtonSaveNewGift</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Create gift and enter another one</shortDescription>
+        <value>Save &amp; Enter New Gift</value>
     </labels>
     <labels>
         <fullName>geButtonTemplatesTabCreateTemplate</fullName>
@@ -5450,6 +5466,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Enter Batch Info</value>
     </labels>
     <labels>
+        <fullName>geHeaderBatchGiftEntry</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Gift Entry header</shortDescription>
+        <value>Batch Gift Entry</value>
+    </labels>
+    <labels>
         <fullName>geHeaderBatchHeaderLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5603,6 +5627,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Header for gift entry template information</shortDescription>
         <value>Review the errors on this page.</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderSingleGiftEntry</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Single Gift Entry Header</shortDescription>
+        <value>Single Gift Entry</value>
     </labels>
     <labels>
         <fullName>geHeaderTemplateInfoLeftCol</fullName>
@@ -5835,22 +5867,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Warning message for deleting a section if it contains required field</shortDescription>
         <value>Warning: By deleting this section, you are also removing required fields from the template. These fields need to be added into another section before you can save the template.</value>
-    </labels>
-    <labels>
-        <fullName>labelGeCancel</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Cancel</shortDescription>
-        <value>Cancel</value>
-    </labels>
-    <labels>
-        <fullName>labelGeSave</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Gift Entry Save</shortDescription>
-        <value>Save</value>
     </labels>
     <labels>
         <fullName>giftProcessingAccountException</fullName>
