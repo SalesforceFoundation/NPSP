@@ -3,6 +3,8 @@ import {isNotEmpty, debouncify} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
+import { fireEvent } from 'c/pubsubNoPageRef';
+import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -19,6 +21,7 @@ export default class GeFormField extends LightningElement {
     @track objectDescribeInfo;
     @track richTextValid = true;
     @api element;
+    @api targetFieldName;
     _defaultValue = null;
 
     richTextFormats = RICH_TEXT_FORMATS;
@@ -26,16 +29,19 @@ export default class GeFormField extends LightningElement {
 
     handleValueChangeSync = (event) => {
         this.value = this.getValueFromChangeEvent(event);
-        // TODO: The custom event below isn't carrying up any of the assigned properties (field and value)
-        // We need to set a detail property in the custom event holding whatever we want to pass in custom event.
-        const evt = new CustomEvent('change', {field: this.element, value: this.value});
+        const detail = {
+            element: this.element,
+            value: this.value,
+            targetFieldName: this.targetFieldName
+        };
+        const evt = new CustomEvent('valuechange', {detail, bubbles: true});
         this.dispatchEvent(evt);
 
         if (this.isLookup) {
             const detail = {
                 recordId: this.value,
                 fieldApiName: this.element.fieldApiName
-            }
+            };
             const changeLookupEvent = new CustomEvent(
                 'changelookup',
                 { detail: detail });
@@ -57,10 +63,15 @@ export default class GeFormField extends LightningElement {
         if(this.isRichText) {
             this.checkRichTextValidity();
         }
+
+        if(this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
+            // fire event for reactive widget component containing the Data Import field API name and Value
+            // currently only used for the Donation Amount.
+            fireEvent(null, 'widgetData', { donationAmount: this.value });
+        }
     };
 
     handleValueChange = debouncify(this.handleValueChangeSync.bind(this), DELAY);
-
 
     /**
      * Retrieve field metadata. Used to configure how fields are displayed on the form.
@@ -73,6 +84,17 @@ export default class GeFormField extends LightningElement {
     }
 
     connectedCallback() {
+        if(isNotEmpty(this.targetFieldName)) {
+            // Construct an element object using the field name and mapping info
+            const required = this.fieldInfo.Is_Required || (this.element && this.element.required);
+            this.element = {
+                ...this.element,
+                label: this.fieldInfo.Target_Field_Label,
+                required,
+                dataImportFieldMappingDevNames: [this.targetFieldName]
+            };
+        }
+
         const { defaultValue, recordValue } = this.element;
 
         if(recordValue) {
@@ -80,9 +102,9 @@ export default class GeFormField extends LightningElement {
             // set the record value to the element value
             this.value = recordValue;
         } else if(defaultValue) {
-           
+
             // Set the default value if there is one
-            // and no record value. 
+            // and no record value.
             this._defaultValue = defaultValue;
             this.value = defaultValue;
         }
@@ -107,7 +129,7 @@ export default class GeFormField extends LightningElement {
         // We need to check for invalid values, regardless if the field is required
         let fieldIsValid = this.checkFieldValidity();
 
-        if(this.element.required) {
+        if(this.element !== null && this.element.required) {
             return isNotEmpty(this.value) && fieldIsValid;
         }
 
@@ -157,11 +179,9 @@ export default class GeFormField extends LightningElement {
         // However, it may change to the array dataImportFieldMappingDevNames
         // If so, we need to update this to reflect that.
         // In the Execute Anonymous code, both fields are populated.
-        // PRINCE: Temporary change below. Please review and update
-        // as needed.
-        // Changed 'this.element.value' references to getter 'formElementName'.
-        fieldAndValue[this.formElementName] = this.value;
 
+        // TODO: Update for widget fields
+        fieldAndValue[this.formElementName] = this.value;
         return fieldAndValue;
     }
 
@@ -178,7 +198,9 @@ export default class GeFormField extends LightningElement {
     }
 
     get fieldInfo() {
-        return GeFormService.getFieldMappingWrapper(this.formElementName);
+        return isNotEmpty(this.targetFieldName) ?
+            GeFormService.getFieldMappingWrapperFromTarget(this.targetFieldName) :
+            GeFormService.getFieldMappingWrapper(this.formElementName);
     }
 
     get fieldDescribeInfo() {
@@ -277,10 +299,12 @@ export default class GeFormField extends LightningElement {
 
     }
 
+    /**
+     * Set the value of the field.
+     * @param value Value to set on the field.
+     */
     @api
-    load(data) {
-        const value = data[this.sourceFieldAPIName];
-
+    setValue(value) {
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             if (value) {
@@ -293,6 +317,16 @@ export default class GeFormField extends LightningElement {
         } else {
             this.value = value;
         }
+    }
+
+    /**
+     * Load a value into the form field.
+     * @param data  An sObject potentially containing a value to load.
+     */
+    @api
+    load(data) {
+        const value = data[this.sourceFieldAPIName];
+        this.setValue(value);
     }
 
     @api

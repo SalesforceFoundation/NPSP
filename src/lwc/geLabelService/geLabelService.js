@@ -80,6 +80,7 @@ import geButtonNewBatch from '@salesforce/label/c.geButtonNewBatch';
 import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
 import geButtonSaveNewGift from '@salesforce/label/c.geButtonSaveNewGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
+import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
 import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
@@ -239,6 +240,7 @@ class GeLabelService {
         geButtonNewSingleGift,
         geButtonSaveNewGift,
         geButtonTemplatesTabCreateTemplate,
+        geErrorAmountDoesNotMatch,
         geErrorCompleteThisField,
         geErrorDonorTypeInvalid,
         geErrorDonorTypeValidation,

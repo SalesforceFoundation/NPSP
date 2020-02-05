@@ -3,11 +3,15 @@ import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
-import { DONATION_DONOR_FIELDS, DONATION_DONOR,
+import {
+    DONATION_DONOR_FIELDS,
+    DONATION_DONOR,
     handleError,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
-    checkPermissionErrors } from 'c/utilTemplateBuilder';
+    checkPermissionErrors
+} from 'c/utilTemplateBuilder';
+import { registerListener } from 'c/pubsubNoPageRef';
 import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone, isUndefined } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
@@ -63,6 +67,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
 
     @track _dataRow; // Row being updated when in update mode
+    @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
     @track opportunities;
     @track selectedDonation;
@@ -105,6 +110,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     connectedCallback() {
+        registerListener('widgetData', this.handleWidgetData, this);
+
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
             // uses the @wire service below to retrieve the Template using the Template Id
@@ -234,15 +241,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const handleCatchError = (err) => this.handleCatchOnSave(err);
 
         // di data for save
-        let data = this.getData(sectionsList);
+        let { diRecord, widgetValues } = this.getData(sectionsList);
         // Apply selected donation fields to data import record
         if (this.blankDataImportRecord) {
-            data = { ...data, ...this.blankDataImportRecord };
+            diRecord = { ...diRecord, ...this.blankDataImportRecord };
         }
 
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
-                data: data,
+                data: { diRecord, widgetValues },
                 success: () => {
                     enableSave();
                     toggle();
@@ -600,10 +607,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     reset() {
         this._dataRow = undefined;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-
         sectionsList.forEach(section => {
             section.reset();
         });
+        this.widgetData = {};
     }
 
     get mode() {
@@ -626,19 +633,27 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return this._dataRow && this._dataRow[STATUS_FIELD.fieldApiName] === 'Imported';
     }
 
+    /**
+     * Track widget data so that our widgets can react to the overall state of the form
+     * @param payload   An object to store in widgetData
+     */
+    handleWidgetData(payload) {
+        this.widgetData = {...this.widgetData, ...payload};
+    }
+
     getData(sections) {
-        let dataImportRecord =
+        let { diRecord, widgetValues } =
             GeFormService.getDataImportRecord(sections);
 
-        if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
-            dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        if (!diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
+            diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
 
         if (this._dataRow) {
-            dataImportRecord.Id = this._dataRow.Id;
+            diRecord.Id = this._dataRow.Id;
         }
 
-        return dataImportRecord;
+        return {diRecord, widgetValues};
     }
 
     /*******************************************************************************
