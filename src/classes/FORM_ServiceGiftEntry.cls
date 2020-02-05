@@ -36,6 +36,22 @@
 */
 public with sharing class FORM_ServiceGiftEntry {
     
+    /*******************************************************************************************************
+    * @description Retrieves Matching string values from BDI_DataImport_API
+    * @return Map of object and field name keys to their values.
+    */
+    @AuraEnabled
+    public static Map<String, String> getDonationMatchingValues() {
+        Map<String, String> matchingValues = new Map<String, String> {
+            'DoNotMatch' => BDI_DataImport_API.DoNotMatch,
+            'RequireNoMatch' => BDI_DataImport_API.RequireNoMatch,
+            'RequireExactMatch' => BDI_DataImport_API.RequireExactMatch,
+            'ExactMatchOrCreate' => BDI_DataImport_API.ExactMatchOrCreate,
+            'RequireBestMatch' => BDI_DataImport_API.RequireBestMatch,
+            'BestMatchOrCreate' => BDI_DataImport_API.BestMatchOrCreate
+        };
+        return matchingValues;
+    }
 
     /*******************************************************************************************************
     * @description Method retrieves records based on a query string.
