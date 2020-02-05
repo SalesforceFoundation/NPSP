@@ -59,6 +59,8 @@ export default class utilExpandableSection extends LightningElement {
 
     handleSlotChange() {
         this.hasSlotContent = true;
-        this.toggleSection();
+        if(this.isCollapsed) {
+            this.isCollapsed = false;
+        }
     }
 }
