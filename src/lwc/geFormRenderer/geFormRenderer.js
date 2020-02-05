@@ -104,13 +104,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    objectMappingNamesBySelectedRecordId = {};
     selectedRecordId;
     selectedRecordFields;
     @wire(getRecord, {recordId: '$selectedRecordId',  optionalFields: '$selectedRecordFields'})
-    populateSiblingFields({error, data}){
+    getSelectedRecord({error, data}){
         if (error) {
             handleError(error);
         } else if (data) {
+            console.log('*** ' + 'got record in form: ' +JSON.stringify(data)+ ' ***');
             debugger;
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             // dataImport should be object with keys = source field api name, and value =
@@ -121,13 +123,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     mapRecordValuesToDataImportFields(record) {
+        console.log('this.selectedRecordIdByObjectMappingName: ', this.objectMappingNamesBySelectedRecordId);
         //reverse map
-        let siblingFieldMappings;
+        let dataImport = {};
+        const objectMappingDevNames = this.objectMappingNamesBySelectedRecordId[record.id];
+        for (const objectMappingName of objectMappingDevNames) {
+                //relevant field mappings
+            for (const fieldMapping of Object.values(GeFormService.fieldMappings)
+                .filter(({Target_Object_Mapping_Dev_Name}) =>
+                Target_Object_Mapping_Dev_Name === objectMappingName)) {
+
+                const value = record.fields[fieldMapping.Target_Field_API_Name];
+                dataImport[fieldMapping.Source_Field_API_Name] = value;
+            }
+        }
+
+        console.log('dataImport: ', JSON.stringify(dataImport));
 
         return dataImport;
     }
 
-    fmbomdn;
 
     connectedCallback() {
         if (this.batchId) {
@@ -719,16 +734,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
     
-    getSiblingFields(fieldApiName) {
+    getSiblingFields(objectMappingDeveloperName) {
         // for a given field, get the full list of fields related to its object mapping
 
         //1. Get this field's object mapping
         //2. Get the other field mappings that have the same Target_Object_Mapping_Dev_Name
         //3. Return the list of fields from those mappings
 
-        const objectMapping = Object.values(GeFormService.objectMappings)
-            .find(({Imported_Record_Field_Name}) =>
-                Imported_Record_Field_Name == fieldApiName);
+        const objectMapping =
+            GeFormService.getObjectMappingWrapper(objectMappingDeveloperName);
 
         this.relevantFieldMappings =
             Object.values(GeFormService.fieldMappings)
@@ -742,12 +756,30 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 `${objectMapping.Object_API_Name}.${Target_Field_API_Name}`);
     }
 
+    getObjectMapping(fieldApiName) {
+        return Object.values(GeFormService.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name == fieldApiName);
+    }
+
+    storeSelectedRecordIdByObjectMappingName(objectMappingName, recordId) {
+        if (this.objectMappingNamesBySelectedRecordId[recordId]) {
+            this.objectMappingNamesBySelectedRecordId[recordId].push(objectMappingName);
+        } else {
+            this.objectMappingNamesBySelectedRecordId[recordId] = [objectMappingName];
+        }
+    }
+
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
         const recordId = event.detail.value;
         const fieldApiName = event.detail.fieldApiName;
         this.selectedRecordId = recordId;
-        this.selectedRecordFields = this.getSiblingFields(fieldApiName);
+        const objectMapping = this.getObjectMapping(fieldApiName);
+        this.storeSelectedRecordIdByObjectMappingName(
+            objectMapping.DeveloperName, recordId
+        );
+        this.selectedRecordFields = this.getSiblingFields(objectMapping.DeveloperName);
         console.log('this.selectedRecordFields: ', this.selectedRecordFields);
         //TODO: if value is null, take field name and reset all sibling fields on the
         // form

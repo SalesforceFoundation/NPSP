@@ -264,6 +264,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     load(data) {
+        console.log('*** ' + 'field LOAD, data: ' + JSON.stringify(data) + ' ***');
         //TODO: saved rows in the table should always reset field values if
         // the property doesn't exist on the data object, otherwise, set to value
         // from row.
