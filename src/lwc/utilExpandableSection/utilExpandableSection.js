@@ -32,7 +32,7 @@ export default class utilExpandableSection extends LightningElement {
     get sectionClass() {
         let classItems = ['section-transition'];
 
-        if (!this.isCollapsed) {
+        if (this.isCollapsed) {
             classItems = [...classItems, 'section-transition_is-closed'];
         } else {
             // Apply provided css class to body if section is expanded
