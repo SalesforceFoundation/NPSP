@@ -18,8 +18,6 @@ ${contact_id}
     [tags]  unstable
     ${level_name}=    Generate Random String
     Go To Page       Home        Level__c
-    # Click Special Object Button       New
-    # Choose Frame    Levels
     Enter Level Values
     ...            Level Name=${level_name}
     ...            Minimum Amount=0.1
@@ -35,7 +33,7 @@ ${contact_id}
     Set Global Variable      ${level_name}
     Set Global Variable      ${level_id}
     Unselect Frame
-    Navigate To And Validate Field Value    Minimum Amount (>=)    contains    0.10
+    Navigate To And Validate Field Value    Minimum Amount (>=)   contains    0.10
     Navigate To And Validate Field Value    Maximum Amount (<)    contains    0.90
 
 2 Edit Level and Verify Fields
@@ -45,8 +43,6 @@ ${contact_id}
     [tags]  unstable
     Go To Page         Details         Level__c        object_id=${level_id}
     Click Show More Actions Button    Edit
-    # Click Link    link=Show more actions
-    # Click Link    link=Edit
     Wait Until Location Contains    /edit
     Wait For Locator    frame    Levels
     Choose Frame    Levels
@@ -59,8 +55,6 @@ ${contact_id}
     #adding a workaround to go back to levels tab due to core issue
     Current Page Should Be     Details    Level__c
     Go To Page         Details         Level__c        object_id=${level_id}
-    # Wait For Locator  breadcrumb  Level
-    # Reload Page
     Navigate To And Validate Field Value   Minimum Amount (>=)    contains    0.01
     Navigate To And Validate Field Value    Maximum Amount (<)     contains    0.99
     Navigate To And Validate Field Value    Source Field    contains    npo02__SmallestAmount__c
@@ -79,7 +73,6 @@ ${contact_id}
     Populate Field          Smallest Gift     0.75
     Click Record Button     Save
     Wait Until Loading Is Complete
-    # Scroll Element Into View    text:Donation Totals
     Navigate To And Validate Field Value          Smallest Gift    contains    $0.75    section=Donation Totals
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
@@ -102,7 +95,6 @@ ${contact_id}
     Populate Field          Smallest Gift     2.0
     Click Record Button     Save
     Wait Until Loading Is Complete
-    # Scroll Element Into View    text:Donation Totals
     Navigate To And Validate Field Value           Smallest Gift    contains    $2.00    section=Donation Totals
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
