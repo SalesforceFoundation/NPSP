@@ -90,9 +90,11 @@ Verify values in Writeoff Remaining Balance Page
     Set Checkbutton To    Written Off    checked
     Populate Field    Payment Amount    200 
     Click Modal Button    Save
+    Wait Until Modal Is Closed
     Click Related List Dd Button    Payments    Show one more action    Write Off Payments 
     Wait For Locator    frame    Write Off Remaining Balance
     Choose Frame    Write Off Remaining Balance 
+    Wait Until Page Contains    You are preparing to write off 2 Payment(s)
     Verify Field Values
     ...    Payment Writeoff Amount=$450.00
     ...    Remaining Balance=$550.00  

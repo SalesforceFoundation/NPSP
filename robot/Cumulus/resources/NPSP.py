@@ -288,7 +288,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 #                 break
 # 
 #         assert list_found, "locator not found"  
-     
+    @capture_screenshot_on_error 
     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
@@ -1171,17 +1171,34 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             return "npsp__" 
         else:
             return ""       
-          
+     
+    @capture_screenshot_on_error      
     def click_first_matching_related_item_popup_link(self,heading,rel_status,link):
         '''Clicks a link in the popup menu for first matching related list item.
         heading specifies the name of the list,
         rel_status specifies the status or other field vaule to identify a particular item,
-        and link specifies the name of the link'''  
+        and link specifies the name of the link''' 
         self.salesforce.load_related_list(heading)
         locator = npsp_lex_locators["record"]["related"]["link"].format(heading, rel_status)
-        list=self.selenium.get_webelements(locator)
-        title=list[0].text
-        self.salesforce.click_related_item_popup_link(heading, title, link)
+        mylist=self.selenium.get_webelements(locator)
+        title=mylist[0].text
+        print(f"title is {title}")
+        self.click_special_related_item_popup_link(heading, title, link)
+        
+    def click_special_related_item_popup_link(self, heading, title, link):
+        """Clicks a link in the popup menu for a related list item.
+
+        heading specifies the name of the list,
+        title specifies the name of the item,
+        and link specifies the name of the link
+        """
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["popup_trigger"].format(heading, title)
+        self.selenium.wait_until_page_contains_element(locator)
+        self.salesforce._jsclick(locator)
+        locator = npsp_lex_locators["popup-link"].format(link)
+        self.salesforce._jsclick(locator)
+        self.salesforce.wait_until_loading_is_complete()    
         
     def verify_field_values(self,**kwargs):
         """Verifies values in the specified fields""" 
