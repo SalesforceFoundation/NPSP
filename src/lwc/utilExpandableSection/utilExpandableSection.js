@@ -22,7 +22,7 @@ export default class utilExpandableSection extends LightningElement {
     get iconClass() {
         let classItems = ['slds-p-right_small', 'icon-transition'];
 
-        if (this.isCollapsed) {
+        if (!this.isCollapsed) {
             classItems = [...classItems, 'icon-transition_is-open'];
         }
 
@@ -46,11 +46,11 @@ export default class utilExpandableSection extends LightningElement {
     }
 
     get ariaExpanded() {
-        return this.isCollapsed ? true : false;
+        return this.isCollapsed ? false : true;
     }
 
     get ariaHidden() {
-        return this.isCollapsed ? false : true;
+        return this.isCollapsed ? true : false;
     }
 
     toggleSection() {
