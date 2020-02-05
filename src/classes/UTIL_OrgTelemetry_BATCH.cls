@@ -50,7 +50,6 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
      */
     private final List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> telemetryTypes =
         new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Org_Environment,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps,
