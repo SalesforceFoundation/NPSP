@@ -1,5 +1,5 @@
 <template>
-    <c-collapsible-section section-title={element.label}>
+    <c-util-expandable-section label={element.label} is-collapsed={collapsed} id="gauExpandableSection">
         <lightning-layout if:true={hasAlert}>
             <lightning-layout-item size="12">
                 <div class={alertClass} role="alert">
@@ -33,5 +33,5 @@
                 $<span>{remainingAmount}</span> remaining
             </lightning-layout-item>
         </lightning-layout>
-    </c-collapsible-section>
+    </c-util-expandable-section>
 </template>

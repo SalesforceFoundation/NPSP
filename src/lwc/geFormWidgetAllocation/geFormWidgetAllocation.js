@@ -2,8 +2,8 @@ import {LightningElement, api, track, wire} from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import { isNumeric, isNotEmpty, getLikeMatchByKey } from 'c/utilCommon';
-import {fireEvent, registerListener} from 'c/pubsubNoPageRef';
+import { isNumeric, isNotEmpty } from 'c/utilCommon';
+import { registerListener } from 'c/pubsubNoPageRef';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
@@ -23,6 +23,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
+    @track collapsed = true;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
