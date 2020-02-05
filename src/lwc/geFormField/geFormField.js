@@ -3,7 +3,6 @@ import {isNotEmpty, debouncify} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
-import TemplateBuilderService from 'c/geTemplateBuilderService';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -31,19 +30,11 @@ export default class GeFormField extends LightningElement {
 
     handleValueChangeSync = (event) => {
         this.value = this.getValueFromChangeEvent(event);
-        // TODO: The custom event below isn't carrying up any of the assigned properties (field and value)
-        // We need to set a detail property in the custom event holding whatever we want to pass in custom event.
-        const evt = new CustomEvent('change', {field: this.element, value: this.value});
-        this.dispatchEvent(evt);
 
         if (this.isLookup) {
-            const detail = {
-                recordId: this.value,
-                fieldApiName: this.element.fieldApiName
-            }
             const changeLookupEvent = new CustomEvent(
                 'changelookup',
-                { detail: detail });
+                { detail: event.detail });
             this.dispatchEvent(changeLookupEvent);
         }
 
@@ -277,11 +268,11 @@ export default class GeFormField extends LightningElement {
         // the property doesn't exist on the data object, otherwise, set to value
         // from row.
         // Instructions: set value to null to reset lookup fields
-        console.log('*** ' + 'formfield load being called' + ' ***');
-        console.log('this.sourceFieldAPIName: ', this.sourceFieldAPIName);
-        console.log('this.value: ', this.value);
-        console.log('data[this.sourceFieldAPIName]: ', data[this.sourceFieldAPIName]);
-        console.log('this.isLookup: ', this.isLookup);
+        // console.log('*** ' + 'formfield load being called' + ' ***');
+        // console.log('this.sourceFieldAPIName: ', this.sourceFieldAPIName);
+        // console.log('this.value: ', this.value);
+        // console.log('data[this.sourceFieldAPIName]: ', data[this.sourceFieldAPIName]);
+        // console.log('this.isLookup: ', this.isLookup);
         //TODO: getRecord seems to return values for each field as a lookup object
         //      with a displayValue and a value prop
         // const value = data[this.sourceFieldAPIName].value;

@@ -104,6 +104,29 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    selectedRecordId;
+    selectedRecordFields;
+    @wire(getRecord, {recordId: '$selectedRecordId',  optionalFields: '$selectedRecordFields'})
+    populateSiblingFields({error, data}){
+        if (error) {
+            handleError(error);
+        } else if (data) {
+            debugger;
+            const dataImport = this.mapRecordValuesToDataImportFields(data);
+            // dataImport should be object with keys = source field api name, and value =
+            // an object with at least one property "value" - but could have more, for
+            // instance "displayValue" for lookup fields, etc.
+            this.load(dataImport);
+        }
+    }
+
+    mapRecordValuesToDataImportFields(record) {
+        //reverse map
+        let siblingFieldMappings;
+
+        return dataImport;
+    }
+
     fmbomdn;
 
     connectedCallback() {
@@ -698,22 +721,25 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
-        console.log('*** ' + 'renderer handleChangeLookup' + ' ***');
-        console.log('JSON.parse(JSON.stringify(event)): ', JSON.parse(JSON.stringify(event)));
+        console.log('*** ' + 'handlechangelookup in form' + ' ***');
+        const recordId = event.detail.value;
+        const fieldApiName = event.detail.fieldApiName;
+
+        //TODO: if value is null, take field name and reset all sibling fields on the
+        // form
         // this.load({Contact1_Lastname__c: 'LastNameTest'});
     // ISEE, I think this is meant to only run when the account or contact 1 imported
         // fields are populated in order to display the review donations modal ( not for
         // all lookups)...
-        const detail = event.detail;
         const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
         const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
-        if (detail.recordId && (detail.fieldApiName === account || detail.fieldApiName === contact)) {
+        if (recordId && (fieldApiName === account || fieldApiName === contact)) {
             // TODO: Future handle Account/Contact priority depending on value of Data Import: Donation Donor.
-            const donorType = detail.fieldApiName === account ? 'Account' : 'Contact';
-            this.selectedDonorId = detail.recordId;
+            const donorType = fieldApiName === account ? 'Account' : 'Contact';
+            this.selectedDonorId = recordId;
             this.selectedDonorType = donorType;
-        } else if (detail.fieldApiName === account || detail.fieldApiName === contact) {
+        } else if (fieldApiName === account || fieldApiName === contact) {
             this.selectedDonation = undefined;
             this.opportunities = undefined;
             this.selectedDonorId = undefined;
@@ -722,12 +748,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonorId = undefined;
             this.selectedDonorType = undefined;
         }
-        // if (event.detail.dataImportRecord) {
-        //     this.load();
-        // }
-        // this.load({
-        //     Contact1_Lastname__c: 'testlastname'
-        // });
     }
 
     handleChangeSelectedDonation(event) {

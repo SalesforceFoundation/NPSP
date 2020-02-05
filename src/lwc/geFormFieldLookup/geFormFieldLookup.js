@@ -19,6 +19,7 @@ export default class GeFormFieldLookup extends LightningElement {
 
     @track options = [];
     @track value;
+    @api valueObj;
     @track targetObjectApiName;
     @track queryFields;
     @track valid = true;
@@ -129,11 +130,16 @@ export default class GeFormFieldLookup extends LightningElement {
      * @param event
      */
     handleSelect(event) {
-        console.log('*** ' + 'handleSelect' + ' ***');
         this.displayValue = event.detail.displayValue;
         this.value = event.detail.value;
-        console.log('this.value: ', this.value);
-        this.dispatchEvent(new CustomEvent('change', { detail: event.detail }));
+
+        this.dispatchEvent(new CustomEvent('change', {
+            detail: {
+                value: event.detail.value,
+                displayValue: event.detail.displayValue,
+                fieldApiName: this.fieldApiName
+            }
+        }));
     }
 
     @api
