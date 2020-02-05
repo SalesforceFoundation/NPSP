@@ -67,8 +67,6 @@ public class STG_PanelRDHealthCheck {
     * - Create Installment Opportunity
     */
     public void verifyLegacyRDConfig() {
-        Boolean isValid = true;
-
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
         // =============================================================
@@ -89,9 +87,11 @@ public class STG_PanelRDHealthCheck {
         }
 
         // The picklist should have the supported and custom picklist values
-        isValid = isValid && validateSupportedPicklistValues(installmentPeriods, 'npe03__Installment_Period__c');
+        validateSupportedPicklistValues(installmentPeriods, 'npe03__Installment_Period__c',
+            System.Label.healthDetailsInvalidRDCustomPeriodPIcklist, System.Label.healthSolutionInvalidRDCustomPeriodPicklist);
         // The picklist should absolutely have all of the custom installment period
-        isValid = isValid && validateRequiredPicklistValues(customInstallmentPeriods, 'npe03__Installment_Period__c');
+        validateRequiredPicklistValues(customInstallmentPeriods, 'npe03__Installment_Period__c',
+            System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionInvalidRDCustomPeriod);
 
         // ===========================================================================================
         // Verify Open Ended Status Values. This field should have all 3 values and nothing else
@@ -100,16 +100,10 @@ public class STG_PanelRDHealthCheck {
         supportedStatus.add(RD_Constants.OPEN_ENDED_STATUS_OPEN);
         supportedStatus.add(RD_Constants.OPEN_ENDED_STATUS_CLOSED);
         supportedStatus.add(RD_Constants.OPEN_ENDED_STATUS_NONE);
-        isValid = isValid && validateSupportedPicklistValues(supportedStatus, 'npe03__Open_Ended_Status__c');
-        isValid = isValid && validateRequiredPicklistValues(supportedStatus, 'npe03__Open_Ended_Status__c');
-
-        if (isValid) {
-            ctrl.createDR(System.Label.stgNavRecurringDonations,
-                STG_PanelHealthCheck_CTRL.statusSuccess,
-                null,
-                System.Label.healthDetailsValidRDCustomPeriod
-            );
-        }
+        validateSupportedPicklistValues(supportedStatus, 'npe03__Open_Ended_Status__c',
+            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
+        validateRequiredPicklistValues(supportedStatus, 'npe03__Open_Ended_Status__c',
+            System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
 
         // =============================================================
         // Verify Schedule Type Values
@@ -118,8 +112,18 @@ public class STG_PanelRDHealthCheck {
         supportedScheduleTypes.add(RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY);
         supportedScheduleTypes.add(RD_Constants.SCHEDULE_TYPE_DIVIDE_BY);
 
-        isValid = isValid && validateSupportedPicklistValues(supportedScheduleTypes, 'npe03__Schedule_Type__c');
-        isValid = isValid && validateRequiredPicklistValues(supportedScheduleTypes, 'npe03__Schedule_Type__c');
+        validateSupportedPicklistValues(supportedScheduleTypes, 'npe03__Schedule_Type__c',
+            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
+        validateRequiredPicklistValues(supportedScheduleTypes, 'npe03__Schedule_Type__c',
+            System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
+
+        if (hasValidationErrors()) {
+            ctrl.createDR(System.Label.stgNavRecurringDonations,
+                STG_PanelHealthCheck_CTRL.statusSuccess,
+                null,
+                System.Label.healthDetailsValidRDCustomPeriod
+            );
+        }
 
         // ===========================================================================================
         // Validate Recurring Donation Stages
@@ -146,7 +150,6 @@ public class STG_PanelRDHealthCheck {
     * - Create Installment Opportunity
     */
     public void verifyEnhancedRDConfig() {
-        Boolean isValid = true;
         RD2_Settings settings = new RD2_Settings();
 
         // =============================================================
@@ -159,7 +162,8 @@ public class STG_PanelRDHealthCheck {
         supportedInstallmentPeriods.add(RD2_Constants.INSTALLMENT_PERIOD_YEARLY);
         supportedInstallmentPeriods.add(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
 
-        isValid = isValid && validateSupportedPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c');
+        validateSupportedPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
+            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
         // =============================================================
         // Verify Status Values
@@ -169,7 +173,8 @@ public class STG_PanelRDHealthCheck {
         supportedStatus.add(RD2_Constants.STATUS_CLOSED);
         supportedStatus.add(RD2_Constants.STATUS_LAPSED);
 
-        isValid = isValid && validateSupportedPicklistValues(supportedStatus, 'Status__c');
+        validateSupportedPicklistValues(supportedStatus, 'Status__c',
+            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
         // =============================================================
         // Verify Recurring Type Values
@@ -177,7 +182,8 @@ public class STG_PanelRDHealthCheck {
         Set<String> supportedType = new Set<String>();
         supportedType.add(RD2_Constants.RECURRING_TYPE_OPEN);
 
-        isValid = isValid && validateSupportedPicklistValues(supportedType, 'RecurringType__c');
+        validateRequiredPicklistValues(supportedType, 'RecurringType__c',
+            System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
 
         // =============================================================
         // Verify Day Of Month Values
@@ -188,9 +194,10 @@ public class STG_PanelRDHealthCheck {
         }
         supportedDayOfMonth.add(RD2_Constants.DAY_OF_MONTH_LAST_DAY);
 
-        isValid = isValid && validateSupportedPicklistValues(supportedDayOfMonth, 'Day_Of_Month__c');
+        validateSupportedPicklistValues(supportedDayOfMonth, 'Day_Of_Month__c',
+            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
-        if (isValid) {
+        if (hasValidationErrors()) {
             ctrl.createDR(System.Label.stgNavRecurringDonations,
                 STG_PanelHealthCheck_CTRL.statusSuccess,
                 null,
@@ -222,9 +229,7 @@ public class STG_PanelRDHealthCheck {
      * @param picklistValues List of picklist Api Names that "are" there
      */
     @TestVisible
-    private Boolean validateSupportedPicklistValues(Set<String> supportedValues, String fieldName) {
-        Boolean isValid = true;
-
+    private void validateSupportedPicklistValues(Set<String> supportedValues, String fieldName, String errorLabel, String solutionLabel) {
         String fieldLabel = UTIL_Describe.getFieldLabel('npe03__Recurring_Donation__c', fieldName);
         List<SelectOption> picklistValues = UTIL_Describe.getSelectOptions(
             'npe03__Recurring_Donation__c', fieldName);
@@ -238,16 +243,15 @@ public class STG_PanelRDHealthCheck {
             if (!supportedValuesLowerCase.contains(option.getValue().toLowerCase())) {
                 ctrl.createDR(System.Label.stgNavRecurringDonations,
                     STG_PanelHealthCheck_CTRL.statusError,
-                    String.format('The "{1}" picklist value for the "{0}" field is not supported',
-                        new String[] { fieldLabel.escapeHtml4(), option.getValue().escapeHtml4() }
+                    String.format(errorLabel,
+                        new String[] { option.getValue().escapeHtml4(), fieldLabel.escapeHtml4() }
                     ),
-                    'The picklist value is not a supported value for this field.'
+                    String.format(solutionLabel,
+                        new String[] { option.getValue().escapeHtml4(), fieldLabel.escapeHtml4() }
+                    )
                 );
-                isValid = false;
             }
         }
-
-        return isValid;
     }
 
     /**
@@ -256,8 +260,7 @@ public class STG_PanelRDHealthCheck {
      * @param picklistValues List of picklist Api Names that "are" there
      */
     @TestVisible
-    private Boolean validateRequiredPicklistValues(Set<String> requiredValues, String fieldName) {
-        Boolean isValid = true;
+    private void validateRequiredPicklistValues(Set<String> requiredValues, String fieldName, String errorLabel, String solutionLabel) {
 
         String fieldLabel = UTIL_Describe.getFieldLabel('npe03__Recurring_Donation__c', fieldName);
         List<SelectOption> picklistValues = UTIL_Describe.getSelectOptions(
@@ -271,19 +274,19 @@ public class STG_PanelRDHealthCheck {
                     break;
                 }
             }
+            System.debug('> Looking for ' + value + ': ' + hasValue);
             if (!hasValue) {
                 ctrl.createDR(System.Label.stgNavRecurringDonations,
                     STG_PanelHealthCheck_CTRL.statusError,
-                    String.format('The "{1}" picklist value for the "{0}" field is missing for this picklist',
-                        new String[] { fieldLabel.escapeHtml4(), value.escapeHtml4() }
+                    String.format(errorLabel,
+                        new String[] { value.escapeHtml4(), fieldLabel.escapeHtml4() }
                     ),
-                    'The picklist value is not a supported value for this field.'
+                    String.format(solutionLabel,
+                        new String[] { value.escapeHtml4(), fieldLabel.escapeHtml4() }
+                    )
                 );
-                isValid = false;
             }
         }
-
-        return isValid;
     }
 
     /**
@@ -407,4 +410,18 @@ public class STG_PanelRDHealthCheck {
             System.Label.healthSolutionSaveOppsFailed
         );
     }
+
+    /**
+     * @description Returns true if there are any "Errors" in the health check results
+     * @return True or False
+     */
+    private Boolean hasValidationErrors() {
+        for (STG_PanelHealthCheck_CTRL.DetectResult dr : ctrl.listDR) {
+            if (dr.strStatus == STG_PanelHealthCheck_CTRL.statusError) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -88,18 +88,29 @@ private class STG_PanelRDHealthCheck_TEST {
 
         STG_PanelRDHealthCheck.verifyRecurringDonationConfiguration(ctrl);
 
-        String errors = getValidationErrors(ctrl);
-        System.assertEquals(2, ctrl.listDR.size(),
-            'There should exactly one error in this validation.\n' + errors
-        );
-        String errorResult = '?';
+        String results = getValidationResults(ctrl);
+
+        String errResults = '';
+        Integer errCount = 0;
         for (STG_PanelHealthCheck_CTRL.DetectResult dr : ctrl.listDR) {
             if (dr.strStatus == STG_PanelHealthCheck_CTRL.statusError) {
-                errorResult = dr.strDetails;
+                errResults += dr.strDetails + '\n';
+                errCount++;
             }
         }
-        System.assert(errorResult.contains(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY),
-            'The error should reference the "' + RD_Constants.INSTALLMENT_PERIOD_QUARTERLY + '" picklist value.\n' + errorResult
+
+        // Since RD1 is enabled by default, there are 4 configuration errors:
+        // - Quarterly in the Installment Period field
+        // - 29,30,31 in the DayOfMonth field
+        System.assertEquals(4, errCount,
+            'There should exactly four entries in this validation.\n' + results
+        );
+
+        System.assert(errResults.contains(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY),
+            'The error should reference the "' + RD_Constants.INSTALLMENT_PERIOD_QUARTERLY + '" picklist value.\n' + errResults
+        );
+        System.assert(errResults.contains('29'),
+            'The error should reference the "29" picklist value.\n' + errResults
         );
     }
 
@@ -122,25 +133,30 @@ private class STG_PanelRDHealthCheck_TEST {
         supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_YEARLY);
         supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
 
-        healthCheck.validateSupportedPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c');
-        healthCheck.validateRequiredPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c');
+        healthCheck.validateSupportedPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
+            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
-        String errors = getValidationErrors(ctrl);
+        healthCheck.validateRequiredPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
+            System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
+
+        String results = getValidationResults(ctrl);
         System.assertEquals(0, ctrl.listDR.size(),
-            'There should zero errors in this picklist validation\n' + errors
+            'There should zero errors in this picklist validation\n' + results
         );
 
         // Add an invalid "required" picklist to this list and validate that the required
         // validation logs the error.
         // =============================================================
         supportedInstallmentPeriods.add(BAD_PICKLIST_VALUE);
-        healthCheck.validateRequiredPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c');
-        errors = getValidationErrors(ctrl);
+        healthCheck.validateRequiredPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
+            System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
+
+        results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
-            'There should exactly one error in this picklist validation.\n' + errors
+            'There should exactly one error in this picklist validation.\n' + results
         );
-        System.assert(errors.contains(BAD_PICKLIST_VALUE),
-            'The error should reference the "' + BAD_PICKLIST_VALUE + '" picklist value.\n' + errors
+        System.assert(results.contains(BAD_PICKLIST_VALUE),
+            'The error should reference the "' + BAD_PICKLIST_VALUE + '" picklist value.\n' + results
         );
     }
 
@@ -155,19 +171,19 @@ private class STG_PanelRDHealthCheck_TEST {
         String openOppStage = System.Label.npe03.RecurringDonationStageName;
         healthCheck.validateOpportunityStage(openOppStage, false, false);
 
-        String errors = getValidationErrors(ctrl);
+        String results = getValidationResults(ctrl);
         System.assertEquals(0, ctrl.listDR.size(),
-            'There should zero errors in the record type validation\n' + errors
+            'There should zero errors in the record type validation\n' + results
         );
 
         healthCheck.validateOpportunityStage(openOppStage, true, true);
 
-        errors = getValidationErrors(ctrl);
+        results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
-            'There should one errors in the record type validation.\n' + errors
+            'There should one errors in the record type validation.\n' + results
         );
-        System.assert(errors.contains(openOppStage),
-            'The error should reference the "' + openOppStage + '" Stage Name.\n' + errors
+        System.assert(results.contains(openOppStage),
+            'The error should reference the "' + openOppStage + '" Stage Name.\n' + results
         );
     }
 
@@ -187,12 +203,12 @@ private class STG_PanelRDHealthCheck_TEST {
         // =============================================================
         healthCheck.validateNewInstallmentOpportunity(openOppStage, defaultRtId);
 
-        String errors = getValidationErrors(ctrl);
+        String results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
-            'There should one result in the installment validation.\n' + errors
+            'There should one result in the installment validation.\n' + results
         );
         System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, ctrl.listDR[0].strStatus,
-            'The result status should have been "' + STG_PanelHealthCheck_CTRL.statusSuccess + '".\n' + errors
+            'The result status should have been "' + STG_PanelHealthCheck_CTRL.statusSuccess + '".\n' + results
         );
         ctrl.listDR.clear();
 
@@ -202,15 +218,15 @@ private class STG_PanelRDHealthCheck_TEST {
         Id mockRecordTypeId = UTIL_UnitTestData_TEST.mockId(defaultRtId.getSobjectType());
         healthCheck.validateNewInstallmentOpportunity(openOppStage, mockRecordTypeId);
 
-        errors = getValidationErrors(ctrl);
+        results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
-            'There should one result in the installment validation.\n' + errors
+            'There should one result in the installment validation.\n' + results
         );
         System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, ctrl.listDR[0].strStatus,
-            'The result status should have been "' + STG_PanelHealthCheck_CTRL.statusError + '".\n' + errors
+            'The result status should have been "' + STG_PanelHealthCheck_CTRL.statusError + '".\n' + results
         );
         System.assert(ctrl.listDR[0].strDetails.contains(mockRecordTypeId),
-            'The result status details should contained the bad record type id of "' + mockRecordTypeId + '".\n' + errors
+            'The result status details should contained the bad record type id of "' + mockRecordTypeId + '".\n' + results
         );
     }
 
@@ -218,11 +234,11 @@ private class STG_PanelRDHealthCheck_TEST {
     // HELPER METHODS
     // ==================================================================================
 
-    private static String getValidationErrors(STG_PanelHealthCheck_CTRL ctrl) {
-        String errors = '';
+    private static String getValidationResults(STG_PanelHealthCheck_CTRL ctrl) {
+        String results = '';
         for (STG_PanelHealthCheck_CTRL.DetectResult dr : ctrl.listDR) {
-            errors += dr.strStatus + ': ' + (dr.strDetails != null ? dr.strDetails : dr.strSolution) + '\n';
+            results += dr.strStatus + ': ' + (dr.strDetails != null ? dr.strDetails : dr.strSolution) + '\n';
         }
-        return errors;
+        return results;
     }
 }

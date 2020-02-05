@@ -1913,6 +1913,7 @@
         <members>healthDetailsInvalidOppField</members>
         <members>healthDetailsInvalidOppStage</members>
         <members>healthDetailsInvalidPaymentField</members>
+        <members>healthDetailsInvalidPicklistValue</members>
         <members>healthDetailsInvalidRDCustomPeriod</members>
         <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
         <members>healthDetailsInvalidRecordtypeId</members>
@@ -1920,6 +1921,7 @@
         <members>healthDetailsInvalidScheduledJob</members>
         <members>healthDetailsMailingListReportMissing</members>
         <members>healthDetailsMissingOppPayments</members>
+        <members>healthDetailsMissingRequiredPicklistValue</members>
         <members>healthDetailsNothingScheduled</members>
         <members>healthDetailsOCR</members>
         <members>healthDetailsOCRDupPrimary</members>
@@ -2000,6 +2002,7 @@
         <members>healthSolutionInvalidUDFObjectField</members>
         <members>healthSolutionMailingListReportMissing</members>
         <members>healthSolutionMissingOppPayments</members>
+        <members>healthSolutionMissingPicklistValue</members>
         <members>healthSolutionNothingScheduled</members>
         <members>healthSolutionOCRDupPrimary</members>
         <members>healthSolutionOCRException</members>
@@ -2010,6 +2013,7 @@
         <members>healthSolutionSaveOppsFailed</members>
         <members>healthSolutionScheduleJobs</members>
         <members>healthSolutionTriggerHandlerMismatch</members>
+        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>healthSolutionUDFBadDatatypes</members>
         <members>healthSolutionUDFOppField</members>
         <members>hhCmpDedupLabelReturnToCmp</members>
