@@ -12,7 +12,7 @@ import {
     checkPermissionErrors
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone, checkNestedProperty } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -80,7 +80,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get title() {
-        return this.donorRecord ? `Gift by ${this.donorRecord.fields.Name.value}` : 'New Gift';
+        return checkNestedProperty(this.donorRecord, 'fields', 'Name', 'value') ?
+            GeLabelService.format(
+                this.CUSTOM_LABELS.geHeaderMatchingGiftBy,
+                [this.donorRecord.fields.Name.value]) :
+            this.CUSTOM_LABELS.commonNewGift;
     }
 
     get isSingleGiftEntry() {

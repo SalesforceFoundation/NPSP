@@ -1905,6 +1905,7 @@
         <members>commonEdit</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonNewGift</members>
         <members>commonNext</members>
         <members>commonNo</members>
         <members>commonNoItems</members>
@@ -2040,6 +2041,7 @@
         <members>geHeaderFormFieldsModalSectionSettings</members>
         <members>geHeaderFormFieldsRightCol</members>
         <members>geHeaderGiftEntry</members>
+        <members>geHeaderMatchingGiftBy</members>
         <members>geHeaderMatchingOpportunity</members>
         <members>geHeaderMatchingPayment</members>
         <members>geHeaderMatchingReviewDonations</members>

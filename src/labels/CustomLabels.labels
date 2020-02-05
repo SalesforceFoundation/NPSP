@@ -4470,6 +4470,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Field Label</value>
     </labels>
     <labels>
+        <fullName>commonNewGift</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New Gift</shortDescription>
+        <value>New Gift</value>
+    </labels>
+    <labels>
         <fullName>commonNext</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5584,6 +5592,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Top of all Gift Entry pages</shortDescription>
         <value>Gift Entry</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderMatchingGiftBy</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Donor Information</shortDescription>
+        <!-- {0} = Account or Contact record Name -->
+        <value>Gift by {0}</value>
     </labels>
     <labels>
         <fullName>geHeaderMatchingReviewDonations</fullName>
