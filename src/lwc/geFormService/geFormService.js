@@ -3,7 +3,7 @@ import saveAndProcessDataImport from '@salesforce/apex/GE_GiftEntryController.sa
 import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunDataImport
     from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
-import {api} from "lwc";
+import {api, track} from "lwc";
 import { isNotEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
     from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
@@ -35,6 +35,8 @@ class GeFormService {
 
     fieldMappings;
     objectMappings;
+    // @track fieldMappingsByObjectMappingName;
+    fieldMappingsByObjectMappingName;
 
     /**
      * Retrieve the default form render wrapper.
@@ -47,6 +49,9 @@ class GeFormService {
                 .then((result) => {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
+                    this.fieldMappingsByObjMappingDevName =
+                        result.fieldMappingSetWrapper.fieldMappingsByObjMappingDevName;
+                    console.log(' default result.fieldMappingSetWrapper: ', result.fieldMappingSetWrapper);
                     resolve(result);
                 })
                 .catch(error => {
@@ -182,6 +187,9 @@ class GeFormService {
                         renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings =
                         renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
+                    this.fieldMappingsByObjMappingDevName =
+                        renderWrapper.fieldMappingSetWrapper.fieldMappingsByObjMappingDevName;
+                    console.log(' templateId : result.fieldMappingSetWrapper: ', renderWrapper.fieldMappingSetWrapper);
                     resolve(renderWrapper);
                 })
                 .catch(err => {
@@ -195,7 +203,8 @@ class GeFormService {
         return new Promise((resolve, reject) => {
             this.getFormRenderWrapper(templateId)
                 .then(renderWrapper => {
-                    resolve(renderWrapper.formTemplate);
+                    // resolve(renderWrapper.formTemplate);
+                    resolve(renderWrapper);
                 })
                 .catch(err => {
                     reject(err);

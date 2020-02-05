@@ -405,6 +405,10 @@ const checkPermissionErrors = (formTemplate) => {
 * @param fieldMappings: the field mappings dev names
 * @param record: the contact or account record
 */
+//todo: or this one?
+    //we have: one for loading row from table
+    //         another for loading data from source Account or Contact
+    //         another for loading data from selected Opportunity or OppPayment...
 const setRecordValuesOnTemplate = (templateSections, fieldMappings, record) => {
     // check if we have a contact or account record
     if (isEmpty(record)) {

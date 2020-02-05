@@ -61,6 +61,11 @@
                           for:item='section'>
                     <c-ge-form-section key={section.id}
                                        section={section}
+                                       fmbomdn={fmbomdn}
+                                       field-mappings={fieldMappings}
+                                       object-mappings={objectMappings}
+                                       fields-used-by-template={displayedFields}
+                                       onlookuprecordselected={handleLookupRecordSelected}
                                        onchangelookup={handleChangeLookup}>
                     </c-ge-form-section>
                 </template>

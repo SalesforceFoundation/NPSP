@@ -22,6 +22,8 @@ export default class GeFormFieldLookup extends LightningElement {
     @track targetObjectApiName;
     @track queryFields;
     @track valid = true;
+    @api fieldsUsedByTemplate;
+    @api relevantFieldMappings;
 
     /**
      * Retrieve information about the object the lookup points to.
@@ -41,6 +43,31 @@ export default class GeFormFieldLookup extends LightningElement {
                 this.value = this.defaultValue;
                 this.displayValue = data.fields.Name.value;
             }
+        }
+    }
+
+    selectedRecord;
+    @wire(getRecord, { recordId: '$value', fields: '$queryFields'})
+    wiredGetSelectedRecord({error, data}) {
+        console.log('*** ' + 'getting selected' + ' value is: '+this.value+'***');
+        this.reportStatus();
+        if(data) {
+            this.selectedRecord = Object.assign({}, data.fields);
+            console.log('this.selectedRecord: ', this.selectedRecord);
+            // if(typeof this.value === 'undefined') {
+                console.log('selected JSON.parse(JSON.stringify(data)): ', JSON.parse(JSON.stringify(data)));
+                // this.value = this.defaultValue;
+                // this.displayValue = data.fields.Name.value;
+            const di = {};
+            for (const fm of this.relevantFieldMappings) {
+                const value = data.fields[fm.Target_Field_API_Name];
+                di[fm.Source_Field_API_Name] = value;
+            }
+            console.log('di: ', di);
+            this.dispatchEvent(new CustomEvent('lookuprecordselected', {detail: di}));
+            // }
+        } else if (error) {
+            console.error(error);
         }
     }
 
@@ -100,8 +127,10 @@ export default class GeFormFieldLookup extends LightningElement {
      * @param event
      */
     handleSelect(event) {
+        console.log('*** ' + 'handleSelect' + ' ***');
         this.displayValue = event.detail.displayValue;
         this.value = event.detail.value;
+        console.log('this.value: ', this.value);
         this.dispatchEvent(new CustomEvent('change', { detail: event.detail }));
     }
 
@@ -115,7 +144,12 @@ export default class GeFormFieldLookup extends LightningElement {
     }
 
     getQueryFields() {
-        const fields = ['Id', 'Name'];
+        let fields = ['Id', 'Name'];
+
+        if (this.fieldsUsedByTemplate) {
+            fields = fields.concat(this.fieldsUsedByTemplate);
+        }
+
         return fields.map(f => `${this.targetObjectApiName}.${f}`);
     }
 
@@ -164,14 +198,43 @@ export default class GeFormFieldLookup extends LightningElement {
 
     @api
     setSelected(lookupResult) {
+        console.log('*** ' + 'setSelected called' + ' ***');
+        this.reportStatus();
         this.displayValue = lookupResult.displayValue;
         this.value = lookupResult.value;
+    }
+    
+    reportStatus() {
+        console.log('this.value: ', this.value);
+        console.log('this.displayValue: ', this.displayValue);
     }
 
     @api
     reset() {
+        console.log('*** ' + 'reset being called on lookup!' + ' ***');
+        console.log('current value is: this.value: ', this.value);
+        console.log('this.displayValue: ', this.displayValue);
         let autocomplete = this.template.querySelector('c-ge-autocomplete');
         autocomplete.reset();
     }
 
+    @api fmbomdn;
+
+    @api templateFields;
+    
+    get fm() {
+        return JSON.stringify(this.fmbomdn);
+    }
+
+    // get templateFields() {
+    //     const templateFields = [];
+    //     console.log('this.fieldApiName: ', this.fieldApiName);
+    //     console.log(':this.objectMappingDevName ', this.objectMappingDevName);
+    //     const fieldMappingsByObjectMappingName = this.fm[this.objectMappingDevName];
+    //     if (fieldMappingsByObjectMappingName) {
+    //         const fields = fieldMappingsByObjectMappingName.map(({Source_Field_API_Name}) => Source_Field_API_Name);
+    //     console.log('fields: ', fields);
+    //     }
+    //     return templateFields;
+    // }
 }

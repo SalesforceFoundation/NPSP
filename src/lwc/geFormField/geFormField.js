@@ -25,6 +25,10 @@ export default class GeFormField extends LightningElement {
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
+    @api fieldMappings;
+    @api objectMappings;
+    relevantFieldMappings;
+
     handleValueChangeSync = (event) => {
         this.value = this.getValueFromChangeEvent(event);
         // TODO: The custom event below isn't carrying up any of the assigned properties (field and value)
@@ -75,7 +79,7 @@ export default class GeFormField extends LightningElement {
             this._defaultValue = defaultValue;
             this.value = defaultValue;
         }
-        this.fieldsToQuery();
+        // this.fieldsToQuery();
     }
 
     getValueFromChangeEvent(event) {
@@ -171,33 +175,6 @@ export default class GeFormField extends LightningElement {
         return GeFormService.getFieldMappingWrapper(this.formElementName);
     }
 
-    fieldsToQuery() {
-        const fmwrap = this.fieldInfo;
-        const omw = this.objectInfo;
-        const odn = this.objectDevName;
-        const allFm = GeFormService.fieldMappings;
-        const allOm = GeFormService.objectMappings;
-        TemplateBuilderService.init().then(() =>
-        {
-            // console.log(TemplateBuilderService.fieldMappingsByObjMappingDevName);
-const a =           TemplateBuilderService.fieldMappingsByObjMappingDevName[this.objectDevName];
-            console.log('a: ', a);
-            const b = a.map(({Source_Field_API_Name}) => Source_Field_API_Name);
-            console.log('b: ', b);
-            // const fields = TemplateBuilderService.fieldMappingsByObjMappingDevName[this.objectDevName].map(({Source_Field_API_Name}) => Source_Field_API_Name);
-            // console.log('fields: ', fields);
-        });
-        // const allFmByOmName = TemplateBuilderService.fieldMappingsByObjMappingDevName;
-    // const result =
-        //     this.fieldInfo.objectMappingByDevName[this.objectDevName]
-        //         .map(({Source_Field_API_Name}) => Source_Field_API_Name);
-        console.log('*** ' + 'in fieldsToQuery' + ' ***');
-        // return result;
-        // return this.objectInfo.
-        return b;
-    }
-
-
     get fieldDescribeInfo() {
         if(this.objectDescribeInfo) {
             return this.objectDescribeInfo.fields[this.fieldApiName];
@@ -205,7 +182,7 @@ const a =           TemplateBuilderService.fieldMappingsByObjMappingDevName[this
     }
 
     get objectInfo() {
-        return GeFormService.getObjectMappingWrapper(this.objectDevName);
+        return GeFormService.getObjectMappingWrapper(this.objectMappingDevName);
     }
 
     get fieldType() {
@@ -238,7 +215,7 @@ const a =           TemplateBuilderService.fieldMappingsByObjMappingDevName[this
         }
     }
 
-    get objectDevName() {
+    get objectMappingDevName() {
         return this.fieldInfo.Target_Object_Mapping_Dev_Name;
     }
 
@@ -296,11 +273,36 @@ const a =           TemplateBuilderService.fieldMappingsByObjMappingDevName[this
 
     @api
     load(data) {
-        const value = data[this.sourceFieldAPIName];
+        //TODO: saved rows in the table should always reset field values if
+        // the property doesn't exist on the data object, otherwise, set to value
+        // from row.
+        console.log('*** ' + 'formfield load being called' + ' ***');
+        console.log('this.sourceFieldAPIName: ', this.sourceFieldAPIName);
+        console.log('this.value: ', this.value);
+        console.log('data[this.sourceFieldAPIName]: ', data[this.sourceFieldAPIName]);
+        console.log('this.isLookup: ', this.isLookup);
+        //TODO: getRecord seems to return values for each field as a lookup object
+        //      with a displayValue and a value prop
+        // const value = data[this.sourceFieldAPIName].value;
+        let value = null;
+        if (data.hasOwnProperty(this.sourceFieldAPIName)) {
+            if (data[this.sourceFieldAPIName].hasOwnProperty('value')) {
+                value = data[this.sourceFieldAPIName].value;
+            } else {
+                value = data[this.sourceFieldAPIName];
+            }
+        } else {
+            return; //Todo: handle the lookup stuff below.  only return if
+            // there is truly no prop on the data obj
+        }
 
         if (this.isLookup) {
+            return;
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             if (value) {
+                if (!value.displayValue) {
+                    return;
+                }
                 const displayValue =
                     data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
                 lookup.setSelected({value, displayValue});
@@ -308,6 +310,7 @@ const a =           TemplateBuilderService.fieldMappingsByObjMappingDevName[this
                 lookup.reset();
             }
         } else {
+            console.log('*** ' + 'else block' + ' ***');
             this.value = value;
         }
     }
@@ -322,4 +325,31 @@ const a =           TemplateBuilderService.fieldMappingsByObjMappingDevName[this
         }
     }
 
+    get fieldsUsedByTemplate() {
+        if (!this.isLookup) {
+            return null;
+        }
+
+        //1. Get this field's field mapping
+        //2. Get the other field mappings that have the same Target_Object_Mapping_Dev_Name
+        //3. Get the list of fields from those mappings
+
+        const objectMapping = Object.values(this.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name == this.fieldApiName);
+
+        this.relevantFieldMappings =
+            Object.values(this.fieldMappings)
+                .filter(({Target_Object_Mapping_Dev_Name}) =>
+                Target_Object_Mapping_Dev_Name === objectMapping.DeveloperName);
+
+        // Return the sibling fields used by Advanced Mapping
+        // TODO: filter down to return only the fields that are IN USE by the template
+        // return this.relevantFieldMappings.map(({Source_Field_API_Name}) => Source_Field_API_Name);
+        return this.relevantFieldMappings.map(({Target_Field_API_Name}) => Target_Field_API_Name);
+    }
+
+    handleLookupRecordSelected(event) {
+        this.dispatchEvent(new CustomEvent('lookuprecordselected', {detail: event.detail}))
+    }
 }

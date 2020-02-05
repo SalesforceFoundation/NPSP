@@ -104,6 +104,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    fmbomdn;
+
     connectedCallback() {
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -120,6 +122,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (response !== null && typeof response !== 'undefined') {
                 this.formTemplate = response.formTemplate;
                 this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
+                this.fmbomdn = response.fieldMappingSetWrapper.fieldMappingsByObjMappingDevName;
 
                 let errorObject = checkPermissionErrors(this.formTemplate);
                 if (errorObject) {
@@ -151,6 +154,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             // add record data to the template fields
             if (isNotEmpty(fieldMappings) && isNotEmpty(this.donorRecord)) {
+                //todo: can I use this setRecordValuesOnTemplate method?
                 let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections,
                     fieldMappings, this.donorRecord);
                 this.sections = sectionsWithValues;
@@ -172,6 +176,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    objectMappings;
     @wire(getRecord, {
         recordId: '$batchId',
         fields: FORM_TEMPLATE_FIELD
@@ -180,13 +185,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (data) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
             GeFormService.getFormTemplateById(this.formTemplateId)
-                .then(template => {
-                    let errorObject = checkPermissionErrors(template);
+                .then(renderWrapper => {
+
+                    this.formTemplate = renderWrapper.formTemplate;
+                    this.fieldMappings = renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
+                    this.objectMappings = renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
+                    this.fmbomdn = renderWrapper.fieldMappingSetWrapper.fieldMappingsByObjMappingDevName;
+
+                    let errorObject = checkPermissionErrors(renderWrapper.formTemplate);
                     if (errorObject) {
                         this.dispatchEvent(new CustomEvent('permissionerror'));
                         this.setPermissionsError(errorObject)
                     }
-                    this.initializeForm(template);
+                    this.initializeForm(renderWrapper.formTemplate);
                 })
                 .catch(err => {
                     handleError(err);
@@ -235,6 +246,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // di data for save
         let data = this.getData(sectionsList);
+        console.log('data: ', data);
         // Apply selected donation fields to data import record
         if (this.blankDataImportRecord) {
             data = { ...data, ...this.blankDataImportRecord };
@@ -586,8 +598,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.erroredFields = [];
     }
 
+    //todo: or this one?
     @api
     load(dataRow) {
+        //todo: how to handle collision/conflict btw data row and selected recor
+        //...
         this._dataRow = dataRow;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
@@ -677,6 +692,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
+        console.log('*** ' + 'renderer handleChangeLookup' + ' ***');
+        console.log('JSON.parse(JSON.stringify(event)): ', JSON.parse(JSON.stringify(event)));
+        // this.load({Contact1_Lastname__c: 'LastNameTest'});
+    // ISEE, I think this is meant to only run when the account or contact 1 imported
+        // fields are populated in order to display the review donations modal ( not for
+        // all lookups)...
         const detail = event.detail;
         const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
         const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
@@ -695,6 +716,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonorId = undefined;
             this.selectedDonorType = undefined;
         }
+        // if (event.detail.dataImportRecord) {
+        //     this.load();
+        // }
+        // this.load({
+        //     Contact1_Lastname__c: 'testlastname'
+        // });
     }
 
     handleChangeSelectedDonation(event) {
@@ -735,6 +762,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.applyFieldValuesFromSelectedDonation(blankDataImportRecord);
     }
 
+    //TODO: can I modify/use this one?
     applyFieldValuesFromSelectedDonation(blankDataImportRecord) {
         let previousFieldValues = {};
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
@@ -770,4 +798,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             that.sections = sections;
         }, 1, that, sections);
     }
+
+    handleLookupRecordSelected(event) {
+        console.log('in renderer - event: ', JSON.stringify(event));
+        this.load(event.detail);
+    }
+
 }
