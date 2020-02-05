@@ -15,6 +15,7 @@ import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonNewGift from '@salesforce/label/c.commonNewGift';
 import commonNext from '@salesforce/label/c.commonNext';
 import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
@@ -86,7 +87,11 @@ import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid
 import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
 import geErrorDonorTypeValidationSingle from '@salesforce/label/c.geErrorDonorTypeValidationSingle';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
+import geErrorFLSBody from '@salesforce/label/c.geErrorFLSBody';
+import geErrorFLSHeader from '@salesforce/label/c.geErrorFLSHeader';
 import geErrorFieldPermission from '@salesforce/label/c.geErrorFieldPermission';
+import geErrorObjectCRUDBody from '@salesforce/label/c.geErrorObjectCRUDBody';
+import geErrorObjectCRUDHeader from '@salesforce/label/c.geErrorObjectCRUDHeader';
 import geErrorPageLevelAdvancedMappingBody from '@salesforce/label/c.geErrorPageLevelAdvancedMappingBody';
 import geErrorPageLevelAdvancedMappingHeader from '@salesforce/label/c.geErrorPageLevelAdvancedMappingHeader';
 import geErrorPageLevelFieldPermission1 from '@salesforce/label/c.geErrorPageLevelFieldPermission1';
@@ -109,6 +114,7 @@ import geHeaderFormFieldsModalRenameSection from '@salesforce/label/c.geHeaderFo
 import geHeaderFormFieldsModalSectionSettings from '@salesforce/label/c.geHeaderFormFieldsModalSectionSettings';
 import geHeaderFormFieldsRightCol from '@salesforce/label/c.geHeaderFormFieldsRightCol';
 import geHeaderGiftEntry from '@salesforce/label/c.geHeaderGiftEntry';
+import geHeaderMatchingGiftBy from '@salesforce/label/c.geHeaderMatchingGiftBy';
 import geHeaderMatchingOpportunity from '@salesforce/label/c.geHeaderMatchingOpportunity';
 import geHeaderMatchingPayment from '@salesforce/label/c.geHeaderMatchingPayment';
 import geHeaderMatchingReviewDonations from '@salesforce/label/c.geHeaderMatchingReviewDonations';
@@ -143,10 +149,6 @@ import geToastTemplateTabError from '@salesforce/label/c.geToastTemplateTabError
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
-import geErrorFLSHeader from '@salesforce/label/c.geErrorFLSHeader';
-import geErrorFLSBody from '@salesforce/label/c.geErrorFLSBody';
-import geErrorObjectCRUDHeader from '@salesforce/label/c.geErrorObjectCRUDHeader';
-import geErrorObjectCRUDBody from '@salesforce/label/c.geErrorObjectCRUDBody';
 
 class GeLabelService {
 
@@ -158,10 +160,6 @@ class GeLabelService {
     * utility method is provided.
     */
     CUSTOM_LABELS = Object.freeze({
-        geErrorFLSHeader,
-        geErrorFLSBody,
-        geErrorObjectCRUDHeader,
-        geErrorObjectCRUDBody,
         commonAssistiveError,
         commonAssistiveInfo,
         commonAssistiveSuccess,
@@ -175,6 +173,7 @@ class GeLabelService {
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonNewGift,
         commonNext,
         commonNo,
         commonNoItems,
@@ -246,7 +245,11 @@ class GeLabelService {
         geErrorDonorTypeValidation,
         geErrorDonorTypeValidationSingle,
         geErrorExistingTemplateName,
+        geErrorFLSBody,
+        geErrorFLSHeader,
         geErrorFieldPermission,
+        geErrorObjectCRUDBody,
+        geErrorObjectCRUDHeader,
         geErrorPageLevelAdvancedMappingBody,
         geErrorPageLevelAdvancedMappingHeader,
         geErrorPageLevelFieldPermission1,
@@ -269,6 +272,7 @@ class GeLabelService {
         geHeaderFormFieldsModalSectionSettings,
         geHeaderFormFieldsRightCol,
         geHeaderGiftEntry,
+        geHeaderMatchingGiftBy,
         geHeaderMatchingOpportunity,
         geHeaderMatchingPayment,
         geHeaderMatchingReviewDonations,
