@@ -50,14 +50,13 @@
 
                 <div class="slds-size_1-of-12 slds-p-bottom_x-small">
                     <div class="slds-float_right">
-                        <template if:true={isRemovable}>
-                            <lightning-button-icon class="slds-m-right_xxx-small "
-                                                   icon-name="utility:delete"
-                                                   alternative-text={labelGeAssistiveFormFieldRemove}
-                                                   size="x-small"
-                                                   onclick={handleDeleteFormElement}>
-                            </lightning-button-icon>
-                        </template>
+                        <lightning-button-icon class="slds-m-right_xxx-small "
+                                               icon-name="utility:delete"
+                                               alternative-text={labelGeAssistiveFormFieldRemove}
+                                               size="x-small"
+                                               onclick={handleDeleteFormElement}
+                                               disabled={isDisabled}>
+                        </lightning-button-icon>
                         <lightning-button-icon class="slds-m-right_xxx-small "
                                                icon-name="utility:chevronup"
                                                alternative-text={labelGeAssistiveFormFieldUp}
