@@ -175,7 +175,7 @@ public class STG_PanelRDHealthCheck {
         supportedStatus.add(RD2_Constants.STATUS_CLOSED);
         supportedStatus.add(RD2_Constants.STATUS_LAPSED);
 
-        validateSupportedPicklistValues(supportedStatus, 'Status__c',
+        validateSupportedPicklistValues(supportedStatus, UTIL_Namespace.StrAllNSPrefix('Status__c'),
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
         // =============================================================
@@ -184,7 +184,7 @@ public class STG_PanelRDHealthCheck {
         Set<String> supportedType = new Set<String>();
         supportedType.add(RD2_Constants.RECURRING_TYPE_OPEN);
 
-        validateRequiredPicklistValues(supportedType, 'RecurringType__c',
+        validateRequiredPicklistValues(supportedType, UTIL_Namespace.StrAllNSPre('RecurringType__c',)
             System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
 
         // =============================================================
@@ -196,7 +196,7 @@ public class STG_PanelRDHealthCheck {
         }
         supportedDayOfMonth.add(RD2_Constants.DAY_OF_MONTH_LAST_DAY);
 
-        validateSupportedPicklistValues(supportedDayOfMonth, 'Day_Of_Month__c',
+        validateSupportedPicklistValues(supportedDayOfMonth, UTIL_Namespace.StrAllNSPre('Day_Of_Month__c'),
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
         if (hasValidationErrors()) {
