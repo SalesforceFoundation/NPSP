@@ -105,7 +105,7 @@ export default class geTemplateBuilderFormField extends LightningElement {
     }
 
     get isDisabled() {
-        return (this.field.isRequiredFieldDisabled === true || this.field.isRequiredFieldDisabled) ? true : false;
+        return this.field.isRequiredFieldDisabled ? true : false;
     }
 
     get isWidget() {
