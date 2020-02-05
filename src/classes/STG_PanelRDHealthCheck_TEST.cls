@@ -33,10 +33,11 @@
 * @group Settings
 * @description Recurring Donations Health Check Unit Tests
 */
-@IsTest
+@IsTest(IsParallel=true)
 private class STG_PanelRDHealthCheck_TEST {
 
     private static final String BAD_PICKLIST_VALUE = 'Non Existent Value';
+    private static final String PLEDGED_STAGE = UTIL_UnitTestData_TEST.getOpenStage();
 
     /**
      * @description Validates that Legacy Recurring Donations is configured properly in the org
@@ -55,6 +56,8 @@ private class STG_PanelRDHealthCheck_TEST {
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
 
+        TDTM_Config_API.disableAllTriggers();
+
         STG_PanelRDHealthCheck.verifyRecurringDonationConfiguration(ctrl);
         for (STG_PanelHealthCheck_CTRL.DetectResult dr : ctrl.listDR) {
             System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, dr.strStatus,
@@ -63,6 +66,44 @@ private class STG_PanelRDHealthCheck_TEST {
         }
     }
 
+    /**
+     * @description Validate that the legacy health check fails with an error when a custom installment period
+     * is created, but does not have a matching picklist value in the installment period picklist
+     */
+    @IsTest
+    private static void shouldValidateLegacyWithCustomInstallmentPeriods() {
+        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
+            npe03__Increment__c = 'Weeks',
+            npe03__Value__c = 2,
+            Name = BAD_PICKLIST_VALUE
+        );
+        insert customInstallment;
+
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                IsRecurringDonations2Enabled__c = false,
+                npe03__Opportunity_Forecast_Months__c = 1,
+                npe03__Maximum_Donations__c = 20,
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Record_Type__c = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType)
+            )
+        );
+
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+
+        TDTM_Config_API.disableAllTriggers();
+
+        Test.startTest();
+
+        STG_PanelRDHealthCheck.verifyRecurringDonationConfiguration(ctrl);
+
+        String results = getValidationResults(ctrl);
+        System.assert(results.contains(BAD_PICKLIST_VALUE),
+            'The error should reference the "' + BAD_PICKLIST_VALUE + '" picklist value.\n' + results
+        );
+
+        Test.stopTest();
+    }
 
     /**
      * @description Validates that Enhanced Recurring Donations is configured properly in the org.
@@ -80,11 +121,13 @@ private class STG_PanelRDHealthCheck_TEST {
                 npe03__Opportunity_Forecast_Months__c = 1,
                 npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
                 npe03__Record_Type__c = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType),
-                InstallmentOppStageName__c = System.Label.npe03.RecurringDonationStageName
+                InstallmentOppStageName__c = PLEDGED_STAGE
             )
         );
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+
+        TDTM_Config_API.disableAllTriggers();
 
         STG_PanelRDHealthCheck.verifyRecurringDonationConfiguration(ctrl);
 
@@ -168,22 +211,21 @@ private class STG_PanelRDHealthCheck_TEST {
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
-        String openOppStage = System.Label.npe03.RecurringDonationStageName;
-        healthCheck.validateOpportunityStage(openOppStage, false, false);
+        healthCheck.validateOpportunityStage(PLEDGED_STAGE, false, false);
 
         String results = getValidationResults(ctrl);
         System.assertEquals(0, ctrl.listDR.size(),
             'There should zero errors in the record type validation\n' + results
         );
 
-        healthCheck.validateOpportunityStage(openOppStage, true, true);
+        healthCheck.validateOpportunityStage(PLEDGED_STAGE, true, true);
 
         results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
             'There should one errors in the record type validation.\n' + results
         );
-        System.assert(results.contains(openOppStage),
-            'The error should reference the "' + openOppStage + '" Stage Name.\n' + results
+        System.assert(results.contains(PLEDGED_STAGE),
+            'The error should reference the "' + PLEDGED_STAGE + '" Stage Name.\n' + results
         );
     }
 
@@ -195,13 +237,12 @@ private class STG_PanelRDHealthCheck_TEST {
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
-        String openOppStage = System.Label.npe03.RecurringDonationStageName;
         Id defaultRtId = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType);
 
         // =============================================================
         // Create a valid installment with a valid stage and record type id
         // =============================================================
-        healthCheck.validateNewInstallmentOpportunity(openOppStage, defaultRtId);
+        healthCheck.validateNewInstallmentOpportunity(PLEDGED_STAGE, defaultRtId);
 
         String results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
@@ -216,7 +257,7 @@ private class STG_PanelRDHealthCheck_TEST {
         // Create a valid installment with an invalid opportunity stage
         // =============================================================
         Id mockRecordTypeId = UTIL_UnitTestData_TEST.mockId(defaultRtId.getSobjectType());
-        healthCheck.validateNewInstallmentOpportunity(openOppStage, mockRecordTypeId);
+        healthCheck.validateNewInstallmentOpportunity(PLEDGED_STAGE, mockRecordTypeId);
 
         results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),

@@ -129,7 +129,9 @@ public class STG_PanelRDHealthCheck {
         // Validate Recurring Donation Stages
         // ===========================================================================================
         String closedOppStage = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
-        String openOppStage = System.Label.npe03.RecurringDonationStageName;
+        String openOppStage = (Test.isRunningTest()
+            ? UTIL_UnitTestData_TEST.getOpenStage()
+            : System.Label.npe03.RecurringDonationStageName);
         validateOpportunityStage(openOppStage, false, false);
         validateOpportunityStage(closedOppStage, false, true);
 
@@ -344,6 +346,7 @@ public class STG_PanelRDHealthCheck {
         Database.SaveResult[] sr = Database.insert(new List<Opportunity>{
             testOpp
         }, false);
+
         Database.rollback(sp);
 
         validateSaveErrors(sr);
@@ -356,7 +359,7 @@ public class STG_PanelRDHealthCheck {
     private Account validateTestAccount() {
         // create a test account and test opportunity
         Account acct = new Account(
-            Name = 'test account'
+            Name = 'test account ' + String.valueOf(System.currentTimeMillis())
         );
         try {
             insert acct;
