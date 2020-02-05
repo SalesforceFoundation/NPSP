@@ -18,6 +18,15 @@
     </template>
 
     <template if:false={isAccessible}>
+        <c-util-page-header>
+            <h1 slot="title">
+                <span class="slds-page-header__title"
+                      title={CUSTOM_LABELS.geHeaderGiftEntry}>
+                    {CUSTOM_LABELS.geHeaderGiftEntry}
+                </span>
+            </h1>
+        </c-util-page-header>
+
         <div class="slds-card slds-card_extension slds-p-around_large">
             <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
                                  message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}

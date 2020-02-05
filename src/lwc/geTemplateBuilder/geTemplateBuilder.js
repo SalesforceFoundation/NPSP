@@ -145,7 +145,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     init = async () => {
         try {
-            this.isLoading = false;
             this.currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
 
             const queryParameters = getQueryParameters();
