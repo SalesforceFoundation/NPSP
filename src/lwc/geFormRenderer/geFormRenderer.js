@@ -734,8 +734,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let donorType;
 
         if (!this.selectedDonorType) {
-            let sectionData = this.getData(sectionsList);
-            donorType = sectionData[DONATION_DONOR_FIELDS.donationDonorField];
+            const sectionData = this.getData(sectionsList);
+            const diRecord = sectionData.diRecord;
+            donorType = diRecord[DONATION_DONOR_FIELDS.donationDonorField];
 
             if (isUndefined(donorType)) {
                 // Highlight donor type field if none is selected
