@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-import { dispatch, handleError } from 'c/utilTemplateBuilder';
+import { handleError } from 'c/utilTemplateBuilder';
 import { deepClone } from 'c/utilCommon';
 import geLabelService from 'c/geLabelService';
 
@@ -24,6 +24,7 @@ export default class geDonationMatchingPaymentCard extends LightningElement {
     CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
 
     @api payment;
+    @api selectedDonationId;
 
     @track paymentObject;
     @track wiredPaymentRecord;
@@ -63,6 +64,18 @@ export default class geDonationMatchingPaymentCard extends LightningElement {
                 ]);
         }
         return '';
+    }
+
+    get isSelectedDonation() {
+        return this.selectedDonationId &&
+            this.payment &&
+            this.payment.Id === this.selectedDonationId ?
+            true :
+            false;
+    }
+
+    get computedCardCssClass() {
+        return this.isSelectedDonation ? 'slds-card_extension_active' : '';
     }
 
     get paymentObjectApiName() {
@@ -116,6 +129,6 @@ export default class geDonationMatchingPaymentCard extends LightningElement {
     */
     handleUpdatePayment() {
         const detail = { objectApiName: PAYMENT_OBJECT.objectApiName, fields: deepClone(this.payment) };
-        dispatch(this, 'updatepayment', detail);
+        this.dispatchEvent(new CustomEvent('updatepayment', { detail }));
     }
 }

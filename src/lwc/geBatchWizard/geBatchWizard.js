@@ -15,6 +15,7 @@ import { checkNestedProperty, getNestedProperty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
+import getDonationMatchingValues from '@salesforce/apex/FORM_ServiceGiftEntry.getDonationMatchingValues';
 
 import DATA_IMPORT_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_ID_INFO from '@salesforce/schema/DataImportBatch__c.Id';
@@ -22,6 +23,7 @@ import DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO from '@salesforce/schema/DataImportB
 import DATA_IMPORT_BATCH_VERSION_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Gift_Entry_Version__c';
 import DATA_IMPORT_BATCH_GIFT_INFO from '@salesforce/schema/DataImportBatch__c.GiftBatch__c';
 import DATA_IMPORT_BATCH_DEFAULTS_INFO from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
+import DATA_IMPORT_MATCHING_BEHAVIOR_INFO from '@salesforce/schema/DataImportBatch__c.Donation_Matching_Behavior__c';
 
 const NAME = 'name';
 const ID = 'id';
@@ -41,6 +43,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     @track formSections = [];
     @track selectedTemplateId;
     @track isLoading = true;
+    @track donationMatchingBehaviors;
 
     dataImportBatchFieldInfos;
     dataImportBatchInfo;
@@ -214,6 +217,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     async connectedCallback() {
         if (!this.recordId) {
             this.templates = await getAllFormTemplates();
+            this.donationMatchingBehaviors = await getDonationMatchingValues();
             this.templates = this.templates.sort();
             this.builderTemplateComboboxOptions(this.templates);
             this.isLoading = false;
@@ -268,8 +272,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         } else {
             this.handleRecordCreate(recordObject);
         }
-
-        // TODO: Add logic for dispatching of events if used outside of the Gift Entry landing page.
     }
 
     setFieldValues(dataImportBatch) {
@@ -294,6 +296,9 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         dataImportBatch.fields[DATA_IMPORT_BATCH_FORM_TEMPLATE_INFO.fieldApiName] = this.selectedTemplateId;
         dataImportBatch.fields[DATA_IMPORT_BATCH_VERSION_INFO.fieldApiName] = 2.0;
         dataImportBatch.fields[DATA_IMPORT_BATCH_GIFT_INFO.fieldApiName] = true;
+        // Set matching behavior
+        dataImportBatch.fields[DATA_IMPORT_MATCHING_BEHAVIOR_INFO.fieldApiName] =
+            this.donationMatchingBehaviors.ExactMatchOrCreate;
 
         if (this.recordId) {
             dataImportBatch.fields[DATA_IMPORT_BATCH_ID_INFO.fieldApiName] = this.recordId;

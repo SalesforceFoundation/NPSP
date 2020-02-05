@@ -1,5 +1,6 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
+import { getRecord } from 'lightning/uiRecordApi';
 import { dispatch, handleError } from 'c/utilTemplateBuilder';
 import { deepClone } from 'c/utilCommon';
 import geLabelService from 'c/geLabelService';
@@ -12,18 +13,22 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
 
     CUSTOM_LABELS = geLabelService.CUSTOM_LABELS;
 
-    // TODO: donor is a temporary object used for dev. Needs to be replaced by a real donor
-    // object passed in from the outer/parent component.
-    @api donor = {
-        Id: '0033D00000b9vjVQAQ',
-        Name: 'Baby Yoda'
-    };
-    @api recordId = '0013D00000pwpJgQAI';
+    @api donorId;
     @api dedicatedListenerEventName = 'geDonationMatchingEvent';
     @api selectedDonation;
     @api opportunities;
 
     @track donationType;
+    @track donor;
+
+    @wire(getRecord, { recordId: '$donorId', optionalFields: ['Account.Name', 'Contact.Name'] })
+    wiredGetRecordMethod({ error, data }) {
+        if (data) {
+            this.donor = data;
+        } else if (error) {
+            handleError(error);
+        }
+    }
 
     get reviewDonationsComputedClass() {
         let baseClass = ['slds-box', 'slds-theme_shade', 'slds-m-bottom_small'];
@@ -106,13 +111,15 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     * overlay library.
     */
     handleReviewDonations() {
-        // TODO: Pass the opp and/or the payment id when updating donation selection
-        // TODO: Add CSS to highlight selected opp/payment card based on id as received in above TODO.
-        const modalHeader = this.CUSTOM_LABELS.geHeaderMatchingReviewDonations;
+        const donorRecordName = this.donor ? this.donor.fields.Name.value : '';
+        const modalHeader = geLabelService.format(
+            this.CUSTOM_LABELS.geHeaderMatchingReviewDonations,
+            [donorRecordName]);
         const modalConfig = {
             componentProperties: {
                 opportunities: deepClone(this.opportunities),
                 dedicatedListenerEventName: this.dedicatedListenerEventName,
+                selectedDonationId: this.hasSelectedDonation ? this.selectedDonation.Id : undefined
             },
             modalProperties: {
                 cssClass: 'slds-modal_large',
