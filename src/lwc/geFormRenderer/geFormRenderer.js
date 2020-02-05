@@ -718,13 +718,37 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.opportunities = isNotEmpty(data) ? JSON.parse(data) : undefined;
         }
     }
+    
+    getSiblingFields(fieldApiName) {
+        // for a given field, get the full list of fields related to its object mapping
+
+        //1. Get this field's object mapping
+        //2. Get the other field mappings that have the same Target_Object_Mapping_Dev_Name
+        //3. Return the list of fields from those mappings
+
+        const objectMapping = Object.values(GeFormService.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name == fieldApiName);
+
+        this.relevantFieldMappings =
+            Object.values(GeFormService.fieldMappings)
+                .filter(({Target_Object_Mapping_Dev_Name}) =>
+                    Target_Object_Mapping_Dev_Name === objectMapping.DeveloperName);
+
+        // Return the sibling fields used by Advanced Mapping
+        // TODO: filter down to return only the fields that are IN USE by the template
+        return this.relevantFieldMappings.map(
+            ({Target_Field_API_Name}) =>
+                `${objectMapping.Object_API_Name}.${Target_Field_API_Name}`);
+    }
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
-        console.log('*** ' + 'handlechangelookup in form' + ' ***');
         const recordId = event.detail.value;
         const fieldApiName = event.detail.fieldApiName;
-
+        this.selectedRecordId = recordId;
+        this.selectedRecordFields = this.getSiblingFields(fieldApiName);
+        console.log('this.selectedRecordFields: ', this.selectedRecordFields);
         //TODO: if value is null, take field name and reset all sibling fields on the
         // form
         // this.load({Contact1_Lastname__c: 'LastNameTest'});

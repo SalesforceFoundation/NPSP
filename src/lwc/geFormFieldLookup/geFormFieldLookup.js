@@ -19,12 +19,9 @@ export default class GeFormFieldLookup extends LightningElement {
 
     @track options = [];
     @track value;
-    @api valueObj;
     @track targetObjectApiName;
     @track queryFields;
     @track valid = true;
-    @api fieldsUsedByTemplate;
-    @api relevantFieldMappings;
 
     /**
      * Retrieve information about the object the lookup points to.
@@ -44,33 +41,6 @@ export default class GeFormFieldLookup extends LightningElement {
                 this.value = this.defaultValue;
                 this.displayValue = data.fields.Name.value;
             }
-        }
-    }
-
-    selectedRecord;
-    @wire(getRecord, { recordId: '$value', fields: '$queryFields'})
-    wiredGetSelectedRecord({error, data}) {
-        if (this.value) {
-            console.log('*** ' + 'getting selected' + ' value is: ' + this.value + '***');
-        }
-        this.reportStatus();
-        if(data) {
-            this.selectedRecord = Object.assign({}, data.fields);
-            console.log('this.selectedRecord: ', this.selectedRecord);
-            // if(typeof this.value === 'undefined') {
-                console.log('selected JSON.parse(JSON.stringify(data)): ', JSON.parse(JSON.stringify(data)));
-                // this.value = this.defaultValue;
-                // this.displayValue = data.fields.Name.value;
-            const di = {};
-            for (const fm of this.relevantFieldMappings) {
-                const value = data.fields[fm.Target_Field_API_Name];
-                di[fm.Source_Field_API_Name] = value;
-            }
-            console.log('di: ', di);
-            this.dispatchEvent(new CustomEvent('lookuprecordselected', {detail: di}));
-            // }
-        } else if (error) {
-            console.error(error);
         }
     }
 
@@ -152,12 +122,7 @@ export default class GeFormFieldLookup extends LightningElement {
     }
 
     getQueryFields() {
-        let fields = ['Id', 'Name'];
-
-        if (this.fieldsUsedByTemplate) {
-            fields = fields.concat(this.fieldsUsedByTemplate);
-        }
-
+        const fields = ['Id', 'Name'];
         return fields.map(f => `${this.targetObjectApiName}.${f}`);
     }
 
@@ -179,7 +144,7 @@ export default class GeFormFieldLookup extends LightningElement {
         if(this.targetObjectInfo && this.targetObjectInfo.data) {
             if(this.targetObjectInfo.data.themeInfo) {
                 const {iconUrl} = this.targetObjectInfo.data.themeInfo;
-                const re = /\/(standard|custom)\/([a-zA-Z]+)/;
+                const re = /\/(standard|custom)\/([a-zA-Z0-9]+)/;
                 const result = re.exec(iconUrl);
 
                 // explicitly handle only standard and custom icon sets
@@ -206,43 +171,14 @@ export default class GeFormFieldLookup extends LightningElement {
 
     @api
     setSelected(lookupResult) {
-        console.log('*** ' + 'setSelected called' + ' ***');
-        this.reportStatus();
         this.displayValue = lookupResult.displayValue;
         this.value = lookupResult.value;
-    }
-    
-    reportStatus() {
-        console.log('this.value: ', this.value);
-        console.log('this.displayValue: ', this.displayValue);
     }
 
     @api
     reset() {
-        console.log('*** ' + 'reset being called on lookup!' + ' ***');
-        console.log('current value is: this.value: ', this.value);
-        console.log('this.displayValue: ', this.displayValue);
         let autocomplete = this.template.querySelector('c-ge-autocomplete');
         autocomplete.reset();
     }
 
-    @api fmbomdn;
-
-    @api templateFields;
-    
-    get fm() {
-        return JSON.stringify(this.fmbomdn);
-    }
-
-    // get templateFields() {
-    //     const templateFields = [];
-    //     console.log('this.fieldApiName: ', this.fieldApiName);
-    //     console.log(':this.objectMappingDevName ', this.objectMappingDevName);
-    //     const fieldMappingsByObjectMappingName = this.fm[this.objectMappingDevName];
-    //     if (fieldMappingsByObjectMappingName) {
-    //         const fields = fieldMappingsByObjectMappingName.map(({Source_Field_API_Name}) => Source_Field_API_Name);
-    //     console.log('fields: ', fields);
-    //     }
-    //     return templateFields;
-    // }
 }
