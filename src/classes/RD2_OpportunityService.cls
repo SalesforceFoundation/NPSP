@@ -37,11 +37,29 @@
 public with sharing class RD2_OpportunityService {
 
     /***
-     * @description A flag to mark Closed Lost Opps that are voided by the data migration. 
+     * @description A flag to mark Closed Lost Opps that are voided by the data migration.
      * The flag is used to exclude (ignore) such Opps by the Opp service
      * when determining if the next Opp with the same Close Date can be created.
      */
     public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = 0;
+
+    /***
+     * @description CurrencyIsoCode field name
+     */
+    private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
+
+    /***
+    * @description Determines if multi-currency is enabled for the org
+    */
+    private Boolean isMultiCurrencyEnabled {
+        get {
+            if (isMultiCurrencyEnabled == null) {
+                isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+            }
+            return isMultiCurrencyEnabled;
+        }
+        set;
+    }
 
     /***
     * @description Recurring Donation custom settings
@@ -50,7 +68,7 @@ public with sharing class RD2_OpportunityService {
         get {
             if (rdSettings == null) {
                 rdSettings = new RD2_Settings();
-            } 
+            }
             return rdSettings;
         }
         set;
@@ -84,7 +102,7 @@ public with sharing class RD2_OpportunityService {
     }
 
     /**
-    * @description Current date used as a cut off date to filter out and evaluate Opportunities 
+    * @description Current date used as a cut off date to filter out and evaluate Opportunities
      * with projected RD schedule installments as of the current date.
      * It can be a date in past, today or a future date in testing. When executed from a scheduler,
      * the current date is always today.
@@ -116,17 +134,17 @@ public with sharing class RD2_OpportunityService {
         for (npe03__Recurring_Donation__c rd : rds) {
             List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
                 currentDate, numberOfInstallments, rd.RecurringDonationSchedules__r
-            ); 
-            
+            );
+
             if (installments.isEmpty()) {
                 continue;
             }
-            
+
             Opportunity opp = buildOpportunity(rd, installments[0]);
 
             if (isNewOpportunity(opp, rd.npe03__Donations__r)) {
                 oppsToCreate.add(opp);
-                installmentsByRDId.put(rd.Id, installments); 
+                installmentsByRDId.put(rd.Id, installments);
             }
         }
 
@@ -161,7 +179,7 @@ public with sharing class RD2_OpportunityService {
         for (Opportunity opp : existingOpps) {
             if (newOpp.CloseDate == opp.CloseDate) {
 
-                Boolean isClosedLostInMigration = opp.isClosed && !opp.IsWon 
+                Boolean isClosedLostInMigration = opp.isClosed && !opp.IsWon
                     && opp.Recurring_Donation_Installment_Number__c == MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
                 return isClosedLostInMigration;
@@ -187,9 +205,8 @@ public with sharing class RD2_OpportunityService {
             npe03__Recurring_Donation__c = rd.Id
         );
         opp.Recurring_Donation_Installment_Number__c = rd.npe03__Total_Paid_Installments__c != null
-            ? rd.npe03__Total_Paid_Installments__c + 1 
+            ? rd.npe03__Total_Paid_Installments__c + 1
             : 1;
-        opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
 
         if (rdSettings.installmentRecordTypeId != null) {
             opp.RecordTypeId = rdSettings.installmentRecordTypeId;
@@ -198,6 +215,15 @@ public with sharing class RD2_OpportunityService {
         if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.shouldSetInstallmentCampaign) {
             opp.CampaignId = installment.campaignId;
         }
+
+        if (isMultiCurrencyEnabled) {
+            String code = (String) rd.get(CURRENCY_ISO_CODE_FIELD);
+            if (String.isNotBlank(code)) {
+                opp.put(CURRENCY_ISO_CODE_FIELD, code);
+            }
+        }
+
+        opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
 
         return opp;
     }
@@ -208,7 +234,7 @@ public with sharing class RD2_OpportunityService {
     */
     private String buildOpportunityName(String donorName, Opportunity opp) {
         return
-            donorName + ' ' 
+            donorName + ' '
             + System.Label.npe03.RecurringDonationPrefix
             + ' (' + opp.Recurring_Donation_Installment_Number__c +  ') '
             + opp.CloseDate.format();
@@ -237,11 +263,11 @@ public with sharing class RD2_OpportunityService {
             Integer numberOfInstallments = rdOpps.size();
             List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
                 currentDate, numberOfInstallments, rd.RecurringDonationSchedules__r
-            );  
+            );
 
             for (Integer i = 0; i < numberOfInstallments; i++) {
                 Opportunity opp = rdOpps[i];
-                //bypass 
+                //bypass
                 //1. past Opps regardless if they are open or closed
                 //2. closed Opps regardless if they are past or future
                 if (opp.CloseDate < currentDate || opp.isClosed == true) {
@@ -274,7 +300,7 @@ public with sharing class RD2_OpportunityService {
     */
     private List<Opportunity> getCurrentOpps(npe03__Recurring_Donation__c rd) {
         List<Opportunity> opps = new List<Opportunity>();
-        
+
         for (Opportunity opp : rd.npe03__Donations__r) {
             if (opp.CloseDate >= currentDate) {
                 opps.add(opp);
@@ -291,20 +317,20 @@ public with sharing class RD2_OpportunityService {
     * @param rd Recurring Donation
     * @return Boolean
     */
-    private Boolean syncOpportunity(Opportunity opp, RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd) {  
+    private Boolean syncOpportunity(Opportunity opp, RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd) {
         Boolean isChanged = false;
 
         if (opp.AccountId != rd.npe03__Organization__c) {
             opp.AccountId = rd.npe03__Organization__c;
             isChanged = true;
         }
-        
+
         if (opp.Primary_Contact__c != rd.npe03__Contact__c) {
             opp.Primary_Contact__c = rd.npe03__Contact__c;
             isChanged = true;
         }
 
-        if (installment != null) { 
+        if (installment != null) {
             if (opp.Amount != installment.installmentAmount) {
                 opp.Amount = installment.installmentAmount;
                 isChanged = true;
@@ -315,11 +341,19 @@ public with sharing class RD2_OpportunityService {
                 isChanged = true;
             }
 
-            if (installment.campaignId != null 
-                && opp.CampaignId != installment.campaignId 
+            if (installment.campaignId != null
+                && opp.CampaignId != installment.campaignId
                 && rdSettings.shouldSetInstallmentCampaign
             ) {
                 opp.CampaignId = installment.campaignId;
+                isChanged = true;
+            }
+        }
+
+        if (isMultiCurrencyEnabled) {
+            String code = (String) rd.get(CURRENCY_ISO_CODE_FIELD);
+            if ((String) opp.get(CURRENCY_ISO_CODE_FIELD) != code) {//TODO what if the RD ccy is blank?
+                opp.put(CURRENCY_ISO_CODE_FIELD, code);
                 isChanged = true;
             }
         }
@@ -354,9 +388,9 @@ public with sharing class RD2_OpportunityService {
             RD2_ScheduleService.Installment installment = installmentByOppId.get(payment.npe01__Opportunity__c);
 
             if (installment != null
-                && String.isNotBlank(installment.paymentMethod) 
+                && String.isNotBlank(installment.paymentMethod)
                 && payment.npe01__Payment_Method__c != installment.paymentMethod
-            ) {                
+            ) {
                 payment.npe01__Payment_Method__c = installment.paymentMethod;
                 payments.add(payment);
             }

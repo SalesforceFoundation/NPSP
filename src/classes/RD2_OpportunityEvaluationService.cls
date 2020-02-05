@@ -346,6 +346,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'Amount, CloseDate, ' +
             'StageName, IsClosed, IsWon, ' +
             'CampaignId, Recurring_Donation_Installment_Number__c ' +
+            (UserInfo.isMultiCurrencyOrganization() ? (', ' + UTIL_Currency.CURRENCY_ISO_CODE_FIELD + ' ') : '') +
             'FROM npe03__Donations__r ' +
             'WHERE IsClosed = false ' +	
             'OR CloseDate >= :currentDate ' +

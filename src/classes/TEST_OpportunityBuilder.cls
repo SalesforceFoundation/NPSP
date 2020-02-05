@@ -164,6 +164,19 @@ public without sharing class TEST_OpportunityBuilder {
     }
 
     /***
+    * @description Sets CurrencyIsoCode
+    * @param ccyIsoCode CurrencyIsoCode value
+    * @return TEST_OpportunityBuilder Builder instance
+    */
+    public TEST_OpportunityBuilder withCurrencyIsoCode(String ccyIsoCode) {
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            valuesByFieldName.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, ccyIsoCode);
+        }
+
+        return this;
+    }
+
+    /***
     * @description Determines the Closed Won stage value and sets StageName to it
     * @return TEST_OpportunityBuilder Builder instance
     */
@@ -208,7 +221,7 @@ public without sharing class TEST_OpportunityBuilder {
     public TEST_OpportunityBuilder withInstallmentNumber(Integer installmentNumber) {
         valuesByFieldName.put('Recurring_Donation_Installment_Number__c', installmentNumber);
         return this;
-    }     
+    }
 
     /***
     * @description Sets the specified custom or standard field to the specified value

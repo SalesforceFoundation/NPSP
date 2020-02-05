@@ -1494,30 +1494,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Processing</shortDescription>
         <value>Processing</value>
     </labels>
-    <labels>
-        <fullName>RD2_ScheduleLWCEndDate</fullName>
-        <categories>Recurring-Donations, Component</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>The end date of the recurring donation schedule</shortDescription>
-        <value>End Date</value>
-    </labels>
-    <labels>
-        <fullName>RD2_ScheduleLWCFutureSchedule</fullName>
-        <categories>Recurring-Donations, Component</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Details of a schedule that will take effect at a future date</shortDescription>
-        <value>Future Schedule</value>
-    </labels>
-    <labels>
-        <fullName>RD2_ScheduleLWCTitle</fullName>
-        <categories>Recurring-Donations, Component</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title of the Active Schedules Component</shortDescription>
-        <value>Active Schedules</value>
-    </labels>
      <labels>
         <fullName>RD2_AmountMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1533,6 +1509,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Validate RD Contact/Account update when a closed opportunity exists on the RD</shortDescription>
         <value>You can&apos;t change the Household Account or Contact on a Recurring Donation that has Closed Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrencyChangeIsRestricted</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Currency change restriction on a Recurring Donation</shortDescription>
+        <value>You can&apos;t modify Recurring Donation currency due to an existing closed Opportunity.</value>
     </labels>
     <labels>
         <fullName>RD2_CurrentScheduleTitle</fullName>
@@ -1927,6 +1911,30 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Every installment Opportunity should have matching RD Schedule installment</shortDescription>
         <value>The Opportunity cannot be matched with the Recurring Donation Schedule installment.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCEndDate</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The end date of the recurring donation schedule</shortDescription>
+        <value>End Date</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCFutureSchedule</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Details of a schedule that will take effect at a future date</shortDescription>
+        <value>Future Schedule</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the Active Schedules Component</shortDescription>
+        <value>Active Schedules</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleVisualizerColumnDate</fullName>

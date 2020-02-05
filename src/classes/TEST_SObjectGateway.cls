@@ -188,6 +188,16 @@ public class TEST_SObjectGateway {
             'Primary_Contact__c'
         };
 
+
+        /***
+        * @description Constructor adding the CurrencyIsoCode into the output fields set
+        */
+        public OpportunityGateway() {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                fields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            }
+        }
+
         /***
         * @description Retrieves Opportunities for the related Recurring Donation
         * @param rd Recurring donation
