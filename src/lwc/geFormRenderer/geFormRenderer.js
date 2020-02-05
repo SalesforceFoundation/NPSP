@@ -104,7 +104,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    objectMappingNamesBySelectedRecordId = {};
+    selectedRecordIdByObjectMappingDevName = {};
     selectedRecordId;
     selectedRecordFields;
     @wire(getRecord, {recordId: '$selectedRecordId',  optionalFields: '$selectedRecordFields'})
@@ -123,15 +123,24 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     mapRecordValuesToDataImportFields(record) {
-        console.log('this.selectedRecordIdByObjectMappingName: ', this.objectMappingNamesBySelectedRecordId);
+        console.log('this.selectedRecordIdByObjectMappingName: ', this.selectedRecordIdByObjectMappingDevName);
         //reverse map
         let dataImport = {};
-        const objectMappingDevNames = this.objectMappingNamesBySelectedRecordId[record.id];
+
+        let objectMappingDevNames = [];
+        for (let [key, value] of Object.entries(
+            this.selectedRecordIdByObjectMappingDevName)) {
+            if (value === record.id) {
+                objectMappingDevNames.push(key);
+            }
+        }
+        console.log('objectMappingDevNames: ', objectMappingDevNames);
+
         for (const objectMappingName of objectMappingDevNames) {
-                //relevant field mappings
+            //relevant field mappings
             for (const fieldMapping of Object.values(GeFormService.fieldMappings)
                 .filter(({Target_Object_Mapping_Dev_Name}) =>
-                Target_Object_Mapping_Dev_Name === objectMappingName)) {
+                    Target_Object_Mapping_Dev_Name === objectMappingName)) {
 
                 const value = record.fields[fieldMapping.Target_Field_API_Name];
                 dataImport[fieldMapping.Source_Field_API_Name] = value;
@@ -763,11 +772,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     storeSelectedRecordIdByObjectMappingName(objectMappingName, recordId) {
-        if (this.objectMappingNamesBySelectedRecordId[recordId]) {
-            this.objectMappingNamesBySelectedRecordId[recordId].push(objectMappingName);
-        } else {
-            this.objectMappingNamesBySelectedRecordId[recordId] = [objectMappingName];
-        }
+            this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
     }
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
