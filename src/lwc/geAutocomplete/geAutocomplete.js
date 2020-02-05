@@ -20,6 +20,7 @@ export default class GeAutocomplete extends LightningElement {
     @api valid;
     @api required;
     @api variant;
+    @api disabled;
     @track errorMessage;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;

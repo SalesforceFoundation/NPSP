@@ -15,6 +15,7 @@ export default class GeFormFieldLookup extends LightningElement {
     @api required;
     @api id; // unique identifier for this field, used mainly for accessibility
     @api variant;
+    @api disabled;
 
 
     @track options = [];
@@ -137,7 +138,7 @@ export default class GeFormFieldLookup extends LightningElement {
         if(this.targetObjectInfo && this.targetObjectInfo.data) {
             if(this.targetObjectInfo.data.themeInfo) {
                 const {iconUrl} = this.targetObjectInfo.data.themeInfo;
-                const re = /\/(standard|custom)\/([a-zA-Z]+)/;
+                const re = /\/(standard|custom)\/([a-zA-Z0-9]+)/;
                 const result = re.exec(iconUrl);
 
                 // explicitly handle only standard and custom icon sets

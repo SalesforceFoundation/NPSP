@@ -79,9 +79,11 @@ public with sharing class GE_GiftEntryController {
     * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
+    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport, String widgetData) {
 
         try {
+            String additionalObjectJSON = GE_FormRendererService.convertWidgetDataToObjectJSON(widgetData);
+            dataImport.Additional_Object_JSON__c = additionalObjectJSON;
             saveDataImport(dataImport);
             return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
 

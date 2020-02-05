@@ -2,6 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 
 export default class GeFormSection extends LightningElement {
     @api section;
+    @api widgetData;
     @track collapsed = false;
 
     /**
@@ -29,7 +30,8 @@ export default class GeFormSection extends LightningElement {
      * @param requestedFields - Array of API Field Names to get information
      * @returns {Array} - field value and ui-label using api-field-name as key
      */
-    @api getFieldValueAndLabel( requestedFields ) {
+    @api
+    getFieldValueAndLabel( requestedFields ) {
 
         const fields = this.template.querySelectorAll('c-ge-form-field');
         let dataImportFieldAndLabels = {};
@@ -52,7 +54,8 @@ export default class GeFormSection extends LightningElement {
      * @param {fieldsArray},Array with sourceFieldAPIName field property
      * @param {errorMessage}, String custom error message for fields
      */
-    @api setCustomValidityOnFields( fieldsArray, errorMessage ) {
+    @api
+    setCustomValidityOnFields( fieldsArray, errorMessage ) {
 
         const fields = this.template.querySelectorAll('c-ge-form-field');
         if (fields !== null && typeof fields !== 'undefined') {
@@ -119,9 +122,14 @@ export default class GeFormSection extends LightningElement {
     @api
     reset() {
         const fields = this.template.querySelectorAll('c-ge-form-field');
+        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
 
         fields.forEach(field => {
             field.reset();
+        });
+
+        widgetList.forEach(widget => {
+            widget.reset();
         });
     }
 

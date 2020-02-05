@@ -631,7 +631,9 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             customLabel: widget.MasterLabel,
             required: false,
             sectionId: sectionId,
-            elementType: widget.Element_Type
+            elementType: widget.Element_Type,
+            dataImportObjectMappingDevName: widget.Widget_Object_Mapping_Developer_Name,
+            dataImportFieldMappingDevNames: widget.Widget_Field_Mapping_Developer_Names,
         }
     }
 
