@@ -62,7 +62,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
 
-    @track _dataRow; // Row being updated when in update mode
+    @track dataImport; // Row being updated when in update mode
     @track isAccessible = true;
     @track opportunities;
     @track selectedDonation;
@@ -600,20 +600,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     //todo: or this one?
     @api
-    load(dataRow) {
+    load(dataImport) {
         //todo: how to handle collision/conflict btw data row and selected recor
         //...
-        this._dataRow = dataRow;
+        console.log('Render, load: JSON.parse(JSON.stringify(dataImport)): ', JSON.parse(JSON.stringify(dataImport)));
+        if (dataImport.Id) {
+            // Lookups can also use this method to load related fields.  By setting
+            // this.dataImport only when the DataImport has an Id, we know we are
+            // updating an existing DataImport record (which changes the UI).
+            this.dataImport = dataImport;
+        }
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         sectionsList.forEach(section => {
-            section.load(dataRow);
+            section.load(dataImport);
         });
     }
 
     @api
     reset() {
-        this._dataRow = undefined;
+        this.dataImport = undefined;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         sectionsList.forEach(section => {
@@ -622,7 +628,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get mode() {
-        return this._dataRow ? mode.UPDATE : mode.CREATE;
+        return this.dataImport ? mode.UPDATE : mode.CREATE;
     }
 
     @api
@@ -638,7 +644,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     get isUpdateActionDisabled() {
-        return this._dataRow && this._dataRow[STATUS_FIELD.fieldApiName] === 'Imported';
+        return this.dataImport && this.dataImport[STATUS_FIELD.fieldApiName] === 'Imported';
     }
 
     getData(sections) {
@@ -649,8 +655,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
 
-        if (this._dataRow) {
-            dataImportRecord.Id = this._dataRow.Id;
+        if (this.dataImport) {
+            dataImportRecord.Id = this.dataImport.Id;
         }
 
         return dataImportRecord;

@@ -276,6 +276,7 @@ export default class GeFormField extends LightningElement {
         //TODO: saved rows in the table should always reset field values if
         // the property doesn't exist on the data object, otherwise, set to value
         // from row.
+        // Instructions: set value to null to reset lookup fields
         console.log('*** ' + 'formfield load being called' + ' ***');
         console.log('this.sourceFieldAPIName: ', this.sourceFieldAPIName);
         console.log('this.value: ', this.value);
@@ -284,7 +285,7 @@ export default class GeFormField extends LightningElement {
         //TODO: getRecord seems to return values for each field as a lookup object
         //      with a displayValue and a value prop
         // const value = data[this.sourceFieldAPIName].value;
-        let value = null;
+        let value;
         if (data.hasOwnProperty(this.sourceFieldAPIName)) {
             if (data[this.sourceFieldAPIName].hasOwnProperty('value')) {
                 value = data[this.sourceFieldAPIName].value;
@@ -292,27 +293,60 @@ export default class GeFormField extends LightningElement {
                 value = data[this.sourceFieldAPIName];
             }
         } else {
-            return; //Todo: handle the lookup stuff below.  only return if
-            // there is truly no prop on the data obj
+            console.log('*** ' + 'the data object has no prop for this field, exiting.' + ' ***');
+            return;
         }
 
-        if (this.isLookup) {
+        if (value === null) {
+            this.reset();
             return;
-            const lookup = this.template.querySelector('c-ge-form-field-lookup');
-            if (value) {
-                if (!value.displayValue) {
-                    return;
-                }
-                const displayValue =
-                    data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
-                lookup.setSelected({value, displayValue});
-            } else {
-                lookup.reset();
-            }
-        } else {
-            console.log('*** ' + 'else block' + ' ***');
-            this.value = value;
         }
+
+        this.value = value;
+
+
+        // else {
+        //     return; //Todo: handle the lookup stuff below.  only return if
+        //     // there is truly no prop on the data obj
+        // }
+
+        if (this.isLookup) {
+            const lookup = this.template.querySelector('c-ge-form-field-lookup');
+
+            let displayValue;
+            if (data['hello']) {
+                console.log('*** ' + 'has hello!' + ' ***');
+            } else {
+                console.log('*** ' + 'no hello' + ' ***');
+                console.log('data[hello]: ', data['hello']);
+            }
+            const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
+            if (data[relationshipFieldName] &&
+                data[relationshipFieldName]['Name']) {
+                displayValue = data[relationshipFieldName].Name;
+                console.log('displayValue: ', displayValue);
+            } else if (data[this.sourceFieldAPIName]['displayValue']) {
+                displayValue = data[this.sourceFieldAPIName].displayValue;
+            }
+
+            lookup.setSelected({value, displayValue});
+        }
+
+        //     return;
+        //     if (value) {
+        //         if (!value.displayValue) {
+        //             return;
+        //         }
+        //         const displayValue =
+        //             data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
+        //         lookup.setSelected({value, displayValue});
+        //     } else {
+        //         lookup.reset();
+        //     }
+        // } else {
+        //     console.log('*** ' + 'else block' + ' ***');
+        //     this.value = value;
+        // }
     }
 
     @api
@@ -320,9 +354,11 @@ export default class GeFormField extends LightningElement {
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             lookup.reset();
-        } else {
-            this.value = this._defaultValue;
         }
+
+        // else {
+            this.value = this._defaultValue;
+        // }
     }
 
     get fieldsUsedByTemplate() {

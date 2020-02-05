@@ -25,6 +25,7 @@ import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
 import commonTemplate from '@salesforce/label/c.commonTemplate';
 import commonTemplates from '@salesforce/label/c.commonTemplates';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
+import commonUpdate from '@salesforce/label/c.commonUpdate';
 import commonViewAll from '@salesforce/label/c.commonViewAll';
 import commonViewMore from '@salesforce/label/c.commonViewMore';
 import commonWarning from '@salesforce/label/c.commonWarning';
@@ -184,6 +185,7 @@ class GeLabelService {
         commonTemplate,
         commonTemplates,
         commonUnknownError,
+        commonUpdate,
         commonViewAll,
         commonViewMore,
         commonWarning,

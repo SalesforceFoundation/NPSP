@@ -49,7 +49,9 @@ export default class GeFormFieldLookup extends LightningElement {
     selectedRecord;
     @wire(getRecord, { recordId: '$value', fields: '$queryFields'})
     wiredGetSelectedRecord({error, data}) {
-        console.log('*** ' + 'getting selected' + ' value is: '+this.value+'***');
+        if (this.value) {
+            console.log('*** ' + 'getting selected' + ' value is: ' + this.value + '***');
+        }
         this.reportStatus();
         if(data) {
             this.selectedRecord = Object.assign({}, data.fields);
