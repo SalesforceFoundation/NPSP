@@ -52,6 +52,6 @@ export default class GeFormWidget extends LightningElement {
     }
 
     get totalAmount() {
-        return isNotEmpty(this.widgetData.Donation_Amount__c) ? this.widgetData.Donation_Amount__c : 0;
+        return isNotEmpty(this.widgetData.donationAmount) ? this.widgetData.donationAmount : 0;
     }
 }

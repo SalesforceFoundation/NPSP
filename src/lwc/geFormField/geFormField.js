@@ -55,7 +55,7 @@ export default class GeFormField extends LightningElement {
         if(this.sourceFieldAPIName === DI_DONATION_AMOUNT.fieldApiName) {
             // fire event for reactive widget component containing the Data Import field API name and Value
             // currently only used for the Donation Amount.
-            fireEvent(null, 'widgetData', { Donation_Amount__c: this.value });
+            fireEvent(null, 'widgetData', { donationAmount: this.value });
         }
     };
 
