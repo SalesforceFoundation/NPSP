@@ -704,8 +704,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (picklistFieldApiName === donorTypeFieldApiName) {
             const sectionsList = this.template.querySelectorAll('c-ge-form-section');
             const sectionData = this.getData(sectionsList);
+            const diRecord = sectionData.diRecord;
             const picklistDonorType = picklistValue === 'Account1' ? 'Account' : 'Contact';
-            const recordId = picklistDonorType === 'Account' ? sectionData[account] : sectionData[contact];
+            const recordId = picklistDonorType === 'Account' ? diRecord[account] : diRecord[contact];
 
             this.setReviewDonationsDonorProperties(recordId, picklistDonorType);
         }
