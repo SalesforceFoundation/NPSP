@@ -71,6 +71,10 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
         return '';
     }
 
+    get isUpdateOpportunityDisabled() {
+        return this.opportunity && this.opportunityPayments.length === 1 ? true : false;
+    }
+
     get opportunityObjectApiName() {
         return OPPORTUNITY_OBJECT.objectApiName ? OPPORTUNITY_OBJECT.objectApiName : undefined;
     }
