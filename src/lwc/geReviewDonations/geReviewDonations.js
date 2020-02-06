@@ -178,7 +178,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     }
 
     @api
-    setProperty(property, value) {
-        this[property] = value;
+    resetDonationType() {
+        this.donationType = undefined;
     }
 }

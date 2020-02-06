@@ -699,7 +699,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                     if (this.hasPreviouslySelectedDonation) {
                         const reviewDonationsComponent = this.template.querySelector('c-ge-review-donations');
-                        reviewDonationsComponent.setProperty('donationType', undefined);
+                        reviewDonationsComponent.resetDonationType();
                         this.selectedDonation = undefined;
                         this.resetDonationAndPaymentImportedFields();
                     }
