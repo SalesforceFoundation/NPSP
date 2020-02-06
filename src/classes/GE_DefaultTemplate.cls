@@ -153,7 +153,8 @@ public with sharing class GE_DefaultTemplate {
                 if (element.dataImportFieldMappingDevNames != null) {
                     for (Integer i=0; i<element.dataImportFieldMappingDevNames.size(); i++) {
                         // Get the updated dev name for this org and replace it into the Base JSON
-                        String partialDevName = element.dataImportFieldMappingDevNames.get(i).substringBeforeLast('_');
+                        String partialDevName = 
+                            element.dataImportFieldMappingDevNames.get(i).substringBeforeLast('_');
     
                         // If the updated Dev Name map doesn't contain the partial dev name
                         // it is not necessary to be updated. It is probably a field
@@ -217,7 +218,7 @@ public with sharing class GE_DefaultTemplate {
             [SELECT Id, 
                     MasterLabel, 
                     DeveloperName,
-             		Target_Object_Mapping__r.DeveloperName
+                    Target_Object_Mapping__r.DeveloperName
             FROM Data_Import_Field_Mapping__mdt 
             WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: 
                 BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME 
