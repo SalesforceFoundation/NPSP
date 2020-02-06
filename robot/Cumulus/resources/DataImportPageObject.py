@@ -1,6 +1,7 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
@@ -34,15 +35,21 @@ class DataImportPage(BaseNPSPPage, ListingPage):
         """Clicks on the specified data import record to open the record""" 
         self.pageobjects.current_page_should_be("Listing","DataImport__c")
         self.npsp.click_link_with_text(di_name)
-        self.pageobjects.current_page_should_be("Details","DataImport__c")
+#         self.pageobjects.current_page_should_be("Details","DataImport__c")
         
         
         
 @pageobject("Details", "DataImport__c")
 class DataImportDetailPage(BaseNPSPPage, DetailPage): 
     
+    def _is_current_page(self):
+        """
+        Waits for the current page to be a Data Import list view
+        """
+        self.selenium.wait_until_location_contains("/view",timeout=60, message="Record detail view did not load in 1 min")
+        self.selenium.location_should_contain("DataImport__c",message="Current page is not a DataImport detail view")
     
-    @capture_screenshot_on_error    
+    @capture_screenshot_on_error   
     def edit_record(self):
         """From the actions dropdown select edit action and wait for modal to open"""
         locator=npsp_lex_locators['link-contains'].format("more actions")

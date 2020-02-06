@@ -6,7 +6,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Variables
-# Suite Teardown  Capture Screenshot and Delete Records and Close Browser
+Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Keywords ***
 Setup Variables
@@ -69,7 +69,8 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     Save Record
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Open Data Import Record          &{data_import_upd}[Name]    
+    Open Data Import Record          &{data_import_upd}[Name] 
+    Current Page Should Be           Details          DataImport__c      
     Navigate To And Validate Field Value              Account1 Import Status    contains     Matched
     Navigate To And Validate Field Value             Donation Import Status    contains     Created
    
@@ -105,7 +106,8 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     Process Data Import Batch        Errors
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Log Many       &{data_import_upd}
-    Open Data Import Record          &{data_import_upd}[Name]    
+    Open Data Import Record          &{data_import_upd}[Name] 
+    Current Page Should Be           Details          DataImport__c   
     Navigate To And Validate Field Value              Failure Information    contains       GAU Allocation 1: Import Status:\n Error: record not created, missing required fields:${ns}GAU_Allocation_1_GAU__c
     
     # Verify Contact Details
