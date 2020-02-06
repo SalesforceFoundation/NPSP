@@ -304,12 +304,13 @@ export default class GeFormField extends LightningElement {
      * @param value Value to set on the field.
      */
     @api
-    setValue(value) {
+    setValue(value, displayValue) {
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             if (value) {
-                const displayValue =
-                    data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
+                // TODO: Where does data below come from?
+                displayValue =
+                    displayValue || data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
                 lookup.setSelected({value, displayValue});
             } else {
                 lookup.reset();
