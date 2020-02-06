@@ -352,9 +352,13 @@
         <members>RD2_OpportunityEvaluationService_TEST</members>
         <members>RD2_OpportunityEvaluation_BATCH</members>
         <members>RD2_OpportunityEvaluation_TEST</members>
+        <members>RD2_OpportunityMatcher</members>
+        <members>RD2_OpportunityMatcher_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_QueueableService</members>
+        <members>RD2_RecurringDonationsOpp_TDTM</members>
+        <members>RD2_RecurringDonationsOpp_TEST</members>
         <members>RD2_RecurringDonations_TDTM</members>
         <members>RD2_RecurringDonations_TEST</members>
         <members>RD2_ScheduleService</members>
@@ -1265,8 +1269,10 @@
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
+        <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
+        <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
         <members>npe03__Recurring_Donation__c.StartDate__c</members>
@@ -1535,7 +1541,6 @@
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
-        <members>RD2_ScheduleInstallmentIsRequired</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
