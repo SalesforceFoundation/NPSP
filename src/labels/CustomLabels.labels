@@ -4889,7 +4889,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The picklist value is not supported</shortDescription>
-        <value>The "{0}" picklist value is not supported</value>
+        <value>The "{0}" picklist value is not supported.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidRecordtypeId</fullName>
@@ -4937,7 +4937,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The picklist value is not supported</shortDescription>
-        <value>The "{0}" picklist value is not present</value>
+        <value>The required "{0}" picklist value is missing.</value>
     </labels>
     <labels>
         <fullName>healthDetailsNothingScheduled</fullName>
@@ -5584,7 +5584,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>A Required picklist value is missing for this specific field</shortDescription>
-        <value>Add the "{0}" picklist value for the "{1}" field in Salesforce Setup</value>
+        <value>Add the required "{0}" picklist value on the "{1}" field.</value>
     </labels>
     <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
@@ -5671,7 +5671,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The picklist value is not supported in this specific field</shortDescription>
-        <value>Remove or inactivate the "{0}" picklist value from the "{1}" field in Salesforce Setup</value>
+        <value>Deactivate or delete the "{0}" picklist value on the "{1}" field.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFBadDatatypes</fullName>
