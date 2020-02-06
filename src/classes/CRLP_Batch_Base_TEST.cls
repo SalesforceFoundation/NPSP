@@ -580,7 +580,7 @@ private class CRLP_Batch_Base_TEST {
         List<String> nonZeroFields = rollupJob.fieldsToCheckForNonZero;
 
         System.assertEquals(1, nonZeroFields.size(), 'There should be one field identified');
-        System.assertEquals('Matching_Gift_Amount_Min__c', nonZeroFields[0]);
+        System.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Matching_Gift_Amount_Min__c'), nonZeroFields[0]);
     }
 
     /**
