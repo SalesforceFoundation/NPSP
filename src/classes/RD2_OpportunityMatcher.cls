@@ -108,7 +108,7 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @param opps Recurring Donation Opportunities
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
-    public RD2_OpportunityMatcher filterCurrentOpen(List<Opportunity> opps) {
+    public RD2_OpportunityMatcher filterCurrentAndOpen(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
@@ -126,6 +126,22 @@ public inherited sharing class RD2_OpportunityMatcher {
     public RD2_OpportunityMatcher filterCurrent(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             if (opp.CloseDate >= currentDate && !isClosedLostInMigration(opp)) {
+                recordByCloseDate.put(opp.CloseDate, new Record(opp));
+            }
+        }
+        return this;
+    }
+
+    /***
+     * @description Filters open Opportunities regardless of the Close Date and
+     * open/closed Opportunities with Close Date greater or equal to the current date.
+     * Opportunities marked as Closed Lost in data migration are ignored.
+     * @param opps Recurring Donation Opportunities
+     * @return RD2_OpportunityMatcher This Opportunity matcher instance
+     */
+    public RD2_OpportunityMatcher filterCurrentOrOpen(List<Opportunity> opps) {
+        for (Opportunity opp : opps) {
+            if (opp.isClosed == false || (opp.CloseDate >= currentDate && !isClosedLostInMigration(opp))) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }

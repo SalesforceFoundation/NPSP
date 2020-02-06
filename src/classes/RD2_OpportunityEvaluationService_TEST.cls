@@ -150,9 +150,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
 
-        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd1), 'Closed RD should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rd1), 'Closed RD should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
     }
 
     /**
@@ -190,10 +190,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
 
-        System.assertEquals(true, evalService.isNewInstallmentCandidate(rdNew), 
+        System.assertEquals(true, evalService.isNewOpportunityCandidate(rdNew), 
             'RD having Schedules and no related Opp should be eligible for an Installment Opp');
 
-        System.assertEquals(false, evalService.isNewInstallmentCandidate(rdOld), 
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rdOld), 
             'RD having Schedules and a related Opp should not be eligible for an Installment Opp');
     }
 

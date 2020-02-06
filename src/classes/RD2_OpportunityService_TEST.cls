@@ -737,11 +737,11 @@ private with sharing class RD2_OpportunityService_TEST {
 
         for (Opportunity opp : oppById.values()) {
             if (opp.Id == opps[0].Id || opp.Id == opps[1].Id) {
-                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed and past Opportunity account should not be updated when RD is updated');
-                System.assertEquals(null, opp.Primary_Contact__c, 'Closed and past Opportunity primary contact should not be updated when RD is updated');
+                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed and past Opportunity account should not be updated');
+                System.assertEquals(null, opp.Primary_Contact__c, 'Closed and past Opportunity primary contact should not be updated');
             } else {
-                System.assertEquals(accts[1].Id, opp.AccountId, 'Open opportunity account should be updated to match RD organization');
-                System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Open opportunity primary contact should be updated to match RD contact');
+                System.assertEquals(accts[1].Id, opp.AccountId, 'Open Opportunity account should be updated to match RD organization');
+                System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Open Opportunity primary contact should be updated to match RD contact');
             }
         }
     }

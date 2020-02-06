@@ -265,11 +265,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (rdRecord.isClosed()) {
                 closedRDs.add(rd);
 
-            } else if (isNewInstallmentCandidate(rdRecord)) {
-                newOppRDs.add(rd);
-
-            } else if (isUpdateContext(rdRecord)) {
-                updateOppRDs.add(rd);
+            } else {
+                if (isNewOpportunityCandidate(rdRecord)) {
+                    newOppRDs.add(rd);
+                } 
+                
+                if (hasOpenOpportunity(rdRecord)) {
+                    updateOppRDs.add(rd);
+                }
             }
 
             // TODO Handle Past Due Installment
@@ -277,10 +280,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         toggleTriggerState(false);
 
-        // TODO Support this method returning a collection of new Opps vs. inserting from within the Opp Service
-        oppService.createOpportunities(newOppRDs);
-        oppService.updateOpportunities(updateOppRDs);
-        oppService.voidOpenOpportunities(closedRDs);
+        oppService
+            .createOpportunities(newOppRDs)
+            .updateOpportunities(updateOppRDs)
+            .voidOpenOpportunities(closedRDs);
+
         handleOutdatedRecurringDonations();
 
         toggleTriggerState(true);
@@ -343,8 +347,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     @TestVisible
-    private Boolean isNewInstallmentCandidate(npe03__Recurring_Donation__c rd) {
-        return isNewInstallmentCandidate(new RecurringDonation(rd));
+    private Boolean isNewOpportunityCandidate(npe03__Recurring_Donation__c rd) {
+        return isNewOpportunityCandidate(new RecurringDonation(rd));
     }
 
     /**
@@ -353,7 +357,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation record
      * @return Boolean
      */
-    private Boolean isNewInstallmentCandidate(RecurringDonation rd) {
+    private Boolean isNewOpportunityCandidate(RecurringDonation rd) {
         Boolean hasMandatoryConditions = rd.isActive()
             && rd.hasNextDonationDate()
             && rd.hasSchedule();
@@ -368,7 +372,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         } else if (rd.isNew()) {
             return rdSettings.isFirstInstallmentEnabled;
 
-        } else if (!rd.hasOpenOpportunity(currentDate)) {
+        } else if (!rd.hasCurrentOpenOpportunity(currentDate)) {
             return rdSettings.isNextInstallmentEnabled;
         }
 
@@ -380,11 +384,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation record
      * @return Boolean
      */
-    private Boolean isUpdateContext(RecurringDonation rd) {
+    private Boolean hasOpenOpportunity(RecurringDonation rd) {
         return !isBatchContext
             && rd.isActive()
             && rd.hasSchedule()
-            && rd.hasOpenOpportunity(currentDate);
+            && rd.hasOpenOpportunity();
     }
 
 
@@ -423,9 +427,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'npe03__Recurring_Donation__c, ' +
             'Amount, CloseDate, ' +
             'StageName, IsClosed, IsWon, ' +
-            'CampaignId, Recurring_Donation_Installment_Number__c ' +
-            (UserInfo.isMultiCurrencyOrganization() ? (', ' + UTIL_Currency.CURRENCY_ISO_CODE_FIELD + ' ') : '') +
-            'FROM npe03__Donations__r ' +
+            'CampaignId, Recurring_Donation_Installment_Number__c ';
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            oppSubquery += ', ' + UTIL_Currency.CURRENCY_ISO_CODE_FIELD + ' ';
+        }
+
+        oppSubquery += 'FROM npe03__Donations__r ' +
             'WHERE IsClosed = false ' +
             'OR CloseDate >= :startDate ' +
             'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
@@ -499,10 +507,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @description Indicates if the Recurring Donation is outdated
         */
         private Boolean isOutdated = false;
-        /**
-        * @description Indicates if the Recurring Donation has an Open Opportunity
-        */
-        private Boolean hasOpenOpportunity;
 
         /**
         * @description Constructor
@@ -638,16 +642,23 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @param currentDate Current Date to compare the Close Date to
         * @return Boolean
         */
-        public Boolean hasOpenOpportunity(Date currentDate) {
-            if (hasOpenOpportunity != null) {
-                return hasOpenOpportunity;
-            }
-
-            hasOpenOpportunity = new RD2_OpportunityMatcher(currentDate)
-                .filterCurrentOpen(rd.npe03__Donations__r)
+        public Boolean hasCurrentOpenOpportunity(Date currentDate) {
+            return new RD2_OpportunityMatcher(currentDate)
+                .filterCurrentAndOpen(rd.npe03__Donations__r)
                 .size() > 0;
+        }
 
-            return hasOpenOpportunity;
+        /**
+        * @description Indicates if the Recurring Donation has any open Opportunity
+        * @return Boolean
+        */
+        public Boolean hasOpenOpportunity() {
+            for (Opportunity opp : rd.npe03__Donations__r) {
+                if (opp.IsClosed == false) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 
