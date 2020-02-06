@@ -48,8 +48,11 @@ private class CRLP_RollupAccSoftCredit_TEST {
     private static void setupBaseTestData() {
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
-        Account acc = UTIL_UnitTestData_TEST.buildHouseholdAccount();
-        insert acc;
+        List<Account> accts = new List<Account>{
+            UTIL_UnitTestData_TEST.buildHouseholdAccount(),
+            UTIL_UnitTestData_TEST.buildOrganizationAccount()
+        };
+        insert accts;
     }
 
     /**
@@ -84,7 +87,6 @@ private class CRLP_RollupAccSoftCredit_TEST {
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
 
         // Create a single Rollup that uses the above Filter Group
-        // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
 
                 // Using nonsense fields for Account Soft Credit tests since we don't package anything for Account Soft Credits
@@ -113,17 +115,12 @@ private class CRLP_RollupAccSoftCredit_TEST {
     static testMethod void test_Rollups_SkewBatch() {
         testRollupsServices(TestType.testSkewBatch);
     }
-    static testMethod void test_Rollups_Trigger() {
-        testRollupsServices(TestType.TestTrigger);
-    }
 
     /**
-     * @description Test some simple rollups from the Opportunity/Payment object to the Account using
-     * four different methods:
-     * 1. Trigger based rollup
-     * 2. Call a Queueuable method directly (simulates clicking a button to recalculate)
-     * 3. Nightly Batch Job
-     * 4. Nightly LDV Batch Job
+     * @description Test some simple rollups from the AccountSoftCredit object to the Account using
+     * two different methods:
+     * 1. Nightly Batch Job (NonSkew)
+     * 2. Nightly LDV Batch Job (Skew)
      */
     private static void testRollupsServices(TestType tt) {
 
@@ -164,7 +161,17 @@ private class CRLP_RollupAccSoftCredit_TEST {
         // Retrieve the dummy Contact and then insert 100 Opportunity records
         Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id hardCreditAccId = c.AccountId;
-        Account softCreditAcc = [SELECT Id FROM Account WHERE Id != :hardCreditAccId];
+        Account softCreditAcc = [SELECT Id FROM Account
+            WHERE Id != :hardCreditAccId AND npe01__SYSTEMIsIndividual__c = TRUE];
+
+        // For the Batch Rollup Only ...
+        // Retrieve the org account and set one of the target fields to a non-zero value to make sure it's set to zero
+        // when the batch rollups are executed.
+        Account orgAccount = [SELECT Id FROM Account WHERE npe01__SYSTEMIsIndividual__c = FALSE];
+        if (tt == TestType.TestBatch) {
+            orgAccount.Matching_Gift_Amount_Max__c = 1000;
+            update orgAccount;
+        }
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
@@ -220,7 +227,7 @@ private class CRLP_RollupAccSoftCredit_TEST {
 
         Id softCreditAccId = softCreditAcc.Id;
         String softCreditAccQuery = baseAccountQuery + ' WHERE Id = :softCreditAccId LIMIT 1';
-        softCreditAcc = database.query(softCreditAccQuery);
+        softCreditAcc = Database.query(softCreditAccQuery);
 
         // Make sure everything is null first!
         if (tt != TestType.TestTrigger) {
@@ -254,14 +261,27 @@ private class CRLP_RollupAccSoftCredit_TEST {
         Test.stopTest();
 
         // Query the Accounts with all the target fields specified in the rollups
-        softCreditAcc = database.query(softCreditAccQuery);
+        softCreditAcc = Database.query(softCreditAccQuery);
+
+        // Query the Org Account
+        orgAccount = [SELECT Id, Matching_Gift_Amount_Max__c
+            FROM Account
+            WHERE Id = :orgAccount.Id LIMIT 1];
 
         // Account Soft Credit rollup assert uses nonsense NPSP field not otherwise used in these tests
         // Account Soft Credit rollups run in batch mode only
         if (tt == TestType.TestBatch || tt == TestType.testSkewBatch) {
-            System.assertEquals((accSCBaseAmt * (ascCount-1)) + accSCMaxAmt, softCreditAcc.Matching_Gift_Amount_Max__c, 'The total of Account Soft Credits is incorrect.');
-            System.assertEquals(accSCMaxAmt, softCreditAcc.Matching_Gift_Amount_Min__c, 'The Largest Account Soft Credits is incorrect.');
-            System.assertEquals(lastInfluencerDate, softCreditAcc.Matching_Gift_Info_Updated__c, 'The Date of Last Account Soft Credit is incorrect.');
+            System.assertEquals((accSCBaseAmt * (ascCount-1)) + accSCMaxAmt, softCreditAcc.Matching_Gift_Amount_Max__c,
+                'The total of Account Soft Credits is incorrect.');
+            System.assertEquals(accSCMaxAmt, softCreditAcc.Matching_Gift_Amount_Min__c,
+                'The Largest Account Soft Credits is incorrect.');
+            System.assertEquals(lastInfluencerDate, softCreditAcc.Matching_Gift_Info_Updated__c,
+                'The Date of Last Account Soft Credit is incorrect.');
+
+            if (tt == TestType.TestBatch) {
+                System.assertEquals(0, orgAccount.Matching_Gift_Amount_Max__c,
+                    'The Matching_Gift_Amount_Max__c field should be reset to zero after the batch job executes');
+            }
         }
     }
 }
