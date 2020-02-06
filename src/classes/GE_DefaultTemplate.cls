@@ -46,7 +46,8 @@ public with sharing class GE_DefaultTemplate {
      *
      */
     public static void createDefaultTemplateIfNecessary() {
-        if (!hasDefaultTemplate()) {
+        // TODO: Should also block template creation if Advanced Mapping is not enabled
+        if (giftEntryIsEnabled() && !hasDefaultTemplate()) {
             Form_Template__c newDefaultTemplate = buildDefaultTemplate();
             
             insert newDefaultTemplate;
@@ -86,6 +87,23 @@ public with sharing class GE_DefaultTemplate {
     }
 
     /**
+     * @description This method determines if the gift entry feature is enabled  
+     *
+     * @return Returns whether or not the feature is enabled.
+     */
+    private static boolean giftEntryIsEnabled() {
+            
+        // Get the gift entry custom setting to check for the default template.             
+        Gift_Entry_Settings__c giftEntryCustomSetting = UTIL_CustomSettingsFacade.getGiftEntrySettings();
+
+        if (giftEntryCustomSetting.Enable_Gift_Entry__c) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @description This method builds a new default template using the base JSON string. 
      * It will update the base JSON string with the updated field mapping dev names.
      *   
@@ -110,9 +128,14 @@ public with sharing class GE_DefaultTemplate {
         // Example:
         // Account1_Name -> Account1_Name_ee63cf9df
         // 
-        // This is used for updating the base JSON's dev names with the org's dev names. 
-        Map<String, String> updatedDevNameMap = getCurrentDevNameMapping();
+        // This is used for updating the base JSON's field mapping dev names with the org's dev names. 
+        Map<String, String> updatedFieldDevNameMap = new Map<String, String>();
 
+        // This is used for updating the base JSON's field mapping dev names with the org's dev names. 
+        Map<String, String> updatedObjectDevNameMap = new Map<String, String>();
+        
+        populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
+        
         FORM_Template defaultTemplate = (FORM_Template)JSON.deserialize(defaultTemplateSRJSON, FORM_Template.class);
         FORM_Layout defaultLayout = defaultTemplate.layout;
         List<FORM_Section> sectionList = defaultLayout.sections;
@@ -121,35 +144,42 @@ public with sharing class GE_DefaultTemplate {
             List<FORM_Element> elementList = section.elements;
 
             for (FORM_Element element : elementList) {
-                if (element.elementType == ELEMENT_TYPE_FIELD) {
-
-                    // Get the updated dev name for this org and replace it into the Base JSON
-                    String partialDevName = element.dataImportFieldMappingDevNames.get(0).substringBeforeLast('_');
-
-                    // If the updated Dev Name map doesn't contain the partial dev name
-                    // it is not necessary to be updated. It is probably a field
-                    // that is on the DI itself and not a mapped field.
-                    // e.g. 'Donation_Donor__c', 'Account1Imported__c', etc
-                    if (updatedDevNameMap.containsKey(partialDevName)) {
-                        element.dataImportFieldMappingDevNames.set(0, updatedDevNameMap.get(partialDevName));
-                    } else {
-                        String fullDevName = element.dataImportFieldMappingDevNames.get(0);
-
-                        if (fullDevName.endsWith('__c')) {
-                            fullDevName = UTIL_Namespace.StrTokenNSPrefix(fullDevName);
-                            // Align field api name with environment namespace if needed
-                            element.fieldApiName =
-                                element.fieldApiName != null ?
-                                UTIL_Namespace.StrTokenNSPrefix(element.fieldApiName) :
-                                element.fieldApiName;
-                            // Align object api name with environment namespace if needed
-                            element.objectApiName = element.objectApiName != null ?
-                                UTIL_Namespace.StrTokenNSPrefix(element.objectApiName) :
-                                element.objectApiName;
+                if (element.dataImportObjectMappingDevName != null) {
+                    String partialObjectDevName = element.dataImportObjectMappingDevName.substringBeforeLast('_');
+                    if (updatedObjectDevNameMap.containsKey(partialObjectDevName)) {
+                        element.dataImportObjectMappingDevName = updatedObjectDevNameMap.get(partialObjectDevName);
+                    }
+                }
+                if (element.dataImportFieldMappingDevNames != null) {
+                    for (Integer i=0; i<element.dataImportFieldMappingDevNames.size(); i++) {
+                        // Get the updated dev name for this org and replace it into the Base JSON
+                        String partialDevName = element.dataImportFieldMappingDevNames.get(i).substringBeforeLast('_');
+    
+                        // If the updated Dev Name map doesn't contain the partial dev name
+                        // it is not necessary to be updated. It is probably a field
+                        // that is on the DI itself and not a mapped field.
+                        // e.g. 'Donation_Donor__c', 'Account1Imported__c', etc
+                        if (updatedFieldDevNameMap.containsKey(partialDevName)) {
+                            element.dataImportFieldMappingDevNames.set(i, updatedFieldDevNameMap.get(partialDevName));
+                        } else {
+                            String fullDevName = element.dataImportFieldMappingDevNames.get(i);
+    
+                            if (fullDevName.endsWith('__c')) {
+                                fullDevName = UTIL_Namespace.StrTokenNSPrefix(fullDevName);
+                                // Align field api name with environment namespace if needed
+                                element.fieldApiName =
+                                    element.fieldApiName != null ?
+                                    UTIL_Namespace.StrTokenNSPrefix(element.fieldApiName) :
+                                    element.fieldApiName;
+                                // Align object api name with environment namespace if needed
+                                element.objectApiName = element.objectApiName != null ?
+                                    UTIL_Namespace.StrTokenNSPrefix(element.objectApiName) :
+                                    element.objectApiName;
+                            }
+    
+                            // If it is a DI field, apply the namespace, if there is one. 
+                            element.dataImportFieldMappingDevNames.set(i, fullDevName);
                         }
-
-                        // If it is a DI field, apply the namespace, if there is one. 
-                        element.dataImportFieldMappingDevNames.set(0, fullDevName);
                     }
                 }
             }
@@ -171,7 +201,7 @@ public with sharing class GE_DefaultTemplate {
         newDefaultTemplate.Format_Version__c = TEMPLATE_VERSION;
         return newDefaultTemplate;
     }
-
+    
     /**
      * @description This method builds a mapping of partial dev name to 
      * the full dev name using the org's field mapping custom metadata records. 
@@ -179,35 +209,33 @@ public with sharing class GE_DefaultTemplate {
      * @return A mapping of partial dev name to full dev name. 
      * e.g. Account1_Name -> Account1_Name_ee63cf9df
      */
-    public static Map<String, String> getCurrentDevNameMapping() {
+    public static void populateDevNameMapping(Map<String,String> updatedFieldDevNameMap, 
+        Map<String,String> updatedObjectDevNameMap) {
+
         // Get the org's migrated field mappings. 
         List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = 
             [SELECT Id, 
                     MasterLabel, 
                     DeveloperName,
-                    Target_Field_API_Name__c, 
-                    Source_Field_API_Name__c,
-                    Target_Object_Mapping__r.Object_API_Name__c
+             		Target_Object_Mapping__r.DeveloperName
             FROM Data_Import_Field_Mapping__mdt 
             WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: 
                 BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME 
-            LIMIT 1000];
+            LIMIT 5000];
 
-        // A map which contains the partial dev name to the org's full dev name.
-        // An example would like this:
-        // Account1_Name -> Account1_Name_ee63cf9df
-        Map<String, String> partialDevNameToUpdatedDevName = new Map<String, String>();
-        
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappingCMTList) {
-            String partialDevName = fieldMapping.DeveloperName.substringBeforeLast('_');
-
+            String partialFieldDevName = fieldMapping.DeveloperName.substringBeforeLast('_');
+			String partialObjectDevName = fieldMapping.Target_Object_Mapping__r.DeveloperName.substringBeforeLast('_');
+            
             // Only add it into the map if there was a change at all. If there wasn't a change
             // that means that there was no '_' in the dev name and is probably not something we want
-            if (partialDevName != fieldMapping.DeveloperName) {
-                partialDevNameToUpdatedDevName.put(partialDevName, fieldMapping.DeveloperName);
+            if (partialFieldDevName != fieldMapping.DeveloperName) {
+                updatedFieldDevNameMap.put(partialFieldDevName, fieldMapping.DeveloperName);
             }
+            
+            if (partialObjectDevName != fieldMapping.Target_Object_Mapping__r.DeveloperName) {
+                updatedObjectDevNameMap.put(partialObjectDevName, fieldMapping.Target_Object_Mapping__r.DeveloperName);
+            }            
         }
-
-        return partialDevNameToUpdatedDevName;
     }
 }
