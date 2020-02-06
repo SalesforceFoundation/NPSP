@@ -4,6 +4,7 @@ export default class utilCard extends LightningElement {
     @api title;
     @api iconName;
     @api iconSize;
+    @api cssClass;
 
     @track showFooter = true;
 
@@ -23,5 +24,16 @@ export default class utilCard extends LightningElement {
 
     get hasStringTitle() {
         return !!this.title;
+    }
+
+    get computedCssClass() {
+        let baseClass = ['slds-card', 'slds-card_boundary'];
+
+        if (this.cssClass) {
+            let cssClass = this.cssClass.split(' ');
+            baseClass = [...baseClass, ...cssClass];
+        }
+
+        return baseClass.join(' ');
     }
 }

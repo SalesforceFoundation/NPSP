@@ -3,12 +3,16 @@ import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
-import { DONATION_DONOR_FIELDS, DONATION_DONOR,
+import {
+    DONATION_DONOR_FIELDS,
+    DONATION_DONOR,
     handleError,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
-    checkPermissionErrors } from 'c/utilTemplateBuilder';
-import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone } from 'c/utilCommon';
+    checkPermissionErrors
+} from 'c/utilTemplateBuilder';
+import { registerListener } from 'c/pubsubNoPageRef';
+import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone, isUndefined, checkNestedProperty } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -63,6 +67,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
 
     @track dataImport; // Row being updated when in update mode
+    @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
     @track opportunities;
     @track selectedDonation;
@@ -75,7 +80,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get title() {
-        return this.donorRecord ? `Gift by ${this.donorRecord.fields.Name.value}` : 'New Gift';
+        return checkNestedProperty(this.donorRecord, 'fields', 'Name', 'value') ?
+            GeLabelService.format(
+                this.CUSTOM_LABELS.geHeaderMatchingGiftBy,
+                [this.donorRecord.fields.Name.value]) :
+            this.CUSTOM_LABELS.commonNewGift;
     }
 
     get isSingleGiftEntry() {
@@ -153,6 +162,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
 
     connectedCallback() {
+        registerListener('widgetData', this.handleWidgetData, this);
+
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
             // uses the @wire service below to retrieve the Template using the Template Id
@@ -168,7 +179,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             if (response !== null && typeof response !== 'undefined') {
                 this.formTemplate = response.formTemplate;
                 this.fieldMappings = response.fieldMappingSetWrapper.fieldMappingByDevName;
-                this.fmbomdn = response.fieldMappingSetWrapper.fieldMappingsByObjMappingDevName;
 
                 let errorObject = checkPermissionErrors(this.formTemplate);
                 if (errorObject) {
@@ -200,7 +210,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             // add record data to the template fields
             if (isNotEmpty(fieldMappings) && isNotEmpty(this.donorRecord)) {
-                //todo: can I use this setRecordValuesOnTemplate method?
                 let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections,
                     fieldMappings, this.donorRecord);
                 this.sections = sectionsWithValues;
@@ -291,16 +300,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const handleCatchError = (err) => this.handleCatchOnSave(err);
 
         // di data for save
-        let data = this.getData(sectionsList);
-        console.log('data: ', data);
+        let { diRecord, widgetValues } = this.getData(sectionsList);
         // Apply selected donation fields to data import record
         if (this.blankDataImportRecord) {
-            data = { ...data, ...this.blankDataImportRecord };
+            diRecord = { ...diRecord, ...this.blankDataImportRecord };
         }
 
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
-                data: data,
+                data: { diRecord, widgetValues },
                 success: () => {
                     enableSave();
                     toggle();
@@ -644,12 +652,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.erroredFields = [];
     }
 
-    //todo: or this one?
     @api
     load(dataImport) {
-        //todo: how to handle collision/conflict btw data row and selected recor
-        //...
-        console.log('Render, load: JSON.parse(JSON.stringify(dataImport)): ', JSON.parse(JSON.stringify(dataImport)));
         if (dataImport.Id) {
             // Lookups can also use this method to load related fields.  By setting
             // this.dataImport only when the DataImport has an Id, we know we are
@@ -680,6 +684,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         sectionsList.forEach(section => {
             section.reset(fieldMappingDevNames);
         });
+        this.widgetData = {};
     }
 
     get mode() {
@@ -702,19 +707,27 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return this.dataImport && this.dataImport[STATUS_FIELD.fieldApiName] === 'Imported';
     }
 
+    /**
+     * Track widget data so that our widgets can react to the overall state of the form
+     * @param payload   An object to store in widgetData
+     */
+    handleWidgetData(payload) {
+        this.widgetData = {...this.widgetData, ...payload};
+    }
+
     getData(sections) {
-        let dataImportRecord =
+        let { diRecord, widgetValues } =
             GeFormService.getDataImportRecord(sections);
 
-        if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
-            dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        if (!diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
+            diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
 
         if (this.dataImport) {
-            dataImportRecord.Id = this.dataImport.Id;
+            diRecord.Id = this.dataImport.Id;
         }
 
-        return dataImportRecord;
+        return {diRecord, widgetValues};
     }
 
     /*******************************************************************************
@@ -750,7 +763,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.opportunities = isNotEmpty(data) ? JSON.parse(data) : undefined;
         }
     }
-    
+
     getSiblingFields(objectMappingDeveloperName) {
         // for a given field, get the full list of fields related to its object mapping
 
@@ -780,7 +793,25 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     storeSelectedRecordIdByObjectMappingName(objectMappingName, recordId) {
-            this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
+        this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
+    }
+
+    handleChangePicklist(event) {
+        const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
+        const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+        const donorTypeFieldApiName = DONATION_DONOR_FIELDS.donationDonorField;
+        const picklistFieldApiName = event.detail.fieldApiName;
+        const picklistValue = event.detail.value;
+
+        if (picklistFieldApiName === donorTypeFieldApiName) {
+            const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+            const sectionData = this.getData(sectionsList);
+            const diRecord = sectionData.diRecord;
+            const picklistDonorType = picklistValue === 'Account1' ? 'Account' : 'Contact';
+            const recordId = picklistDonorType === 'Account' ? diRecord[account] : diRecord[contact];
+
+            this.setReviewDonationsDonorProperties(recordId, picklistDonorType);
+        }
     }
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
@@ -798,21 +829,49 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedRecordId = recordId;
             this.selectedRecordFields = this.getSiblingFields(objectMapping.DeveloperName);
         }
-        
+
         const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
         const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+        const lookupDonorType = fieldApiName === account ? 'Account' : 'Contact';
 
-        if (recordId && (fieldApiName === account || fieldApiName === contact)) {
-            // TODO: Future handle Account/Contact priority depending on value of Data Import: Donation Donor.
-            const donorType = fieldApiName === account ? 'Account' : 'Contact';
+        if (fieldApiName === account || fieldApiName === contact) {
+            let donorType = this.getCurrentlySelectedDonorType();
+
+            if (donorType && donorType === lookupDonorType) {
+                this.setReviewDonationsDonorProperties(recordId, donorType);
+            }
+        }
+    }
+
+    getCurrentlySelectedDonorType() {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        let donorType;
+
+        if (!this.selectedDonorType) {
+            const sectionData = this.getData(sectionsList);
+            const diRecord = sectionData.diRecord;
+            donorType = diRecord[DONATION_DONOR_FIELDS.donationDonorField];
+
+            if (isUndefined(donorType)) {
+                // Highlight donor type field if none is selected
+                this.isDonorTypeInvalid(sectionsList);
+            } else {
+                donorType = donorType === 'Account1' ? 'Account' : 'Contact';
+            }
+        } else {
+            donorType = this.selectedDonorType;
+        }
+
+        return donorType;
+    }
+
+    setReviewDonationsDonorProperties(recordId, donorType) {
+        if (recordId) {
             this.selectedDonorId = recordId;
             this.selectedDonorType = donorType;
-        } else if (fieldApiName === account || fieldApiName === contact) {
+        } else {
             this.selectedDonation = undefined;
             this.opportunities = undefined;
-            this.selectedDonorId = undefined;
-            this.selectedDonorType = undefined;
-        } else {
             this.selectedDonorId = undefined;
             this.selectedDonorType = undefined;
         }
@@ -856,7 +915,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.applyFieldValuesFromSelectedDonation(blankDataImportRecord);
     }
 
-    //TODO: can I modify/use this one?
     applyFieldValuesFromSelectedDonation(blankDataImportRecord) {
         let previousFieldValues = {};
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');

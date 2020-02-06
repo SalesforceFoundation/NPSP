@@ -59,6 +59,10 @@ const getQueryParameters = () => {
     return params;
 };
 
+const isNumeric = (value) => {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+};
+
 /*******************************************************************************
  * @description Checks if value parameter is a function
  *
@@ -308,6 +312,27 @@ const getNestedProperty = (object, ...args) => {
     return args.reduce((obj, level) => obj && obj[level], object)
 }
 
+/*******************************************************************************
+* @description Method attempts the key or value within an object by a key
+* substring where the following happens.
+*     objectToSearch = { "GAU_Allocation_1_asdfghj": value, "Account_1_asdfgh": value}
+*     keyToFind = "GAU_Allocation_1_"
+*     returnKey = true
+* returns "GAU_Allocation_1_asdfghj".
+*
+* @param {object} objectToSearch: Object with properties to return.
+* @param {string} keyToFind: Substring to check for.
+* @param {boolean} returnKey: Determines whether we return the key or value of
+* the object.
+*/
+const getLikeMatchByKey = (objectToSearch, keyToFind, returnKey = false) => {
+    for (let key in objectToSearch) {
+        if ( key.toLowerCase().indexOf(keyToFind.toLowerCase()) !== -1)
+            return returnKey ? key : objectToSearch[key];
+    }
+    return null;
+}
+
 export {
     debouncify,
     deepClone,
@@ -315,6 +340,7 @@ export {
     getQueryParameters,
     isEmpty,
     isNotEmpty,
+    isNumeric,
     isFunction,
     isObject,
     isUndefined,
@@ -326,5 +352,6 @@ export {
     removeByProperty,
     format,
     checkNestedProperty,
-    getNestedProperty
+    getNestedProperty,
+    getLikeMatchByKey
 };

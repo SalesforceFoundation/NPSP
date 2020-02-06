@@ -50,6 +50,22 @@ public with sharing class GE_FormRendererService {
     }
 
     /**
+     * This method creates a wrapper which contains the  template selected by name and a field mapping set.
+     * If the template is not found, it returns a wrapper for the default template
+     * @param String templateName
+     * @return  A FORM_RenderWrapper containing the default template JSON.
+     */
+    public static FORM_RenderWrapper getRenderWrapper(String templateName) {
+        FORM_Service formService = new FORM_Service();
+
+        FORM_Template template = formService.retrieveFormTemplate(templateName);
+
+        FORM_RenderWrapper renderWrapper = wrapTemplate(template);
+
+        return renderWrapper;
+    }
+
+    /**
      * This method creates a wrapper which contains the default SGE template and a field mapping set.
      *
      * @return  A FORM_RenderWrapper containing the default template JSON.
@@ -84,6 +100,16 @@ public with sharing class GE_FormRendererService {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Get Allocations settings. Used to determine the default GAU, and if the default GAU is enabled.
+     * This result cannot be cached as there is the potential for an upsert operation when no allocation settings exist.
+     * @return An Allocation_Settings__c custom setting record
+     */
+    @AuraEnabled
+    public static Allocations_Settings__c getAllocationsSettings() {
+        return UTIL_CustomSettingsFacade.getAllocationsSettings();
     }
 
     /*******************************************************************************************************
@@ -121,14 +147,21 @@ public with sharing class GE_FormRendererService {
     */
     public static String convertWidgetDataToObjectJSON(String widgetData) {
 
-        if(String.isBlank(widgetData)){
+        if (String.isBlank(widgetData)) {
             return null;
         }
 
-        Map<String, Object> objNameToObjList;
-        List<SObject> thisList;
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance();
+        Map<String,BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
+        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
+
+        dynSourceGroup.name = DataImport__c.Additional_Object_JSON__c.getDescribe().getName();
+        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
+
+        Map<String, Object> objMappingDevNameToObjList;
+
         try {
-            objNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
+            objMappingDevNameToObjList = (Map<String, Object>)JSON.deserializeUntyped(widgetData);
         } catch(Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
             
@@ -136,34 +169,52 @@ public with sharing class GE_FormRendererService {
         }
 
         // Create a map of sobject type to sobject list for processing
-        for(String widgetKey : objNameToObjList.keySet()) {
-            Object objList = objNameToObjList.get(widgetKey);
-            if(objList != null) {
-                String objListString = JSON.serialize(objList);
+        for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
+            Object objList = objMappingDevNameToObjList.get(objMappingDevName);
 
-                // System.debug(widgetKey); 
-                // System.debug(objListString); 
+            BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
 
-                // TODO: Depending on how data gets passed, this will change
-                //Type listType = Type.forName('List<' + objName + '>');
-                //thisList = (List<SObject>)JSON.deserialize(objListString, listType);
-                
-                // Might not need this, could be provided by N-object logic?
-                // String lookupField = opportunityLookupMap.get(objName);
-                // for(SObject relObj : thisList){
-                //     relObj.put(lookupField, oppId);
-                // }
+            BDI_FieldMapping[] fieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(objMappingDevName);
+
+            String[] tempObjStrings = new String[]{};
+
+            //Reserializing the object strings to resolve platform issue with deserializing SObjects
+            for (Object obj : (List<Object>)objMappingDevNameToObjList.get(objMappingDevName)){
+                tempObjStrings.add(JSON.serialize(obj));
+            }
+
+            if(tempObjStrings != null && tempObjStrings.size() > 0) {
+
+                Integer i = 0;
+                //Loop through the sObjects and construct DI records to hold the data in the expected fields
+                for (String objString : tempObjStrings) {
+
+                    SObject sObj = (SObject)JSON.deserialize(objString, Sobject.class);
+
+                    i++;
+                    DataImport__c tempDI = new DataImport__c();
+
+                    //Reverse mapping the fields back onto a tempDI Record that respresents the source obj.
+                    for (BDI_FieldMapping fieldMapping : fieldMappings) {
+                        Object value = sObj.get(fieldMapping.Target_Field_API_Name);
+                        tempDI.put(fieldMapping.Source_Field_API_Name, value);
+                    }
+
+                    BDI_DynamicSource dynSource = new BDI_DynamicSource();
+                    dynSource.objectMappingDevName = objMapping.DeveloperName + 'temp' + i;
+                    dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
+                    dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
+                    dynSource.sourceObj = tempDI;
+
+                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName,dynSource);
+                }
             }
         }
 
-        // TODO: Fit widget data into a series of Data Import records, and prepare them for Additional_Object_JSON__c
-        // See BDI_AdditionalObjectService_TEST for an example of this process (dynamicParentAdditionalObjectsShouldBeCreated)
-        
-        // String additionalObjJSONFieldName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Additional_Object_JSON__c');
-        // Create BDI_DynamicSourceGroup
-        // Map of <String,BDI_DynamicSource>
-        // JSON.serialize(dynSourceGroupA);
-
+        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
+            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
+            return dynSourceGroupString;
+        }
         return null;
     }
 

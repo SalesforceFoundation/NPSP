@@ -10,9 +10,13 @@ export default class GeGiftEntryFormApp extends LightningElement {
 
     handleSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-
+        const { diRecord, widgetValues } = event.detail.data;
+        let widgetString = '';
+        if(widgetValues) {
+            widgetString = JSON.stringify(widgetValues);
+        }
         GeFormService.saveAndDryRun(
-            this.recordId, event.detail.data)
+            this.recordId, diRecord, widgetString)
             .then(
                 dataImportModel => {
                     Object.assign(dataImportModel.dataImportRows[0],

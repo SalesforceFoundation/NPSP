@@ -1,9 +1,10 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
+import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
 import saveAndProcessDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndProcessDataImport';
 import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunDataImport
     from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
-import {api, track} from "lwc";
+import {api} from "lwc";
 import { isNotEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
     from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
@@ -35,8 +36,7 @@ class GeFormService {
 
     fieldMappings;
     objectMappings;
-    // @track fieldMappingsByObjectMappingName;
-    fieldMappingsByObjectMappingName;
+    fieldTargetMappings;
 
     /**
      * Retrieve the default form render wrapper.
@@ -49,14 +49,20 @@ class GeFormService {
                 .then((result) => {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
-                    this.fieldMappingsByObjMappingDevName =
-                        result.fieldMappingSetWrapper.fieldMappingsByObjMappingDevName;
-                    console.log(' default result.fieldMappingSetWrapper: ', result.fieldMappingSetWrapper);
+                    this.fieldTargetMappings = result.fieldMappingSetWrapper.fieldMappingByTargetFieldName;
                     resolve(result);
                 })
                 .catch(error => {
                     handleError(error);
                 });
+        });
+    }
+
+    getAllocationSettings() {
+        return new Promise((resolve, reject) => {
+           getAllocationSettings()
+               .then(resolve)
+               .catch(handleError)
         });
     }
 
@@ -85,6 +91,15 @@ class GeFormService {
      */
     getFieldMappingWrapper(fieldDevName) {
         return this.fieldMappings[fieldDevName];
+    }
+
+    /**
+     * Get a field info object by dev name from the render wrapper object
+     * @param fieldDevName  Dev name of the object to retrieve
+     * @returns {BDI_FieldMapping}
+     */
+    getFieldMappingWrapperFromTarget(targetFieldName) {
+        return this.fieldTargetMappings[targetFieldName];
     }
 
     /**
@@ -126,15 +141,21 @@ class GeFormService {
      * @returns opportunityId
      */
     handleSave(sectionList, record, dataImportRecord) {
-        let diRecord = this.getDataImportRecord(sectionList, record, dataImportRecord);
+        const { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record, dataImportRecord);
 
         const hasUserSelectedDonation = isNotEmpty(dataImportRecord);
 
-        const opportunityID = this.saveAndProcessDataImport(diRecord, {}, hasUserSelectedDonation);
+        const opportunityID = this.saveAndProcessDataImport(diRecord, widgetValues, hasUserSelectedDonation);
 
         return opportunityID;
     }
 
+    /**
+     * Grab the data from the form fields and widgets, convert to a data import record.
+     * @param sectionList   List of ge-form-sections on the form
+     * @param record        Existing account or contact record to attach to the data import record
+     * @return {{widgetValues: {}, diRecord: {}}}
+     */
     getDataImportRecord(sectionList, record, dataImportRecord){
         // Gather all the data from the input
         let fieldData = {};
@@ -164,12 +185,12 @@ class GeFormService {
         // Include any fields from a user selected donation
         diRecord = { ...diRecord, ...dataImportRecord };
 
-        return diRecord;
+        return { diRecord, widgetValues };
     }
 
-    saveAndDryRun(batchId, dataImport) {
+    saveAndDryRun(batchId, dataImport, widgetData) {
         return new Promise((resolve, reject) => {
-            saveAndDryRunDataImport({batchId: batchId, dataImport: dataImport})
+            saveAndDryRunDataImport({batchId, dataImport, widgetData})
                 .then((result) => {
                     resolve(JSON.parse(result));
                 })
@@ -187,9 +208,9 @@ class GeFormService {
                         renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings =
                         renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
-                    this.fieldMappingsByObjMappingDevName =
-                        renderWrapper.fieldMappingSetWrapper.fieldMappingsByObjMappingDevName;
-                    console.log(' templateId : result.fieldMappingSetWrapper: ', renderWrapper.fieldMappingSetWrapper);
+                    this.fieldTargetMappings =
+                        renderWrapper.fieldMappingSetWrapper.fieldMappingByTargetFieldName;
+
                     resolve(renderWrapper);
                 })
                 .catch(err => {
@@ -203,7 +224,6 @@ class GeFormService {
         return new Promise((resolve, reject) => {
             this.getFormRenderWrapper(templateId)
                 .then(renderWrapper => {
-                    // resolve(renderWrapper.formTemplate);
                     resolve(renderWrapper);
                 })
                 .catch(err => {

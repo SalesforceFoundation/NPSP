@@ -1905,6 +1905,7 @@
         <members>commonEdit</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonNewGift</members>
         <members>commonNext</members>
         <members>commonNo</members>
         <members>commonNoItems</members>
@@ -2007,6 +2008,7 @@
         <members>geDonorColumnLabel</members>
         <members>geEditBatchInfo</members>
         <members>geEnableGiftEntrySuccess</members>
+        <members>geErrorAmountDoesNotMatch</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
         <members>geErrorDonorTypeValidation</members>
@@ -2039,6 +2041,7 @@
         <members>geHeaderFormFieldsModalSectionSettings</members>
         <members>geHeaderFormFieldsRightCol</members>
         <members>geHeaderGiftEntry</members>
+        <members>geHeaderMatchingGiftBy</members>
         <members>geHeaderMatchingOpportunity</members>
         <members>geHeaderMatchingPayment</members>
         <members>geHeaderMatchingReviewDonations</members>
@@ -3367,7 +3370,7 @@
         <members>geFormService</members>
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
-        <members>geFormWidgetRow</members>
+        <members>geFormWidgetRowAllocation</members>
         <members>geGiftEntryFormApp</members>
         <members>geHome</members>
         <members>geLabelService</members>
@@ -3382,6 +3385,7 @@
         <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
         <members>geTemplates</members>
+        <members>geWidgetService</members>
         <members>libsMoment</members>
         <members>progressRing</members>
         <members>pubsubNoPageRef</members>

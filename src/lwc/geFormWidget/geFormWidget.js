@@ -1,13 +1,18 @@
-import {LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
+import {checkNestedProperty, isNotEmpty} from 'c/utilCommon';
 
 const PAYMENT_WIDGET = 'geFormWidgetPayment';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
 const WIDGET_LIST = [PAYMENT_WIDGET, ALLOCATION_WIDGET];
 
 export default class GeFormWidget extends LightningElement {
-    // TODO: Could value be an array that matches the field mappings list passed to the widget?
-    @track value = [];
     @api element;
+    @api widgetData;
+
+    @api
+    reset() {
+        this.widgetComponent.reset();
+    }
 
     @api
     get widgetAndValues() {
@@ -46,8 +51,7 @@ export default class GeFormWidget extends LightningElement {
         return WIDGET_LIST.indexOf(this.element.componentName) < 0
     }
 
-    checkValid() {
-        console.log('Is Widget valid?: ' + this.isValid); 
+    get totalAmount() {
+        return checkNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
     }
-
 }

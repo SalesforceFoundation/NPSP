@@ -2,15 +2,8 @@ import {LightningElement, api, track} from 'lwc';
 
 export default class GeFormSection extends LightningElement {
     @api section;
-    @track expanded = true;
-
-    /**
-     * Get the icon that should display next to the twistable section header
-     * @returns {string} containing the icon name from SLDS
-     */
-    get iconName() {
-        return this.expanded ? 'utility:chevrondown' : 'utility:chevronright';
-    }
+    @api widgetData;
+    @track collapsed = false;
 
     /**
      * Get the alternative text that represents the section expand/collapse button
@@ -54,7 +47,8 @@ export default class GeFormSection extends LightningElement {
      * @param requestedFields - Array of API Field Names to get information
      * @returns {Array} - field value and ui-label using api-field-name as key
      */
-    @api getFieldValueAndLabel( requestedFields ) {
+    @api
+    getFieldValueAndLabel( requestedFields ) {
 
         const fields = this.template.querySelectorAll('c-ge-form-field');
         let dataImportFieldAndLabels = {};
@@ -77,7 +71,8 @@ export default class GeFormSection extends LightningElement {
      * @param {fieldsArray},Array with sourceFieldAPIName field property
      * @param {errorMessage}, String custom error message for fields
      */
-    @api setCustomValidityOnFields( fieldsArray, errorMessage ) {
+    @api
+    setCustomValidityOnFields( fieldsArray, errorMessage ) {
 
         const fields = this.template.querySelectorAll('c-ge-form-field');
         if (fields !== null && typeof fields !== 'undefined') {
@@ -143,23 +138,26 @@ export default class GeFormSection extends LightningElement {
 
     @api
     reset(fieldMappingDevNames = null) {
-        const fieldsAndWidgetElements = this.template.querySelectorAll('c-ge-form-field');
+        const fields = this.template.querySelectorAll('c-ge-form-field');
+        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
 
-        fieldsAndWidgetElements.forEach(fieldOrWidget => {
+        fields.forEach(field => {
             if (fieldMappingDevNames) {
                 // reset the fields elements related to
                 // these field mappings
-                if (fieldOrWidget.element.elementType === 'field') {
-                    if (fieldMappingDevNames.includes(
-                        fieldOrWidget.element.dataImportFieldMappingDevNames[0]
-                    )) {
-                        fieldOrWidget.reset();
-                    }
+                if (fieldMappingDevNames.includes(
+                    field.element.dataImportFieldMappingDevNames[0]
+                )) {
+                    field.reset();
                 }
             } else {
-                // reset all fields and widget elements in this section
-                fieldOrWidget.reset();
+                // reset all field elements in this section
+                field.reset();
             }
+        });
+
+        widgetList.forEach(widget => {
+            widget.reset();
         });
     }
 
@@ -170,4 +168,10 @@ export default class GeFormSection extends LightningElement {
         this.dispatchEvent(changeLookupEvent);
     }
 
+    handleChangePicklist(event) {
+        const changePicklistEvent = new CustomEvent(
+            'changepicklist',
+            { detail: event.detail });
+        this.dispatchEvent(changePicklistEvent);
+    }
 }
