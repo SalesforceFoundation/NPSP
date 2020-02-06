@@ -665,12 +665,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @api
-    reset() {
+    reset(objectMappingDeveloperName = null) {
         this.dataImport = undefined;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
+        let fieldMappingDevNames = null;
+        if (objectMappingDeveloperName) {
+            fieldMappingDevNames =
+                Object.values(GeFormService.fieldMappings).filter(
+                    ({Target_Object_Mapping_Dev_Name, DeveloperName}) =>
+                        Target_Object_Mapping_Dev_Name === objectMappingDeveloperName)
+                    .map(({DeveloperName}) => DeveloperName);
+        }
+
         sectionsList.forEach(section => {
-            section.reset();
+            section.reset(fieldMappingDevNames);
         });
     }
 
@@ -779,13 +788,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     handleChangeLookup(event) {
         const recordId = event.detail.value;
         const fieldApiName = event.detail.fieldApiName;
-        this.selectedRecordId = recordId;
         const objectMapping = this.getObjectMapping(fieldApiName);
         this.storeSelectedRecordIdByObjectMappingName(
             objectMapping.DeveloperName, recordId
         );
-        this.selectedRecordFields = this.getSiblingFields(objectMapping.DeveloperName);
-        console.log('this.selectedRecordFields: ', this.selectedRecordFields);
+        if (recordId === null) {
+            //reset all related fields
+            this.reset(objectMapping.DeveloperName);
+        } else {
+            this.selectedRecordId = recordId;
+            this.selectedRecordFields = this.getSiblingFields(objectMapping.DeveloperName);
+            console.log('this.selectedRecordFields: ', this.selectedRecordFields);
+        }
         //TODO: if value is null, take field name and reset all sibling fields on the
         // form
         // this.load({Contact1_Lastname__c: 'LastNameTest'});

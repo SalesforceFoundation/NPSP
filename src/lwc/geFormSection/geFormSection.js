@@ -144,11 +144,24 @@ export default class GeFormSection extends LightningElement {
     }
 
     @api
-    reset() {
-        const fields = this.template.querySelectorAll('c-ge-form-field');
+    reset(fieldMappingDevNames = null) {
+        const fieldsAndWidgetElements = this.template.querySelectorAll('c-ge-form-field');
 
-        fields.forEach(field => {
-            field.reset();
+        fieldsAndWidgetElements.forEach(fieldOrWidget => {
+            if (fieldMappingDevNames) {
+                // reset the fields elements related to
+                // these field mappings
+                if (fieldOrWidget.element.elementType === 'field') {
+                    if (fieldMappingDevNames.includes(
+                        fieldOrWidget.element.dataImportFieldMappingDevNames[0]
+                    )) {
+                        fieldOrWidget.reset();
+                    }
+                }
+            } else {
+                // reset all fields and widget elements in this section
+                fieldOrWidget.reset();
+            }
         });
     }
 
@@ -159,10 +172,6 @@ export default class GeFormSection extends LightningElement {
             { detail: event.detail });
         this.dispatchEvent(changeLookupEvent);
     }
-
-    @api
-    fmbomdn;
-
 
     handleLookupRecordSelected(event) {
         this.dispatchEvent(new CustomEvent('lookuprecordselected', {detail: event.detail}));
