@@ -1,5 +1,5 @@
-import { LightningElement, api, track } from 'lwc';
-import { isNotEmpty, checkNestedProperty } from 'c/utilCommon';
+import { LightningElement, api } from 'lwc';
+import { checkNestedProperty } from 'c/utilCommon';
 
 const PAYMENT_WIDGET = 'geFormWidgetPayment';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
