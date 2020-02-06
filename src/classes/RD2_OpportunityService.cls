@@ -37,20 +37,13 @@
 public with sharing class RD2_OpportunityService {
 
     /***
-     * @description A flag to mark Closed Lost Opps that are voided by the data migration. 
-     * The flag is used to exclude (ignore) such Opps by the Opp service
-     * when determining if the next Opp with the same Close Date can be created.
-     */
-    public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = 0;
-
-    /***
     * @description Recurring Donation custom settings
     */
     private RD2_Settings rdSettings {
         get {
             if (rdSettings == null) {
                 rdSettings = new RD2_Settings();
-            } 
+            }
             return rdSettings;
         }
         set;
@@ -84,7 +77,7 @@ public with sharing class RD2_OpportunityService {
     }
 
     /**
-    * @description Current date used as a cut off date to filter out and evaluate Opportunities 
+    * @description Current date used as a cut off date to filter out and evaluate Opportunities
      * with projected RD schedule installments as of the current date.
      * It can be a date in past, today or a future date in testing. When executed from a scheduler,
      * the current date is always today.
@@ -105,10 +98,6 @@ public with sharing class RD2_OpportunityService {
     * @return void
     */
     public void createOpportunities(List<npe03__Recurring_Donation__c> rds) {
-        if (rds.isEmpty()) {
-            return;
-        }
-
         List<Opportunity> oppsToCreate = new List<Opportunity>();
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = new Map<Id, List<RD2_ScheduleService.Installment>>();
         Integer numberOfInstallments = 1;
@@ -116,17 +105,21 @@ public with sharing class RD2_OpportunityService {
         for (npe03__Recurring_Donation__c rd : rds) {
             List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
                 currentDate, numberOfInstallments, rd.RecurringDonationSchedules__r
-            ); 
-            
+            );
+            installmentsByRDId.put(rd.Id, installments);
+
             if (installments.isEmpty()) {
                 continue;
             }
-            
-            Opportunity opp = buildOpportunity(rd, installments[0]);
 
-            if (isNewOpportunity(opp, rd.npe03__Donations__r)) {
-                oppsToCreate.add(opp);
-                installmentsByRDId.put(rd.Id, installments); 
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
+                .filterCurrent(rd.npe03__Donations__r)
+                .match(installments);
+
+            for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
+                if (record.isNew()) {
+                    oppsToCreate.add(buildOpportunity(rd, record.getInstallment()));
+                }
             }
         }
 
@@ -146,31 +139,6 @@ public with sharing class RD2_OpportunityService {
         updatePaymentRecords(installmentByOppId);
     }
 
-
-    /***
-    * @description Indicates if the Opportunity can be created. The Opp gets the green light
-    * when there is no open/closed Opp with the same Close Date *except* when
-    * the Opp was Closed Lost during data migration to the enhanced (RD2) format. In that case,
-    * the Closed Lost Opp will be ignored and the new Opp with the same Close Date can be created.
-    *
-    * @param newOpp Opportunity just built but not created yet
-    * @param existingOpps Existing Opportunities on the Recurring Donation
-    * @return Boolean
-    */
-    private Boolean isNewOpportunity(Opportunity newOpp, List<Opportunity> existingOpps) {
-        for (Opportunity opp : existingOpps) {
-            if (newOpp.CloseDate == opp.CloseDate) {
-
-                Boolean isClosedLostInMigration = opp.isClosed && !opp.IsWon 
-                    && opp.Recurring_Donation_Installment_Number__c == MIGRATION_INSTALLMENT_NUMBER_FLAG;
-
-                return isClosedLostInMigration;
-            }
-        }
-
-        return true;
-    }
-
     /***
     * @description Builds the opportunity and populates its fields from the recurring donation.
     * @param rd Recurring donation
@@ -187,7 +155,7 @@ public with sharing class RD2_OpportunityService {
             npe03__Recurring_Donation__c = rd.Id
         );
         opp.Recurring_Donation_Installment_Number__c = rd.npe03__Total_Paid_Installments__c != null
-            ? rd.npe03__Total_Paid_Installments__c + 1 
+            ? rd.npe03__Total_Paid_Installments__c + 1
             : 1;
         opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
 
@@ -208,7 +176,7 @@ public with sharing class RD2_OpportunityService {
     */
     private String buildOpportunityName(String donorName, Opportunity opp) {
         return
-            donorName + ' ' 
+            donorName + ' '
             + System.Label.npe03.RecurringDonationPrefix
             + ' (' + opp.Recurring_Donation_Installment_Number__c +  ') '
             + opp.CloseDate.format();
@@ -220,39 +188,31 @@ public with sharing class RD2_OpportunityService {
     * @return void
     */
     public void updateOpportunities(List<npe03__Recurring_Donation__c> rds) {
-        if (rds.isEmpty()) {
-            return;
-        }
-
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
 
         //Synchronize Opps with matching Schedule installments
         for (npe03__Recurring_Donation__c rd : rds) {
-            List<Opportunity> rdOpps = getCurrentOpps(rd);
-            if (rdOpps.isEmpty()) {
-                continue;
-            }
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
+                .filterCurrent(rd.npe03__Donations__r);
 
-            Integer numberOfInstallments = rdOpps.size();
             List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
-                currentDate, numberOfInstallments, rd.RecurringDonationSchedules__r
-            );  
+                currentDate, matcher.size(), rd.RecurringDonationSchedules__r
+            );
 
-            for (Integer i = 0; i < numberOfInstallments; i++) {
-                Opportunity opp = rdOpps[i];
-                //bypass 
-                //1. past Opps regardless if they are open or closed
-                //2. closed Opps regardless if they are past or future
-                if (opp.CloseDate < currentDate || opp.isClosed == true) {
+            matcher.match(installments);
+
+            for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
+                if (record.isNew() || !record.isOpen() || !record.hasInstallment()) {
                     continue;
                 }
 
-                Boolean hasMatchingInstallment = installments != null && (i + 1 <= installments.size());
-                installmentByOppId.put(opp.Id, hasMatchingInstallment ? installments[i] : null);
+                RD2_ScheduleService.Installment installment = record.getInstallment();
+                Opportunity opp = record.getOpportunity();
+
+                installmentByOppId.put(opp.Id, installment);
 
                 Boolean isChanged = syncOpportunity(opp, installmentByOppId.get(opp.Id), rd);
-
                 if (isChanged) {
                     oppsToUpdate.add(opp);
                 }
@@ -265,27 +225,7 @@ public with sharing class RD2_OpportunityService {
     }
 
     /***
-    * @description Returns Opp with Close Date = today (if any) and all future open Opps
-    * - If the Close Date = today, then the Opp can be closed or open
-    * - If the Close Date > today, only open Opps are considered
-    *
-    * @param rd Recurring Donation
-    * @return List<Opportunity>
-    */
-    private List<Opportunity> getCurrentOpps(npe03__Recurring_Donation__c rd) {
-        List<Opportunity> opps = new List<Opportunity>();
-        
-        for (Opportunity opp : rd.npe03__Donations__r) {
-            if (opp.CloseDate >= currentDate) {
-                opps.add(opp);
-            }
-        }
-
-        return opps;
-    }
-
-    /***
-    * @description Updates Opportunity if it differs from its related Recurring Donation and/or matching installment
+    * @description Updates Opportunity if it differs from the related Recurring Donation Schedule installment
     * @param opp Opportunity
     * @param installment Recurring Donation Schedule installment
     * @param rd Recurring Donation
@@ -354,9 +294,9 @@ public with sharing class RD2_OpportunityService {
             RD2_ScheduleService.Installment installment = installmentByOppId.get(payment.npe01__Opportunity__c);
 
             if (installment != null
-                && String.isNotBlank(installment.paymentMethod) 
+                && String.isNotBlank(installment.paymentMethod)
                 && payment.npe01__Payment_Method__c != installment.paymentMethod
-            ) {                
+            ) {
                 payment.npe01__Payment_Method__c = installment.paymentMethod;
                 payments.add(payment);
             }
