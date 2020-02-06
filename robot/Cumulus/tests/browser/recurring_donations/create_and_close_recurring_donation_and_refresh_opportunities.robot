@@ -56,6 +56,7 @@ Create and Close a Recurring Donation and Refresh Opportunities
     Click Actions Button         Edit
     Select Value From Dropdown   Open Ended Status              Closed
     Click Modal Button           Save
+    Wait Until Modal Is Closed
     Refresh Opportunities
 
     #Find 3rd Opportunity for Recurring Donation
