@@ -42,7 +42,7 @@ class DataImportPage(BaseNPSPPage, ListingPage):
 class DataImportDetailPage(BaseNPSPPage, DetailPage): 
     
     
-        
+    @capture_screenshot_on_error    
     def edit_record(self):
         """From the actions dropdown select edit action and wait for modal to open"""
         locator=npsp_lex_locators['link-contains'].format("more actions")

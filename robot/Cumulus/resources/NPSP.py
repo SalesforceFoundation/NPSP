@@ -266,29 +266,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['click_aff_id'].format(self.aff_id_text)
         self.selenium.get_webelement(locator).click()   
         
-        
-#     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
-#         """If status is 'contains' then the specified value should be present in the field
-#                         'does not contain' then the specified value should not be present in the field
-#         """
-#         if section is not None:
-#             section="text:"+section
-#             self.selenium.scroll_element_into_view(section)
-#         list_found = False
-#         locators = npsp_lex_locators["confirm"].values()
-#         for i in locators:
-#             locator = i.format(field,value)
-#             if self.check_if_element_exists(locator):   
-#                 actual_value=self.selenium.get_webelement(locator).text
-#                 if status == "contains":
-#                     assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
-#                 elif status == "does not contain":
-#                     assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
-#                 list_found = True
-#                 break
-# 
-#         assert list_found, "locator not found"  
-    @capture_screenshot_on_error 
+    @capture_screenshot_on_error    
     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
@@ -298,23 +276,46 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.selenium.scroll_element_into_view(section)
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
-        if status == "contains":
-            for i in locators:
-                locator = i.format(field,value)
-                if self.check_if_element_exists(locator):
-                    actual_value=self.selenium.get_webelement(locator).text
-                    assert value == actual_value, "Expected {} value to be {} but found {}".format(field,value, actual_value)
-                    list_found=True
-                    break
-        if status == "does not contain":
-            for i in locators:
-                locator = i.format(field,value)
-                self.selenium.page_should_not_contain_element(locator,message= f"{field} should not contain {value}")   
+        for i in locators:
+            locator = i.format(field)
+            if self.check_if_element_exists(locator):   
+                actual_value=self.selenium.get_webelement(locator).text
+                if status == "contains":
+                    assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
+                elif status == "does not contain":
+                    assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
                 list_found = True
                 break
-
-        assert list_found, "locator not found" 
-    
+ 
+        assert list_found, "locator not found"  
+#     @capture_screenshot_on_error 
+#     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
+#         """If status is 'contains' then the specified value should be present in the field
+#                         'does not contain' then the specified value should not be present in the field
+#         """
+#         if section is not None:
+#             section="text:"+section
+#             self.selenium.scroll_element_into_view(section)
+#         list_found = False
+#         locators = npsp_lex_locators["confirm"].values()
+#         if status == "contains":
+#             for i in locators:
+#                 locator = i.format(field,value)
+#                 if self.check_if_element_exists(locator):
+#                     actual_value=self.selenium.get_webelement(locator).text
+#                     assert value == actual_value, "Expected {} value to be {} but found {}".format(field,value, actual_value)
+#                     list_found=True
+#                     break
+#         if status == "does not contain":
+#             for i in locators:
+#                 locator = i.format(field,value)
+#                 if self.check_if_element_exists(locator):
+#                     print(f"locator is {locator}")
+#                     raise Exception(f"{field} should not contain {value}")
+#             list_found = True    
+# 
+#         assert list_found, "locator not found" 
+    @capture_screenshot_on_error
     def verify_record(self, name):
         """ Checks for the record in the object page and returns true if found else returns false
         """
