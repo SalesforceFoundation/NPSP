@@ -94,6 +94,9 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private Integer rdDiffCount = 0;
 
     @TestVisible
+    private Integer fixedLengthRdCount = 0;
+
+    @TestVisible
     private Integer oppsWithMultiplePaymentsCount = 0;
 
     @TestVisible
@@ -103,6 +106,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description Constructor
+     * @param jobMode Determine if the current batch is for Opportunity or Recurring Donation
      */
     public UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode jobMode) {
         this.jobMode = jobMode;
@@ -111,6 +115,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     /**
      * @description Execute the appropriate query to use in this batch job. Clears out the last processed Id to prevent
      * infinite loops
+     * @param context Not used
+     * @return Database.QueryLocator
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
         String soqlQuery = buildQuery(lastProcessedId, chunkSize);
@@ -122,16 +128,20 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description Builds a query based on batch job mode, using specified Id offset and limit
+     * @param idToOffset Track the last processed Id to prevent duplicate count
+     * @param queryLimit The chunk size of the query
+     * @return String Constructed query
      */
     private String buildQuery(Id idToOffset, Integer queryLimit) {
-        String soqlQuery = 'SELECT Id FROM Account LIMIT 0';
+        String soqlQuery = '';
+
         switch on (jobMode) {
             when OPPORTUNITIES {
                 soqlQuery = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c, npe01__Number_of_Payments__c FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
             when RECURRING_DONATIONS {
-                soqlQuery = 'SELECT npe03__Amount__c FROM npe03__Recurring_Donation__c WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
+                soqlQuery = 'SELECT npe03__Amount__c, npe03__Open_Ended_Status__c FROM npe03__Recurring_Donation__c WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
             when else {
@@ -150,6 +160,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     /**
      * @description For each batch iteration, loop through the records and count as needed into
      * stateful vars
+     * @param context not used
+     * @param scope The sobject records being processed
      */
     public void execute(Database.BatchableContext context, List<SObject> scope) {
         // Since execution contexts might not run in order (ex., chunk size 10k,
@@ -173,6 +185,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description Handles batch logic for OPPORTUNITIES job mode
+     * @param opp The Opportunity records being processed
      */
     private void handleOpportunityJobMode(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
@@ -183,6 +196,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description Process RecurringDonation counters for the specific Opportunity
+     * @param opp The Opportunity to be evaluated
      */
     private void getOppRecurringDonationsCounts(Opportunity opp) {
         if (opp.npe03__Recurring_Donation__c == null) {
@@ -199,17 +213,21 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description Handles batch logic for RECURRING_DONATIONS job mode
+     * @param recurringDonations The Rd records being processed
      */
     private void handleRecurringDonationsJobMode(List<npe03__Recurring_Donation__c> recurringDonations) {
         Map<Id, List<Opportunity>> oppsByRecurringDonationId = getOppsByRecurringDonationId(recurringDonations);
 
         for (npe03__Recurring_Donation__c recurringDonation : recurringDonations) {
             getRecurringDonationsCounts(recurringDonation, oppsByRecurringDonationId.get(recurringDonation.Id));
+            fixedLengthRdCount(recurringDonation);
         }
     }
 
     /**
      * @description Process RecurringDonation counters for the specific Opportunity
+     * @param recurringDonation The Rd being evaluated
+     * @param relatedOpps The Opportunities that are related to the Rd
      */
     private void getRecurringDonationsCounts(npe03__Recurring_Donation__c recurringDonation, List<Opportunity> relatedOpps) {
         rdAllCount++;
@@ -227,7 +245,19 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
+    * @description Increment fixed-length Rd counter when the Rd is fixed-length(open ended status of none or null)
+    * @param recurringDonation The Rd being evaluated
+    */
+    private void fixedLengthRdCount(npe03__Recurring_Donation__c recurringDonation) {
+        if(recurringDonation.npe03__Open_Ended_Status__c == null || recurringDonation.npe03__Open_Ended_Status__c == 'None') {
+            fixedLengthRdCount++;
+        }
+    }
+
+    /**
      * @description Builds a map of opportunities grouped by npe03__Recurring_Donation__c
+     * @param recurringDonations Rds to be evaluated
+     * @return Map<Id, List<Opportunity>>
      */
     private Map<Id, List<Opportunity>> getOppsByRecurringDonationId(List<npe03__Recurring_Donation__c> recurringDonations) {
         List<Opportunity> opps = [
@@ -255,6 +285,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description Handles payment counts
+     * @param opp The Opportunity being evaluated
      */
     private void countOppsWithPayments(Opportunity opp) {
         if (opp.npe01__Number_of_Payments__c > 1) {
@@ -268,6 +299,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description When the entire batch job is done, submit the final count variables to the LMO
+     * @param context not used
      */
     public void finish(Database.BatchableContext context) {
         if (shouldChainNextBatch()) {
@@ -310,6 +342,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private void setRecurringDonationsCounts() {
         featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), rdAllCount);
         featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(), fixedLengthRdCount);
     }
 
     /**

@@ -47,31 +47,31 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     private static void testDataSetup() {
         TDTM_Config_API.disableAllTriggers();
 
-        npe03__Recurring_Donation__c openRd = new npe03__Recurring_Donation__c(
-            npe03__Amount__c = 100,
-            npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
-        );
-
-        npe03__Recurring_Donation__c closedRd = new npe03__Recurring_Donation__c(
-            npe03__Amount__c = 1200,
-            npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationClosedStatus
-        );
-
-        insert new List<npe03__Recurring_Donation__c>{ openRd, closedRd };
-
-        Map<Schema.SObjectField, Object> fieldValues = new Map<Schema.SObjectField, Object> {
-            Opportunity.Amount => 100,
-            Opportunity.npe03__Recurring_Donation__c => openRd.Id
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c> {
+            new TEST_RecurringDonationBuilder()
+                .withAmount(100)
+                .withOpenEndedStatusOpen()
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withAmount(1200)
+                .withOpenEndedStatusClosed()
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withAmount(1200)
+                .withOpenEndedStatusNone()
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withAmount(1200)
+                .build()
         };
 
+        insert rds;
+
         //Build opps for open recurring donation
-        List<Opportunity> opps = buildOpps(1, fieldValues);
+        createOpps(1, rds[0].Id);
 
         //Build opps for closed recurring donation
-        fieldValues.put(Opportunity.npe03__Recurring_Donation__c, closedRd.Id);
-        opps.addAll(buildOpps(12, fieldValues));
-
-        insert opps;
+        createOpps(12, rds[1].Id);
 
         setupOppsWithPayments();
     }
@@ -80,19 +80,11 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
      * @description Creates opportunities with single and multiple payments
      */
     private static void setupOppsWithPayments() {
-        Map<Schema.SObjectField, Object> fieldValues = new Map<Schema.SObjectField, Object> {
-            Opportunity.Amount => 100
-        };
-
         List<Opportunity> opps = new List<Opportunity>();
 
-        List<Opportunity> oppsWithMultiplePayments = buildOpps(NUM_OPPS_WITH_MULTIPLE_PAYMENTS, fieldValues);
-        opps.addAll(oppsWithMultiplePayments);
+        List<Opportunity> oppsWithMultiplePayments = createOpps(NUM_OPPS_WITH_MULTIPLE_PAYMENTS);
 
-        List<Opportunity> oppsWithSinglePayment = buildOpps(NUM_OPPS_WITH_SINGLE_PAYMENT, fieldValues);
-        opps.addAll(oppsWithSinglePayment);
-
-        insert opps;
+        List<Opportunity> oppsWithSinglePayment = createOpps(NUM_OPPS_WITH_SINGLE_PAYMENT);
 
         List<npe01__OppPayment__c> payments = buildPaymentsForOpps(oppsWithMultiplePayments, 2);
         payments.addAll(buildPaymentsForOpps(oppsWithSinglePayment, 1));
@@ -244,11 +236,30 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             'The lastProcessedId should be cached correctly'
         );
 
-        System.assertEquals(2, rdBatch.rdAllCount,
+        System.assertEquals(recurringDonations.size(), rdBatch.rdAllCount,
             'The number of Recurring Donations should be tracked correctly');
 
         System.assertEquals(1, rdBatch.rdDiffCount,
             'The number of Recurring Donations with an amount differing from its opportunities should be tracked correctly');
+    }
+
+    /**
+     * @description Verifies total number of fixed-length Rds are calculated correctly
+     */
+    @IsTest
+    private static void shouldCountTotalFixedLengthRds() {
+        UTIL_OrgTelemetry_SObject_BATCH rdBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
+
+        String rdBatchQuery = rdBatch.start(null).getQuery();
+        List<npe03__Recurring_Donation__c> recurringDonations = Database.query(rdBatchQuery);
+
+        Test.startTest();
+        rdBatch.execute(null, recurringDonations);
+        Test.stopTest();
+
+        System.assertEquals(2, rdBatch.fixedLengthRdCount,
+            'The number of fixed-length Recurring Donations should be tracked correctly');
     }
 
     /**
@@ -519,28 +530,29 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Builds test opportunity records with the given field values
-     * @param numOpps: number of opportunities to build
-     * @param fieldValues: map of values by SObjectField to set on the opportunities
-     * @return List of uninserted Opportunities
+     * @description Insert Opportunities without parent Rd
+     * @param size amount of opps to be inserted
+     * @return List<Opportunity>
      */
-    private static List<Opportunity> buildOpps(Integer numOpps, Map<Schema.SObjectField, Object> fieldValues) {
-        List<Opportunity> opps = new List<Opportunity>();
+    private static List<Opportunity> createOpps(Integer size) {
+        return createOpps(size, null);
+    }
 
-        for (Integer i = 0; i < numOpps; i++) {
-            Opportunity opp = new Opportunity(
-                Name = 'Test Opp ' + i,
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                CloseDate = Date.today()
-            );
+    /**
+     * @description Insert opportunities with parent Rd
+     * @param size amount of opps to be inserted
+     * @param rd The parent Rd
+     * @return List<Opportunity>
+     */
+    private static List<Opportunity> createOpps(Integer size, Id rdId) {
+        List<Opportunity> opps = new TEST_OpportunityBuilder()
+            .withAmount(100)
+            .withClosedWonStage()
+            .withCloseDate(Date.today())
+            .withRecurringDonation(rdId)
+            .build(size);
 
-            for (Schema.SObjectField field : fieldValues.keySet()) {
-                opp.put(field, fieldValues.get(field));
-            }
-
-            opps.add(opp);
-        }
-
+        insert opps;
         return opps;
     }
 
@@ -552,11 +564,18 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
      */
     private static List<npe01__OppPayment__c> buildPaymentsForOpps(List<Opportunity> opps, Integer numPayments) {
         List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
+
         for (Opportunity opp : opps) {
             for (Integer i = 0; i < numPayments; i++) {
-                payments.add(new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id));
+                payments.add(
+                    new npe01__OppPayment__c(
+                        npe01__Payment_Amount__c = 100,
+                        npe01__Opportunity__c = opp.Id
+                    )
+                );
             }
         }
+        
         return payments;
     }
 

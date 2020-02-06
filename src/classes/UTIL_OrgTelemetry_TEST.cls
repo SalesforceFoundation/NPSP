@@ -377,6 +377,29 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
+    * @description Verifies Data_CountFixLengthRd telemetry data is retrieved and set up correctly
+    */
+    @IsTest
+    private static void shouldInitializeTeletryDataCountFieldWhenCountFixedLengthRdTelemetryStart() {
+        Test.startTest();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd);
+
+        Test.stopTest();
+
+        System.assertEquals(
+            -1, 
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'Telemetry field DataCount_ONETIME_Use should defaulted to -1 with the feature of Data_CountFixedLengthRd.'
+        );
+    }
+
+    /**
      * @description Test that the Data_CountOfErrorLog settings telemetry data is retrieved.
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
