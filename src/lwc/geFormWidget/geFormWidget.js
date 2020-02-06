@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, checkNestedProperty } from 'c/utilCommon';
 
 const PAYMENT_WIDGET = 'geFormWidgetPayment';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -52,6 +52,6 @@ export default class GeFormWidget extends LightningElement {
     }
 
     get totalAmount() {
-        return isNotEmpty(this.widgetData.donationAmount) ? this.widgetData.donationAmount : 0;
+        return checkNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
     }
 }

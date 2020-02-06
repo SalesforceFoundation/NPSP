@@ -1,11 +1,10 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { getRecord } from 'lightning/uiRecordApi';
-import { dispatch, handleError } from 'c/utilTemplateBuilder';
+import { handleError } from 'c/utilTemplateBuilder';
 import { deepClone } from 'c/utilCommon';
 import geLabelService from 'c/geLabelService';
 
-const EVENT_TOGGLE_MODAL = 'togglemodal';
 const PAYMENT = 'payment';
 const OPPORTUNITY = 'opportunity';
 
@@ -129,7 +128,7 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
             }
         };
 
-        dispatch(this, EVENT_TOGGLE_MODAL, modalConfig);
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail: modalConfig }));
     }
 
     /*******************************************************************************
@@ -150,11 +149,11 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
         }
 
         const detail = {
-            selectedDonation: this.selectedDonation,
-            donationType: this.donationType
+            selectedDonation: deepClone(this.selectedDonation),
+            donationType: deepClone(this.donationType)
         }
 
-        dispatch(this, 'changeselecteddonation', detail);
+        this.dispatchEvent(new CustomEvent('changeselecteddonation', { detail }));
     }
 
     /*******************************************************************************
