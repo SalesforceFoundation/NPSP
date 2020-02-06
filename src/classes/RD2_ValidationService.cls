@@ -230,7 +230,7 @@ public with sharing class RD2_ValidationService {
         if ((String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD)
             && !noClosedOppRDIds.contains(rd.Id)
         ) {
-            rd.addError(System.Label.RD2_CurrencyChangeIsRestricted);
+            rd.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnRD);
         }
     }
 

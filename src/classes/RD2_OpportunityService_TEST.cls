@@ -793,7 +793,7 @@ private with sharing class RD2_OpportunityService_TEST {
         };
         insert opps;
 
-        Exception actualException = updateRDCurrency(rd, CURRENCY_USD);
+        Exception actualException = updateRecurringDonation(rd, RD_NEW_AMOUNT, CURRENCY_USD);
 
         assertCurrencyIsRestrictedException(rd, actualException);
     }
@@ -825,7 +825,7 @@ private with sharing class RD2_OpportunityService_TEST {
         };
         insert opps;
 
-        Exception actualException = updateRDCurrency(rd, CURRENCY_USD);
+        Exception actualException = updateRecurringDonation(rd, RD_NEW_AMOUNT, CURRENCY_USD);
 
         assertCurrencyIsRestrictedException(rd, actualException);
     }
@@ -839,7 +839,7 @@ private with sharing class RD2_OpportunityService_TEST {
      */
     private static void assertCurrencyIsRestrictedException(npe03__Recurring_Donation__c rd, Exception actualException) {
         System.assertNotEquals(null, actualException, 'An Exception should be generated');
-        System.assert(actualException.getMessage().contains(System.Label.RD2_CurrencyChangeIsRestricted),
+        System.assert(actualException.getMessage().contains(System.Label.RD2_CurrencyChangeIsRestrictedOnRD),
             'Exception message should match, actual message: ' + actualException.getMessage());
             
         for (Opportunity opp : oppGateway.getRecords(rd)) {
@@ -875,7 +875,7 @@ private with sharing class RD2_OpportunityService_TEST {
         };
         insert opps;
 
-        Exception actualException = updateRDCurrency(rd, CURRENCY_USD);
+        Exception actualException = updateRecurringDonation(rd, RD_NEW_AMOUNT, CURRENCY_USD);
 
         System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
 
@@ -965,14 +965,16 @@ private with sharing class RD2_OpportunityService_TEST {
     /***
     * @description Updates currency on the Recurring Donation record
     * @param rd A Recurring Donation record
+    * @param newAmount New Amount value
     * @param currencyCode Curency ISO Code on the Recurring Donation record
     * @return Exception Returns an exception if generated during update
     */
-    private static Exception updateRDCurrency(npe03__Recurring_Donation__c rd, String currencyCode) {
+    private static Exception updateRecurringDonation(npe03__Recurring_Donation__c rd, Decimal newAmount, String currencyCode) {
         Exception actualException;
         try {
             Test.startTest();
             rd.put(CURRENCY_ISO_CODE_FIELD, currencyCode);
+            rd.npe03__Amount__c = newAmount;
             update rd;
             Test.stopTest();
 

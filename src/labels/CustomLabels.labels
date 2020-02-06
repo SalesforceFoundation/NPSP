@@ -1511,7 +1511,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>You can&apos;t change the Household Account or Contact on a Recurring Donation that has Closed Opportunities.</value>
     </labels>
     <labels>
-        <fullName>RD2_CurrencyChangeIsRestricted</fullName>
+        <fullName>RD2_CurrencyChangeIsRestrictedOnOpp</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Currency change restriction on an Opportunity</shortDescription>
+        <value>You can&apos;t modify Opportunity currency to be different than related Recurring Donation currency.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
