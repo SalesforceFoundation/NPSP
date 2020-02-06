@@ -1,7 +1,8 @@
 <template>
     <c-util-card title={opportunityComputedName}
                  icon-name="standard:opportunity"
-                 icon-size="small">
+                 icon-size="small"
+                 css-class={computedCardCssClass}>
         <template if:true={isLoading}>
             <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
         </template>
@@ -98,6 +99,7 @@
                                                medium-device-size="6"
                                                large-device-size="3">
                             <c-ge-donation-matching-payment-card payment={it.value}
+                                                                 selected-donation-id={selectedDonationId}
                                                                  onupdatepayment={handleUpdatePayment}>
                             </c-ge-donation-matching-payment-card>
                         </lightning-layout-item>
