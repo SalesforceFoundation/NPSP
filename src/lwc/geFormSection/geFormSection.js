@@ -4,8 +4,6 @@ export default class GeFormSection extends LightningElement {
     @api section;
     @track expanded = true;
 
-    @api fieldMappings;
-    @api objectMappings;
     /**
      * Get the icon that should display next to the twistable section header
      * @returns {string} containing the icon name from SLDS
@@ -166,14 +164,10 @@ export default class GeFormSection extends LightningElement {
     }
 
     handleChangeLookup(event) {
-        //Does this event do anything? do we needit?
         const changeLookupEvent = new CustomEvent(
             'changelookup',
             { detail: event.detail });
         this.dispatchEvent(changeLookupEvent);
     }
 
-    handleLookupRecordSelected(event) {
-        this.dispatchEvent(new CustomEvent('lookuprecordselected', {detail: event.detail}));
-    }
 }

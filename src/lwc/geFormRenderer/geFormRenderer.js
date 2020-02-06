@@ -104,6 +104,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    //TODO: loading from account or contact and possibly selecting donation/payment in
+    //      review donations modal could possibly route through this getSelectedRecord
+    //      function by populating selectedRecordId and selectedRecordFields (using
+    //      this.getSiblingFields())
     selectedRecordIdByObjectMappingDevName = {};
     selectedRecordId;
     selectedRecordFields;
@@ -112,19 +116,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (error) {
             handleError(error);
         } else if (data) {
-            console.log('*** ' + 'got record in form: ' +JSON.stringify(data)+ ' ***');
-            debugger;
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             // dataImport should be object with keys = source field api name, and value =
             // an object with at least one property "value" - but could have more, for
             // instance "displayValue" for lookup fields, etc.
+            // See response from getRecord for data structure guidance.
             this.load(dataImport);
         }
     }
 
     mapRecordValuesToDataImportFields(record) {
-        console.log('this.selectedRecordIdByObjectMappingName: ', this.selectedRecordIdByObjectMappingDevName);
-        //reverse map
+        //reverse map to create an object with relevant source field api names to values
         let dataImport = {};
 
         let objectMappingDevNames = [];
@@ -134,7 +136,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 objectMappingDevNames.push(key);
             }
         }
-        console.log('objectMappingDevNames: ', objectMappingDevNames);
 
         for (const objectMappingName of objectMappingDevNames) {
             //relevant field mappings
@@ -146,8 +147,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 dataImport[fieldMapping.Source_Field_API_Name] = value;
             }
         }
-
-        console.log('dataImport: ', JSON.stringify(dataImport));
 
         return dataImport;
     }
@@ -793,19 +792,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             objectMapping.DeveloperName, recordId
         );
         if (recordId === null) {
-            //reset all related fields
+            // Reset all fields related to this lookup field's object mapping
             this.reset(objectMapping.DeveloperName);
         } else {
             this.selectedRecordId = recordId;
             this.selectedRecordFields = this.getSiblingFields(objectMapping.DeveloperName);
-            console.log('this.selectedRecordFields: ', this.selectedRecordFields);
         }
-        //TODO: if value is null, take field name and reset all sibling fields on the
-        // form
-        // this.load({Contact1_Lastname__c: 'LastNameTest'});
-    // ISEE, I think this is meant to only run when the account or contact 1 imported
-        // fields are populated in order to display the review donations modal ( not for
-        // all lookups)...
+        
         const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
         const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
@@ -899,10 +892,4 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             that.sections = sections;
         }, 1, that, sections);
     }
-
-    handleLookupRecordSelected(event) {
-        console.log('in renderer - event: ', JSON.stringify(event));
-        this.load(event.detail);
-    }
-
 }
