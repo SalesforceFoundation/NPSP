@@ -235,7 +235,8 @@ public with sharing class GE_DefaultTemplate {
             }
             
             if (partialObjectDevName != fieldMapping.Target_Object_Mapping__r.DeveloperName) {
-                updatedObjectDevNameMap.put(partialObjectDevName, fieldMapping.Target_Object_Mapping__r.DeveloperName);
+                updatedObjectDevNameMap.put(partialObjectDevName, 
+                    fieldMapping.Target_Object_Mapping__r.DeveloperName);
             }            
         }
     }
