@@ -940,7 +940,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         Id individualRecordTypeId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
         if (individualRecordTypeId != null) {
             Schema.RecordTypeInfo recordTypeInfo = null;
-            Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
+            Schema.DescribeSObjectResult describeResult = UTIL_Describe.getObjectDescribe(Account.SObjectType);
             Map<Id,Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
             recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
             return recordTypeInfo == null

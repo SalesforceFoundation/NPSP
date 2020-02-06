@@ -95,7 +95,7 @@ public class CRLP_Rollup_SVC {
     public static SObject createEmptyResultObject(Id objectId, List<CRLP_Rollup> rollups) {
         SObjectType objType = objectId.getSobjectType();
         if (!cachedEmptyObjects.containsKey(objType)) {
-            SObject emptyObject = UTIL_Describe.getPrototypeObject(objType.getDescribe().getName());
+            SObject emptyObject = UTIL_Describe.getPrototypeObject(UTIL_Describe.getObjectDescribe(objType).getName());
             for (CRLP_Rollup rollup : rollups) {
                 for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
                     emptyObject.put(rollup.rollupsMdt[ns].summaryField, null);

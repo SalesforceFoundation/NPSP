@@ -74,10 +74,11 @@ public class UTIL_Describe {
         utilDescribeInstance = utilDescribe;
     }
 
-    /*******************************************
-    * Gets describe maps for a new object
-    ********************************************/
-    static void fillMapsForObject(string objectName) {
+    /**
+    * @description Gets describe maps for a new object, using lazy loading of child relationships
+    * @param objectName Object api name
+    */
+    static void fillMapsForObject(String objectName) {
         // get the object map the first time
         if (gd == null) {
             gd = Schema.getGlobalDescribe();
@@ -86,7 +87,7 @@ public class UTIL_Describe {
         // get the object description
         if (gd.containsKey(objectName)) {
             if (!objectDescribes.containsKey(objectName)) {
-                Schema.DescribeSObjectResult objDescribe = gd.get(objectName).getDescribe();
+                Schema.DescribeSObjectResult objDescribe = gd.get(objectName).getDescribe(SObjectDescribeOptions.Deferred);
                 objectDescribes.put(objectName, objDescribe);
                 objectDescribesByType.put(objDescribe.getSObjectType(), objDescribe);
             }
@@ -98,7 +99,7 @@ public class UTIL_Describe {
     /*******************************************
     * Gets a field map for a new object/field pair
     ********************************************/
-    private static void fillFieldMapsForObject(string objectName, string fieldName) {
+    private static void fillFieldMapsForObject(String objectName, String fieldName) {
         // get the object map the first time
         fillMapsForObject(objectName);
 
@@ -174,21 +175,36 @@ public class UTIL_Describe {
     */
     public static Schema.DescribeSObjectResult getObjectDescribe(String objectName) {
         // make sure we have this object's schema mapped
-        if (!objectDescribes.containsKey(objectName))
+        if (!objectDescribes.containsKey(objectName)) {
             fillMapsForObject(objectName);
+        }
 
         return objectDescribes.get(objectName);
     }
 
-    /*******************************************************************************************************
-    * @description Returns object describe data.
+     /*******************************************************************************************************
+    * @description Returns object describe data using Lazy Loading of Child Relationships
     * @param objType the SObjectType of the object to lookup
     * @return Schema.DescribeSObjectResult of the object
     */
     public static Schema.DescribeSObjectResult getObjectDescribe(SObjectType objType) {
         // make sure we have this object's schema mapped
         if (objectDescribesByType == null || !objectDescribesByType.containsKey(objType)) {
-            fillMapsForObject(objType.getDescribe().getName());
+            fillMapsForObject(objType.getDescribe(SObjectDescribeOptions.Deferred).getName());
+        }
+
+        return objectDescribesByType.get(objType);
+    }
+
+     /*******************************************************************************************************
+    * @description Returns object describe data, including child relationships
+    * @param objType the SObjectType of the object to lookup
+    * @return Schema.DescribeSObjectResult of the object
+    */
+    public static Schema.DescribeSObjectResult getFullObjectDescribe(SObjectType objType) {
+        // make sure we have this object's schema mapped
+        if (objectDescribesByType == null || !objectDescribesByType.containsKey(objType)) {
+            fillMapsForObject(objType.getDescribe(SObjectDescribeOptions.Full).getName());
         }
 
         return objectDescribesByType.get(objType);
@@ -247,7 +263,7 @@ public class UTIL_Describe {
                 }
             }
         }
-        
+
         return nameField;
     }
 
@@ -440,7 +456,7 @@ public class UTIL_Describe {
         List<String> fieldNames = new List<String>();
         if (gd==null) gd = Schema.getGlobalDescribe();
         Schema.SObjectType targetType = gd.get(obj);
-        Schema.DescribeSObjectResult objectDescribe = targetType.getDescribe();
+        Schema.DescribeSObjectResult objectDescribe = targetType.getDescribe(SObjectDescribeOptions.Deferred);
         Schema.FieldSet fieldSetDescribe = objectDescribe.fieldSets.getMap().get(fieldSetName);
         if (fieldSetDescribe == null) {
             return null;
@@ -485,9 +501,9 @@ public class UTIL_Describe {
             DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
             if (dfr == null || !dfr.isCreateable() || !dfr.isUpdateable())
                 throw (new permsException(string.format(label.flsError, new string[]{strObject + '.' + strF})));
-            
+
             // don't copy null for checkbox fields, or they will give an error on update
-            if (dfr.isNillable() || src.get(strF)!= null) {    
+            if (dfr.isNillable() || src.get(strF)!= null) {
                 dst.put(strF, src.get(strF));
             }
         }
@@ -554,14 +570,14 @@ public class UTIL_Describe {
      * throwing an exception if it isn't.*/
     public static void checkFieldFLS(String objectName, String fieldName) {
         DescribeFieldResult dfr = getFieldDescribe(
-            UTIL_Namespace.StrTokenNSPrefix(objectName), 
+            UTIL_Namespace.StrTokenNSPrefix(objectName),
             fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName
         );
         if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable()) {
             throw (new permsException(
                 string.format(
-                    label.flsError, 
-                    new string[]{UTIL_Namespace.StrTokenNSPrefix(objectName) + '.' + 
+                    label.flsError,
+                    new string[]{UTIL_Namespace.StrTokenNSPrefix(objectName) + '.' +
                                  UTIL_Namespace.StrTokenNSPrefix(fieldName)}
                 )
             ));
@@ -574,7 +590,7 @@ public class UTIL_Describe {
     public static Boolean isMiddleNameEnabled() {
         if (isMiddleNameEnabled == null) {
             if (!fieldTokens.containsKey('Contact')) {
-                fieldTokens.put('Contact', Contact.sObjectType.getDescribe().fields.getMap());
+                fieldTokens.put('Contact', Contact.SObjectType.getDescribe(SObjectDescribeOptions.Deferred).fields.getMap());
                 fieldDescribes.put('Contact', new Map<String, Schema.DescribeFieldResult>());
             }
             isMiddleNameEnabled = fieldTokens.get('Contact').containsKey('middlename');
@@ -588,7 +604,7 @@ public class UTIL_Describe {
     public static Boolean isNameSuffixEnabled() {
         if (isNameSuffixEnabled == null) {
             if (!fieldTokens.containsKey('Contact')) {
-                fieldTokens.put('Contact', Contact.sObjectType.getDescribe().fields.getMap());
+                fieldTokens.put('Contact', Contact.SObjectType.getDescribe(SObjectDescribeOptions.Deferred).fields.getMap());
                 fieldDescribes.put('Contact', new Map<String, Schema.DescribeFieldResult>());
             }
             isNameSuffixEnabled = fieldTokens.get('Contact').containsKey('suffix');
@@ -598,5 +614,5 @@ public class UTIL_Describe {
 
     /** @description our exception object for Field Level & Object Security errors. */
     private class permsException extends Exception {}
-    
+
 }

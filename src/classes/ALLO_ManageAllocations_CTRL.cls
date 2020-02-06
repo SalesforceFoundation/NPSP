@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -185,10 +185,10 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
 
         defaultAllo = new Allocation__c();
-        listAllo = [SELECT Id, Name, Amount__c, Percent__c, General_Accounting_Unit__c 
-            FROM Allocation__c 
-            WHERE Opportunity__c = :parentId 
-            OR Campaign__c = :parentId 
+        listAllo = [SELECT Id, Name, Amount__c, Percent__c, General_Accounting_Unit__c
+            FROM Allocation__c
+            WHERE Opportunity__c = :parentId
+            OR Campaign__c = :parentId
             OR Recurring_Donation__c = :parentId
             OR Payment__c = :parentId];
 
@@ -215,7 +215,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     private void populateObjectParameters(Schema.sObjectType st) {
-        DescribeSObjectResult describe = st.getDescribe();
+        DescribeSObjectResult describe = UTIL_Describe.getObjectDescribe(st);
         keyPrefix = describe.getKeyPrefix();
         objectAPIName = describe.getName();
         objectLabelPlural = describe.getLabelPlural();
@@ -254,7 +254,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         }
         return currencySymbol;
     }
-    
+
     /** @description Adds an empty row to the bottom of the list and refreshes the page.*/
     public pageReference addRow() {
         Allocation__c allo = new Allocation__c();
@@ -270,7 +270,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
         // always add to last row
         listAllo.add(allo);
-        
+
         return null;
     }
 
@@ -302,7 +302,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             else listAlloForInsert.add(allo);
         }
 
-        Savepoint sp = Database.setSavepoint(); 
+        Savepoint sp = Database.setSavepoint();
         try {
             if (!listAlloForDelete.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
@@ -320,7 +320,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
                 insert listAlloForInsert;
             }
-            
+
             redirect = true;
         } catch (Exception e) {
             Database.rollback(sp);

@@ -39,7 +39,7 @@
 public class UTIL_UnitTestData_TEST {
 
     /** @description A mock Account Id .*/
-    public static final String MOCK_ACCOUNT_ID = Account.SObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
+    public static final String MOCK_ACCOUNT_ID = UTIL_Describe.getObjectDescribe(Account.SObjectType).getKeyPrefix() + '000000000001AAA';
 
     public static final String PROFILE_STANDARD_USER = 'Standard User';
     public static final String PROFILE_READONLY_USER = 'Read Only';
@@ -398,7 +398,7 @@ public class UTIL_UnitTestData_TEST {
 
     /***
     * @description Builds a Household Account
-    * @return Account 
+    * @return Account
     */
     public static Account buildHouseholdAccount() {
         return createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
@@ -859,7 +859,7 @@ public class UTIL_UnitTestData_TEST {
     * @description Generates mock Ids for an sObject
     */
     public static List<Id> mockIds(SObjectType sObjectType, Integer size) {
-        String keyPrefix = sObjectType.getDescribe().getKeyPrefix();
+        String keyPrefix = UTIL_Describe.getObjectDescribe(sObjectType).getKeyPrefix();
         List<Id> ids = new List<Id>();
 
         for (Integer i = 0; i < size; i++) {

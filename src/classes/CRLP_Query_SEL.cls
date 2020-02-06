@@ -109,7 +109,7 @@ public inherited sharing class CRLP_Query_SEL {
         List<String> fieldsList = new List<String>(queryFields);
 
         // Build the final SOQL string with the full list of fields
-        String soql = 'SELECT ' + String.join(fieldsList, ',') + ' FROM ' + resultObject.getDescribe().getName();
+        String soql = 'SELECT ' + String.join(fieldsList, ',') + ' FROM ' + UTIL_Describe.getObjectDescribe(resultObject).getName();
 
         return soql;
     }
@@ -165,7 +165,7 @@ public inherited sharing class CRLP_Query_SEL {
         }
 
         // Append the main object back to the query and return it
-        mainSoql += ' FROM ' + detailObject.getDescribe().getName();
+        mainSoql += ' FROM ' + UTIL_Describe.getObjectDescribe(detailObject).getName();
         UTIL_Debug.debug(LoggingLevel.WARN, 'SOQL=' + mainSoql);
         return mainSoql;
     }

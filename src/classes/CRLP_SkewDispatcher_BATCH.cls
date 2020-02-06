@@ -90,7 +90,7 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
             Boolean hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollups(jobType);
 
             // Build a query string of the target Summary object.
-            query = 'SELECT Id FROM ' + this.summaryObjectType.getDescribe().getName();
+            query = 'SELECT Id FROM ' + UTIL_Describe.getObjectDescribe(this.summaryObjectType).getName();
             String skewFilter = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             if (!String.isEmpty(skewFilter)) {
                 query += ' WHERE ' + skewFilter;

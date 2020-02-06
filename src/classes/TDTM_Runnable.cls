@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2013, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 
@@ -36,9 +36,9 @@
  * @description Abstract class that classes to be run from a trigger, according to the TDTM design,
  * need to extend.
  *
- * It will be the duty of the run method implementation to set a flag to prevent re-entrancy. We cannot do 
- * that for them in TDTM_TriggerHandler, even if it's after calling the future, because then it might get set 
- * before the future runs (and since the future method calls the non-future method, which checks the flag, 
+ * It will be the duty of the run method implementation to set a flag to prevent re-entrancy. We cannot do
+ * that for them in TDTM_TriggerHandler, even if it's after calling the future, because then it might get set
+ * before the future runs (and since the future method calls the non-future method, which checks the flag,
  * the future method would have no effect.) Also, some classes might not want to prevent it.
  */
 global abstract class TDTM_Runnable {
@@ -54,7 +54,7 @@ global abstract class TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-     * @description Calls the run method of the class, as a future. To be called dynamically from TDTM_TriggerHandler. 
+     * @description Calls the run method of the class, as a future. To be called dynamically from TDTM_TriggerHandler.
      * We need this method because Apex won't let us call a non-static method from a separate object instance.
      * @param newIds The IDs of the records that were passed to the trigger as trigger.new.
      * @param oldIds The IDs of the records that were passed to the trigger as trigger.old.
@@ -66,7 +66,7 @@ global abstract class TDTM_Runnable {
     public void runFutureNonStatic(Set<Id> newIds, Set<Id> oldIds, String action, String objectName, String classToRunName) {
         runFuture(newIds, oldIds, action, objectName, classToRunName);
     }
-    
+
     /*******************************************************************************************************
      * @description Calls the run method of the class, as a future.
      * @param newIds The IDs of the records that were passed to the trigger as trigger.new.
@@ -78,13 +78,13 @@ global abstract class TDTM_Runnable {
      */
     @future
     public static void runFuture(Set<Id> newIds, Set<Id> oldIds, String action, String objectName, String classToRunName) {
-        
+
         Schema.DescribeSObjectResult objResult = UTIL_Describe.getObjectDescribe(objectName);
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
-        
+
         //Get all fields for the object
         List<Schema.SObjectField> allFields = objResult.fields.getMap().values();
-        
+
         //Getting the records the IDs refer to
         String qn = 'SELECT ';
         for (Integer i = 0; i < allFields.size() - 1; i++) { //add all fields, except last, to query
@@ -104,7 +104,7 @@ global abstract class TDTM_Runnable {
 
         //Call the non-future method
         Type classType = Type.forName(classToRunName);
-        Object classInstance; 
+        Object classInstance;
         if (classType != null) {
             classInstance = classType.newInstance();
         }
@@ -120,7 +120,7 @@ global abstract class TDTM_Runnable {
             TDTM_TriggerHandler.processDML(dmlWrapper);
         }
     }
-    
+
     /*******************************************************************************************************
      * @description Method to be implemented by the classes the extend this abstract class. This is the method
      * that will be called by the trigger handler.
@@ -130,19 +130,19 @@ global abstract class TDTM_Runnable {
      * @param objectResult The type of SObject the class runs for.
      * @return DmlWrapper A wrapper containing all the records to perform DML on.
      */
-    global abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, Action triggerAction, 
+    global abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, Action triggerAction,
         Schema.DescribeSObjectResult objResult);
-    
+
     /*******************************************************************************************************
     * @description Class that wraps records that need to have DML performed on them. One DML operation of each
     * kind will be performed at the end of the transaction.
-    */     
+    */
     global class DmlWrapper {
-        global List<SObject> objectsToInsert = new List<SObject>(); 
+        global List<SObject> objectsToInsert = new List<SObject>();
         global List<SObject> objectsToUpdate = new List<SObject>();
         global List<SObject> objectsToDelete = new List<SObject>();
         global List<SObject> objectsToUndelete = new List<SObject>();
-        
+
         /*******************************************************************************************************
         * @description Groups the records in each of the property lists by object type.
         * @return void
@@ -153,7 +153,7 @@ global abstract class TDTM_Runnable {
             objectsToDelete = groupSObjects(objectsToDelete);
             objectsToUndelete = groupSObjects(objectsToUndelete);
         }
-        
+
         /*******************************************************************************************************
         * @description Groups records by object type to avoid the following error:
         * "Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking".
@@ -161,7 +161,7 @@ global abstract class TDTM_Runnable {
         * @param sObjects The records to group by type.
         * @return List<SObject> A list with the records passed as parameters ordered by type. Duplicates removed.
         */
-        private List<SObject> groupSObjects(List<SObject> sObjects) {                        
+        private List<SObject> groupSObjects(List<SObject> sObjects) {
             Map<String, List<SObject>> sObjectsByType = new Map<String, List<SObject>>();
             List<SObject> sorted = new List<SObject>();
 
@@ -170,7 +170,7 @@ global abstract class TDTM_Runnable {
 
             //Group records by sObjectType
             for (SObject sObj : sObjects) {
-                String sObjType = sObj.getSObjectType().getDescribe().getName();
+                String sObjType = UTIL_Describe.getObjectDescribe(sObj.getSObjectType()).getName();
 
                 if (sObjectsByType.containsKey(sObjType)) {
                     sObjectsByType.get(sObjType).add(sObj);
@@ -183,20 +183,20 @@ global abstract class TDTM_Runnable {
                 sorted.addAll(groupedObjects);
             }
 
-            return sorted;            
+            return sorted;
         }
     }
-    
+
     /*******************************************************************************************************
     * @description Different type of actions to run classes for from triggers. Equivalent to trigger events,
     * but used in our TDTM design.
     */
-    global enum Action {   
-        BeforeInsert, 
-        BeforeUpdate, 
-        BeforeDelete, 
-        AfterInsert, 
-        AfterUpdate, 
+    global enum Action {
+        BeforeInsert,
+        BeforeUpdate,
+        BeforeDelete,
+        AfterInsert,
+        AfterUpdate,
         AfterDelete,
         AfterUndelete
     }

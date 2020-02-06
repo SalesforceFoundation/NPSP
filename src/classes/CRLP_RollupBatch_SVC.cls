@@ -129,13 +129,13 @@ public class CRLP_RollupBatch_SVC {
                 jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                 jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
                 jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            String objName = recordId.getSobjectType().getDescribe().getName();
-            String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordID ';
+            String objName = UTIL_Describe.getObjectDescribe(recordId.getSobjectType()).getName();
+            String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordId ';
             String filter = getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             if (!String.isEmpty(filter)) {
                 soql += ' AND ' + filter;
             }
-            List<SObject> cntObj = database.query(soql);
+            List<SObject> cntObj = Database.query(soql);
             return cntObj.size() == 1;
         }
         return true;

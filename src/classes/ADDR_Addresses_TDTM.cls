@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,24 +15,24 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.org 
-* @date 2014 
+* @author Salesforce.org
+* @date 2014
 * @group Address Management
 * @group-content ../../ApexDocContent/Addresses.htm
-* @description trigger handler on Address object to support propagating addresses 
+* @description trigger handler on Address object to support propagating addresses
 * @async_support this trigger handler has been tested with async=true, and appears to not cause problems.
 */
 public class ADDR_Addresses_TDTM extends TDTM_Runnable {
@@ -51,15 +51,15 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @description map from Country Code to Country Name
     */
     private static Map<String, String> validCountriesByCode = new Map<String, String>();
-    
+
     /*******************************************************************************************************
     * @description Trigger Handler on Address that handles address management.  Updates the appropriate
     * Accounts and Contacts when an Address is changed.
-    * @param listNew the list of Addresses from trigger new. 
-    * @param listOld the list of Addresses from trigger old. 
-    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
-    * @param objResult the describe for Addresses 
-    * @return dmlWrapper.  
+    * @param listNew the list of Addresses from trigger new.
+    * @param listOld the list of Addresses from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @param objResult the describe for Addresses
+    * @return dmlWrapper.
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld,
             TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
@@ -179,7 +179,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
 
         // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
-        // that might occur updating contacts and accounts, and associating those errors with 
+        // that might occur updating contacts and accounts, and associating those errors with
         // the correct addresses.
         ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapper, false);
         if (errors.errorsExist) {
@@ -214,8 +214,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
         return null;
-    }    
-    
+    }
+
     /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
     * household and its contacts.  Prioritizes the Optional mapped Address as the Default
@@ -223,8 +223,8 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param mapAccIdAddr a map of Account Id to the Account's default Address.
     * @param dmlWrapper to hold the objects that get updated
     * @param isCalcHHInfoOnly if set, then this routine will return the map of HHId to HHInfo,
-    * and not do any changes to dmlWrapper. 
-    * @return map<Id, HHInfo> a map of Account Id to the HHInfo object for the account  
+    * and not do any changes to dmlWrapper.
+    * @return map<Id, HHInfo> a map of Account Id to the HHInfo object for the account
     ********************************************************************************************************/
     public static Map<Id, HHInfo> refreshCurrentHHAddress(Map<Id, Address__c> mapAccIdAddr, DmlWrapper dmlWrapper, Boolean isCalcHHInfoOnly) {
 
@@ -249,7 +249,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         // for each hh, find the current address to use (seasonal vs default)
         map<Id, HHInfo> mapAccIdHHInfo = new map<Id, HHInfo>();
         for (Id accId : listAccId) {
-            // create a HHInfo for each household        
+            // create a HHInfo for each household
             HHInfo hhinfo = new HHInfo();
             hhinfo.accId = accId;
             mapAccIdHHInfo.put(accId, hhinfo);
@@ -260,7 +260,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 hhinfo.addrDefault = addr;
             }
 
-            // go through the hh addresses storing the default and any seasonal  
+            // go through the hh addresses storing the default and any seasonal
             if (mapAccIdListAddrHH.get(accId) != null) {
                 for (Address__c addrHH : mapAccIdListAddrHH.get(accId)) {
 
@@ -382,7 +382,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         return mapAccIdHHInfo;
     }
-        
+
     /*******************************************************************************************************
     * @description helper class to keep track of the default and seasonal address for a household
     */
@@ -421,7 +421,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         return (fStart ? dtStart : dtEnd);
     }
-    
+
     /*******************************************************************************************************
     * @description utility to see if the address has seasonal fields set
     * @param addr the Address to look at
@@ -431,7 +431,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
                 addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
     }
-    
+
     /*******************************************************************************************************
     * @description utility to see if the address has only a subset of its seasonal fields set
     * @param addr the Address to look at
@@ -445,7 +445,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         if (addr.Seasonal_End_Day__c != null) cParts++;
         return (cParts > 0 && cParts < 4);
     }
-    
+
     /*******************************************************************************************************
     * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
     * @param mapAddrIdAddr a map of Address Id's to Addresses
@@ -497,7 +497,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             WHERE Id IN :acctIds
         ]);
     }
- 
+
     /*******************************************************************************************************
     * @description returns whether the Address's mailing fields are null
     * @param addr the Address
@@ -530,7 +530,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                         addrNew.Seasonal_End_Month__c != addrOld.Seasonal_End_Month__c ||
                         addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
     }
-    
+
     /*******************************************************************************************************
     * @description utility to compare two address objects address fields
     * @param addrNew the new version of the Address
@@ -584,7 +584,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @description Returns whether two strings are equal, using a case sensitve comparison
     * @param str1 The first string
     * @param str2 The second string
-    * @return boolean 
+    * @return boolean
     ********************************************************************************************************/
     public static Boolean equalsCaseSensitive(String str1, String str2) {
         if (str1 == null) {
@@ -597,7 +597,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Compare two address objects address fields and support fuzzy matching; our definition of 
+    * @description Compare two address objects address fields and support fuzzy matching; our definition of
     * fuzzy is: only one field has changed, ignoring whitespace and letter casing changes.
     * @param addrNew the new version of the Address
     * @param addrOld the old version of the Address
@@ -653,7 +653,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         else
                 return decimal.valueOf(m + '.' + d);
     }
-    
+
     /*******************************************************************************************************
     * @description utility to see if two seasonal addresses overlap
     * @param addr1 an Address
@@ -668,7 +668,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // we don't need to know what year or month we are currently in, but
         // we need to take into account days (since we could be in the same month).
-        // to make this easy to compare, we convert month & day to be a decimal of month.day.  
+        // to make this easy to compare, we convert month & day to be a decimal of month.day.
         // eg., 3.01 for Feb 1st and 3.28 for Feb 28th.
         decimal start1 = decimalOfMonthDay(addr1.Seasonal_Start_Month__c, addr1.Seasonal_Start_Day__c);
         decimal end1 = decimalOfMonthDay(addr1.Seasonal_End_Month__c, addr1.Seasonal_End_Day__c);
@@ -679,7 +679,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         boolean range1Increases = start1 < end1;
         boolean range2Increases = start2 < end2;
 
-        // we can now tell if there is overlap simply by looking at three scenarios: 
+        // we can now tell if there is overlap simply by looking at three scenarios:
         // 1. both ranges increase, make sure start1 not in range2, and start2 not in range1.
         if (range1Increases && range2Increases) {
             return (start1 >= start2 && start1 <= end2) || (start2 >= start1 && start2 <= end1);
@@ -698,7 +698,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @description verify that the account for each Address is a HH account or an Organizational account if enabled.
     * Adds an Error to each Address object that has an illegal account.
     * @param listAddr a list of Addresses to verify
-    * @return void. 
+    * @return void.
     */
     private void verifyAddrHHAccOnly(list<Address__c> listAddr) {
         set<Id> setAccId = new set<Id>();
@@ -723,12 +723,12 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
     }
-    
+
     /*******************************************************************************************************
     * @description verify that any seasonal addresses don't overlap
     * Adds an Error to each Address object that has an illegal seasonal fields
     * @param listAddr a list of Addresses to verify
-    * @return void. 
+    * @return void.
     */
     private void verifyAddrSeasonalNoOverlap(list<Address__c> listAddr) {
 
@@ -777,7 +777,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
     }
-    
+
     /*******************************************************************************************************
     * @description routine the scheduled batch job calls to update households with Seasonal addresses
     * @param listAcc a list of Accounts to see if their address needs to be updated
@@ -814,7 +814,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
 
         // now mapAccIdAddr only contains those Accounts (and Contacts) who need updating.
-        // we'll go thru refreshCurrentHHAddress() again, this time allowing it to do the updates    
+        // we'll go thru refreshCurrentHHAddress() again, this time allowing it to do the updates
 
         // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
@@ -824,10 +824,10 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
     }
-    
+
     /*******************************************************************************************************
     * @description For the list of Addresses, sees if there is already an existing Address in the Account that
-    * matches. Creates only unique addresses from their respective household, and mark any existing matches 
+    * matches. Creates only unique addresses from their respective household, and mark any existing matches
     * as Default if the caller specifies it on the new address.
     * @param listAddr a list of Addresses to update
     * @param dmlWrapper the Addresses to update
@@ -855,7 +855,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             }
         }
     }
-    
+
     /*******************************************************************************************************
     * @description for the given addresses, find if they have a match, and return a map that
     * has null for no match, and the matching address if there is a match.
@@ -903,7 +903,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         return mapAddrDupAddr;
     }
-    
+
     /*******************************************************************************************************
     * @description Cleanup the Addresses for the specified Accounts by removing any duplicate Addresses,
     * making sure only one is marked Default, and that the Default is propagated to the appropriate
@@ -974,10 +974,10 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         dmlWrapper = new TDTM_Runnable.DmlWrapper();
         refreshCurrentHHAddress(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDml(dmlWrapper);
-    }    
-    
+    }
+
     /*******************************************************************************************************
-    * @description replaces the losing address with the winning address in any contacts referring to the 
+    * @description replaces the losing address with the winning address in any contacts referring to the
     * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
     * Any Contacts that are modified are put on dmlWrapper for later updating.
     * @param addrLoser the Address to look for
@@ -1042,7 +1042,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
             return;
         }
     }
-    
+
     /*******************************************************************************************************
     * @description utility to see if the address has only a subset of its seasonal fields set
     * @param addr the Address to look at
@@ -1055,7 +1055,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
         }
         return str;
     }
-    
+
     /*******************************************************************************************************
     * @description Utility to copy Address fields between to Address objects.
     * @param addrSrc the source Address
@@ -1107,7 +1107,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address object to copy to
     * @param addrType if not null, copy to address.Address_Type__c
     * @return void
-    */ 
+    */
     public static void copyAddressStdSObjAddr(sObject sobjSrc, String fieldPrefixSrc, Address__c addr, String addrType) {
         addr.MailingStreet__c = (String)sobjSrc.get(fieldPrefixSrc + 'Street');
         handleMultilineStreet(addr);
@@ -1180,7 +1180,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
 
     /*******************************************************************************************************
-    * @description Determines if the Account's BillingStateCode or Contact's MailingStateCode matches the 
+    * @description Determines if the Account's BillingStateCode or Contact's MailingStateCode matches the
     *              Address record's Mailing State.
     * @param stateCode the BillingStateCode or MailingStateCode
     * @param addressMailingState the Address Mailing State
@@ -1206,7 +1206,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
     * @param addr the Address object to copy from
     * @param sobjDst the destination Contact or Account
     * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
-    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to 
+    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
     * @return void
     */
     public static void copyAddressAddrSObj(Address__c addr, sobject sobjDst, string strFieldPrefix, string strFieldAddrType) {
@@ -1276,7 +1276,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
 
         // If State & Country Picklists are enabled in the org, build maps of the
         // valid Labels and Codes for each field to use for validation
-        map<String, Schema.SObjectField> acctFields = Account.getSobjectType().getDescribe().fields.getMap();
+        map<String, Schema.SObjectField> acctFields = UTIL_Describe.getObjectDescribe(Account.SObjectType).fields.getMap();
         boolean isCodesEnabled = acctFields.containsKey('BillingCountryCode');
         if (isCodesEnabled) {
             list<Schema.Picklistentry> countryPLValues = acctFields.get('BillingCountryCode').getDescribe().getPicklistValues();
@@ -1292,7 +1292,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                     validStatesByLabel.put(p.getLabel().toUpperCase(), p.getValue());
                     // we can't have a map of valid StateCodes, because they are not unique.
                     // ideally we would have a map of CountryCode + StateCode -> StateLabel
-                    // but Salesforce provides us no way of figuring out picklist dependencies efficiently. 
+                    // but Salesforce provides us no way of figuring out picklist dependencies efficiently.
                 }
             }
         }
