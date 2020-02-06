@@ -104,7 +104,6 @@ export default class GeFormField extends LightningElement {
             this._defaultValue = defaultValue;
             this.value = defaultValue;
         }
-        // this.fieldsToQuery();
     }
 
     getValueFromChangeEvent(event) {
