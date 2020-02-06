@@ -214,15 +214,15 @@ public with sharing class GE_DefaultTemplate {
         Map<String,String> updatedObjectDevNameMap) {
 
         // Get the org's migrated field mappings. 
-        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = 
-            [SELECT Id, 
-                    MasterLabel, 
-                    DeveloperName,
-                    Target_Object_Mapping__r.DeveloperName
-            FROM Data_Import_Field_Mapping__mdt 
-            WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: 
-                BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME 
-            LIMIT 5000];
+        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = [
+                SELECT Id, 
+                        MasterLabel, 
+                        DeveloperName,
+                        Target_Object_Mapping__r.DeveloperName
+                FROM Data_Import_Field_Mapping__mdt 
+                WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: 
+                    BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
+            ];
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappingCMTList) {
             String partialFieldDevName = fieldMapping.DeveloperName.substringBeforeLast('_');
