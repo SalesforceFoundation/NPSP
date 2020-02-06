@@ -226,7 +226,8 @@ public with sharing class GE_DefaultTemplate {
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappingCMTList) {
             String partialFieldDevName = fieldMapping.DeveloperName.substringBeforeLast('_');
-			String partialObjectDevName = fieldMapping.Target_Object_Mapping__r.DeveloperName.substringBeforeLast('_');
+			String partialObjectDevName = 
+                fieldMapping.Target_Object_Mapping__r.DeveloperName.substringBeforeLast('_');
             
             // Only add it into the map if there was a change at all. If there wasn't a change
             // that means that there was no '_' in the dev name and is probably not something we want
