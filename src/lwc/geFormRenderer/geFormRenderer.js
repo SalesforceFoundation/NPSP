@@ -231,7 +231,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    objectMappings;
     @wire(getRecord, {
         recordId: '$batchId',
         fields: FORM_TEMPLATE_FIELD
@@ -240,19 +239,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (data) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
             GeFormService.getFormTemplateById(this.formTemplateId)
-                .then(renderWrapper => {
+                .then(formTemplate => {
+                    this.formTemplate = formTemplate;
 
-                    this.formTemplate = renderWrapper.formTemplate;
-                    this.fieldMappings = renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
-                    this.objectMappings = renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
-                    this.fmbomdn = renderWrapper.fieldMappingSetWrapper.fieldMappingsByObjMappingDevName;
-
-                    let errorObject = checkPermissionErrors(renderWrapper.formTemplate);
+                    let errorObject = checkPermissionErrors(formTemplate);
                     if (errorObject) {
                         this.dispatchEvent(new CustomEvent('permissionerror'));
                         this.setPermissionsError(errorObject)
                     }
-                    this.initializeForm(renderWrapper.formTemplate);
+                    this.initializeForm(formTemplate, GeFormService.fieldMappings);
                 })
                 .catch(err => {
                     handleError(err);

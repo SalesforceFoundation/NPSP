@@ -224,7 +224,7 @@ class GeFormService {
         return new Promise((resolve, reject) => {
             this.getFormRenderWrapper(templateId)
                 .then(renderWrapper => {
-                    resolve(renderWrapper);
+                    resolve(renderWrapper.formTemplate);
                 })
                 .catch(err => {
                     reject(err);
