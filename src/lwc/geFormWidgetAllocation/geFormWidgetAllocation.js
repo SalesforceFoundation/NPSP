@@ -88,12 +88,14 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     set totalAmount(value) {
         this._totalAmount = value;
-        if(value >= 0 && this.hasDefaultGAU) {
+        if(value >= 0) {
             // handle percentage allocations first
             // value updates don't propagate down to child nodes, so we need to pass the new Total Amount down
             this.reallocateByPercent(value);
-            // assign remainder to default GAU
-            this.allocateDefaultGAU();
+            if(this.hasDefaultGAU) {
+                // assign remainder to default GAU if enabled
+                this.allocateDefaultGAU();
+            }
             this.validate();
         }
     }
