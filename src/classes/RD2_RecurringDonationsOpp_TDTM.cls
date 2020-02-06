@@ -78,7 +78,7 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert
             || triggerAction == TDTM_Runnable.Action.BeforeUpdate
         ) {
-            validate(opps);
+            validateCurrency(opps);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             rdIds = getRecurringDonationIds(opps);
@@ -100,11 +100,11 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Validates Opportunities
+    * @description Validates currency on provided Opportunities
     * @param opps Opportunities
     * @return void
     */
-    public void validate(List<Opportunity> opps) {
+    public void validateCurrency(List<Opportunity> opps) {
         MultiCurrencyValidator currencyValidator = new MultiCurrencyValidator();
 
         if (!currencyValidator.isEnabled()) {
@@ -266,7 +266,7 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         public Boolean isCurrencyOutOfSync(Opportunity opp) {
             Id rdId = opp.npe03__Recurring_Donation__c;
 
-            if (!isMultiCurrencyEnabled || rdId == null || !rdById.containsKey(rdId)) {
+            if (rdId == null || !rdById.containsKey(rdId)) {
                 return false;
             }
             

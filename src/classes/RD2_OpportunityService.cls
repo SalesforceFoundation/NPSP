@@ -264,7 +264,7 @@ public with sharing class RD2_OpportunityService {
     * @return Boolean Indicates if the Opportunity has been changed
     */
     private Boolean syncOppWithInstallment(Opportunity opp, RD2_ScheduleService.Installment installment) {
-        if (installment == null) {
+        if (installment == null || opp.CloseDate < currentDate) {
             return false;
         }
 
