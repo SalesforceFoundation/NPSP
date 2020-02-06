@@ -12,7 +12,7 @@ import {
     checkPermissionErrors
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { getQueryParameters, isEmpty, isNotEmpty, format, deepClone, isUndefined, checkNestedProperty } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -691,7 +691,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @wire(getOpenDonations, { donorId: '$selectedDonorId', donorType: '$selectedDonorType' })
     wiredOpenDonations({ error, data }) {
         if (data) {
-            this.opportunities = isNotEmpty(data) ? JSON.parse(data) : undefined;
+            if (isNotEmpty(data)) {
+                let donorOpportunities = JSON.parse(data);
+
+                if (arraysMatch(this.opportunities, donorOpportunities) === false) {
+                    this.opportunities = donorOpportunities;
+
+                    if (this.hasPreviouslySelectedDonation) {
+                        const reviewDonationsComponent = this.template.querySelector('c-ge-review-donations');
+                        reviewDonationsComponent.setProperty('donationType', undefined);
+                        this.selectedDonation = undefined;
+                        this.resetDonationAndPaymentImportedFields();
+                    }
+                }
+            } else {
+                this.opportunities = [];
+            }
+        }
+
+        if (error) {
+            handleError(error);
         }
     }
 
@@ -764,10 +783,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             if (isUndefined(this.opportunities) && this.hasPreviouslySelectedDonation) {
                 // Reset populated donation/payment imported fields
-                const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
-                const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
-                this.setFormFieldValue(donationImported, undefined, undefined);
-                this.setFormFieldValue(paymentImported, undefined, undefined);
+                this.resetDonationAndPaymentImportedFields();
             }
         }
     }
@@ -836,5 +852,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (allFormFields[fieldApiName]) {
             allFormFields[fieldApiName].setValue(value, displayValue);
         }
+    }
+
+    resetDonationAndPaymentImportedFields() {
+        const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
+        const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
+        this.setFormFieldValue(donationImported, undefined, undefined);
+        this.setFormFieldValue(paymentImported, undefined, undefined);
     }
 }

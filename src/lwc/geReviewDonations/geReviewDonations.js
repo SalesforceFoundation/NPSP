@@ -176,4 +176,9 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
                 handleError(error);
             });
     }
+
+    @api
+    setProperty(property, value) {
+        this[property] = value;
+    }
 }
