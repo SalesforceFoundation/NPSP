@@ -33,7 +33,7 @@ ${contact_id}
     Set Global Variable      ${level_name}
     Set Global Variable      ${level_id}
     Unselect Frame
-    Navigate To And Validate Field Value    Minimum Amount (>=)   contains    0.10
+    Navigate To And Validate Field Value    Minimum Amount (>\=)   contains    0.10
     Navigate To And Validate Field Value    Maximum Amount (<)    contains    0.90
 
 2 Edit Level and Verify Fields
@@ -55,7 +55,7 @@ ${contact_id}
     #adding a workaround to go back to levels tab due to core issue
     Current Page Should Be     Details    Level__c
     Go To Page         Details         Level__c        object_id=${level_id}
-    Navigate To And Validate Field Value   Minimum Amount (>=)    contains    0.01
+    Navigate To And Validate Field Value   Minimum Amount (>\=)    contains    0.01
     Navigate To And Validate Field Value   Maximum Amount (<)     contains    0.99
     Navigate To And Validate Field Value    Source Field    contains    npo02__SmallestAmount__c
 
