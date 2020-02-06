@@ -13,23 +13,6 @@ export default class GeFormSection extends LightningElement {
         return 'Toggle ' + this.section.label;
     }
 
-    /**
-     * Get the css classname for the body of the twistable section, show/hide when closed/open
-     * @returns {string} 'collapsed' when the section is closed
-     */
-    get sectionClassName() {
-        return this.expanded ? '' : 'collapsed';
-    }
-
-    /**
-     * When twistable section header is clicked, collapse/expand it
-     * @param event
-     */
-    toggleExpand(event) {
-        event.preventDefault();
-        this.expanded = !this.expanded;
-    }
-
     @api
     get values() {
         const fields = this.template.querySelectorAll('c-ge-form-field');

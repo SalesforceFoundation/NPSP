@@ -52,7 +52,6 @@ export default class GeGiftEntryFormApp extends LightningElement {
 
     handleLoadData(event) {
         const form = this.template.querySelector('c-ge-form-renderer');
-        console.log('app open action JSON.parse(JSON.stringify(event.detail)): ', JSON.parse(JSON.stringify(event.detail)));
         form.reset();
         form.load(event.detail);
     }
