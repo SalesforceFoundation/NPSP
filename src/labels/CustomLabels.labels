@@ -1556,7 +1556,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Installment Period cannot be converted to enhanced Recurring Donation format</shortDescription>
-        <value>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
+        <value>Recurring Donation Installment Period &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
     </labels>
     <labels>
         <fullName>RD2_DataMigrationInvalidOpenEndedStatus</fullName>
@@ -1564,7 +1564,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Open Ended Status cannot be converted to enhanced Recurring Donation format</shortDescription>
-        <value>Recurring Donation Open Ended Status "{0}" cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</value>
+        <value>Recurring Donation Open Ended Status &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</value>
     </labels>
     <labels>
         <fullName>RD2_DayOfMonthMustBeValid</fullName>
@@ -1718,7 +1718,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Enablement page introduction and guidelines</shortDescription>
         <value>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
         &lt;br/&gt;&lt;br/&gt;Since there's already a Recurring Donations feature in NPSP, you'll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We've outlined the required tasks for you below.
-        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href="https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot" target="_blank"&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
+        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployConfirm</fullName>
@@ -4889,7 +4889,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The picklist value is not supported</shortDescription>
-        <value>The "{0}" picklist value is not supported.</value>
+        <value>The picklist value &quot;{0}&quot; is not supported.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidRecordtypeId</fullName>
@@ -4937,7 +4937,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The picklist value is not supported</shortDescription>
-        <value>The required "{0}" picklist value is missing.</value>
+        <value>The required picklist value &quot;{0}&quot; is missing.</value>
     </labels>
     <labels>
         <fullName>healthDetailsNothingScheduled</fullName>
@@ -5584,7 +5584,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>A Required picklist value is missing for this specific field</shortDescription>
-        <value>Add the required "{0}" picklist value on the "{1}" field.</value>
+        <value>Add the required picklist value &quot;{0}&quot; on the &quot;{1}&quot; field.</value>
     </labels>
     <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
@@ -5671,7 +5671,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The picklist value is not supported in this specific field</shortDescription>
-        <value>Deactivate or delete the "{0}" picklist value on the "{1}" field.</value>
+        <value>Deactivate or delete the picklist value &quot;{0}&quot; on the &quot;{1}&quot; field.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFBadDatatypes</fullName>
