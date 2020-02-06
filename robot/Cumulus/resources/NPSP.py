@@ -158,12 +158,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            
         
         
-    def click_flexipage_dropdown(self, title):
-        """Click the lightning dropdown to open it"""
+    def click_flexipage_dropdown(self, title,value):
+        """Click the lightning dropdown to open it and select value"""
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('flexipage-popup')    
+        self.wait_for_locator('flexipage-popup')
+        option=npsp_lex_locators['span'].format(value)
+        self.selenium.click_element(option)   
 
     def open_date_picker(self, title):
         locator = npsp_lex_locators['record']['list'].format(title)
@@ -1282,7 +1284,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.builtin.should_not_be_empty(record, msg="The database object {} with id {} is not in the database".format(object_name,id))
         return record
     
-
+    @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value): 
         """Select given value in the dropdown field"""
         locator = npsp_lex_locators['record']['list'].format(dropdown)
