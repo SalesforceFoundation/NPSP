@@ -113,6 +113,23 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    /**
+     * @description Retrieves a records mapped target field values and
+     *              loads them into the appropriate source fields in use
+     *              on the Gift Entry form.
+     * @param selectedRecordId Id of the selected record.
+     * @param lookupFieldApiName Api name of the lookup field.
+     */
+    loadSelectedRecordFieldValues(lookupFieldApiName, selectedRecordId) {
+        this.selectedRecordId = selectedRecordId;
+        this.selectedRecordFields =
+            this.getSiblingFieldsForSourceField(lookupFieldApiName);
+        this.storeSelectedRecordIdByObjectMappingName(
+            this.getObjectMapping(lookupFieldApiName).DeveloperName,
+            selectedRecordId
+        );
+    }
+
     //TODO: loading from account or contact and possibly selecting donation/payment in
     //      review donations modal could possibly route through this getSelectedRecord
     //      function by populating selectedRecordId and selectedRecordFields (using
@@ -159,7 +176,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         return dataImport;
     }
-
 
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
@@ -258,6 +274,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleCancel() {
+        this.dataImport = undefined;
         this.reset();
 
         // if not in batch mode, go back to point of origin
@@ -650,7 +667,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api
     load(dataImport) {
         if (dataImport.Id) {
-            // Lookups can also use this method to load related fields.  By setting
+            // Lookups might also use this method to load related fields.  By setting
             // this.dataImport only when the DataImport has an Id, we know we are
             // updating an existing DataImport record (which changes the UI).
             this.dataImport = dataImport;
@@ -759,6 +776,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    getSiblingFieldsForSourceField(sourceFieldApiName) {
+        const objectMapping = Object.values(GeFormService.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name === sourceFieldApiName);
+        return this.getSiblingFields(objectMapping.DeveloperName);
+    }
+    
     getSiblingFields(objectMappingDeveloperName) {
         // for a given field, get the full list of fields related to its object mapping
 
@@ -769,14 +793,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const objectMapping =
             GeFormService.getObjectMappingWrapper(objectMappingDeveloperName);
 
-        this.relevantFieldMappings =
+        const relevantFieldMappings =
             Object.values(GeFormService.fieldMappings)
                 .filter(({Target_Object_Mapping_Dev_Name}) =>
                     Target_Object_Mapping_Dev_Name === objectMapping.DeveloperName);
 
         // Return the sibling fields used by Advanced Mapping
         // TODO: filter down to return only the fields that are IN USE by the template
-        return this.relevantFieldMappings.map(
+        return relevantFieldMappings.map(
             ({Target_Field_API_Name}) =>
                 `${objectMapping.Object_API_Name}.${Target_Field_API_Name}`);
     }
@@ -811,18 +835,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
+        if (this.dataImport && this.dataImport.Id) {
+            //Temporary fix for Open row action not working. Changing/re-populating
+            // lookups after opening row from table currently not working.
+            //TODO: fix clashes between lookup related field values for opening row
+            //      from table vs selecting lookup value on new form.
+            return;
+        }
         const recordId = event.detail.value;
         const fieldApiName = event.detail.fieldApiName;
-        const objectMapping = this.getObjectMapping(fieldApiName);
-        this.storeSelectedRecordIdByObjectMappingName(
-            objectMapping.DeveloperName, recordId
-        );
         if (recordId === null) {
             // Reset all fields related to this lookup field's object mapping
-            this.reset(objectMapping.DeveloperName);
+            // this.reset(objectMapping.DeveloperName);
+            this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
         } else {
-            this.selectedRecordId = recordId;
-            this.selectedRecordFields = this.getSiblingFields(objectMapping.DeveloperName);
+            this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         }
 
         const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
@@ -894,11 +921,20 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
                 blankDataImportRecord[paymentImported] = undefined;
                 blankDataImportRecord[paymentImportStatus] = undefined;
+
+                //TODO: use loadSelectedRecordFieldValues to load selected Opp & Pmt field
+                // values
+                // this.loadSelectedRecordFieldValues(donationImported, selectedDonation.Id);
             } else if (donationType === 'payment') {
                 blankDataImportRecord[paymentImported] = selectedDonation.Id;
                 blankDataImportRecord[paymentImportStatus] = userSelectedMatch;
                 blankDataImportRecord[donationImported] = selectedDonation.npe01__Opportunity__c;
                 blankDataImportRecord[donationImportStatus] = userSelectedMatch;
+
+                //TODO: combine these by modifying getSiblingFields to return parent fields
+                //      for object mappings that have a predecessor
+                // this.loadSelectedRecordFieldValues(paymentImported, selectedDonation.Id);
+                // this.loadSelectedRecordFieldValues(donationImported, selectedDonation.npe01__Opportunity__c);
             }
 
         } else {
