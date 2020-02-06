@@ -50,3 +50,9 @@
     border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));
     border-radius: 0;
 }
+
+.slds-button:disabled {
+    background-color: #fff;
+    color: #dddbda;
+    cursor: default;
+}
