@@ -131,7 +131,7 @@ public with sharing class GE_DefaultTemplate {
         // This is used for updating the base JSON's field mapping dev names with the org's dev names. 
         Map<String, String> updatedFieldDevNameMap = new Map<String, String>();
 
-        // This is used for updating the base JSON's field mapping dev names with the org's dev names. 
+        // This is used for updating the base JSON's object mapping dev names with the org's dev names. 
         Map<String, String> updatedObjectDevNameMap = new Map<String, String>();
         
         populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
