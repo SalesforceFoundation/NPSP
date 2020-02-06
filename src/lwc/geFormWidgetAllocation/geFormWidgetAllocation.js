@@ -266,6 +266,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
     }
 
+    hasAllocations() {
+        return Array.isArray(this.rowList) && this.rowList.length > 0;
+    }
+
     /**
      * @return {boolean} TRUE when the total amount allocated is more then the total donation
      */
@@ -311,7 +315,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * @return {boolean}
      */
     get showRemainingAmount() {
-        return (this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0;
+        return this.hasAllocations() &&
+            ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
     }
 
     /**
@@ -332,7 +337,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     get hasAlert() {
-        return isNotEmpty(this.alertBanner.message);
+        return this.hasAllocations() && isNotEmpty(this.alertBanner.message);
     }
 
     get alertIcon() {
