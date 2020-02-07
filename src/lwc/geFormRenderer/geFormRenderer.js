@@ -27,6 +27,9 @@ import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
 
+import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
+import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
+
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
@@ -43,7 +46,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorApiName;
     @api donorRecord;
 
-    fieldNames = [];
+    fieldNames = [ ACCOUNT_NAME_FIELD, CONTACT_NAME_FIELD ];
     @api sections = [];
     @api showSpinner = false;
     @api batchId;
@@ -141,7 +144,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
 
                 // get the target field names to be used by getRecord
-                this.fieldNames = getRecordFieldNames(this.formTemplate, this.fieldMappings, this.donorApiName);
+                let fieldNamesFromTemplate =
+                    getRecordFieldNames(this.formTemplate, this.fieldMappings, this.donorApiName);
+                this.fieldNames = [ ...this.fieldNames, ...fieldNamesFromTemplate ];
                 if (isEmpty(this.donorRecordId)) {
                     // if we don't have a donor record, it's ok to initialize the form now
                     // otherwise the form will be initialized after wiredGetRecordMethod completes
