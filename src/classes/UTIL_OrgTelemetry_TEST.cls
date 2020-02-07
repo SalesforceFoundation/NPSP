@@ -190,6 +190,14 @@ private class UTIL_OrgTelemetry_TEST {
         System.assertNotEquals(
             null,
             featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_GiftEntry.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_GiftEntry'
+        );        
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_RecurringDonations2.name()
             ),
             'setPackageBooleanValue should have been called with the feature IsEnabled_RecurringDonations2'
@@ -541,7 +549,7 @@ private class UTIL_OrgTelemetry_TEST {
         Test.stopTest();
 
         System.assertEquals(
-            NUM_BGE_ROWS_30_DAYS_AGO,
+            NUM_BGE_ROWS_30_DAYS_AGO + NUM_NEWGE_BGE_ROWS_30_DAYS_AGO,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name()
             ),
