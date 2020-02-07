@@ -64,9 +64,11 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     ...    Name=&{data_import}[${ns}Account1_Name__c]
     
     #Update DI record and reprocess batch and verify status messages
-    Edit Record
+    Click Show More Actions Button   Edit
+    Wait Until Modal Is Open
     Select Value From Dropdown       Donation Donor    Account1                 
-    Save Record
+    Click Modal Button               Save
+    Wait Until Modal Is Closed
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Open Data Import Record          &{data_import_upd}[Name] 
