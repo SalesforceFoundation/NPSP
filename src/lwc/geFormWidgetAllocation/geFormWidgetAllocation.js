@@ -88,12 +88,14 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     set totalAmount(value) {
         this._totalAmount = value;
-        if(value >= 0 && this.hasDefaultGAU) {
+        if(value >= 0) {
             // handle percentage allocations first
             // value updates don't propagate down to child nodes, so we need to pass the new Total Amount down
             this.reallocateByPercent(value);
-            // assign remainder to default GAU
-            this.allocateDefaultGAU();
+            if(this.hasDefaultGAU) {
+                // assign remainder to default GAU if enabled
+                this.allocateDefaultGAU();
+            }
             this.validate();
         }
     }
@@ -264,6 +266,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
     }
 
+    hasAllocations() {
+        return Array.isArray(this.rowList) && this.rowList.length > 0;
+    }
+
     /**
      * @return {boolean} TRUE when the total amount allocated is more then the total donation
      */
@@ -309,7 +315,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * @return {boolean}
      */
     get showRemainingAmount() {
-        return (this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0;
+        return this.hasAllocations() &&
+            ((this.hasDefaultGAU === false && this.remainingAmount > 0) || this.remainingAmount < 0);
     }
 
     /**
@@ -319,7 +326,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     get remainingAmount() {
         if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
-            return this.totalAmount - this.allocatedAmount;
+            const remainingCents = Math.round(this.totalAmount * 100) - Math.round(this.allocatedAmount * 100);
+            // avoid floating point errors by subtracting whole numbers
+            return (remainingCents / 100)
         }
         return 0;
     }
@@ -330,7 +339,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     get hasAlert() {
-        return isNotEmpty(this.alertBanner.message);
+        return this.hasAllocations() && isNotEmpty(this.alertBanner.message);
     }
 
     get alertIcon() {

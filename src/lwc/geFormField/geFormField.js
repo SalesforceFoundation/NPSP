@@ -14,6 +14,9 @@ const DELAY = 300;
 const RICH_TEXT_FORMATS = [
     'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
 ];
+const CURRENCY = 'currency';
+const PERCENT = 'percent';
+const DECIMAL = 'decimal';
 
 export default class GeFormField extends LightningElement {
     @track value;
@@ -193,6 +196,18 @@ export default class GeFormField extends LightningElement {
         return GeFormService.getNumberFormatterByDescribeType(this.fieldType);
     }
 
+    get granularity() {
+        if (this.formatter) {
+            switch (this.fieldType.toLowerCase()) {
+                case CURRENCY: return '0.01';
+                case PERCENT: return '0.01';
+                case DECIMAL: return '0.001';
+                default: return 'any';
+            }
+        }
+        return undefined;
+    }
+
     get fieldInfo() {
         return isNotEmpty(this.targetFieldName) ?
             GeFormService.getFieldMappingWrapperFromTarget(this.targetFieldName) :
@@ -299,6 +314,8 @@ export default class GeFormField extends LightningElement {
      * Set the value of the field.
      * @param value Value to set on the field.
      */
+    // TODO This is a bit awkward, as we are essentially supporting two different shapes for data
+    // could use  refactor
     @api
     load(data) {
         let value;
@@ -308,8 +325,8 @@ export default class GeFormField extends LightningElement {
             } else {
                 value = data[this.sourceFieldAPIName];
             }
-        } else {
-            return;
+        } else if (data.value) {
+            value = data.value;
         }
 
         if (value === null) {
@@ -329,6 +346,8 @@ export default class GeFormField extends LightningElement {
                 displayValue = data[relationshipFieldName].Name;
             } else if (data[this.sourceFieldAPIName]['displayValue']) {
                 displayValue = data[this.sourceFieldAPIName].displayValue;
+            } else if (data.displayValue) {
+                displayValue = data.displayValue;
             }
 
             lookup.setSelected({value, displayValue});

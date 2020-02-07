@@ -28,7 +28,8 @@
                     <c-ge-review-donations ontogglemodal={toggleModal}
                                            onchangeselecteddonation={handleChangeSelectedDonation}
                                            opportunities={opportunities}
-                                           donor-id={selectedDonorId}>
+                                           donor-id={selectedDonorId}
+                                           selected-donation={selectedDonation}>
                     </c-ge-review-donations>
                 </lightning-layout-item>
             </template>
@@ -63,12 +64,12 @@
                     <c-ge-form-section key={section.id}
                                        section={section}
                                        onchangelookup={handleChangeLookup}
-                                       onchangepicklist={handleChangePicklist}>
+                                       onchangepicklist={handleChangePicklist}
                                        widget-data={widgetData}>
                     </c-ge-form-section>
                 </template>
 
-                <article class='slds-align_absolute-center slds-p-vertical_small'>
+                <article if:false={isPermissionError} class='slds-align_absolute-center slds-p-vertical_small'>
                     <lightning-button label={cancelButtonText}
                                       title={cancelButtonText}
                                       onclick={handleCancel}

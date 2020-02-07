@@ -49,7 +49,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     setFieldValue(field, value) {
         const element = this.getFieldByName(field);
         if(element) {
-            element.setValue(value);
+            element.load({value});
         }
     }
 
@@ -109,7 +109,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
         // calculate what percent of the total we should set this row's allocation to
         const amount = this.calculateAmount(value, total);
-        this.setFieldValue(ALLOCATION_AMOUNT, amount);
+        this.setFieldValue({ALLOCATION_AMOUNT, amount});
         // add the allocation amount to the update event
         payload[ALLOCATION_AMOUNT] = amount;
         return payload;
