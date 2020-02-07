@@ -3,10 +3,12 @@
         <c-ge-batch-gift-entry-header
                 batch-id={recordId}
                 onbatchdryrun={handleBatchDryRun}
-                onedit={handleEditBatch}>
+                onedit={handleEditBatch}
+                is-permission-error={isPermissionError}>
         </c-ge-batch-gift-entry-header>
         <br/>
     </template>
+    
 
     <c-ge-form-renderer
             batch-id={recordId}
