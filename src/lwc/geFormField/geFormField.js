@@ -1,5 +1,5 @@
 import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty, debouncify, isUndefined} from 'c/utilCommon';
+import {isNotEmpty, debouncify} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
@@ -302,15 +302,15 @@ export default class GeFormField extends LightningElement {
     /**
      * Set the value of the field.
      * @param value Value to set on the field.
-     * @param data Record data
      */
     @api
-    setValue(value, data) {
+    setValue(value, displayValue) {
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
-            if (data) {
-                const displayValue =
-                    data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
+            if (value) {
+                // TODO: Where does data below come from?
+                displayValue =
+                    displayValue || data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
                 lookup.setSelected({value, displayValue});
             } else {
                 lookup.reset();
@@ -327,9 +327,7 @@ export default class GeFormField extends LightningElement {
     @api
     load(data) {
         const value = data[this.sourceFieldAPIName];
-        if (!isUndefined(value)) {
-            this.setValue(value, data);
-        }
+        this.setValue(value);
     }
 
     @api
