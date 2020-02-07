@@ -72,6 +72,19 @@ public with sharing class GE_GiftEntryController {
     }
 
     /*******************************************************************************************************
+    * @description Creates an DmlException with the specified error message
+    *
+    * @param errorMsg contents of the exception error messagae
+    *
+    * @return DmlException
+    */
+    public static DmlException returnDmlException(String errorMsg) {
+        DmlException ex = new DmlException(errorMsg);
+        ex.setMessage(errorMsg);
+        return ex;
+    }
+
+    /*******************************************************************************************************
     * @description Saves the data import record, dry runs the record, and returns updated
     * totals with the new row.
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
@@ -91,7 +104,7 @@ public with sharing class GE_GiftEntryController {
             // create custom lwc exception and throw it
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
 
-            throw returnAuraException(JSONExceptionData);
+            throw returnDmlException(JSONExceptionData);
         }
     }
 
@@ -150,7 +163,7 @@ public with sharing class GE_GiftEntryController {
         } catch(Exception e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
-            throw returnAuraException(JSONExceptionData);
+            throw returnDmlException(JSONExceptionData);
         }
     }
 
