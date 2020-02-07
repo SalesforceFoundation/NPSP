@@ -277,7 +277,7 @@ public with sharing class GE_FormRendererService {
                     'AND npe01__Paid__c = false)' +
                 'FROM Opportunity ' +
                 'WHERE ' + relationshipField + ' = :donorId ' +
-                'AND (IsClosed = false OR Id in :oppIdsWithUnpaidPayments) ' +
+                'AND IsClosed = false ' +
                 'ORDER BY CloseDate ASC ';
 
             // CRUD / FLS of this operation already verified by checkCRUDFLS()
