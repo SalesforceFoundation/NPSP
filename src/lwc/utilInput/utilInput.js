@@ -115,12 +115,15 @@ export default class utilInput extends LightningElement {
     }
 
     get granularity() {
-        switch (this.dataType) {
-            case CURRENCY: return '0.01';
-            case PERCENT: return '0.01';
-            case DECIMAL: return '0.001';
-            default: return 'any';
+        if (this.formatter) {
+            switch (this.dataType) {
+                case CURRENCY: return '0.01';
+                case PERCENT: return '0.01';
+                case DECIMAL: return '0.001';
+                default: return 'any';
+            }
         }
+        return undefined;
     }
 
     get lightningInputType() {
