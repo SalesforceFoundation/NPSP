@@ -33,9 +33,9 @@
 * @group Settings
 * @description Recurring Donations Health Check
 */
-public class STG_PanelRDHealthCheck {
+public inherited sharing class STG_PanelRDHealthCheck {
 
-    /*********************************************************************************************************
+    /**
     * @description Delegate Health Check operations for Recurring Donations
     * @param ctrl The Health Check panel's controller
     */
@@ -59,7 +59,7 @@ public class STG_PanelRDHealthCheck {
         this.ctrl = ctrl;
     }
 
-    /*********************************************************************************************************
+    /**
     * @description Health Check Validation for Legacy Recurring Donations:
     * - Installment Period Picklist Values with Custom Installment Type(s)
     * - Open Opportunity Stage
@@ -175,7 +175,7 @@ public class STG_PanelRDHealthCheck {
         supportedStatus.add(RD2_Constants.STATUS_CLOSED);
         supportedStatus.add(RD2_Constants.STATUS_LAPSED);
 
-        validateSupportedPicklistValues(supportedStatus, UTIL_Namespace.StrAllNSPrefix('Status__c'),
+        validateSupportedPicklistValues(supportedStatus, String.valueOf(npe03__Recurring_Donation__c.Status__c),
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
         // =============================================================
@@ -184,7 +184,7 @@ public class STG_PanelRDHealthCheck {
         Set<String> supportedType = new Set<String>();
         supportedType.add(RD2_Constants.RECURRING_TYPE_OPEN);
 
-        validateRequiredPicklistValues(supportedType, UTIL_Namespace.StrAllNSPrefix('RecurringType__c'),
+        validateRequiredPicklistValues(supportedType, String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
             System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
 
         // =============================================================
@@ -196,7 +196,7 @@ public class STG_PanelRDHealthCheck {
         }
         supportedDayOfMonth.add(RD2_Constants.DAY_OF_MONTH_LAST_DAY);
 
-        validateSupportedPicklistValues(supportedDayOfMonth, UTIL_Namespace.StrAllNSPrefix('Day_Of_Month__c'),
+        validateSupportedPicklistValues(supportedDayOfMonth, String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
         if (hasValidationErrors()) {
