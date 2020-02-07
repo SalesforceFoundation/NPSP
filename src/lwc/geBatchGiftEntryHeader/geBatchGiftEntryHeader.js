@@ -21,6 +21,7 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
     bdiDataImportPageName;
 
     @api batchId;
+    @api isPermissionError;
 
     @wire(getRecord, {
         recordId: '$batchId',
