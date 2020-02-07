@@ -2,7 +2,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
-import { isNotEmpty, checkNestedProperty } from 'c/utilCommon';
+import { isNotEmpty } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 
 const WIDGET = 'widget';
@@ -19,6 +19,9 @@ const TRUE = 'true';
 const RICH_TEXT_FORMATS = [
     'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
 ];
+const CURRENCY = 'currency';
+const PERCENT = 'percent';
+const DECIMAL = 'decimal';
 
 export default class utilInput extends LightningElement {
 
@@ -100,14 +103,24 @@ export default class utilInput extends LightningElement {
         return false;
     }
 
+    get dataType() {
+        return this.type ? this.type.toLowerCase() : undefined;
+    }
+
     get formatter() {
-        let type = checkNestedProperty(this.fieldDescribe, 'dataType') ?
-            this.fieldDescribe.dataType :
-            this.type;
-        if (type === 'Currency' || type === 'Percent' || type === 'Decimal') {
-            return type;
+        if (this.dataType === CURRENCY || this.dataType === PERCENT || this.dataType === DECIMAL) {
+            return this.dataType;
         }
         return undefined;
+    }
+
+    get granularity() {
+        switch (this.dataType) {
+            case CURRENCY: return '0.01';
+            case PERCENT: return '0.01';
+            case DECIMAL: return '0.001';
+            default: return 'any';
+        }
     }
 
     get lightningInputType() {
@@ -142,6 +155,9 @@ export default class utilInput extends LightningElement {
     wiredObjectInfo(response) {
         if (response.data) {
             this.objectInfo = response.data;
+            if (!this.type) {
+                this.type = this.objectInfo.fields[this.fieldApiName].dataType;
+            }
         }
     }
 
