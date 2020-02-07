@@ -333,6 +333,29 @@ const getLikeMatchByKey = (objectToSearch, keyToFind, returnKey = false) => {
     return null;
 }
 
+/*******************************************************************************
+* @description Methods checks if two arrays are strictly equal both in length
+* and order of items.
+*
+* @param {list} arr1: An array.
+* @param {list} arr2: An array.
+*
+* @return {boolean}: Returns true if the provided arrays are strictly equal.
+*/
+const arraysMatch = (arr1, arr2) => {
+    if (arr1 && arr2) {
+        if (arr1.length !== arr2.length) return false;
+
+        for (var i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) return false;
+        }
+
+        return true;
+    }
+
+    return false;
+};
+
 export {
     debouncify,
     deepClone,
@@ -353,5 +376,6 @@ export {
     format,
     checkNestedProperty,
     getNestedProperty,
-    getLikeMatchByKey
+    getLikeMatchByKey,
+    arraysMatch
 };
