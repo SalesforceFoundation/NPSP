@@ -2,9 +2,9 @@
     <template if:true={isBatchMode}>
         <c-ge-batch-gift-entry-header
                 batch-id={recordId}
+                is-permission-error={isPermissionError}
                 onbatchdryrun={handleBatchDryRun}
-                onedit={handleEditBatch}
-                is-permission-error={isPermissionError}>
+                onedit={handleEditBatch}>
         </c-ge-batch-gift-entry-header>
         <br/>
     </template>
