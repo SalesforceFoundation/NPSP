@@ -12,7 +12,6 @@
                     Maybe size numbers should be passed as part of the "element"? -->
                 <template if:false={element.componentName}>
                     <lightning-layout-item key={element.id}
-                                           class={sectionClassName}
                                            size='6'
                                            medium-device-size='3'>
                         <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
@@ -25,7 +24,6 @@
                 </template>
                 <template if:true={element.componentName}>
                     <lightning-layout-item key={element.id}
-                                           class={sectionClassName}
                                            padding='around-small'
                                            size='12'
                                            medium-device-size='12'>
