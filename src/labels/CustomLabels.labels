@@ -8310,7 +8310,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
-        <value>When selected, NPSP copies the Campaign you specified on the Recurring Donation record to all of its child Opportunities. If this is not selected, NPSP copies the Campaign to the first child Opportunity only.</value>
+        <value>When selected, NPSP copies the Campaign you specified on the Recurring Donation to its installment Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDBatch</fullName>
@@ -8412,7 +8412,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>The Opportunity record type assigned to the Recurring Donation's child Opportunities.</value>
+        <value>The Opportunity record type assigned to the Recurring Donation&apos;s installment Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDInstallmentCreateOptionMessage</fullName>
