@@ -304,9 +304,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locators = npsp_lex_locators["confirm"].values()
         if status == "contains":
             for i in locators:
+                print("inside for loop")
                 locator = i.format(field,value)
                 if self.check_if_element_exists(locator):
+                    print(f"element exists {locator}")
                     actual_value=self.selenium.get_webelement(locator).text
+                    print(f"actual value is {actual_value}")
                     assert value == actual_value, "Expected {} value to be {} but found {}".format(field,value, actual_value)
                     list_found=True
                     break

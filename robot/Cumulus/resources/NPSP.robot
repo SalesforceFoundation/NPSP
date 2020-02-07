@@ -231,6 +231,7 @@ Create GAU
     ...                    General Accounting Unit Name=${gau_name}
     ...                    Largest Allocation=5
     Click Modal Button        Save
+    Wait Until Modal Is Closed
     #Sleep    2
     [Return]           ${gau_name}    
 
