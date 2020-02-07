@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
+                <div if:false={isPermissionError} class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning-button-group>
                         <lightning-button label={batchDryRunLabel}
                                           onclick={handleClick}
