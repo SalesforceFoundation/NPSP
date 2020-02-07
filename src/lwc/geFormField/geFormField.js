@@ -14,6 +14,9 @@ const DELAY = 300;
 const RICH_TEXT_FORMATS = [
     'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'indent', 'align', 'link', 'clean', 'table', 'header'
 ];
+const CURRENCY = 'currency';
+const PERCENT = 'percent';
+const DECIMAL = 'decimal';
 
 export default class GeFormField extends LightningElement {
     @track value;
@@ -195,6 +198,18 @@ export default class GeFormField extends LightningElement {
 
     get formatter() {
         return GeFormService.getNumberFormatterByDescribeType(this.fieldType);
+    }
+
+    get granularity() {
+        if (this.formatter) {
+            switch (this.fieldType.toLowerCase()) {
+                case CURRENCY: return '0.01';
+                case PERCENT: return '0.01';
+                case DECIMAL: return '0.001';
+                default: return 'any';
+            }
+        }
+        return undefined;
     }
 
     get fieldInfo() {

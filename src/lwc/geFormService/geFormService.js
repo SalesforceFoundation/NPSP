@@ -31,7 +31,9 @@ const inputTypeByDescribeType = {
 };
 
 const numberFormatterByDescribeType = {
-  'PERCENT': 'percent-fixed'
+  'PERCENT': 'percent-fixed',
+  'CURRENCY': 'currency',
+  'DECIMAL': 'decimal'
 };
 
 class GeFormService {
