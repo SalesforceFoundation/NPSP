@@ -241,24 +241,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         System.assertEquals(1, rdBatch.rdDiffCount,
             'The number of Recurring Donations with an amount differing from its opportunities should be tracked correctly');
-    }
-
-    /**
-    * @description Verifies total number of fixed-length Rds are calculated correctly
-    */
-    @IsTest
-    private static void shouldCountTotalFixedLengthRds() {
-        UTIL_OrgTelemetry_SObject_BATCH rdBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
-
-        String rdBatchQuery = rdBatch.start(null).getQuery();
-        List<npe03__Recurring_Donation__c> recurringDonations = Database.query(rdBatchQuery);
-
-        Test.startTest();
-        rdBatch.execute(null, recurringDonations);
-        Test.stopTest();
-
-        System.assertEquals(2, rdBatch.fixedLengthRdCount,
+        
+        System.assertEquals(2, rdBatch.rdFixedLengthCount,
             'The number of fixed-length Recurring Donations should be tracked correctly');
     }
 
@@ -342,6 +326,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         rdBatch.rdAllCount = 4;
         rdBatch.rdDiffCount = 3;
+        rdBatch.rdFixedLengthCount = 5;
 
         Test.startTest();
         rdBatch.finish(null);
@@ -362,7 +347,88 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             ),
             'setPackageIntegerValue should have been called with the feature Data_CountRdsWithDiffAmount and set correctly'
         );
+
+        System.assertEquals(
+            rdBatch.rdFixedLengthCount,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature DataCount_ONETIME_Use and set correctly'
+        );
     }
+
+    /*
+    * @description Confirms Opportunity Payment metrics are captured in FeatureManagement at the end of the batch	    
+    * @description Confirms batch is not run again if lastProcessedId is null
+    * when Auto Payments are enabled	
+    */	
+    /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when	
+            you move forward with Data_OppPaymentsWithoutPaymentsEnabled	
+    @isTest	
+    private static void shouldCaptureOppPaymentMetricsInFeatureManagementWhenAutoPaymentsEnabled() {	
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(	
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)	
+        );	
+        UTIL_OrgTelemetry_SObject_BATCH paymentBatch =	
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);	
+        paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);	
+        paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;	
+        Test.startTest();	
+        paymentBatch.finish(null);	
+        Test.stopTest();	
+        System.assertEquals(	
+            NUM_OPPS_WITH_MULTIPLE_PAYMENTS,	
+            featureManagementMock.packageIntegerValuesByName.get(	
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()	
+            ),	
+            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and set correctly'	
+        );	
+        System.assertEquals(	
+            0,	
+            featureManagementMock.packageIntegerValuesByName.get(	
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()	
+            ),	
+            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set correctly'	
+        );	
+    }	
+    */	
+
+    /**	
+    * @description Confirms Opportunity Payment metrics are captured in FeatureManagement at the end of the batch	
+    * when Auto Payments are not enabled	
+    */	
+
+    /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when	
+            you move forward with Data_OppPaymentsWithoutPaymentsEnabled	
+    @isTest	
+    private static void shouldCaptureOppPaymentMetricsInFeatureManagementWhenAutoPaymentsNotEnabled() {	
+       UTIL_CustomSettingsFacade.getContactsSettingsForTests(	
+           new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)	
+       );	
+       UTIL_OrgTelemetry_SObject_BATCH paymentBatch =	
+           new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);	
+       paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);	
+       paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;	
+       paymentBatch.oppsWithPayments = NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT;	
+       Test.startTest();	
+       paymentBatch.finish(null);	
+       Test.stopTest();	
+       System.assertEquals(	
+           NUM_OPPS_WITH_MULTIPLE_PAYMENTS,	
+           featureManagementMock.packageIntegerValuesByName.get(	
+               UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()	
+           ),	
+           'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and set correctly'	
+       );	
+       System.assertEquals(	
+           NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT,	
+           featureManagementMock.packageIntegerValuesByName.get(	
+               UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()	
+           ),	
+           'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set correctly'	
+       );	
+    }
+    */
 
     /**
     * @description Confirms batch is not run again if lastProcessedId is null
@@ -447,8 +513,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-    * @description Insert Opportunities without parent Rd
-    * @param size amount of opps to be inserted
+    * @description Create Opportunities without parent Rd
+    * @param size amount of opps to create
     * @return List<Opportunity>
     */
     private static List<Opportunity> createOpps(Integer size) {
@@ -456,9 +522,9 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-    * @description Insert opportunities with parent Rd
-    * @param size amount of opps to be inserted
-    * @param rd The parent Rd
+    * @description Create opportunities with parent Rd
+    * @param size amount of opps to create
+    * @param rd The parent Recurring Donation Record
     * @return List<Opportunity>
     */
     private static List<Opportunity> createOpps(Integer size, Id rdId) {

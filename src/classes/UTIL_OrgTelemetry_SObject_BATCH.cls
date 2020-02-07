@@ -41,7 +41,7 @@
 * npe03__Recurring_Donation__c field. Both of those consistently failed with a query timeout error. The only query
 * that did run consistently is one without any filter at all. Technically we could use a filter with against an
 * indexed field, however in this case the goal was to use " != null" which would not use the index. As a result
-* this job will query and loop through all Opportunity records, but just count the recurring donation related ones.
+* this job will query and loop through all Opportunity records, but just count the Recurring Donation related ones.
 */
 public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
@@ -94,7 +94,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private Integer rdDiffCount = 0;
 
     @TestVisible
-    private Integer fixedLengthRdCount = 0;
+    private Integer rdFixedLengthCount = 0;
 
     @TestVisible
     private Integer oppsWithMultiplePaymentsCount = 0;
@@ -115,7 +115,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     /**
      * @description Execute the appropriate query to use in this batch job. Clears out the last processed Id to prevent
      * infinite loops
-     * @param context Not used
+     * @param context Batch context
      * @return Database.QueryLocator
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
@@ -213,24 +213,27 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description Handles batch logic for RECURRING_DONATIONS job mode
-     * @param recurringDonations The Rd records being processed
+     * @param recurringDonations The Recurring Donation records being processed
      */
     private void handleRecurringDonationsJobMode(List<npe03__Recurring_Donation__c> recurringDonations) {
         Map<Id, List<Opportunity>> oppsByRecurringDonationId = getOppsByRecurringDonationId(recurringDonations);
 
         for (npe03__Recurring_Donation__c recurringDonation : recurringDonations) {
             getRecurringDonationsCounts(recurringDonation, oppsByRecurringDonationId.get(recurringDonation.Id));
-            fixedLengthRdCount(recurringDonation);
         }
     }
 
     /**
      * @description Process RecurringDonation counters for the specific Opportunity
-     * @param recurringDonation The Rd being evaluated
-     * @param relatedOpps The Opportunities that are related to the Rd
+     * @param recurringDonation The Recurring Donation record being evaluated
+     * @param relatedOpps The Opportunities that are related to the Recurring Donation record
      */
     private void getRecurringDonationsCounts(npe03__Recurring_Donation__c recurringDonation, List<Opportunity> relatedOpps) {
         rdAllCount++;
+        
+        if(recurringDonation.npe03__Open_Ended_Status__c == null || recurringDonation.npe03__Open_Ended_Status__c == 'None') {
+            rdFixedLengthCount++;
+        }
 
         if (relatedOpps == null) {
             return;
@@ -245,18 +248,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
-    * @description Increment fixed-length Rd counter when the Rd is fixed-length(open ended status of none or null)
-    * @param recurringDonation The Rd being evaluated
-    */
-    private void fixedLengthRdCount(npe03__Recurring_Donation__c recurringDonation) {
-        if(recurringDonation.npe03__Open_Ended_Status__c == null || recurringDonation.npe03__Open_Ended_Status__c == 'None') {
-            fixedLengthRdCount++;
-        }
-    }
-
-    /**
      * @description Builds a map of opportunities grouped by npe03__Recurring_Donation__c
-     * @param recurringDonations Rds to be evaluated
+     * @param recurringDonations Recurring Donation records to be evaluated
      * @return Map<Id, List<Opportunity>>
      */
     private Map<Id, List<Opportunity>> getOppsByRecurringDonationId(List<npe03__Recurring_Donation__c> recurringDonations) {
@@ -299,7 +292,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
     /**
      * @description When the entire batch job is done, submit the final count variables to the LMO
-     * @param context not used
+     * @param context Batch context
      */
     public void finish(Database.BatchableContext context) {
         if (shouldChainNextBatch()) {
@@ -329,7 +322,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
-     * @description Sets counts related to recurring donation opportunities in LMO
+     * @description Sets counts related to Recurring Donation opportunities in LMO
      */
     private void setRecurringDonationOppsCounts() {
         featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
@@ -337,12 +330,12 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
-     * @description Sets counts related to recurring donations in LMO
+     * @description Sets counts related to Recurring Donations in LMO
      */
     private void setRecurringDonationsCounts() {
         featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), rdAllCount);
         featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
-        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(), fixedLengthRdCount);
+        featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(), rdFixedLengthCount);
     }
 
     /**

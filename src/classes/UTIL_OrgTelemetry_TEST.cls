@@ -380,7 +380,7 @@ private class UTIL_OrgTelemetry_TEST {
     * @description Verifies Data_CountFixLengthRd telemetry data is retrieved and set up correctly
     */
     @IsTest
-    private static void shouldInitializeTeletryDataCountFieldWhenCountFixedLengthRdTelemetryStart() {
+    private static void shouldSetDataCountOneTimeWhenRDFixedLengthCountCategory() {
         Test.startTest();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
