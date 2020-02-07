@@ -69,7 +69,7 @@
                     </c-ge-form-section>
                 </template>
 
-                <article class='slds-align_absolute-center slds-p-vertical_small'>
+                <article if:false={isPermissionError} class='slds-align_absolute-center slds-p-vertical_small'>
                     <lightning-button label={cancelButtonText}
                                       title={cancelButtonText}
                                       onclick={handleCancel}
