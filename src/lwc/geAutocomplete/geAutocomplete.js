@@ -159,4 +159,19 @@ export default class GeAutocomplete extends LightningElement {
     get errorMsgId() {
         return `errMsg-${this.id}`;
     }
+
+    /**
+     * Sets data on a look-up field (mimics the action on a select event on a look-up option)
+     * @param lookupResult
+     */
+    @api
+    setLookUpData (lookupResult) {
+        const payload = {
+            detail: {
+                value: lookupResult.value,
+                displayValue: lookupResult.displayValue
+            }
+        };
+        this.handleSelect(payload);
+    }
 }
