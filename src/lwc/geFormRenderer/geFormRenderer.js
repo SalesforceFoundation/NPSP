@@ -12,7 +12,7 @@ import {
     checkPermissionErrors
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch, deepClone } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -860,33 +860,42 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleChangeLookup(event) {
-        if (this.dataImport && this.dataImport.Id) {
-            //Temporary fix for Open row action not working. Changing/re-populating
-            // lookups after opening row from table currently not working.
-            //TODO: fix clashes between lookup related field values for opening row
-            //      from table vs selecting lookup value on new form.
-            return;
-        }
-        const recordId = event.detail.value;
-        const fieldApiName = event.detail.fieldApiName;
-        if (recordId === null) {
-            // Reset all fields related to this lookup field's object mapping
-            // this.reset(objectMapping.DeveloperName);
-            this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
-        } else {
-            this.loadSelectedRecordFieldValues(fieldApiName, recordId);
-        }
-
-        const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
-        const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
-        const lookupDonorType = fieldApiName === account ? 'Account' : 'Contact';
-
-        if (fieldApiName === account || fieldApiName === contact) {
-            let donorType = this.getCurrentlySelectedDonorType();
-
-            if (donorType && donorType === lookupDonorType) {
-                this.setReviewDonationsDonorProperties(recordId, donorType);
+        console.log('*** handleChangeLookup: ', deepClone(event.detail));
+        try {
+            if (this.dataImport && this.dataImport.Id) {
+                //Temporary fix for Open row action not working. Changing/re-populating
+                // lookups after opening row from table currently not working.
+                //TODO: fix clashes between lookup related field values for opening row
+                //      from table vs selecting lookup value on new form.
+                return;
             }
+            const recordId = event.detail.value;
+            const fieldApiName = event.detail.fieldApiName;
+            if (recordId === null) {
+                // Reset all fields related to this lookup field's object mapping
+                // this.reset(objectMapping.DeveloperName);
+                console.log('attempting to reset lookup');
+                const objectMapping = this.getObjectMapping(fieldApiName);
+                if (objectMapping) {
+                    this.reset(objectMapping.DeveloperName);
+                }
+            } else {
+                this.loadSelectedRecordFieldValues(fieldApiName, recordId);
+            }
+    
+            const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
+            const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
+            const lookupDonorType = fieldApiName === account ? 'Account' : 'Contact';
+    
+            if (fieldApiName === account || fieldApiName === contact) {
+                let donorType = this.getCurrentlySelectedDonorType();
+    
+                if (donorType && donorType === lookupDonorType) {
+                    this.setReviewDonationsDonorProperties(recordId, donorType);
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -943,6 +952,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (this.selectedDonation) {
             if (donationType === 'opportunity') {
+                console.log('selected opportunity');
                 blankDataImportRecord[donationImported] = this.selectedDonation.Id;
 
                 if (this.selectedDonation.applyPayment) {
@@ -950,8 +960,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 } else {
                     blankDataImportRecord[donationImportStatus] = userSelectedMatch;
                 }
-                blankDataImportRecord[paymentImported] = undefined;
-                blankDataImportRecord[paymentImportStatus] = undefined;
+                blankDataImportRecord[paymentImported] = null;
+                blankDataImportRecord[paymentImportStatus] = null;
 
                 //TODO: use loadSelectedRecordFieldValues to load selected Opp & Pmt field
                 // values
@@ -1007,7 +1017,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     resetDonationAndPaymentImportedFields() {
         const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
         const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
-        this.setFormFieldValue(donationImported, undefined, undefined);
-        this.setFormFieldValue(paymentImported, undefined, undefined);
+        this.setFormFieldValue(donationImported, null, undefined);
+        this.setFormFieldValue(paymentImported, null, undefined);
     }
 }

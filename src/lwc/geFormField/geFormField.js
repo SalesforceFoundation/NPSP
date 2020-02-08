@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty, debouncify} from 'c/utilCommon';
+import {isNotEmpty, debouncify, deepClone} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
@@ -31,6 +32,7 @@ export default class GeFormField extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     handleValueChangeSync = (event) => {
+        console.log('***handleValueChangeSync');
         this.value = this.getValueFromChangeEvent(event);
         const detail = {
             element: this.element,
@@ -325,8 +327,10 @@ export default class GeFormField extends LightningElement {
             } else {
                 value = data[this.sourceFieldAPIName];
             }
-        } else if (data.value) {
+        } else if (data.value !== undefined) {
             value = data.value;
+        } else {
+            return;
         }
 
         if (value === null) {
@@ -337,25 +341,42 @@ export default class GeFormField extends LightningElement {
         this.value = value;
 
         if (this.isLookup) {
-            const lookup = this.template.querySelector('c-ge-form-field-lookup');
+            try {
+                ///console.log('IS A LOOKUP');
+                ///console.log('data:', deepClone(data));
+                const lookup = this.template.querySelector('c-ge-form-field-lookup');
+                ///console.log('found lookup component... ', lookup);
+                let displayValue;
+                const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
+                ///console.log('relationship field name... ', relationshipFieldName);
+                ///console.log('data[relationshipFieldName]: ', data[relationshipFieldName]);
+                ///console.log('data.displayValue: ', data.displayValue);
+                if (data.displayValue) {
+                    ///console.log('getting explicitly set display value...', data.displayValue);
+                    displayValue = data.displayValue;
+                } else if (data[relationshipFieldName] &&
+                    data[relationshipFieldName].Name) {
+                    ///console.log('getting Name value from record like object...');
+                    displayValue = data[relationshipFieldName].Name;
 
-            let displayValue;
-            const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
-            if (data[relationshipFieldName] &&
-                data[relationshipFieldName]['Name']) {
-                displayValue = data[relationshipFieldName].Name;
-            } else if (data[this.sourceFieldAPIName]['displayValue']) {
-                displayValue = data[this.sourceFieldAPIName].displayValue;
-            } else if (data.displayValue) {
-                displayValue = data.displayValue;
+                } else if (data[this.sourceFieldAPIName].displayValue) {
+                    ///console.log('getting display value from record like object...');
+                    displayValue = data[this.sourceFieldAPIName].displayValue;
+
+                }
+
+                ///console.log('setting lookup value and displayValue...');
+                lookup.setSelected({ value, displayValue });
+            } catch (error) {
+                console.error(error);
             }
-
-            lookup.setSelected({value, displayValue});
+            
         }
     }
 
     @api
     reset() {
+        console.log('***reset');
         this.value = this._defaultValue;
 
         if (this.isLookup) {

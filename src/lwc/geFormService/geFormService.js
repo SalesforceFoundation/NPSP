@@ -121,8 +121,9 @@ class GeFormService {
      */
     saveAndProcessDataImport(createdDIRecord, widgetValues, hasUserSelectedDonation = false) {
         const widgetDataString = JSON.stringify(widgetValues);
+        console.log('createdDIRecord: ', createdDIRecord);
         return new Promise((resolve, reject) => {
-            saveAndProcessDataImport({
+            /*saveAndProcessDataImport({
                     diRecord: createdDIRecord,
                     widgetData: widgetDataString,
                     updateGift: hasUserSelectedDonation
@@ -133,7 +134,7 @@ class GeFormService {
                 .catch(error => {
                     console.error(JSON.stringify(error));
                     reject(error);
-                });
+                });*/
         });
     }
 
