@@ -23,7 +23,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
-    @track collapsed = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
