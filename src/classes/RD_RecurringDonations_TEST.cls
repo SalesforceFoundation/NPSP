@@ -46,8 +46,8 @@ public class RD_RecurringDonations_TEST {
     @isTest
     private static void insertOpportunities()
     {
-        UTIL_Debug.debug('multiply: ' + System.Label.npe03.RecurringDonationMultiplyValue);
-        UTIL_Debug.debug('divide: ' + System.Label.npe03.RecurringDonationDivideValue);
+        UTIL_Debug.debug('multiply: ' + RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY);
+        UTIL_Debug.debug('divide: ' + RD_Constants.SCHEDULE_TYPE_DIVIDE_BY);
         Account a = buildAccount();
         insert a;
 
@@ -235,7 +235,7 @@ public class RD_RecurringDonations_TEST {
         r2.npe03__Installments__c = 3;
         r2.npe03__Organization__c = a.Id;
         r2.npe03__Date_Established__c = Date.newInstance(1970,6,30);
-        r2.npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationDivideValue;
+        r2.npe03__Schedule_Type__c = RD_Constants.SCHEDULE_TYPE_DIVIDE_BY;
         insert r2;
 
         Opportunity[] installments2 = getOpps(r2.id);
@@ -482,7 +482,7 @@ public class RD_RecurringDonations_TEST {
         insert c;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         insert rd;
 
@@ -493,7 +493,7 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(100, originalOpps[0].Amount);
 
         Test.startTest();
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
         update rd;
         Test.stopTest();
 
@@ -511,9 +511,9 @@ public class RD_RecurringDonations_TEST {
         insert c;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation(
-            c.Id, System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th
+            c.Id, RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH
         );
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY;
 
         Test.startTest();
@@ -538,7 +538,7 @@ public class RD_RecurringDonations_TEST {
         insert c;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         insert rd;
 
@@ -549,7 +549,7 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(100, originalOpps[0].Amount);
 
         Test.startTest();
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly;
+        rd.npe03__Installment_Period__c = RD_Constants.INSTALLMENT_PERIOD_YEARLY;
         update rd;
         Test.stopTest();
 
@@ -567,7 +567,7 @@ public class RD_RecurringDonations_TEST {
         insert c;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationMonthlyInstallment(c.Id);
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         insert rd;
 
@@ -577,7 +577,7 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(100, originalOpps[0].Amount);
 
         Test.startTest();
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodWeekly;
+        rd.npe03__Installment_Period__c = RD_Constants.INSTALLMENT_PERIOD_WEEKLY;
         update rd;
         Test.stopTest();
 
@@ -597,7 +597,7 @@ public class RD_RecurringDonations_TEST {
         insert c;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         insert rd;
 
@@ -607,7 +607,7 @@ public class RD_RecurringDonations_TEST {
         System.assert(cOpp == 52 || cOpp == 53);
         System.assertEquals(100, originalOpps[0].Amount);
         Test.startTest();
-        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly;
+        rd.npe03__Installment_Period__c = RD_Constants.INSTALLMENT_PERIOD_QUARTERLY;
         update rd;
         Test.stopTest();
 
@@ -626,7 +626,7 @@ public class RD_RecurringDonations_TEST {
         insert c;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         rd.OwnerId = system.Userinfo.getUserId();
         insert rd;
@@ -660,7 +660,7 @@ public class RD_RecurringDonations_TEST {
         insert c;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationYearlyInstallment(c.Id);
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY;
         rd.OwnerId = system.Userinfo.getUserId();
         insert rd;
@@ -698,7 +698,7 @@ public class RD_RecurringDonations_TEST {
         insert c;
 
         npe03__Recurring_Donation__c rd = buildRecurringDonationQuarterlyInstallment(c.Id);
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         rd.OwnerId = system.Userinfo.getUserId();
         insert rd;
@@ -742,7 +742,7 @@ public class RD_RecurringDonations_TEST {
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation(null, customInstallment.Name);
         rd.npe03__Organization__c = a.id;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         rd.OwnerId = system.Userinfo.getUserId();
         insert rd;
@@ -785,7 +785,7 @@ public class RD_RecurringDonations_TEST {
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation(null, customInstallment.Name);
         rd.npe03__Organization__c = a.id;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         insert rd;
 
@@ -827,7 +827,7 @@ public class RD_RecurringDonations_TEST {
         npe03__Recurring_Donation__c rd = buildRecurringDonation(null, customInstallment.Name);
         rd.npe03__Organization__c = a.id;
         rd.npe03__Date_Established__c = Date.newInstance(2000,1,1);
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
         rd.OwnerId = system.Userinfo.getUserId();
         insert rd;
@@ -869,7 +869,7 @@ public class RD_RecurringDonations_TEST {
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation(null, customInstallment.Name);
         rd.npe03__Organization__c = a.id;
-        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
         rd.npe03__Next_Payment_Date__c = TODAY;
         rd.OwnerId = system.Userinfo.getUserId();
         insert rd;
@@ -920,7 +920,7 @@ public class RD_RecurringDonations_TEST {
     * @return npe03__Recurring_Donation__c
     */
     public static npe03__Recurring_Donation__c buildRecurringDonationYearlyInstallment(Id contactId) {
-        return buildRecurringDonation(contactId, System.Label.npe03.RecurringDonationInstallmentPeriodYearly);
+        return buildRecurringDonation(contactId, RD_Constants.INSTALLMENT_PERIOD_YEARLY);
     }
 
     /*******************************************************************************************************
@@ -929,7 +929,7 @@ public class RD_RecurringDonations_TEST {
     * @return npe03__Recurring_Donation__c
     */
     public static npe03__Recurring_Donation__c buildRecurringDonationQuarterlyInstallment(Id contactId) {
-        return buildRecurringDonation(contactId, System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly);
+        return buildRecurringDonation(contactId, RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);
     }
 
     /*******************************************************************************************************
@@ -938,7 +938,7 @@ public class RD_RecurringDonations_TEST {
     * @return npe03__Recurring_Donation__c
     */
     public static npe03__Recurring_Donation__c buildRecurringDonationMonthlyInstallment(Id contactId) {
-        return buildRecurringDonation(contactId, System.Label.npe03.RecurringDonationInstallmentPeriodMonthly);
+        return buildRecurringDonation(contactId, RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
     }
 
     /*******************************************************************************************************
@@ -947,7 +947,7 @@ public class RD_RecurringDonations_TEST {
     * @return npe03__Recurring_Donation__c
     */
     public static npe03__Recurring_Donation__c buildRecurringDonationWeeklyInstallment(Id contactId) {
-        return buildRecurringDonation(contactId, System.Label.npe03.RecurringDonationInstallmentPeriodWeekly);
+        return buildRecurringDonation(contactId, RD_Constants.INSTALLMENT_PERIOD_WEEKLY);
     }
 
     /*******************************************************************************************************
