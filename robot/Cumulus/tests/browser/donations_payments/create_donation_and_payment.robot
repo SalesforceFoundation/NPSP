@@ -42,7 +42,6 @@ Create Donation from a Contact
     Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)    
     Click Button with Value    Create Payments
     Current Page Should Be     Details    Opportunity
-    # Wait Until Page Does Not Contain Element    ${xpath}    error=Clicking Button Create Payments was not successful
     Scroll Page To Location    0    0
     Validate Related Record Count         Payments       4
     Click ViewAll Related List    Payments

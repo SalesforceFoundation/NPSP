@@ -16,10 +16,6 @@ class EngagementPlanListPage(BaseNPSPPage, ListingPage):
         self.selenium.location_should_contain("Engagement_Plan_Template__c",message="Current page is not an Engagement Plan List view")
             
     
-        
-
-    
-    
 @pageobject("Details", "Engagement_Plan_Template__c")
 class EngagementPlanDetailPage(BaseNPSPPage, DetailPage):
 

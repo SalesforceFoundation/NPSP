@@ -19,7 +19,7 @@ class AffiliationDetailPage(BaseNPSPPage,DetailPage ):
             by verifying that the url contains '/view'
         """
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Record view did not open in 1 min")
-        self.selenium.location_should_contain("/lightning/r/npe5__Affiliation__c/",message="Current page is not an Affiliation record view")
+        self.selenium.location_should_contain(f"/lightning/r/{object_name}/",message="Current page is not an Affiliation record view")
     
 
     def save_affiliation_record(self):

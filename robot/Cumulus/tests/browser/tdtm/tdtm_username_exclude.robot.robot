@@ -39,14 +39,12 @@ Update a Trigger Handler to Exclude a Username
     ...                          select=Username
     ...                          Name=User User
     Go To Page                   Details            Trigger_Handler__c            object_id=${triggerhandler}[0][Id]
-    # Go To Record Home            ${triggerhandler}[0][Id]
     ${uppercaseusername} =       Convert To Uppercase           ${scratchuser}[0][Username]
     API Modify Trigger Handler   ${triggerhandler}[0][Id]       ${ns}Usernames_to_Exclude__c=${uppercaseusername}
 
     # Create a Recurring Donation and verify no Opportunities are created
     &{contact} =                 API Create Contact             Email=jjoseph@robot.com
     Go To Page                   Details            Contact           object_id=&{contact}[Id]
-    # Go To Record Home            &{contact}[Id]
     &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=&{contact}[Id]
     ...                          Name=Julian Recurring Donation
     ...                          npe03__Amount__c=1200
@@ -54,9 +52,7 @@ Update a Trigger Handler to Exclude a Username
     ...                          npe03__Schedule_Type__c=Divide By
     ...                          npe03__Installment_Period__c=Monthly
     Go To Page                   Details           npe03__Recurring_Donation__c           object_id=&{recurringdonation}[Id]
-    # Go To Record Home            &{recurringdonation}[Id]
     Go To Page                   Details           Contact           object_id=&{contact}[Id]
-    # Go To Record Home            &{contact}[Id]
 
     #Verify no Opportunities were created
     @{opportunity} =             Salesforce Query             Opportunity

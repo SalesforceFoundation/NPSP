@@ -27,15 +27,4 @@ Data Imports
     ...                       Account2 Name=${acc2}
     Click Modal Button        Save
     Process Data Import Batch    Completed
-    # Select App Launcher Tab   NPSP Data Imports
-    # Select Object Dropdown
-    # Click Link    link=All
-    # #Sleep    2
-    # #Click Link    link=Status
-    # Click Special Object Button       Start Data Import
-    # Wait For Locator    frame    NPSP Data Import
-    # # Select Frame With Title   NPSP Data Import
-    # # Click Button With Value   Begin Data Import Process
-    # Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
-    # Wait For Batch To Process    BDI_DataImport_BATCH    Completed
-
+    

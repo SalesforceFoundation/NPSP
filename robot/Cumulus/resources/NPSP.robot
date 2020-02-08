@@ -248,10 +248,7 @@ Run Donations Batch Process
     Wait For Batch To Process    RLLP_OppContactRollup_BATCH        Completed
     Wait For Batch To Process    RLLP_OppHouseholdRollup_BATCH      Completed
     Wait For Batch To Process    RLLP_OppSoftCreditRollup_BATCH     Completed
-    # Wait For Locator    npsp_settings.status    RLLP_OppAccRollup_BATCH    Completed
-    # Wait For Locator    npsp_settings.status    RLLP_OppContactRollup_BATCH    Completed
-    # Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
-    # Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
+    
      
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
@@ -262,21 +259,12 @@ Open NPSP Settings
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            ${topmenu}
     Click Link With Text      ${submenu}
-    # Wait Until Element Is Visible  text:${topmenu}
-    # # Click Link With Text    text=${topmenu}
-    # Click Element With Locator    npsp_settings.side_panel    idPanelBulkProcesses
-    # Wait Until Element Is Visible  text:${submenu}
-    # Click Link With Text    text=${submenu}
     Sleep  1
     
 Click Data Import Button
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
-    
-# Click Field And Select Date
-    # [Arguments]    ${field}    ${date}
-    # Click Element With Locator    bge.field-input    ${field}    
-    # Click BGE Button    ${date}    
+       
      
 Process Data Import Batch
     [Documentation]        Go to NPSP Data Import Page and change view to 'To be Imported' and Process Batch

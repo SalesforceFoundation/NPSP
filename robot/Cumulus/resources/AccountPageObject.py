@@ -18,6 +18,7 @@ class AccountDetailPage(BaseNPSPPage,DetailPage ):
         """ Verify we are on the Account detail page
             by verifying that the url contains '/view'
         """
-        self.selenium.wait_until_location_contains("/lightning/r/Account/",message="Current page is not an Account record detail view")
+        self.selenium.wait_until_location_contains(f"/lightning/r/{object_name}/",timeout=60,
+                                                   message="Current page is not an Account record detail view")
     
  

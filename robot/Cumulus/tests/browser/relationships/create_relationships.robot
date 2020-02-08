@@ -49,7 +49,6 @@ Create Relationships for contacts
     ...                                 Parent
 
     Click More Actions Button
-    # Click Link                          link=Show more actions
     Click Link                          link=Relationships Viewer
     Wait Until Loading Is Complete
     Capture Page Screenshot
@@ -61,7 +60,6 @@ Create Relationships for contacts
     ...                                 &{contact1}[FirstName] &{contact1}[LastName]
     ...                                 Child
 
-    # Load Related List                   Relationships
     Click Related Table Item Link       Relationships                                               &{contact2}[FirstName] &{contact2}[LastName]
 
     Current Page Should Be              Details                                                     npe4__Relationship__c
