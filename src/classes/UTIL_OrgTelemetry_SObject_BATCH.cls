@@ -231,7 +231,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private void getRecurringDonationsCounts(npe03__Recurring_Donation__c recurringDonation, List<Opportunity> relatedOpps) {
         rdAllCount++;
         
-        if(recurringDonation.npe03__Open_Ended_Status__c == null || recurringDonation.npe03__Open_Ended_Status__c == 'None') {
+        if (recurringDonation.npe03__Open_Ended_Status__c == null || recurringDonation.npe03__Open_Ended_Status__c == 'None') {
             rdFixedLengthCount++;
         }
 
