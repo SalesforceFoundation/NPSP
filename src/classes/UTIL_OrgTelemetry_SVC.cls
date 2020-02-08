@@ -60,7 +60,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountPaymentOpps,
         Data_CountErrorLog,
         Data_CountBDIRows,
-        Data_CountBGERows
+        Data_CountBGERows,
+        Data_CountGERowsBatch
     }
 
     /**
@@ -73,6 +74,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_BDICMT,
         IsEnabled_CustomizableRollups,
         IsEnabled_DefaultGAU,
+        IsEnabled_GiftEntry,
         IsEnabled_PaymentAllocations,
         IsEnabled_RecurringDonations2,
         Data_CountErrorLog,
@@ -86,6 +88,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountRecurringDonationsAll,
         Data_CountBDIRowsLast30Days,
         Data_CountBGERowsLast30Days,
+        Data_CountGERowsLast30DaysBatch,
         Data_MaxNumRelatedOpps,
         DataCount_ONETIME_Use,
         HasUserManagedTDTM,
@@ -211,6 +214,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 handleBGECount();
             }
 
+            when Data_CountGERowsBatch {
+                handleGEBatchCount();
+            }
+
             when Data_CountErrorLog {
                 handleErrorLogCount();
             }
@@ -246,7 +253,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_CustomizableRollups.name(),
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_BDICMT.name(),
-                (stgSvc.stgDI.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false));
+                (stgSvc.stgDI.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false));   
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_GiftEntry.name(),
+                (stgSvc.stgGiftEntry.Enable_Gift_Entry__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_RecurringDonations2.name(),
                 (stgSvc.stgRD.IsRecurringDonations2Enabled__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocations.name(), 
@@ -419,6 +428,25 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeCount);
         } catch (Exception ex) {
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), -1);
+        }
+    }
+
+    /**
+     * @description Total number of Gift Entry Data Import records connected to a new GE batch (version = 2)
+     * created in the last 30 days
+     */
+    private void handleGEBatchCount() {
+        try {
+            Integer geBatchDataImportCount = Database.countQuery(
+                'SELECT count() FROM DataImport__c '+
+                'WHERE CreatedDate = Last_n_days:30 '+
+                'AND NPSP_Data_Import_Batch__r.GiftBatch__c = true '+
+                'AND NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c >= 2'
+            );
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(), 
+                geBatchDataImportCount);
+        } catch (Exception ex) {
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(), -1);
         }
     }
 
