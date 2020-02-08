@@ -711,10 +711,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     get saveActionLabel() {
+        if (this.isSingleGiftEntry) {
+            return this.CUSTOM_LABELS.commonSave;
+        }
+
         switch (this.mode) {
             case mode.UPDATE:
                 return this.CUSTOM_LABELS.commonUpdate;
-                break;
             default:
                 return this.CUSTOM_LABELS.geButtonSaveNewGift;
         }
