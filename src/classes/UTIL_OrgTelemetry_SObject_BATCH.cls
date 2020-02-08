@@ -99,7 +99,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     @TestVisible
     private Integer oppsWithPayments = 0;
 
-    private final String recurringDonationOpenStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
+    private final String recurringDonationOpenStatusValue = RD_Constants.OPEN_ENDED_STATUS_OPEN;
 
     /**
      * @description Constructor
