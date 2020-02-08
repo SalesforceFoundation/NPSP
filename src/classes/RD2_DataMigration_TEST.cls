@@ -97,7 +97,7 @@ private class RD2_DataMigration_TEST {
             .withId(null)
             .build();
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled');
 
         Exception jobException;
@@ -111,7 +111,7 @@ private class RD2_DataMigration_TEST {
             jobException = ex;
         }
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled *by* Dry Run migration');
 
         System.assertEquals(null, jobException,
@@ -393,7 +393,7 @@ private class RD2_DataMigration_TEST {
 
         npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
             getLegacyRecurringDonationBuilder()
-                .withInstallmentPeriod(System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th)
+                .withInstallmentPeriod(RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH)
                 .build()
         ).convertToEnhancedRD();
 
@@ -504,7 +504,7 @@ private class RD2_DataMigration_TEST {
             .withId(null)
             .withInstallmentPeriodYearly()
             .withInstallments(installments)
-            .withScheduleType(System.Label.npe03.RecurringDonationDivideValue)
+            .withScheduleType(RD_Constants.SCHEDULE_TYPE_DIVIDE_BY)
             .withOpenEndedStatusNone()
             .build();
         insert rd;
@@ -1565,15 +1565,15 @@ private class RD2_DataMigration_TEST {
         }
         insert opps;
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled');
 
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
         batch.execute(batchContext, getRecords());
-        batch.finish(batchContext);      
+        batch.finish(batchContext);
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled *by* Dry Run migration');
 
         List<Error__c> errors = errorGateway.getRecords();
@@ -1621,16 +1621,16 @@ private class RD2_DataMigration_TEST {
         //reset custom settings static var
         UTIL_ListCustomSettingsFacade.mapCustomInstallmentSettings = null;
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled');
 
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
         batch.execute(batchContext, getRecords());
-        batch.finish(batchContext);   
-        Id jobId = batchContext.getJobId();   
+        batch.finish(batchContext);
+        Id jobId = batchContext.getJobId();
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 
+        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled *by* the Dry Run batch');
 
         List<Error__c> errors = errorGateway.getRecords();
@@ -1654,7 +1654,7 @@ private class RD2_DataMigration_TEST {
      * when migration is run in a dry run mode
      */
     @IsTest
-    private static void shouldNotLogErrorWhenDayOfMonthIsLastDayInDryRunMode() { 
+    private static void shouldNotLogErrorWhenDayOfMonthIsLastDayInDryRunMode() {
         final String dayOfMonth = '29';
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
@@ -1665,7 +1665,7 @@ private class RD2_DataMigration_TEST {
         try {
             insert rd;
         } catch (Exception e) {
-            if (e.getMessage().contains('INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST')) {                
+            if (e.getMessage().contains('INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST')) {
                 return; //do not execute the test when the org has RD2 config deployed
             } else {
                 actualException = e;
@@ -1677,8 +1677,8 @@ private class RD2_DataMigration_TEST {
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
         batch.execute(batchContext, getRecords());
-        batch.finish(batchContext);   
-        Id jobId = batchContext.getJobId();   
+        batch.finish(batchContext);
+        Id jobId = batchContext.getJobId();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -1686,7 +1686,7 @@ private class RD2_DataMigration_TEST {
         List<npe03__Recurring_Donation__c> rds = getRecords();
         System.assertEquals(dayOfMonth, rds[0].Day_of_Month__c, 'Day of Month should not change');
         assertLegacyFormat(rds);
-        
+
         assertBatchSummarySuccess(batchContext.getJobId(), 1);
     }
 
