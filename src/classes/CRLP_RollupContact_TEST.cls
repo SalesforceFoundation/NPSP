@@ -511,9 +511,8 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals('New', c.Department);
 
         System.assertEquals(1, c.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
-        System.assertEquals(wonCount, c.CountGiftsLastYear__c, 'The number of close won opps should be 12');
+        System.assertEquals(wonCount, c.CountGiftsLastYear__c, 'The number of close won opps should be equal to wonCount');
 
-        //System.assertEquals(cnt, c.npo02__NumberOfClosedOpps__c);
         // These 10 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
