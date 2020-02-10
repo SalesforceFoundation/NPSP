@@ -55,9 +55,10 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     &{data_import} =                 Create Data Import Record
     Process Data Import Batch        Errors
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
-    Open Data Import Record          &{data_import_upd}[Name]    
-    Navigate To And Validate Field Value             Failure Information    contains        Invalid Donation Donor
-    Navigate To And Validate Field Value              Donation Import Status    contains     Invalid Donation Donor
+    Open Data Import Record          &{data_import_upd}[Name]
+    Current Page Should be           Details         DataImport__c    
+    Verify Failure Message           Failure Information        contains        Invalid Donation Donor
+    Verify Failure Message           Donation Import Status     contains        Invalid Donation Donor
     
     # Verify Account Details
     Verify Expected Values                     nonns    Account            &{data_import_upd}[${ns}Account1Imported__c]
@@ -73,8 +74,8 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Open Data Import Record          &{data_import_upd}[Name] 
     Current Page Should Be           Details          DataImport__c      
-    Navigate To And Validate Field Value              Account1 Import Status    contains     Matched
-    Navigate To And Validate Field Value             Donation Import Status    contains     Created
+    Verify Failure Message           Account1 Import Status    contains     Matched
+    Verify Failure Message           Donation Import Status    contains     Created
    
     #Verify Opportunity is created as closed won with given date and amount
     Verify Expected Values                     nonns    Opportunity        &{data_import_upd}[${ns}DonationImported__c]
@@ -110,7 +111,7 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     Log Many       &{data_import_upd}
     Open Data Import Record          &{data_import_upd}[Name] 
     Current Page Should Be           Details          DataImport__c   
-    Navigate To And Validate Field Value              Failure Information    contains       GAU Allocation 1: Import Status:\n Error: record not created, missing required fields:${ns}GAU_Allocation_1_GAU__c
+    Verify Failure Message           Failure Information    contains       GAU Allocation 1: Import Status:\n Error: record not created, missing required fields:${ns}GAU_Allocation_1_GAU__c
     
     # Verify Contact Details
     Verify Expected Values                     nonns    Contact            &{data_import_upd}[${ns}Contact1Imported__c]
@@ -139,8 +140,9 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     Process Data Import Batch        Completed
     &{data_import_upd} =             Salesforce Get  ${ns}DataImport__c  &{data_import}[Id]
     Open Data Import Record          &{data_import_upd}[Name]    
-    Navigate To And Validate Field Value              Contact1 Import Status    contains     Matched
-    Navigate To And Validate Field Value             Donation Import Status    contains     Created
+    Current Page Should Be           Details          DataImport__c
+    Verify Failure Message           Contact1 Import Status    contains     Matched
+    Verify Failure Message           Donation Import Status    contains     Created
     Go To Page                Detail        Opportunity     object_id=&{data_import_upd}[${ns}DonationImported__c]
     Select Tab                Related
     Verify Allocations        GAU Allocations

@@ -68,3 +68,16 @@ class DataImportDetailPage(BaseNPSPPage, DetailPage):
         """clicks the save button on the modal and waits till modal is closed"""
         self.salesforce.click_modal_button("Save")
         self.salesforce.wait_until_modal_is_closed()
+
+    def verify_failure_message(self,field,status,value):
+        """If status is 'contains' then the specified value should be present in the field
+            'does not contain' then the specified value should not be present in the field"""
+        locator = npsp_lex_locators['data_imports']['check_status'].format(field)
+        self.selenium.wait_until_page_contains_element(locator, error=f"Couldn't find {field} on the page")
+        self.selenium.scroll_element_into_view(locator) 
+        actual_value=self.selenium.get_webelement(locator).text
+        print(f"actual value is {actual_value}")
+        if status == "contains":
+            assert value == actual_value, f"Expected {field} to be {value} but found {actual_value}"
+        elif status == "does not contain":
+            assert value != actual_value, f"Expected {field} should not contain {value}"   
