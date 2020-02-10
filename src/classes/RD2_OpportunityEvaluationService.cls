@@ -36,6 +36,24 @@
 */
 public inherited sharing class RD2_OpportunityEvaluationService {
 
+    /***
+     * @description CurrencyIsoCode field name
+     */
+    private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
+
+    /***
+    * @description Determines if multi-currency is enabled for the org
+    */
+    private Boolean isMultiCurrencyEnabled {
+        get {
+            if (isMultiCurrencyEnabled == null) {
+                isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+            }
+            return isMultiCurrencyEnabled;
+        }
+        set;
+    }
+
     /**
      * @description Indicates if the Opp evaluation service will be skipped.
      * The flag is currently applicable to migration since the Opp evaluation service should not be executed on migration.
@@ -224,7 +242,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return Boolean
      */
     public Boolean hasKeyFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        return
+        Boolean isChanged =
             rd.npe03__Contact__c != oldRd.npe03__Contact__c ||
             rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
             rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
@@ -235,6 +253,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rd.Status__c != oldRd.Status__c ||
             rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
             rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c;
+
+        if (!isChanged && isMultiCurrencyEnabled) {
+            isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);
+        }
+
+        return isChanged;
     }
 
     /**
@@ -429,8 +453,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'StageName, IsClosed, IsWon, ' +
             'CampaignId, Recurring_Donation_Installment_Number__c ';
 
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            oppSubquery += ', ' + UTIL_Currency.CURRENCY_ISO_CODE_FIELD + ' ';
+        if (isMultiCurrencyEnabled) {
+            oppSubquery += ', ' + CURRENCY_ISO_CODE_FIELD + ' ';
         }
 
         oppSubquery += 'FROM npe03__Donations__r ' +

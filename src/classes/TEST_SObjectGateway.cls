@@ -252,6 +252,51 @@ public class TEST_SObjectGateway {
     }
 
     /***
+    * @description Retrieves payments
+    */
+    public class PaymentGateway {
+        private Set<String> fields = new Set<String>{
+            'Name',
+            'npe01__Payment_Method__c',
+            'npe01__Payment_Amount__c',
+            'npe01__Opportunity__c'
+        };
+
+        /***
+        * @description Constructor adding the CurrencyIsoCode into the output fields set
+        */
+        public PaymentGateway() {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                fields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            }
+        }
+
+        /***
+        * @description Retrieves payments for the related Opportunity
+        * @param opp Opportunity
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(Opportunity opp) {
+            return getRecords(new List<Opportunity>{ opp });
+        }
+
+        /***
+        * @description Retrieves payments for related Opportunities
+        * @param opps Opportunity records
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(List<Opportunity> opps) {
+            String soql = new UTIL_Query()
+                .withFrom(npe01__OppPayment__c.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe01__Opportunity__c IN :opps')
+                .build();
+
+            return (List<npe01__OppPayment__c>) Database.query(soql);
+        }
+    }
+
+    /***
     * @description Retrieves Error record(s)
     */
     public class ErrorGateway {

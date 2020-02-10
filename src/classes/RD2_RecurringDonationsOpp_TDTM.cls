@@ -105,16 +105,15 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
     * @return void
     */
     public void validateCurrency(List<Opportunity> opps) {
-        MultiCurrencyValidator currencyValidator = new MultiCurrencyValidator();
+        MultiCurrencyValidator validator = new MultiCurrencyValidator()
+            .withOpportunities(opps);
 
-        if (!currencyValidator.isEnabled()) {
+        if (!validator.isEnabled() || !validator.hasRecurringDonationOpp()) {
             return;
         }
-        
-        currencyValidator.withOpportunities(opps);
 
         for (Opportunity opp : opps) {
-            if (currencyValidator.isCurrencyOutOfSync(opp)) {
+            if (validator.isCurrencyOutOfSync(opp)) {
                 opp.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnOpp);
             }
         }
@@ -232,6 +231,14 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         */
         public Boolean isEnabled() {
             return isMultiCurrencyEnabled;
+        }
+
+        /***
+        * @description Indicates if at least one Opportunity is related to a Recurring Donation
+        * @return Boolean
+        */
+        public Boolean hasRecurringDonationOpp() {
+            return !rdById.isEmpty();
         }
 
         /***

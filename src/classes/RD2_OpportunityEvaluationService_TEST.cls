@@ -515,6 +515,33 @@ private class RD2_OpportunityEvaluationService_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
     }
+     
+    /**
+     * @description Verifies Opps are processed when currency on RD is changed only
+     */
+    @IsTest
+    private static void shouldEvaluateOppsWhenRDCurrencyIsChanged() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withCurrencyIsoCode('CAD')
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        npe03__Recurring_Donation__c updatedRD = rd.clone();
+        rd.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, 'USD');
+
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        System.assertEquals(true, evalService.hasKeyFieldChanged(updatedRd, rd),
+            'Opps should be evaluated when currency on related RD is changed only');
+    }
 
     /**
      * @description Verifies future open Opp is updated when an active RD is updated
