@@ -1746,7 +1746,8 @@ private class RD2_DataMigration_TEST {
     * @description Returns contact record
     * @return Contact
     */
-    * @description Returns contact record
+    private static Contact getContact() {
+        return [
             SELECT FirstName, LastName, AccountId
             FROM Contact
             LIMIT 1
