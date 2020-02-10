@@ -12,7 +12,7 @@ import {
     checkPermissionErrors
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch, deepClone } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -950,6 +950,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (this.selectedDonation) {
             if (donationType === 'opportunity') {
+                console.log('selected opportunity');
                 blankDataImportRecord[donationImported] = this.selectedDonation.Id;
 
                 if (this.selectedDonation.applyPayment) {

@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty, debouncify} from 'c/utilCommon';
+import {isNotEmpty, debouncify, deepClone} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
@@ -31,6 +32,7 @@ export default class GeFormField extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     handleValueChangeSync = (event) => {
+        console.log('***handleValueChangeSync');
         this.value = this.getValueFromChangeEvent(event);
         const detail = {
             element: this.element,
@@ -361,6 +363,7 @@ export default class GeFormField extends LightningElement {
 
     @api
     reset() {
+        console.log('***reset');
         this.value = this._defaultValue;
 
         if (this.isLookup) {

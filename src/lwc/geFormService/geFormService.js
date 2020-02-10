@@ -121,6 +121,7 @@ class GeFormService {
      */
     saveAndProcessDataImport(createdDIRecord, widgetValues, hasUserSelectedDonation = false) {
         const widgetDataString = JSON.stringify(widgetValues);
+        console.log('createdDIRecord: ', createdDIRecord);
         return new Promise((resolve, reject) => {
             saveAndProcessDataImport({
                     diRecord: createdDIRecord,

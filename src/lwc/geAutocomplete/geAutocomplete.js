@@ -101,6 +101,7 @@ export default class GeAutocomplete extends LightningElement {
 
     @api
     reset() {
+        console.log('***reset');
         this.displayValue = '';
         this.value = null;
         const payload = {

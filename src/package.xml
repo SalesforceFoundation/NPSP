@@ -3259,7 +3259,6 @@
         <members>IsEnabled_BDICMT</members>
         <members>IsEnabled_CustomizableRollups</members>
         <members>IsEnabled_DefaultGAU</members>
-        <members>IsEnabled_GiftEntry</members>
         <members>IsEnabled_HouseholdAcctModel</members>
         <members>IsEnabled_PaymentAllocations</members>
         <members>IsEnabled_RecurringDonations2</members>
@@ -3272,7 +3271,6 @@
         <members>Data_CountBDIRowsLast30Days</members>
         <members>Data_CountBGERowsLast30Days</members>
         <members>Data_CountErrorLog</members>
-        <members>Data_CountGERowsLast30DaysBatch</members>
         <members>Data_CountOppsWithMultiplePayments</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>
