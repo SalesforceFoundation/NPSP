@@ -33,9 +33,9 @@
 * @group Settings
 * @description Recurring Donations Health Check
 */
-public inherited sharing class STG_PanelRDHealthCheck {
+public class STG_PanelRDHealthCheck {
 
-    /**
+    /*********************************************************************************************************
     * @description Delegate Health Check operations for Recurring Donations
     * @param ctrl The Health Check panel's controller
     */
@@ -48,8 +48,14 @@ public inherited sharing class STG_PanelRDHealthCheck {
         }
     }
 
-    /** @description Health CHeck Panel Controller Instance */
+    /** @description Recurring Donation SObject API Name */
+    private static final String RD_SOBJECT_NAME = 'npe03__Recurring_Donation__c';
+
+    /** @description Health Check Panel Controller Instance */
     private STG_PanelHealthCheck_CTRL ctrl;
+
+    /** @description Health Check Result reporting container */
+    private HealthCheckResult result;
 
     /**
      * @description Constructor
@@ -57,9 +63,10 @@ public inherited sharing class STG_PanelRDHealthCheck {
      */
     public STG_PanelRDHealthCheck(STG_PanelHealthCheck_CTRL ctrl) {
         this.ctrl = ctrl;
+        this.result = new HealthCheckResult(this.ctrl);
     }
 
-    /**
+    /***
     * @description Health Check Validation for Legacy Recurring Donations:
     * - Installment Period Picklist Values with Custom Installment Type(s)
     * - Open Opportunity Stage
@@ -67,78 +74,40 @@ public inherited sharing class STG_PanelRDHealthCheck {
     * - Create Installment Opportunity
     */
     public void verifyLegacyRDConfig() {
-        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        npe03__Recurring_Donations_Settings__c settings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        SupportedLegacyRDValues supported = new SupportedLegacyRDValues();
 
-        // =============================================================
-        // Verify Standard and Custom Installment Periods
-        // =============================================================
-        Set<String> installmentPeriods = new Set<String>();
-        Set<String> customInstallmentPeriods = new Set<String>();
-        installmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_WEEKLY);
-        installmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
-        installmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);
-        installmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_YEARLY);
-        installmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
-
-        // Get Custom Installment Periods
-        for (npe03__Custom_Installment_Settings__c ci : STG_Panel.stgService.listRDCustomInstallment) {
-            installmentPeriods.add(ci.Name);
-            customInstallmentPeriods.add(ci.Name);
-        }
+        result.withRecurringDonationScope();
 
         // The picklist should have the supported and custom picklist values
-        validateSupportedPicklistValues(installmentPeriods, 'npe03__Installment_Period__c',
+        validateSupportedPicklistValues(supported.installmentPeriods, 'npe03__Installment_Period__c',
             System.Label.healthDetailsInvalidRDCustomPeriodPIcklist, System.Label.healthSolutionInvalidRDCustomPeriodPicklist);
         // The picklist should absolutely have all of the custom installment period
-        validateRequiredPicklistValues(customInstallmentPeriods, 'npe03__Installment_Period__c',
+        validateRequiredPicklistValues(supported.customInstallmentPeriods, 'npe03__Installment_Period__c',
             System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionInvalidRDCustomPeriod);
 
-        // ===========================================================================================
-        // Verify Open Ended Status Values. This field should have all 3 values and nothing else
-        // ===========================================================================================
-        Set<String> supportedStatus = new Set<String>();
-        supportedStatus.add(RD_Constants.OPEN_ENDED_STATUS_OPEN);
-        supportedStatus.add(RD_Constants.OPEN_ENDED_STATUS_CLOSED);
-        supportedStatus.add(RD_Constants.OPEN_ENDED_STATUS_NONE);
-        validateSupportedPicklistValues(supportedStatus, 'npe03__Open_Ended_Status__c',
+        validateSupportedPicklistValues(supported.status, 'npe03__Open_Ended_Status__c',
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
-        validateRequiredPicklistValues(supportedStatus, 'npe03__Open_Ended_Status__c',
+        validateRequiredPicklistValues(supported.status, 'npe03__Open_Ended_Status__c',
             System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
 
-        // =============================================================
-        // Verify Schedule Type Values
-        // =============================================================
-        Set<String> supportedScheduleTypes = new Set<String>();
-        supportedScheduleTypes.add(RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY);
-        supportedScheduleTypes.add(RD_Constants.SCHEDULE_TYPE_DIVIDE_BY);
-
-        validateSupportedPicklistValues(supportedScheduleTypes, 'npe03__Schedule_Type__c',
+        validateSupportedPicklistValues(supported.scheduleTypes, 'npe03__Schedule_Type__c',
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
-        validateRequiredPicklistValues(supportedScheduleTypes, 'npe03__Schedule_Type__c',
+        validateRequiredPicklistValues(supported.scheduleTypes, 'npe03__Schedule_Type__c',
             System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
 
-        if (hasValidationErrors()) {
-            ctrl.createDR(System.Label.stgNavRecurringDonations,
-                STG_PanelHealthCheck_CTRL.statusSuccess,
-                null,
-                System.Label.healthDetailsValidRDCustomPeriod
-            );
+        if (!result.hasErrors()) {
+            result.addSuccess(System.Label.healthDetailsValidRDCustomPeriod);
         }
 
-        // ===========================================================================================
-        // Validate Recurring Donation Stages
-        // ===========================================================================================
-        String closedOppStage = System.Label.npe03.RecurringDonationClosedLostOpportunityStage;
         String openOppStage = (Test.isRunningTest()
             ? UTIL_UnitTestData_TEST.getOpenStage()
             : System.Label.npe03.RecurringDonationStageName);
-        validateOpportunityStage(openOppStage, false, false);
-        validateOpportunityStage(closedOppStage, false, true);
+        validateOpenOpportunityStage(openOppStage);
+        validateClosedLostOpportunityStage(System.Label.npe03.RecurringDonationClosedLostOpportunityStage);
 
-        // ===========================================================================================
         // Validate that an Installment Opportunity can be created
-        // ===========================================================================================
-        validateNewInstallmentOpportunity(openOppStage, rds.npe03__Record_Type__c);
+        validateNewInstallmentOpportunity(openOppStage, settings.npe03__Record_Type__c);
     }
 
     /**
@@ -153,75 +122,32 @@ public inherited sharing class STG_PanelRDHealthCheck {
     */
     public void verifyEnhancedRDConfig() {
         RD2_Settings settings = new RD2_Settings();
+        SupportedEnhancedRDValues supported = new SupportedEnhancedRDValues();
 
-        // =============================================================
-        // Verify Installment Periods
-        // =============================================================
-        Set<String> supportedInstallmentPeriods = new Set<String>();
-        supportedInstallmentPeriods.add(RD2_Constants.INSTALLMENT_PERIOD_DAILY);
-        supportedInstallmentPeriods.add(RD2_Constants.INSTALLMENT_PERIOD_WEEKLY);
-        supportedInstallmentPeriods.add(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY);
-        supportedInstallmentPeriods.add(RD2_Constants.INSTALLMENT_PERIOD_YEARLY);
-        supportedInstallmentPeriods.add(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
+        result.withRecurringDonationScope();
 
-        validateSupportedPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
+        validateSupportedPicklistValues(supported.installmentPeriods, 'npe03__Installment_Period__c',
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
-        // =============================================================
-        // Verify Status Values
-        // =============================================================
-        Set<String> supportedStatus = new Set<String>();
-        supportedStatus.add(RD2_Constants.STATUS_ACTIVE);
-        supportedStatus.add(RD2_Constants.STATUS_CLOSED);
-        supportedStatus.add(RD2_Constants.STATUS_LAPSED);
-
-        validateSupportedPicklistValues(supportedStatus, String.valueOf(npe03__Recurring_Donation__c.Status__c),
+        validateSupportedPicklistValues(supported.status, String.valueOf(npe03__Recurring_Donation__c.Status__c),
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
-        // =============================================================
-        // Verify Recurring Type Values
-        // =============================================================
-        Set<String> supportedType = new Set<String>();
-        supportedType.add(RD2_Constants.RECURRING_TYPE_OPEN);
-
-        validateRequiredPicklistValues(supportedType, String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
+        validateRequiredPicklistValues(supported.recurringTypes, String.valueOf(npe03__Recurring_Donation__c.RecurringType__c),
             System.Label.healthDetailsMissingRequiredPicklistValue, System.Label.healthSolutionMissingPicklistValue);
 
-        // =============================================================
-        // Verify Day Of Month Values
-        // =============================================================
-        Set<String> supportedDayOfMonth = new Set<String>();
-        for (Integer n=0; n < 29; n++) {
-            supportedDayOfMonth.add(String.valueOf(n));
-        }
-        supportedDayOfMonth.add(RD2_Constants.DAY_OF_MONTH_LAST_DAY);
-
-        validateSupportedPicklistValues(supportedDayOfMonth, String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c),
+        validateSupportedPicklistValues(supported.dayOfMonthValues, String.valueOf(npe03__Recurring_Donation__c.Day_Of_Month__c),
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
-        if (hasValidationErrors()) {
-            ctrl.createDR(System.Label.stgNavRecurringDonations,
-                STG_PanelHealthCheck_CTRL.statusSuccess,
-                null,
-                System.Label.healthDetailsValidRDCustomPeriod
-            );
+        if (!result.hasErrors()) {
+            result.addSuccess(System.Label.healthDetailsValidRDCustomPeriod);
         }
 
-        // ===========================================================================================
-        // Validate Recurring Donation Stages
-        // ===========================================================================================
-        validateOpportunityStage(settings.installmentStage, false, false);
-        validateOpportunityStage(System.Label.npe03.RecurringDonationClosedLostOpportunityStage, false, true);
+        validateOpenOpportunityStage(settings.installmentStage);
+        validateClosedLostOpportunityStage(System.Label.npe03.RecurringDonationClosedLostOpportunityStage);
 
-        // ===========================================================================================
         // Validate that an Installment Opportunity can be created
-        // ===========================================================================================
         validateNewInstallmentOpportunity(settings.installmentStage, settings.installmentRecordTypeId);
     }
-
-    // ==================================================================================
-    // HELPER METHODS
-    // ==================================================================================
 
     /**
      * @description Validate that the Picklist only has this list of supported picklist values. The picklist
@@ -232,9 +158,8 @@ public inherited sharing class STG_PanelRDHealthCheck {
      */
     @TestVisible
     private void validateSupportedPicklistValues(Set<String> supportedValues, String fieldName, String errorLabel, String solutionLabel) {
-        String fieldLabel = UTIL_Describe.getFieldLabel('npe03__Recurring_Donation__c', fieldName);
-        List<SelectOption> picklistValues = UTIL_Describe.getSelectOptions(
-            'npe03__Recurring_Donation__c', fieldName);
+        String fieldLabel = UTIL_Describe.getFieldLabel(RD_SOBJECT_NAME, fieldName);
+        List<SelectOption> picklistValues = UTIL_Describe.getSelectOptions(RD_SOBJECT_NAME, fieldName);
 
         Set<String> supportedValuesLowerCase = new Set<String>();
         for (String val : supportedValues) {
@@ -243,15 +168,7 @@ public inherited sharing class STG_PanelRDHealthCheck {
 
         for (SelectOption option : picklistValues) {
             if (!supportedValuesLowerCase.contains(option.getValue().toLowerCase())) {
-                ctrl.createDR(System.Label.stgNavRecurringDonations,
-                    STG_PanelHealthCheck_CTRL.statusError,
-                    String.format(errorLabel,
-                        new String[] { option.getValue().escapeHtml4(), fieldLabel.escapeHtml4() }
-                    ),
-                    String.format(solutionLabel,
-                        new String[] { option.getValue().escapeHtml4(), fieldLabel.escapeHtml4() }
-                    )
-                );
+                result.addError(option.getValue(), fieldLabel, errorLabel, solutionLabel);
             }
         }
     }
@@ -263,10 +180,8 @@ public inherited sharing class STG_PanelRDHealthCheck {
      */
     @TestVisible
     private void validateRequiredPicklistValues(Set<String> requiredValues, String fieldName, String errorLabel, String solutionLabel) {
-
-        String fieldLabel = UTIL_Describe.getFieldLabel('npe03__Recurring_Donation__c', fieldName);
-        List<SelectOption> picklistValues = UTIL_Describe.getSelectOptions(
-            'npe03__Recurring_Donation__c', fieldName);
+        String fieldLabel = UTIL_Describe.getFieldLabel(RD_SOBJECT_NAME, fieldName);
+        List<SelectOption> picklistValues = UTIL_Describe.getSelectOptions(RD_SOBJECT_NAME, fieldName);
 
         for (String value : requiredValues) {
             Boolean hasValue = false;
@@ -276,19 +191,28 @@ public inherited sharing class STG_PanelRDHealthCheck {
                     break;
                 }
             }
-            System.debug('> Looking for ' + value + ': ' + hasValue);
             if (!hasValue) {
-                ctrl.createDR(System.Label.stgNavRecurringDonations,
-                    STG_PanelHealthCheck_CTRL.statusError,
-                    String.format(errorLabel,
-                        new String[] { value.escapeHtml4(), fieldLabel.escapeHtml4() }
-                    ),
-                    String.format(solutionLabel,
-                        new String[] { value.escapeHtml4(), fieldLabel.escapeHtml4() }
-                    )
-                );
+                result.addError(value, fieldLabel, errorLabel, solutionLabel);
             }
         }
+    }
+
+    /**
+     * @description Validates specified stage name exists as an open stage and it is active
+     * @param oppStageName Opportunity Stage Name
+     * @return void
+     */
+    private void validateOpenOpportunityStage(String oppStageName) {
+        validateOpportunityStage(oppStageName, false, false);
+    }
+
+    /**
+     * @description Validates specified stage name exists as a Closed Lost stage and it is active
+     * @param oppStageName Opportunity Stage Name
+     * @return void
+     */
+    private void validateClosedLostOpportunityStage(String oppStageName) {
+        validateOpportunityStage(oppStageName, false, true);
     }
 
     /**
@@ -297,23 +221,25 @@ public inherited sharing class STG_PanelRDHealthCheck {
      * @param oppStageName Record Type Api Name (DeveloperName NOT label)
      * @param isWon
      * @param isClosed
+     * @return void
      */
     @TestVisible
     private void validateOpportunityStage(String oppStageName, Boolean isWon, Boolean isClosed) {
 
         Integer cnt = [SELECT COUNT() FROM OpportunityStage
-            WHERE ApiName = :oppStageName
-            AND IsClosed = :isClosed
-            AND IsWon = :isWon
-            AND IsActive = TRUE
+        WHERE ApiName = :oppStageName
+        AND IsClosed = :isClosed
+        AND IsWon = :isWon
+        AND IsActive = TRUE
         ];
         if (cnt == 0) {
-            ctrl.createDR(System.Label.stgNavRecurringDonations,
-                STG_PanelHealthCheck_CTRL.statusError,
-                String.format(System.Label.healthDetailsInvalidOppStage,
-                    new String[] {
-                        oppStageName
-                    }),
+            result
+                .withRecurringDonationScope()
+                .addError(
+                String.format(
+                    System.Label.healthDetailsInvalidOppStage,
+                    new String[] { oppStageName}
+                ),
                 System.Label.healthSolutionInvalidOppStage
             );
         }
@@ -326,6 +252,8 @@ public inherited sharing class STG_PanelRDHealthCheck {
      */
     @TestVisible
     private void validateNewInstallmentOpportunity(String oppStage, Id oppRecordType) {
+        result.withOpportunityScope();
+
         Savepoint sp = Database.setSavepoint();
 
         // create a test account and test opportunity
@@ -343,9 +271,9 @@ public inherited sharing class STG_PanelRDHealthCheck {
             RecordTypeId = oppRecordType
         );
 
-        Database.SaveResult[] sr = Database.insert(new List<Opportunity>{
-            testOpp
-        }, false);
+        Database.SaveResult[] sr = Database.insert(
+            new List<Opportunity>{ testOpp }, false
+        );
 
         Database.rollback(sp);
 
@@ -353,7 +281,7 @@ public inherited sharing class STG_PanelRDHealthCheck {
     }
 
     /**
-     * @description Create a Test Account and validate that is saves correctl
+     * @description Create a Test Account and validate that is saves correctly
      * @return Account Instance
      */
     private Account validateTestAccount() {
@@ -364,8 +292,7 @@ public inherited sharing class STG_PanelRDHealthCheck {
         try {
             insert acct;
         } catch (Exception ex) {
-            ctrl.createDR(System.Label.stgNavDonations,
-                STG_PanelHealthCheck_CTRL.statusError,
+            result.addError(
                 System.Label.healthDetailsSaveAcctFailed + ' ' + ex.getMessage(),
                 System.Label.healthSolutionSaveOppsFailed
             );
@@ -381,11 +308,7 @@ public inherited sharing class STG_PanelRDHealthCheck {
     private void validateSaveErrors(List<Database.SaveResult> sr) {
 
         if (sr[0].isSuccess()) {
-            ctrl.createDR(System.Label.stgNavDonations,
-                STG_PanelHealthCheck_CTRL.statusSuccess,
-                null,
-                System.Label.healthLabelRDOppsValid
-            );
+            result.addSuccess(System.Label.healthLabelRDOppsValid);
             return;
         }
 
@@ -407,24 +330,151 @@ public inherited sharing class STG_PanelRDHealthCheck {
             errorMsg += String.join(fields, ', ');
         }
 
-        ctrl.createDR(System.Label.stgNavDonations,
-            STG_PanelHealthCheck_CTRL.statusError,
+        result.addError(
             System.Label.healthDetailsSaveOppsFailed + ' ' + errorMsg,
             System.Label.healthSolutionSaveOppsFailed
         );
     }
 
     /**
-     * @description Returns true if there are any "Errors" in the health check results
-     * @return True or False
+     * @description Contains field values supported for the legacy Recurring Donations
      */
-    private Boolean hasValidationErrors() {
-        for (STG_PanelHealthCheck_CTRL.DetectResult dr : ctrl.listDR) {
-            if (dr.strStatus == STG_PanelHealthCheck_CTRL.statusError) {
-                return true;
+    public class SupportedLegacyRDValues {
+        public Set<String> installmentPeriods = new Set<String>{
+            RD_Constants.INSTALLMENT_PERIOD_WEEKLY,
+            RD_Constants.INSTALLMENT_PERIOD_MONTHLY,
+            RD_Constants.INSTALLMENT_PERIOD_QUARTERLY,
+            RD_Constants.INSTALLMENT_PERIOD_YEARLY,
+            RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH
+        };
+        public Set<String> customInstallmentPeriods = new Set<String>();
+
+        public Set<String> status = new Set<String>{
+            RD_Constants.OPEN_ENDED_STATUS_OPEN,
+            RD_Constants.OPEN_ENDED_STATUS_CLOSED,
+            RD_Constants.OPEN_ENDED_STATUS_NONE
+        };
+
+        public Set<String> scheduleTypes = new Set<String>{
+            RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY,
+            RD_Constants.SCHEDULE_TYPE_DIVIDE_BY
+        };
+
+        public SupportedLegacyRDValues() {
+            populateCustomInstallmentPeriods();
+        }
+
+        private void populateCustomInstallmentPeriods() {
+            for (npe03__Custom_Installment_Settings__c ci : STG_Panel.stgService.listRDCustomInstallment) {
+                installmentPeriods.add(ci.Name);
+                customInstallmentPeriods.add(ci.Name);
             }
         }
-        return false;
+    }
+
+    /**
+     * @description Contains field values supported for the enhanced Recurring Donations
+     */
+    public class SupportedEnhancedRDValues {
+        public Set<String> installmentPeriods = new Set<String>{
+            RD2_Constants.INSTALLMENT_PERIOD_DAILY,
+            RD2_Constants.INSTALLMENT_PERIOD_WEEKLY,
+            RD2_Constants.INSTALLMENT_PERIOD_MONTHLY,
+            RD2_Constants.INSTALLMENT_PERIOD_YEARLY,
+            RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH
+        };
+
+        public Set<String> status = new Set<String>{
+            RD2_Constants.STATUS_ACTIVE,
+            RD2_Constants.STATUS_CLOSED,
+            RD2_Constants.STATUS_LAPSED
+        };
+
+        public Set<String> recurringTypes = new Set<String>{
+            RD2_Constants.RECURRING_TYPE_OPEN
+        };
+
+        public Set<String> dayOfMonthValues {
+            get {
+                if (dayOfMonthValues == null) {
+                    dayOfMonthValues = getSupportedDayOfMonth();
+                }
+                return dayOfMonthValues;
+            }
+            private set;
+        }
+
+        private Set<String> getSupportedDayOfMonth() {
+            Set<String> values = new Set<String>();
+            for (Integer i = 0; i < 29; i++) {
+                values.add(String.valueOf(i));
+            }
+
+            values.add(RD2_Constants.DAY_OF_MONTH_LAST_DAY);
+            return values;
+        }
+    }
+
+    /**
+     * @description Builds and collects health check results
+     */
+    public class HealthCheckResult {
+
+        private final String statusError = STG_PanelHealthCheck_CTRL.statusError;
+        private final String statusSuccess = STG_PanelHealthCheck_CTRL.statusSuccess;
+
+        private STG_PanelHealthCheck_CTRL ctrl;
+        private String scope;
+
+        public HealthCheckResult(STG_PanelHealthCheck_CTRL ctrl) {
+            this.ctrl = ctrl;
+        }
+
+        public HealthCheckResult withRecurringDonationScope() {
+            scope = System.Label.stgNavRecurringDonations;
+            return this;
+        }
+
+        public HealthCheckResult withOpportunityScope() {
+            scope = System.Label.stgNavDonations;
+            return this;
+        }
+
+        public void addSuccess(String solution) {
+            ctrl.createDR(
+                scope, statusSuccess, null, solution
+            );
+        }
+
+        public void addError(String value, String fieldLabel, String errorLabel, String solutionLabel) {
+            ctrl.createDR(
+                scope,
+                statusError,
+                String.format(
+                    errorLabel,
+                    new String[] { value.escapeHtml4(), fieldLabel.escapeHtml4() }
+                ),
+                String.format(
+                    solutionLabel,
+                    new String[] { value.escapeHtml4(), fieldLabel.escapeHtml4() }
+                )
+            );
+        }
+
+        public void addError(String detail, String solution) {
+            ctrl.createDR(
+                scope, statusError, detail, solution
+            );
+        }
+
+        public Boolean hasErrors() {
+            for (STG_PanelHealthCheck_CTRL.DetectResult dr : ctrl.listDR) {
+                if (dr.strStatus == statusError) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
 }

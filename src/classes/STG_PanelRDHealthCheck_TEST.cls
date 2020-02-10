@@ -44,15 +44,7 @@ private class STG_PanelRDHealthCheck_TEST {
      */
     @IsTest
     private static void shouldValidateLegacyRecurringDonationsConfig() {
-        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                IsRecurringDonations2Enabled__c = false,
-                npe03__Opportunity_Forecast_Months__c = 1,
-                npe03__Maximum_Donations__c = 20,
-                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
-                npe03__Record_Type__c = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType)
-            )
-        );
+        configureLegacyRDSettings();
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
 
@@ -79,15 +71,7 @@ private class STG_PanelRDHealthCheck_TEST {
         );
         insert customInstallment;
 
-        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                IsRecurringDonations2Enabled__c = false,
-                npe03__Opportunity_Forecast_Months__c = 1,
-                npe03__Maximum_Donations__c = 20,
-                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
-                npe03__Record_Type__c = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType)
-            )
-        );
+        configureLegacyRDSettings();
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
 
@@ -113,17 +97,7 @@ private class STG_PanelRDHealthCheck_TEST {
      */
     @IsTest
     private static void shouldValidateEnhancedRecurringDonationsConfig() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                IsRecurringDonations2Enabled__c = true,
-                npe03__Opportunity_Forecast_Months__c = 1,
-                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
-                npe03__Record_Type__c = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType),
-                InstallmentOppStageName__c = PLEDGED_STAGE
-            )
-        );
+        configureEnhancedRDSettings();
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
 
@@ -162,20 +136,12 @@ private class STG_PanelRDHealthCheck_TEST {
      * picklist values works as expected
      */
     @IsTest
-    private static void shouldValidatePicklistEntries() {
+    private static void shouldValidateLegacyPeriodPicklistEntries() {
 
         STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
         STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
-        // Verify known packaged installment periods on this field
-        // =============================================================
-        Set<String> supportedInstallmentPeriods = new Set<String>();
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_WEEKLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_YEARLY);
-        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
-
+        Set<String> supportedInstallmentPeriods = getLegacyPeriodPicklistForTest();
         healthCheck.validateSupportedPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
@@ -186,15 +152,24 @@ private class STG_PanelRDHealthCheck_TEST {
         System.assertEquals(0, ctrl.listDR.size(),
             'There should zero errors in this picklist validation\n' + results
         );
+    }
 
-        // Add an invalid "required" picklist to this list and validate that the required
-        // validation logs the error.
-        // =============================================================
+    /**
+     * @description Validates that an unsupported InstallmentPeriod picklist entry is identified by the
+     * health check.
+     */
+    @IsTest
+    private static void shouldIdentifyInvalidLegacyPeriodPicklistEntry() {
+
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+        STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
+
+        Set<String> supportedInstallmentPeriods = getLegacyPeriodPicklistForTest();
         supportedInstallmentPeriods.add(BAD_PICKLIST_VALUE);
         healthCheck.validateRequiredPicklistValues(supportedInstallmentPeriods, 'npe03__Installment_Period__c',
             System.Label.healthDetailsInvalidPicklistValue, System.Label.healthSolutionUnsupportedPicklistValue);
 
-        results = getValidationResults(ctrl);
+        String results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
             'There should exactly one error in this picklist validation.\n' + results
         );
@@ -217,10 +192,19 @@ private class STG_PanelRDHealthCheck_TEST {
         System.assertEquals(0, ctrl.listDR.size(),
             'There should zero errors in the record type validation\n' + results
         );
+    }
+
+    /**
+     * @description Validate that an invalid opportunity installment stage is identified by the Health Check
+     */
+    @IsTest
+    private static void shouldValidateInvalidOppStageSettings() {
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+        STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
 
         healthCheck.validateOpportunityStage(PLEDGED_STAGE, true, true);
 
-        results = getValidationResults(ctrl);
+        String results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
             'There should one errors in the record type validation.\n' + results
         );
@@ -239,9 +223,6 @@ private class STG_PanelRDHealthCheck_TEST {
 
         Id defaultRtId = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType);
 
-        // =============================================================
-        // Create a valid installment with a valid stage and record type id
-        // =============================================================
         healthCheck.validateNewInstallmentOpportunity(PLEDGED_STAGE, defaultRtId);
 
         String results = getValidationResults(ctrl);
@@ -251,15 +232,20 @@ private class STG_PanelRDHealthCheck_TEST {
         System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, ctrl.listDR[0].strStatus,
             'The result status should have been "' + STG_PanelHealthCheck_CTRL.statusSuccess + '".\n' + results
         );
-        ctrl.listDR.clear();
+    }
 
-        // =============================================================
-        // Create a valid installment with an invalid opportunity stage
-        // =============================================================
-        Id mockRecordTypeId = UTIL_UnitTestData_TEST.mockId(defaultRtId.getSobjectType());
+    /**
+     * @description Validate that the checking of the Opportunity Stage Settings works as expected
+     */
+    @IsTest
+    private static void shouldValidateOpportunityInstallmentFailed() {
+        STG_PanelHealthCheck_CTRL ctrl = new STG_PanelHealthCheck_CTRL();
+        STG_PanelRDHealthCheck healthCheck = new STG_PanelRDHealthCheck(ctrl);
+
+        Id mockRecordTypeId = UTIL_RecordTypes_TEST.MOCK_ID;
         healthCheck.validateNewInstallmentOpportunity(PLEDGED_STAGE, mockRecordTypeId);
 
-        results = getValidationResults(ctrl);
+        String results = getValidationResults(ctrl);
         System.assertEquals(1, ctrl.listDR.size(),
             'There should one result in the installment validation.\n' + results
         );
@@ -275,11 +261,64 @@ private class STG_PanelRDHealthCheck_TEST {
     // HELPER METHODS
     // ==================================================================================
 
+    /**
+     * @description Retrieve a concatentated string with the results of the health check to use for
+     * assertions
+     * @param ctrl HealthCheck Page Controller
+     * @return String
+     */
     private static String getValidationResults(STG_PanelHealthCheck_CTRL ctrl) {
         String results = '';
         for (STG_PanelHealthCheck_CTRL.DetectResult dr : ctrl.listDR) {
             results += dr.strStatus + ': ' + (dr.strDetails != null ? dr.strDetails : dr.strSolution) + '\n';
         }
         return results;
+    }
+
+    /**
+     * @description Configure RD Settings for Legacy RD's
+     */
+    private static void configureLegacyRDSettings() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                IsRecurringDonations2Enabled__c = false,
+                npe03__Opportunity_Forecast_Months__c = 1,
+                npe03__Maximum_Donations__c = 20,
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Record_Type__c = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType)
+            )
+        );
+    }
+
+    /**
+     * @description Configure RD Settings for Enhanced Recurring Donations
+     */
+    private static void configureEnhancedRDSettings() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                IsRecurringDonations2Enabled__c = true,
+                npe03__Opportunity_Forecast_Months__c = 1,
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Record_Type__c = UTIL_RecordTypes_TEST.getDefaultRecordTypeId(Opportunity.SObjectType),
+                InstallmentOppStageName__c = PLEDGED_STAGE
+            )
+        );
+    }
+
+    /**
+     * @description Returns a set of supported InstallmentPeriod picklist entries for Legacy RD's
+     * @return Set<String>
+     */
+    private static Set<String> getLegacyPeriodPicklistForTest() {
+        Set<String> supportedInstallmentPeriods = new Set<String>();
+        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_WEEKLY);
+        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
+        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY);
+        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_YEARLY);
+        supportedInstallmentPeriods.add(RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
+
+        return supportedInstallmentPeriods;
     }
 }
