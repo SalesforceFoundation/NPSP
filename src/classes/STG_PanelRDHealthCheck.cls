@@ -33,7 +33,7 @@
 * @group Settings
 * @description Recurring Donations Health Check
 */
-public class STG_PanelRDHealthCheck {
+public inherited sharing class STG_PanelRDHealthCheck {
 
     /*********************************************************************************************************
     * @description Delegate Health Check operations for Recurring Donations
