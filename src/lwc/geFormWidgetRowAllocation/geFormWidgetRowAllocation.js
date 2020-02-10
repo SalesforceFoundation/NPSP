@@ -49,7 +49,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     setFieldValue(field, value) {
         const element = this.getFieldByName(field);
         if(element) {
-            element.setValue(value, null);
+            element.load({value});
         }
     }
 
