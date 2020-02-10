@@ -32,7 +32,6 @@ export default class GeFormField extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     handleValueChangeSync = (event) => {
-        console.log('***handleValueChangeSync');
         this.value = this.getValueFromChangeEvent(event);
         const detail = {
             element: this.element,
@@ -363,7 +362,6 @@ export default class GeFormField extends LightningElement {
 
     @api
     reset() {
-        console.log('***reset');
         this.value = this._defaultValue;
 
         if (this.isLookup) {

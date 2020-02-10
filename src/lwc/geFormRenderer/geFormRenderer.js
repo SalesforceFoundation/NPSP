@@ -12,7 +12,7 @@ import {
     checkPermissionErrors
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch, deepClone } from 'c/utilCommon';
+import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch, deepClone, getValueFromDotNotationString } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -26,6 +26,7 @@ import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__
 import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
+import PAYMENT_OPPORTUNITY_NAME_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__r.Name';
 
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
 import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
@@ -950,7 +951,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (this.selectedDonation) {
             if (donationType === 'opportunity') {
-                console.log('selected opportunity');
                 blankDataImportRecord[donationImported] = this.selectedDonation.Id;
 
                 if (this.selectedDonation.applyPayment) {
@@ -986,6 +986,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     applyFieldValuesFromSelectedDonation(blankDataImportRecord) {
+        if (this.selectedDonation.new) {
+            this.resetDonationAndPaymentImportedFields();
+            return;
+        }
+
         const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
         const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
 
@@ -996,7 +1001,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             let displayValue;
 
             if (isDonorLookupAndHasValue) {
-                displayValue = this.selectedDonation.Name;
+                if (fieldApiName === donationImported) {
+                    displayValue = this.selectedDonation.Name;
+                }
+                if (fieldApiName === paymentImported) {
+                    displayValue = getValueFromDotNotationString(
+                        this.selectedDonation,
+                        PAYMENT_OPPORTUNITY_NAME_FIELD.fieldApiName);
+                }
             }
 
             this.setFormFieldValue(fieldApiName, value, displayValue);
