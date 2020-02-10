@@ -2459,6 +2459,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
         <value>You've selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</value>
     </labels>
+   <labels>
+        <fullName>alloDefaultGAUNotActive</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The default General Accounting Unit selected is no longer active.</shortDescription>
+        <value>{0} is an inactive Default General Accounting Unit.</value>
+    </labels>
     <labels>
         <fullName>alloDefaultNotEnabled</fullName>
         <categories>Allocation, Error</categories>
@@ -2570,6 +2578,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
         <value>The total allocation of paid payments cannot exceed the opportunity allocation for a GAU.</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchAllocationError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>An error occurred associated with a specific Allocation.</shortDescription>
+        <value>Allocation Error occurred on the {obj_type} record named {parent_name} for Allocation named {alloc_name}. Reason: {error}</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentAllocationBatchRecordError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>An error occurred not associated with a specific Allocation.</shortDescription>
+        <value>Allocation Error occurred on the {obj_type} record named {parent_name}. Reason: {error}</value>
     </labels>
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>
