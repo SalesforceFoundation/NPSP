@@ -424,7 +424,12 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     private void handleBGECount() {
         try {
-            Integer bgeCount = Database.countQuery('SELECT count() FROM DataImport__c WHERE CreatedDate = Last_n_days:30 AND NPSP_Data_Import_Batch__r.GiftBatch__c = true');
+            Integer bgeCount = Database.countQuery(
+                'SELECT count() FROM DataImport__c '+
+                'WHERE CreatedDate = Last_n_days:30 '+
+                'AND NPSP_Data_Import_Batch__r.GiftBatch__c = true '+
+                'AND (NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c = null OR '+
+                    'NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c <= 1)');
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeCount);
         } catch (Exception ex) {
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), -1);
