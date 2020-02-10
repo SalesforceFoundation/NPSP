@@ -1538,6 +1538,19 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>CountGiftsLastYear__c</fullName>
+        <description>The number of gifts attributed to this Contact in the previous calendar year.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of gifts attributed to this Contact in the previous calendar year.</inlineHelpText>
+        <label>Count of Gifts Last Year</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Current_Address__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>Lookup to the current Address record for this Contact. NPSP populates the Contact's Mailing Address field with the street, city, state, and postal code from the current Address record.</description>

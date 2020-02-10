@@ -847,6 +847,7 @@
         <members>Batch__c.Object_Name__c</members>
         <members>Contact.Address_Verification_Status__c</members>
         <members>Contact.Batch__c</members>
+        <members>Contact.CountGiftsLastYear__c</members>
         <members>Contact.Current_Address__c</members>
         <members>Contact.Deceased__c</members>
         <members>Contact.Do_Not_Contact__c</members>
