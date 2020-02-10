@@ -56,6 +56,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
         self.selenium.click_element(locator)
         self.pageobjects.current_page_should_be("Custom", "BDI_ManageAdvancedMapping")
+        self.selenium.wait_until_page_contains("Account",timeout=30, error="Objects did not load in 30 seconds")
     
     def verify_advanced_mapping_is_not_enabled(self):
         """Verifies that advanced mapping is not enabled by default 
