@@ -786,7 +786,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                     if (this.hasPreviouslySelectedDonation) {
                         const reviewDonationsComponent = this.template.querySelector('c-ge-review-donations');
-                        reviewDonationsComponent.resetDonationType();
+
+                        if (reviewDonationsComponent) {
+                            reviewDonationsComponent.resetDonationType();
+                        }
+
                         this.selectedDonation = undefined;
                         this.resetDonationAndPaymentImportedFields();
                     }
@@ -872,7 +876,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (recordId === null) {
             // Reset all fields related to this lookup field's object mapping
             // this.reset(objectMapping.DeveloperName);
-            this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
+            const objectMapping = this.getObjectMapping(fieldApiName);
+            if (objectMapping) {
+                this.reset(objectMapping.DeveloperName);
+            }
         } else {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         }
@@ -950,8 +957,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 } else {
                     blankDataImportRecord[donationImportStatus] = userSelectedMatch;
                 }
-                blankDataImportRecord[paymentImported] = undefined;
-                blankDataImportRecord[paymentImportStatus] = undefined;
+                blankDataImportRecord[paymentImported] = null;
+                blankDataImportRecord[paymentImportStatus] = null;
 
                 //TODO: use loadSelectedRecordFieldValues to load selected Opp & Pmt field
                 // values
@@ -1007,7 +1014,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     resetDonationAndPaymentImportedFields() {
         const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
         const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
-        this.setFormFieldValue(donationImported, undefined, undefined);
-        this.setFormFieldValue(paymentImported, undefined, undefined);
+        this.setFormFieldValue(donationImported, null, undefined);
+        this.setFormFieldValue(paymentImported, null, undefined);
     }
 }

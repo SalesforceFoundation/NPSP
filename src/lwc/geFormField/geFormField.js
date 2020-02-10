@@ -325,8 +325,10 @@ export default class GeFormField extends LightningElement {
             } else {
                 value = data[this.sourceFieldAPIName];
             }
-        } else if (data.value) {
+        } else if (data.value !== undefined) {
             value = data.value;
+        } else {
+            return;
         }
 
         if (value === null) {
@@ -338,19 +340,22 @@ export default class GeFormField extends LightningElement {
 
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
-
             let displayValue;
             const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
-            if (data[relationshipFieldName] &&
-                data[relationshipFieldName]['Name']) {
-                displayValue = data[relationshipFieldName].Name;
-            } else if (data[this.sourceFieldAPIName]['displayValue']) {
-                displayValue = data[this.sourceFieldAPIName].displayValue;
-            } else if (data.displayValue) {
+
+            if (data.displayValue) {
                 displayValue = data.displayValue;
+
+            } else if (data[relationshipFieldName] &&
+                data[relationshipFieldName].Name) {
+                displayValue = data[relationshipFieldName].Name;
+
+            } else if (data[this.sourceFieldAPIName].displayValue) {
+                displayValue = data[this.sourceFieldAPIName].displayValue;
+
             }
 
-            lookup.setSelected({value, displayValue});
+            lookup.setSelected({ value, displayValue });
         }
     }
 
