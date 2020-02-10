@@ -356,6 +356,19 @@ const arraysMatch = (arr1, arr2) => {
     return false;
 };
 
+/*******************************************************************************
+* @description Methods converts dot-notation strings provided by importing
+* relationships like 'npe01__OppPayment__r.Name' from the schema into references.
+*
+* @param {object} obj: Object to pull a value from
+* @param {string} dotNotationString: A string of references
+*
+* @return {boolean}: Returns true if the provided arrays are strictly equal.
+*/
+const getValueFromDotNotationString = (obj, dotNotationString) => {
+    return dotNotationString.split('.').reduce((accumulator, currentValue) => accumulator[currentValue], obj);
+}
+
 export {
     debouncify,
     deepClone,
@@ -377,5 +390,6 @@ export {
     checkNestedProperty,
     getNestedProperty,
     getLikeMatchByKey,
-    arraysMatch
+    arraysMatch,
+    getValueFromDotNotationString
 };

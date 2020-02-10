@@ -352,13 +352,18 @@ export default class GeFormField extends LightningElement {
 
         let displayValue;
         const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
+
         if (data[relationshipFieldName] &&
             data[relationshipFieldName]['Name']) {
             displayValue = data[relationshipFieldName].Name;
-        } else if (data[this.sourceFieldAPIName]['displayValue']) {
+
+        } else if (data[this.sourceFieldAPIName] &&
+            data[this.sourceFieldAPIName]['displayValue']) {
             displayValue = data[this.sourceFieldAPIName].displayValue;
+
         } else if (data.displayValue) {
             displayValue = data.displayValue;
+
         }
 
         lookup.setSelected({value, displayValue});
