@@ -1516,7 +1516,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Currency change restriction on an Opportunity</shortDescription>
-        <value>You can&apos;t modify Opportunity currency to be different than related Recurring Donation currency.</value>
+        <value>You can&apos;t change the Opportunity currency to a different currency than the related Recurring Donation.</value>
     </labels>
     <labels>
         <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
@@ -1524,7 +1524,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Currency change restriction on a Recurring Donation</shortDescription>
-        <value>You can&apos;t modify Recurring Donation currency due to an existing closed Opportunity.</value>
+        <value>You can&apos;t change the Recurring Donation currency when there is a related closed Opportunity.</value>
     </labels>
     <labels>
         <fullName>RD2_CurrentScheduleTitle</fullName>
