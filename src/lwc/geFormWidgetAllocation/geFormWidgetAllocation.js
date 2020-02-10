@@ -380,7 +380,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * TODO: Retrieve the custom label for donation amount from the form template JSON
      */
     get donationAmountCustomLabel() {
-        return 'Donation Amount';
+        return GeFormService.donationFieldTemplateLabel;
     }
 
 }
