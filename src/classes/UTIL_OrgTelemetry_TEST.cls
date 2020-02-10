@@ -549,7 +549,7 @@ private class UTIL_OrgTelemetry_TEST {
         Test.stopTest();
 
         System.assertEquals(
-            NUM_BGE_ROWS_30_DAYS_AGO + NUM_NEWGE_BGE_ROWS_30_DAYS_AGO,
+            NUM_BGE_ROWS_30_DAYS_AGO,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name()
             ),
