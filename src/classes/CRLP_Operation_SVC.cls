@@ -358,8 +358,7 @@ public class CRLP_Operation_SVC {
                         rollup.maxByYear.put(theYear, amountValue);
                     }
                 }
-            }
-            else if (rollup.countByYear != null && rollup.countByYear.containsKey(theYear)) {
+            } else if (rollup.countByYear != null && rollup.countByYear.containsKey(theYear)) {
                 rollup.countByYear.put(theYear, rollup.countByYear.get(theYear) + 1);
                 if (amountValue != null) {
                     rollup.sumByYear.put(theYear, amountValue);
