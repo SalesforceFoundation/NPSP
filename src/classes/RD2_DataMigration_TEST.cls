@@ -1585,10 +1585,10 @@ private class RD2_DataMigration_TEST {
 
         System.assertEquals(DATE_ESTABLISHED, rd.StartDate__c, 
             'Effective Date should equal to the Date Established when the RD has no related Opp');
-        System.assertEquals(TODAY, rd.npe03__Next_Payment_Date__c, 
+        System.assertNotEquals(null, rd.npe03__Next_Payment_Date__c, 
             'Next Donation Date should be calculated');
 
-        assertDayOfMonth(rd, TODAY.day());
+        assertDayOfMonth(rd, DATE_ESTABLISHED.day());
 
         assertBatchSummarySuccess(jobId, 1);
     }
