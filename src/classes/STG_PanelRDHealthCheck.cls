@@ -360,10 +360,16 @@ public inherited sharing class STG_PanelRDHealthCheck {
             RD_Constants.SCHEDULE_TYPE_DIVIDE_BY
         };
 
+        /**
+         * @description Create definitions for Legacy RD Health Check
+         */
         public SupportedLegacyRDValues() {
             populateCustomInstallmentPeriods();
         }
 
+        /**
+         * @description Add any user defined custom installment periods to the periods set
+         */
         private void populateCustomInstallmentPeriods() {
             for (npe03__Custom_Installment_Settings__c ci : STG_Panel.stgService.listRDCustomInstallment) {
                 installmentPeriods.add(ci.Name);
@@ -404,6 +410,9 @@ public inherited sharing class STG_PanelRDHealthCheck {
             private set;
         }
 
+        /**
+         * @description Build a list of supported day of month picklist values.
+         */
         private Set<String> getSupportedDayOfMonth() {
             Set<String> values = new Set<String>();
             for (Integer i = 0; i < 29; i++) {
@@ -426,26 +435,41 @@ public inherited sharing class STG_PanelRDHealthCheck {
         private STG_PanelHealthCheck_CTRL ctrl;
         private String scope;
 
+        /**
+         * @description Constructor
+         */
         public HealthCheckResult(STG_PanelHealthCheck_CTRL ctrl) {
             this.ctrl = ctrl;
         }
 
+        /**
+         * @description Defines the current scope label for the test as recurring donation related
+         */
         public HealthCheckResult withRecurringDonationScope() {
             scope = System.Label.stgNavRecurringDonations;
             return this;
         }
 
+        /**
+         * @description Define the current scope label for the test as opportunity related
+         */
         public HealthCheckResult withOpportunityScope() {
             scope = System.Label.stgNavDonations;
             return this;
         }
 
+        /**
+         * @description Add a Success message to the displayed results
+         */
         public void addSuccess(String solution) {
             ctrl.createDR(
                 scope, statusSuccess, null, solution
             );
         }
 
+        /**
+         * @description Add an Error messge to the displayed results with a solution
+         */
         public void addError(String value, String fieldLabel, String errorLabel, String solutionLabel) {
             ctrl.createDR(
                 scope,
@@ -461,12 +485,18 @@ public inherited sharing class STG_PanelRDHealthCheck {
             );
         }
 
+        /**
+         * @description Add an error message to the list of displayed results
+         */
         public void addError(String detail, String solution) {
             ctrl.createDR(
                 scope, statusError, detail, solution
             );
         }
 
+        /**
+         * @description Are there any errors in the list of displayed results?
+         */
         public Boolean hasErrors() {
             for (STG_PanelHealthCheck_CTRL.DetectResult dr : ctrl.listDR) {
                 if (dr.strStatus == statusError) {
