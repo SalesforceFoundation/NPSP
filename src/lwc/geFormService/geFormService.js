@@ -5,9 +5,11 @@ import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunDataImport
     from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import {api} from "lwc";
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, isEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
     from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
+import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
+import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -39,6 +41,7 @@ class GeFormService {
     fieldMappings;
     objectMappings;
     fieldTargetMappings;
+    donationFieldTemplateLabel;
 
     /**
      * Retrieve the default form render wrapper.
@@ -52,6 +55,9 @@ class GeFormService {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
                     this.fieldTargetMappings = result.fieldMappingSetWrapper.fieldMappingByTargetFieldName;
+                    if(isEmpty(this.donationFieldTemplateLabel)) {
+                        this.donationFieldTemplateLabel = this.getDonationAmountCustomLabel(result.formTemplate);
+                    }
                     resolve(result);
                 })
                 .catch(error => {
@@ -111,6 +117,30 @@ class GeFormService {
      */
     getObjectMappingWrapper(objectDevName) {
         return this.objectMappings[objectDevName];
+    }
+
+    /**
+     * Get the user-defined label used for the Opportunity Amount field on the
+     * @return {string}
+     */
+    getDonationAmountCustomLabel(formTemplate) {
+        // find field that is mapped to Opportunity Amount
+        const mapping = this.getFieldMappingWrapperFromTarget(`${OPPORTUNITY_OBJECT.objectApiName}.${OPPORTUNITY_AMOUNT.fieldApiName}`);
+        const mappingDevName = mapping.DeveloperName;
+        // get developer name of mapping cmt
+        let fieldElement;
+        for(const section of formTemplate.layout.sections) {
+           fieldElement = section.elements.find( element => {
+               if(Array.isArray(element.dataImportFieldMappingDevNames)) {
+                   return element.dataImportFieldMappingDevNames.includes(mappingDevName);
+               }
+           });
+        }
+
+        if(isNotEmpty(fieldElement)) {
+            // return custom label from the form template layout
+            return fieldElement.customLabel;
+        }
     }
 
     /**
@@ -212,7 +242,6 @@ class GeFormService {
                         renderWrapper.fieldMappingSetWrapper.objectMappingByDevName;
                     this.fieldTargetMappings =
                         renderWrapper.fieldMappingSetWrapper.fieldMappingByTargetFieldName;
-
                     resolve(renderWrapper);
                 })
                 .catch(err => {
