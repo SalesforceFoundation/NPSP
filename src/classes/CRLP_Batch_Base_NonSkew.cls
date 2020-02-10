@@ -58,14 +58,16 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     protected CRLP_Batch_Base_NonSkew() { }
 
     /**
-     * @description These 2 fields are used to check for Contacts or Accounts (both objects have the same fields)
-     * that may have non-zero values in these fields even though they have no attached opportunities. In that case,
-     * the parents are included in the queries/processing to ensure the values are reset accordingly. Now, the
-     * assumption here is that these 2 fields are inclusive of the types of values that might have been incremented
+     * @description These fields are used to check for Contacts or Accounts (Summary Object) that may have
+     * non-zero values in these fields even though they have no attached opportunities. In that case,
+     * the summary records are included in the queries/processing to ensure the values are reset accordingly.
+     * The assumption is that these fields are inclusive of the types of values that might have been incremented
      * at some point when an Opportunity was inserted/updated, but maybe that Opportunity was deleted or the
      * reference changed.
-     * There may be some custom rollups that use other fields that this wouldn't know about, or the user may have
-     * modified the filters to somehow change those meaning. This is a good 99.9% check though.
+     * The objective of this method is to identify one or more fields on the Summary object that help identify
+     * if the rerord "ever" had rollups to it, even if there are no detail records currently to roll up. This
+     * allows the rollup process to clear the rollups in the summary record if the last remaining detail record
+     * is no longer eligible for rolling up (such as it was deleted).
     */
     @TestVisible
     private List<String> fieldsToCheckForNonZero {
@@ -123,17 +125,18 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
 
         for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(targetObject)) {
-            if (r.Active__c == true) {
-                Schema.DisplayType fieldType = UTIL_Describe.getFieldDisplaytype(
-                    String.valueOf(targetObject), r.Summary_Field__r.QualifiedApiName
-                );
-                if (fieldType != DisplayType.DOUBLE && fieldType != DisplayType.CURRENCY) {
-                    continue;
-                }
-                if (r.Amount_Object__r.QualifiedApiName == detailObjectName) {
-                    fieldToCheck = r.Summary_Field__r.QualifiedApiName;
-                    break;
-                }
+            if (r.Active__c == false) {
+                continue;
+            }
+            Schema.DisplayType fieldType = UTIL_Describe.getFieldDisplaytype(
+                String.valueOf(targetObject), r.Summary_Field__r.QualifiedApiName
+            );
+            if (fieldType != DisplayType.DOUBLE && fieldType != DisplayType.CURRENCY) {
+                continue;
+            }
+            if (r.Amount_Object__r.QualifiedApiName == detailObjectName) {
+                fieldToCheck = r.Summary_Field__r.QualifiedApiName;
+                break;
             }
 
         }
