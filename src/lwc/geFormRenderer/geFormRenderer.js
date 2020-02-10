@@ -833,10 +833,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         this.blankDataImportRecord = blankDataImportRecord;
 
-        this.applyFieldValuesFromSelectedDonation(blankDataImportRecord);
+        this.applyFieldValuesFromSelectedDonation(blankDataImportRecord, donationType);
     }
 
-    applyFieldValuesFromSelectedDonation(blankDataImportRecord) {
+    applyFieldValuesFromSelectedDonation(blankDataImportRecord, donationType) {
         const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
         const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
 
@@ -848,13 +848,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             if (isDonorLookupAndHasValue) {
                 if (fieldApiName === donationImported) {
-                    displayValue = this.selectedDonation.Name;
+                    if (donationType === 'payment') {
+                        displayValue = getValueFromDotNotationString(
+                            this.selectedDonation,
+                            PAYMENT_OPPORTUNITY_NAME_FIELD.fieldApiName);
+                        return;
+                    }
                 }
-                if (fieldApiName === paymentImported) {
-                    displayValue = getValueFromDotNotationString(
-                        this.selectedDonation,
-                        PAYMENT_OPPORTUNITY_NAME_FIELD.fieldApiName);
-                }
+                displayValue = this.selectedDonation.Name;
             }
 
             this.setFormFieldValue(fieldApiName, value, displayValue);
