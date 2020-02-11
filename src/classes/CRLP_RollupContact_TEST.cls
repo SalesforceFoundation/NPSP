@@ -127,9 +127,9 @@ public class CRLP_RollupContact_TEST {
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Closed Won Donations', filterGroupId4,
+                CMT_UnitTestData_TEST.createRollupRecord('Count Closed Won Donations For Last Year', filterGroupId4,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'CountGiftsLastYear__c', CRLP_Operation.RollupType.COUNT, 'Close Date',
+                        'npo02__OppsClosedLastYear__c', CRLP_Operation.RollupType.COUNT, 'Close Date',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 1) + ',' +
 
                 /* Using nonsense fields to test Smallest with different Detail Field and Years Ago */
@@ -511,7 +511,7 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals('New', c.Department);
 
         System.assertEquals(1, c.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
-        System.assertEquals(wonCount, c.CountGiftsLastYear__c, 'The number of close won opps should be equal to wonCount');
+        System.assertEquals(wonCount, c.npo02__OppsClosedLastYear__c, 'The number of closed won opps should be equal to wonCount');
 
         // These 10 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
