@@ -53,7 +53,7 @@ private class LD_LeadConvertOverride_TEST {
     static testMethod void newLeadConversion_TestHHAccount(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
+
         newLeadConversion_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -110,17 +110,17 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(1,convertedContacts.size());
         system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
 
-        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].LastName;
         if (CAO_Constants.isOneToOne()) {
             system.assertEquals(accountName, convertedContacts[0].Account.Name);
             assertAccountWithName(accountName);
 
         } else if (CAO_Constants.isHHAccountModel()) {
-            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+            system.assertEquals(convertedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, convertedContacts[0].Account.Name);
         } else if (CAO_Constants.isBucketModel()) {
             system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
         }
-                        
+
         // make sure no affilations created
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
     }
@@ -248,14 +248,14 @@ private class LD_LeadConvertOverride_TEST {
         system.currentPageReference().getParameters().put('id', l.id);
 
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);  
-        
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
         assertNewOptionAndNoAccountIsRetrieved(ext);
-        
+
         // this selects the "New" option in the Contact box
         ext.strConId = 'NEW_CONTACT';
         ext.strAccountId = 'NEW';
-        ext.strAfflAccountID = 'NEW'; 
+        ext.strAfflAccountID = 'NEW';
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
             ext.l.Status = lcStatus.getValue();
@@ -605,7 +605,7 @@ private class LD_LeadConvertOverride_TEST {
             assertAccountWithName(accountName);
 
         } else if (CAO_Constants.isHHAccountModel()) {
-            System.assertEquals(convertedContacts[0].LastName + ' Household', convertedContacts[0].Account.Name, 'The hh account name should be as expected.');
+            System.assertEquals(convertedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, convertedContacts[0].Account.Name, 'The hh account name should be as expected.');
             System.assertEquals(1, [SELECT count() FROM Address__c], 'There should only be 1 address created.');
             System.assertEquals(1, [SELECT count() FROM Address__c WHERE Default_Address__c = true], 'There should be 1 default address');
 
@@ -665,20 +665,20 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(1,convertedContacts.size());
         system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
 
-        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].LastName;
         if (CAO_Constants.isOneToOne()) {
             system.assertEquals(accountName, convertedContacts[0].Account.Name);
             assertAccountWithName(accountName);
 
         } else if (CAO_Constants.isHHAccountModel()) {
-            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+            system.assertEquals(convertedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, convertedContacts[0].Account.Name);
         } else if (CAO_Constants.isBucketModel()) {
             system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
         }
-        
+
         // make sure no affilations created
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
-        
+
         // verify address
         list<Address__c> listAddr = [select Id, MailingStreet__c, MailingCity__c, MailingState__c, MailingPostalCode__c from Address__c];
         system.assertEquals(1, listAddr.size());
@@ -719,7 +719,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-        
+
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
         string companyName = SPECIAL_ACCOUNT_NAME;
         String leadFirstName = 'Leady';
@@ -759,27 +759,27 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(1,convertedContacts.size());
         system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
 
-        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].LastName;
         if (CAO_Constants.isOneToOne()) {
             system.assertEquals(accountName, convertedContacts[0].Account.Name);
             assertAccountWithName(accountName);
 
         } else if (CAO_Constants.isHHAccountModel()) {
-            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+            system.assertEquals(convertedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, convertedContacts[0].Account.Name);
         } else if (CAO_Constants.isBucketModel()) {
             system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
         }
-        
-        // verify Opp 
+
+        // verify Opp
         list<Opportunity> listOpp = [select Id, AccountId, Name, Primary_Contact__c from Opportunity];
         system.assertEquals(1, listOpp.size());
-        system.assertEquals(ext.OppName, listOpp[0].Name);        
+        system.assertEquals(ext.OppName, listOpp[0].Name);
 
         // verify Opp OCR's
         list<OpportunityContactRole> listOCR = [select Id, OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole];
-        system.assertEquals(1, listOCR.size());        
+        system.assertEquals(1, listOCR.size());
         system.assertEquals(true, listOCR[0].IsPrimary);
-        
+
         // verify Primary Contact
         system.assertEquals(convertedContacts[0].Id, listOpp[0].Primary_Contact__c);
     }
@@ -820,11 +820,11 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-        
+
         // create an existing contact
         Contact con = new Contact();
-        con.firstname = 'Testy';
-        con.lastname = 'Testy';
+        con.FirstName = 'Testy';
+        con.LastName = 'Testy';
         insert con;
         con = getContacts()[0];
         system.assertNotEquals(null, con.AccountId);
@@ -849,13 +849,13 @@ private class LD_LeadConvertOverride_TEST {
 
         // fill the lists (for coverage)
         ext.getConList();
-        
+
         assertContactIsReturned(ext);
         assertNoAccountIsRetrieved(ext);
 
         // this selects the existing contact option in the Contact box
         ext.strConId = con.id;
-        ext.strAccountId = 'AUTO';        
+        ext.strAccountId = 'AUTO';
         ext.OppName = 'Test Opp';
         ext.doNotCreateOpp = false;
         Test.startTest();
@@ -871,32 +871,32 @@ private class LD_LeadConvertOverride_TEST {
         system.assertEquals(1,convertedContacts.size());
         system.assertEquals(true,convertedContacts[0].Account.npe01__Systemisindividual__c);
 
-        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].LastName;
         if (CAO_Constants.isOneToOne()) {
             system.assertEquals(accountName, convertedContacts[0].Account.Name);
             List<Account> createdAccount2 = [select id from Account WHERE Id != :con.AccountId];
             system.assertEquals(1,createdAccount2.size());
         } else if (CAO_Constants.isHHAccountModel()) {
-            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+            system.assertEquals(convertedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, convertedContacts[0].Account.Name);
         } else if (CAO_Constants.isBucketModel()) {
             system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
         }
-        
-        // verify Opp 
+
+        // verify Opp
         list<Opportunity> listOpp = [select Id, AccountId, Name, Primary_Contact__c from Opportunity];
         system.assertEquals(1, listOpp.size());
-        system.assertEquals(ext.OppName, listOpp[0].Name);        
+        system.assertEquals(ext.OppName, listOpp[0].Name);
 
         // verify Opp OCR's
         list<OpportunityContactRole> listOCR = [select Id, OpportunityId, ContactId, Role, IsPrimary from OpportunityContactRole];
-        system.assertEquals(1, listOCR.size());        
+        system.assertEquals(1, listOCR.size());
         system.assertEquals(true, listOCR[0].IsPrimary);
-        
+
         // verify Primary Contact
         system.assertEquals(convertedContacts[0].Id, listOpp[0].Primary_Contact__c);
     }
-    
-    
+
+
     /*******************************************************************************************************
     * @description Runs newLeadConversion_TestOppAFF with the 1x1 account model and verify Opp created for affiliation.
     */
@@ -930,7 +930,7 @@ private class LD_LeadConvertOverride_TEST {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-        
+
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
         string companyName = 'Super Co';
         String leadFirstName = 'Leady';
@@ -976,26 +976,26 @@ private class LD_LeadConvertOverride_TEST {
         system.assertNotEquals(null, convertedContacts[0].Primary_Affiliation__c);
         system.assertEquals('112 Company St', convertedContacts[0].Primary_Affiliation__r.BillingStreet);
 
-        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].lastname;
+        String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].LastName;
         if (CAO_Constants.isOneToOne()) {
             system.assertEquals(accountName, convertedContacts[0].Account.Name);
             assertAccountWithName(accountName);
 
         } else if (CAO_Constants.isHHAccountModel()) {
-            system.assertEquals(convertedContacts[0].lastname + ' Household', convertedContacts[0].Account.Name);
+            system.assertEquals(convertedContacts[0].LastName + CAO_Constants.HH_NAME_SUFFIX, convertedContacts[0].Account.Name);
         } else if (CAO_Constants.isBucketModel()) {
             system.assertEquals(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS, convertedContacts[0].Account.Name);
         }
-        
+
         // verify Opp Affiliation
         npe5__Affiliation__c  aff = [select npe5__Organization__c  from npe5__Affiliation__c LIMIT 1][0];
         system.assertNotEquals(null, aff, 'Affiliation should be created.');
 
         list<Opportunity> listOpp = [select Id, AccountId, Name, Primary_Contact__c from Opportunity];
         system.assertEquals(1, listOpp.size());
-        system.assertEquals(aff.npe5__Organization__c , listOpp[0].AccountId);        
+        system.assertEquals(aff.npe5__Organization__c , listOpp[0].AccountId);
     }
-    
+
     /*******************************************************************************************************
     * @description Runs lead conversion to create a company and test Lead.CompanyAddress bhvr
     */
@@ -1013,7 +1013,7 @@ private class LD_LeadConvertOverride_TEST {
         l.CompanyPostalCode__c = '98122';
         l.CompanyCountry__c = 'United States';
         insert l;
-        
+
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
         system.currentPageReference().getParameters().put('id', l.id);
 
@@ -1034,7 +1034,7 @@ private class LD_LeadConvertOverride_TEST {
                 break;
         }
         Test.stopTest();
-        
+
         Account result = [SELECT Id,Name,BillingStreet FROM Account LIMIT 1][0];
         System.assertEquals(l.CompanyStreet__c,result.BillingStreet);
     }
@@ -1046,7 +1046,7 @@ private class LD_LeadConvertOverride_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-        
+
         Lead l = new Lead();
         l.FirstName = 'Jane';
         l.LastName = 'Smith Soql';
@@ -1064,7 +1064,7 @@ private class LD_LeadConvertOverride_TEST {
 
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
-        
+
         if (!ext.contactFinder.isSoql()) {
             return;
         }
@@ -1083,7 +1083,7 @@ private class LD_LeadConvertOverride_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-        
+
         Lead l = new Lead();
         l.FirstName = 'Jane';
         l.LastName = 'Smith Sosl';
@@ -1095,9 +1095,9 @@ private class LD_LeadConvertOverride_TEST {
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
         ext.contactFinder.criteria.isFilterable = false;
-        System.assert(!ext.contactFinder.isSoql(), 'Search query should be executed'); 
+        System.assert(!ext.contactFinder.isSoql(), 'Search query should be executed');
         List<sObject> actual = ext.contactFinder.find();  //no need to return any data, validate the SOSL only
-        
+
         UTIL_Finder.SearchBuilder searchBuilder = ext.contactFinder.searchBuilder();
 
         Set<String> fieldSetFields = new Set<String>();
@@ -1108,7 +1108,7 @@ private class LD_LeadConvertOverride_TEST {
 
         String sosl = searchBuilder.build();
         System.assert(sosl.startsWith(
-            'FIND \'(Smith Sosl AND Jane) OR jane.smithsosl@example.com*\' IN ALL FIELDS RETURNING Contact(Id, Name, FirstName, LastName, Email'), 
+            'FIND \'(Smith Sosl AND Jane) OR jane.smithsosl@example.com*\' IN ALL FIELDS RETURNING Contact(Id, Name, FirstName, LastName, Email'),
             'SOSL should search expected values: ' + sosl
         );
     }
@@ -1120,7 +1120,7 @@ private class LD_LeadConvertOverride_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-        
+
         Lead l = new Lead();
         l.FirstName = 'Jane';
         l.LastName = 'Smith AccFinder';
@@ -1144,7 +1144,7 @@ private class LD_LeadConvertOverride_TEST {
     /////////////
 
     /*********************************************************************************************************
-    * @description Asserts the controller's list of Accounts contains no existing Account 
+    * @description Asserts the controller's list of Accounts contains no existing Account
     * @param ext The controller
     * @return void
     */
@@ -1155,7 +1155,7 @@ private class LD_LeadConvertOverride_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Asserts the controller's list of Accounts contains New option and has no existing Account 
+    * @description Asserts the controller's list of Accounts contains New option and has no existing Account
     * @param ext The controller
     * @return void
     */
@@ -1166,7 +1166,7 @@ private class LD_LeadConvertOverride_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Asserts the controller's list of Accounts contains existing Account 
+    * @description Asserts the controller's list of Accounts contains existing Account
     * @param ext The controller
     * @return void
     */
@@ -1177,7 +1177,7 @@ private class LD_LeadConvertOverride_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Asserts the controller's list of Contacts contains no existing Contact 
+    * @description Asserts the controller's list of Contacts contains no existing Contact
     * @param ext The controller
     * @return void
     */
@@ -1188,7 +1188,7 @@ private class LD_LeadConvertOverride_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Asserts the controller's list of Contacts contains existing Contact 
+    * @description Asserts the controller's list of Contacts contains existing Contact
     * @param ext The controller
     * @return void
     */
@@ -1223,35 +1223,35 @@ private class LD_LeadConvertOverride_TEST {
                 if (acc.Name.equalsIgnoreCase(accountName)) {
                     actual.add(acc);
                 }
-            }           
+            }
         }
 
         System.assertEquals(size, actual.size(), 'Actual Accounts: ' + actual);
     }
 
     /*********************************************************************************************************
-    * @description Returns existing Contacts 
+    * @description Returns existing Contacts
     * @return List<Contact> Contacts
     */
     private static List<Contact> getContacts() {
         return [
-            SELECT Id, FirstName, LastName, 
-                AccountId, Account.Name, Account.npe01__Systemisindividual__c, 
+            SELECT Id, FirstName, LastName,
+                AccountId, Account.Name, Account.npe01__Systemisindividual__c,
                 Primary_Affiliation__c, Primary_Affiliation__r.BillingStreet,
-                MailingStreet, MailingCity, MailingState, MailingPostalCode, 
+                MailingStreet, MailingCity, MailingState, MailingPostalCode,
                 Current_Address__c, npo02__Household__c
             FROM Contact
         ];
     }
 
     /*********************************************************************************************************
-    * @description Returns existing Leads that are not converted 
+    * @description Returns existing Leads that are not converted
     * @return List<Lead> Leads
     */
     private static List<Lead> getUnconvertedLeads() {
         return [
-            SELECT Id, FirstName, LastName 
-            FROM Lead 
+            SELECT Id, FirstName, LastName
+            FROM Lead
             WHERE isConverted = false
         ];
     }
