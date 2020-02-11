@@ -215,9 +215,10 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     async connectedCallback() {
+        this.donationMatchingBehaviors = await getDonationMatchingValues();
+
         if (!this.recordId) {
             this.templates = await getAllFormTemplates();
-            this.donationMatchingBehaviors = await getDonationMatchingValues();
             this.templates = this.templates.sort();
             this.builderTemplateComboboxOptions(this.templates);
             this.isLoading = false;
