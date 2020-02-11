@@ -66,7 +66,9 @@ Create Household With additional details
     ...                                   Last Name=${last_name1}
     ...                                   Work Email=automation@example.com
     Click Modal Button                    Save & New
-    
+    Wait Until Loading Is Complete
+    # Adding 5 secs of sleep to allow processing of the record before creating next one
+    Sleep                                 5
     # Create a contact with name and address  
     Populate Modal Form
     ...                                   First Name=${first_name2}

@@ -1391,17 +1391,21 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     if "Lookup" in classname and "readonly" not in classname:
                         self.salesforce.populate_lookup_field(key,value)
                         print("Executed populate lookup field for {}".format(key))
+                        break
                     elif "Select" in classname and "readonly" not in classname:
                         self.select_value_from_dropdown(key,value)
                         print("Executed select value from dropdown for {}".format(key))
+                        break
                     elif "Checkbox" in classname and "readonly" not in classname:
                         if value == "checked":
                             locator = npsp_lex_locators["checkbox"]["model-checkbox"].format(key)
-                            self.selenium.get_webelement(locator).click() 
+                            self.selenium.get_webelement(locator).click()
+                            break 
                     elif "Date" in classname and "readonly" not in classname:
                         self.open_date_picker(key)
                         self.pick_date(value)
                         print("Executed open date picker and pick date for {}".format(key))
+                        break
                     else:
                         try :
                             self.search_field_by_value(key,value)
