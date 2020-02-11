@@ -77,19 +77,19 @@ public inherited sharing class RD2_Constants {
     * @description Returns all valid Installment Periods
     */
     public static Set<String> allInstallmentPeriods {
-    get {
-        if (allInstallmentPeriods == null) {
-            allInstallmentPeriods = new Set<String>{
-                INSTALLMENT_PERIOD_DAILY,
-                INSTALLMENT_PERIOD_WEEKLY,
-                INSTALLMENT_PERIOD_MONTHLY,
-                INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH,
-                INSTALLMENT_PERIOD_YEARLY
-            };
+        get {
+            if (allInstallmentPeriods == null) {
+                allInstallmentPeriods = new Set<String>{
+                    INSTALLMENT_PERIOD_DAILY,
+                    INSTALLMENT_PERIOD_WEEKLY,
+                    INSTALLMENT_PERIOD_MONTHLY,
+                    INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH,
+                    INSTALLMENT_PERIOD_YEARLY
+                };
+            }
+            return allInstallmentPeriods;
         }
-        return allInstallmentPeriods;
+        set;
     }
-    set;
-}
 
 }
