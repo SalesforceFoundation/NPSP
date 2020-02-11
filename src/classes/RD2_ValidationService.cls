@@ -117,15 +117,29 @@ public with sharing class RD2_ValidationService {
     }
 
     /***
-    * @description Validates installment data on Recurring Donation
+    * @description Validates data on Recurring Donation is valid
     * @param rd The Recurring Donation to validate
     */
     private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd) {
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return;
         }
+
+        validateInstallmentData(rd);
+        validateDayOfMonth(rd);
+    }
+
+    /***
+     * @description Validate installment data on Recurring Donation
+     * @description rd Recurring Donation reocrd to evaluate
+     */
+    private void validateInstallmentData(npe03__Recurring_Donation__c rd) {
         if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
             rd.addError(System.Label.RD2_AmountMustBeValid);
+        }
+
+        if (rd.InstallmentFrequency__c == null || rd.InstallmentFrequency__c > 20) {
+            rd.addError('tbd');
         }
 
         if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
@@ -135,8 +149,6 @@ public with sharing class RD2_ValidationService {
                     new String[]{ rd.npe03__Installment_Period__c })
             );
         }
-
-        validateDayOfMonth(rd);
     }
 
     /***
@@ -188,8 +200,6 @@ public with sharing class RD2_ValidationService {
         }
 
         return isValid;
-        
-        
     }
 
     /***

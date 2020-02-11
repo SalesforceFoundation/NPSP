@@ -93,6 +93,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
+        assignDefaultInsallmentFrequency(rds, triggerAction);
         validate(rds, oldRds, triggerAction);
         handleRDSchedules(rds, oldRds, triggerAction);
 
@@ -123,6 +124,23 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             namingService.autogenerateNamesOnChange(rds, oldRds);
+        }
+    }
+
+    /***
+     * @description Assign Installment Frequency to the recurring donation record if the field is null on insert
+     * @param rds Trigger.new records
+     * * @param triggerAction BeforeInsert, AfterInsert, etc.
+     */
+    private void assignDefaultInsallmentFrequency(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction !== TDTM_Runnable.Action.BeforeInsert) {
+            return;
+        }
+        
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.InstallmentFrequency__c == null) {
+                rd.InstallmentFrequency__c = 1;
+            }
         }
     }
 
