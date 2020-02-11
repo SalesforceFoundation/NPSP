@@ -112,8 +112,9 @@
     </fields>
     <fields>
         <fullName>Batch_Defaults__c</fullName>
-        <description>Represents the data model of batch level default field values for a NPSP_DataImportBatch__c record in Gift Entry. Not intended for direct customer use and should not be edited directly.</description>
+        <description>The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch.</inlineHelpText>
         <label>Batch Defaults</label>
         <length>50000</length>
         <trackHistory>false</trackHistory>
@@ -136,6 +137,7 @@
         <fullName>Batch_Gift_Entry_Version__c</fullName>
         <description>The version of the Batch Gift Entry feature used to create this Batch.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The version of the Batch Gift Entry feature used to create this Batch.</inlineHelpText>
         <label>Batch Gift Entry Version</label>
         <precision>4</precision>
         <required>false</required>
@@ -311,6 +313,7 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <description>The Template to use for the gift entry form for this Batch.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The Template to use for the gift entry form for this Batch.</inlineHelpText>
         <label>Form Template</label>
         <referenceTo>Form_Template__c</referenceTo>
         <relationshipLabel>NPSP Data Import Batches</relationshipLabel>

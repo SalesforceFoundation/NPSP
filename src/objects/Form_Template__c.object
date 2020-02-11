@@ -143,6 +143,7 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
+    <description>A set of fields and default values that users see when entering gifts.</description>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
@@ -154,9 +155,9 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Description__c</fullName>
-        <description>Short description of what the template is intended to be used for.</description>
+        <description>The short description users can enter for a template.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Short description of what the template is intended to be used for.</inlineHelpText>
+        <inlineHelpText>The short description users can enter for a template.</inlineHelpText>
         <label>Description</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -164,9 +165,9 @@
     </fields>
     <fields>
         <fullName>Format_Version__c</fullName>
-        <description>If there are changes made to the format/structure of the FormTemplate class or child classes this number indicates the version of the instance stored on this record.</description>
+        <description>The version of Gift Entry used to create the template. Used for troubleshooting issues if changes are made to the template structure or code.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If there are changes made to the format/structure of the FormTemplate class or child classes this number indicates the version of the instance stored on this record.</inlineHelpText>
+        <inlineHelpText>The version of Gift Entry used to create this template.</inlineHelpText>
         <label>Format Version</label>
         <length>40</length>
         <required>true</required>
@@ -176,9 +177,9 @@
     </fields>
     <fields>
         <fullName>Template_JSON__c</fullName>
-        <description>An instance of the FormTemplate class stored as JSON.</description>
+        <description>The sections and fields on this template, along with their order, requirements, and default values. Stored as JSON. Do not edit directly.</description>
         <externalId>false</externalId>
-        <inlineHelpText>An instance of the FormTemplate class stored as JSON.</inlineHelpText>
+        <inlineHelpText>The sections and fields on this template, along with their order, requirements, and default values. Stored as JSON. Do not edit directly.</inlineHelpText>
         <label>Template JSON</label>
         <length>131072</length>
         <trackTrending>false</trackTrending>

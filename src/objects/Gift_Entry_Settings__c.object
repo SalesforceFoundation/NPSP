@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>Hierarchy</customSettingsType>
+    <description>Settings for the NPSP Gift Entry product.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
         <fullName>Default_Gift_Entry_Template__c</fullName>
-        <description>The name of the template to use for the Single Gift Entry page.</description>
+        <description>This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts.</description>
         <externalId>false</externalId>
         <inlineHelpText>This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts.</inlineHelpText>
         <label>Default Gift Entry Template</label>
@@ -17,8 +18,9 @@
     <fields>
         <fullName>Enable_Gift_Entry__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Setting for feature-gating the Gift Entry feature</description>
+        <description>Enables the Gift Entry tool. This feature requires Advanced Mapping.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Enables the Gift Entry tool. This feature requires Advanced Mapping.</inlineHelpText>
         <label>Enable Gift Entry</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
