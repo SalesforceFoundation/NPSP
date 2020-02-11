@@ -35,7 +35,7 @@
 * Needs to be "without sharing" so that the Install Script can run it.
 */
 public without sharing class UTIL_CustomSettingsFacade {
-    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
+    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = CAO_Constants.OCR_DONOR_ROLE;
     public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
     public static final Integer DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE = 1000;
@@ -593,7 +593,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         }
 
-        hs.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
+        hs.npo02__Household_Member_Contact_Role__c = CAO_Constants.HH_MEMBER_CONTACT_ROLE;
         hs.npo02__Always_Rollup_to_Primary_Contact__c = false;
         hs.npo02__Enable_Opp_Rollup_Triggers__c = true;
         hs.npo02__Excluded_Account_Opp_Rectypes__c = null;
