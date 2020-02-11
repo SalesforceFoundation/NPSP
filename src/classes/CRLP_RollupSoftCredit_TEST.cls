@@ -185,14 +185,14 @@ public class CRLP_RollupSoftCredit_TEST {
             ));
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE,
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
                 npe01__Payments_Enabled__c = false
             ));
 
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
+                npo02__Household_Member_Contact_Role__c = CAO_Constants.HH_MEMBER_CONTACT_ROLE,
                 npo02__Household_Contact_Roles_On__c = true,
                 npo02__Always_Rollup_to_Primary_Contact__c = (tt == TestType.TestWithAlwaysRollupToPrimary)
             ));
@@ -303,7 +303,7 @@ public class CRLP_RollupSoftCredit_TEST {
         // Change the OCR Role on the org donation so that it will roll up as a soft credit.
         OpportunityContactRole orgOCR = [SELECT Id, OpportunityId, ContactId, Role FROM OpportunityContactRole
                     WHERE Opportunity.AccountId = :orgAcct1.Id AND IsPrimary = True LIMIT 1];
-        orgOCR.Role = label.npo02.Household_Member_Contact_Role;
+        orgOCR.Role = CAO_Constants.HH_MEMBER_CONTACT_ROLE;
         update orgOCR;
 
         //Create duplicate Non Primary OCRs to test the Rollup for duplicate OCRs.
