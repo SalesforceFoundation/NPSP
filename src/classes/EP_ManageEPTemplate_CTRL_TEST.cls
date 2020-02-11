@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2016, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -38,7 +38,7 @@
 private with sharing class EP_ManageEPTemplate_CTRL_TEST {
 
     /*********************************************************************************************************
-    * @description Creates a template with two tasks, one the child of the other. Tests out buttons and 
+    * @description Creates a template with two tasks, one the child of the other. Tests out buttons and
     * verifies results.
     */
     static testMethod void testDependentPlan() {
@@ -49,7 +49,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         Engagement_Plan_Task__c epTask = createTask(template.Id);
         Engagement_Plan_Task__c dependentEpTask = createDependentTask(template.Id, epTask.Id);
 
-        Test.startTest();        
+        Test.startTest();
         setUpPage(template.Id);
 
         EP_ManageEPTemplate_CTRL ctrl = new EP_ManageEPTemplate_CTRL(new ApexPages.StandardController(template));
@@ -85,7 +85,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         ctrl.currentTaskLevel = '1-1';
         ctrl.deleteTask();
         ctrl.getTaskTree();
-        system.assert(!ctrl.mapTaskWrappers.containsKey('1-1-1-1'), 
+        system.assert(!ctrl.mapTaskWrappers.containsKey('1-1-1-1'),
             'EP Task with level of 1-1-1-1 should be gone as its grandparent was deleted.');
 
         ctrl.saveClose();
@@ -126,35 +126,35 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
                                                             FROM Engagement_Plan_Template__c WHERE Id != :template.id];
         System.assertEquals(1, clonedTemplate.size(), 'A new cloned template should exist.');
         System.assert(clonedTemplate[0].Name.contains(Label.lblCloned), 'Cloned template should have the Cloned label.');
-        System.assertEquals(template.Skip_Weekends__c, clonedTemplate[0].Skip_Weekends__c, 
+        System.assertEquals(template.Skip_Weekends__c, clonedTemplate[0].Skip_Weekends__c,
             'Clone should have the same Skip Weekend field value as the original.');
-        System.assertEquals(template.Default_Assignee__c, clonedTemplate[0].Default_Assignee__c, 
+        System.assertEquals(template.Default_Assignee__c, clonedTemplate[0].Default_Assignee__c,
             'Cloned Template should have the same Default Assignee field value as the original.');
 
-        List<Engagement_Plan_Task__c> tasks = [SELECT Id, Parent_Task__c, Name FROM Engagement_Plan_Task__c 
-                                               WHERE Id != :epTask.id AND Id != :dependentEpTask.id 
+        List<Engagement_Plan_Task__c> tasks = [SELECT Id, Parent_Task__c, Name FROM Engagement_Plan_Task__c
+                                               WHERE Id != :epTask.id AND Id != :dependentEpTask.id
                                                ORDER BY Parent_Task__c NULLS FIRST];
         System.assertEquals(2, tasks.size(), 'Two cloned tasks should exist. ' + epTask.id + ' ' + ctrl.mapTaskWrappers.values()[0].detail);
         System.assertEquals(epTask.Name, tasks[0].Name, 'Cloned task should have the same name as the original.');
-        System.assertEquals(dependentEpTask.Name, tasks[1].Name, 
+        System.assertEquals(dependentEpTask.Name, tasks[1].Name,
             'Cloned task should have the same name as the original.');
-        System.assertEquals(tasks[0].id, tasks[1].Parent_Task__c, 
+        System.assertEquals(tasks[0].id, tasks[1].Parent_Task__c,
             'Dependent task should have the cloned task as parent.');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Test saving the Template and a new Task which has no Name
     verify:
         An error is displayed on the page since the new Task has no Name.
-        The Template and Tasks are unchanged. 
-    **********************************************************************************************************/ 
+        The Template and Tasks are unchanged.
+    **********************************************************************************************************/
     private static testMethod void testSaveFailsWhenNewTaskHasNoName() {
         Engagement_Plan_Template__c template = createTemplate();
         Engagement_Plan_Task__c epTask = createTask(template.Id);
 
         setUpPage(template.Id);
-        
+
         EP_ManageEPTemplate_CTRL ctrl = new EP_ManageEPTemplate_CTRL(new ApexPages.StandardController(template));
 
         String templateName = ctrl.template.Name;
@@ -179,18 +179,18 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
-        Test saving Template and Tasks when an exception occurs 
+    @description
+        Test saving Template and Tasks when an exception occurs
     verify:
         The transaction is completely rolled back and there is no partial commit.
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void testSaveRollsBackAllDmlsOnError() {
         Engagement_Plan_Template__c template = createTemplate();
         Engagement_Plan_Task__c epTask = createTask(template.Id);
         Engagement_Plan_Task__c dependentEpTask = createDependentTask(template.Id, epTask.Id);
 
         setUpPage(template.Id);
-        
+
         EP_ManageEPTemplate_CTRL ctrl = new EP_ManageEPTemplate_CTRL(new ApexPages.StandardController(template));
 
         String templateName = ctrl.template.Name;
@@ -210,7 +210,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         ctrl.getTaskTree();
 
         System.assertEquals(3, ctrl.mapTaskWrappers.size(), 'Dependent task should be deleted');
-        
+
         // Cause an error on update
         ctrl.mapTaskWrappers.get('1').detail.put('Assigned_To__c', UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
 
@@ -219,7 +219,9 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         Test.stopTest();
 
         System.assertEquals(null, retPage, 'The return page on the error should be null');
-        UTIL_UnitTestData_TEST.assertPageHasError('value of incorrect type');
+        // The exact text of the error is generated by Salesfore as opposed to being a custom label.
+        // As a result, the bit of text to search for is the bad Id pushed into the field.
+        UTIL_UnitTestData_TEST.assertPageHasError(': ' + UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
 
         Engagement_Plan_Template__c actualTemplate = [SELECT Id, Name FROM Engagement_Plan_Template__c WHERE Id = :template.Id];
         System.assertEquals(templateName, actualTemplate.Name, 'Template Name should be unchanged');
@@ -232,18 +234,18 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
-        Test re-saving of Template and Tasks after an error is fixed 
+    @description
+        Test re-saving of Template and Tasks after an error is fixed
     verify:
         Records are saved as expected
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void testResaveSucceedsWhenErrorIsFixed() {
         Engagement_Plan_Template__c template = createTemplate();
         Engagement_Plan_Task__c epTask = createTask(template.Id);
         Engagement_Plan_Task__c dependentEpTask = createDependentTask(template.Id, epTask.Id);
 
         setUpPage(template.Id);
-        
+
         EP_ManageEPTemplate_CTRL ctrl = new EP_ManageEPTemplate_CTRL(new ApexPages.StandardController(template));
 
         ctrl.getTaskTree();
@@ -269,7 +271,9 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
         PageReference retPage = ctrl.saveClose();
 
         System.assertEquals(null, retPage, 'The return page on the error should be null');
-        UTIL_UnitTestData_TEST.assertPageHasError('value of incorrect type');
+        // The exact text of the error is generated by Salesfore as opposed to being a custom label.
+        // As a result, the bit of text to search for is the bad Id pushed into the field.
+        UTIL_UnitTestData_TEST.assertPageHasError(': ' + UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
 
         //fix the error
         ctrl.getTaskTree();
@@ -382,7 +386,7 @@ private with sharing class EP_ManageEPTemplate_CTRL_TEST {
     /**
      * @description Sets up VF page for the Template
      * @param templateId A Template Id
-     * @return PageReference 
+     * @return PageReference
      */
     private static PageReference setUpPage(Id templateId) {
         PageReference pageRef = Page.EP_ManageEPTemplate;
