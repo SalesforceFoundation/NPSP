@@ -1,5 +1,5 @@
 import {LightningElement, api, track, wire} from 'lwc';
-import {isNotEmpty, debouncify} from 'c/utilCommon';
+import {isNotEmpty, debouncify, isUndefined} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
@@ -315,35 +315,61 @@ export default class GeFormField extends LightningElement {
     }
 
     /**
-     * Set the value of the field.
-     * @param value Value to set on the field.
-     */
+     * Load a value into the form field.
+     * @param data  An sObject potentially containing a value to load.
+     * */
     @api
-    setValue(value, displayValue) {
-        if (this.isLookup) {
-            const lookup = this.template.querySelector('c-ge-form-field-lookup');
-            if (value) {
-                // TODO: Where does data below come from?
-                displayValue =
-                    displayValue || data[this.sourceFieldAPIName.replace('__c', '__r')].Name;
-                lookup.setSelected({value, displayValue});
+    load(data) {
+        let value;
+        if (data.hasOwnProperty(this.sourceFieldAPIName)) {
+            if (data[this.sourceFieldAPIName].hasOwnProperty('value')) {
+                value = data[this.sourceFieldAPIName].value;
             } else {
-                lookup.reset();
+                value = data[this.sourceFieldAPIName];
             }
-        } else {
-            this.value = value;
+        } else if (data.value) {
+            value = data.value;
         }
+
+        if (value === null || isUndefined(value)) {
+            this.reset();
+            return;
+        }
+        this.value = value;
+        if (this.isLookup) {
+            this.loadLookUp(data, value);
+        }
+
     }
 
     /**
-     * Load a value into the form field.
-     * @param data  An sObject potentially containing a value to load.
+     * Loads a value into a look-up field
+     * @param data An sObject potentially containing a value to load.
+     * @param value A form field value
      */
-    @api
-    load(data) {
-        const value = data[this.sourceFieldAPIName];
-        this.setValue(value);
+    loadLookUp(data, value) {
+        const lookup = this.template.querySelector('c-ge-form-field-lookup');
+
+        let displayValue;
+        const relationshipFieldName = this.sourceFieldAPIName.replace('__c', '__r');
+
+        if (data[relationshipFieldName] &&
+            data[relationshipFieldName]['Name']) {
+            displayValue = data[relationshipFieldName].Name;
+
+        } else if (data[this.sourceFieldAPIName] &&
+            data[this.sourceFieldAPIName]['displayValue']) {
+            displayValue = data[this.sourceFieldAPIName].displayValue;
+
+        } else if (data.displayValue) {
+            displayValue = data.displayValue;
+
+        }
+
+        lookup.setSelected({value, displayValue});
+
     }
+
 
     @api
     reset() {
