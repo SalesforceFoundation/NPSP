@@ -549,7 +549,7 @@ public with sharing class OPP_OpportunityNaming_TEST
      * @return User
      */
     private static User buildSpanishUser() {
-        User usr = UTIL_UnitTestData_Test.createUserWithoutInsert('Standard User');
+        User usr = UTIL_UnitTestData_Test.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER);
 
         usr.LanguageLocaleKey = 'es';
         usr.LocaleSidKey = 'es';
