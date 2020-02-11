@@ -131,7 +131,7 @@ public with sharing class RD2_OpportunityService {
             }
 
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-                .filterCurrent(rd.npe03__Donations__r)
+                .includeCurrent(rd.npe03__Donations__r)
                 .match(installments);
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
@@ -212,7 +212,7 @@ public with sharing class RD2_OpportunityService {
         //Synchronize Opps with matching Schedule installments
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-                .filterCurrentOrOpen(rd.npe03__Donations__r);
+                .includeCurrentOrOpen(rd.npe03__Donations__r);
             
             matcher.match(scheduleService.getVisualizedInstallments(
                 currentDate, matcher.size(), rd.RecurringDonationSchedules__r

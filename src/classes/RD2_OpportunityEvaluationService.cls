@@ -668,7 +668,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         */
         public Boolean hasCurrentOpenOpportunity(Date currentDate) {
             return new RD2_OpportunityMatcher(currentDate)
-                .filterCurrentAndOpen(rd.npe03__Donations__r)
+                .includeCurrentAndOpen(rd.npe03__Donations__r)
                 .size() > 0;
         }
 
@@ -823,7 +823,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 scheduleService.getVisualizedInstallments(startDate, endDate, schedules);
  
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(startDate)
-                .filterByYear(opps, startDate.year())
+                .includeByYear(opps, startDate.year())
                 .match(installments);
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {

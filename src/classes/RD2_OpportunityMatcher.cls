@@ -43,7 +43,7 @@ public inherited sharing class RD2_OpportunityMatcher {
     public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = RD2_DataMigrationBase_BATCH.MIGRATION_INSTALLMENT_NUMBER_FLAG;
 
     /**
-     * @description Current date is the cut off date to filter out and evaluate current existing Opportunities.
+     * @description Current date is the cut off date to evaluate current existing Opportunities.
      * Moreover, it is used to determine projected installments as of the current date.
      * It can be a past date, today or a future date when testing. 
      * The current date is always today when used within RD batch scheduler.
@@ -51,9 +51,9 @@ public inherited sharing class RD2_OpportunityMatcher {
     private Date currentDate;
 
     /***
-    * @description Contains all filtered Opportunities and/or projected installments mapped by their Close Date
+    * @description Contains all included Opportunities and/or projected installments mapped by their Close Date
     */
-    private Map<Date, Record> recordByCloseDate = new Map<Date, Record>();//TODO more than one Opp on the same Close Date?
+    private Map<Date, Record> recordByCloseDate = new Map<Date, Record>();
 
     /***
     * @description Contains Opportunities with Close Date >= current date
@@ -88,13 +88,13 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Filters Opportunities matching the provided calendar year regardless if they are open or closed.
+     * @description Includes Opportunities matching the provided calendar year regardless if they are open or closed.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
-     * @param year Year filter criteria
+     * @param year Year criteria
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
-    public RD2_OpportunityMatcher filterByYear(List<Opportunity> opps, Integer year) {
+    public RD2_OpportunityMatcher includeByYear(List<Opportunity> opps, Integer year) {
         for (Opportunity opp : opps) {
             if (opp.CloseDate.year() == year && !isClosedLostInMigration(opp)) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
@@ -104,11 +104,11 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Filters Open Opportunities with Close Date greater or equal to the current date
+     * @description Includes Open Opportunities with Close Date greater or equal to the current date
      * @param opps Recurring Donation Opportunities
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
-    public RD2_OpportunityMatcher filterCurrentAndOpen(List<Opportunity> opps) {
+    public RD2_OpportunityMatcher includeCurrentAndOpen(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
@@ -118,12 +118,12 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Filters Opportunities with Close Date greater or equal to the current date.
+     * @description Includes Opportunities with Close Date greater or equal to the current date.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
-    public RD2_OpportunityMatcher filterCurrent(List<Opportunity> opps) {
+    public RD2_OpportunityMatcher includeCurrent(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             if (opp.CloseDate >= currentDate && !isClosedLostInMigration(opp)) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
@@ -133,13 +133,13 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Filters open Opportunities regardless of the Close Date and
+     * @description Includes open Opportunities regardless of the Close Date and
      * open/closed Opportunities with Close Date greater or equal to the current date.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
-    public RD2_OpportunityMatcher filterCurrentOrOpen(List<Opportunity> opps) {
+    public RD2_OpportunityMatcher includeCurrentOrOpen(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
             if (opp.isClosed == false || (opp.CloseDate >= currentDate && !isClosedLostInMigration(opp))) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
@@ -160,7 +160,7 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Matches existing filtered Opportunities with projected installments
+     * @description Matches existing included Opportunities with projected installments
      * and creates resulting Records.
      * @param installments Recurring Donation projected installments
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
@@ -214,7 +214,7 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Wrapper for the extracted Opportunity based on the filter criteria
+     * @description Wrapper for the extracted Opportunity based on the inclusion criteria
      * and/or matching installment. The record can have both Opportunity and installment
      * specified if they are matching, otherwise Opportunity only is specified for records
      * with Close Date < current date and installment only is usually specified for 

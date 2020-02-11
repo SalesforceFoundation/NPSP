@@ -48,7 +48,7 @@ private class RD2_OpportunityMatcher_TEST {
      * Opportunities Closed Lost in data migration are not returned.
      */
     @IsTest
-    private static void shouldFilterAllOppsWhenCloseDateYearMatchesCurrentYear() {
+    private static void shouldIncludeAllOppsWhenCloseDateYearMatchesCurrentYear() {
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
@@ -87,10 +87,10 @@ private class RD2_OpportunityMatcher_TEST {
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .filterByYear(opps, CURRENT_YEAR)
+            .includeByYear(opps, CURRENT_YEAR)
             .getRecords();
 
-        System.assertEquals(3, records.size(), 'Number of filtered Opportunities should match: ' + records);
+        System.assertEquals(3, records.size(), 'Number of included Opportunities should match: ' + records);
         for (RD2_OpportunityMatcher.Record record : records) {
             System.assertEquals(CURRENT_YEAR, record.getOpportunity().CloseDate.year(), 'Opportunity Close Date Year should match');
             System.assertNotEquals(opps[4].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
@@ -102,7 +102,7 @@ private class RD2_OpportunityMatcher_TEST {
      * when their Close Date is greater or equal to the current date (today).
      */
     @IsTest
-    private static void shouldFilterOpenOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
+    private static void shouldIncludeOpenOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
@@ -137,10 +137,10 @@ private class RD2_OpportunityMatcher_TEST {
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .filterCurrentAndOpen(opps)
+            .includeCurrentAndOpen(opps)
             .getRecords();
 
-        System.assertEquals(2, records.size(), 'Number of filtered Opportunities should match: ' + records);
+        System.assertEquals(2, records.size(), 'Number of included Opportunities should match: ' + records);
         for (RD2_OpportunityMatcher.Record record : records) {
             System.assert(record.getOpportunity().CloseDate >= TODAY, 'Opportunity Close Date should be >= TODAY: ' + record);
             System.assertNotEquals(opps[2].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
@@ -154,7 +154,7 @@ private class RD2_OpportunityMatcher_TEST {
      * Opportunities Closed Lost in data migration are not returned.
      */
     @IsTest
-    private static void shouldFilterAllOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
+    private static void shouldIncludeAllOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
@@ -189,10 +189,10 @@ private class RD2_OpportunityMatcher_TEST {
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .filterCurrent(opps)
+            .includeCurrent(opps)
             .getRecords();
 
-        System.assertEquals(3, records.size(), 'Number of filtered Opportunities should match: ' + records);
+        System.assertEquals(3, records.size(), 'Number of included Opportunities should match: ' + records);
 
         for (RD2_OpportunityMatcher.Record record : records) {
             System.assert(record.getOpportunity().CloseDate >= TODAY, 'Opportunity Close Date should be >= TODAY: ' + record);
@@ -243,7 +243,7 @@ private class RD2_OpportunityMatcher_TEST {
         );
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .filterCurrent(opps)
+            .includeCurrent(opps)
             .match(installments)
             .getRecords();
 
@@ -267,7 +267,7 @@ private class RD2_OpportunityMatcher_TEST {
     /**
      * @description Verifies matching of Opportunities and projected installments
      * is applied by matching order of the installment Close Date from the current date
-     * when existing filtered Opp cannot be matched by the Close Date.
+     * when existing included Opp cannot be matched by the Close Date.
      */
     @IsTest
     private static void shouldMatchCurrentOppWithInstallmentOrderIfCannotMatchByTheCloseDate() {
@@ -308,7 +308,7 @@ private class RD2_OpportunityMatcher_TEST {
         );
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .filterCurrent(opps)
+            .includeCurrent(opps)
             .match(installments)
             .getRecords();
 
@@ -370,7 +370,7 @@ private class RD2_OpportunityMatcher_TEST {
         );
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .filterCurrentOrOpen(opps)
+            .includeCurrentOrOpen(opps)
             .match(installments)
             .getRecords();
 
