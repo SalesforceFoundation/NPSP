@@ -69,6 +69,7 @@ class DataImportDetailPage(BaseNPSPPage, DetailPage):
         self.salesforce.click_modal_button("Save")
         self.salesforce.wait_until_modal_is_closed()
 
+    @capture_screenshot_on_error
     def verify_failure_message(self,field,status,value):
         """If status is 'contains' then the specified value should be present in the field
             'does not contain' then the specified value should not be present in the field"""
