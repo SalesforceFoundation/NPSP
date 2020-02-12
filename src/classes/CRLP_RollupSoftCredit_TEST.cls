@@ -46,9 +46,9 @@ public class CRLP_RollupSoftCredit_TEST {
      */
     @TestSetup
     private static void setupBaseTestData() {
-
-        Account orgAcct = new Account(Name = 'CRLP-ORG-TEST', npe01__SYSTEMIsIndividual__c = false);
-        insert orgAcct;
+        Account orgAcct1 = new Account(Name = 'CRLP-ORG-TEST', npe01__SYSTEMIsIndividual__c = false);
+        Account orgAcct2 = new Account(Name = 'CRLP-ORG-TEST', npe01__SYSTEMIsIndividual__c = false);
+        insert new List<Account> { orgAcct1, orgAcct2 };
 
         Contact c = UTIL_UnitTestData_TEST.getContact();
         c.FirstName = 'TEST-1';
@@ -205,13 +205,24 @@ public class CRLP_RollupSoftCredit_TEST {
         UTIL_UnitTestData_TEST.disableRollupTriggers();
         UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
 
-        Account orgAcct = [SELECT Id, Name FROM Account WHERE npe01__SYSTEMIsIndividual__c = false LIMIT 1];
+        Account orgAcct1 = [SELECT Id, Name FROM Account
+            WHERE npe01__SYSTEMIsIndividual__c = FALSE LIMIT 1];
+
+        // For the AccountContactSoftCredit Rollup Only ...
+        // Retrieve the org account and set one of the target fields to a non-zero value to make sure it's set to zero
+        // when the batch rollups are executed.
+        Account orgAcct2 = [SELECT Id, Name FROM Account
+            WHERE Id != :orgAcct1.Id AND npe01__SYSTEMIsIndividual__c = FALSE LIMIT 1];
+        if (tt == TestType.TestBatchAccount) {
+            orgAcct2.npo02__TotalOppAmount__c = 1000;
+            update orgAcct2;
+        }
 
         // Insert a dummy Contact and 100 Opportunity records
         // Retrieve the dummy Contact and then insert 100 Opportunity records
         Contact c1, c2, c3, c4;
         Id acctId, conId;
-        for (Contact cx : [SELECT Id, FirstName, LastName, AccountId FROM Contact WHERE AccountId != :orgAcct.Id]) {
+        for (Contact cx : [SELECT Id, FirstName, LastName, AccountId FROM Contact WHERE AccountId != :orgAcct1.Id]) {
             if (cx.FirstName == 'TEST-1') {
                 acctId = cx.AccountId;
                 conId = cx.Id;
@@ -278,7 +289,7 @@ public class CRLP_RollupSoftCredit_TEST {
         Date orgDonationDate = Date.Today().addDays(-30);
         opps.add(new Opportunity (
                 Name = 'Test Org Opp ' + c1.FirstName + ' ' + c1.LastName,
-                AccountId = orgAcct.Id,
+                AccountId = orgAcct1.Id,
                 Amount = orgDonationAmt,
                 CloseDate = orgDonationDate,
                 StageName = closedStage,
@@ -291,7 +302,7 @@ public class CRLP_RollupSoftCredit_TEST {
 
         // Change the OCR Role on the org donation so that it will roll up as a soft credit.
         OpportunityContactRole orgOCR = [SELECT Id, OpportunityId, ContactId, Role FROM OpportunityContactRole
-                    WHERE Opportunity.AccountId = :orgAcct.Id AND IsPrimary = True LIMIT 1];
+                    WHERE Opportunity.AccountId = :orgAcct1.Id AND IsPrimary = True LIMIT 1];
         orgOCR.Role = CAO_Constants.HH_MEMBER_CONTACT_ROLE;
         update orgOCR;
 
@@ -328,7 +339,7 @@ public class CRLP_RollupSoftCredit_TEST {
         if (tt != TestType.TestBatchAccount) {
             Id c2Id = c2.Id;
             String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
-            c2 = database.query(conQuery);
+            c2 = Database.query(conQuery);
 
             // Basic rollup asserts using existing NPSP rollup fields.
             System.assertEquals(totalDonations, c2.npo02__Soft_Credit_Total__c);
@@ -340,7 +351,7 @@ public class CRLP_RollupSoftCredit_TEST {
 
             // Query the Primary Contact (should have NO Soft Credit)
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
-            c1 = database.query(conQuery);
+            c1 = Database.query(conQuery);
             System.assert(c1.npo02__Soft_Credit_Total__c == null || c1.npo02__Soft_Credit_Total__c == 0,
                     'The Total Soft Credits for this contact should be null or zero');
 
@@ -348,7 +359,7 @@ public class CRLP_RollupSoftCredit_TEST {
             // has only this one soft credit attributed to them.
             Id c4Id = c4.Id;
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
-            c4 = database.query(conQuery);
+            c4 = Database.query(conQuery);
             if (tt != TestType.TestWithAlwaysRollupToPrimary) {
                 System.assertEquals(orgDonationAmt, c4.npo02__Soft_Credit_Total__c);
                 System.assertEquals(1, c4.Number_of_Soft_Credits__c);
@@ -361,15 +372,24 @@ public class CRLP_RollupSoftCredit_TEST {
         // Basic rollup asserts using existing NPSP rollup fields.
         if (tt == TestType.TestBatchAccount) {
             // Query the Household
-            String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
-            Account a = database.query(acctQuery);
+            String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType)
+                + ' WHERE Id = :acctId LIMIT 1';
+            Account acct = Database.query(acctQuery);
 
-            System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
-            System.assertEquals(cnt, a.npo02__NumberOfClosedOpps__c);
-            System.assertEquals(firstCloseDate, a.npo02__FirstCloseDate__c);
-            System.assertEquals(baseAmt, a.npo02__LastOppAmount__c);
-            System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
+            // Query the org account for the Account-Contact-Soft-Credit rollup to make sure the value is cleared
+            Id orgAcct2Id = orgAcct2.Id;
+            acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType)
+                + ' WHERE Id = :orgAcct2Id LIMIT 1';
+            orgAcct2 = Database.query(acctQuery);
 
+            System.assertEquals(totalDonations, acct.npo02__TotalOppAmount__c);
+            System.assertEquals(cnt, acct.npo02__NumberOfClosedOpps__c);
+            System.assertEquals(firstCloseDate, acct.npo02__FirstCloseDate__c);
+            System.assertEquals(baseAmt, acct.npo02__LastOppAmount__c);
+            System.assertEquals(maxAmt, acct.npo02__LargestAmount__c);
+
+            System.assertEquals(0, orgAcct2.npo02__TotalOppAmount__c,
+                'The npo02__TotalOppAmount__c field should be reset to zero after the batch job executes');
         }
     }
 }
