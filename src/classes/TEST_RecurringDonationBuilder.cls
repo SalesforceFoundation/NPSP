@@ -462,6 +462,15 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @param recurringType Recurring Type value
     * @return TEST_RecurringDonationBuilder Builder instance
     */
+    public TEST_RecurringDonationBuilder withRecurringTypeFixed() {
+        return withRecurringType(RD2_Constants.RECURRING_TYPE_FIXED);
+    }
+
+    /***
+    * @description Sets Recurring Type field
+    * @param recurringType Recurring Type value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
     public TEST_RecurringDonationBuilder withRecurringType(String recurringType) {
         validateMode(Mode.Enhanced);
 

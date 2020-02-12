@@ -36,6 +36,11 @@
                     <label>Card Expired</label>
                 </value>
                 <value>
+                    <fullName>Commitment Completed</fullName>
+                    <default>false</default>
+                    <label>Commitment Completed</label>
+                </value>
+                <value>
                     <fullName>Deceased Donor</fullName>
                     <default>false</default>
                     <label>Deceased Donor</label>
@@ -318,6 +323,11 @@
                     <fullName>Open</fullName>
                     <default>true</default>
                     <label>Open</label>
+                </value>
+                <value>
+                    <fullName>Fixed</fullName>
+                    <default>false</default>
+                    <label>Fixed</label>
                 </value>
             </valueSetDefinition>
         </valueSet>

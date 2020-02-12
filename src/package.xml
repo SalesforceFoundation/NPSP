@@ -1537,6 +1537,9 @@
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
+        <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
+        <members>RD2_NumberInstallmentsRequiredWhenOpen</members>
+        <members>RD2_NumberPlannedInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
         <members>RD2_ScheduleLWCEndDate</members>
