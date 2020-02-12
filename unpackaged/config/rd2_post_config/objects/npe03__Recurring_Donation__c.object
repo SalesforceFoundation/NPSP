@@ -283,6 +283,20 @@
         <type>Picklist</type>
     </fields>
     <fields>
+        <fullName>InstallmentFrequency__c</fullName>
+        <description>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</inlineHelpText>
+        <label>Installment Frequency</label>
+        <precision>3</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>npe03__Last_Payment_Date__c</fullName>
         <description>NPSP calculates this value automatically based on the last time an installment Opportunity was marked paid (read only).</description>
         <externalId>false</externalId>
