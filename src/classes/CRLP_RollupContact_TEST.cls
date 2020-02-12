@@ -319,7 +319,7 @@ public class CRLP_RollupContact_TEST {
         Decimal maxAmt = 1000;
         Decimal baseAmt = 100;
         Integer cnt = 100;
-        Integer wonCount = 0;
+        Integer wonCountLastYear = 0;
         String bestGiftYear;
         Set<String> donationYears = new Set<String>();
         Date lastCloseDate;
@@ -339,7 +339,7 @@ public class CRLP_RollupContact_TEST {
                 total2YearsAgo += amt;
             }
             if (closeDate.addMonths(n).year() == Date.Today().addYears(-1).year()) {
-                wonCount++;
+                wonCountLastYear++;
             }
             if (closeDate.addMonths(n).daysBetween(Date.Today()) <= 365) {
                 last365Days += amt;
@@ -511,7 +511,7 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals('New', c.Department);
 
         System.assertEquals(1, c.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
-        System.assertEquals(wonCount, c.npo02__OppsClosedLastYear__c, 'The number of closed won opps should be equal to wonCount');
+        System.assertEquals(wonCountLastYear, c.npo02__OppsClosedLastYear__c, 'The number of closed won opps should be equal to ' + wonCountLastYear);
 
         // These 10 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
