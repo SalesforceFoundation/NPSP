@@ -77,7 +77,7 @@ private class BDI_DataImportFLSService_TEST {
                 BDI_DataImportFLSService.AccessLevel.VALIDATE_UPDATE
         };
 
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert('Read Only');
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
         System.runAs(readOnlyUser) {
             BDI_DataImportFLSService service = new BDI_DataImportFLSService(
                     new List<DataImport__c>{
