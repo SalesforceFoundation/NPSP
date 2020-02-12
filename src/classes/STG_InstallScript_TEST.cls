@@ -238,7 +238,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(householdAccountId, npe01Settings.npe01__HH_Account_RecordTypeID__c);
 
         System.assertEquals(HH_Households.NO_HOUSEHOLDS_PROCESSOR, npo02Settings.npo02__Household_Rules__c);
-        System.assertEquals(label.npo02.Household_Member_Contact_Role, npo02Settings.npo02__Household_Member_Contact_Role__c);
+        System.assertEquals(CAO_Constants.HH_MEMBER_CONTACT_ROLE, npo02Settings.npo02__Household_Member_Contact_Role__c);
         System.assertEquals(false, npo02Settings.npo02__Always_Rollup_to_Primary_Contact__c);
         System.assertEquals(true, npo02Settings.npo02__Enable_Opp_Rollup_Triggers__c);
         System.assertEquals(null, npo02Settings.npo02__Excluded_Account_Opp_Rectypes__c);
