@@ -95,10 +95,24 @@ public with sharing class UTIL_HtmlOutput_CTRL {
         }
 
         String safeHtml = replaceWhitelist(unsafeHtml);
+        System.debug('safeHtml - ' + safeHtml);
         safeHtml = safeHtml.escapeHtml4();
+        System.debug('safeHtml escaped - ' + safeHtml);
         safeHtml = resetWhitelist(safeHtml);
+        System.debug('safeHtml reset - ' + safeHtml);
 
         return safeHtml;
+    }
+
+    /*******************************************************************************************************************
+    * @description Returns the escaped html with the unescaped whitelisted tags and url
+    */
+    public String sanitizeInlineJavaScript(String unsanitaryLink) {
+        if (String.isBlank(unsanitaryLink)) {
+            return '';
+        }
+
+        return unsanitaryLink.replaceAll('on.*\\(.*\\).*"', '');
     }
 
     /*******************************************************************************************************************
@@ -113,7 +127,10 @@ public with sharing class UTIL_HtmlOutput_CTRL {
 
         if (hasURL) {
             for (String allowedUrl : SUBSTITUTION_BY_ALLOWED_URL.keySet()) {
+                System.debug('allowedUrl - ' + allowedUrl);
                 replacedHtml = replacedHtml.replace(allowedUrl, SUBSTITUTION_BY_ALLOWED_URL.get(allowedUrl));
+                System.debug('replacedHtml - ' + replacedHtml);
+                replacedHtml = sanitizeInlineJavaScript(replacedHtml);
             }
         }
 
