@@ -102,7 +102,7 @@ global with sharing class Callable_API implements System.Callable {
                 String contextType = paramService.getString(CallableApiParameters.PARAM_CONTEXT_TYPE);
                 Datetime processingBoundary = paramService.getDatetime(CallableApiParameters.PARAM_PROCESSING_BOUNDARY);
                 Boolean disableOppAndPmtAlloTriggers = paramService.getBoolean(CallableApiParameters.PARAM_DISABLE_ALLOCATION_TRIGGERS);
-                return ALLO_UpdPaymentAllocations_BATCH.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);
+                return ALLO_AllocationsUtil.processRecords(contextType, opportunityIds, null, processingBoundary, disableOppAndPmtAlloTriggers, true);
             } when 'allo.validatepmtallocationconfig' {
                 // This method is to be used only by Salesforce.org apps and is subject to change at any time. Do NOT call this method.
                 // If you do so, your functionality can break without any warning or liability from Salesforce.

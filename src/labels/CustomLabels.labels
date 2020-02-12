@@ -2564,12 +2564,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Percent field can't contain a negative value.</value>
     </labels>
     <labels>
+        <fullName>alloNullZeroInvalidStateError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Allocations are cleared because amounts can't convert to percentages</shortDescription>
+        <value>Warning! Allocations couldn’t be converted to percentages and were cleared. If the parent amount becomes a non-blank or zero amount, Allocations will be recreated from the defaults for this record.</value>
+    </labels>
+    <labels>
         <fullName>alloObjectUnsupported</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloObjectUnsupported</shortDescription>
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
+    </labels>
+    <labels>
+        <fullName>alloOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Allocations are cleared because amounts can't convert to percentages</shortDescription>
+        <value>The amount allocated exceeds the {obj_type} amount. Update Allocation amounts so that the total equals the {obj_type} amount.</value>
     </labels>
     <labels>
         <fullName>alloPaidPmtsExceedsOpp</fullName>
@@ -4549,6 +4565,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>errErrorNoContext</shortDescription>
         <value>No process context supplied to constructor</value>
+    </labels>
+    <labels>
+        <fullName>errErrorRecordRetrySuccessful</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>errErrorRecordRetrySuccessful</shortDescription>
+        <value>Record reprocessing completed successfully. </value>
     </labels>
     <labels>
         <fullName>errErrorTypeOther</fullName>
