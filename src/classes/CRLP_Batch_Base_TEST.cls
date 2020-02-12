@@ -554,6 +554,118 @@ private class CRLP_Batch_Base_TEST {
             'Recurring Donation Nonskew query should not include inner join');
     }
 
+    /**
+     * @description For Account-Contact-Soft-Credit rollups, validate that the FieldsToCheckForNonZero property
+     * returns back a single instance of a numeric field based on the mocked rollups configured for this
+     * rollup type.
+     */
+    @IsTest
+    private static void shouldIdentifySingleFieldToCheckForNonZeroInAcctContactSoftCredit() {
+
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('Date Field', null,
+                CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount, 'Matching_Gift_Info_Updated__c',
+                CRLP_Operation.RollupType.Last, 'CloseDate') + ',' +
+
+            CMT_UnitTestData_TEST.createRollupRecord('Numeric Field', null,
+                CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount, 'Matching_Gift_Amount_Min__c',
+                CRLP_Operation.RollupType.LARGEST, 'Amount__c') +
+
+            ']';
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        CRLP_Batch_Base_NonSkew rollupJob = new CRLP_Account_SoftCredit_BATCH(
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All
+        );
+        List<String> nonZeroFields = rollupJob.fieldsToCheckForNonZero;
+
+        System.assertEquals(1, nonZeroFields.size(), 'There should be one field identified');
+        System.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Matching_Gift_Amount_Min__c'), nonZeroFields[0]);
+    }
+
+    /**
+     * @description For Account-Soft-Credit rollups, validate that the FieldsToCheckForNonZero property
+     * does not find any numeric field based on the mocked rollups configured for this rollup type.
+     */
+    @IsTest
+    private static void shouldIdentifyNFieldsToCheckForNonZeroInAcctContactSoftCredit() {
+
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('Date Field', null,
+                CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount, 'Matching_Gift_Info_Updated__c',
+                CRLP_Operation.RollupType.Last, 'CloseDate') + ',' +
+
+            CMT_UnitTestData_TEST.createRollupRecord('String Field', null,
+                CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount, 'Description',
+                CRLP_Operation.RollupType.First, 'Type') +
+
+            ']';
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        CRLP_Batch_Base_NonSkew rollupJob = new CRLP_Account_SoftCredit_BATCH(
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All
+        );
+        List<String> nonZeroFields = rollupJob.fieldsToCheckForNonZero;
+
+        System.assertEquals(0, nonZeroFields.size(), 'There should have been no numeric fields to check');
+    }
+
+    /**
+     * @description For Account-Contact-Soft-Credit rollups, validate that the FieldsToCheckForNonZero property
+     * returns back a single instance of a numeric field based on the mocked rollups configured for this
+     * rollup type.
+     */
+    @IsTest
+    private static void shouldIdentifySingleFieldToCheckForNonZeroInAccountSoftCredit() {
+
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('Date Field', null,
+                CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'Matching_Gift_Info_Updated__c',
+                CRLP_Operation.RollupType.Last, 'CloseDate') + ',' +
+
+            CMT_UnitTestData_TEST.createRollupRecord('Numeric Field', null,
+                CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'Matching_Gift_Amount_Min__c',
+                CRLP_Operation.RollupType.LARGEST, 'Amount__c') +
+
+            ']';
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        CRLP_Batch_Base_NonSkew rollupJob = new CRLP_Account_AccSoftCredit_BATCH(
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All
+        );
+        List<String> nonZeroFields = rollupJob.fieldsToCheckForNonZero;
+
+        System.assertEquals(1, nonZeroFields.size(), 'There should be one field identified');
+        System.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Matching_Gift_Amount_Min__c'), nonZeroFields[0]);
+    }
+
+    /**
+     * @description For Account-Soft-Credit rollups, validate that the FieldsToCheckForNonZero property
+     * does not find any numeric field based on the mocked rollups configured for this rollup type.
+     */
+    @IsTest
+    private static void shouldIdentifyNFieldsToCheckForNonZeroInAccountSoftCredit() {
+
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('Date Field', null,
+                CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'Matching_Gift_Info_Updated__c',
+                CRLP_Operation.RollupType.Last, 'CloseDate') + ',' +
+
+            CMT_UnitTestData_TEST.createRollupRecord('String Field', null,
+                CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'Description',
+                CRLP_Operation.RollupType.First, 'Type') +
+
+            ']';
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        CRLP_Batch_Base_NonSkew rollupJob = new CRLP_Account_AccSoftCredit_BATCH(
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All
+        );
+        List<String> nonZeroFields = rollupJob.fieldsToCheckForNonZero;
+
+        System.assertEquals(0, nonZeroFields.size(), 'There should have been no numeric fields to check');
+    }
+
     /******************************** Helper Methods *****************************/
 
     /**
