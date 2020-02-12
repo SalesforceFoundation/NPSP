@@ -17,7 +17,5 @@ Enable Advanced Mapping
     Verify Advanced Mapping Is Not Enabled
     Click Toggle Button                       Advanced Mapping
     Wait For Message                          Advanced Mapping is enabled
-    Choose Frame                              Nonprofit Success Pack Settings
-    Click Toggle Button                       Gift Entry
-    Wait For Message                          Gift Entry Enabled
+
 
