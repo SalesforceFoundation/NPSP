@@ -102,13 +102,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.CUSTOM_LABELS.geButtonCancelAndClear;
     }
 
-    get saveButtonText() {
-        return this.isSingleGiftEntry ?
-            this.CUSTOM_LABELS.commonSave :
-            this.CUSTOM_LABELS.geButtonSaveNewGift;
-    }
-
-    @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
+   @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
     wiredGetRecordMethod({ error, data }) {
         if (data) {
             this.donorRecord = data;
@@ -688,11 +682,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     reset(objectMappingDeveloperName = null) {
-        this.dataImport = undefined;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         let fieldMappingDevNames = null;
-        if (objectMappingDeveloperName) {
+        if (objectMappingDeveloperName === null) {
+            this.dataImport = undefined;
+        } else {
             fieldMappingDevNames =
                 Object.values(GeFormService.fieldMappings).filter(
                     ({Target_Object_Mapping_Dev_Name, DeveloperName}) =>
@@ -712,16 +707,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     get saveActionLabel() {
-        if (this.isSingleGiftEntry) {
-            return this.CUSTOM_LABELS.commonSave;
-        }
-
-        switch (this.mode) {
-            case mode.UPDATE:
-                return this.CUSTOM_LABELS.commonUpdate;
-            default:
-                return this.CUSTOM_LABELS.geButtonSaveNewGift;
-        }
+        return this.isSingleGiftEntry ?
+            this.CUSTOM_LABELS.commonSave :
+            this.mode === mode.UPDATE ?
+                this.CUSTOM_LABELS.commonUpdate :
+                this.CUSTOM_LABELS.geButtonSaveNewGift;
     }
 
     @api
