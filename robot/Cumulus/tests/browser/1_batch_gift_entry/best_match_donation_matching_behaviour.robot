@@ -44,7 +44,7 @@ Best Match Donation Matching Behaviour
     ...                       Donation Amount=200
     Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
-    Sleep    2
+    Sleep    5
     Verify Row Count    2
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
