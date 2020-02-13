@@ -9,7 +9,7 @@
 }
 
 .section-transition {
-    max-height: 100vh;
+    max-height: 100%;
     transition: all 0.3s ease-in-out;
 }
 
