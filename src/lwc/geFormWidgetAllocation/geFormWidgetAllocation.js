@@ -248,16 +248,31 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if (!dataImportRow) {
             return;
         }
-        let recordProperties = {};
-        let gauKeys = Object.keys(dataImportRow).filter(key => {
-            return key.toLowerCase().includes('gau_allocation');
+        let fieldMappings = GeFormService.fieldMappings;
+        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
+            return key.toLowerCase().includes('gau_allocation_1');
         });
-        gauKeys.forEach(key => {
-            let sourceObj = dataImportRow[key];
-            
-        }); 
-        this.addRow(false, recordProperties);
+
+        Object.keys(dataImportRow).forEach(diKey => {
+            let properties = [];
+
+            gauMappingKeys.forEach(fieldMappingKey => {
+                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
+                let sourceObj = dataImportRow[diKey].sourceObj;
+
+                if(Object.keys(sourceObj).includes(sourceField)) {
+                    properties.push({
+                        [fieldMappings[fieldMappingKey].Target_Field_API_Name] : dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name]
+                    });
+                }
+            });
+
+            this.addRow(false, properties);
+        });
+
+
         // build widget row with record properties from the data import row
+        // this.addRow(false, recordProperties);
         
     }
 
