@@ -241,7 +241,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     /**
-     * Handle receiving a pub/sub event by re-rendering the GAU widget rows
+     * WIP: Handle receiving a pub/sub event by re-rendering the GAU widget rows
      */
     handleReceiveEvent(event) {
         let dataImportRow = JSON.parse(event.detail[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
