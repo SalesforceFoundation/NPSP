@@ -4,7 +4,7 @@ from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 
-@pageobject("Detail", "Opportunity")
+@pageobject("Details", "Opportunity")
 class OpportunityPage(BaseNPSPPage, DetailPage):
     object_name = "Opportunity"
 
@@ -12,7 +12,7 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         """ Verify we are on the opportunity details page
             by verifying that the url contains '/view'
         """
-        self.selenium.location_should_contain("/lightning/r/Opportunity/",message="Current page is not a Opportunity detail view")
+        self.selenium.wait_until_location_contains("/lightning/r/Opportunity/",message="Current page is not a Opportunity detail view")
 
 @pageobject("Listing", "Opportunity")
 class OpportunityListingPage(BaseNPSPPage, ListingPage):
@@ -22,7 +22,7 @@ class OpportunityListingPage(BaseNPSPPage, ListingPage):
         """ Verify we are on the opportunities listing page
             by verifying that the url contains '/list'
         """
-        self.selenium.location_should_contain("lightning/o/Opportunity/list",message="Current page is not a list page")
+        self.selenium.wait_until_location_contains("lightning/o/Opportunity/list",message="Current page is not a list page")
 
     def perform_delete_menu_operation_on(self,value,action):
         """ Identifies the value to delete from the List and chooses delete

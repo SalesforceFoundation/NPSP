@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -43,8 +45,8 @@ Test Case 2
     Select Tab  Related
     Click Related Table Item Link    Relationships    &{contact1}[FirstName] &{contact1}[LastName]
     Click Button    title=Edit Related Opportunity Contact Role
-    Wait For Locator  record.edit_form
-    Select Value From Dropdown   Related Opportunity Contact Role              Soft Credit
+    Wait For Locator  record.footer
+    Click Flexipage Dropdown   Related Opportunity Contact Role              Soft Credit
     Click Button    Save
     &{opportunity} =  API Create Opportunity    &{contact1}[AccountId]    Donation    Name=Reciprocal test $500 donation    Amount=500    ${ns}Primary_Contact__c=&{contact1}[Id]  
     Go To Record Home    &{opportunity}[Id]

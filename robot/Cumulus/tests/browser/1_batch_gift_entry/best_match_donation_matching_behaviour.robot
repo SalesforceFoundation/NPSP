@@ -1,7 +1,11 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/PaymentPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
+Library         DateTime
 Suite Setup      Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
@@ -11,9 +15,8 @@ Suite Teardown  Delete Records and Close Browser
 
 Best Match Donation Matching Behaviour
     
-    [tags]  stable
-    Set Window Size    1024    768  
-    Select App Launcher Tab   Batch Gift Entry
+    [tags]  stable 
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
@@ -29,8 +32,7 @@ Best Match Donation Matching Behaviour
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
-    Click Element With Locator    bge.field-input    Donation Date
-    Click BGE Button    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
@@ -40,10 +42,9 @@ Best Match Donation Matching Behaviour
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=200
-    Click Element With Locator    bge.field-input    Donation Date
-    Click BGE Button    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
-    Sleep    2
+    Sleep    5
     Verify Row Count    2
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
@@ -55,6 +56,7 @@ Best Match Donation Matching Behaviour
     Click Link With Text    @{value}[0]
     # Verify that a new payment and opportunity are created for the gift in closed won stage
     Select Window    @{value}[0] | Salesforce    7
+    Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=200.0
@@ -62,6 +64,7 @@ Best Match Donation Matching Behaviour
     ...    npe01__Paid__c=True
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
+    Current Page Should Be    Details    Opportunity
     ${opp_id} =   Save Current Record ID For Deletion     Opportunity  
     Navigate To And Validate Field Value    Amount    contains    $200.00
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
@@ -75,7 +78,8 @@ Best Match Donation Matching Behaviour
     Navigate To And Validate Field Value    Stage    contains    Closed Won
     Select Tab    Related
     Load Related List    GAU Allocations
-    Click Link    ${pay_no}
+    Click Link With Text    ${pay_no}
+    Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=100.0
