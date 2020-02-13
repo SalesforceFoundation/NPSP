@@ -41,58 +41,50 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     private static Integer NUM_OPPS_WITH_SINGLE_PAYMENT = 5;
 
     /**
-     * @description Create test data needed for the unit tests in this class
-     */
+    * @description Create test data needed for the unit tests in this class
+    */
     @TestSetup
     private static void testDataSetup() {
         TDTM_Config_API.disableAllTriggers();
 
-        npe03__Recurring_Donation__c openRd = new npe03__Recurring_Donation__c(
-            npe03__Amount__c = 100,
-            npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN
-        );
-
-        npe03__Recurring_Donation__c closedRd = new npe03__Recurring_Donation__c(
-            npe03__Amount__c = 1200,
-            npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_CLOSED
-        );
-
-        insert new List<npe03__Recurring_Donation__c>{ openRd, closedRd };
-
-        Map<Schema.SObjectField, Object> fieldValues = new Map<Schema.SObjectField, Object> {
-            Opportunity.Amount => 100,
-            Opportunity.npe03__Recurring_Donation__c => openRd.Id
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c> {
+            new TEST_RecurringDonationBuilder()
+                .withAmount(100)
+                .withOpenEndedStatusOpen()
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withAmount(1200)
+                .withOpenEndedStatusClosed()
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withAmount(1200)
+                .withOpenEndedStatusNone()
+                .build(),
+            new TEST_RecurringDonationBuilder()
+                .withAmount(1200)
+                .build()
         };
 
+        insert rds;
+
         //Build opps for open recurring donation
-        List<Opportunity> opps = buildOpps(1, fieldValues);
+        createOpps(1, rds[0].Id);
 
         //Build opps for closed recurring donation
-        fieldValues.put(Opportunity.npe03__Recurring_Donation__c, closedRd.Id);
-        opps.addAll(buildOpps(12, fieldValues));
-
-        insert opps;
+        createOpps(12, rds[1].Id);
 
         setupOppsWithPayments();
     }
 
     /**
-     * @description Creates opportunities with single and multiple payments
-     */
+    * @description Creates opportunities with single and multiple payments
+    */
     private static void setupOppsWithPayments() {
-        Map<Schema.SObjectField, Object> fieldValues = new Map<Schema.SObjectField, Object> {
-            Opportunity.Amount => 100
-        };
-
         List<Opportunity> opps = new List<Opportunity>();
 
-        List<Opportunity> oppsWithMultiplePayments = buildOpps(NUM_OPPS_WITH_MULTIPLE_PAYMENTS, fieldValues);
-        opps.addAll(oppsWithMultiplePayments);
+        List<Opportunity> oppsWithMultiplePayments = createOpps(NUM_OPPS_WITH_MULTIPLE_PAYMENTS);
 
-        List<Opportunity> oppsWithSinglePayment = buildOpps(NUM_OPPS_WITH_SINGLE_PAYMENT, fieldValues);
-        opps.addAll(oppsWithSinglePayment);
-
-        insert opps;
+        List<Opportunity> oppsWithSinglePayment = createOpps(NUM_OPPS_WITH_SINGLE_PAYMENT);
 
         List<npe01__OppPayment__c> payments = buildPaymentsForOpps(oppsWithMultiplePayments, 2);
         payments.addAll(buildPaymentsForOpps(oppsWithSinglePayment, 1));
@@ -102,10 +94,10 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
 
     /**
-     * @description Provide coverage test for the executed batch job. There's no way to verify that the
-     * job executed; and the job itself modifies no data that can be validated against.
-     * The lack of a failed test itself is an implicit assert that the batch job completed.
-     */
+    * @description Provide coverage test for the executed batch job. There's no way to verify that the
+    * job executed; and the job itself modifies no data that can be validated against.
+    * The lack of a failed test itself is an implicit assert that the batch job completed.
+    */
     @IsTest
     private static void testSObjectBatchJob() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
@@ -123,8 +115,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms OPPORTUNITIES job mode queries for the correct SObject type with the correct limit
-     */
+    * @description Confirms OPPORTUNITIES job mode queries for the correct SObject type with the correct limit
+    */
     @IsTest
     private static void opportunitiesJobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
@@ -141,8 +133,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms RECURRING_DONATIONS job mode queries for the correct SObject type with the correct limit
-     */
+    * @description Confirms RECURRING_DONATIONS job mode queries for the correct SObject type with the correct limit
+    */
     @IsTest
     private static void recurringDonationsJobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
         UTIL_OrgTelemetry_SObject_BATCH rdBatch =
@@ -160,8 +152,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms OPPORTUNITIES job modes query for the correct SObject type with the correct Id offset
-     */
+    * @description Confirms OPPORTUNITIES job modes query for the correct SObject type with the correct Id offset
+    */
     @IsTest
     private static void opportunitiesJobModeShouldReturnCorrectQueryWhenThereIsALastProcessedId() {
         List<SObject> expectedRecords = queryOpportunitiesInIdOrder();
@@ -181,8 +173,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms RECURRING_DONATIONS job modes query for the correct SObject type with the correct Id offset
-     */
+    * @description Confirms RECURRING_DONATIONS job modes query for the correct SObject type with the correct Id offset
+    */
     @IsTest
     private static void recurringDonationsJobModeShouldReturnCorrectQueryWhenThereIsALastProcessedId() {
         List<SObject> expectedRecords = queryRecurringDonationsInIdOrder();
@@ -202,8 +194,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms Recurring Donation Opportunity counts are calculated correctly
-     */
+    * @description Confirms Recurring Donation Opportunity counts are calculated correctly
+    */
     @IsTest
     private static void shouldCalculateCorrectRecurringDonationOppMetrics() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
@@ -226,8 +218,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms Recurring Donation counts are calculated correctly
-     */
+    * @description Confirms Recurring Donation counts are calculated correctly
+    */
     @IsTest
     private static void shouldCalculateCorrectRecurringDonationMetrics() {
         UTIL_OrgTelemetry_SObject_BATCH rdBatch =
@@ -244,16 +236,19 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             'The lastProcessedId should be cached correctly'
         );
 
-        System.assertEquals(2, rdBatch.rdAllCount,
+        System.assertEquals(recurringDonations.size(), rdBatch.rdAllCount,
             'The number of Recurring Donations should be tracked correctly');
 
         System.assertEquals(1, rdBatch.rdDiffCount,
             'The number of Recurring Donations with an amount differing from its opportunities should be tracked correctly');
+        
+        System.assertEquals(2, rdBatch.rdFixedLengthCount,
+            'The number of fixed-length Recurring Donations should be tracked correctly');
     }
 
     /**
-     * @description Confirms Opps with Payments counts are calculated correctly
-     */
+    * @description Confirms Opps with Payments counts are calculated correctly
+    */
     @IsTest
     private static void shouldCalculateOppPaymentMetrics() {
         UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
@@ -281,9 +276,9 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms Recurring Donation Opportunity metrics are captured in FeatureManagement
-     * at the end of the batch
-     */
+    * @description Confirms Recurring Donation Opportunity metrics are captured in FeatureManagement
+    * at the end of the batch
+    */
     @isTest
     private static void shouldCaptureRecurringDonationOppMetricsInFeatureManagement() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
@@ -318,8 +313,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms Recurring Donation metrics are captured in FeatureManagement at the end of the batch
-     */
+    * @description Confirms Recurring Donation metrics are captured in FeatureManagement at the end of the batch
+    */
     @isTest
     private static void shouldCaptureRecurringDonationMetricsInFeatureManagement() {
         UTIL_OrgTelemetry_SObject_BATCH rdBatch =
@@ -331,6 +326,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
         rdBatch.rdAllCount = 4;
         rdBatch.rdDiffCount = 3;
+        rdBatch.rdFixedLengthCount = 5;
 
         Test.startTest();
         rdBatch.finish(null);
@@ -351,94 +347,92 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             ),
             'setPackageIntegerValue should have been called with the feature Data_CountRdsWithDiffAmount and set correctly'
         );
+
+        System.assertEquals(
+            rdBatch.rdFixedLengthCount,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature DataCount_ONETIME_Use and set correctly'
+        );
     }
 
-    /**
-     * @description Confirms Opportunity Payment metrics are captured in FeatureManagement at the end of the batch
-     * when Auto Payments are enabled
-     */
-    /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
-             you move forward with Data_OppPaymentsWithoutPaymentsEnabled
-    @isTest
-    private static void shouldCaptureOppPaymentMetricsInFeatureManagementWhenAutoPaymentsEnabled() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
-        );
+    /*
+    * @description Confirms Opportunity Payment metrics are captured in FeatureManagement at the end of the batch	    
+    * @description Confirms batch is not run again if lastProcessedId is null
+    * when Auto Payments are enabled	
+    */	
+    /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when	
+            you move forward with Data_OppPaymentsWithoutPaymentsEnabled	
+    @isTest	
+    private static void shouldCaptureOppPaymentMetricsInFeatureManagementWhenAutoPaymentsEnabled() {	
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(	
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)	
+        );	
+        UTIL_OrgTelemetry_SObject_BATCH paymentBatch =	
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);	
+        paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);	
+        paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;	
+        Test.startTest();	
+        paymentBatch.finish(null);	
+        Test.stopTest();	
+        System.assertEquals(	
+            NUM_OPPS_WITH_MULTIPLE_PAYMENTS,	
+            featureManagementMock.packageIntegerValuesByName.get(	
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()	
+            ),	
+            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and set correctly'	
+        );	
+        System.assertEquals(	
+            0,	
+            featureManagementMock.packageIntegerValuesByName.get(	
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()	
+            ),	
+            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set correctly'	
+        );	
+    }	
+    */	
 
-        UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
-        paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+    /**	
+    * @description Confirms Opportunity Payment metrics are captured in FeatureManagement at the end of the batch	
+    * when Auto Payments are not enabled	
+    */	
 
-        paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;
-
-        Test.startTest();
-        paymentBatch.finish(null);
-        Test.stopTest();
-
-        System.assertEquals(
-            NUM_OPPS_WITH_MULTIPLE_PAYMENTS,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and set correctly'
-        );
-
-        System.assertEquals(
-            0,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set correctly'
-        );
-    }
-    */
-
-    /**
-     * @description Confirms Opportunity Payment metrics are captured in FeatureManagement at the end of the batch
-     * when Auto Payments are not enabled
-     */
-
-    /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
-             you move forward with Data_OppPaymentsWithoutPaymentsEnabled
-
-    @isTest
-    private static void shouldCaptureOppPaymentMetricsInFeatureManagementWhenAutoPaymentsNotEnabled() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)
-        );
-
-        UTIL_OrgTelemetry_SObject_BATCH paymentBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
-        paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
-        paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;
-        paymentBatch.oppsWithPayments = NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT;
-
-        Test.startTest();
-        paymentBatch.finish(null);
-        Test.stopTest();
-
-        System.assertEquals(
-            NUM_OPPS_WITH_MULTIPLE_PAYMENTS,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and set correctly'
-        );
-
-        System.assertEquals(
-            NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()
-            ),
-            'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set correctly'
-        );
+    /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when	
+            you move forward with Data_OppPaymentsWithoutPaymentsEnabled	
+    @isTest	
+    private static void shouldCaptureOppPaymentMetricsInFeatureManagementWhenAutoPaymentsNotEnabled() {	
+       UTIL_CustomSettingsFacade.getContactsSettingsForTests(	
+           new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false)	
+       );	
+       UTIL_OrgTelemetry_SObject_BATCH paymentBatch =	
+           new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);	
+       paymentBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);	
+       paymentBatch.oppsWithMultiplePaymentsCount = NUM_OPPS_WITH_MULTIPLE_PAYMENTS;	
+       paymentBatch.oppsWithPayments = NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT;	
+       Test.startTest();	
+       paymentBatch.finish(null);	
+       Test.stopTest();	
+       System.assertEquals(	
+           NUM_OPPS_WITH_MULTIPLE_PAYMENTS,	
+           featureManagementMock.packageIntegerValuesByName.get(	
+               UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountOppsWithMultiplePayments.name()	
+           ),	
+           'setPackageIntegerValue should have been called with the feature Data_CountOppsWithMultiplePayments and set correctly'	
+       );	
+       System.assertEquals(	
+           NUM_OPPS_WITH_MULTIPLE_PAYMENTS + NUM_OPPS_WITH_SINGLE_PAYMENT,	
+           featureManagementMock.packageIntegerValuesByName.get(	
+               UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name()	
+           ),	
+           'setPackageIntegerValue should have been called with the feature Data_OppPaymentsWithoutPaymentsEnabled and set correctly'	
+       );	
     }
     */
 
     /**
-     * @description Confirms batch is not run again if lastProcessedId is null
-     */
+    * @description Confirms batch is not run again if lastProcessedId is null
+    */
     @isTest
     private static void shouldNotChainNextBatchIfLastProcessedIdIsNull() {
         UTIL_OrgTelemetry_SObject_BATCH batch =
@@ -455,9 +449,9 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms that the finish method does not chain the next batch
-     * if there are no more records to process
-     */
+    * @description Confirms that the finish method does not chain the next batch
+    * if there are no more records to process
+    */
     @isTest
     private static void shouldNotChainNextBatchIfThereAreNoMoreRecordsToProcess() {
         List<Opportunity> testOpps = queryOpportunitiesInIdOrder();
@@ -477,13 +471,13 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms that the finish method chains the next batch with an offset of the last Id processed.
-     * Cannot assert on much else other than that job was ran. During the test, state on batch is reverted
-     * after the batch is executed. For example, rdCountAll = 0 on the batch instance before the test runs.
-     * The finish() method chains the next batch and rdCountAll is incremented to 1. After stopTest(), rdCountAll is
-     * reset to 0. This can be confirmed by putting a failing assertion in the batch class itself where rdCountAll is
-     * actually incremented and outputing rdCountAll
-     */
+    * @description Confirms that the finish method chains the next batch with an offset of the last Id processed.
+    * Cannot assert on much else other than that job was ran. During the test, state on batch is reverted
+    * after the batch is executed. For example, rdCountAll = 0 on the batch instance before the test runs.
+    * The finish() method chains the next batch and rdCountAll is incremented to 1. After stopTest(), rdCountAll is
+    * reset to 0. This can be confirmed by putting a failing assertion in the batch class itself where rdCountAll is
+    * actually incremented and outputing rdCountAll
+    */
     @isTest
     private static void shouldChainNextBatchOffsetByLastRecordProcessed() {
         List<npe03__Recurring_Donation__c> recurringDonations = queryRecurringDonationsInIdOrder();
@@ -519,69 +513,77 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Builds test opportunity records with the given field values
-     * @param numOpps: number of opportunities to build
-     * @param fieldValues: map of values by SObjectField to set on the opportunities
-     * @return List of uninserted Opportunities
-     */
-    private static List<Opportunity> buildOpps(Integer numOpps, Map<Schema.SObjectField, Object> fieldValues) {
-        List<Opportunity> opps = new List<Opportunity>();
+    * @description Create Opportunities without parent Rd
+    * @param size amount of opps to create
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> createOpps(Integer size) {
+        return createOpps(size, null);
+    }
 
-        for (Integer i = 0; i < numOpps; i++) {
-            Opportunity opp = new Opportunity(
-                Name = 'Test Opp ' + i,
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                CloseDate = Date.today()
-            );
+    /**
+    * @description Create opportunities with parent Rd
+    * @param size amount of opps to create
+    * @param rd The parent Recurring Donation Record
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> createOpps(Integer size, Id rdId) {
+        List<Opportunity> opps = new TEST_OpportunityBuilder()
+            .withAmount(100)
+            .withClosedWonStage()
+            .withCloseDate(Date.today())
+            .withRecurringDonation(rdId)
+            .build(size);
 
-            for (Schema.SObjectField field : fieldValues.keySet()) {
-                opp.put(field, fieldValues.get(field));
-            }
-
-            opps.add(opp);
-        }
-
+        insert opps;
         return opps;
     }
 
     /**
-     * @description Builds test payments records for given opportunities
-     * @param opps: Parent opportunities to build payments for
-     * @param numPayments: Number of payments for each parent opportunity
-     * @return List of uninserted npe01__OppPayment__c records
-     */
+    * @description Builds test payments records for given opportunities
+    * @param opps: Parent opportunities to build payments for
+    * @param numPayments: Number of payments for each parent opportunity
+    * @return List of uninserted npe01__OppPayment__c records
+    */
     private static List<npe01__OppPayment__c> buildPaymentsForOpps(List<Opportunity> opps, Integer numPayments) {
         List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
+
         for (Opportunity opp : opps) {
             for (Integer i = 0; i < numPayments; i++) {
-                payments.add(new npe01__OppPayment__c(npe01__Payment_Amount__c = 100, npe01__Opportunity__c = opp.Id));
+                payments.add(
+                    new npe01__OppPayment__c(
+                        npe01__Payment_Amount__c = 100,
+                        npe01__Opportunity__c = opp.Id
+                    )
+                );
             }
         }
+        
         return payments;
     }
 
 
     /**
-     * @description Queries opportunities in order of Id
-     * @return List of Opportunity ordered by Id
-     */
+    * @description Queries opportunities in order of Id
+    * @return List of Opportunity ordered by Id
+    */
     private static List<Opportunity> queryOpportunitiesInIdOrder() {
         return [SELECT Id FROM Opportunity ORDER BY Id];
     }
 
     /**
-     * @description Queries recurring donations in order of Id
-     * @return List of npe03__Recurring_Donation__c ordered by Id
-     */
+    * @description Queries recurring donations in order of Id
+    * @return List of npe03__Recurring_Donation__c ordered by Id
+    */
     private static List<npe03__Recurring_Donation__c> queryRecurringDonationsInIdOrder() {
         return [SELECT Id FROM npe03__Recurring_Donation__c ORDER BY Id];
     }
 
     /**
-     * @description Confirms records are in the same order and are the same size
-     * @param expectedRecords: list of expected, ordered SObjects to validate against
-     * @param actualRecords: list of actual, ordered SObjects to validate
-     */
+    * @description Confirms records are in the same order and are the same size
+    * @param expectedRecords: list of expected, ordered SObjects to validate against
+    * @param actualRecords: list of actual, ordered SObjects to validate
+    */
     private static void assertOnOrderedSObjects(List<SObject> expectedRecords, List<SObject> actualRecords) {
         System.assertEquals(expectedRecords.size(), actualRecords.size(),
             'The correct number of records should be returned');
@@ -593,9 +595,9 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Retrieves UTIL_OrgTelemetry_SObject_BATCH batch jobs
-     * @return List of AsyncApexJob for class UTIL_OrgTelemetry_SObject_BATCH
-     */
+    * @description Retrieves UTIL_OrgTelemetry_SObject_BATCH batch jobs
+    * @return List of AsyncApexJob for class UTIL_OrgTelemetry_SObject_BATCH
+    */
     private static List<AsyncApexJob> queryOrgTelemetrySObjectBatchJobs() {
         return [
             SELECT Id FROM AsyncApexJob
