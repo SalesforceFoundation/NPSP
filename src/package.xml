@@ -1492,6 +1492,8 @@
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_ContactChangeIsRestricted</members>
+        <members>RD2_CurrencyChangeIsRestrictedOnOpp</members>
+        <members>RD2_CurrencyChangeIsRestrictedOnRD</members>
         <members>RD2_CurrentScheduleTitle</members>
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>

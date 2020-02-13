@@ -150,9 +150,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
 
-        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd1), 'Closed RD should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
-        System.assertEquals(false, evalService.isNewInstallmentCandidate(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rd1), 'Closed RD should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rd2), 'RD with no Schedules should not be eligible for an Installment Opp');
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rd3), 'RD without a Next Donation Date should not be eligible for an Installment Opp');
     }
 
     /**
@@ -190,10 +190,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
 
-        System.assertEquals(true, evalService.isNewInstallmentCandidate(rdNew), 
+        System.assertEquals(true, evalService.isNewOpportunityCandidate(rdNew), 
             'RD having Schedules and no related Opp should be eligible for an Installment Opp');
 
-        System.assertEquals(false, evalService.isNewInstallmentCandidate(rdOld), 
+        System.assertEquals(false, evalService.isNewOpportunityCandidate(rdOld), 
             'RD having Schedules and a related Opp should not be eligible for an Installment Opp');
     }
 
@@ -514,6 +514,33 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+     
+    /**
+     * @description Verifies Opps are processed when currency on RD is changed only
+     */
+    @IsTest
+    private static void shouldEvaluateOppsWhenRDCurrencyIsChanged() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withCurrencyIsoCode('CAD')
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        npe03__Recurring_Donation__c updatedRD = rd.clone();
+        rd.put(UTIL_Currency.CURRENCY_ISO_CODE_FIELD, 'USD');
+
+        RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
+        System.assertEquals(true, evalService.hasKeyFieldChanged(updatedRd, rd),
+            'Opps should be evaluated when currency on related RD is changed only');
     }
 
     /**
