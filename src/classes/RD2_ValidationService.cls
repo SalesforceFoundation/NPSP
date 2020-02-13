@@ -211,7 +211,7 @@ public with sharing class RD2_ValidationService {
     /**
     * @description Validate when contact or account change is permitted on update of rd
     * @param rds The Recurring Donations to validate
-    * @param oldRds The old list of Recurring Donations
+    * @param oldRd The previous version of the Recurring Donation
     */
     private void validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
 
