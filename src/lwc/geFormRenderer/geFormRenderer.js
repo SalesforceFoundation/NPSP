@@ -834,21 +834,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
     }
 
-    handleChangePicklist(event) {
-        const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
-        const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
-        const donorTypeFieldApiName = DONATION_DONOR_FIELDS.donationDonorField;
-        const picklistFieldApiName = event.detail.fieldApiName;
-        const picklistValue = event.detail.value;
+    handleChangeDonationDonor(event) {
+        this._donationDonor = event.detail.value;
+        this.setReviewDonationsDonorProperties(this.donorId);
+    }
 
-        if (picklistFieldApiName === donorTypeFieldApiName) {
-            const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-            const sectionData = this.getData(sectionsList);
-            const diRecord = sectionData.diRecord;
-            const picklistDonorType = picklistValue === 'Account1' ? 'Account' : 'Contact';
-            const recordId = picklistDonorType === 'Account' ? diRecord[account] : diRecord[contact];
-
-            this.setReviewDonationsDonorProperties(recordId, picklistDonorType);
+    get donorId() {
+        switch (this._donationDonor) {
+            case this.donationDonorEnum.account1:
+                return this._account1Imported;
+            case this.donationDonorEnum.contact1:
+                return this._contact1Imported;
+            default:
+                return false;
         }
     }
 

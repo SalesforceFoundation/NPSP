@@ -5,6 +5,7 @@ import GeLabelService from 'c/geLabelService';
 import {getObjectInfo} from "lightning/uiObjectInfoApi";
 import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -48,15 +49,12 @@ export default class GeFormField extends LightningElement {
         }
 
         if (this.isPicklist) {
-            const detail = {
-                value: this.value,
-                fieldApiName: this.element.fieldApiName
+            if (this.fieldApiName === DONATION_DONOR_FIELD.fieldApiName) {
+                const changeDonationDonorEvent = new CustomEvent(
+                    'changedonationdonor',
+                    {detail: {value: this.value}});
+                this.dispatchEvent(changeDonationDonorEvent);
             }
-
-            const changePicklistEvent = new CustomEvent(
-                'changepicklist',
-                { detail: detail });
-            this.dispatchEvent(changePicklistEvent);
         }
 
         if(this.isRichText) {
