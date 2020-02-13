@@ -68,7 +68,9 @@ public with sharing class UTIL_SObject {
     * @return Set<Id>
     */
     public static Set<Id> extractId(List<SObject> records, Schema.SObjectField field) {
-        return new Set<Id>((List<Id>) extractField(List<Id>.Class, records, field.getDescribe().getName()));
+        Set<Id> values = new Set<Id>((List<Id>) extractField(List<Id>.Class, records, field.getDescribe().getName()));
+        values.remove(null);
+        return values;
     }
 
     /***
