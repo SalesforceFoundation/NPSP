@@ -112,6 +112,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             state.isReady = service.isRecurringDonations2Ready();
             state.isEnabled = service.isRecurringDonations2Enabled();
 
+
             if (String.isBlank(jsonState)) {
                 state.isConfirmed = false;
                 state.isMetaLaunched = false;
@@ -119,7 +120,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             } else {
                 state.isMetaLaunched = state.isMetaLaunched && state.isEnabled;
                 state.isMetaConfirmed = state.isMetaConfirmed && state.isMetaLaunched && hasMetaDeployCompleted();
-            }
+            }      
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
@@ -270,11 +271,21 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         Id jobId;
         
         try {
+            Boolean isStateUpdate = false;
             EnablementState state = getEnablementState();
+
             if (state.isMetaConfirmed) {
                 state.isDryRun2 = true;
+                isStateUpdate = true;
+
+            } else if (!state.isEnabled && state.isConfirmed && getDryRunDaysBetween() > 7) {
+                state.isConfirmed = false;
+                isStateUpdate = true;
+            }
+
+            if (isStateUpdate) {
                 saveEnablementState(state);
-            } 
+            }
 
             RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
             jobId = Database.executeBatch(batch, batch.batchSize);
@@ -284,6 +295,14 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
         
         return jobId;
+    }
+
+    /***
+    * @description Determines number of days passed since the dry run batch job has completed
+    * @return Integer
+    */
+    private static Integer getDryRunDaysBetween() {
+        return new UTIL_BatchJobService().getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH');
     }
 
     /***

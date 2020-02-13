@@ -1332,6 +1332,7 @@
         <members>AssistiveTextActive</members>
         <members>AssistiveTextComplete</members>
         <members>AssistiveTextError</members>
+        <members>AssistiveTextInfo</members>
         <members>AssistiveTextNewWindow</members>
         <members>AssistiveTextRecordIcon</members>
         <members>AssistiveTextWarning</members>
@@ -1506,6 +1507,7 @@
         <members>RD2_EnablementDryRunComplete</members>
         <members>RD2_EnablementDryRunIntro</members>
         <members>RD2_EnablementDryRunNextButton</members>
+        <members>RD2_EnablementDryRunOutdatedInfo</members>
         <members>RD2_EnablementDryRunSkipButton</members>
         <members>RD2_EnablementDryRunStopButton</members>
         <members>RD2_EnablementDryRunTitle</members>
