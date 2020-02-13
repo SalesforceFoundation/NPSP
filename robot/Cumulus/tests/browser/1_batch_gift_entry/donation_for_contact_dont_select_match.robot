@@ -1,7 +1,10 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
+Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -10,7 +13,6 @@ Suite Teardown  Delete Records and Close Browser
 Dont select match for contact new donation with grid changes
     #Enter a donation for a contact that has an exact opp match, don't select the match, make grid changes, and process batch
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -25,7 +27,7 @@ Dont select match for contact new donation with grid changes
     Store Session Record      Account    &{contact}[AccountId]
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
@@ -36,7 +38,7 @@ Dont select match for contact new donation with grid changes
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
-    Click Field And Select Date    Donation Date    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Sleep    2
     Verify Row Count    1
@@ -63,14 +65,13 @@ Dont select match for contact new donation with grid changes
     Select Window    ${value} | Salesforce    10
     ${opp_name}    Return Locator Value    check_field_spl    Opportunity
     Click Link    ${opp_name}
+    Current Page Should Be    Details    Opportunity
     ${newopp_id}    Save Current Record ID For Deletion      Opportunity
     Verify Expected Values    nonns    Opportunity    ${newopp_id}
     ...    Amount=20.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
     Go To Record Home    &{contact}[Id]
-    Select Tab    Related
-    Load Related List    Opportunities
     Validate Related Record Count     Opportunities     2
 
     
