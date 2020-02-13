@@ -145,7 +145,9 @@ public with sharing class RD2_ValidationService {
             addError(rd, System.Label.RD2_AmountMustBeValid);
         }
         
-        if (rd.InstallmentFrequency__c == null || rd.InstallmentFrequency__c > 20) {
+        if (rd.InstallmentFrequency__c == null
+                || rd.InstallmentFrequency__c < 1
+                || rd.InstallmentFrequency__c > 20) {
             addError(rd, System.Label.RD2_InstallmentFrequencyMustBeValid);
         }
 

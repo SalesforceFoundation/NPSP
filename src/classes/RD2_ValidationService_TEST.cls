@@ -561,30 +561,31 @@ private with sharing class RD2_ValidationService_TEST {
     * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty) 
     */
     @isTest
-    private static void shouldBlockRdUpdateWhenInstallmentFrequencyChangesToGreaterThan20() {
+    private static void shouldBlockRdUpdateWhenInstallmentFrequencyChangesIsInvalid() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+        List<npe03__Recurring_Donation__c> rds = getRecurringDonationBuilder()
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
-            .build();
+            .build(2);
             
-        insert rd;
+        insert rds;
 
-        rd.InstallmentFrequency__c = 21;
+        rds[0].InstallmentFrequency__c = 21;
+        rds[1].InstallmentFrequency__c = 0;
 
         String errMessage = '';
 
-        try {
-            Test.startTest();
-            update rd;
-            Test.stopTest();
-        } catch (DmlException e) {
-            errMessage = e.getMessage();
-        }
+        Test.startTest();
+        List<Database.SaveResult> results = Database.update(rds, false);
+        Test.stopTest();
 
-        System.assert(errMessage.contains(System.Label.RD2_InstallmentFrequencyMustBeValid),
-            'RD update should fail due to invalid installment frequency with the message: ' + System.Label.RD2_InstallmentFrequencyMustBeValid);
+        for (Database.SaveResult result : results) {
+            System.assert(
+                result.getErrors()[0].getMessage().contains(System.Label.RD2_InstallmentFrequencyMustBeValid),
+                'RD update should fail due to invalid installment frequency with the message: ' + System.Label.RD2_InstallmentFrequencyMustBeValid
+            );
+        }
     }
 
     /***
