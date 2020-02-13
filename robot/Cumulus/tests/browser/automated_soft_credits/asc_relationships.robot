@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -15,15 +17,19 @@ Create ASC for Related Contact
     Go To Record Home    &{contact1}[Id]
     Select Tab    Related
     Click Related List Button  Relationships    New
+    Wait Until Modal Is Open
     Populate Lookup Field    Related Contact    &{contact2}[FirstName] &{contact2}[LastName]
     Select Value From Dropdown   Type              Employer
     Select Value From Dropdown   Related Opportunity Contact Role              Soft Credit
     Click Modal Button        Save
+    Wait Until Modal Is Closed
     Click Related List Button  Relationships    New
+    Wait Until Modal Is Open
     Populate Lookup Field    Related Contact    &{contact3}[FirstName] &{contact3}[LastName]
     Select Value From Dropdown   Type              Coworker
     Select Value From Dropdown   Related Opportunity Contact Role              Solicitor
     Click Modal Button        Save
+    Wait Until Modal Is Closed
     #&{relation} =  API Create Relationship    &{contact1}[Id]    &{contact3}[Id]    Coworker    ${ns}Related_Opportunity_Contact_Role__c=Solicitor
     &{opportunity} =  API Create Opportunity    &{Contact1}[AccountId]    Donation    Name=&{Contact1}[FirstName] $100 donation    Amount=100
     Go To Record Home    &{opportunity}[Id]
