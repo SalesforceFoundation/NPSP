@@ -1,6 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -27,18 +30,16 @@ Convert Lead To Account
     Wait Until Modal Is Closed
     Go To Object Home         Lead
     Click Link                link=${first_name} ${last_name}
-    Wait Until Page Contains    Convert
-    Click Link                link=Convert
+    Click Actions Link          Convert
     Click Lead Button    vfFrameId    button    Convert
+    Current Page Should Be    Details    Contact
     #Sleep    2
     # Select Frame with Name      vfFrameId
     # Click Element             //input[@value="Convert"]
     #Sleep    2
-    Go To Object Home         Contact
-    Reload Page
+    Go To Page        Listing         Contact
     Page Should Contain Link    ${first_name} ${last_name}
-    Go To Object Home         Account
-    Reload Page
+    Go To Page        Listing         Account
     Page Should Contain Link    ${last_name} Household
     Page Should Contain Link    ${company}
 
