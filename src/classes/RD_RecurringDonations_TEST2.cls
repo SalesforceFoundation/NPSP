@@ -195,7 +195,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         insert c;
 
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withInstallments(0)
+            .withPlannedInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -623,7 +623,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriodYearly()
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
             .withNextPaymentDate(TODAY)
@@ -1233,7 +1233,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         rdList.add(TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(con.Id)
             .withAmount(100)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriodMonthly()
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
             .withScheduleTypeMultiplyValue()
@@ -1275,7 +1275,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //--------------------------------
         // Setup the Recurring Donation
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withInstallments(0)
+            .withPlannedInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -1347,7 +1347,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //--------------------------------
         // Setup the First Recurring Donation
         TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withInstallments(0)
+            .withPlannedInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -1419,7 +1419,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //--------------------------------
         // Setup the First Recurring Donation
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withInstallments(0)
+            .withPlannedInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -1571,7 +1571,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             .withAlwaysUseLastDayOfMonth(true)
             .withOpenEndedStatusOpen()
             .withOwnerId()
-            .withInstallments(null)
+            .withPlannedInstallments(null)
             .build();
         rd.npe03__Installments__c = null;   // force this to null because the default is 1
         Test.startTest();

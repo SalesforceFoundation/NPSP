@@ -498,6 +498,111 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertEquals(numSchedulesPreUpdate, rdScheduleGateway.getRecords(rd).size(), 'Number of schedules pre- and post-update should be equal');
     }
 
+    /***
+    * @description Verifies that when an Open Ended RD is created with a NumberOfPlannedInstallments equal
+    * to one, that the NumberOfPlannedInstallments field is changed to null
+    */
+    @isTest
+    private static void shouldSetNumPlannedInstallmentsToNullWhenOpenEnded() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withPlannedInstallments(1)
+            .withRecurringTypeOpen()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(null, rd.npe03__Installments__c,
+            'The NumberOfPlannedInstallments field should be null for an Open Ended RD');
+    }
+
+    /***
+    * @description Verifies that when a Fixed Length RD is created with a NumberOfPlannedInstallments value
+    * of one, that the value remains unchanged
+    */
+    @isTest
+    private static void shouldNotChangePlannedInstallmentsWhenFixedLength() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withPlannedInstallments(1)
+            .withRecurringTypeFixed()
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(1, rd.npe03__Installments__c,
+            'The NumberOfPlannedInstallments field should be unchanged');
+    }
+
+    /***
+    * @description Verifies that when the Number of Paid Installments for a Fixed Length RD is modified,
+    * but stil less than the NumberOfPlannedInstallments, that the RD Status remains as Active.
+    */
+    @isTest
+    private static void shouldNotChangeFixedLengthRecurringDonationWhenNumberPaidInstallmentsChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withPlannedInstallments(5)
+            .withRecurringTypeFixed()
+            .build();
+
+        Test.startTest();
+        insert rd;
+
+        rd.npe03__Total_Paid_Installments__c = rd.npe03__Installments__c - 1;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(5, rd.npe03__Installments__c,
+            'The NumberOfPlannedInstallments field should be unchanged');
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
+            'The RD Status should be Active');
+    }
+
+    /***
+    * @description Verifies that when the Number of Paid Installments for a Fixed Length RD reaches
+    * the same value as the Number of Planned Installments, that the RD is Closed
+    */
+    @isTest
+    private static void shouldCloseFixedLengthRecurringDonationWhenReachNumPlannedInstallments() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withPlannedInstallments(5)
+            .withPaidInstallments(4)
+            .withRecurringTypeFixed()
+            .build();
+
+        Test.startTest();
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
+            'The RD Status should be Active');
+
+        rd.npe03__Total_Paid_Installments__c = rd.npe03__Installments__c;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(5, rd.npe03__Installments__c,
+            'The NumberOfPlannedInstallments field should be unchanged');
+        System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c,
+            'The RD Status should be Closed');
+        System.assertEquals(RD2_Constants.FIXED_TYPE_CLOSED_REASON, rd.ClosedReason__c,
+            'The RD ClosedReason field should be set to "' + RD2_Constants.FIXED_TYPE_CLOSED_REASON + '"');
+    }
+
 
     // Helpers
     ///////////////////

@@ -192,7 +192,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies an exception is thrown when Amount is not specified, 
+    * @description Verifies an exception is thrown when Amount is not specified,
     * zero or a negative number on an Active Recurring Donation.
     */
     @isTest
@@ -446,7 +446,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(householdContacts[0].Id)
             .build();
         insert rd;
-        
+
         rd.npe03__Contact__c = householdContacts[1].Id;
 
         Test.startTest();
@@ -458,7 +458,7 @@ private with sharing class RD2_ValidationService_TEST {
         System.assertEquals(householdContacts[1].Id, rd.npe03__Contact__c,
             'The Rd should be successfully updated with new contact');
     }
-    
+
     /***
     * @description Verifies Rd with closed opp can be updated to different organization
     */
@@ -527,6 +527,96 @@ private with sharing class RD2_ValidationService_TEST {
             'The Rd should have the household contact as its primary contact');
     }
 
+    /***
+    * @description Verifies if it displays error message when a fixed length RD has no value in
+    * the NumberOfPlannedInstallments field
+    */
+    @isTest
+    private static void shouldFailWhenFixedLengthWithNoInstallments() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilderFixed()
+            .withContact(getContact().Id)
+            .withPlannedInstallments(null)
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsRequiredWhenFixed), errMessage);
+    }
+
+    /***
+    * @description Verifies if it displays error message when a Open Ended RD has a
+    * the NumberOfPlannedInstallments value greater than one
+    */
+    @isTest
+    private static void shouldFailWhenOpenWithInstallmentsGreaterThanOne() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withPlannedInstallments(2)
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen), errMessage);
+    }
+
+    /***
+    * @description Verifies if it displays error message when a fixed length RD has a negative value in
+    * the NumberOfPlannedInstallments field
+    */
+    @isTest
+    private static void shouldFailWhenFixedLengthInstallmentsNegative() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilderFixed()
+            .withContact(getContact().Id)
+            .withPlannedInstallments(-1)
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsRequiredWhenFixed), errMessage);
+    }
+
+    /***
+    * @description Verifies if it displays error message when a fixed length RD has a NumberOfPlannedInstallments
+    * value that is less than the NumberOfPaidInstallments field.
+    */
+    @isTest
+    private static void shouldFailWhenFixedLengthPaidInstallmentsGreaterThanPlanned() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilderFixed()
+            .withContact(getContact().Id)
+            .withPlannedInstallments(12)
+            .withPaidInstallments(13)
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_NumberPlannedInstallmentsCannotBeLessThanPaid), errMessage);
+    }
+
+
     // Helper Methods
     /////////////////////
 
@@ -562,6 +652,12 @@ private with sharing class RD2_ValidationService_TEST {
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)
             .withCalculateNextDonationDate();
+    }
+
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilderFixed() {
+        return getRecurringDonationBuilder()
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(12);
     }
 
     /**

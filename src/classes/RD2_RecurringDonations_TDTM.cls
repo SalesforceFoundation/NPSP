@@ -94,6 +94,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         autogenerateNames(rds, oldRds, triggerAction);
         validate(rds, oldRds, triggerAction);
+        handleDataTransformationInBeforeContext(rds, oldRds, triggerAction);
         handleRDSchedules(rds, oldRds, triggerAction);
 
         // Insert/Update any pending RecurringDonationSchedule records before the
@@ -124,6 +125,38 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             namingService.autogenerateNamesOnChange(rds, oldRds);
         }
+    }
+
+    /***
+    * @description Data Transformation Actions for Before Insert and Update Trigger Actions:
+    * - If RecurringType is Open and NumOfPlannedInstallments = 1, set NumOfPlannedInstallments to null
+    * - If RecurringType is Fixed and NumberOfPaidInstallments is >= NumOfPlannedInstallments Close RD
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, BeforeUpdate, etc.
+    */
+    public void handleDataTransformationInBeforeContext(List<npe03__Recurring_Donation__c> rds,
+            List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction
+    ) {
+
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert &&
+                triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
+            return;
+        }
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN
+                    && rd.npe03__Installments__c == 1) {
+                rd.npe03__Installments__c = null;
+            }
+
+            if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED
+                    && rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c) {
+                rd.ClosedReason__c = RD2_Constants.FIXED_TYPE_CLOSED_REASON;
+                rd.Status__c = RD2_Constants.STATUS_CLOSED;
+            }
+        }
+
     }
 
     /***

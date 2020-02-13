@@ -503,7 +503,7 @@ private class RD2_DataMigration_TEST {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withInstallmentPeriodYearly()
-            .withInstallments(installments)
+            .withPlannedInstallments(installments)
             .withScheduleType(RD_Constants.SCHEDULE_TYPE_DIVIDE_BY)
             .withOpenEndedStatusNone()
             .build();
@@ -1129,22 +1129,22 @@ private class RD2_DataMigration_TEST {
 
         Opportunity opp = oppById.get(opps[0].Id);
         System.assertEquals(true, opp.IsClosed && opp.IsWon, 'Already Closed Won Opp should be unchanged');
-        System.assertEquals(opps[0].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c, 
+        System.assertEquals(opps[0].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c,
             'The Opp Installment Number should be unchanged');
 
         opp = oppById.get(opps[1].Id);
         System.assertEquals(false, opp.IsClosed, 'Open Opp with Close Date in the past should stay open');
-        System.assertEquals(opps[1].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c, 
+        System.assertEquals(opps[1].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c,
             'The Opp Installment Number should be unchanged');
 
         opp = oppById.get(opps[2].Id);
         System.assertEquals(false, opp.IsClosed, 'Open Opp with Close Date equal to today should stay open');
-        System.assertEquals(opps[2].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c, 
+        System.assertEquals(opps[2].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c,
             'The Opp Installment Number should be unchanged');
 
         opp = oppById.get(opps[3].Id);
         System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'The next future Open Opp should be Closed Lost');
-        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER_FLAG, opp.Recurring_Donation_Installment_Number__c, 
+        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER_FLAG, opp.Recurring_Donation_Installment_Number__c,
             'The Closed Lost Opp should have the Installment Number overriden');
         System.assertEquals(getLogContextMigration(jobId), opp.Closed_Lost_Reason__c, 'Closed Lost Reason should indicate migration');
 
@@ -1209,12 +1209,12 @@ private class RD2_DataMigration_TEST {
 
         Opportunity opp = oppById.get(opps[2].Id);
         System.assertEquals(false, opp.IsClosed, 'The first future Open Opp should stay open');
-        System.assertEquals(opps[2].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c, 
+        System.assertEquals(opps[2].Recurring_Donation_Installment_Number__c, opp.Recurring_Donation_Installment_Number__c,
             'The Opp Installment Number should be unchanged');
 
         opp = oppById.get(opps[3].Id);
         System.assertEquals(true, opp.IsClosed && !opp.IsWon, 'The next future Open Opp should be Closed Lost');
-        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER_FLAG, opp.Recurring_Donation_Installment_Number__c, 
+        System.assertEquals(MIGRATION_INSTALLMENT_NUMBER_FLAG, opp.Recurring_Donation_Installment_Number__c,
             'The Closed Lost Opp should have the Installment Number overriden');
         System.assertEquals(getLogContextMigration(jobId), opp.Closed_Lost_Reason__c, 'Closed Lost Reason should indicate migration');
 
@@ -1462,7 +1462,7 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
-     * @description Verifies Recurring Donation with no Open Opportunity 
+     * @description Verifies Recurring Donation with no Open Opportunity
      * does not have new Opps created during data migration
      */
     @IsTest
@@ -1529,7 +1529,7 @@ private class RD2_DataMigration_TEST {
             .build();
         insert rd;
 
-        //ensure Effective Date is not specified to simulate an RD created before 
+        //ensure Effective Date is not specified to simulate an RD created before
         //the field is created in the codebase and defaulted to today if empty
         rd.StartDate__c = null;
         update rd;
@@ -1543,7 +1543,7 @@ private class RD2_DataMigration_TEST {
         rd = getRecords()[0];
         assertEnhancedFormat(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(nextDonationDate, rd.StartDate__c, 
+        System.assertEquals(nextDonationDate, rd.StartDate__c,
             'Effective Date should equal to the Next Donation Date when the RD has no related Opp');
 
         assertDayOfMonth(rd, nextDonationDate.day());
@@ -1568,7 +1568,7 @@ private class RD2_DataMigration_TEST {
             .build();
         insert rd;
 
-        //ensure Effective Date is not specified to simulate an RD created before 
+        //ensure Effective Date is not specified to simulate an RD created before
         //the field is created in the codebase and defaulted to today if empty
         rd.StartDate__c = null;
         rd.npe03__Next_Payment_Date__c = null;
@@ -1583,9 +1583,9 @@ private class RD2_DataMigration_TEST {
         rd = getRecords()[0];
         assertEnhancedFormat(new List<npe03__Recurring_Donation__c>{ rd });
 
-        System.assertEquals(DATE_ESTABLISHED, rd.StartDate__c, 
+        System.assertEquals(DATE_ESTABLISHED, rd.StartDate__c,
             'Effective Date should equal to the Date Established when the RD has no related Opp');
-        System.assertNotEquals(null, rd.npe03__Next_Payment_Date__c, 
+        System.assertNotEquals(null, rd.npe03__Next_Payment_Date__c,
             'Next Donation Date should be calculated');
 
         assertDayOfMonth(rd, DATE_ESTABLISHED.day());
@@ -1627,7 +1627,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled');
 
-        Id jobId = executeAndFinishDryRun();      
+        Id jobId = executeAndFinishDryRun();
 
         System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled *by* Dry Run migration');
@@ -1680,7 +1680,7 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled');
 
-        Id jobId = executeAndFinishDryRun();   
+        Id jobId = executeAndFinishDryRun();
 
         System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled,
             'Enhanced RDs should not be enabled *by* the Dry Run batch');
@@ -1726,7 +1726,7 @@ private class RD2_DataMigration_TEST {
 
         System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
 
-        Id jobId = executeAndFinishDryRun();   
+        Id jobId = executeAndFinishDryRun();
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
@@ -1734,7 +1734,7 @@ private class RD2_DataMigration_TEST {
         List<npe03__Recurring_Donation__c> rds = getRecords();
         System.assertEquals(dayOfMonth, rds[0].Day_of_Month__c, 'Day of Month should not change');
         assertLegacyFormat(rds);
-        
+
         assertBatchSummarySuccess(jobId, 1);
     }
 
@@ -1996,8 +1996,8 @@ private class RD2_DataMigration_TEST {
     * @description Executes dry run migration batch execute() and finish() methods
     * @return Id Batch job Id
     */
-    private static Id executeAndFinishDryRun() {        
-        return executeAndFinishBatch(new RD2_DataMigrationDryRun_BATCH());   
+    private static Id executeAndFinishDryRun() {
+        return executeAndFinishBatch(new RD2_DataMigrationDryRun_BATCH());
     }
 
     /****
@@ -2008,9 +2008,9 @@ private class RD2_DataMigration_TEST {
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
 
         batch.execute(batchContext, getRecords());
-        batch.finish(batchContext);   
-        
-        return batchContext.getJobId();   
+        batch.finish(batchContext);
+
+        return batchContext.getJobId();
     }
 
     /****

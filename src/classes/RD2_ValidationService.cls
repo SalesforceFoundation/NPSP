@@ -59,7 +59,7 @@ public with sharing class RD2_ValidationService {
     }
 
     /***
-    * @descripton Ids of Recurring Donations that can have donor modified 
+    * @descripton Ids of Recurring Donations that can have donor modified
     */
     private Set<Id> adjustableRdIds {
         get {
@@ -108,7 +108,7 @@ public with sharing class RD2_ValidationService {
             npe03__Recurring_Donation__c oldRd = oldRds[i];
 
             validateActiveRecurringDonation(rd);
-            
+
             Boolean isValid = validateDonorChange(rd, oldRd);
             if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
@@ -137,6 +137,8 @@ public with sharing class RD2_ValidationService {
         }
 
         validateDayOfMonth(rd);
+
+        validateFixedLength(rd);
     }
 
     /***
@@ -173,7 +175,7 @@ public with sharing class RD2_ValidationService {
         Boolean isValid = false;
 
         if (rd.npe03__Organization__c == oldRd.npe03__Organization__c
-            && rd.npe03__Contact__c == oldRd.npe03__Contact__c) {
+                && rd.npe03__Contact__c == oldRd.npe03__Contact__c) {
             isValid = true;
         }
 
@@ -188,8 +190,8 @@ public with sharing class RD2_ValidationService {
         }
 
         return isValid;
-        
-        
+
+
     }
 
     /***
@@ -199,7 +201,7 @@ public with sharing class RD2_ValidationService {
     * @return Boolean True when both new and old account are organization accounts
     */
     private Boolean isOrganizationChange(Account newAcct, Account oldAcct) {
-        return 
+        return
             newAcct != null
             && oldAcct != null
             && newAcct.npe01__SYSTEMIsIndividual__c == false
@@ -241,6 +243,30 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
+     * @description Validate the NumberOfPlannedInstallments field value for Fixed Length and
+     * Open Recurring Donations
+     * @param rd The recurring donation to validate
+     */
+    private void validateFixedLength(npe03__Recurring_Donation__c rd) {
+        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN
+                && rd.npe03__Installments__c > 1) {
+            rd.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
+        }
+
+        if (rd.RecurringType__c != RD2_Constants.RECURRING_TYPE_FIXED) {
+            return;
+        }
+
+        if (rd.npe03__Installments__c == null || rd.npe03__Installments__c < 0) {
+            rd.addError(System.Label.RD2_NumberInstallmentsRequiredWhenFixed);
+
+        } else if (rd.npe03__Total_Paid_Installments__c > 0
+                && rd.npe03__Installments__c < rd.npe03__Total_Paid_Installments__c) {
+            rd.addError(System.Label.RD2_NumberPlannedInstallmentsCannotBeLessThanPaid);
+        }
+    }
+
+    /**
     * @description Get account map on the RDs from both new and old recurring donation context
     * @return Map<Id, Account>
     */
@@ -249,7 +275,7 @@ public with sharing class RD2_ValidationService {
         Set<Id> contactIds = UTIL_SObject.extractId(rds, npe03__Recurring_Donation__c.npe03__Contact__c);
 
         accountIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Organization__c));
-        contactIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Contact__c)); 
+        contactIds.addAll(UTIL_SObject.extractId(oldRds, npe03__Recurring_Donation__c.npe03__Contact__c));
 
         accountIds.remove(null);
         contactIds.remove(null);
@@ -275,7 +301,7 @@ public with sharing class RD2_ValidationService {
 
         for (npe03__Recurring_Donation__c rd : [
             SELECT (
-                SELECT Id 
+                SELECT Id
                 FROM npe03__Donations__r
                 WHERE IsClosed = true
                 LIMIT 1
@@ -287,7 +313,7 @@ public with sharing class RD2_ValidationService {
                 rdIds.add(rd.Id);
             }
         }
-        
+
         return rdIds;
     }
 }

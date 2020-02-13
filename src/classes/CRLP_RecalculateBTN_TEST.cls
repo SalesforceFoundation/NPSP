@@ -50,7 +50,7 @@ private class CRLP_RecalculateBTN_TEST {
         insert gau;
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withContact(c.Id)
             .withAmount(1)
             .withInstallmentPeriodYearly()
