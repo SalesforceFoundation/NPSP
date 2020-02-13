@@ -188,39 +188,31 @@ class GeFormService {
      * @param record        Existing account or contact record to attach to the data import record
      * @return {{widgetValues: {}, diRecord: {}}}
      */
-    getDataImportRecord(sectionList, record, dataImportRecord){
-        // Gather all the data from the input
+    getDataImportRecord(sectionList, record, dataImportRecord) {
         let fieldData = {};
         let widgetValues = {};
 
         sectionList.forEach(section => {
-            fieldData = { ...fieldData, ...(section.values)};
-            widgetValues = { ...widgetValues, ...(section.widgetValues)};
+            fieldData = {...fieldData, ...(section.values)};
+            widgetValues = {...widgetValues, ...(section.widgetValues)};
         });
 
         // Build the DI Record
-        let diRecord = {};  
+        let diRecord = {};
 
-        for (let key in fieldData) {
-            if (fieldData.hasOwnProperty(key)) {
-                let value = fieldData[key];
-
-                // Get the field mapping wrapper with the CMT record name (this is the key variable).
-                let fieldWrapper = this.getFieldMappingWrapper(key);
-
-                if (value) {
-                    diRecord[fieldWrapper.Source_Field_API_Name] = value;
-                }
-            }
+        for (let [key, value] of Object.entries(fieldData)) {
+            let fieldWrapper = this.getFieldMappingWrapper(key);
+            diRecord[fieldWrapper.Source_Field_API_Name] = value;
         }
 
         // Include any fields from a user selected donation
-        diRecord = { ...diRecord, ...dataImportRecord };
+        diRecord = {...diRecord, ...dataImportRecord};
 
-        return { diRecord, widgetValues };
+        return {diRecord, widgetValues};
     }
 
     saveAndDryRun(batchId, dataImport, widgetData) {
+        console.log('JSON.parse(JSON.stringify(dataImport)): ', JSON.parse(JSON.stringify(dataImport)));
         return new Promise((resolve, reject) => {
             saveAndDryRunDataImport({batchId, dataImport, widgetData})
                 .then((result) => {
