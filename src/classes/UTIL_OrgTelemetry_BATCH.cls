@@ -50,7 +50,6 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
      */
     private final List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> telemetryTypes =
         new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Org_Environment,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps,
@@ -59,7 +58,8 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountPaymentOpps,
             UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBDIRows,
-            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountBGERows,
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd
         };
 
     /**
@@ -133,6 +133,7 @@ public without sharing virtual class UTIL_OrgTelemetry_BATCH implements Database
         } else {
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), 0);
             featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), 0);
+            featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(), 0);
         }
     }
 
