@@ -498,6 +498,31 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertEquals(numSchedulesPreUpdate, rdScheduleGateway.getRecords(rd).size(), 'Number of schedules pre- and post-update should be equal');
     }
 
+    /***
+    * @description Verifies Installment Frequency should default to one when RD insert with null Installment Frequency
+    */
+    @isTest
+    private static void shouldCreateRdWithDefaultInstallmentFrequencyOfOneWhenValueIsNull() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withContact(contact.Id)
+            .withDayOfMonth('10')
+            .withAmount(100)
+            .withInstallmentFrequency(null)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(1, rd.InstallmentFrequency__c, 'Installment Frequency shhould be default to 1 when not specific');
+    }
+
 
     // Helpers
     ///////////////////
