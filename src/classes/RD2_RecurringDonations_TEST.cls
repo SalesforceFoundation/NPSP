@@ -510,6 +510,7 @@ private with sharing class RD2_RecurringDonations_TEST {
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
             .withContact(contact.Id)
             .withDayOfMonth('10')
+            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY)
             .withAmount(100)
             .withInstallmentFrequency(null)
             .build();
