@@ -230,10 +230,10 @@ public with sharing class GE_FormRendererService {
         }
 
         String relationshipField;
-        if (donorType == 'Account') {
+        if (donorType == 'Account1') {
             relationshipField = 'AccountId';
-        } else if (donorType == 'Contact') {
-            relationshipField = 'npsp__Primary_Contact__c';
+        } else if (donorType == 'Contact1') {
+            relationshipField = String.valueOf(Opportunity.Primary_Contact__c);
         }
 
         // Could eventually be used to display unpaid payments on the donation matching modal

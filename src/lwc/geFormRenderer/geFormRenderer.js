@@ -863,47 +863,47 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
         }
 
-        const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
-        const contact = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
-        const lookupDonorType = fieldApiName === account ? 'Account' : 'Contact';
+        const account1Imported = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
+        const contact1Imported = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
-        if (fieldApiName === account || fieldApiName === contact) {
-            let donorType = this.getCurrentlySelectedDonorType();
-
-            if (donorType && donorType === lookupDonorType) {
-                this.setReviewDonationsDonorProperties(recordId, donorType);
-            }
+        if (fieldApiName === account1Imported) {
+            this.handleDonorAccountChange(recordId);
+        } else if (fieldApiName === contact1Imported) {
+            this.handleDonorContactChange(recordId);
         }
     }
 
-    getCurrentlySelectedDonorType() {
-        console.log('*** ' + 'exiting curr sel donor type' + ' ***');
-        return false;
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        let donorType;
-
-        if (!this.selectedDonorType) {
-            const sectionData = this.getData(sectionsList);
-            const diRecord = sectionData.diRecord;
-            donorType = diRecord[DONATION_DONOR_FIELDS.donationDonorField];
-
-            if (isUndefined(donorType)) {
-                // Highlight donor type field if none is selected
-                this.isDonorTypeInvalid(sectionsList);
-            } else {
-                donorType = donorType === 'Account1' ? 'Account' : 'Contact';
-            }
-        } else {
-            donorType = this.selectedDonorType;
-        }
-
-        return donorType;
+    donationDonorEnum = {
+        account1: 'Account1',
+        contact1: 'Contact1'
     }
 
-    setReviewDonationsDonorProperties(recordId, donorType) {
+    _donationDonor = null;
+    _account1Imported = null;
+    _contact1Imported = null;
+
+    handleDonorAccountChange(selectedRecordId) {
+        this._account1Imported = selectedRecordId;
+        if (this._donationDonor === this.donationDonorEnum.account1) {
+            this.setReviewDonationsDonorProperties(this._account1Imported);
+        } else if (this._donationDonor === null) {
+            // TODO: Maybe auto-set to 'Account1'?
+        }
+    }
+
+    handleDonorContactChange(selectedRecordId) {
+        this._contact1Imported = selectedRecordId;
+        if (this._donationDonor === this.donationDonorEnum.contact1) {
+            this.setReviewDonationsDonorProperties(this._contact1Imported);
+        } else if (this._donationDonor === null) {
+            // TODO: Maybe auto-set to 'Contact1'?
+        }
+    }
+
+    setReviewDonationsDonorProperties(recordId) {
         if (recordId) {
             this.selectedDonorId = recordId;
-            this.selectedDonorType = donorType;
+            this.selectedDonorType = this._donationDonor;
         } else {
             this.selectedDonation = undefined;
             this.opportunities = undefined;
