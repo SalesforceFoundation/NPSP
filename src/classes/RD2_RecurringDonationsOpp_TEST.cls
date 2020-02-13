@@ -40,6 +40,10 @@ private class RD2_RecurringDonationsOpp_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
 
+    private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
+    private static final String CURRENCY_CAD = 'CAD';
+    private static final String CURRENCY_USD = 'USD';
+
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final Date TODAY = START_DATE.addDays(1);
     private static final Integer MONTHS_TO_YEAR_END = START_DATE.monthsBetween(Date.newInstance(2020, 1, 1));
@@ -58,18 +62,22 @@ private class RD2_RecurringDonationsOpp_TEST {
         RD2_ScheduleService.currentDate = TODAY;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id).build();
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)
+            .withCurrencyIsoCode(CURRENCY_CAD)
+            .build();
         insert rd;
 
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
+                .withCurrencyIsoCode(CURRENCY_CAD)
                 .withCloseDate(START_DATE)
                 .withClosedWonStage()
                 .build(),
             oppBuilder
                 .withName()
+                .withCurrencyIsoCode(CURRENCY_CAD)
                 .withCloseDate(START_DATE.addMonths(1))
                 .withOpenStage()
                 .build()
@@ -148,35 +156,186 @@ private class RD2_RecurringDonationsOpp_TEST {
             'Next Year Value should be unchanged');
     }
 
-    /**	
-     * @description Verifies Current Year Value is updated	
+    /**
+     * @description Verifies Current Year Value is updated
      * when future open Opp Amount is changed. The Current Year Value
      * takes the Opp Amount into consideration over the matching installment Amount.
-     */	
-    @IsTest	
-    private static void shouldUpdateCurrentYearValueWhenOppAmountIsUpdated() {	
+     */
+    @IsTest
+    private static void shouldUpdateCurrentYearValueWhenOppAmountIsUpdated() {
         final Decimal oppNewAmount = RD_AMOUNT + 100;
-        RD2_ScheduleService.currentDate = TODAY;	
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();	
+        RD2_ScheduleService.currentDate = TODAY;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];	
-        Opportunity opp = getOpenOpportunity(rd);	
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Opportunity opp = getOpenOpportunity(rd);
 
         //users updates the future open Opp Amount
-        Test.startTest();	
-        opp.Amount = oppNewAmount;	
-        update opp;	
+        Test.startTest();
+        opp.Amount = oppNewAmount;
+        update opp;
         Test.stopTest();
-        
-        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertEquals(oppNewAmount, oppById.get(opp.Id).Amount, 'The Opp Amount should be as user specified it');	
 
-        rd = rdGateway.getRecord(rd.Id);	
-        System.assertEquals(rd.npe03__Amount__c * (MONTHS_TO_YEAR_END - 1) + oppNewAmount, rd.CurrentYearValue__c,	
-            'Current Year Value should use the future open Opp Amount over the matching installment Amount');	
-        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,	
-            'Next Year Value should be unchanged');	
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(oppNewAmount, oppById.get(opp.Id).Amount, 'The Opp Amount should be as user specified it');
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c * (MONTHS_TO_YEAR_END - 1) + oppNewAmount, rd.CurrentYearValue__c,
+            'Current Year Value should use the future open Opp Amount over the matching installment Amount');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be unchanged');
     }
+
+    /**
+     * @description Verifies an Opportunity cannot be created if its currency is not the same
+     * as the currency on related Recurring Donation
+     */
+    @IsTest
+    private static void shouldPreventOppInsertWhenCurrencyIsOutOfSyncWithRD() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        RD2_ScheduleService.currentDate = TODAY;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        
+        Exception actualException;
+        try {
+            Test.startTest();
+            insert getOpportunityBuilder(rd)
+                .withCurrencyIsoCode(CURRENCY_USD)
+                .withCloseDate(START_DATE)
+                .withOpenStage()
+                .build();
+            Test.stopTest();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        System.assertNotEquals(null, actualException, 'An Exception should be generated');
+        System.assert(actualException.getMessage().contains(System.Label.RD2_CurrencyChangeIsRestrictedOnOpp),
+            'Exception message should match, actual message: ' + actualException.getMessage());
+    }
+
+    /**
+     * @description Verifies an Opportunity can be created if its currency is the same
+     * as the currency on related Recurring Donation
+     */
+    @IsTest
+    private static void shouldAllowOppInsertWhenCurrencyIsInSyncWithRD() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        RD2_ScheduleService.currentDate = TODAY;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        
+        Exception actualException;
+        try {
+            Test.startTest();
+            insert getOpportunityBuilder(rd)
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(START_DATE)
+                .withOpenStage()
+                .build();
+            Test.stopTest();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
+    }
+
+    /**
+     * @description Verifies an Opportunity cannot be updated if its currency is not the same
+     * as the currency on related Recurring Donation
+     */
+    @IsTest
+    private static void shouldPreventOppUpdateWhenCurrencyIsOutOfSyncWithRD() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        RD2_ScheduleService.currentDate = TODAY;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Opportunity opp = getOpenOpportunity(rd);
+
+        Exception actualException = updateOpportunity(opp, opp.Amount + 10, CURRENCY_USD);
+
+        System.assertNotEquals(null, actualException, 'An Exception should be generated');
+        System.assert(actualException.getMessage().contains(System.Label.RD2_CurrencyChangeIsRestrictedOnOpp),
+            'Exception message should match, actual message: ' + actualException.getMessage());
+    }
+
+    /**
+     * @description Verifies an Opportunity is updated if its currency is the same
+     * as the currency on related Recurring Donation
+     */
+    @IsTest
+    private static void shouldAllowOppUpdateWhenCurrencyIsInSyncWithRD() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        RD2_ScheduleService.currentDate = TODAY;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Opportunity opp = getOpenOpportunity(rd);
+        Decimal oldAmount = opp.Amount;
+
+        Exception actualException = updateOpportunity(opp, opp.Amount + 10, CURRENCY_CAD);
+
+        System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertNotEquals(oldAmount, oppById.get(opp.Id).Amount, 'The Opp Amount should be changed');
+    }
+
+    /**
+     * @description Verifies an Opportunity can be created and updated
+     * without any error when it is not related to a Recurring Donation record
+     */
+    @IsTest
+    private static void shouldAllowOppInsertAndUpdateWhenNotRelatedToRD() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        RD2_ScheduleService.currentDate = TODAY;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        
+        Exception actualException;
+        try {
+            Test.startTest();
+            Opportunity opp = new TEST_OpportunityBuilder()
+                .withContact(getContact().Id)
+                .withAmount(100)
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(START_DATE)
+                .withOpenStage()
+                .build();
+            insert opp;
+            Test.stopTest();
+
+            opp.Amount += 10;
+            update opp;
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
+    }
+
+
 
 
     // Helpers
@@ -273,5 +432,29 @@ private class RD2_RecurringDonationsOpp_TEST {
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE);
     }
+
+    /***
+    * @description Updates currency on the Opportunity record
+    * @param opp An Opportunity record
+    * @param newAmount New Amount value
+    * @param currencyCode Curency ISO Code on the Opportunity record
+    * @return Exception Returns an exception if generated during update
+    */
+    private static Exception updateOpportunity(Opportunity opp, Decimal newAmount, String currencyCode) {
+        Exception actualException;
+        try {
+            Test.startTest();
+            opp.put(CURRENCY_ISO_CODE_FIELD, currencyCode);
+            opp.Amount = newAmount;
+            update opp;
+            Test.stopTest();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        return actualException;
+    }
+
 
 }
