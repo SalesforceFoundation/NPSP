@@ -36,6 +36,9 @@
 */
 public with sharing class BGE_BatchGiftEntry_UTIL {
 
+    private static final String ADDITIONAL_OBJECT_JSON_FIELD_NAME = 'Additional_Object_JSON__c';
+    private static final String WIDGET_ELEMENT_TYPE = 'widget';
+
     /*******************************************************************************************************
     * @description Currently limit the set of allowed objects, and point to their BDI-defined 
     *  Object group name
@@ -87,6 +90,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             fieldApiNames.addAll(getActiveFieldNamesFromBatch(batchId));
 
         } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) {
+            
+            fieldApiNames.add(UTIL_Namespace.StrAllNSPrefix(ADDITIONAL_OBJECT_JSON_FIELD_NAME));
 
             for (String field : getCoreDataImportFields(includeRelationshipFields)) {
                 fieldApiNames.add(field.toLowerCase());
@@ -112,12 +117,14 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                     for (String fieldMappingName :
                             formElement.dataImportFieldMappingDevNames) {
 
-                        BDI_FieldMapping fieldMapping =
-                                fieldMappingByDevName.get(fieldMappingName);
+                        BDI_FieldMapping fieldMapping = fieldMappingByDevName.get(fieldMappingName);
                         if (fieldMapping == null) {
                             continue;
                         }
-
+                        if(fieldMapping.Element_Type.toLowerCase() ==
+                            WIDGET_ELEMENT_TYPE) {
+                                fieldApiNames.add(ADDITIONAL_OBJECT_JSON_FIELD_NAME);
+                        }
                         // Add the source fields used in the Template
                         if (!fieldApiNames.contains(
                                 fieldMapping.Source_Field_API_Name.toLowerCase())) {

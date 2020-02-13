@@ -1,4 +1,7 @@
 <template>
+    <c-util-dedicated-listener event-name={dedicatedListenerEventName}
+                               onreceiveevent={handleReceiveEvent}>
+    </c-util-dedicated-listener>
     <lightning-layout if:true={hasAlert}>
         <lightning-layout-item size="12">
             <div class={alertClass} role="alert">

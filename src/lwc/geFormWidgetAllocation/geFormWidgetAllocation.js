@@ -6,6 +6,7 @@ import { isNumeric, isNotEmpty } from 'c/utilCommon';
 import { registerListener } from 'c/pubsubNoPageRef';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
+import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
@@ -23,12 +24,14 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
+    
+    dedicatedListenerEventName = 'reloadwidget';
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     // need labels for field list
     @wire(getObjectInfo, { objectApiName: ALLOCATION_OBJECT })
-    wiredObjectInfo({data, error}) {
+    wiredObjectInfo({data}) {
         // Represents the fields in a row of the widget
         if(data) {
             this.fieldList = [
@@ -163,10 +166,13 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * Add a new record to the list
      * @param isDefaultGAU {boolean} When initializing the first row, this should be true.
      */
-    addRow(isDefaultGAU) {
+    addRow(isDefaultGAU, recordProperties) {
         let element = {};
         element.key = this.rowList.length;
-        const record = { apiName: ALLOCATION_OBJECT.objectApiName };
+        const record = {
+            apiName: ALLOCATION_OBJECT.objectApiName,
+            ...recordProperties
+        };
         let row = {};
         if(isDefaultGAU === true) {
             // default GAU should be locked.
@@ -174,7 +180,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             row.isDefaultGAU = true;
             record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
         }
-
         row = {
             ...row,
             record,
@@ -233,6 +238,27 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     handleRemove(event) {
         this.rowList.splice(event.detail.rowIndex, 1);
+    }
+
+    /**
+     * Handle receiving a pub/sub event by re-rendering the GAU widget rows
+     */
+    handleReceiveEvent(event) {
+        let dataImportRow = JSON.parse(event.detail[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
+        if (!dataImportRow) {
+            return;
+        }
+        let recordProperties = {};
+        let gauKeys = Object.keys(dataImportRow).filter(key => {
+            return key.toLowerCase().includes('gau_allocation');
+        });
+        gauKeys.forEach(key => {
+            let sourceObj = dataImportRow[key];
+            
+        }); 
+        this.addRow(false, recordProperties);
+        // build widget row with record properties from the data import row
+        
     }
 
     /**

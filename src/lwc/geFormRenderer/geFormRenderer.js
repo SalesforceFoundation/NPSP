@@ -11,7 +11,7 @@ import {
     setRecordValuesOnTemplate,
     checkPermissionErrors
 } from 'c/utilTemplateBuilder';
-import { registerListener } from 'c/pubsubNoPageRef';
+import { registerListener, fireEvent } from 'c/pubsubNoPageRef';
 import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch, getValueFromDotNotationString } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
@@ -609,8 +609,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this._dataRow = dataRow;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
-        sectionsList.forEach(section => {
+        sectionsList.forEach((section, index, array) => {
             section.load(dataRow);
+            // pub/sub event for reloading any widgets in the form
+            if(index === (array.length - 1)) {
+                fireEvent(this.pageRef, 'reloadwidget', dataRow);
+            }
         });
     }
 
