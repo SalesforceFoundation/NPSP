@@ -48,7 +48,7 @@ Create Relationships for contacts
     ...                                 &{contact2}[FirstName] &{contact2}[LastName]
     ...                                 Parent
 
-    Click Link                          link=Show more actions
+    Click More Actions Button
     Click Link                          link=Relationships Viewer
     Wait Until Loading Is Complete
     Capture Page Screenshot
@@ -60,10 +60,8 @@ Create Relationships for contacts
     ...                                 &{contact1}[FirstName] &{contact1}[LastName]
     ...                                 Child
 
-    # Load Related List                   Relationships
     Click Related Table Item Link       Relationships                                               &{contact2}[FirstName] &{contact2}[LastName]
 
-    Current Page Should Be              Details                                                     Relationship
-    ${id}                               Get Current Record Id
+    Current Page Should Be              Details                                                     npe4__Relationship__c
     Save Current Record ID For Deletion  npe4__Relationship__c
 

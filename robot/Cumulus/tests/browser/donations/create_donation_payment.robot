@@ -39,7 +39,6 @@ Create Donation and Opportunity and Create Payment Manually
     # Create a new Opportunity from the UI
 
     Populate Modal Form
-    ...                                             Stage=${Stage_Type}
     ...                                             Opportunity Name=${opp_name}
     ...                                             Account Name=${data}[contact][LastName] Household
     ...                                             Amount=${Amount}
@@ -48,10 +47,9 @@ Create Donation and Opportunity and Create Payment Manually
     Open Date Picker                                Close Date
     Pick Date                                       Today
     Click Modal Button                              Save
-
+    Wait Until Modal Is Closed
+    Current Page Should Be                          Details                                  Opportunity
     Save Current Record ID For Deletion             Opportunity
-    Current Page Should Be                          Detail                                  Opportunity
-
     Validate Related Record Count                   Payments                                0
 
     #Make A New Payment

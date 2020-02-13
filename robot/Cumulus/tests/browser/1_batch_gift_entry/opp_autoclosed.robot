@@ -1,7 +1,10 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/PaymentPageObject.py
+Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -10,7 +13,6 @@ Suite Teardown  Delete Records and Close Browser
 Opportunity is Autoclosed when Overpaid
     [Documentation]    Create Open Opportunity and apply new payment of amount more than opportunity amount and confirm that opportunity is closed when batch is processed
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -29,7 +31,7 @@ Opportunity is Autoclosed when Overpaid
     ...    Amount=100    
     ...    CloseDate=${date}
     ...    Name=&{contact}[LastName] Test Donation    
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
@@ -40,7 +42,7 @@ Opportunity is Autoclosed when Overpaid
     Page Should Contain     You are currently applying a new Payment to Opportunity:&{opportunity}[Name]
     Fill BGE Form
     ...                       Donation Amount=101
-    Click Field And Select Date    Donation Date    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Verify Row Count    1
     Page Should Contain Link    &{opportunity}[Name]
@@ -53,6 +55,7 @@ Opportunity is Autoclosed when Overpaid
     # Click Link    ${value}
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
+    Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
     ...    npe01__Payment_Amount__c=101.0
