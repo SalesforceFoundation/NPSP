@@ -21,7 +21,7 @@ Create Grant
     Pick Date    Today
     Set Checkbutton To    Do Not Automatically Create Payment    checked
     Click Modal Button        Save
-
+    Wait Until Modal Is Closed
     ${grant_name}    Get Main Header
     Go To Object Home         Opportunity
     Click Link    link=${grant_name} 
