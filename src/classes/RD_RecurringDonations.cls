@@ -413,7 +413,7 @@ public class RD_RecurringDonations {
                     paidInstallments = Integer.valueOf(r.npe03__Total_Paid_Installments__c);
                     j = paidInstallments;
 
-                    if (r.npe03__Schedule_Type__c != Label.npe03.RecurringDonationMultiplyValue &&
+                    if (r.npe03__Schedule_Type__c != RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY &&
                         installments - paidInstallments > 0
                     ) {
                         installmentAmount = (r.npe03__Amount__c - paidAmount) / (installments - paidInstallments);
@@ -704,7 +704,7 @@ public class RD_RecurringDonations {
 
     /*******************************************************************************************************
     * @description Future method that updates all the existing Opportunities for the specified Recurring Donations.
-    * @param recIDs The set of RD id's to process
+    * @param recIDs The set of RD id's to processx
     * @param dmlWrapper Object to store the Opps that need updating
     * @return void
     */

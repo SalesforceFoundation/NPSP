@@ -516,6 +516,8 @@ private class RD2_DataMigration_TEST {
             .convertToEnhancedRD();
 
         System.assertEquals(AMOUNT_VALUE / installments, convertedRD.npe03__Amount__c, 'Amount should be copied from Installment Amount');
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, convertedRD.RecurringType__c, 'Recurring Type should be Fixed');
+        System.assertEquals(installments, convertedRD.npe03__Installments__c, 'Number of Planned Installments should be unchanged');
     }
 
     /**
@@ -945,6 +947,7 @@ private class RD2_DataMigration_TEST {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withOpenEndedStatusNone()
+            .withPlannedInstallments(12)
             .build();
         insert rd;
 
@@ -1736,6 +1739,48 @@ private class RD2_DataMigration_TEST {
         assertLegacyFormat(rds);
 
         assertBatchSummarySuccess(jobId, 1);
+    }
+
+    /**
+     * @description Verifies that a Legacy Fixed Length RD is converted properly.
+     */
+    @IsTest
+    private static void shouldConvertFixedLengthRecurringDonation() {
+        Integer installments = 12;
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withOpenEndedStatusNone()
+            .withPlannedInstallments(installments)
+            .withDateEstablished(DATE_ESTABLISHED)
+            .build();
+
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+
+        System.assertEquals(installments, convertedRD.npe03__Installments__c,
+            'Number of Planned Installments should be set to ' + installments);
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, convertedRD.RecurringType__c,
+            'The RecurringType should be fixed');
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, convertedRD.Status__c,
+            'Number of Status should be active');
+    }
+
+    /**
+     * @description Verifies that the NumberOfPlannedInstallments field is set to null when converting an open ended RD
+     */
+    @IsTest
+    private static void shouldSetNumPlannedInstallmentsToNullForOpenEndedRD() {
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
+            .withOpenEndedStatusOpen()
+            .withPlannedInstallments(12)
+            .withDateEstablished(DATE_ESTABLISHED)
+            .build();
+
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
+            .convertToEnhancedRD();
+
+        System.assertEquals(null, convertedRD.npe03__Installments__c,
+            'Number of Planned Installments should be set to null');
     }
 
 
