@@ -2939,6 +2939,13 @@
         <members>Contact-iw</members>
         <members>Contact-ja</members>
         <members>Contact-nl_NL</members>
+        <members>Custom_Column_Header__c-de</members>
+        <members>Custom_Column_Header__c-en_US</members>
+        <members>Custom_Column_Header__c-es</members>
+        <members>Custom_Column_Header__c-fr</members>
+        <members>Custom_Column_Header__c-iw</members>
+        <members>Custom_Column_Header__c-ja</members>
+        <members>Custom_Column_Header__c-nl_NL</members>
         <members>Customizable_Rollup_Settings__c-de</members>
         <members>Customizable_Rollup_Settings__c-en_US</members>
         <members>Customizable_Rollup_Settings__c-es</members>
@@ -3002,6 +3009,13 @@
         <members>Error__c-iw</members>
         <members>Error__c-ja</members>
         <members>Error__c-nl_NL</members>
+        <members>Form_Template__c-de</members>
+        <members>Form_Template__c-en_US</members>
+        <members>Form_Template__c-es</members>
+        <members>Form_Template__c-fr</members>
+        <members>Form_Template__c-iw</members>
+        <members>Form_Template__c-ja</members>
+        <members>Form_Template__c-nl_NL</members>
         <members>Fund__c-de</members>
         <members>Fund__c-en_US</members>
         <members>Fund__c-es</members>
@@ -3016,6 +3030,13 @@
         <members>General_Accounting_Unit__c-iw</members>
         <members>General_Accounting_Unit__c-ja</members>
         <members>General_Accounting_Unit__c-nl_NL</members>
+        <members>Gift_Entry_Settings__c-de</members>
+        <members>Gift_Entry_Settings__c-en_US</members>
+        <members>Gift_Entry_Settings__c-es</members>
+        <members>Gift_Entry_Settings__c-fr</members>
+        <members>Gift_Entry_Settings__c-iw</members>
+        <members>Gift_Entry_Settings__c-ja</members>
+        <members>Gift_Entry_Settings__c-nl_NL</members>
         <members>Grant_Deadline__c-de</members>
         <members>Grant_Deadline__c-en_US</members>
         <members>Grant_Deadline__c-es</members>
