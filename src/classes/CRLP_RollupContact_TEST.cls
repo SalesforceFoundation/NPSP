@@ -65,12 +65,15 @@ public class CRLP_RollupContact_TEST {
         String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId3 = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupId4 = CMT_UnitTestData_TEST.getNewRecordId();
+
 
         // Simple testing filters for IsWon, RecordType, and Paid/Written Off
         String filterGroupsJSON = '[' +
             CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
             CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') + ',' +
-            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId3, 'TestFilterGroup3-IsLost') +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId3, 'TestFilterGroup3-IsLost') + ',' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId4, 'TestFilterGroup4-IsWon+AmountNotNull') +
         ']';
 
         String filterRulesJSON = '[' +
@@ -94,7 +97,10 @@ public class CRLP_RollupContact_TEST {
             CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') + ',' +
 
             CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule1', 'Opportunity', 'IsWon', 'Equals', 'False') + ',' +
-            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule2', 'Opportunity', 'IsClosed', 'Equals', 'True') +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule2', 'Opportunity', 'IsClosed', 'Equals', 'True') + ',' +
+
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId4, 'Group4.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId4, 'Group4.Rule2', 'Opportunity', 'Amount', 'Not_Equals', '') +
         ']';
 
         // Deserialize the filter group and filter rule to use for the tests
@@ -120,6 +126,11 @@ public class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Count Closed Won Donations For Last Year', filterGroupId4,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__OppsClosedLastYear__c', CRLP_Operation.RollupType.COUNT, 'Close Date',
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 1) + ',' +
 
                 /* Using nonsense fields to test Smallest with different Detail Field and Years Ago */
                 CMT_UnitTestData_TEST.createRollupRecord('Num from Smallest Opp Last Year', filterGroupId1,
@@ -308,6 +319,7 @@ public class CRLP_RollupContact_TEST {
         Decimal maxAmt = 1000;
         Decimal baseAmt = 100;
         Integer cnt = 100;
+        Integer wonCountLastYear = 0;
         String bestGiftYear;
         Set<String> donationYears = new Set<String>();
         Date lastCloseDate;
@@ -325,6 +337,9 @@ public class CRLP_RollupContact_TEST {
             totalDonations += amt;
             if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
                 total2YearsAgo += amt;
+            }
+            if (closeDate.addMonths(n).year() == Date.Today().addYears(-1).year()) {
+                wonCountLastYear++;
             }
             if (closeDate.addMonths(n).daysBetween(Date.Today()) <= 365) {
                 last365Days += amt;
@@ -496,6 +511,7 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals('New', c.Department);
 
         System.assertEquals(1, c.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
+        System.assertEquals(wonCountLastYear, c.npo02__OppsClosedLastYear__c, 'The number of closed won opps should be equal to ' + wonCountLastYear);
 
         // These 10 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
