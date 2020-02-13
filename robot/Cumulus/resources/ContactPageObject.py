@@ -32,6 +32,8 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         locator=npsp_lex_locators['delete_icon'].format(field_name,old_value)
         self.selenium.get_webelement(locator).click() 
         self.salesforce.populate_lookup_field(field_name,new_value)
+        
+            
 
     def waitfor_actions_dropdown_and_click_option(self,option):
         """Wait for the Action dropdown menu to load from the contact details page

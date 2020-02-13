@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Run Keywords
 ...             Open Test Browser
 ...             Setup Variables
@@ -30,16 +32,16 @@ Create Fixed Length Recurring Donation Divide By
     [Documentation]              This test verifies that Opportunities with the proper divided amount are created for a Recurring Donation.
 
     #Find 1st Opportunity for Recurring Donation and Check Amount
-    @{opportunity1} =            API Query Installment          &{recurringdonation}[Id]    (1 of 12)
-    Go To Record Home            ${opportunity1}[0][Id]
-    Select Tab                   Details
-    Navigate To And Validate Field Value          Amount                         contains                    $100.00
+    @{opportunity1} =                        API Query Installment      &{recurringdonation}[Id]    (1 of 12)
+    Go To Page                               Details                    Opportunity                 object_id=${opportunity1}[0][Id]
+    Select Tab                               Details
+    Navigate To And Validate Field Value     Amount                     contains                    $100.00
 
     #Find 2nd Opportunity for Recurring Donation and Check Amount
-    @{opportunity2} =            API Query Installment          &{recurringdonation}[Id]    (2 of 12)
-    Go To Record Home            ${opportunity2}[0][Id]
-    Select Tab                   Details
-    Navigate To And Validate Field Value          Amount                         contains                    $100.00
+    @{opportunity2} =                        API Query Installment      &{recurringdonation}[Id]    (2 of 12)
+    Go To Page                               Details                    Opportunity                 object_id=${opportunity2}[0][Id]
+    Select Tab                               Details
+    Navigate To And Validate Field Value     Amount                     contains                    $100.00
 
 
 
