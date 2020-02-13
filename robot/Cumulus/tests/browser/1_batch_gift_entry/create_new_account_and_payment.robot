@@ -13,7 +13,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Create a new account and enter payment information
     #Create a new account and enter payment information, then process batch
-    [tags]  stable
+    [tags]  unstable
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    

@@ -48,6 +48,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
     def view_field_mappings_of_the_object(self,obj):
         """Click the dropdwon for obj and select View Field Mappings and verify that field mappings page is open"""
         self.selenium.wait_until_page_contains("Object Groups", timeout=60)
+        self.selenium.wait_until_page_contains(obj, timeout=30, error=f"{obj} did not load in 30 seconds")
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(obj)
         self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
