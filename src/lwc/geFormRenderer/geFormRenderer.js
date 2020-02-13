@@ -853,22 +853,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
-    handleChangeLookup(event) {
-        if (this.dataImport && this.dataImport.Id) {
-            //Temporary fix for Open row action not working. Changing/re-populating
-            // lookups after opening row from table currently not working.
-            //TODO: fix clashes between lookup related field values for opening row
-            //      from table vs selecting lookup value on new form.
-            return;
-        }
-        const recordId = event.detail.value;
+    handleLookupRecordSelect(event) {
+        const recordId = event.detail.value; // Reset the field if null
         const fieldApiName = event.detail.fieldApiName;
-        if (recordId === null) {
-            // Reset all fields related to this lookup field's object mapping
-            // this.reset(objectMapping.DeveloperName);
-            this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
-        } else {
+        // LookupRecordSelect event should set value if one is provided
+        // or reset if value is null
+        if (event.detail.hasOwnProperty('value') && event.detail.value !== null) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
+        } else {
+            // Reset all fields related to this lookup field's object mapping
+            this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
         }
 
         const account = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
@@ -885,6 +879,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     getCurrentlySelectedDonorType() {
+        console.log('*** ' + 'exiting curr sel donor type' + ' ***');
+        return false;
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         let donorType;
 

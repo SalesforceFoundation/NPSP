@@ -103,13 +103,6 @@ export default class GeAutocomplete extends LightningElement {
     reset() {
         this.displayValue = '';
         this.value = null;
-        const payload = {
-            detail: {
-                value: this.value,
-                displayValue: this.displayValue
-            }
-        };
-        this.dispatchEvent(new CustomEvent('select', payload));
     }
 
     /*******************************************
@@ -161,17 +154,15 @@ export default class GeAutocomplete extends LightningElement {
     }
 
     /**
-     * Sets data on a look-up field (mimics the action on a select event on a look-up option)
-     * @param lookupResult
+     * @description Sets value and displayValue for this component. This method should be
+     *              used when the field is being set to a known value and does not fire a
+     *              change event.
+     * @param data: an object with value and displayValue properties.
      */
     @api
-    setLookUpData (lookupResult) {
-        const payload = {
-            detail: {
-                value: lookupResult.value,
-                displayValue: lookupResult.displayValue
-            }
-        };
-        this.handleSelect(payload);
+    setValue(data) {
+        this.value = data.value;
+        this.displayValue = data.displayValue;
     }
+
 }

@@ -41,10 +41,10 @@ export default class GeFormField extends LightningElement {
         this.dispatchEvent(evt);
 
         if (this.isLookup) {
-            const changeLookupEvent = new CustomEvent(
-                'changelookup',
+            const selectRecordEvent = new CustomEvent(
+                'lookuprecordselect',
                 { detail: event.detail });
-            this.dispatchEvent(changeLookupEvent);
+            this.dispatchEvent(selectRecordEvent);
         }
 
         if (this.isPicklist) {
@@ -322,20 +322,20 @@ export default class GeFormField extends LightningElement {
                 value = data[this.sourceFieldAPIName].value;
             } else {
                 value = data[this.sourceFieldAPIName];
+                //if this is an empty object or null, reset
+                if (value === null || isUndefined(value.value)) {
+                    this.reset();
+                }
+
+                if (this.isLookup) {
+                    this.loadLookUp(data, value);
+                }
             }
-        } else if (data.value) {
-            value = data.value;
+            this.value = value;
+        } else {
+            // Property isn't defined.  Don't do anything.
+            return false;
         }
-
-        if (value === null || isUndefined(value)) {
-            this.reset();
-            return;
-        }
-        this.value = value;
-        if (this.isLookup) {
-            this.loadLookUp(data, value);
-        }
-
     }
 
     /**

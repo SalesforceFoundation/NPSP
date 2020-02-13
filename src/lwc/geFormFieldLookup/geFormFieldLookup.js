@@ -172,8 +172,8 @@ export default class GeFormFieldLookup extends LightningElement {
 
     @api
     setSelected(lookupResult) {
-        const lookup = this.template.querySelector('c-ge-autocomplete');
-        lookup.setLookUpData(lookupResult);
+        const autocomplete = this.template.querySelector('c-ge-autocomplete');
+        autocomplete.setValue(lookupResult);
     }
 
     @api
