@@ -4402,7 +4402,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Back button</shortDescription>
+        <shortDescription>Back</shortDescription>
         <value>Back</value>
     </labels>
     <labels>
@@ -4482,7 +4482,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Next button</shortDescription>
+        <shortDescription>Next</shortDescription>
         <value>Next</value>
     </labels>
     <labels>
@@ -4498,7 +4498,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>No items to display.</shortDescription>
+        <shortDescription>Notification for empty tables</shortDescription>
         <value>No items to display.</value>
     </labels>
     <labels>
@@ -4514,7 +4514,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Link to read additional details</shortDescription>
+        <shortDescription>Read More</shortDescription>
         <value>Read More</value>
     </labels>
     <labels>
@@ -4961,7 +4961,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text about not being able to set default values for Field Bundles</shortDescription>
+        <shortDescription>Text block about inability to set default values for Field Bundles</shortDescription>
         <value>You can't set default values for fields included in this section.</value>
     </labels>
     <labels>
@@ -4995,7 +4995,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>New Batch screen with info about setting default values</shortDescription>
+        <shortDescription>Info about setting default values on New Batch screen</shortDescription>
         <value>Set default values for this batch. You can override default values when you enter gifts.</value>
     </labels>
     <labels>
@@ -5004,14 +5004,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Body for illustration card when a form section is empty</shortDescription>
-        <value>Select gift fields to add to this section.</value>
+        <value>Select fields to add to this section.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Template Builder Form Fields tab left column body</shortDescription>
+        <shortDescription>Form Fields sidebar text block</shortDescription>
         <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
     </labels>
     <labels>
@@ -5030,7 +5030,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
             &lt;li&gt; If this is part of a new Object Group, create additional fields for a new Object group and create the new Object Group in NPSP Settings. &lt;/li&gt;
             &lt;li&gt; Add Field Mapping in NPSP Settings to connect the NPSP Data Import field to the target field. &lt;/li&gt;
         &lt;/ol&gt;
-        &lt;/br&gt;
         See NPSP documentation about Advanced Mapping for additional details.
         </value>
     </labels>
@@ -5047,8 +5046,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Form Fields sidebar text block</shortDescription>
-        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering the sections or fields.</value>
+        <shortDescription>Form Fields main section text block</shortDescription>
+        <value>Click a section, then select a field in the sidebar to add it to the section in the main screen. For each field, you can edit the field label, mark it as required, assign a default value or remove it from the section. Adjust the layout of the gift entry form by creating sections and reordering sections or fields.</value>
     </labels>
     <labels>
         <fullName>geBodyGiftEntryHelp</fullName>
@@ -5083,8 +5082,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message when an Opportunity has no Payments</shortDescription>
-        <value>This Opportunity does not have any Payments.</value>
+        <shortDescription>Message when an Opportunity has no Payments that are not paid</shortDescription>
+        <value>This Opportunity does not have any Payments that are not paid.</value>
     </labels>
     <labels>
         <fullName>geBodyMatchingPendingDonation</fullName>
@@ -5124,14 +5123,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Template landing screen text block</shortDescription>
-        <value>A template is a reusable layout of fields for data entry. Edit a template by clicking the template name. Alternatively, create a new template or click any template's dropdown menu for more options.</value>
+        <value>A template is a reusable layout of fields for data entry. Edit a template by clicking the template name. Alternatively, create a new template or click any template's dropdown menu for more options. Any templates that are in use can't be deleted.</value>
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBackFormFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <shortDescription>Button to go back to form fields</shortDescription>
         <value>Back: Form Fields</value>
     </labels>
     <labels>
@@ -5139,7 +5138,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <shortDescription>Button to go back to configure template information</shortDescription>
         <value>Back: Template Info</value>
     </labels>
     <labels>
@@ -5147,7 +5146,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <shortDescription>Button to continue and configure the batch header</shortDescription>
         <value>Next: Batch Header</value>
     </labels>
     <labels>
@@ -5155,7 +5154,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Entry Template Builder navigation button text</shortDescription>
+        <shortDescription>Button to choose fields to include on your form</shortDescription>
         <value>Next: Form Fields</value>
     </labels>
     <labels>
@@ -5420,7 +5419,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Page-level error message body when Advanced Mapping off</shortDescription>
+        <shortDescription>Page-level error message body when Advanced Mapping and Gift Entry are off</shortDescription>
         <value>This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.</value>
     </labels>
     <labels>
@@ -5453,7 +5452,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Page-level error for insufficient field access about exiting without saving</shortDescription>
+        <shortDescription>Page-level error message for required field missing on template</shortDescription>
         <!-- Label should be followed by a list of fields e.g. npsp__Amount__c, npsp__Description__c -->
         <value>You must include all required fields in your template. Review the source fields (NPSP Data Import object) for the following fields:</value>
     </labels>
@@ -5462,7 +5461,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>geErrorPageLevelMissingRequiredGroupFields</shortDescription>
+        <shortDescription>Page-level error message for required group of fields is missing</shortDescription>
         <value>At least one of the following fields is required: {0}</value>
     </labels>
     <labels>
@@ -5526,7 +5525,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for the component that handles the custom table headers</shortDescription>
+        <shortDescription>Label for selecting fields to include as columns</shortDescription>
         <value>Select Fields to Display</value>
     </labels>
     <labels>
@@ -5536,6 +5535,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Header for illustration card when a form section is empty</shortDescription>
         <value>No fields yet</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderFieldBundles</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for field bundles (aka widgets)</shortDescription>
+        <value>Field Bundles</value>
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsDefaultSectionName</fullName>
@@ -5551,7 +5558,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for Form Fields sidebar</shortDescription>
-        <value>Form Fields &amp; Template Components</value>
+        <value>Form Fields &amp; Field Bundles</value>
     </labels>
     <labels>
         <fullName>geHeaderFormFieldsModalDeleteSection</fullName>
@@ -5590,7 +5597,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Top of all Gift Entry pages</shortDescription>
+        <shortDescription>Gift Entry</shortDescription>
         <value>Gift Entry</value>
     </labels>
     <labels>
@@ -5626,7 +5633,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label with key Payment information</shortDescription>
-        <!-- {0} = Payment Amount {1} = Payment Close Date -->
+        <!-- {0} = Payment Amount {1} = Payment Scheduled Date -->
         <value>{0} on {1}</value>
     </labels>
     <labels>
@@ -5634,7 +5641,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>New Section</shortDescription>
+        <shortDescription>Header for a new section</shortDescription>
         <value>New Section</value>
     </labels>
     <labels>
@@ -5650,7 +5657,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for gift entry template information</shortDescription>
+        <shortDescription>Header for page level errors</shortDescription>
         <value>Review the errors on this page.</value>
     </labels>
     <labels>
@@ -5701,7 +5708,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for selected fields in component that handles the custom table headers</shortDescription>
+        <shortDescription>Label for fields that are included as columns</shortDescription>
         <value>Visible Fields</value>
     </labels>
     <labels>
@@ -5709,7 +5716,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for source fields in component that handles the custom table headers</shortDescription>
+        <shortDescription>Label for fields that aren't included as columns</shortDescription>
         <value>Available Fields</value>
     </labels>
     <labels>
@@ -5717,7 +5724,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Section Name</shortDescription>
+        <shortDescription>Label for the Section Name field</shortDescription>
         <value>Section Name</value>
     </labels>
     <labels>
@@ -5725,7 +5732,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for the field for the template's description</shortDescription>
+        <shortDescription>Label for the Description field</shortDescription>
         <value>Description</value>
     </labels>
     <labels>
@@ -5733,7 +5740,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label for the field for the template's name</shortDescription>
+        <shortDescription>Label for the Template Name field</shortDescription>
         <value>Template Name</value>
     </labels>
     <labels>
@@ -5755,7 +5762,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Batch Header</shortDescription>
+        <shortDescription>Label for Batch Header navigation subtab</shortDescription>
         <value>Batch Header</value>
     </labels>
     <labels>
@@ -5763,7 +5770,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Form Fields</shortDescription>
+        <shortDescription>Label for Form Fields navigation subtab</shortDescription>
         <value>Form Fields</value>
     </labels>
     <labels>
@@ -5771,7 +5778,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Template Info</shortDescription>
+        <shortDescription>Label for Template Info navigation subtab</shortDescription>
         <value>Template Info</value>
     </labels>
     <labels>
@@ -5779,7 +5786,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text to show the number of records shown in the list view</shortDescription>
+        <shortDescription>Text to show the record count in the list view, one record</shortDescription>
         <value>{0} item</value>
     </labels>
     <labels>
@@ -5787,7 +5794,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text to show the number of records shown in the list view</shortDescription>
+        <shortDescription>Text to show the record count in the list view, more than one record</shortDescription>
         <value>{0} items</value>
     </labels>
     <labels>
@@ -5821,7 +5828,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when trying to save if there isn't a system error to display</shortDescription>
+        <shortDescription>Error when trying to save and system error isn't displayed</shortDescription>
         <value>Your changes cannot be saved. Please try again.</value>
     </labels>
     <labels>
@@ -5863,18 +5870,9 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when trying to save and tabs has an error</shortDescription>
+        <shortDescription>Error when trying to save a template with errors</shortDescription>
         <!-- {0} is a list of strings. Names of the tabs with errors. -->
-        <value>Please review tabs {0}</value>
-    </labels>
-    <labels>
-        <fullName>geToastTemplateTabError</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error when trying to save and a tab has an error</shortDescription>
-        <!-- {0} is a string. Name of the tab with errors. -->
-        <value>Please review tab {0}</value>
+        <value>Please review the following: {0}</value>
     </labels>
     <labels>
         <fullName>geToastTemplateUpdateSuccess</fullName>
@@ -5890,7 +5888,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Warning message for deleting a section if it contains required field</shortDescription>
+        <shortDescription>Warning message for deleting a section if it contains required fields</shortDescription>
         <value>Warning: By deleting this section, you are also removing required fields from the template. These fields need to be added into another section before you can save the template.</value>
     </labels>
     <labels>
