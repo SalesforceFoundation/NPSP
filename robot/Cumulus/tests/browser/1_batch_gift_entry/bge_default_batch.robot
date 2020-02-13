@@ -1,6 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/DataImportPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -9,9 +12,8 @@ Suite Teardown  Delete Records and Close Browser
 BGE Batch With Default Values
     #Create a BGE batch with default values
     [tags]  stable
-    Set Window Size    1024    768
     ${batch} =           Generate Random String
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     Click BGE Button       New Batch
     Fill BGE Form
     ...                       Name=${batch}
@@ -23,6 +25,7 @@ BGE Batch With Default Values
     Wait For Locator    bge.title    Batch Gift Entry
     Verify Title    Batch Gift Entry    ${batch}
     ${ns} =  Get NPSP Namespace Prefix
+    Current Page Should Be    Details    DataImportBatch__c
     ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c 
     Verify Expected Batch Values    ${batch_id}
     ...    Batch_Process_Size__c=50.0
@@ -42,7 +45,7 @@ Create New gift and process batch and validate
     Search Field By Value    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Fill BGE Form    Donation Amount=100
-    Click Field And Select Date    Donation Date    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process

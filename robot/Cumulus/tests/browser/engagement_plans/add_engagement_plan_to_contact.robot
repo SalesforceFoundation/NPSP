@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/EngagementPlanTemplatesPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -9,6 +11,7 @@ Suite Teardown  Delete Records and Close Browser
 Create a Contact and Add Engagement Plan
     [tags]  unstable
     ${plan_name}     ${task1_1}    ${sub_task1_1}     ${task2_1}     Create Engagement Plan
+    Set Suite Variable    ${plan_name}
     &{contact} =  API Create Contact    MailingStreet=50 Fremont Street    MailingCity=San Francisco    MailingPostalCode=95320    MailingState=CA    MailingCountry=USA
     Store Session Record    Account    &{contact}[AccountId]
     Go To Record Home  &{contact}[Id]
@@ -20,14 +23,13 @@ Create a Contact and Add Engagement Plan
 
 Delete Engagement Plan
     [tags]  unstable
-    ${plan_num}    Verify Eng Plan Exists    Engagement Plans    True
-    Click Element With Locator    toast-close
+    ${plan_num}    Verify Eng Plan Exists    ${plan_name}
     Click Related Item Popup Link    Engagement Plans    ${plan_num}    Delete
     Click Modal Button        Delete
-    Validate Related Record Count          Engagement Plans       0
+    Verify Occurence          Engagement Plans       0
     
 Verify Tasks Exist Under Activity
     [tags]  unstable
     Scroll Page To Location    0    0
-    Click Element With Locator    engagement_plan.activity-button    showMoreButton
+    Click More Activity Button    
     Check Activity Tasks    ${task1}    ${sub_task}    ${task2}
