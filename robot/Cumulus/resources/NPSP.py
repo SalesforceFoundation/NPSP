@@ -1174,7 +1174,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            rec=self.salesforce.salesforce_get(table,rec_id)
            for key, value in kwargs.items():
                self.builtin.should_be_equal_as_strings(rec[key], value)
-               break
+           break
        except Exception :
            time.sleep(10)
            rec=self.salesforce.salesforce_get(table,rec_id)
