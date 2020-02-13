@@ -1,7 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -10,7 +12,6 @@ Suite Teardown  Delete Records and Close Browser
 Select an opportunity for an account make grid changes and process it
     #Select an opportunity for an account, make grid changes, and process it
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -24,7 +25,7 @@ Select an opportunity for an account make grid changes and process it
     &{account} =     API Create Organization Account
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}    
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
@@ -35,8 +36,7 @@ Select an opportunity for an account make grid changes and process it
     Click BGE Button    Update this Opportunity
     Fill BGE Form
     ...                       Donation Amount=20
-    Click Element With Locator    bge.field-input    Donation Date
-    Click BGE Button    Today
+    Select Date From Datepicker    Donation Date    Today
     Click BGE Button       Save
     Sleep    2
     Verify Row Count    1

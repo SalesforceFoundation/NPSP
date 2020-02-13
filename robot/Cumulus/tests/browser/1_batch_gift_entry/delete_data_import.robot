@@ -1,7 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Library           DateTime
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+Library         DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -9,7 +11,6 @@ Suite Teardown  Delete Records and Close Browser
 
 Delete a Data Import
     [tags]  stable
-    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -22,7 +23,7 @@ Delete a Data Import
     ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{account} =     API Create Organization Account
     &{data_import} =  API Create DataImport    ${ns}NPSP_Data_Import_Batch__c=&{batch}[Id]    ${ns}Account1Imported__c=&{account}[Id]    ${ns}Donation_Donor__c=Account1
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     # Click Link      link=&{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
