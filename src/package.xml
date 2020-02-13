@@ -2035,6 +2035,7 @@
         <members>geHeaderBatchSetDefaultValues</members>
         <members>geHeaderCustomTableHeaders</members>
         <members>geHeaderEmptyFormSection</members>
+        <members>geHeaderFieldBundles</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
         <members>geHeaderFormFieldsLeftCol</members>
         <members>geHeaderFormFieldsModalDeleteSection</members>
@@ -2074,7 +2075,6 @@
         <members>geToastTemplateCreateSuccess</members>
         <members>geToastTemplateDeleteError</members>
         <members>geToastTemplateDeleteSuccess</members>
-        <members>geToastTemplateTabError</members>
         <members>geToastTemplateTabsError</members>
         <members>geToastTemplateUpdateSuccess</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
