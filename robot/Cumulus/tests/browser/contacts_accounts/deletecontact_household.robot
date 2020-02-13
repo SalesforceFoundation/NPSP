@@ -28,7 +28,7 @@ Delete Contact from Household
     Go To Page                           Listing               Contact
     Delete Record                        &{Contact2}[FirstName] &{Contact2}[LastName]
     Go To Page                           Details               Account                                object_id=&{contact1}[Id]
-    Page Should Contain Link             link=&{contact1}[LastName] Household
+    Page Should Contain                  &{contact1}[LastName] Household
     Go To Page                           Listing               Contact
     Select Row                           &{Contact1}[FirstName] &{Contact1}[LastName]
     Click Link                           title=Delete

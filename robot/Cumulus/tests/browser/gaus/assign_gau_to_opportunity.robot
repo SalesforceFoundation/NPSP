@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -24,7 +26,6 @@ Assign GAU to Opportunity
     Select Search    General Accounting Unit 1    &{gau2}[Name]  
     Add GAU Allocation    Amount 1    20
     Click Button    Save
-    Wait Until Page Does Not Contain    Add Row
-    Select Window
-    Page Scroll To Locator    record.related.check_occurrence    GAU Allocations
-    Verify Occurrence    GAU Allocations    2
+    Current Page Should Be     Details    Opportunity  
+    Scroll Page To Location    0    0  
+    Validate Related Record Count    GAU Allocations    2
