@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -17,6 +19,7 @@ Create Donation from a Contact
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Store Session Record    Account    &{contact}[AccountId]
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $1000 donation    Amount=1000    StageName=Pledged    npe01__Do_Not_Automatically_Create_Payment__c=false
+    Set Suite Variable    &{opportunity}
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
     ${opp_name}    Get Main Header 
@@ -38,18 +41,16 @@ Create Donation from a Contact
     ${xpath}    Get NPSP Locator    button    Create Payments
     Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)    
     Click Button with Value    Create Payments
-    Wait Until Page Does Not Contain Element    ${xpath}    error=Clicking Button Create Payments was not successful
-    Select Window
-    Page Scroll To Locator    record.related.check_occurrence    Payments
-    Wait For Locator    record.related.viewall    Payments
-    Validate Related Record Count         Payments                         4
+    Current Page Should Be     Details    Opportunity
+    Scroll Page To Location    0    0
+    Validate Related Record Count         Payments       4
     Click ViewAll Related List    Payments
     ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
     
 Verify values in Create one or more Payments for this Opportunity page
     [tags]  unstable
-    Click Element With Locator    breadcrumb-link    ${opp_name}
+    Go To Page     Details    Opportunity    object_id=&{opportunity}[Id]
     Select Tab    Related
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
     Wait Until Modal Is Open
@@ -64,7 +65,7 @@ Verify values in Create one or more Payments for this Opportunity page
     ...    Payment Writeoff Amount=$250.00
     ...    Remaining Balance=$750.00
     Click Button    Cancel
-    Wait Until Loading Is Complete
+    Current Page Should Be     Details    Opportunity
     Select Tab    Related
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
     Wait Until Modal Is Open
@@ -73,7 +74,7 @@ Verify values in Create one or more Payments for this Opportunity page
     Click Modal Button    Save
     Page Should Contain    A Payment can't be both paid and written off. You must deselect one or both checkboxes.
     Click Modal Button    Cancel
-    Wait Until Modal Is Closed
+    Current Page Should Be     Details    Opportunity
     Click ViewAll Related List    Payments
     Verify Details
     ...    Unpaid=3
@@ -81,23 +82,25 @@ Verify values in Create one or more Payments for this Opportunity page
     
 Verify values in Writeoff Remaining Balance Page
     [tags]  unstable
-    Click Element With Locator    breadcrumb-link    ${opp_name}
+    Go To Page     Details    Opportunity    object_id=&{opportunity}[Id]
     Select Tab    Related
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
     Wait Until Modal Is Open  
     Set Checkbutton To    Written Off    checked
     Populate Field    Payment Amount    200 
     Click Modal Button    Save
+    Wait Until Modal Is Closed
     Click Related List Dd Button    Payments    Show one more action    Write Off Payments 
     Wait For Locator    frame    Write Off Remaining Balance
     Choose Frame    Write Off Remaining Balance 
+    Wait Until Page Contains    You are preparing to write off 2 Payment(s)
     Verify Field Values
     ...    Payment Writeoff Amount=$450.00
     ...    Remaining Balance=$550.00  
     Page Should Contain    You are preparing to write off 2 Payment(s) totaling $550.00
     Choose Frame    Write Off Remaining Balance
     Click Button    Cancel
-    Wait Until Loading Is Complete
+    Current Page Should Be     Details    Opportunity
     Select Tab    Related
     Load Related List    Payments
     Click ViewAll Related List    Payments

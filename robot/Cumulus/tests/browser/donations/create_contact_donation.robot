@@ -47,7 +47,7 @@ Create Donation from a Contact
     ${value}                             Return Locator Value      alert
     Go To Page                           Listing                   Opportunity
     Click Link                           ${value}
+    Current Page Should Be               Details                   Opportunity
     Save Current Record ID For Deletion  Opportunity
-    Current Page Should Be               Detail                    Opportunity
     Validate Related Record Count        Payments                     1
 
