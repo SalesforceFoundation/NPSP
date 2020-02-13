@@ -24,19 +24,19 @@ from cumulusci.tasks.apex.anon import AnonymousApexTask
 from cumulusci.core.config import TaskConfig
 
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
+from BaseObjects import BaseNPSPPage
 
-
-from locators_46 import npsp_lex_locators as locators_46
+from locators_48 import npsp_lex_locators as locators_48
 from locators_47 import npsp_lex_locators as locators_47
 locators_by_api_version = {
+    48.0: locators_48,   # spring '20
     47.0: locators_47,   # winter '20
-    46.0: locators_46,  # Summer '19
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
 
 @selenium_retry
-class NPSP(SalesforceRobotLibraryBase):
+class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = 1.0
@@ -89,8 +89,7 @@ class NPSP(SalesforceRobotLibraryBase):
         """This is a temporary keyword added to address difference in behaviour between summer19 and winter20 release"""
         self.search_field_by_value(loc, value)
         print(self.latest_api_version)       
-        if self.latest_api_version == 47.0:
-            self.selenium.click_link(value)
+        self.selenium.click_link(value)
             
 
     def click_record_button(self, title):
@@ -134,33 +133,39 @@ class NPSP(SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["record"]["related"]["button"].format(
             heading, button_title
         )
-        buttons=self.selenium.get_webelements(locator)
+        buttons = self.selenium.driver.find_elements_by_xpath(locator)
         for button in buttons:
             if button.is_displayed():
-                button.click()
+                self.selenium.driver.execute_script('arguments[0].click()', button)
                 b_found = True
                 break
             
         assert b_found, "{} related list with button {} not found.".format(heading, button_title)
-                  
+     
+    @capture_screenshot_on_error              
     def click_related_list_dd_button(self, heading, dd_title, button_title):
         """ To Click on a related list dropdown button.
             Pass the list name, dd name and button name"""
         self.salesforce.load_related_list(heading)
         locator = npsp_lex_locators["record"]["related"]["button"].format(heading, dd_title)
-        self.selenium.click_link(locator) 
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element) 
         time.sleep(1)
         loc=npsp_lex_locators["record"]["related"]["dd-link"].format(button_title)
         self.selenium.wait_until_element_is_visible(loc)
-        self.selenium.click_link(loc)   
+        element = self.selenium.driver.find_element_by_xpath(loc)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+           
         
         
-    def click_flexipage_dropdown(self, title):
-        """Click the lightning dropdown to open it"""
+    def click_flexipage_dropdown(self, title,value):
+        """Click the lightning dropdown to open it and select value"""
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('flexipage-popup')    
+        self.wait_for_locator('flexipage-popup')
+        option=npsp_lex_locators['span'].format(value)
+        self.selenium.click_element(option)   
 
     def open_date_picker(self, title):
         locator = npsp_lex_locators['record']['list'].format(title)
@@ -263,7 +268,31 @@ class NPSP(SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['click_aff_id'].format(self.aff_id_text)
         self.selenium.get_webelement(locator).click()   
         
-        
+#     @capture_screenshot_on_error    
+#     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
+#         """If status is 'contains' then the specified value should be present in the field
+#                         'does not contain' then the specified value should not be present in the field
+#         """
+#         if section is not None:
+#             section="text:"+section
+#             self.selenium.scroll_element_into_view(section)
+#         list_found = False
+#         locators = npsp_lex_locators["confirm"].values()
+#         for i in locators:
+#             locator = i.format(field,value)
+#             if self.check_if_element_exists(locator): 
+#                 print(f"element exists {locator}")  
+#                 actual_value=self.selenium.get_webelement(locator).text
+#                 print(f"actual value is {actual_value}")
+#                 if status == "contains":
+#                     assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
+#                 elif status == "does not contain":
+#                     assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
+#                 list_found = True
+#                 break
+#  
+#         assert list_found, "locator not found"  
+    @capture_screenshot_on_error 
     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
@@ -273,21 +302,27 @@ class NPSP(SalesforceRobotLibraryBase):
             self.selenium.scroll_element_into_view(section)
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
-        for i in locators:
-            locator = i.format(field)
-            if self.check_if_element_exists(locator):   
-                actual_value=self.selenium.get_webelement(locator).text
-                if status == "contains":
-                    assert value == actual_value, "Expected value to be {} but found {}".format(value, actual_value)
-                elif status == "does not contain":
-                    assert value != actual_value, "Expected value {} and actual value {} should not match".format(value, actual_value)   
-                list_found = True
-                break
-
-        assert list_found, "locator not found"  
-     
-    
-    
+        if status == "contains":
+            for i in locators:
+                print("inside for loop")
+                locator = i.format(field,value)
+                if self.check_if_element_exists(locator):
+                    print(f"element exists {locator}")
+                    actual_value=self.selenium.get_webelement(locator).text
+                    print(f"actual value is {actual_value}")
+                    assert value == actual_value, "Expected {} value to be {} but found {}".format(field,value, actual_value)
+                    list_found=True
+                    break
+        if status == "does not contain":
+            for i in locators:
+                locator = i.format(field,value)
+                if self.check_if_element_exists(locator):
+                    print(f"locator is {locator}")
+                    raise Exception(f"{field} should not contain value {value}")
+            list_found = True    
+ 
+        assert list_found, "locator not found" 
+    @capture_screenshot_on_error
     def verify_record(self, name):
         """ Checks for the record in the object page and returns true if found else returns false
         """
@@ -462,6 +497,17 @@ class NPSP(SalesforceRobotLibraryBase):
             exp_value, actual_value
         )  
         
+    def verify_occurence(self,title,value):
+        self.salesforce.load_related_list(title)
+        time.sleep(1) 
+        locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
+        actual_value=self.selenium.get_webelement(locator).text
+        exp_value="("+value+")"
+        assert exp_value == actual_value, "Expected value to be {} but found {}".format(
+            exp_value, actual_value
+        )
+           
+        
     def check_record_related_item(self,title,value):
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
         self.selenium.wait_until_page_contains_element(locator)
@@ -502,7 +548,9 @@ class NPSP(SalesforceRobotLibraryBase):
     def select_relatedlist(self,title):
         """click on the related list to open it"""
         locator=npsp_lex_locators['record']['related']['title'].format(title)
-        self.selenium.get_webelement(locator).click()  
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
+ 
         
     def verify_related_list_field_values(self, listname=None, **kwargs):
         """verifies the values in the related list objects page"""
@@ -525,7 +573,7 @@ class NPSP(SalesforceRobotLibraryBase):
     def page_contains_record(self,title):   
         """Validates if the specified record is present on the page"""   
         locator= npsp_lex_locators['object']['record'].format(title)
-        self.selenium.page_should_not_contain_element(locator) 
+        self.selenium.wait_until_page_does_not_contain_element(locator) 
              
                          
                
@@ -571,19 +619,18 @@ class NPSP(SalesforceRobotLibraryBase):
     
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
+        self.salesforce.load_related_list(list_name)
         for value in args:
             locator = npsp_lex_locators['check_related_list_item'].format(list_name,value)
             self.selenium.page_should_contain_element(locator)
 
     def verify_eng_plan_exists(self,name, delete=None):  
         """verifies that the Engagement Plans related list has a plan stored under it and clicks on dropdown if True is passed as 2nd argument"""
-        locator = npsp_lex_locators['engagement_plan']['check_eng_plan'].format(name)
+        locator = npsp_lex_locators['record']['related']['link'].format('Engagement Plans',name)
         self.selenium.page_should_contain_element(locator) 
-        plan=self.selenium.get_webelement(locator).text   
-        if delete == "True":
-               locator = npsp_lex_locators['engagement_plan']['dd'].format(name)
-               self.selenium.get_webelement(locator).click()      
+        plan=self.selenium.get_webelement(locator).text       
         return plan
+    
     
     def check_activity_tasks(self, *args):
         """verifies that the specified tasks are present under activity tab """
@@ -731,7 +778,8 @@ class NPSP(SalesforceRobotLibraryBase):
     def click_viewall_related_list (self,title):  
         """clicks on the View All link under the Related List"""      
         locator=npsp_lex_locators['record']['related']['viewall'].format(title)
-        self.selenium.get_webelement(locator).click()
+        element = self.selenium.driver.find_element_by_xpath(locator)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
         
     def click_button_with_value (self,title):  
         """clicks on the button on the payments page"""      
@@ -963,7 +1011,6 @@ class NPSP(SalesforceRobotLibraryBase):
         """clicks on buttons for BGE"""  
         self.builtin.log("This test is using javascript to click on button as regular click wouldn't work with Summer19", "WARN")    
         locator=npsp_lex_locators['bge']['button'].format(text)
-        self.selenium.set_focus_to_element(locator)
         time.sleep(1)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
@@ -1012,6 +1059,7 @@ class NPSP(SalesforceRobotLibraryBase):
     def return_locator_value(self, path, *args, **kwargs): 
         """Returns the value pointed by the specified locator"""
         locator=self.get_npsp_locator(path, *args, **kwargs)
+        self.selenium.wait_until_page_contains_element(locator)
         value=self.selenium.get_webelement(locator).text   
         return value
         
@@ -1034,6 +1082,7 @@ class NPSP(SalesforceRobotLibraryBase):
     def click_link_with_text(self, text):
         self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
         locator = npsp_lex_locators['link-text'].format(text)
+        self.selenium.wait_until_page_contains_element(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)  
     
@@ -1130,17 +1179,34 @@ class NPSP(SalesforceRobotLibraryBase):
             return "npsp__" 
         else:
             return ""       
-          
+     
+    @capture_screenshot_on_error      
     def click_first_matching_related_item_popup_link(self,heading,rel_status,link):
         '''Clicks a link in the popup menu for first matching related list item.
         heading specifies the name of the list,
         rel_status specifies the status or other field vaule to identify a particular item,
-        and link specifies the name of the link'''  
+        and link specifies the name of the link''' 
         self.salesforce.load_related_list(heading)
         locator = npsp_lex_locators["record"]["related"]["link"].format(heading, rel_status)
-        list=self.selenium.get_webelements(locator)
-        title=list[0].text
-        self.salesforce.click_related_item_popup_link(heading, title, link)
+        mylist=self.selenium.get_webelements(locator)
+        title=mylist[0].text
+        print(f"title is {title}")
+        self.click_special_related_item_popup_link(heading, title, link)
+        
+    def click_special_related_item_popup_link(self, heading, title, link):
+        """Clicks a link in the popup menu for a related list item.
+
+        heading specifies the name of the list,
+        title specifies the name of the item,
+        and link specifies the name of the link
+        """
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["popup_trigger"].format(heading, title)
+        self.selenium.wait_until_page_contains_element(locator)
+        self.salesforce._jsclick(locator)
+        locator = npsp_lex_locators["popup-link"].format(link)
+        self.salesforce._jsclick(locator)
+        self.salesforce.wait_until_loading_is_complete()    
         
     def verify_field_values(self,**kwargs):
         """Verifies values in the specified fields""" 
@@ -1190,11 +1256,13 @@ class NPSP(SalesforceRobotLibraryBase):
     def change_view_to(self,view_name): 
         """Selects a different view for the object records in listing page""" 
         locator=npsp_lex_locators['object_dd']
-        view=npsp_lex_locators['link'].format(view_name)
+        view=npsp_lex_locators['link'].format(view_name,view_name)
         self.selenium.wait_until_page_contains("List Views")
-        self.selenium.get_webelement(locator).click()  
-        self.selenium.click_element(view)
+        self.selenium.get_webelement(locator).click()
+        element = self.selenium.driver.find_element_by_xpath(view)
+        self.selenium.driver.execute_script('arguments[0].click()', element)
         self.selenium.wait_until_page_contains(view_name)
+        
 
     def search_field_by_value(self, fieldname, value):
          """ Searches the field with the placeholder given by 'fieldname' for the given 'value'
@@ -1208,7 +1276,8 @@ class NPSP(SalesforceRobotLibraryBase):
         
     def save_current_record_id_for_deletion(self,object_name): 
         """Gets the current page record id and stores it for specified object 
-           in order to delete record during suite teardown """   
+           in order to delete record during suite teardown """  
+#         self.pageobjects.current_page_should_be("Details",object_name)    
         id=self.salesforce.get_current_record_id()
         self.salesforce.store_session_record(object_name,id)   
         return id
@@ -1220,11 +1289,11 @@ class NPSP(SalesforceRobotLibraryBase):
         self.builtin.should_not_be_empty(record, msg="The database object {} with id {} is not in the database".format(object_name,id))
         return record
     
-
+    @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value): 
         """Select given value in the dropdown field"""
         locator = npsp_lex_locators['record']['list'].format(dropdown)
-        self.selenium.set_focus_to_element(locator)
+        self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
         self.selenium.click_link(value) 
@@ -1305,6 +1374,7 @@ class NPSP(SalesforceRobotLibraryBase):
         self.select_row(value)
         self.selenium.click_link("Delete")
         self.selenium.wait_until_location_contains("/list")
+        self.selenium.wait_until_page_does_not_contain(value)
     
     @capture_screenshot_on_error    
     def populate_modal_form(self,**kwargs):
@@ -1321,17 +1391,21 @@ class NPSP(SalesforceRobotLibraryBase):
                     if "Lookup" in classname and "readonly" not in classname:
                         self.salesforce.populate_lookup_field(key,value)
                         print("Executed populate lookup field for {}".format(key))
+                        break
                     elif "Select" in classname and "readonly" not in classname:
                         self.select_value_from_dropdown(key,value)
                         print("Executed select value from dropdown for {}".format(key))
+                        break
                     elif "Checkbox" in classname and "readonly" not in classname:
                         if value == "checked":
                             locator = npsp_lex_locators["checkbox"]["model-checkbox"].format(key)
-                            self.selenium.get_webelement(locator).click() 
+                            self.selenium.get_webelement(locator).click()
+                            break 
                     elif "Date" in classname and "readonly" not in classname:
                         self.open_date_picker(key)
                         self.pick_date(value)
                         print("Executed open date picker and pick date for {}".format(key))
+                        break
                     else:
                         try :
                             self.search_field_by_value(key,value)
@@ -1350,15 +1424,13 @@ class NPSP(SalesforceRobotLibraryBase):
     def verify_toast_message(self,value):
         """Verifies that toast contains specified value"""       
         locator=npsp_lex_locators["toast-msg"]
-        ele=self.selenium.get_webelements(locator)
-        found=False
-        for e in ele:
-            msg=e.text
-            if msg == value:
-                found=True
-                print("Toast message verified")
-                break
-        assert found, "Expected Toast message {} not found on page".format(value)
+        self.selenium.wait_until_page_contains_element(locator)
+        msg=self.selenium.get_webelement(locator).text
+        if msg == value:
+            print("Toast message verified")
+        else:
+            raise Exception("Expected Toast message not found on page")    
+
 
     def edit_record_field_value(self,field,value):
         """Scrolls just a little below the field
@@ -1410,8 +1482,21 @@ class NPSP(SalesforceRobotLibraryBase):
         self.selenium.click_button(btn)
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
-        locator=npsp_lex_locators['delete_icon'].format(field,value)
-        self.selenium.get_webelement(locator).click()  
+        locator=npsp_lex_locators['delete_icon_record'].format(field,value)
+        self.selenium.get_webelement(locator).click()        
+        
+    def select_date_from_datepicker(self,field,value):
+        field_loc=npsp_lex_locators["bge"]["field-input"].format(field)
+        self.selenium.click_element(field_loc)
+        locator=npsp_lex_locators["bge"]["datepicker_open"].format(field)  
+        self.selenium.wait_until_page_contains_element(locator)
+        self.click_bge_button(value)
+        self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")    
+        
+    def click_more_actions_button(self):
+        """"""   
+        locator=npsp_lex_locators['link'].format("more actions","more actions")
+        self.selenium.click_element(locator)     
         
         
     @capture_screenshot_on_error
@@ -1426,3 +1511,21 @@ class NPSP(SalesforceRobotLibraryBase):
         self.salesforce._jsclick(locator)
         self.builtin.log("waiting...", "DEBUG")
         self.salesforce.wait_until_loading_is_complete()      
+
+    def click_actions_link(self,title):
+        """Clicks on the link in the actions container on top right corner of the page using Javascript"""
+        locator=npsp_lex_locators["link-title"].format(title)
+        self.salesforce._jsclick(locator)
+     
+    def click_more_activity_button(self): 
+        """Clicks on View More button on Activity tab of the record""" 
+        locator = npsp_lex_locators["record"]["activity-button"].format('showMoreButton') 
+        self.salesforce._jsclick(locator) 
+        
+    def click_show_more_actions_button(self,title):
+        """Clicks on more actions dropdown and click the given title"""   
+        locator=npsp_lex_locators['link-contains'].format("more actions")
+        self.selenium.click_element(locator)
+        self.selenium.wait_until_page_contains(title)
+        link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
+        self.selenium.click_link(link_locator)     
