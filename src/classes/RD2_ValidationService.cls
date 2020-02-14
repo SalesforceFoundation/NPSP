@@ -91,17 +91,12 @@ public with sharing class RD2_ValidationService {
         set;
     }
 
-    /***
-     * @description Boolean indicate if the current validation is valid and if any further logic needs to be execute.
-     */
-    public Boolean dataIsValid;
 
     /**
     * @description Constructor for the RD2_ValidationService class
     * @param rds New rds that will be validated
     */
     public RD2_ValidationService(List<npe03__Recurring_Donation__c> rds) {
-        this.dataIsValid = true;
         this.rds = rds;
     }
 
@@ -137,9 +132,9 @@ public with sharing class RD2_ValidationService {
 
             validateActiveRecurringDonation(rd);
             validateCurrencyChange(rd, oldRd);
-            validateDonorChange(rd, oldRd);
 
-            if (dataIsValid) {
+            Boolean isValid = validateDonorChange(rd, oldRd);	            
+            if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
         }
@@ -165,17 +160,17 @@ public with sharing class RD2_ValidationService {
      */
     private void validateInstallmentData(npe03__Recurring_Donation__c rd) {
         if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
-            addError(rd, System.Label.RD2_AmountMustBeValid);
+            rd.addError(System.Label.RD2_AmountMustBeValid);
         }
         
         if (rd.InstallmentFrequency__c == null
                 || rd.InstallmentFrequency__c < 1
                 || rd.InstallmentFrequency__c > 20) {
-            addError(rd, System.Label.RD2_InstallmentFrequencyMustBeValid);
+            rd.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
         }
 
         if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
-            addError(rd,
+            rd.addError(
                 String.format(
                     System.Label.RD2_InstallmentPeriodMustBeValid,
                     new String[]{ rd.npe03__Installment_Period__c })
@@ -192,7 +187,7 @@ public with sharing class RD2_ValidationService {
     private void validateDonor(npe03__Recurring_Donation__c rd, Account acct) {
         //either Account or Contact must be specified
         if (rd.npe03__Organization__c == null && rd.npe03__Contact__c == null) {
-            addError(rd, System.Label.RD_DonorIsRequired);
+            rd.addError(System.Label.RD_DonorIsRequired);
             return;
         }
 
@@ -202,32 +197,33 @@ public with sharing class RD2_ValidationService {
         }
 
         if (rd.npe03__Contact__c == null) {
-            addError(rd, System.Label.RD_ContactMustBelongToAccount);
+            rd.addError(System.Label.RD_ContactMustBelongToAccount);
         } else if (!UTIL_SObject.extractIds(acct.Contacts).contains(rd.npe03__Contact__c)) {
-            addError(rd, System.Label.RD_ContactMustBelongToAccount);
+            rd.addError(System.Label.RD_ContactMustBelongToAccount);
         }
     }
 
     /**
     * @description Validate when contact or account change is permitted on update of rd
-    * @param rds The Recurring Donations to validate
+    * @param rds The Recurring Donation to validate
     * @param oldRd The previous version of the Recurring Donation
+    * @return Boolean True when the validation pass, otherwise, false
     */
-    private void validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-
+    private Boolean validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
         if (rd.npe03__Organization__c == oldRd.npe03__Organization__c
             && rd.npe03__Contact__c == oldRd.npe03__Contact__c
         ) {
-            return;
+            return true;
         }
 
         if (noClosedOppRDIds.contains(rd.Id)
             || isOrganizationChange(accountById.get(rd.npe03__Organization__c), accountById.get(oldRd.npe03__Organization__c))
         ) {
-            return;
+            return true;
         }
             
-        addError(rd, System.Label.RD2_ContactChangeIsRestricted);
+        rd.addError(System.Label.RD2_ContactChangeIsRestricted);
+        return false;
     }
 
     /**
@@ -247,7 +243,7 @@ public with sharing class RD2_ValidationService {
         if ((String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD)
             && !noClosedOppRDIds.contains(rd.Id)
         ) {
-            addError(rd, System.Label.RD2_CurrencyChangeIsRestrictedOnRD);
+            rd.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnRD);
         }
     }
 
@@ -276,7 +272,7 @@ public with sharing class RD2_ValidationService {
         }
 
         if (String.IsBlank(rd.Day_of_Month__c)) {
-            addError(rd, System.Label.RD2_DayOfMonthIsRequiredForMonthlyInstallment);
+            rd.addError(System.Label.RD2_DayOfMonthIsRequiredForMonthlyInstallment);
             return;
         }
 
@@ -291,7 +287,7 @@ public with sharing class RD2_ValidationService {
             Boolean isValid = dayOfMonth > 0 && dayOfMonth < 29;
 
             if (!isValid) {
-                addError(rd,
+                rd.addError(
                     String.format(
                         System.Label.RD2_DayOfMonthMustBeValid,
                         new String[]{ rd.Day_of_Month__c })
@@ -349,15 +345,5 @@ public with sharing class RD2_ValidationService {
         }
 
         return rdIds;
-    }
-
-    /***
-    * @description Add error to the Recurring Donation record and set data to be no longer valid
-    * @param rd The Recurring Donation record to add the error message
-    * @param errorString The error message to be added
-    */
-    private void addError(npe03__Recurring_Donation__c rd, String errorString) {
-        dataIsValid = false;
-        rd.addError(errorString);
     }
 }

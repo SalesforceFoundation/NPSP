@@ -98,11 +98,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         assignDefaultInstallmentFrequency(rds, triggerAction);
 
-        Boolean dataIsValid = validate(rds, oldRds, triggerAction);
-
-        if (!dataIsValid) {
-            return null;
-        }
+        validate(rds, oldRds, triggerAction);
 
         handleRDSchedules(rds, oldRds, triggerAction);
 
@@ -157,9 +153,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @description Validates Recurring Donations data
     * @param rds Trigger.new records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
-    * @return Boolean Indicate if the validation pass
     */
-    public Boolean validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+    public void validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
         RD2_ValidationService validationService = new RD2_ValidationService(rds);
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
@@ -170,8 +165,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 .withOldRecurringDonations(oldRds)
                 .validateOnChange();
         }
-
-        return validationService.dataIsValid;
     }
 
     /***
