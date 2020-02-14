@@ -370,6 +370,7 @@
         <members>RD2_VisualizeScheduleController</members>
         <members>RD2_VisualizeScheduleController_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
+        <members>RD_AddDonationsBTN_TEST</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
         <members>RD_CascadeDeleteLookups_TEST</members>
@@ -1555,6 +1556,7 @@
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
+        <members>RD_ErrorAddDonationLimitedToLegacyMode</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
         <members>RD_ErrorLegacyBatchJobCannotBeRun</members>
@@ -2020,9 +2022,9 @@
         <members>healthSolutionSaveOppsFailed</members>
         <members>healthSolutionScheduleJobs</members>
         <members>healthSolutionTriggerHandlerMismatch</members>
-        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>healthSolutionUDFBadDatatypes</members>
         <members>healthSolutionUDFOppField</members>
+        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>hhCmpDedupLabelReturnToCmp</members>
         <members>hhCmpDedupeBatchMessage</members>
         <members>hhCmpDedupeBatchProgressTitle</members>
