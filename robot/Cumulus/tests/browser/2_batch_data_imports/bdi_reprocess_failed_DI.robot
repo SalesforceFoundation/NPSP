@@ -49,7 +49,7 @@ Verify Donation Creation Fails on Incorrect Data and Reprocess
     ...                    Create a DI record with Account, CustomObject2 and Donation details but select Donation Donor as Contact.
     ...                    Verify that DI processing fails but account is created. Edit DI and change Donor to Account and reprocess DI record. 
     ...                    DI completes and account matches to previous and Donation and Custom Object records are created 
-    [tags]                 W-035913    feature:BDI
+    [tags]                 W-035913    feature:BDI    unstable
     
     #Create DI record and process batch and verify failure messages
     &{data_import} =                 Create Data Import Record
@@ -102,7 +102,7 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     ...                    Create a DI record with Contact, correct Donation details and GAU Allocation percent but without GAU ID.
     ...                    Verify that DI processing fails but Contact, Donation and Payment are created. Update DI with GAU ID and reprocess DI record. 
     ...                    DI completes and Contact matches to previous and Donation and GAU allocation records are created 
-    [tags]                 W-035913    feature:BDI
+    [tags]                 W-035913    feature:BDI    unstable
     
     #Create DI record, process batch and confirm failure message
     &{data_import} =                 Create Data Import with GAU Details
