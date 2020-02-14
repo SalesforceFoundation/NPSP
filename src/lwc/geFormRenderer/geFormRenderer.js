@@ -1,4 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
+import {getObjectInfo} from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import { NavigationMixin } from 'lightning/navigation';
 import GeLabelService from 'c/geLabelService';
@@ -14,7 +15,7 @@ import {
 import { registerListener } from 'c/pubsubNoPageRef';
 import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch, getValueFromDotNotationString } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import { getRecord } from 'lightning/uiRecordApi';
+import {getRecord, getFieldValue} from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
@@ -30,6 +31,9 @@ import PAYMENT_OPPORTUNITY_NAME_FIELD from '@salesforce/schema/npe01__OppPayment
 
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
 import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
+import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
+import PARENT_OPPORTUNITY_FIELD
+    from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
 
 // Labels are used in BDI_MatchDonations class
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
@@ -102,8 +106,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.CUSTOM_LABELS.geButtonCancelAndClear;
     }
 
-   @wire(getRecord, { recordId: '$donorRecordId', optionalFields: '$fieldNames' })
-    wiredGetRecordMethod({ error, data }) {
+    @wire(getRecord, {recordId: '$donorRecordId', optionalFields: '$fieldNames'})
+    wiredGetRecordMethod({error, data}) {
         if (data) {
             this.donorRecord = data;
             this.initializeForm(this.formTemplate, this.fieldMappings);
@@ -116,23 +120,36 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @description Retrieves a records mapped target field values and
      *              loads them into the appropriate source fields in use
      *              on the Gift Entry form.
-     * @param selectedRecordId Id of the selected record.
      * @param lookupFieldApiName Api name of the lookup field.
+     * @param selectedRecordId Id of the selected record.
      */
     loadSelectedRecordFieldValues(lookupFieldApiName, selectedRecordId) {
         this.selectedRecordId = selectedRecordId;
         this.selectedRecordFields =
             this.getSiblingFieldsForSourceField(lookupFieldApiName);
+
+        if (selectedRecordId.substring(0, 3) === this.oppPaymentKeyPrefix &&
+            this.selectedDonation.Id === selectedRecordId) {
+            // This is the selected payment, so add in the parent opp field so
+            // it can be used to populate the parent Opportunities' fields.
+            this.selectedRecordFields.push(
+                this.getQualifiedFieldName(OPP_PAYMENT_OBJECT, PARENT_OPPORTUNITY_FIELD));
+        }
+
         this.storeSelectedRecordIdByObjectMappingName(
             this.getObjectMapping(lookupFieldApiName).DeveloperName,
             selectedRecordId
         );
     }
 
-    //TODO: loading from account or contact and possibly selecting donation/payment in
-    //      review donations modal could possibly route through this getSelectedRecord
-    //      function by populating selectedRecordId and selectedRecordFields (using
-    //      this.getSiblingFields())
+    getQualifiedFieldName(objectInfo, fieldInfo) {
+        return `${objectInfo.objectApiName}.${fieldInfo.fieldApiName}`;
+    }
+
+    get oppPaymentKeyPrefix() {
+        return this.oppPaymentObjectInfo.data.keyPrefix;
+    }
+    
     selectedRecordIdByObjectMappingDevName = {};
     selectedRecordId;
     selectedRecordFields;
@@ -147,8 +164,22 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // instance "displayValue" for lookup fields, etc.
             // See response from getRecord for data structure guidance.
             this.load(dataImport);
+
+            if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
+                data.id === this.selectedDonation.Id) {
+                const oppId = this.parentOpportunityId(data);
+                this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
+            }
         }
     }
+
+    parentOpportunityId(oppPaymentRecord) {
+        const parentOppId = getFieldValue(oppPaymentRecord, PARENT_OPPORTUNITY_FIELD);
+        return parentOppId;
+    }
+
+    @wire(getObjectInfo, {objectApiName: OPP_PAYMENT_OBJECT.objectApiName})
+    oppPaymentObjectInfo;
 
     mapRecordValuesToDataImportFields(record) {
         //reverse map to create an object with relevant source field api names to values
@@ -941,19 +972,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 blankDataImportRecord[paymentImported] = undefined;
                 blankDataImportRecord[paymentImportStatus] = undefined;
 
-                //TODO: use loadSelectedRecordFieldValues to load selected Opp & Pmt field
-                // values
-                // this.loadSelectedRecordFieldValues(donationImported, selectedDonation.Id);
+                this.loadSelectedRecordFieldValues(donationImported, this.selectedDonation.Id);
             } else if (donationType === 'payment') {
                 blankDataImportRecord[paymentImported] = this.selectedDonation.Id;
                 blankDataImportRecord[paymentImportStatus] = userSelectedMatch;
                 blankDataImportRecord[donationImported] = this.selectedDonation.npe01__Opportunity__c;
                 blankDataImportRecord[donationImportStatus] = userSelectedMatch;
 
-                //TODO: combine these by modifying getSiblingFields to return parent fields
-                //      for object mappings that have a predecessor
-                // this.loadSelectedRecordFieldValues(paymentImported, selectedDonation.Id);
-                // this.loadSelectedRecordFieldValues(donationImported, selectedDonation.npe01__Opportunity__c);
+                this.loadSelectedRecordFieldValues(paymentImported, this.selectedDonation.Id);
             }
 
         } else {

@@ -111,7 +111,7 @@ export default class GeFormSection extends LightningElement {
     }
 
     @api
-    load(data){
+    load(data) {
         const fields = this.template.querySelectorAll('c-ge-form-field');
 
         fields.forEach(fieldCmp => {
