@@ -47,6 +47,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>InstallmentOppAutoCreateOption__c</fullName>
+        <description>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</inlineHelpText>
+        <label>Installment Opportunity Auto-Creation</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>IsRecurringDonations2Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <description>This option enables Enhanced Recurring Donations. IMPORTANT: You must enable Enhanced Recurring Donations in NPSP Settings. Enabling in Custom Settings may cause data inconsistencies.</description>
