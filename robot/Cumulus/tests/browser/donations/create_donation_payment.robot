@@ -48,7 +48,7 @@ Create Donation and Opportunity and Create Payment Manually
     Pick Date                               Today
     Click Modal Button                      Save
     Wait Until Modal Is Closed
-    Current Page Should Be                  Details                                  Opportunity
+    Current Page Should Be                  Details                                 Opportunity
     Save Current Record ID For Deletion     Opportunity
     Validate Related Record Count           Payments                                0
 
@@ -64,12 +64,12 @@ Create Donation and Opportunity and Create Payment Manually
     Pick Date                               Today
     Click Modal Button                      Save
     Scroll Page To Location                 0    0
-    Validate Related Record Count           Payments                                      1
+    Validate Related Record Count           Payments                                1
 
     Go To Page                              Details
     ...                                     Contact
     ...                                     object_id=${data}[contact][Id]
-
+    Wait Until Loading Is Complete
     #Perform Validations
     ${opp_date} =     Get Current Date      result_format=%-m/%-d/%Y
     Navigate To And Validate Field Value    Last Gift Date           contains       ${opp_date}          Donation Totals
