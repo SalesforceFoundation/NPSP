@@ -386,6 +386,21 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+    * @description Build multiple Organization Accounts
+    * @param size size of organization accounts being created
+    * @return List<Account>
+    */
+    public static List<Account> buildOrganizationAccounts(Integer size) {
+        List<Account> organizations = new List<Account>();
+        
+        for (Integer i = 0; i < size; i++) {
+            organizations.add(buildOrganizationAccount());
+        }
+
+        return organizations;
+    }
+
+    /**
      * @description Builds an Organization Account
      * @return Account
      */

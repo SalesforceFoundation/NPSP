@@ -213,72 +213,6 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
-     * @description Confirms DataCount_ONETIME_Use feature parameter is set to true when custom
-     * installments are enabled
-     */
-    @IsTest
-    private static void validateCustomInstallmentSettingsTelemetryWhenEnabled() {
-        final String CUSTOM_INSTALLMENT_PERIOD = 'Bi-Weekly';
-
-        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
-        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
-            npe03__Increment__c = 'Weeks',
-            npe03__Value__c = 2,
-            Name = CUSTOM_INSTALLMENT_PERIOD
-        );
-        insert customInstallment;
-
-        Account donorAccount = new Account(Name = 'foo');
-        insert donorAccount;
-
-        insert new TEST_RecurringDonationBuilder()
-            .withInstallmentPeriod(CUSTOM_INSTALLMENT_PERIOD)
-            .withDateEstablished(System.today())
-            .withAccount(donorAccount.Id)
-            .withAmount(20)
-            .withScheduleTypeMultiplyValue()
-            .withOpenEndedStatusOpen()
-            .build();
-
-        Test.startTest();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
-        Test.stopTest();
-
-        System.assertEquals(
-            1,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
-            ),
-            'setPackageBooleanValue should have been called with the feature DataCount_ONETIME_Use'
-        );
-    }
-
-    /**
-     * @description Confirms DataCount_ONETIME_Use feature parameter is set to true when custom
-     * installments are enabled
-     */
-    @IsTest
-    private static void validateCustomInstallmentSettingsTelemetryWhenDisabled() {
-        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
-        Test.startTest();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
-        Test.stopTest();
-
-        System.assertEquals(
-            0,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
-            ),
-            'setPackageBooleanValue should have been called with the feature DataCount_ONETIME_Use'
-        );
-    }
-
-
-    /**
      * @description Confirms that the payment opportunities count settings telemetry data is defaulted correctly
      */
     @IsTest
@@ -458,6 +392,29 @@ private class UTIL_OrgTelemetry_TEST {
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name()
             ),
             'setPackageIntegerValue should have been called with the feature Data_CountRdsWithDiffAmount and defaulted to -1'
+        );
+    }
+
+    /**
+    * @description Verifies Data_CountFixLengthRd telemetry data is retrieved and set up correctly
+    */
+    @IsTest
+    private static void shouldSetDataCountOneTimeWhenRDFixedLengthCountCategory() {
+        Test.startTest();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd);
+
+        Test.stopTest();
+
+        System.assertEquals(
+            -1, 
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'Telemetry field DataCount_ONETIME_Use should defaulted to -1 with the feature of Data_CountFixedLengthRd.'
         );
     }
 
