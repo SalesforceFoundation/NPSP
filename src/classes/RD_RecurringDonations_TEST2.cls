@@ -612,7 +612,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     }
 
     /***
-     * @description Executes RD_RecurringDonations_BATCH "start()" method and returns Recurring Donations for verification
+     * @description Executes legacy RD batch "start()" method and returns Recurring Donations for verification
      */
     private static List<npe03__Recurring_Donation__c> executeBatchStart() {
         RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();
