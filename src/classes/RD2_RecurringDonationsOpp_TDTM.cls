@@ -34,8 +34,8 @@
 * @description Trigger on Recurring Donation Opportunities when enhanced Recurring Donations are enabled
 *
 */
-public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {    
-
+public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
+    
     /***
     * @description Trigger handler on Opportunities when Recurring Donation enhancement is enabled
     * @param rds Trigger.new records
@@ -53,7 +53,7 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         ) {
             return null;
         }
-        
+
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
 
         evaluateOpportunities(opps, oldOpps, triggerAction);
@@ -75,11 +75,16 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         }
 
         Set<Id> rdIds = new Set<Id>();
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert
+            || triggerAction == TDTM_Runnable.Action.BeforeUpdate
+        ) {
+            validateCurrency(opps);
+
+        } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             rdIds = getRecurringDonationIds(opps);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            rdIds = getRecurringDonationIds(opps, oldOpps);    
+            rdIds = getRecurringDonationIds(opps, oldOpps);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             rdIds = getRecurringDonationIds(oldOpps);
@@ -88,30 +93,44 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
         if (rdIds.isEmpty()) {
             return;
         }
-                                           
+
         new RD2_OpportunityEvaluationService()
             .withRds(rdIds)
             .handleOutdatedRecurringDonations();
     }
 
     /***
-    * @description Returns Recurring Donation Ids from related created Opportunities
+    * @description Validates currency on provided Opportunities
+    * @param opps Opportunities
+    * @return void
+    */
+    public void validateCurrency(List<Opportunity> opps) {
+        MultiCurrencyValidator validator = new MultiCurrencyValidator()
+            .withOpportunities(opps);
+
+        if (!validator.isEnabled() || !validator.hasRecurringDonationOpp()) {
+            return;
+        }
+
+        for (Opportunity opp : opps) {
+            if (validator.isCurrencyOutOfSync(opp)) {
+                opp.addError(System.Label.RD2_CurrencyChangeIsRestrictedOnOpp);
+            }
+        }
+    }
+
+    /***
+    * @description Returns all Recurring Donation Ids on related Opportunities
     * @param opps Opportunities
     * @return Set<Id> Related Recurring Donation Ids
     */
     public Set<Id> getRecurringDonationIds(List<Opportunity> opps) {
-        Set<Id> rdIds = new Set<Id>();
-
-        for (Opportunity opp : opps) {
-            rdIds.add(opp.npe03__Recurring_Donation__c);
-        }
-
-        rdIds.remove(null);
-        return rdIds;
+        return UTIL_SObject.extractId(opps, Opportunity.npe03__Recurring_Donation__c);
     }
 
     /***
-    * @description Returns Recurring Donation Ids from updated Opportunities
+    * @description Returns Recurring Donation Ids from valid updated Opportunities.
+    * If the Opportunity change is not valid, an error is added to the record.
     * @param opps Opportunities
     * @param oldOpps Opportunities containing values before the update
     * @return Set<Id> Related Recurring Donation Ids
@@ -140,17 +159,125 @@ public class RD2_RecurringDonationsOpp_TDTM extends TDTM_Runnable {
     * @return Boolean
     */
     private Boolean hasChanged(Opportunity opp, Opportunity oldOpp) {
-        Boolean isAssignedToRD = opp.npe03__Recurring_Donation__c != null 
+        Boolean isAssignedToRD = opp.npe03__Recurring_Donation__c != null
             || oldOpp.npe03__Recurring_Donation__c != null;
 
         if (!isAssignedToRD) {
             return false;
         }
-            
-        return opp.IsClosed != oldOpp.IsClosed 
-            || opp.IsWon != oldOpp.IsWon 
+
+        return opp.IsClosed != oldOpp.IsClosed
+            || opp.IsWon != oldOpp.IsWon
             || opp.Amount != oldOpp.Amount
             || opp.CloseDate != oldOpp.CloseDate
             || opp.npe03__Recurring_Donation__c != oldOpp.npe03__Recurring_Donation__c;
+    }
+
+
+    /***
+    * @description Currency validator on Opportunities related to Recurring Donations
+    * when multi-currency is enabled for the organization
+    */
+    public class MultiCurrencyValidator {
+        /***
+         * @description CurrencyIsoCode field name
+         */
+        private final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
+
+        /***
+        * @description Determines if multi-currency is enabled for the org
+        */
+        private Boolean isMultiCurrencyEnabled {
+            get {
+                if (isMultiCurrencyEnabled == null) {
+                    isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+                }
+                return isMultiCurrencyEnabled;
+            }
+            set;
+        }
+
+        /***
+        * @description Contains Recurring Donation by Id records
+        */
+        private Map<Id, npe03__Recurring_Donation__c> rdById {
+            get {
+                if (rdById == null) {
+                    rdById = getRecurringDonations();
+                }
+                return rdById;
+            }
+            set;
+        }
+        
+        /***
+        * @description Contains Recurring Donation Ids
+        */
+        private Set<Id> rdIds = new Set<Id>();
+
+        /***
+        * @description Extracts Recurring Donation Ids from related Opportunities
+        * @param opps Opportunities
+        * @return MultiCurrencyValidator This validator instance
+        */
+        public MultiCurrencyValidator withOpportunities(List<Opportunity> opps) {
+            this.rdIds = UTIL_SObject.extractId(opps, Opportunity.npe03__Recurring_Donation__c);
+            return this;
+        }
+
+        /***
+        * @description Indicates if the multi-currency is enabled
+        * @return Boolean
+        */
+        public Boolean isEnabled() {
+            return isMultiCurrencyEnabled;
+        }
+
+        /***
+        * @description Indicates if at least one Opportunity is related to a Recurring Donation
+        * @return Boolean
+        */
+        public Boolean hasRecurringDonationOpp() {
+            return !rdById.isEmpty();
+        }
+
+        /***
+        * @description Returns related Recurring Donations (if any) on Opportunities
+        * @return Map<Id, npe03__Recurring_Donation__c>
+        */
+        private Map<Id, npe03__Recurring_Donation__c> getRecurringDonations() {
+            if (!isMultiCurrencyEnabled || rdIds.isEmpty()) {
+                return new Map<Id, npe03__Recurring_Donation__c>();
+            }
+
+            String soql = new UTIL_Query()
+                .withFrom(npe03__Recurring_Donation__c.SObjectType)
+                .withSelectFields(new Set<String>{
+                    'Id', 
+                    CURRENCY_ISO_CODE_FIELD
+                })
+                .withWhere('Id IN :rdIds')
+                .build();
+
+            List<npe03__Recurring_Donation__c> rds = (List<npe03__Recurring_Donation__c>) Database.query(soql);
+
+            return new Map<Id, npe03__Recurring_Donation__c>(rds);            
+        }
+
+        /***
+        * @description Indicates if currency on the Opportunity is out sync 
+        * with the currency on the related Recurring Donation.
+        * @param opp Opportunity
+        * @return Boolean
+        */
+        public Boolean isCurrencyOutOfSync(Opportunity opp) {
+            Id rdId = opp.npe03__Recurring_Donation__c;
+
+            if (rdId == null || !rdById.containsKey(rdId)) {
+                return false;
+            }
+            
+            return (String) opp.get(CURRENCY_ISO_CODE_FIELD) != (String) rdById.get(rdId).get(CURRENCY_ISO_CODE_FIELD);
+        }
     }
 }

@@ -184,8 +184,8 @@ private with sharing class RD2_RecurringDonations_TEST {
                 .withInstallmentPeriodMonthly()
                 .withInstallmentFrequency(1)
                 .withDayOfMonth('20')
-                .withDateEstablished(Date.newInstance(2019, 9, 15))
-                .withStartDate(Date.newInstance(2019, 9, 15))
+                .withDateEstablished(DATE_ESTABLISHED)
+                .withStartDate(DATE_ESTABLISHED)
                 .build()
         };
 
@@ -202,7 +202,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies new schedule is created when recurring donation is updated
+    * @description Verifies a new schedule is created when recurring donation is updated
     */
     @isTest
     private static void shouldCreateNewRDScheduleOnUpdate() {
@@ -216,8 +216,8 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withInstallmentPeriodMonthly()
             .withInstallmentFrequency(1)
             .withDayOfMonth('20')
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
+            .withDateEstablished(DATE_ESTABLISHED)
+            .withStartDate(DATE_ESTABLISHED)
             .build();
 
         Test.startTest();
@@ -257,7 +257,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withAmount(10)
             .withInstallmentPeriodWeekly()
             .withInstallmentFrequency(1)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
+            .withDateEstablished(DATE_ESTABLISHED)
             .withStartDate(Date.today())
             .build();
 
@@ -284,8 +284,8 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withAmount(10)
             .withInstallmentPeriodWeekly()
             .withInstallmentFrequency(1)
-            .withDateEstablished(Date.newInstance(2019, 9, 15))
-            .withStartDate(Date.newInstance(2019, 9, 15))
+            .withDateEstablished(DATE_ESTABLISHED)
+            .withStartDate(DATE_ESTABLISHED)
             .build();
 
         Test.startTest();
@@ -315,8 +315,8 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_DAILY)
             .withInstallmentFrequency(1)
             .withStatus(RD2_Constants.STATUS_CLOSED)
-            .withDateEstablished(Date.newInstance(2018, 9, 15))
-            .withStartDate(Date.newInstance(2018, 9, 15))
+            .withDateEstablished(DATE_ESTABLISHED)
+            .withStartDate(DATE_ESTABLISHED)
             .build();
 
         Test.startTest();
@@ -338,7 +338,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldNotOverrideStartDateWithCurrentDate() {
-        Date startDate = Date.newInstance(2019, 10, 5);
+        final Date startDate = DATE_ESTABLISHED.addMonths(1);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Contact contact = getContact();
@@ -378,8 +378,8 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static void shouldSetStartDateToCurrentDateIfStartDateEmpty() {
         Date startDate = Date.newInstance(2019, 11, 1);
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .build();
+            .withStartDate(startDate)
+            .build();
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -411,29 +411,23 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static void shouldUseInputStartDateForFutureStartDate() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact contact = getContact();
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(contact.Id)
-            .withAmount(50)
-            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY)
-            .withDayOfMonth('10')
-            .withInstallmentFrequency(1)
-            .withStatus(RD2_Constants.STATUS_ACTIVE)
-            .withDateEstablished(Date.newInstance(2019, 6, 5))
-            .withStartDate(Date.newInstance(2019, 6, 5))
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .build();
+
+        Date newEffectiveDate = Date.today().addDays(15);
 
         Test.startTest();
         insert rd;
-        rd.StartDate__c = Date.today().addDays(15);
-        rd.npe03__Amount__c = 100;
+
+        rd.StartDate__c = newEffectiveDate;
+        rd.npe03__Amount__c += 100;
         rd.InstallmentFrequency__c = 2;
         update rd;
+
         Test.stopTest();
 
         npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(Date.today().addDays(15), rd2.StartDate__c, 'Start date should be 15 days after today()');
+        System.assertEquals(newEffectiveDate, rd2.StartDate__c, 'New Effective Date should be 15 days after today');
     }
 
     /***
@@ -443,59 +437,47 @@ private with sharing class RD2_RecurringDonations_TEST {
     private static void shouldUseInputStartDateForPastStartDate() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact contact = getContact();
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(contact.Id)
-            .withAmount(50)
-            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY)
-            .withDayOfMonth('10')
-            .withInstallmentFrequency(1)
-            .withStatus(RD2_Constants.STATUS_ACTIVE)
-            .withDateEstablished(Date.newInstance(2019, 6, 5))
-            .withStartDate(Date.newInstance(2019, 6, 5))
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .build();
+
+        Date newEffectiveDate = Date.today().addDays(-15);
 
         Test.startTest();
         insert rd;
-        rd.StartDate__c = Date.today().addDays(-15);
-        rd.npe03__Amount__c = 100;
+
+        rd.StartDate__c = newEffectiveDate;
+        rd.npe03__Amount__c += 100;
         rd.InstallmentFrequency__c = 2;
         update rd;
+
         Test.stopTest();
 
         npe03__Recurring_Donation__c rd2 = rdGateway.getRecord(rd.Id);
-        System.assertEquals(Date.today().addDays(-15), rd2.StartDate__c, 'Start date should be 15 days before today()');
+        System.assertEquals(newEffectiveDate, rd2.StartDate__c, 'New Effective Date should be 15 days before today');
     }
 
     /***
-    * @description Verifies that no new rd schedule is created when RD update does not include relevant field
+    * @description Verifies that no new RD schedule is created 
+    * when no relevant field for the schedule is updated on the RD
     */
     @isTest
-    private static void shouldNotCreateNewRDScheduleOnUpdate() {
+    private static void shouldNotCreateNewRDScheduleOnUpdateWhenRelevantFieldIsUnchanged() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact contact = getContact();
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(contact.Id)
-            .withAmount(50)
-            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY)
-            .withDayOfMonth('10')
-            .withInstallmentFrequency(1)
-            .withStatus(RD2_Constants.STATUS_ACTIVE)
-            .withDateEstablished(Date.newInstance(2019, 6, 5))
-            .withStartDate(Date.newInstance(2019, 6, 5))
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .build();
 
         Test.startTest();
         insert rd;
+
         Integer numSchedulesPreUpdate = rdScheduleGateway.getRecords(rd).size();
         rd.npe03__Date_Established__c = Date.today().addDays(15);
         update rd;
+
         Test.stopTest();
 
-        System.assertEquals(numSchedulesPreUpdate, rdScheduleGateway.getRecords(rd).size(), 'Number of schedules pre- and post-update should be equal');
+        System.assertEquals(numSchedulesPreUpdate, rdScheduleGateway.getRecords(rd).size(), 
+            'Number of schedules pre- and post-update should be equal');
     }
 
     /***
@@ -612,7 +594,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationYearlyBuilder() {
         return getRecurringDonationBaseBuilder()
-                .withInstallmentPeriodYearly();
+            .withInstallmentPeriodYearly();
     }
 
     /****
@@ -620,8 +602,8 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationMonthlyBuilder() {
         return getRecurringDonationBaseBuilder()
-                .withInstallmentPeriodMonthly()
-                .withDayOfMonth('1');
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1');
     }
 
     /****
@@ -629,7 +611,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationWeeklyBuilder() {
         return getRecurringDonationBaseBuilder()
-                .withInstallmentPeriodWeekly();
+            .withInstallmentPeriodWeekly();
     }
 
     /****
@@ -637,7 +619,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationDailyBuilder() {
         return getRecurringDonationBaseBuilder()
-                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_DAILY);
+            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_DAILY);
     }
 
     /****
@@ -645,7 +627,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationFirstAndFifteenthBuilder() {
         return getRecurringDonationBaseBuilder()
-                .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
+            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH);
     }
 
     /****
@@ -653,12 +635,12 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationBaseBuilder() {
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-                .withContact(getContact().Id)
-                .withAmount(100)
-                .withPaymentMethod('Credit Card')
-                .withInstallmentFrequency(1)
-                .withDateEstablished(DATE_ESTABLISHED)
-                .withStartDate(DATE_ESTABLISHED);
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withPaymentMethod('Credit Card')
+            .withInstallmentFrequency(1)
+            .withDateEstablished(DATE_ESTABLISHED)
+            .withStartDate(DATE_ESTABLISHED);
     }
 
     /****
