@@ -382,9 +382,13 @@
         <members>RD2_OpportunityEvaluationService_TEST</members>
         <members>RD2_OpportunityEvaluation_BATCH</members>
         <members>RD2_OpportunityEvaluation_TEST</members>
+        <members>RD2_OpportunityMatcher</members>
+        <members>RD2_OpportunityMatcher_TEST</members>
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_QueueableService</members>
+        <members>RD2_RecurringDonationsOpp_TDTM</members>
+        <members>RD2_RecurringDonationsOpp_TEST</members>
         <members>RD2_RecurringDonations_TDTM</members>
         <members>RD2_RecurringDonations_TEST</members>
         <members>RD2_ScheduleService</members>
@@ -474,6 +478,8 @@
         <members>STG_PanelRDBatch_CTRL</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
         <members>STG_PanelRDCustomInstallment_CTRL</members>
+        <members>STG_PanelRDHealthCheck</members>
+        <members>STG_PanelRDHealthCheck_TEST</members>
         <members>STG_PanelRD_CTRL</members>
         <members>STG_PanelRelAuto_CTRL</members>
         <members>STG_PanelRelReciprocal_CTRL</members>
@@ -1309,8 +1315,10 @@
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
+        <members>npe03__Recurring_Donation__c.CurrentYearValue__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
         <members>npe03__Recurring_Donation__c.InstallmentFrequency__c</members>
+        <members>npe03__Recurring_Donation__c.NextYearValue__c</members>
         <members>npe03__Recurring_Donation__c.PaymentMethod__c</members>
         <members>npe03__Recurring_Donation__c.RecurringType__c</members>
         <members>npe03__Recurring_Donation__c.StartDate__c</members>
@@ -1318,6 +1326,7 @@
         <members>npe03__Recurring_Donations_Settings__c.DataMigrationBatchSize__c</members>
         <members>npe03__Recurring_Donations_Settings__c.DisableRollupsWhenCreatingInstallments__c</members>
         <members>npe03__Recurring_Donations_Settings__c.EnableAutomaticNaming__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.InstallmentOppAutoCreateOption__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
@@ -1530,6 +1539,9 @@
         <members>PageMessagesWarning</members>
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
+        <members>RD2_ContactChangeIsRestricted</members>
+        <members>RD2_CurrencyChangeIsRestrictedOnOpp</members>
+        <members>RD2_CurrencyChangeIsRestrictedOnRD</members>
         <members>RD2_CurrentScheduleTitle</members>
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
@@ -1577,7 +1589,6 @@
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
-        <members>RD2_ScheduleInstallmentIsRequired</members>
         <members>RD2_ScheduleLWCEndDate</members>
         <members>RD2_ScheduleLWCFutureSchedule</members>
         <members>RD2_ScheduleLWCTitle</members>
@@ -2111,6 +2122,7 @@
         <members>healthDetailsInvalidOppField</members>
         <members>healthDetailsInvalidOppStage</members>
         <members>healthDetailsInvalidPaymentField</members>
+        <members>healthDetailsInvalidPicklistValue</members>
         <members>healthDetailsInvalidRDCustomPeriod</members>
         <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
         <members>healthDetailsInvalidRecordtypeId</members>
@@ -2118,6 +2130,7 @@
         <members>healthDetailsInvalidScheduledJob</members>
         <members>healthDetailsMailingListReportMissing</members>
         <members>healthDetailsMissingOppPayments</members>
+        <members>healthDetailsMissingRequiredPicklistValue</members>
         <members>healthDetailsNothingScheduled</members>
         <members>healthDetailsOCR</members>
         <members>healthDetailsOCRDupPrimary</members>
@@ -2198,6 +2211,7 @@
         <members>healthSolutionInvalidUDFObjectField</members>
         <members>healthSolutionMailingListReportMissing</members>
         <members>healthSolutionMissingOppPayments</members>
+        <members>healthSolutionMissingPicklistValue</members>
         <members>healthSolutionNothingScheduled</members>
         <members>healthSolutionOCRDupPrimary</members>
         <members>healthSolutionOCRException</members>
@@ -2208,6 +2222,7 @@
         <members>healthSolutionSaveOppsFailed</members>
         <members>healthSolutionScheduleJobs</members>
         <members>healthSolutionTriggerHandlerMismatch</members>
+        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>healthSolutionUDFBadDatatypes</members>
         <members>healthSolutionUDFOppField</members>
         <members>hhCmpDedupLabelReturnToCmp</members>
@@ -2532,6 +2547,7 @@
         <members>stgHelpRDFieldMap</members>
         <members>stgHelpRDFieldMapOppField</members>
         <members>stgHelpRDFieldMapRDField</members>
+        <members>stgHelpRDInstallmentCreateOptionMessage</members>
         <members>stgHelpRDLastRun</members>
         <members>stgHelpRDMaxDonations</members>
         <members>stgHelpRDOpenOppBehavior</members>
@@ -2581,6 +2597,9 @@
         <members>stgHelpUDRTargetObject</members>
         <members>stgHelpUseDatedConvRates</members>
         <members>stgInstallScriptError</members>
+        <members>stgInstallmentOppDisableAll</members>
+        <members>stgInstallmentOppDisableFirst</members>
+        <members>stgInstallmentOppEnableAll</members>
         <members>stgLabelActionColumn</members>
         <members>stgLabelAddressVerification</members>
         <members>stgLabelAfflSettings</members>
@@ -2939,6 +2958,13 @@
         <members>Contact-iw</members>
         <members>Contact-ja</members>
         <members>Contact-nl_NL</members>
+        <members>Custom_Column_Header__c-de</members>
+        <members>Custom_Column_Header__c-en_US</members>
+        <members>Custom_Column_Header__c-es</members>
+        <members>Custom_Column_Header__c-fr</members>
+        <members>Custom_Column_Header__c-iw</members>
+        <members>Custom_Column_Header__c-ja</members>
+        <members>Custom_Column_Header__c-nl_NL</members>
         <members>Customizable_Rollup_Settings__c-de</members>
         <members>Customizable_Rollup_Settings__c-en_US</members>
         <members>Customizable_Rollup_Settings__c-es</members>
@@ -3002,6 +3028,13 @@
         <members>Error__c-iw</members>
         <members>Error__c-ja</members>
         <members>Error__c-nl_NL</members>
+        <members>Form_Template__c-de</members>
+        <members>Form_Template__c-en_US</members>
+        <members>Form_Template__c-es</members>
+        <members>Form_Template__c-fr</members>
+        <members>Form_Template__c-iw</members>
+        <members>Form_Template__c-ja</members>
+        <members>Form_Template__c-nl_NL</members>
         <members>Fund__c-de</members>
         <members>Fund__c-en_US</members>
         <members>Fund__c-es</members>
@@ -3016,6 +3049,13 @@
         <members>General_Accounting_Unit__c-iw</members>
         <members>General_Accounting_Unit__c-ja</members>
         <members>General_Accounting_Unit__c-nl_NL</members>
+        <members>Gift_Entry_Settings__c-de</members>
+        <members>Gift_Entry_Settings__c-en_US</members>
+        <members>Gift_Entry_Settings__c-es</members>
+        <members>Gift_Entry_Settings__c-fr</members>
+        <members>Gift_Entry_Settings__c-iw</members>
+        <members>Gift_Entry_Settings__c-ja</members>
+        <members>Gift_Entry_Settings__c-nl_NL</members>
         <members>Grant_Deadline__c-de</members>
         <members>Grant_Deadline__c-en_US</members>
         <members>Grant_Deadline__c-es</members>
@@ -3454,6 +3494,7 @@
         <members>Opportunity.New_Payment</members>
         <members>Opportunity.Quick_Update</members>
         <members>npe01__OppPayment__c.Quick_Update</members>
+        <members>npe03__Recurring_Donation__c.Close_Recurring_Donation</members>
         <members>npe03__Recurring_Donation__c.New_Opportunity</members>
         <members>npe03__Recurring_Donation__c.Quick_Update</members>
         <members>npo02__Household__c.Update_Household</members>

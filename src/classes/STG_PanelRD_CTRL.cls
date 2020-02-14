@@ -177,4 +177,65 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }
 
+    /*********************************************************************************************************
+    * @description Return a list of picklist value to be selected for Installment Auto-Creation Setting 
+    */
+    public List<SelectOption> installmentCreateOptions {
+        get {
+        	if (installmentCreateOptions == null) {
+	            installmentCreateOptions = getCreationOptions();
+        	}
+            return installmentCreateOptions;
+        }
+        private set;
+    }
+
+    /*********************************************************************************************************
+    * @description The current setting being stored on the Installment Auto-Creation Setting
+    */
+    public String selectedInstallmentCreateOption {
+        get {
+            selectedInstallmentCreateOption = convertToInstallmentLabel(STG_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
+
+            selectedInstallmentCreateOption = (String.isBlank(selectedInstallmentCreateOption))
+                ? System.Label.stgInstallmentOppEnableAll
+                : selectedInstallmentCreateOption;
+
+            return selectedInstallmentCreateOption;
+        }
+        private set;
+    }
+
+    /*********************************************************************************************************
+    * @description Generate a list of Auto-Creation option from the InstallmentCreateOptions enum list
+    */
+    private List<SelectOption> getCreationOptions() {
+        List<SelectOption> options = new List<SelectOption>();
+
+        for (RD2_Constants.InstallmentCreateOptions option : RD2_Constants.InstallmentCreateOptions.values()) {
+            options.add(new SelectOption(option.name(), convertToInstallmentLabel(option.name())));
+        }
+
+        return options;
+    }
+    
+    /*********************************************************************************************************
+    * @description Convert Installment Auto-Creation Setting API to respected custom label
+    * @param installmentOption The API name that will be converted
+    * @return Th converted custom label string
+    */
+    @TestVisible
+    private String convertToInstallmentLabel(String installmentOption) {
+        if (installmentOption == RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()) {
+            return System.Label.stgInstallmentOppEnableAll;
+
+        } else if(installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()) {
+            return System.Label.stgInstallmentOppDisableFirst;
+
+        } else if (installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()) {
+            return System.Label.stgInstallmentOppDisableAll;
+        }
+
+        return '';
+    }
 }

@@ -90,7 +90,9 @@ public class TEST_SObjectGateway {
                     npe03__Installments__c,
                     PaymentMethod__c,
                     RecurringType__c,
-                    Status__c
+                    Status__c,
+                    CurrentYearValue__c,
+                    NextYearValue__c
                 FROM npe03__Recurring_Donation__c
                 WHERE Id IN :rdIds
             ];
@@ -188,6 +190,16 @@ public class TEST_SObjectGateway {
             'Primary_Contact__c'
         };
 
+
+        /***
+        * @description Constructor adding the CurrencyIsoCode into the output fields set
+        */
+        public OpportunityGateway() {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                fields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            }
+        }
+
         /***
         * @description Retrieves Opportunities for the related Recurring Donation
         * @param rd Recurring donation
@@ -236,6 +248,51 @@ public class TEST_SObjectGateway {
                 .build();
 
             return (List<Opportunity>) Database.query(soql);
+        }
+    }
+
+    /***
+    * @description Retrieves payments
+    */
+    public class PaymentGateway {
+        private Set<String> fields = new Set<String>{
+            'Name',
+            'npe01__Payment_Method__c',
+            'npe01__Payment_Amount__c',
+            'npe01__Opportunity__c'
+        };
+
+        /***
+        * @description Constructor adding the CurrencyIsoCode into the output fields set
+        */
+        public PaymentGateway() {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                fields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+            }
+        }
+
+        /***
+        * @description Retrieves payments for the related Opportunity
+        * @param opp Opportunity
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(Opportunity opp) {
+            return getRecords(new List<Opportunity>{ opp });
+        }
+
+        /***
+        * @description Retrieves payments for related Opportunities
+        * @param opps Opportunity records
+        * @return List<npe01__OppPayment__c>
+        */
+        public List<npe01__OppPayment__c> getRecords(List<Opportunity> opps) {
+            String soql = new UTIL_Query()
+                .withFrom(npe01__OppPayment__c.SObjectType)
+                .withSelectFields(fields)
+                .withWhere('npe01__Opportunity__c IN :opps')
+                .build();
+
+            return (List<npe01__OppPayment__c>) Database.query(soql);
         }
     }
 
