@@ -275,7 +275,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     private void calculateNextDonationDateBeforeUpdate(List<SObject> rds, List<SObject> oldRds) {
         Map<Id, List<RecurringDonationSchedule__c>> schedulesByRdId = scheduleService.getAllRecurringDonationSchedules(rds, oldRds);
         for (npe03__Recurring_Donation__c rd : (List<npe03__Recurring_Donation__c>)rds) {
-            rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(schedulesByRdId.get(rd.Id));
+            //Extra validation add here to prevent invalid Installment Frequency being passed in and cause system exception
+            if (rd.InstallmentFrequency__c != null && rd.InstallmentFrequency__c > 0) {
+                rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(schedulesByRdId.get(rd.Id));
+            }
         }
     }
 
