@@ -93,7 +93,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
-        validate(rds, triggerAction);
+        validate(rds, oldRds, triggerAction);
         handleRDSchedules(rds, oldRds, triggerAction);
 
         // Insert/Update any pending RecurringDonationSchedule records before the
@@ -131,10 +131,16 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param rds Trigger.new records
     * @param triggerAction BeforeInsert, BeforeUpdate, etc.
     */
-    public void validate(List<SObject> rds, TDTM_Runnable.Action triggerAction) {
+    public void validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+        RD2_ValidationService validationService = new RD2_ValidationService(rds);
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-           new RD2_ValidationService().validate(rds);
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            validationService.validate();
+
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            validationService
+                .withOldRecurringDonations(oldRds)
+                .validateOnChange();
         }
     }
 
