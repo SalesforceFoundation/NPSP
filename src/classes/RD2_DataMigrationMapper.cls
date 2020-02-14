@@ -266,7 +266,7 @@ public class RD2_DataMigrationMapper {
             installmentDate = rd.npe03__Date_Established__c;
         }
 
-        return installmentDate.day().format();
+        return installmentDate == null ? null : installmentDate.day().format();
     }
 
     /**

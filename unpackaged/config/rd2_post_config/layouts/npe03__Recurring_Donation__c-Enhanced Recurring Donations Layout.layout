@@ -85,6 +85,25 @@
                 <behavior>Readonly</behavior>
                 <field>npe03__Last_Payment_Date__c</field>
             </layoutItems>
+        </layoutColumns>
+        <style>TwoColumnsTopToBottom</style>
+    </layoutSections>
+    <layoutSections>
+        <customLabel>true</customLabel>
+        <detailHeading>true</detailHeading>
+        <editHeading>true</editHeading>
+        <label>Recurring Donation Statistics</label>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>%%%NAMESPACE%%%CurrentYearValue__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>%%%NAMESPACE%%%NextYearValue__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>npe03__Paid_Amount__c</field>
@@ -131,7 +150,10 @@
     </layoutSections>
     <quickActionList>
         <quickActionListItems>
-            <quickActionName>NewTask</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%NewTask</quickActionName>
+        </quickActionListItems>
+        <quickActionListItems>
+            <quickActionName>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Close_Recurring_Donation</quickActionName>
         </quickActionListItems>
     </quickActionList>
     <relatedLists>
