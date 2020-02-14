@@ -380,9 +380,7 @@ public class ERR_Handler {
             return;
         }
 
-        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-            Database.insert(errorRecords, false);
-        }
+        Database.insert(errorRecords, false);
 
         ERR_Notifier.sendErrorNotifications(context);
     }
