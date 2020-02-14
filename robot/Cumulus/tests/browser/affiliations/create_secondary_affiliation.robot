@@ -33,4 +33,5 @@ Create Secondary Affiliation for Contact
     Validate Related Record Count        Organization Affiliations          1
     Verify Allocations                   Organization Affiliations        &{account}[Name]=Current 
     Click Related Table Item Link        Organization Affiliations        &{account}[Name]
+    Current Page Should Be               Details                          npe5__Affiliation__c
     Save Current Record ID For Deletion  npe5__Affiliation__c    

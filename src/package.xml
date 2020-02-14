@@ -448,6 +448,8 @@
         <members>STG_PanelRDBatch_CTRL</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
         <members>STG_PanelRDCustomInstallment_CTRL</members>
+        <members>STG_PanelRDHealthCheck</members>
+        <members>STG_PanelRDHealthCheck_TEST</members>
         <members>STG_PanelRD_CTRL</members>
         <members>STG_PanelRelAuto_CTRL</members>
         <members>STG_PanelRelReciprocal_CTRL</members>
@@ -1493,6 +1495,8 @@
         <members>ProgressMarkerAssistiveTextProgress</members>
         <members>RD2_AmountMustBeValid</members>
         <members>RD2_ContactChangeIsRestricted</members>
+        <members>RD2_CurrencyChangeIsRestrictedOnOpp</members>
+        <members>RD2_CurrencyChangeIsRestrictedOnRD</members>
         <members>RD2_CurrentScheduleTitle</members>
         <members>RD2_DataMigrationInvalidCloseAction</members>
         <members>RD2_DataMigrationInvalidInstallmentPeriod</members>
@@ -1918,6 +1922,7 @@
         <members>healthDetailsInvalidOppField</members>
         <members>healthDetailsInvalidOppStage</members>
         <members>healthDetailsInvalidPaymentField</members>
+        <members>healthDetailsInvalidPicklistValue</members>
         <members>healthDetailsInvalidRDCustomPeriod</members>
         <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
         <members>healthDetailsInvalidRecordtypeId</members>
@@ -1925,6 +1930,7 @@
         <members>healthDetailsInvalidScheduledJob</members>
         <members>healthDetailsMailingListReportMissing</members>
         <members>healthDetailsMissingOppPayments</members>
+        <members>healthDetailsMissingRequiredPicklistValue</members>
         <members>healthDetailsNothingScheduled</members>
         <members>healthDetailsOCR</members>
         <members>healthDetailsOCRDupPrimary</members>
@@ -2005,6 +2011,7 @@
         <members>healthSolutionInvalidUDFObjectField</members>
         <members>healthSolutionMailingListReportMissing</members>
         <members>healthSolutionMissingOppPayments</members>
+        <members>healthSolutionMissingPicklistValue</members>
         <members>healthSolutionNothingScheduled</members>
         <members>healthSolutionOCRDupPrimary</members>
         <members>healthSolutionOCRException</members>
@@ -2015,6 +2022,7 @@
         <members>healthSolutionSaveOppsFailed</members>
         <members>healthSolutionScheduleJobs</members>
         <members>healthSolutionTriggerHandlerMismatch</members>
+        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>healthSolutionUDFBadDatatypes</members>
         <members>healthSolutionUDFOppField</members>
         <members>hhCmpDedupLabelReturnToCmp</members>

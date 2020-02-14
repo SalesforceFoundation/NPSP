@@ -37,6 +37,24 @@
 public with sharing class RD2_OpportunityService {
 
     /***
+     * @description CurrencyIsoCode field name
+     */
+    private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
+
+    /***
+    * @description Determines if multi-currency is enabled for the org
+    */
+    private Boolean isMultiCurrencyEnabled {
+        get {
+            if (isMultiCurrencyEnabled == null) {
+                isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+            }
+            return isMultiCurrencyEnabled;
+        }
+        set;
+    }
+
+    /***
     * @description Recurring Donation custom settings
     */
     private RD2_Settings rdSettings {
@@ -95,9 +113,9 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Creates Opportunities and updates payment records for specified Recurring Donations
     * @param rds Recurring Donations
-    * @return void
+    * @return RD2_OpportunityService This Opportunity Service instance
     */
-    public void createOpportunities(List<npe03__Recurring_Donation__c> rds) {
+    public RD2_OpportunityService createOpportunities(List<npe03__Recurring_Donation__c> rds) {
         List<Opportunity> oppsToCreate = new List<Opportunity>();
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = new Map<Id, List<RD2_ScheduleService.Installment>>();
         Integer numberOfInstallments = 1;
@@ -113,7 +131,7 @@ public with sharing class RD2_OpportunityService {
             }
 
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-                .filterCurrent(rd.npe03__Donations__r)
+                .includeCurrent(rd.npe03__Donations__r)
                 .match(installments);
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
@@ -121,10 +139,6 @@ public with sharing class RD2_OpportunityService {
                     oppsToCreate.add(buildOpportunity(rd, record.getInstallment()));
                 }
             }
-        }
-
-        if (oppsToCreate.isEmpty()) {
-            return;
         }
 
         Set<Id> createdOppIds = dbService.insertRecords(oppsToCreate);
@@ -137,6 +151,7 @@ public with sharing class RD2_OpportunityService {
         }
 
         updatePaymentRecords(installmentByOppId);
+        return this;
     }
 
     /***
@@ -157,7 +172,6 @@ public with sharing class RD2_OpportunityService {
         opp.Recurring_Donation_Installment_Number__c = rd.npe03__Total_Paid_Installments__c != null
             ? rd.npe03__Total_Paid_Installments__c + 1
             : 1;
-        opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
 
         if (rdSettings.installmentRecordTypeId != null) {
             opp.RecordTypeId = rdSettings.installmentRecordTypeId;
@@ -166,6 +180,10 @@ public with sharing class RD2_OpportunityService {
         if (rd.npe03__Recurring_Donation_Campaign__c != null && rdSettings.shouldSetInstallmentCampaign) {
             opp.CampaignId = installment.campaignId;
         }
+
+        syncOppCurrency(opp, rd);
+
+        opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
 
         return opp;
     }
@@ -185,35 +203,35 @@ public with sharing class RD2_OpportunityService {
     /***
     * @description Updates related future open installment Opps
     * @param rds Recurring Donations
-    * @return void
+    * @return RD2_OpportunityService This Opportunity Service instance
     */
-    public void updateOpportunities(List<npe03__Recurring_Donation__c> rds) {
+    public RD2_OpportunityService updateOpportunities(List<npe03__Recurring_Donation__c> rds) {
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
 
         //Synchronize Opps with matching Schedule installments
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-                .filterCurrent(rd.npe03__Donations__r);
-
-            List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
+                .includeCurrentOrOpen(rd.npe03__Donations__r);
+            
+            matcher.match(scheduleService.getVisualizedInstallments(
                 currentDate, matcher.size(), rd.RecurringDonationSchedules__r
-            );
-
-            matcher.match(installments);
+            ));
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
-                if (record.isNew() || !record.isOpen() || !record.hasInstallment()) {
+                if (record.isNew() || !record.isOpen()) {
                     continue;
                 }
 
-                RD2_ScheduleService.Installment installment = record.getInstallment();
                 Opportunity opp = record.getOpportunity();
+                if (record.hasInstallment()) {
+                    installmentByOppId.put(opp.Id, record.getInstallment());
+                }
 
-                installmentByOppId.put(opp.Id, installment);
-
-                Boolean isChanged = syncOpportunity(opp, installmentByOppId.get(opp.Id), rd);
+                Boolean isChanged = syncOppWithRecurringDonation(opp, rd);
+                isChanged = syncOppWithInstallment(opp, record.getInstallment()) || isChanged;
                 if (isChanged) {
+                    opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
                     oppsToUpdate.add(opp);
                 }
             }
@@ -222,53 +240,102 @@ public with sharing class RD2_OpportunityService {
         dbService.updateRecords(oppsToUpdate);
 
         updatePaymentRecords(installmentByOppId);
+        return this;
     }
 
     /***
     * @description Updates Opportunity if it differs from the related Recurring Donation Schedule installment
     * @param opp Opportunity
-    * @param installment Recurring Donation Schedule installment
     * @param rd Recurring Donation
-    * @return Boolean
+    * @return Boolean Indicates if the Opportunity has been changed
     */
-    private Boolean syncOpportunity(Opportunity opp, RD2_ScheduleService.Installment installment, npe03__Recurring_Donation__c rd) {  
+    private Boolean syncOppWithRecurringDonation(Opportunity opp, npe03__Recurring_Donation__c rd) {
+        Boolean isChanged = syncOppDonorInfo(opp, rd);
+        
+        //ensure the Opportunity and RD Currency sync is done first 
+        //so the Opp is updated in the case there is a discrepancy
+        return syncOppCurrency(opp, rd) || isChanged;
+    }
+
+    /***
+    * @description Updates Opportunity with the projected installment (if any)
+    * @param opp Opportunity
+    * @param installment Recurring Donation Schedule installment
+    * @return Boolean Indicates if the Opportunity has been changed
+    */
+    private Boolean syncOppWithInstallment(Opportunity opp, RD2_ScheduleService.Installment installment) {
+        if (installment == null || opp.CloseDate < currentDate) {
+            return false;
+        }
+
+        Boolean isChanged = false;
+
+        if (opp.Amount != installment.installmentAmount) {
+            opp.Amount = installment.installmentAmount;
+            isChanged = true;
+        }
+
+        if (opp.CloseDate != installment.nextDonationDate) {
+            opp.CloseDate = installment.nextDonationDate;
+            isChanged = true;
+        }
+
+        if (installment.campaignId != null
+            && opp.CampaignId != installment.campaignId
+            && rdSettings.shouldSetInstallmentCampaign
+        ) {
+            opp.CampaignId = installment.campaignId;
+            isChanged = true;
+        }
+
+        return isChanged;
+    }
+
+    /***
+    * @description Updates Opportunity Account and/or Primary Contact if it differs
+    * from the related Recurring Donation. Past open Opportunities are not updated.
+    * @param opp Opportunity
+    * @param rd Recurring Donation
+    * @return Boolean Indicates if the donor info on the Opportunity has been changed
+    */
+    private Boolean syncOppDonorInfo(Opportunity opp, npe03__Recurring_Donation__c rd) {
+        if (opp.CloseDate < currentDate) {
+            return false;
+        }
+
         Boolean isChanged = false;
 
         if (opp.AccountId != rd.npe03__Organization__c) {
             opp.AccountId = rd.npe03__Organization__c;
             isChanged = true;
         }
-        
+
         if (opp.Primary_Contact__c != rd.npe03__Contact__c) {
             opp.Primary_Contact__c = rd.npe03__Contact__c;
             isChanged = true;
         }
-
-        if (installment != null) { 
-            if (opp.Amount != installment.installmentAmount) {
-                opp.Amount = installment.installmentAmount;
-                isChanged = true;
-            }
-
-            if (opp.CloseDate != installment.nextDonationDate) {
-                opp.CloseDate = installment.nextDonationDate;
-                isChanged = true;
-            }
-
-            if (installment.campaignId != null 
-                && opp.CampaignId != installment.campaignId 
-                && rdSettings.shouldSetInstallmentCampaign
-            ) {
-                opp.CampaignId = installment.campaignId;
-                isChanged = true;
-            }
-        }
-
-        if (isChanged) {
-            opp.name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
-        }
-
+        
         return isChanged;
+    }
+
+    /***
+    * @description Updates Opportunity CurrencyIsoCode if it differs from the related Recurring Donation 
+    * @param opp Opportunity
+    * @param rd Recurring Donation
+    * @return Boolean Indicates if the currency on the Opportunity has been changed
+    */
+    private Boolean syncOppCurrency(Opportunity opp, npe03__Recurring_Donation__c rd) {
+        if (!isMultiCurrencyEnabled) {
+            return false;
+        }
+
+        String rdCurrency = (String) rd.get(CURRENCY_ISO_CODE_FIELD);
+        if ((String) opp.get(CURRENCY_ISO_CODE_FIELD) != rdCurrency) {
+            opp.put(CURRENCY_ISO_CODE_FIELD, rdCurrency);
+            return true;
+        }
+
+        return false;
     }
 
     /***
@@ -308,11 +375,11 @@ public with sharing class RD2_OpportunityService {
     /**
      * @description Updates or deletes closed RD open Installment Opportunities based on the settings
      * @param opps Opportunities
-     * @return void
+     * @return RD2_OpportunityService This Opportunity Service instance
      */
-    public void voidOpenOpportunities(List<npe03__Recurring_Donation__c> rds) {
+    public RD2_OpportunityService voidOpenOpportunities(List<npe03__Recurring_Donation__c> rds) {
         if (rds.isEmpty() || rdSettings.isCloseActionNoAction()) {
-            return;
+            return this;
         }
 
         List<Opportunity> openOppsToVoid = new List<Opportunity>();
@@ -322,10 +389,6 @@ public with sharing class RD2_OpportunityService {
                     openOppsToVoid.add(opp);
                 }
             }
-        }
-
-        if (openOppsToVoid.isEmpty()) {
-            return;
         }
 
         if (rdSettings.isCloseActionDeletion()) {
@@ -343,5 +406,7 @@ public with sharing class RD2_OpportunityService {
 
             dbService.updateRecords(oppsToUpdate);
         }
+        
+        return this;
     }
 }

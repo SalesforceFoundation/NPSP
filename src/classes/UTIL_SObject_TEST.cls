@@ -94,6 +94,24 @@ private with sharing class UTIL_SObject_TEST {
     }
 
     /***
+    * @description Verifies specified Id type field values are extracted and returned
+    * and null values are not returned.
+    */
+    @isTest
+    private static void shouldNotReturnNullInIdSetOfTheTargetField() {
+        final Id mockRDId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType);
+
+        List<Opportunity> opps = buildOpportunities(3);
+        opps[0].npe03__Recurring_Donation__c = mockRDId;
+
+        Test.startTest();
+        Set<Id> ids = UTIL_SObject.extractId(opps, Opportunity.npe03__Recurring_Donation__c);
+        Test.stopTest();
+
+        System.assertEquals(new Set<Id>{ mockRDId }, ids, 'Recurring Donation target field Id should be returned');
+    }
+
+    /***
     * @description Verifies specified String type field values are extracted and returned. 
     */
     @isTest

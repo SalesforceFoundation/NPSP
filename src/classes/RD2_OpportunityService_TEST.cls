@@ -37,6 +37,10 @@
 @isTest
 private with sharing class RD2_OpportunityService_TEST {
 
+    private static final String CURRENCY_ISO_CODE_FIELD = UTIL_Currency.CURRENCY_ISO_CODE_FIELD;
+    private static final String CURRENCY_CAD = 'CAD';
+    private static final String CURRENCY_USD = 'USD';
+
     private static final String AFFILIATION_OCR_ROLE_SOLICITOR = 'Solicitor';
     private static final String RELATIONSHIP_TYPE_EMPLOYEE = 'Employee';
     private static final String RELATIONSHIP_STATUS_CURRENT = 'Current';
@@ -54,6 +58,7 @@ private with sharing class RD2_OpportunityService_TEST {
 
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
+    private static final TEST_SObjectGateway.PaymentGateway paymentGateway = new TEST_SObjectGateway.PaymentGateway();
     private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
 
@@ -89,7 +94,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(CLOSE_DATE, opps[0].CloseDate);
         System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, opps[0].CampaignId);
         System.assertEquals(STAGE_NAME_PLEDGED, opps[0].StageName);
-        System.assertEquals(PAYMENT_CREDIT_CARD, getPayments(opps)[0].npe01__Payment_Method__c);
+        System.assertEquals(PAYMENT_CREDIT_CARD, paymentGateway.getRecords(opps)[0].npe01__Payment_Method__c);
     }
 
     /***
@@ -125,7 +130,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, opps[0].CampaignId);
         System.assertEquals(CLOSE_DATE, opps[0].CloseDate);
         System.assertEquals(STAGE_NAME_PROMISED, opps[0].StageName);
-        System.assertEquals(PAYMENT_CREDIT_CARD, getPayments(opps)[0].npe01__Payment_Method__c);
+        System.assertEquals(PAYMENT_CREDIT_CARD, paymentGateway.getRecords(opps)[0].npe01__Payment_Method__c);
 
         List<OpportunityContactRole> ocrs = getOppContactRoles(new Set<Id>{ opps[0].Id });
         System.assertEquals(1, ocrs.size(), 'One OCR should be created: ' + ocrs);
@@ -285,7 +290,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Amount should be updated');
         System.assertEquals(nextCloseDate, opps[0].CloseDate, 'Close Date should be updated');
         System.assertEquals(getExpectedOppName(rd, nextCloseDate), opps[0].Name, 'Opportunity name should contain new Close Date');
-        System.assertEquals(PAYMENT_CHECK, getPayments(opps)[0].npe01__Payment_Method__c, 'Payment method should be updated on Payment');
+        System.assertEquals(PAYMENT_CHECK, paymentGateway.getRecords(opps)[0].npe01__Payment_Method__c, 'Payment method should be updated on Payment');
     }
 
     /***
@@ -353,7 +358,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
         System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Amount should be changed');
 
-        List<npe01__OppPayment__c> payments = getPayments(opps);
+        List<npe01__OppPayment__c> payments = paymentGateway.getRecords(opps);
         System.assertEquals(opps.size(), payments.size(), 'Payment should exist for the Opp: ' + payments);
         System.assertEquals(PAYMENT_CHECK, payments[0].npe01__Payment_Method__c,
             'Payment method should be updated for the open Opp with Close Date = today');
@@ -387,7 +392,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(1, opps.size(), 'One opportunity should exist: ' + opps);
         System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Amount should be unchanged');
 
-        List<npe01__OppPayment__c> payments = getPayments(opps);
+        List<npe01__OppPayment__c> payments = paymentGateway.getRecords(opps);
         System.assertEquals(opps.size(), payments.size(), 'Payment should exist for the Opp: ' + payments);
         System.assertNotEquals(PAYMENT_CHECK, payments[0].npe01__Payment_Method__c,
             'Payment method should not be updated for the closed Opp with Close Date = today');
@@ -440,7 +445,7 @@ private with sharing class RD2_OpportunityService_TEST {
             }
         }
 
-        List<npe01__OppPayment__c> payments = getPayments(opps);
+        List<npe01__OppPayment__c> payments = paymentGateway.getRecords(opps);
         System.assertEquals(opps.size(), payments.size(), 'Payment should exist for each Opp: ' + payments);
         for (npe01__OppPayment__c payment : payments) {
             if (payment.npe01__Opportunity__c == opps[0].Id) {
@@ -497,7 +502,7 @@ private with sharing class RD2_OpportunityService_TEST {
                 : 'Amount should be updated for the future Opp');
         }
 
-        List<npe01__OppPayment__c> payments = getPayments(opps);
+        List<npe01__OppPayment__c> payments = paymentGateway.getRecords(opps);
         System.assertEquals(opps.size(), payments.size(), 'Payment should exist for each Opp: ' + payments);
 
         for (npe01__OppPayment__c payment : payments) {
@@ -679,8 +684,8 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verifies Account and Primary Contact are changed on future opened Opportunity 
-    * when related Recurring Donation donor Organization and Contact are changed. 
+    * @description Verifies Account and Primary Contact are changed on future opened Opportunity
+    * when related Recurring Donation donor Organization and Contact are changed.
     * Existing Closed Won/Lost, and past opened Opportunities should not be updated.
     */
     @isTest
@@ -725,7 +730,7 @@ private with sharing class RD2_OpportunityService_TEST {
         Test.startTest();
         rd.npe03__Organization__c = accts[1].Id;
         rd.npe03__Contact__c = primaryContact.Id;
-        
+
         update rd;
         Test.stopTest();
 
@@ -733,14 +738,192 @@ private with sharing class RD2_OpportunityService_TEST {
 
         for (Opportunity opp : oppById.values()) {
             if (opp.Id == opps[0].Id || opp.Id == opps[1].Id) {
-                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed and past Opportunity account should not be updated when RD is updated');
-                System.assertEquals(null, opp.Primary_Contact__c, 'Closed and past Opportunity primary contact should not be updated when RD is updated');
+                System.assertEquals(accts[0].Id, opp.AccountId, 'Closed and past Opportunity account should not be updated');
+                System.assertEquals(null, opp.Primary_Contact__c, 'Closed and past Opportunity primary contact should not be updated');
             } else {
-                System.assertEquals(accts[1].Id, opp.AccountId, 'Open opportunity account should be updated to match RD organization');
-                System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Open opportunity primary contact should be updated to match RD contact');
+                System.assertEquals(accts[1].Id, opp.AccountId, 'Open Opportunity account should be updated to match RD organization');
+                System.assertEquals(primaryContact.Id, opp.Primary_Contact__c, 'Open Opportunity primary contact should be updated to match RD contact');
             }
         }
     }
+
+    /***
+     * @description Verifies an Opportunity has the same currency as its related Recurring Donation
+     * when multi-currency is enabled on an org
+     */
+    @isTest
+    private static void shouldSetCurrencyOnOpportunityWhenMultiCurrencyIsEnabled() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        Test.startTest();
+        npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'One Installment Opp should be created: ' + opps);
+        System.assertEquals(CURRENCY_CAD, (String) opps[0].get(CURRENCY_ISO_CODE_FIELD),
+            'Opportunity should have the same currency as the RD');
+        System.assertEquals(RD_AMOUNT, opps[0].Amount,
+            'Opportunity Amount should be the same as the RD Amount');
+
+        assertPaymentIsMatchingOpp(new Map<Id, Opportunity>(opps));
+    }
+
+    /***
+     * @description Verifies Currency on a Recurring Donation cannot be changed
+     * when the Recurring Donation has at least one Closed Won Opp
+     */
+    @isTest
+    private static void shouldPreventCurrencyChangeWhenRDHasClosedWonOpp() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(CLOSE_DATE)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(CLOSE_DATE.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Exception actualException = updateRecurringDonation(rd, RD_NEW_AMOUNT, CURRENCY_USD);
+
+        assertCurrencyIsRestrictedException(rd, actualException);
+    }
+
+    /***
+     * @description Verifies Currency on a Recurring Donation cannot be changed
+     * when the Recurring Donation has a Closed Lost Opp
+     */
+    @isTest
+    private static void shouldPreventCurrencyChangeWhenRDHasClosedLostOpp() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(CLOSE_DATE)
+                .withClosedLostStage()
+                .build(),
+            oppBuilder
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(CLOSE_DATE.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Exception actualException = updateRecurringDonation(rd, RD_NEW_AMOUNT, CURRENCY_USD);
+
+        assertCurrencyIsRestrictedException(rd, actualException);
+    }
+
+    /***
+     * @description Verifies Currency on a Recurring Donation can be changed
+     * when the Recurring Donation has a past or future Open Opp and has no closed Opp
+     * and RC currency and Amount are changed
+     */
+    @isTest
+    private static void shouldAllowCurrencyChangeWhenRDHasNoClosedOpp() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(TODAY.addDays(-1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(CLOSE_DATE.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Exception actualException = updateRecurringDonation(rd, RD_NEW_AMOUNT, CURRENCY_USD);
+        System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        for (Opportunity opp : oppById.values()) {
+            System.assertEquals(CURRENCY_USD, (String) opp.get(CURRENCY_ISO_CODE_FIELD),
+                'Opportunity currency should be changed for every Open Opp: ' + opp.CloseDate);
+        }
+
+        System.assertEquals(RD_AMOUNT, oppById.get(opps[0].Id).Amount,
+            'Opportunity Amount should be unchanged for the past Open Opp: ' + oppById.values());
+        System.assertEquals(RD_NEW_AMOUNT, oppById.get(opps[1].Id).Amount,
+            'Opportunity Amount should be changed for the future Open Opp: ' + oppById.values());
+
+        assertPaymentIsMatchingOpp(oppById);
+    }
+
+    /***
+     * @description Verifies Currency on a Recurring Donation can be changed
+     * when the Recurring Donation has a past or future Open Opp and has no closed Opp
+     * and RC currency only is changed
+     */
+    @isTest
+    private static void shouldAllowCurrencyChangeWhenRDHasNoClosedOppAndCurrencyIsChangedOnly() {
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(CURRENCY_CAD);
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(TODAY.addDays(-1))
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withCurrencyIsoCode(CURRENCY_CAD)
+                .withCloseDate(CLOSE_DATE.addMonths(1))
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        Test.startTest();
+        rd.put(CURRENCY_ISO_CODE_FIELD, CURRENCY_USD);
+        update rd;
+        Test.stopTest();
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        for (Opportunity opp : oppById.values()) {
+            System.assertEquals(CURRENCY_USD, (String) opp.get(CURRENCY_ISO_CODE_FIELD),
+                'Opportunity currency should be changed for every Open Opp: ' + opp.CloseDate);
+            System.assertEquals(RD_AMOUNT, opp.Amount,
+                'Opportunity Amount should be unchanged for every Open Opp: ' + oppById.values());
+        }
+
+        assertPaymentIsMatchingOpp(oppById);
+    }
+
 
     // Helper Methods
     //////////////////
@@ -771,14 +954,8 @@ private with sharing class RD2_OpportunityService_TEST {
         Campaign campaign = new Campaign(Name = 'Test Campaign', IsActive = true);
         insert campaign;
 
-        TEST_RecurringDonationBuilder builder = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withDefaultValues()
-            .withAmount(RD_AMOUNT)
-            .withPaymentMethod(PAYMENT_CREDIT_CARD)
-            .withCampaign(campaign.Id)
-            .withDateEstablished(START_DATE)
-            .withStartDate(START_DATE)
-            .withDayOfMonth(DAY_OF_MONTH);
+        TEST_RecurringDonationBuilder builder = buildRecurringDonation()
+            .withCampaign(campaign.Id);
 
         if (contact != null) {
             builder.withContact(contact.Id);
@@ -792,6 +969,60 @@ private with sharing class RD2_OpportunityService_TEST {
         return rdGateway.getRecords(rds);
     }
 
+    /***
+    * @description Creates a Recurring Donation record
+    * @param currencyCode Curency ISO Code on the Recurring Donation
+    * @return npe03__Recurring_Donation__c
+    */
+    private static npe03__Recurring_Donation__c createRecurringDonation(String currencyCode) {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        setUpConfiguration();
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation()
+            .withContact(getContact().Id)
+            .withCurrencyIsoCode(currencyCode)
+            .build();
+        insert rd;
+
+        return rd;
+    }
+
+    /***
+    * @description Builds a Recurring Donation
+    * @return TEST_RecurringDonationBuilder
+    */
+    private static TEST_RecurringDonationBuilder buildRecurringDonation() {
+        return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withAmount(RD_AMOUNT)
+            .withPaymentMethod(PAYMENT_CREDIT_CARD)
+            .withDateEstablished(START_DATE)
+            .withStartDate(START_DATE)
+            .withDayOfMonth(DAY_OF_MONTH);
+    }
+
+    /***
+    * @description Updates currency on the Recurring Donation record
+    * @param rd A Recurring Donation record
+    * @param newAmount New Amount value
+    * @param currencyCode Curency ISO Code on the Recurring Donation record
+    * @return Exception Returns an exception if generated during update
+    */
+    private static Exception updateRecurringDonation(npe03__Recurring_Donation__c rd, Decimal newAmount, String currencyCode) {
+        Exception actualException;
+        try {
+            Test.startTest();
+            rd.put(CURRENCY_ISO_CODE_FIELD, currencyCode);
+            rd.npe03__Amount__c = newAmount;
+            update rd;
+            Test.stopTest();
+
+        } catch (Exception e) {
+            actualException = e;
+        }
+
+        return actualException;
+    }
 
     /***
     * @description Generic version of creating Recurring Donations Settings
@@ -878,15 +1109,47 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Retrieves Payments for specified Opportunities
-    * @param opps Specified Opportunities
-    * @return List<npe01__OppPayment__c>
-    */
-    private static List<npe01__OppPayment__c> getPayments(List<Opportunity> opps) {
-        return [
-            SELECT npe01__Payment_Method__c, npe01__Opportunity__c
-            FROM npe01__OppPayment__c
-            WHERE npe01__Opportunity__c IN :opps
-        ];
+     * @description Asserts exception is thrown for the currency change restriction.
+     * Verifies related Opportunity Currency is unchanged.
+     * @param rd Recurring Donation record
+     * @param actualException Exception generated on the Recurring Donation update DML
+     * @return void
+     */
+    private static void assertCurrencyIsRestrictedException(npe03__Recurring_Donation__c rd, Exception actualException) {
+        System.assertNotEquals(null, actualException, 'An Exception should be generated');
+        System.assert(actualException.getMessage().contains(System.Label.RD2_CurrencyChangeIsRestrictedOnRD),
+            'Exception message should match, actual message: ' + actualException.getMessage());
+            
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        for (Opportunity opp : oppById.values()) {
+            System.assertEquals(CURRENCY_CAD, (String) opp.get(CURRENCY_ISO_CODE_FIELD),
+                'Opportunity currency should be unchanged');
+        }
+
+        assertPaymentIsMatchingOpp(oppById);
+    }
+
+    /***
+     * @description Asserts payments are matching their related Opps
+     * @param oppById Opportunity records mapped by their Id
+     * @return void
+     */
+    private static void assertPaymentIsMatchingOpp(Map<Id, Opportunity> oppById) {
+        final Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+
+        List<npe01__OppPayment__c> payments = paymentGateway.getRecords(oppById.values());
+        System.assertEquals(oppById.size(), payments.size(), 'Payment should exist for each Opp: ' + payments);
+
+        for (npe01__OppPayment__c payment : payments) {
+            Opportunity opp = oppById.get(payment.npe01__Opportunity__c);
+
+            System.assertEquals(opp.Amount, payment.npe01__Payment_Amount__c, 
+                'Payment Amount should match Opportunity Amount');
+
+            if (isMultiCurrencyEnabled) {
+                System.assertEquals((String) opp.get(CURRENCY_ISO_CODE_FIELD), (String) payment.get(CURRENCY_ISO_CODE_FIELD), 
+                    'Payment currency should match Opportunity currency');
+            }
+        }
     }
 }
