@@ -293,7 +293,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 #  
 #         assert list_found, "locator not found"  
     @capture_screenshot_on_error 
-    def navigate_to_and_validate_field_value(self, field,status,value,section=None):
+    def navigate_to_and_validate_field_value(self, field, status, value, section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
         """
@@ -954,14 +954,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """clicks on the button on the payments page"""      
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         self.selenium.get_webelement(locator).click()
-     
+
+    @capture_screenshot_on_error
     def click_settings_button (self,panel_id,btn_value):  
         """clicks on the buttons on npsp settings object using panel id and button value"""      
         locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
         self.selenium.click_element(locator)   
-        
- 
-    
+
     def verify_payment_details(self):
         locator = "//tbody/tr/td[2]/span/span"
         locs1 = self.selenium.get_webelements(locator)
@@ -1227,6 +1226,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
 
+
     def click_wrapper_related_list_button(self,heading,button_title):  
         """Clicks a button in the heading of a related list when the related list is enclosed in wrapper.
            Waits for a modal to open after clicking the button.
@@ -1309,41 +1309,64 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None):
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, engagement_data=None, task_data=None):
         """ Creates an Account if account setup data is passed
             Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
             Creates a contact and sets an opportunity simultaneously if both the
             contact_data and opportunity_data is specified
+            Creates a contact and sets up an engagement plan with both contact and engagement plan information is provided
          """
-
         # get the data variable, or an empty dictionary if not set
 
         data = self.builtin.get_variable_value("${data}", {})
-        if account_data is not None:
 
+        if account_data is not None:
             # create the account based on the user input specified account type
             name = self.randomString(10);
             rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
             account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
-            account = self.salesforce.salesforce_get("Contact",account_id)
-
+            account = self.salesforce.salesforce_get("Account",account_id)
             # save the account object to data dictionary
             data[name] = account
 
         if contact_data is not None:
-
             # create the contact
             firstname = self.randomString(10);
             lastname = self.randomString(10);
-
             contact_data.update( {'Firstname' : firstname,'Lastname' : lastname})
             contact_id = self.salesforce.salesforce_insert("Contact", **contact_data)
             contact = self.salesforce.salesforce_get("Contact",contact_id)
-
             # save the contact object to data dictionary
             data[name] = contact
+
+        if engagement_data is not None:
+            # set up enegagement template based on the user input specified and link the contact to the engagement template
+            engobjname = "Engagement_Plan_Template__c"
+            contactobjname = "Contact__c"
+            object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), engobjname)
+            contact_object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), contactobjname)
+            engagement_id = self.salesforce.salesforce_insert(object_name, **engagement_data)
+            engagement = self.salesforce.salesforce_get(object_name,engagement_id)
+            # Add tasks to engagement if tast_data information is provided
+            if task_data is not None:
+                taskdata = {}
+                for field, possible_values in task_data.items():
+                    taskdata.update( {'Name' : task_data.get(field), object_name: engagement_id } )
+                    self.salesforce.salesforce_insert(object_name, **taskdata )
+            # If the keyword is contact, link the contact to the engagement plan created
+            if name.lower() == 'contact':
+                testdata={}
+                testdata.update( {contact_object_name : data[name]["Id"], object_name: engagement_id } )
+                self.salesforce.salesforce_insert(object_name, **testdata)
+
+            # save the engagement object to data dictionary
+
+            if name.lower() == 'contact':
+                data[f"{name}_engagement"] = engagement
+            else:
+                data[name] = engagement
 
         if opportunity_data is not None:
             # create opportunity
@@ -1360,7 +1383,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             opportunity_data.update( {'AccountId' : data[name]["AccountId"], 'RecordTypeId': rt_id } )
             opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
             opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
-
             # save the opportunity
             data[f"{name}_opportunity"] = opportunity
 
