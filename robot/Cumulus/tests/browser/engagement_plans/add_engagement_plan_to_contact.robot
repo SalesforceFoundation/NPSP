@@ -10,7 +10,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 # Setup a contact with parameters specified
@@ -35,6 +35,7 @@ Create a Contact and Add Engagement Plan
 
     Populate Values And Save Template                Create                         ${fields}
     ${ns} =  Get NPSP Namespace Prefix
+
     Save Current Record ID For Deletion              ${ns}Engagement_Plan_Template__c
     Go To Page                                       Details
     ...                                              Contact
@@ -49,15 +50,17 @@ Create a Contact and Add Engagement Plan
     Validate Related Record Count                    Engagement Plans               1
 
 Delete Engagement Plan
+    [Documentation]                      Delete engagement plan from customer
+    ...                                  Verify tasks persis
+t
     [tags]  unstable
-    ${plan_num}                                     Verify Eng Plan Exists         Automation_Plan
-    Click Related Item Popup Link                   Engagement Plans    ${plan_num}    Delete
-    Click Modal Button                              Delete
-    Verify Occurence                                Engagement Plans                 0
+    go to related engagement actionplans page       ${data}[contact][Id]
+    Perform Action On Related Item                   Delete
+    Go To Page                                       Details
+    ...                                              Contact
+    ...                                              object_id=${data}[contact][Id]
+    Scroll Page To Location                          0                      0
+    Check Activity Tasks                             Task_1                Task_2
 
-Verify Tasks Exist Under Activity
-    [tags]  unstable
-    Scroll Page To Location                             0                      0
-    Check Activity Tasks                               Task_1                Task_2
 
 
