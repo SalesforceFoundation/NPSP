@@ -117,6 +117,7 @@ public with sharing class RD2_ValidationService {
     public void validate() {
         for (npe03__Recurring_Donation__c rd : rds) {
             validateActiveRecurringDonation(rd);
+            validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
         }
     }
@@ -131,6 +132,7 @@ public with sharing class RD2_ValidationService {
             npe03__Recurring_Donation__c oldRd = oldRds[i];
 
             validateActiveRecurringDonation(rd);
+            validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
 
             Boolean isValid = validateDonorChange(rd, oldRd);	            
@@ -156,17 +158,11 @@ public with sharing class RD2_ValidationService {
 
     /***
      * @description Validate installment data on Recurring Donation
-     * @description rd Recurring Donation reocrd to evaluate
+     * @param rd Recurring Donation reocrd to evaluate
      */
     private void validateInstallmentData(npe03__Recurring_Donation__c rd) {
         if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
             rd.addError(System.Label.RD2_AmountMustBeValid);
-        }
-        
-        if (rd.InstallmentFrequency__c == null
-                || rd.InstallmentFrequency__c < 1
-                || rd.InstallmentFrequency__c > 20) {
-            rd.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
         }
 
         if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
@@ -175,6 +171,18 @@ public with sharing class RD2_ValidationService {
                     System.Label.RD2_InstallmentPeriodMustBeValid,
                     new String[]{ rd.npe03__Installment_Period__c })
             );
+        }
+    }
+
+    /***
+     * @description Validate Installment Frequency to be in the range
+     * @param rd Recurring Donation reocrd to validate
+     */
+    private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd) {
+        if (rd.InstallmentFrequency__c == null
+            || rd.InstallmentFrequency__c < 1
+            || rd.InstallmentFrequency__c > 20) {
+            rd.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
         }
     }
 
