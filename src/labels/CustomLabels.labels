@@ -1494,30 +1494,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Processing</shortDescription>
         <value>Processing</value>
     </labels>
-    <labels>
-        <fullName>RD2_ScheduleLWCEndDate</fullName>
-        <categories>Recurring-Donations, Component</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>The end date of the recurring donation schedule</shortDescription>
-        <value>End Date</value>
-    </labels>
-    <labels>
-        <fullName>RD2_ScheduleLWCFutureSchedule</fullName>
-        <categories>Recurring-Donations, Component</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Details of a schedule that will take effect at a future date</shortDescription>
-        <value>Future Schedule</value>
-    </labels>
-    <labels>
-        <fullName>RD2_ScheduleLWCTitle</fullName>
-        <categories>Recurring-Donations, Component</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title of the Active Schedules Component</shortDescription>
-        <value>Active Schedules</value>
-    </labels>
      <labels>
         <fullName>RD2_AmountMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1525,6 +1501,30 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if value on the amount is valid or not</shortDescription>
         <value>Enter a valid Amount. The Amount cannot be zero, negative, or blank.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ContactChangeIsRestricted</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate RD Contact/Account update when a closed opportunity exists on the RD</shortDescription>
+        <value>You can&apos;t change the Household Account or Contact on a Recurring Donation that has Closed Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrencyChangeIsRestrictedOnOpp</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Currency change restriction on an Opportunity</shortDescription>
+        <value>You can&apos;t change the Opportunity currency to a different currency than the related Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Currency change restriction on a Recurring Donation</shortDescription>
+        <value>You can&apos;t change the Recurring Donation currency when there is a related closed Opportunity.</value>
     </labels>
     <labels>
         <fullName>RD2_CurrentScheduleTitle</fullName>
@@ -1548,7 +1548,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Installment Period cannot be converted to enhanced Recurring Donation format</shortDescription>
-        <value>Recurring Donation Installment Period "{0}" cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
+        <value>Recurring Donation Installment Period &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. Make sure the Installment Period is defined in NPSP Settings -> Recurring Donations -> Recurring Donation Custom Installment Periods.</value>
     </labels>
     <labels>
         <fullName>RD2_DataMigrationInvalidOpenEndedStatus</fullName>
@@ -1556,7 +1556,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Open Ended Status cannot be converted to enhanced Recurring Donation format</shortDescription>
-        <value>Recurring Donation Open Ended Status "{0}" cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</value>
+        <value>Recurring Donation Open Ended Status &quot;{0}&quot; cannot be converted to the Enhanced Recurring Donations format. You must use one of these values: Open, Closed, or None.</value>
     </labels>
     <labels>
         <fullName>RD2_DayOfMonthMustBeValid</fullName>
@@ -1566,7 +1566,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Validate Recurring Donations data if it is valid day of month</shortDescription>
         <value>{0} is not a supported value for Day of Month. Select a value between 1 and 28 or select Last Day of Month.</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>RD2_DayOfMonthIsRequiredForMonthlyInstallment</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1710,7 +1710,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Enablement page introduction and guidelines</shortDescription>
         <value>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
         &lt;br/&gt;&lt;br/&gt;Since there's already a Recurring Donations feature in NPSP, you'll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We've outlined the required tasks for you below.
-        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href="https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot" target="_blank"&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
+        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployConfirm</fullName>
@@ -1913,12 +1913,28 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>This page is not available in Enhanced Recurring Donations. Refresh your browser and return to NPSP Settings.</value>
     </labels>
     <labels>
-        <fullName>RD2_ScheduleInstallmentIsRequired</fullName>
-        <categories>Recurring-Donations, Error</categories>
+        <fullName>RD2_ScheduleLWCEndDate</fullName>
+        <categories>Recurring-Donations, Component</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Every installment Opportunity should have matching RD Schedule installment</shortDescription>
-        <value>The Opportunity cannot be matched with the Recurring Donation Schedule installment.</value>
+        <shortDescription>The end date of the recurring donation schedule</shortDescription>
+        <value>End Date</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCFutureSchedule</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Details of a schedule that will take effect at a future date</shortDescription>
+        <value>Future Schedule</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleLWCTitle</fullName>
+        <categories>Recurring-Donations, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title of the Active Schedules Component</shortDescription>
+        <value>Active Schedules</value>
     </labels>
     <labels>
         <fullName>RD2_ScheduleVisualizerColumnDate</fullName>
@@ -6169,6 +6185,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Recurring Donation Installment Period picklist value {0} is not a valid Custom Installment Period.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidPicklistValue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The picklist value is not supported</shortDescription>
+        <value>The picklist value &quot;{0}&quot; is not supported.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidRecordtypeId</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -6207,6 +6231,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>healthDetailsMissingOppPayments</shortDescription>
         <value>{0} Opportunities that should have Payments are missing those Payments.</value>
+    </labels>
+    <labels>
+        <fullName>healthDetailsMissingRequiredPicklistValue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The picklist value is not supported</shortDescription>
+        <value>The required picklist value &quot;{0}&quot; is missing.</value>
     </labels>
     <labels>
         <fullName>healthDetailsNothingScheduled</fullName>
@@ -6848,6 +6880,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>View these Opportunities by running the &lt;b&gt;Opportunities without Payments&lt;/b&gt; report in the NPSP Health Check reports folder. Note that you should add filter criteria on the report to exclude any Opportunity types and Opportunity record types you&apos;ve excluded in NPSP Payments Settings. You can create the missing Payment records using the Create Missing Payments button on NPSP Settings | Bulk Data Processes | Create Missing Payments.</value>
     </labels>
     <labels>
+        <fullName>healthSolutionMissingPicklistValue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>A Required picklist value is missing for this specific field</shortDescription>
+        <value>Add the required picklist value &quot;{0}&quot; on the &quot;{1}&quot; field.</value>
+    </labels>
+    <labels>
         <fullName>healthSolutionNothingScheduled</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -6925,6 +6965,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>false</protected>
         <shortDescription>healthSolutionTriggerHandlerMismatch</shortDescription>
         <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See the Manage Trigger Handlers article in the Power Of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</value>
+    </labels>
+    <labels>
+        <fullName>healthSolutionUnsupportedPicklistValue</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The picklist value is not supported in this specific field</shortDescription>
+        <value>Deactivate or delete the picklist value &quot;{0}&quot; on the &quot;{1}&quot; field.</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFBadDatatypes</fullName>
@@ -9571,7 +9619,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
-        <value>When selected, NPSP copies the Campaign you specified on the Recurring Donation record to all of its child Opportunities. If this is not selected, NPSP copies the Campaign to the first child Opportunity only.</value>
+        <value>When selected, NPSP copies the Campaign you specified on the Recurring Donation to its installment Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDBatch</fullName>
@@ -9673,7 +9721,15 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>The Opportunity record type assigned to the Recurring Donation's child Opportunities.</value>
+        <value>The Opportunity record type assigned to the Recurring Donation&apos;s installment Opportunities.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpRDInstallmentCreateOptionMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help Text for Recurring Donation Setting Installment Opportunity Auto-Creation</shortDescription>
+        <value>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
@@ -10019,6 +10075,30 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <protected>false</protected>
         <shortDescription>stgHelpUseDatedConvRates</shortDescription>
         <value>When checked, Dated Exchange Rates are used for currency conversion. If unchecked, the standard exchange rate is used even if Advanced Currency Management is enabled.</value>
+    </labels>
+    <labels>
+        <fullName>stgInstallmentOppDisableAll</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disable Installments Auto-Creation process</shortDescription>
+        <value>Disable All Installments</value>
+    </labels>
+    <labels>
+        <fullName>stgInstallmentOppDisableFirst</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disable First Installment Auto-Creation on Create</shortDescription>
+        <value>Disable First Installment on Create</value>
+    </labels>
+    <labels>
+        <fullName>stgInstallmentOppEnableAll</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Always Create Next Installment</shortDescription>
+        <value>Always Create Next Installment</value>
     </labels>
     <labels>
         <fullName>stgInstallScriptError</fullName>
