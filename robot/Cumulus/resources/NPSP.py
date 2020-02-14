@@ -1531,6 +1531,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["record"]["activity-button"].format('showMoreButton') 
         self.salesforce._jsclick(locator) 
         
+    def click_button_with_title(self,title): 
+        """Clicks button identified by title using Javascript""" 
+        locator = npsp_lex_locators["button-title"].format(title) 
+        self.salesforce._jsclick(locator)     
+        
     def click_show_more_actions_button(self,title):
         """Clicks on more actions dropdown and click the given title"""   
         locator=npsp_lex_locators['link-contains'].format("more actions")
