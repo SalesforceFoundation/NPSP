@@ -72,8 +72,7 @@ private with sharing class RD_AddDonationsBTN_TEST {
         System.assertNotEquals('/' + rd.Id, returnPage.getUrl(), 
             'The button should redirect to the Recurring Donation detail page on successful Opp refresh');
 
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(false, opps.isEmpty(), 'Opportunities should be recreated: ' + opps);
+        System.assertEquals(false, oppGateway.getRecords(rd).isEmpty(), 'Opportunities should be recreated');
     }
 
     /***
