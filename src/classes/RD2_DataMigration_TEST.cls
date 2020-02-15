@@ -885,7 +885,7 @@ private class RD2_DataMigration_TEST {
     @IsTest
     private static void shouldLogDryRunErrorWhenStoreErrorIsDisabled() {
 
-        setStoreErrorInErrorSettings(false);
+        setStoreErrorsInErrorSettings(false);
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
@@ -918,7 +918,7 @@ private class RD2_DataMigration_TEST {
     @IsTest
     private static void shouldLogDataMigrationErrorWhenStoreErrorIsDisabled() {
 
-        setStoreErrorInErrorSettings(false);
+        setStoreErrorsInErrorSettings(false);
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
@@ -2000,7 +2000,13 @@ private class RD2_DataMigration_TEST {
         );
     }
 
-    private static void setStoreErrorInErrorSettings(Boolean isEnabled) {
+    /**
+     * @description Sets store settings to enable or disable in error settings
+     * @param isEnabled true or false
+     * @return void
+     */
+
+    private static void setStoreErrorsInErrorSettings(Boolean isEnabled) {
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(
             new Error_Settings__c(
             Error_Notifications_On__c = isEnabled,
