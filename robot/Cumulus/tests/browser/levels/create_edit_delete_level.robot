@@ -27,28 +27,28 @@ Create and edit level to verify fields
 
 
     Go To Page                                          Home                      Level__c
-    Populate Values To Create Level                     ${text_fields}            ${dropdown_fields}
-
-    Wait For Locator                                    obj-header                Level
+    Populate Values                                     ${text_fields}            ${dropdown_fields}
+    Current Page Should be                              Details    Level__c
     ${level_id} =                                       Save Current Record ID For Deletion  Level__c
     Set Global Variable                                 ${level_id}
     Go To Page                                          Details
-    ...                                                 Level__c
-    ...                                                 object_id=${level_id}
+        ...                                             Level__c
+        ...                                             object_id=${level_id}
 
     Wait Until Loading Is Complete
     Navigate To And Validate Field Value                Minimum Amount (>\=)    contains    0.10
     Navigate To And Validate Field Value                Maximum Amount (<)      contains    0.90
-    Click Link                                          link=Show more actions
-    Click Link                                          link=Edit
-    Populate Values To Create Level                     ${text_fields_edit}    ${dropdown_fields_edit}
+    Go to edit level page                               ${level_id}
+    Populate Values                                     ${text_fields_edit}    ${dropdown_fields_edit}
     Go To Page                                          Details
     ...                                                 Level__c
     ...                                                 object_id=${level_id}
 
     Wait Until Loading Is Complete
-    Navigate To And Validate Field Value                Maximum Amount (<)     contains       0.99
-    Navigate To And Validate Field Value                Source Field           contains       npo02__SmallestAmount__c
+
+    Navigate To And Validate Field Value    Maximum Amount (<)     contains       0.99
+    Navigate To And Validate Field Value    Source Field           contains       npo02__SmallestAmount__c
+
 
 2 Validate Level Assignment in Batch Job
     [Documentation]                      Create a contact, edit the smallgift field value to apply a valid
@@ -58,18 +58,12 @@ Create and edit level to verify fields
     # --------------------------------
     # Modify the SmallestGift field to allow the level to be applied
     # --------------------------------
-    Setupdata                               contact                     contact_data=${contact_fields}
+    Setupdata                               contact                   contact_data=${contact_fields}
     Set Global Variable                     ${data}
+    Salesforce Update                       Contact                   ${data}[contact][Id]  npo02__SmallestAmount__c=0.75
     Go To Page                              Details
     ...                                     Contact
     ...                                     object_id=${data}[contact][Id]
-
-    Scroll Element Into View                text:Donation Totals
-    Click Button                            title:Edit Smallest Gift
-    Wait For Locator                        record.edit_form
-    Populate Field                          Smallest Gift                 0.75
-    Click Record Button                     Save
-    Wait Until Loading Is Complete
 
     Navigate To And Validate Field Value    Smallest Gift    contains    $0.75
     # --------------------------------
@@ -77,7 +71,7 @@ Create and edit level to verify fields
     # --------------------------------
     Open NPSP Settings                      Bulk Data Processes         Level Assignment Batch
     Click Settings Button                   idPanelLvlAssignBatch       Run Batch
-    Wait for Locator                        npsp_settings.completed
+    Wait For Batch To Process               LVL_LevelAssign_BATCH       Completed
     # --------------------------------
     # Return to the Contact to validate the updated Level field
     # --------------------------------
@@ -87,8 +81,7 @@ Create and edit level to verify fields
     Navigate To And Validate Field Value    Level    contains          AutomationLevel
 
 3. Delete a Level
-    [Documentation]                        Delete the Level from the level details page using more actions
-    ...                                    Verify that the level gets disassociated with the contact
+    [Documentation]                      Delete the Level from the levels listing page
     [tags]                                  W-038641                 feature:Level
 
     Go To Page                              Details
@@ -100,4 +93,3 @@ Create and edit level to verify fields
     ...                                     Contact
     ...                                     object_id=${data}[contact][Id]
     Navigate To And Validate Field Value    Level      does not contain    AutomationLevel    section=Donation Totals
-

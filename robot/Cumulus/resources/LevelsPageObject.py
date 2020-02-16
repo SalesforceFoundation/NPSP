@@ -11,6 +11,7 @@ import time
 @pageobject("Home", "Level__c")
 class LevelListPage(BaseNPSPPage, HomePage):
 
+
     def _go_to_page(self, filter_name=None):
         """To go to create level page"""
         url_template = "{root}/lightning/o/{object}/new"
@@ -22,7 +23,7 @@ class LevelListPage(BaseNPSPPage, HomePage):
         self.npsp.wait_for_locator("frame","Levels")
         #elf.npsp.choose_frame("Levels")
 
-    def populate_values_to_create_level(self, textvalues=None, dropdownvalues=None):
+    def populate_values(self, textvalues=None, dropdownvalues=None):
         self.npsp.choose_frame("Levels")
         for field, value in textvalues.items():
             if field == "Level Name":
@@ -68,8 +69,6 @@ class LevelListPage(BaseNPSPPage, HomePage):
                 self.selenium.select_from_list_by_label(loc,value)
 
         self.selenium.click_button("Save")
-        self.selenium.unselect_frame()
-
 
 @pageobject("Listing", "Level__c")
 class LevelListPage(BaseNPSPPage, ListingPage):
@@ -91,6 +90,17 @@ class LevelDetailPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail view did not open in 1 min")
         self.selenium.location_should_contain("/lightning/r/",message="Current page is not Level record detail view")
+
+    def go_to_edit_level_page(self,levelid=None):
+        """ Navigates to the edit view for the given level id """
+        url = self.cumulusci.org.lightning_base_url
+        name = "Level_c"
+        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
+
+        url = "{}/lightning/r/{}/{}/edit".format(url,object_name,levelid)
+        self.selenium.go_to(url)
+        self.salesforce.wait_until_loading_is_complete()
+        self.selenium.wait_until_location_contains("/edit",timeout=60, message="Page not loaded")
     
         
         
