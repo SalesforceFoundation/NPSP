@@ -443,16 +443,17 @@
         const batch = component.get("v.dryRunBatch");
         if (batch !== undefined && batch !== null) {
             const isBatchCompleted = batch.status === 'Completed' && batch.isSuccess;
+
             isOutdated = batch.completedDaysBetween > 7;
+            if (isOutdated) {
+                state.isConfirmed = state.isEnabled ? true : false;
+                component.set('v.state.isConfirmed', state.isConfirmed);
+            }
 
             hideDryRun = state.isEnabled ? true : (state.isConfirmed ? !isOutdated : false);
             isInProgress = batch.isInProgress;
             isCompleted = state.isEnabled ? true : (isOutdated ? false : isBatchCompleted);
             isCompleted2 = state.isDryRun2 ? isBatchCompleted : false;
-
-            if (isOutdated) {
-                component.set('v.state.isConfirmed', state.isEnabled ? true : false);
-            }
         }
 
         component.set('v.state.isDryRunOutdated', isOutdated);

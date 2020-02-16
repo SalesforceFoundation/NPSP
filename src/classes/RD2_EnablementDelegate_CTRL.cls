@@ -109,15 +109,18 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 state = (EnablementState) JSON.deserialize(jsonState, EnablementState.class);
             }
 
+            //do not use the enablement values from the settings but refresh them based on the configuration
             state.isReady = service.isRecurringDonations2Ready();
             state.isEnabled = service.isRecurringDonations2Enabled();
-
 
             if (String.isBlank(jsonState)) {
                 state.isConfirmed = false;
                 state.isMetaLaunched = false;
                 state.isMetaConfirmed = false;
             } else {
+                if (!state.isEnabled && state.isConfirmed && isDryRunOutdated()) {
+                    state.isConfirmed = false;
+                }
                 state.isMetaLaunched = state.isMetaLaunched && state.isEnabled;
                 state.isMetaConfirmed = state.isMetaConfirmed && state.isMetaLaunched && hasMetaDeployCompleted();
             }      
@@ -130,11 +133,23 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Determines if the dry run is outdated
+    * @return Boolean
+    */
+    private static Boolean isDryRunOutdated() {
+        return new UTIL_BatchJobService().getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > 7;
+    }
+
+    /***
     * @description Tracks the enablement confirmation user action
     * @return void
     */
     @AuraEnabled
     public static void confirmEnablement() {
+        if (isDryRunOutdated()) {
+            throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
+        }
+
         EnablementState state = getEnablementState();
         state.isConfirmed = true;
 
@@ -147,6 +162,10 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void enableEnhancement() {
+        if (isDryRunOutdated()) {
+            throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
+        }
+
         try {
             STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
 
@@ -278,7 +297,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 state.isDryRun2 = true;
                 isStateUpdate = true;
 
-            } else if (!state.isEnabled && state.isConfirmed && getDryRunDaysBetween() > 7) {
+            } else if (!state.isEnabled && state.isConfirmed) {
                 state.isConfirmed = false;
                 isStateUpdate = true;
             }
@@ -295,14 +314,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
         
         return jobId;
-    }
-
-    /***
-    * @description Determines number of days passed since the dry run batch job has completed
-    * @return Integer
-    */
-    private static Integer getDryRunDaysBetween() {
-        return new UTIL_BatchJobService().getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH');
     }
 
     /***
@@ -330,10 +341,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     private static void saveEnablementState(EnablementState state) {
         try {
-            //do not save variables obsolete in the saved enablement state
-            state.isReady = null;
-            state.isEnabled = null;
-
             //save the state
             STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
 

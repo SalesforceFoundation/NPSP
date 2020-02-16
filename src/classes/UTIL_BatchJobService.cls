@@ -36,8 +36,6 @@
 public with sharing class UTIL_BatchJobService {
     public class BatchException extends Exception {}
 
-    private static final String TEST_BATCH_JOB_ID = '70754000010jEGqAAM';//TODO
-
     @TestVisible
     private static final String BATCH_JOB_REQUIRED = 'Batch job is required';
 
@@ -53,6 +51,7 @@ public with sharing class UTIL_BatchJobService {
         ApexJobStatus.PREPARING.name(),
         ApexJobStatus.PROCESSING.name()
     };
+
 
     /***
     * @description Determines if the batch job is in progress
@@ -88,9 +87,7 @@ public with sharing class UTIL_BatchJobService {
             return 0;
         }
 
-        return batchJob.Id == TEST_BATCH_JOB_ID
-            ? 8
-            : (System.today()).daysBetween(Date.valueOf(batchJob.CompletedDate));        
+        return (System.today()).daysBetween(Date.valueOf(batchJob.CompletedDate));        
     }
 
     /***
@@ -302,9 +299,7 @@ public with sharing class UTIL_BatchJobService {
                 return 0;
             }
 
-            return batchId == TEST_BATCH_JOB_ID
-            ? 8
-            : (System.today()).daysBetween(Date.valueOf(completedDate));        
+            return (System.today()).daysBetween(Date.valueOf(completedDate));        
         }
 
         /***
