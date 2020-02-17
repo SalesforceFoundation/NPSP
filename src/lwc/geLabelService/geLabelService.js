@@ -146,7 +146,6 @@ import geToastSaveFailed from '@salesforce/label/c.geToastSaveFailed';
 import geToastSelectActiveSection from '@salesforce/label/c.geToastSelectActiveSection';
 import geToastTemplateCreateSuccess from '@salesforce/label/c.geToastTemplateCreateSuccess';
 import geToastTemplateDeleteSuccess from '@salesforce/label/c.geToastTemplateDeleteSuccess';
-import geToastTemplateTabError from '@salesforce/label/c.geToastTemplateTabError';
 import geToastTemplateTabsError from '@salesforce/label/c.geToastTemplateTabsError';
 import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpdateSuccess';
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
@@ -305,7 +304,6 @@ class GeLabelService {
         geToastSelectActiveSection,
         geToastTemplateCreateSuccess,
         geToastTemplateDeleteSuccess,
-        geToastTemplateTabError,
         geToastTemplateTabsError,
         geToastTemplateUpdateSuccess,
         geWarningFormFieldsModalDeleteSection,

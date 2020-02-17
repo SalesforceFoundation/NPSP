@@ -46,7 +46,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
      * The flag is used to exclude (ignore) such Opps by the Opp service
      * when determining if the next Opp with the same Close Date can be created.
      */
-    public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = RD2_OpportunityService.MIGRATION_INSTALLMENT_NUMBER_FLAG;
+    public static final Integer MIGRATION_INSTALLMENT_NUMBER_FLAG = 0;
 
     /**
     * @description Contains Recurring Donation custom settings

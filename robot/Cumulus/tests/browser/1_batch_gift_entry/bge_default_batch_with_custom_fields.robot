@@ -1,6 +1,10 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/BatchGiftEntryPageObject.py
+...             robot/Cumulus/resources/DataImportPageObject.py
+...             robot/Cumulus/resources/PaymentPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
@@ -13,12 +17,11 @@ ${camp_id}
 Create BGE Batch With Custom Fields
     #Create a BGE batch with default values and selecting different types of custom fields for Donation and Payment
     [tags]  stable
-    Set Window Size    1024    768
     # --------------------------------
     # Create Batch With Custom Fields
     # --------------------------------
     ${batch} =           Generate Random String
-    Select App Launcher Tab   Batch Gift Entry
+    Go To Page                        Listing                      Batch_Gift_Entry
     Click BGE Button       New Batch
     Fill BGE Form
     ...                       Name=${batch}
@@ -36,6 +39,7 @@ Create BGE Batch With Custom Fields
     Verify Title    Batch Gift Entry    ${batch}         
     ${ns} =  Get NPSP Namespace Prefix
     Set Global Variable     ${ns}       ${ns}
+    Current Page Should Be    Details    DataImportBatch__c
     ${batch_id}    Save Current Record ID For Deletion      ${ns}DataImportBatch__c
     Verify Expected Batch Values    ${batch_id}
     ...    Batch_Process_Size__c=50.0
@@ -66,10 +70,9 @@ Create New gift and process batch and validate
     ...    custom_phone=1234567890
     ...    custom_url=automation.com
     ...    custom_textarea=this is custom batch
-    Populate Campaign    Search Campaigns    ${campaign}[Name]
-    
-    Click Field And Select Date    Donation Date    Today
-    Click Field And Select Date    custom_date    Today
+    Populate Campaign    Search Campaigns    ${campaign}[Name]    
+    Select Date From Datepicker    Donation Date    Today
+    Select Date From Datepicker    custom_date    Today
     Select Value From BGE DD    custom_picklist    2
     Select Multiple Values From Duellist    bge.duellist2    custom_multipick    Available    1    2    3
     Click Duellist Button    custom_multipick    Move selection to Chosen
@@ -88,6 +91,7 @@ Verify Custom Fields on Payment and Donation
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
     Select Window    ${value} | Salesforce    10
+    Current Page Should Be    Details    npe01__OppPayment__c
     ${pay_id}    Save Current Record ID For Deletion      npe01__OppPayment__c  
     ${org_ns} =  Get Org Namespace Prefix
     &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}

@@ -506,6 +506,16 @@ tasks:
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
 
+    set_user_language:
+        description: Update the language of the Current User to the specified language as '-o param1 English' (Other languages are are Spanish, French, German and Dutch).
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >-
+                User u = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1];
+                Map<String, String> languageMap = new Map<String, String>{ 'English' => 'en_US', 'Spanish' => 'es', 'French' => 'fr', 'German' => 'de', 'Dutch' => 'nl_NL', 'english' => 'en_US', 'spanish' => 'es', 'french' => 'fr', 'german' => 'de', 'dutch' => 'nl_NL' };
+                u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
+                Update u;
+
 
 flows:
     config_dev:

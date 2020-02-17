@@ -59,7 +59,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
                 npe01__Payments_Enabled__c = true,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+                npe01__Opportunity_Contact_Role_Default_role__c = CAO_Constants.OCR_DONOR_ROLE
         ));
 
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (

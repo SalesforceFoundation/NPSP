@@ -841,7 +841,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         if (this.hasTemplateInfoTabError || this.hasSelectFieldsTabError || this.hasBatchHeaderTabError) {
             const message = `${tabsWithErrors.size > 1 ?
                 this.CUSTOM_LABELS.geToastTemplateTabsError
-                : this.CUSTOM_LABELS.geToastTemplateTabError}`;
+                : this.CUSTOM_LABELS.geToastTemplateTabsError}`;
             const errors = [...tabsWithErrors].join(', ');
             showToast(this.CUSTOM_LABELS.commonError, `${message}${errors}.`, ERROR);
 

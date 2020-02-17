@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -38,57 +38,57 @@ public with sharing class HH_NameSpec implements HH_INaming {
     /*******************************************************************************************************
     * @description Get the Household name for the list of Contacts from a single Household.
     * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the name, are not included in the list of Contacts.
-    * If the list of Contacts is empty, returns the appropriate 'anonymous' name.  
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' name.
     * @param listCon the list of Contacts in the Household
     * @return the Household name
-    */ 
-    public string getHouseholdName(list<Contact> listCon) { 
+    */
+    public string getHouseholdName(list<Contact> listCon) {
         NameSpec ns = new NameSpec(hns, 'Household_Name_Format__c');
-        return strNameFromNameSpec(ns, listCon);            	
+        return strNameFromNameSpec(ns, listCon);
     }
 
     /*******************************************************************************************************
     * @description Get the Household Formal Greeting for the list of Contacts from a single Household.
     * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the greeting, are not included in the list of Contacts.
-    * If the list of Contacts is empty, returns the appropriate 'anonymous' greeting.  
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' greeting.
     * @param listCon the list of Contacts in the Household
     * @return the Household Formal Greeting
-    */ 
-    public string getHouseholdFormalGreeting(list<Contact> listCon) { 
+    */
+    public string getHouseholdFormalGreeting(list<Contact> listCon) {
         NameSpec ns = new NameSpec(hns, 'Formal_Greeting_Format__c');
-        return strNameFromNameSpec(ns, listCon);                
+        return strNameFromNameSpec(ns, listCon);
     }
 
     /*******************************************************************************************************
     * @description Get the Household Informal Greeting for the list of Contacts from a single Household.
     * Contacts who have set their npo02__Naming_Exclusions__c field to be excluded from the greeting, are not included in the list of Contacts.
-    * If the list of Contacts is empty, returns the appropriate 'anonymous' greeting.  
+    * If the list of Contacts is empty, returns the appropriate 'anonymous' greeting.
     * @param listCon the list of Contacts in the Household
     * @return the Household Informal Greeting
-    */ 
-    public string getHouseholdInformalGreeting(list<Contact> listCon) { 
+    */
+    public string getHouseholdInformalGreeting(list<Contact> listCon) {
         NameSpec ns = new NameSpec(hns, 'Informal_Greeting_Format__c');
-        return strNameFromNameSpec(ns, listCon);                
+        return strNameFromNameSpec(ns, listCon);
     }
-    
+
     /*******************************************************************************************************
     * @description For the Settings page, get the formatted name or greeting for the list of Contacts.
     * @param hns an in-memory Household Naming Settings object
     * @param strField is one of: Household_Name_Format__c, Formal_Greeting_Format__c, or Informal_Greeting_Format__c.
     * @param listCon the list of Contacts in the Household
     * @return the appropriate Household name or greeting
-    */ 
+    */
     public string getExampleName(Household_Naming_Settings__c hnsMem, string strField, list<Contact> listCon) {
         NameSpec ns = new NameSpec(hnsMem, strField);
-        return strNameFromNameSpec(ns, listCon);        
+        return strNameFromNameSpec(ns, listCon);
     }
-    
+
     /*******************************************************************************************************
     * @description To allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
     * @return set of strings of all fields referenced from Contact.
     */
     public set<string> setHouseholdNameFieldsOnContact() {
-        set<string> setStrField = new set<string>(); 
+        set<string> setStrField = new set<string>();
         NameSpec ns;
         ns = new NameSpec(hns, 'Household_Name_Format__c');
         setStrField.addAll(ns.setStrFieldsInNameSpec());
@@ -98,7 +98,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
         setStrField.addAll(ns.setStrFieldsInNameSpec());
         return setStrField;
     }
-    
+
     /*******************************************************************************************************
     * @description our cached copy of the Household Naming Settings
     */
@@ -112,9 +112,9 @@ public with sharing class HH_NameSpec implements HH_INaming {
 
     private static string chLToken = '{!';
     private static string chRToken = '}';
-        
+
     /*******************************************************************************************************
-    * @description 
+    * @description
     * Class that supports the parsing of a format string from the Household Naming Settings object.
     *
     * The NameSpec looks like:
@@ -132,21 +132,21 @@ public with sharing class HH_NameSpec implements HH_INaming {
         private string strOverrun { get; set; }
         private integer cMaxUseOverrun { get; set; }
         private string strHNSField { get; set; }
-        
+
         /*******************************************************************************************************
         * @description NameSpec Constructor
         * @param hns An instance of Household Naming Settings to use.
         * @param strField The namespec field in Settings to use.
         */
         private NameSpec(Household_Naming_Settings__c hns, string strField) {
-            strHNSField = strField; 
+            strHNSField = strField;
             string strNameSpec = string.valueOf(hns.get(strField));
             strAnd = (hns.Name_Connector__c == null ? ' ' : ' ' + hns.Name_Connector__c + ' ');
             strOverrun = hns.Name_Overrun__c;
             cMaxUseOverrun = integer.valueOf(hns.Contact_Overrun_Count__c);
             parseNameSpec(strNameSpec);
         }
-        
+
         /*******************************************************************************************************
         * @description Given the namespec string, parses out its constituent parts, and sets them in the class.
         * @param strNameSpec The namespec
@@ -156,19 +156,19 @@ public with sharing class HH_NameSpec implements HH_INaming {
             strSuffix = '';
             strFirstNameSpec = '';
             strFullNameSpec = '';
-            
+
             if (strNameSpec == null)
                 return;
-            
+
             // get optional Prefix
-            integer ich = strNameSpec.indexOf(chLToken);   
+            integer ich = strNameSpec.indexOf(chLToken);
             if (ich > 0) {
                 // don't include any tokens immediately next to the '{' in the prefix
                 //while (ich > 0 && strNameSpec.substring(ich, ich+1) != ' ') ich--;
                 strPrefix = strNameSpec.left(ich);
                 strNameSpec = strNameSpec.substring(ich);
             }
-               
+
             // get optional Suffix
             ich = strNameSpec.lastIndexOf(chRToken);
             if (ich > 0) {
@@ -177,7 +177,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 strSuffix = strNameSpec.substring(ich+1);
                 strNameSpec = strNameSpec.left(ich+1);
             }
-            
+
             // extract FirstNameSpec
             string str = strFNameSpecFromStrNameSpec(strNameSpec);
 
@@ -191,7 +191,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 strFullNameSpec = strNameSpec;
             }
         }
-        
+
         /*******************************************************************************************************
         * @description Returns a set of all field names in all parts of the namespec
         * @return string
@@ -202,26 +202,26 @@ public with sharing class HH_NameSpec implements HH_INaming {
                 setStrField.addAll(setStrFieldFromStrFSpec(strFirstNameSpec));
             if (strFullNameSpec != null)
                 setStrField.addAll(setStrFieldFromStrFSpec(strFullNameSpec));
-            setStrField.add('LastName');    
+            setStrField.add('LastName');
             return setStrField;
         }
     }
-    
+
     /*******************************************************************************************************
     * @description Given a namespec and a list of Contacts (assumed from a single household),
-    * return the formated string for that household.  
+    * return the formated string for that household.
     * this can be used for any of the household strings (name, formal greeting, informal greeting).
     * @param ns The namespec class
     * @param listCon the list of Contacts in the Household
     * return string
     */
     private static string strNameFromNameSpec(NameSpec ns, list<Contact> listCon) {
-        Integer cCon = listCon.size();    
+        Integer cCon = listCon.size();
         Boolean isNoLastnames = ns.strFullNameSpec.toUpperCase().indexOf(chLToken + 'LASTNAME' + chRToken) == -1;
         Boolean isLastNameOnlyFormat = !isNoLastnames && ns.setStrFieldsInNameSpec().size() == 1;
         Set<String> processedLastNames = new Set<String>();
         String[] names = new String[0];
-        
+
         if (cCon == 0) {
             names.add(
                 ns.strHNSField == 'Household_Name_Format__c'
@@ -229,7 +229,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
                     : label.npo02.HouseholdAnonymousGreeting
             );
         }
-        
+
         for (Integer i = 0, next = 0; i < cCon && i < ns.cMaxUseOverrun; i = next) {
             String strLname = listCon[i].LastName;
             next = i + 1;
@@ -240,7 +240,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             processedLastNames.add(strLname);
 
             String strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
-            
+
             // get the set of additional fname's for this lname
             list<String> listFname = new list<String>();
             for (; next < cCon && (isNoLastnames || listCon[next].LastName == strLname); next++) {
@@ -276,26 +276,26 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
 
             names.add(name);
-   
-            Boolean willAddOverrun = next >= ns.cMaxUseOverrun && 
-                cCon > ns.cMaxUseOverrun && 
-                ns.strFirstNameSpec != '' && 
+
+            Boolean willAddOverrun = next >= ns.cMaxUseOverrun &&
+                cCon > ns.cMaxUseOverrun &&
+                ns.strFirstNameSpec != '' &&
                 ns.strOverrun != null;
 
             if (willAddOverrun) {
                 names.add(ns.strOverrun);
-            }            
+            }
         }
 
         return ns.strPrefix + buildName(ns, names) + ns.strSuffix;
     }
-    
+
     /*******************************************************************************************************
     * @description Concatenate string out of individual formatted names.
     * @param ns The namespec class
     * @param names List of strings to concatenate
-    * return string Concatenated string where names are separated by comma except 
-    * the last string is linked with the namespec's AND delimiter 
+    * return string Concatenated string where names are separated by comma except
+    * the last string is linked with the namespec's AND delimiter
     */
     private static String buildName(NameSpec ns, String[] names) {
         String name = '';
@@ -313,7 +313,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
 
         return name;
     }
-    
+
     /*******************************************************************************************************
     * @description Given a single contact and a namespec string, returns the formatted string filling
     * in fields in the namespec from the contact.
@@ -323,19 +323,19 @@ public with sharing class HH_NameSpec implements HH_INaming {
     */
     private static string strConFspec(Contact con, string strFspec) {
         string str = strFspec;
-        
+
         // First, instantiate a new Pattern object looking for {...} without any nested {'s.
-        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');       
-        // Then instantiate a new Matcher object 
+        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
+        // Then instantiate a new Matcher object
         Matcher MyMatcher = MyPattern.matcher(strFspec);
-        
+
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
             string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
-            
+
             //separate cross object references, i.e. account.name
             list<string> splitField = (strField.split('\\.',0));
-            
+
             //remove the field name itself to only include parent object references
             string fieldName = splitField[splitField.size()-1].trim();
             splitField.remove(splitField.size()-1);
@@ -360,10 +360,10 @@ public with sharing class HH_NameSpec implements HH_INaming {
             if (thisObj != null) {
                 val = string.valueOf(thisObj.get(fieldName));
             }
-            
+
             // add back the {}'s for string substitution
             strField = chLToken + strField + chRToken;
-            if (val == null) {   
+            if (val == null) {
                 // eat potential trailing space
                 str = str.replace(strField + ' ', '');
                 // eat potential leading space
@@ -371,8 +371,7 @@ public with sharing class HH_NameSpec implements HH_INaming {
             }
             str = str.replace(strField, val == null ? '' : val);
         }
-        //system.debug('**** strConFspec con: ' + con + ' strFspec: ' + strFspec + ' returns: ' + str);
-        return str;     
+        return str;
     }
 
     /*******************************************************************************************************
@@ -383,18 +382,18 @@ public with sharing class HH_NameSpec implements HH_INaming {
     */
     private static set<string> setStrFieldFromStrFSpec(string strFSpec) {
         set<string> setStrField = new set<string>();
-                
+
         // First, instantiate a new Pattern object looking for {...} without any nested {'s.
-        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');       
-        // Then instantiate a new Matcher object 
+        Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
+        // Then instantiate a new Matcher object
         Matcher MyMatcher = MyPattern.matcher(strFSpec);
-        
+
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
             string strField = strFSpec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
             setStrField.add(strField.trim());
         }
-        return setStrField;     
+        return setStrField;
     }
 
     /*******************************************************************************************************
@@ -406,14 +405,14 @@ public with sharing class HH_NameSpec implements HH_INaming {
     private static string strFNameSpecFromStrNameSpec(string strNameSpec) {
 
         // First, instantiate a new Pattern object looking for {! {! xxxx } }
-        Pattern MyPattern = Pattern.compile('\\{![^\\}]*\\{!.*\\}[^\\{!]*\\}');       
-        // Then instantiate a new Matcher object 
+        Pattern MyPattern = Pattern.compile('\\{![^\\}]*\\{!.*\\}[^\\{!]*\\}');
+        // Then instantiate a new Matcher object
         Matcher MyMatcher = MyPattern.matcher(strNameSpec);
-        
+
         if (MyMatcher.find()) {
             return strNameSpec.substring(MyMatcher.start(), MyMatcher.end());
         } else {
             return '';
-        }     
+        }
     }
 }

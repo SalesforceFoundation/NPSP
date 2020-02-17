@@ -184,7 +184,11 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c',
               Trigger_Action__c = 'BeforeDelete;BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
-        // Enhanced Recurring Donations trigger handler
+        // Enhanced Recurring Donations trigger handlers
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'RD2_RecurringDonationsOpp_TDTM', Load_Order__c = 2, Object__c = 'Opportunity',
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
+
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'RD2_RecurringDonations_TDTM', Load_Order__c = 2, Object__c = 'npe03__Recurring_Donation__c',
               Trigger_Action__c = 'BeforeDelete;BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));

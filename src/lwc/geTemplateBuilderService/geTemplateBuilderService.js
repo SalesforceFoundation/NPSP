@@ -3,6 +3,7 @@ import getNamespaceWrapper from '@salesforce/apex/BDI_ManageAdvancedMappingCtrl.
 import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
+import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
@@ -125,7 +126,7 @@ class GeTemplateBuilderService {
 
         objectMappingByDevName.Widgets = {
             DeveloperName: 'Widgets',
-            MasterLabel: 'Widgets'
+            MasterLabel: labelGeHeaderFieldBundles
         };
 
         fieldMappingsByObjMappingDevName.Widgets = [
