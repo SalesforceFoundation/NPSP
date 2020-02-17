@@ -155,6 +155,37 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.init();
     }
 
+    @api
+    load(data) {
+        let dataImportRow = JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
+        if (!dataImportRow) {
+            return;
+        }
+        let fieldMappings = GeFormService.fieldMappings;
+        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
+            return key.toLowerCase().includes('gau_allocation_1');
+        });
+        let rows = [];
+        Object.keys(dataImportRow).forEach(diKey => {
+            let properties = {};
+
+            gauMappingKeys.forEach(fieldMappingKey => {
+                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
+                let sourceObj = dataImportRow[diKey].sourceObj;
+
+                if(Object.keys(sourceObj).includes(sourceField)) {
+                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
+                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
+                    
+                    properties[targetField] = diSourceField;
+                    
+                }
+            });
+            rows.push(properties);
+        });
+        this.addRows(rows);
+    }
+
     /**
      * Handle Add Row being clicked
      */
@@ -200,39 +231,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             element
         };
         this.rowList.push(row);
-    }
-
-    /**
-     * WIP: Handle receiving a pub/sub event by re-rendering the GAU widget rows
-     */
-    handleReceiveEvent(event) {
-        let dataImportRow = JSON.parse(event.detail[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
-        if (!dataImportRow) {
-            return;
-        }
-        let fieldMappings = GeFormService.fieldMappings;
-        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
-            return key.toLowerCase().includes('gau_allocation_1');
-        });
-        let rows = [];
-        Object.keys(dataImportRow).forEach(diKey => {
-            let properties = {};
-
-            gauMappingKeys.forEach(fieldMappingKey => {
-                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
-                let sourceObj = dataImportRow[diKey].sourceObj;
-
-                if(Object.keys(sourceObj).includes(sourceField)) {
-                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
-                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
-                    
-                    properties[targetField] = diSourceField;
-                    
-                }
-            });
-            rows.push(properties);
-        });
-        this.addRows(rows);
     }
 
     /**

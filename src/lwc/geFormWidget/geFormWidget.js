@@ -25,6 +25,14 @@ export default class GeFormWidget extends LightningElement {
         return widgetAndValues;
     }
 
+    @api
+    load(data) {
+        const allocationWidget = this.template.querySelector('c-ge-form-widget-allocation');
+        if(allocationWidget) {
+            allocationWidget.load(data);
+        }
+    }
+
     get isValid() {
         const thisWidget = this.widgetComponent;
         let isValid = false;

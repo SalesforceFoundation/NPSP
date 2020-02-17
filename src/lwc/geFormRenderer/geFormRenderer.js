@@ -611,10 +611,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         sectionsList.forEach((section, index, array) => {
             section.load(dataRow);
-            // pub/sub event for reloading any widgets in the form
-            if(index === (array.length - 1)) {
-                fireEvent(this.pageRef, 'reloadwidget', dataRow);
-            }
         });
     }
 

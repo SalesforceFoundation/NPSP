@@ -121,10 +121,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                         if (fieldMapping == null) {
                             continue;
                         }
-                        if(fieldMapping.Element_Type.toLowerCase() ==
-                            WIDGET_ELEMENT_TYPE) {
-                                fieldApiNames.add(ADDITIONAL_OBJECT_JSON_FIELD_NAME);
-                        }
                         // Add the source fields used in the Template
                         if (!fieldApiNames.contains(
                                 fieldMapping.Source_Field_API_Name.toLowerCase())) {
