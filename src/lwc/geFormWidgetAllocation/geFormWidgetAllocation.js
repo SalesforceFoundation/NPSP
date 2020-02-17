@@ -162,16 +162,30 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.addRow(false);
     }
 
+    addRows(records) {
+        let rows = [];
+        records.forEach(record => {
+            let element = {};
+            element.key = rows.length;
+            let row = {
+                record : {
+                    ...record
+                },
+                element
+            };
+            this.rowList.push(row);
+        });
+    }
+
     /**
      * Add a new record to the list
      * @param isDefaultGAU {boolean} When initializing the first row, this should be true.
      */
-    addRow(isDefaultGAU, recordProperties) {
+    addRow(isDefaultGAU) {
         let element = {};
         element.key = this.rowList.length;
         const record = {
             apiName: ALLOCATION_OBJECT.objectApiName,
-            ...recordProperties
         };
         let row = {};
         if(isDefaultGAU === true) {
@@ -186,6 +200,39 @@ export default class GeFormWidgetAllocation extends LightningElement {
             element
         };
         this.rowList.push(row);
+    }
+
+    /**
+     * WIP: Handle receiving a pub/sub event by re-rendering the GAU widget rows
+     */
+    handleReceiveEvent(event) {
+        let dataImportRow = JSON.parse(event.detail[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
+        if (!dataImportRow) {
+            return;
+        }
+        let fieldMappings = GeFormService.fieldMappings;
+        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
+            return key.toLowerCase().includes('gau_allocation_1');
+        });
+        let rows = [];
+        Object.keys(dataImportRow).forEach(diKey => {
+            let properties = {};
+
+            gauMappingKeys.forEach(fieldMappingKey => {
+                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
+                let sourceObj = dataImportRow[diKey].sourceObj;
+
+                if(Object.keys(sourceObj).includes(sourceField)) {
+                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
+                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
+                    
+                    properties[targetField] = diSourceField;
+                    
+                }
+            });
+            rows.push(properties);
+        });
+        this.addRows(rows);
     }
 
     /**
@@ -238,42 +285,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     handleRemove(event) {
         this.rowList.splice(event.detail.rowIndex, 1);
-    }
-
-    /**
-     * WIP: Handle receiving a pub/sub event by re-rendering the GAU widget rows
-     */
-    handleReceiveEvent(event) {
-        let dataImportRow = JSON.parse(event.detail[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
-        if (!dataImportRow) {
-            return;
-        }
-        let fieldMappings = GeFormService.fieldMappings;
-        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
-            return key.toLowerCase().includes('gau_allocation_1');
-        });
-
-        Object.keys(dataImportRow).forEach(diKey => {
-            let properties = [];
-
-            gauMappingKeys.forEach(fieldMappingKey => {
-                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
-                let sourceObj = dataImportRow[diKey].sourceObj;
-
-                if(Object.keys(sourceObj).includes(sourceField)) {
-                    properties.push({
-                        [fieldMappings[fieldMappingKey].Target_Field_API_Name] : dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name]
-                    });
-                }
-            });
-
-            this.addRow(false, properties);
-        });
-
-
-        // build widget row with record properties from the data import row
-        // this.addRow(false, recordProperties);
-        
     }
 
     /**

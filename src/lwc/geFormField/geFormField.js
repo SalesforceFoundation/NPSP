@@ -339,7 +339,15 @@ export default class GeFormField extends LightningElement {
         if (this.isLookup) {
             this.loadLookUp(data, value);
         }
-
+        // When form field is loaded, trigger value change on the field
+        // if(isNotEmpty(this.value)) {
+        //     let loadEvent = {
+        //         detail: {
+        //             value: this.value
+        //         }
+        //     };
+        //     this.handleValueChange(loadEvent);
+        // }
     }
 
     /**
