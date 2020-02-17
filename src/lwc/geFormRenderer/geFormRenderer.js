@@ -960,6 +960,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.selectedDonation = event.detail.selectedDonation;
 
         const donationImportStatus = DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD.fieldApiName;
+        const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
+        const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
+        const paymentImportStatus = DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName;
+
         if (!this.selectedDonation.hasOwnProperty('Id')) {
             this.resetDonationAndPaymentImportedFields();
             if (this.selectedDonation.new === true) {
@@ -967,26 +971,28 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     userSelectedNewOpp;
             }
         } else {
-            const donationImported = DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName;
-            const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
-            const paymentImportStatus = DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD.fieldApiName;
 
             if (this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix)) {
                 this.selectedDonationDataImportFieldValues[paymentImported] =
-                    this.selectedDonation.Id;
+                    {
+                        value: this.selectedDonation.Id,
+                        displayValue: this.selectedDonation.Name
+                    };
                 this.selectedDonationDataImportFieldValues[paymentImportStatus] =
                     userSelectedMatch;
                 this.selectedDonationDataImportFieldValues[donationImported] =
-                    this.selectedDonation.npe01__Opportunity__c;
+                    {
+                        value: this.selectedDonation.npe01__Opportunity__c,
+                        displayValue: this.selectedDonation.npe01__Opportunity__r.Name
+                    };
                 this.selectedDonationDataImportFieldValues[donationImportStatus] =
                     userSelectedMatch;
-
-                this.loadSelectedRecordFieldValues(
-                    paymentImported,
-                    this.selectedDonation.Id);
             } else {
                 this.selectedDonationDataImportFieldValues[donationImported] =
-                    this.selectedDonation.Id;
+                    {
+                        value: this.selectedDonation.Id,
+                        displayValue: this.selectedDonation.Name
+                    };
 
                 if (this.selectedDonation.applyPayment) {
                     this.selectedDonationDataImportFieldValues[donationImportStatus] =
@@ -998,11 +1004,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
                 this.selectedDonationDataImportFieldValues[paymentImported] = null;
                 this.selectedDonationDataImportFieldValues[paymentImportStatus] = null;
-                this.loadSelectedRecordFieldValues(
-                    donationImported,
-                    this.selectedDonation.Id);
             }
         }
+        this.load(this.selectedDonationDataImportFieldValues);
+        this.loadSelectedRecordFieldValues(
+            this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix) ?
+                paymentImported :
+                donationImported,
+            this.selectedDonation.Id
+        );
     }
 
     resetDonationAndPaymentImportedFields() {

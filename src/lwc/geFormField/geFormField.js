@@ -325,16 +325,16 @@ export default class GeFormField extends LightningElement {
                 value = data[this.sourceFieldAPIName].value;
             } else {
                 value = data[this.sourceFieldAPIName];
-                //if this is an empty object or null, reset
-                if (value === null || isUndefined(value.value)) {
+                //if null, reset
+                if (value === null) {
                     this.reset();
-                }
-
-                if (this.isLookup) {
-                    this.loadLookUp(data, value);
                 }
             }
             this.value = value;
+
+            if (this.isLookup) {
+                this.loadLookUp(data, value);
+            }
         } else {
             // Property isn't defined.  Don't do anything.
             return false;
