@@ -59,6 +59,19 @@
         </valueSet>
     </fields>
     <fields>
+        <fullName>CurrentYearValue__c</fullName>
+        <description>This Recurring Donation&quot;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This Recurring Donation&quot;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</inlineHelpText>
+        <label>Current Year Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
         <fullName>Day_of_Month__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Sets future monthly, custom monthly, or quarterly donation installments to the selected day of the month, regardless of Next Donation Date. NOTE: If the Always use last day of month checkbox is selected, it supersedes the Day of Month value.</inlineHelpText>
@@ -242,6 +255,19 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>NextYearValue__c</fullName>
+        <description>This Recurring Donation&quot;s total expected amount for the next calendar or fiscal year (read only).</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This Recurring Donation&quot;s total expected amount for the next calendar or fiscal year (read only).</inlineHelpText>
+        <label>Next Year Value</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
     </fields>
     <fields>
         <fullName>PaymentMethod__c</fullName>
