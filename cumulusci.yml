@@ -111,6 +111,7 @@ tasks:
         options:
             path: unpackaged/config/delete
 
+<<<<<<< HEAD
     deploy_trailhead_config:
         description: Deploys the metadata for Trailhead Playground config
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -124,6 +125,15 @@ tasks:
         options:
             path: unpackaged/config/trailhead_delete
 
+=======
+    deploy_trial_translations:
+        description: Deploys the translations for trial configured organizations
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/trial_translations
+            namespace_inject: $project_config.project__package__namespace
+
+>>>>>>> master
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
@@ -628,6 +638,16 @@ tasks:
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
 
+    set_user_language:
+        description: Update the language of the Current User to the specified language as '-o param1 English' (Other languages are are Spanish, French, German and Dutch).
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >-
+                User u = [SELECT Id FROM User WHERE Id = :UserInfo.getUserId() LIMIT 1];
+                Map<String, String> languageMap = new Map<String, String>{ 'English' => 'en_US', 'Spanish' => 'es', 'French' => 'fr', 'German' => 'de', 'Dutch' => 'nl_NL', 'english' => 'en_US', 'spanish' => 'es', 'french' => 'fr', 'german' => 'de', 'dutch' => 'nl_NL' };
+                u.LanguageLocaleKey = languageMap.get('%%%PARAM_1%%%');
+                Update u;
+
 
 flows:
     config_dev:
@@ -960,6 +980,8 @@ orgs:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
             config_file: orgs/beta_multicurrency.json
+        beta_nonenglish:
+            config_file: orgs/beta_nonenglish.json
         beta_personaccounts:
             config_file: orgs/beta_personaccounts.json
         beta_platformencryption:

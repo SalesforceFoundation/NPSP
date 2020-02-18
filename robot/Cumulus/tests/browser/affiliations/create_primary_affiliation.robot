@@ -3,6 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AffiliationPageObject.py
 ...             robot/Cumulus/resources/NPSP.py
 Suite Setup     Run keywords
 ...             Open Test Browser
@@ -27,7 +28,8 @@ Create Primary Affiliation for Contact
     Select Tab                           Details
     Edit Record Field Value              Primary Affiliation          &{account}[Name]
     Save Record
-    Validate Related Record Count         Organization Affiliations                        1
+    Validate Related Record Count        Organization Affiliations                        1
     Verify Allocations                   Organization Affiliations    &{account}[Name]=Current 
-    Click Related Item Link              Organization Affiliations    &{account}[Name]
+    Click Related Table Item Link        Organization Affiliations    &{account}[Name]
+    Current Page Should Be               Details                      npe5__Affiliation__c
     Save Current Record ID For Deletion  npe5__Affiliation__c    

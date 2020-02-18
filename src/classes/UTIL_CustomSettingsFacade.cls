@@ -35,7 +35,7 @@
 * Needs to be "without sharing" so that the Install Script can run it.
 */
 public without sharing class UTIL_CustomSettingsFacade {
-    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
+    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = CAO_Constants.OCR_DONOR_ROLE;
     public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
     public static final Integer DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE = 1000;
@@ -548,7 +548,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         }
 
-        hs.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
+        hs.npo02__Household_Member_Contact_Role__c = CAO_Constants.HH_MEMBER_CONTACT_ROLE;
         hs.npo02__Always_Rollup_to_Primary_Contact__c = false;
         hs.npo02__Enable_Opp_Rollup_Triggers__c = true;
         hs.npo02__Excluded_Account_Opp_Rectypes__c = null;
@@ -588,6 +588,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Opportunity_Forecast_Months__c = 12;
             settings.npe03__Update_Check_Interval__c = 90;
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
+            settings.InstallmentOppAutoCreateOption__c = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
             settings.DisableRollupsWhenCreatingInstallments__c = false;
 
             settings.EnableAutomaticNaming__c = false;
@@ -849,6 +850,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
         recurringDonationsSettings.DisableRollupsWhenCreatingInstallments__c = settings.DisableRollupsWhenCreatingInstallments__c;
         recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
+        recurringDonationsSettings.InstallmentOppAutoCreateOption__c = settings.InstallmentOppAutoCreateOption__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 

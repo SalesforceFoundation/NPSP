@@ -13,9 +13,7 @@
     </div>
 
     <apex:form id="form">
-        <apex:actionFunction name="refreshPanels" 
-            action="{!refreshPanels}" 
-            reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRDInstPd, idPanelRDFieldMap"
+        <apex:actionFunction name="refreshPanels" action="{!refreshPanels}" reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRDInstPd, idPanelRDFieldMap"
             status="statusLoad" />
     </apex:form>
 
@@ -31,7 +29,7 @@
                 "enablementDelegateDiv",
                 function () {
                     $A.eventService.addHandler({
-                        "event": "c:RD2_EnhancementEnabledEvent",
+                        "event": namespace + ":RD2_EnhancementEnabledEvent",
                         "handler": refreshPanels
                     });
                 }
