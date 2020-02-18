@@ -45,7 +45,7 @@ Create a Contact and Add Engagement Plan
     Enter Task Id and Subject                        Task 2                             Task_2
     Page Scroll To Locator                           button                             Save
     Click Button                                     Save
-
+    wait until location contains                     /view
     ${ns} =  Get NPSP Namespace Prefix
 
     Save Current Record ID For Deletion              ${ns}Engagement_Plan_Template__c
@@ -60,20 +60,14 @@ Create a Contact and Add Engagement Plan
     Wait Until Modal Is Closed
     Current Page Should Be                           Detail                         Contact
     Validate Related Record Count                    Engagement Plans               1
-
-Delete Engagement Plan
-    [Documentation]                      Delete the related engagement plan from contact
-    ...                                  Verify tasks and subtasks associated with the plan still exist
-
-    [tags]                               W-038641                 feature:Engagements
-    Go To Related Engagement Actionplans Page                     ${data}[contact][Id]
-    Perform Action On Related Item                                Delete
-    Go To Page                                                    Details
-    ...                                                           Contact
-    ...                                                           object_id=${data}[contact][Id]
-    Scroll Page To Location                                       0                      0
+    Go To Related Engagement Actionplans Page        ${data}[contact][Id]
+    Perform Action On Related Item                   Delete
+    Go To Page                                       Details
+    ...                                              Contact
+    ...                                              object_id=${data}[contact][Id]
+    Scroll Page To Location                          0                      0
     Click More Activity Button
-    Check Activity Tasks                                          Task_1    Sub_task_1.1    Task_2
+    Check Activity Tasks                            Task_1    Sub_task_1.1    Task_2
 
 
 
