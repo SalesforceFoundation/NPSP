@@ -32,7 +32,7 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.salesforce.populate_lookup_field(field_name,new_value)
 
     def go_to_related_engagement_actionplans_page(self,customerid):
-        """ Navigates to the specified mode of engagement plant template page """
+        """ Navigates to the related engagement plans listing page"""
         url = self.cumulusci.org.lightning_base_url
         name = "Action_Plans__r"
         object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
