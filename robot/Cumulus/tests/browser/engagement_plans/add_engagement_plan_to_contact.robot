@@ -19,21 +19,33 @@ Setup Test Data
 
 *** Variables ***
 &{contact_fields}  Email=test@example.com
-&{fields}  Name=Automation_Plan    task1=Task_1    task2=Task_2
 
 *** Test Cases ***
 Create a Contact and Add Engagement Plan
-    [Documentation]                      Create data for Engagement plan Template and contact
-    ...                                  Create an engagement plan for the contact and verify
+    [Documentation]                      Create an Engagement plan Template with two tasks and one subtask. And  a contact
+    ...                                  Link the  engagement plan for the contact and verify
     ...                                  There is one engagement plan set up for the contact
     [tags]                               W-038641                 feature:Engagements
 
 
-    Go To Page                                       Listing                        Engagement_Plan_Template__c
+    Go To Page                                       Listing                            Engagement_Plan_Template__c
     go to engagement plan page                       create
-    Wait For Locator                                 frame                          Manage Engagement Plan Template
+    Wait For Locator                                 frame                              Manage Engagement Plan Template
 
-    Populate Values And Save Template                Create                         ${fields}
+    Select Frame And Click Element                   Manage Engagement Plan Template    id    idName
+    Enter Eng Plan Values                            idName                             Automation_Plan
+    Enter Eng Plan Values                            idDesc                             This plan is created via Automation
+    Click Button                                     Add Task
+    Wait Until Page Contains                         Task 1
+    Enter Task Id and Subject                        Task 1                             Task_1
+    Click Task Button                                  1                                Add Dependent Task
+    Enter Task Id and Subject                        Task 1-1                           Sub_task_1.1
+    Click Button                                     Add Task
+    Wait Until Page Contains                         Task 2
+    Enter Task Id and Subject                        Task 2                             Task_2
+    Page Scroll To Locator                           button                             Save
+    Click Button                                     Save
+
     ${ns} =  Get NPSP Namespace Prefix
 
     Save Current Record ID For Deletion              ${ns}Engagement_Plan_Template__c
@@ -50,8 +62,8 @@ Create a Contact and Add Engagement Plan
     Validate Related Record Count                    Engagement Plans               1
 
 Delete Engagement Plan
-    [Documentation]                      Delete engagement plan from customer
-    ...                                  Verify tasks persis
+    [Documentation]                      Delete the related engagement plan from contact
+    ...                                  Verify tasks and subtasks associated with the plan still exist
 
     [tags]                               W-038641                 feature:Engagements
     go to related engagement actionplans page                     ${data}[contact][Id]
@@ -60,7 +72,8 @@ Delete Engagement Plan
     ...                                                           Contact
     ...                                                           object_id=${data}[contact][Id]
     Scroll Page To Location                                       0                      0
-    Check Activity Tasks                                        Task_1                Task_2
+    Click More Activity Button
+    Check Activity Tasks                                          Task_1    Sub_task_1.1    Task_2
 
 
 

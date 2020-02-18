@@ -624,15 +624,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             locator = npsp_lex_locators['check_related_list_item'].format(list_name,value)
             self.selenium.page_should_contain_element(locator)
 
-    # @capture_screenshot_on_error
-    # def verify_eng_plan_exists(self,name, delete=None):
-    #     """verifies that the Engagement Plans related list has a plan stored under it and clicks on dropdown if True is passed as 2nd argument"""
-    #     time.sleep(2)
-    #     locator = npsp_lex_locators['record']['related']['link'].format('Engagement Plans',name)
-    #     self.selenium.page_should_contain_element(locator)
-    #     plan=self.selenium.get_webelement(locator).text
-    #     return plan
-
     def check_activity_tasks(self, *args):
         """verifies that the specified tasks are present under activity tab """
         for value in args:
@@ -1353,13 +1344,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             contact_object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), contactobjname)
             engagement_id = self.salesforce.salesforce_insert(object_name, **engagement_data)
             engagement = self.salesforce.salesforce_get(object_name,engagement_id)
-            # Add tasks to engagement if tast_data information is provided
-            if task_data is not None:
-                taskdata = {}
-                for field, possible_values in task_data.items():
-                    taskdata.update( {'Name' : task_data.get(field), object_name: engagement_id } )
-                    self.salesforce.salesforce_insert(object_name, **taskdata )
-            # If the keyword is contact, link the contact to the engagement plan created
+
+          # If the keyword is contact, link the contact to the engagement plan created
             if name.lower() == 'contact':
                 testdata={}
                 testdata.update( {contact_object_name : data[name]["Id"], object_name: engagement_id } )

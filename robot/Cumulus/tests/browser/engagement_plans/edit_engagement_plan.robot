@@ -20,10 +20,8 @@ Setup Test Data
 *** Variables ***
 ${task1}  Task_1
 ${task2}  Task_2
-${sub_task1}  subtask1
-&{contact1_fields}  Email=test@example.com
 &{engagement_fields}  Name=AutomationTestPlan
-&{edit_fields}  Name=testplan1    task1=Task_1    task2=Task_2
+
 
 *** Test Cases ***
 Create Engagement Plan And Edit the Plan
@@ -35,9 +33,20 @@ Create Engagement Plan And Edit the Plan
 
     Go To Page                                        Listing                             Engagement_Plan_Template__c
     Go To Engagement Plan Page                        Edit                                ${data}[engagement][Id]
+    Wait For Locator                                 frame                               Manage Engagement Plan Template
+
+    Select Frame And Click Element                   Manage Engagement Plan Template     id    idName
+
+    Click Button                                     Add Task
+    Wait Until Page Contains                         Task 1
+    Enter Task Id and Subject                        Task 1                             Task_1
+    Click Button                                     Add Task
+    Wait Until Page Contains                         Task 2
+    Enter Task Id and Subject                        Task 2                             Task_2
+    Page Scroll To Locator                           button                             Save
+    Click Button                                     Save
 
 
-    Populate Values And Save Template                 Edit                                  ${edit_fields}
     Go To Page                                        Detail
     ...                                               EngagementTemplate
     ...                                               object_id=${data}[engagement][Id]
