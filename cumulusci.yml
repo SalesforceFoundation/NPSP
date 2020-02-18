@@ -111,7 +111,6 @@ tasks:
         options:
             path: unpackaged/config/delete
 
-<<<<<<< HEAD
     deploy_trailhead_config:
         description: Deploys the metadata for Trailhead Playground config
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -125,7 +124,6 @@ tasks:
         options:
             path: unpackaged/config/trailhead_delete
 
-=======
     deploy_trial_translations:
         description: Deploys the translations for trial configured organizations
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -133,7 +131,6 @@ tasks:
             path: unpackaged/config/trial_translations
             namespace_inject: $project_config.project__package__namespace
 
->>>>>>> master
     ensure_record_type:
         name: Ensure Opportunity Record Types
         description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
