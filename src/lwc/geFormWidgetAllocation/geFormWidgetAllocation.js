@@ -6,6 +6,7 @@ import { isNumeric, isNotEmpty } from 'c/utilCommon';
 import { registerListener } from 'c/pubsubNoPageRef';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
+import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
@@ -150,6 +151,36 @@ export default class GeFormWidgetAllocation extends LightningElement {
     reset() {
         this.rowList = [];
         this.init();
+    }
+
+    @api
+    load(data) {
+        let dataImportRow = JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
+        if (!dataImportRow) {
+            return;
+        }
+        let fieldMappings = GeFormService.fieldMappings;
+        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
+            return key.toLowerCase().includes('gau_allocation_1');
+        });
+        let rows = [];
+        Object.keys(dataImportRow).forEach(diKey => {
+            let properties = {};
+
+            gauMappingKeys.forEach(fieldMappingKey => {
+                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
+                let sourceObj = dataImportRow[diKey].sourceObj;
+
+                if(Object.keys(sourceObj).includes(sourceField)) {
+                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
+                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
+
+                    properties[targetField] = diSourceField;
+
+                }
+            });
+            rows.push(properties);
+        });
     }
 
     /**
