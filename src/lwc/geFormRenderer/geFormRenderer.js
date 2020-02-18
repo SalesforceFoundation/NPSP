@@ -888,12 +888,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    // TODO: Need to handle displaying of review donations onload when coming from an Account/Contact page
     handleLookupRecordSelect(event) {
         const recordId = event.detail.value; // Reset the field if null
         const fieldApiName = event.detail.fieldApiName;
-        // LookupRecordSelect event should set value if one is provided
-        // or reset if value is null
+
+        if(!fieldApiName ||
+            !GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
+            return false;
+        }
+
         if (event.detail.hasOwnProperty('value') && event.detail.value !== null) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         } else {

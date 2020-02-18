@@ -255,6 +255,13 @@ class GeFormService {
         });
     }
 
+    get importedRecordFieldNames() {
+        return Object.values(this.objectMappings).map(
+            ({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name
+        );
+    }
+
 }
 
 const geFormServiceInstance = new GeFormService();
