@@ -29,7 +29,7 @@ Create a Contact and Add Engagement Plan
 
 
     Go To Page                                       Listing                            Engagement_Plan_Template__c
-    go to engagement plan page                       create
+    Go To Engagement Plan Page                       create
     Wait For Locator                                 frame                              Manage Engagement Plan Template
 
     Select Frame And Click Element                   Manage Engagement Plan Template    id    idName
@@ -66,7 +66,7 @@ Delete Engagement Plan
     ...                                  Verify tasks and subtasks associated with the plan still exist
 
     [tags]                               W-038641                 feature:Engagements
-    go to related engagement actionplans page                     ${data}[contact][Id]
+    Go To Related Engagement Actionplans Page                     ${data}[contact][Id]
     Perform Action On Related Item                                Delete
     Go To Page                                                    Details
     ...                                                           Contact
