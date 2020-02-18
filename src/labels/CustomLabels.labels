@@ -1897,6 +1897,30 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
     </labels>
     <labels>
+        <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Require Planned Installments field on the RD when Recurring Type is Fixed</shortDescription>
+        <value>Number of Planned Installments is required when Recurring Type is Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NumberInstallmentsNotAllowedWhenOpen</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disallow a value in Planned Installments on the RD for Recurring Type is Open</shortDescription>
+        <value>Number of Planned Installments is for Fixed Recurring Donations only. Remove the value in Number of Planned Installments or change the Recurring Type to Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NumberPlannedInstallmentsCannotBeLessThanPaid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Planned Installments field is greater than number of Paid Installments</shortDescription>
+        <value>Number of Planned Installments can't be less than the Number of Paid Installments.</value>
+    </labels>
+    <labels>
         <fullName>RD2_PageNotAvailableHeader</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2015,6 +2039,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Refresh Opportunities</shortDescription>
         <value>Refresh Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>RD_ErrorAddDonationLimitedToLegacyMode</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh Opportunities button action can be executed in the legacy mode only</shortDescription>
+        <value>The Refresh Opportunities button has no function in Enhanced Recurring Donations. Ask your administrator to remove this button from Recurring Donation page layouts.</value>
     </labels>
     <labels>
         <fullName>RD_ErrorAddDonationMissingId</fullName>

@@ -1541,6 +1541,9 @@
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
+        <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
+        <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
+        <members>RD2_NumberPlannedInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
         <members>RD2_ScheduleLWCEndDate</members>
@@ -1555,6 +1558,7 @@
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
+        <members>RD_ErrorAddDonationLimitedToLegacyMode</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
         <members>RD_ErrorLegacyBatchJobCannotBeRun</members>
