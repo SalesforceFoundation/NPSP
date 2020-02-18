@@ -333,6 +333,12 @@
     </fields>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Recurring Donations track charitable giving where a donor specifies an amount of money to be given on a regular basis.</description>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
     <label>Recurring Donations</label>
     <nameField>
         <label>Recurring Donation Name</label>
