@@ -562,6 +562,7 @@ Insert OpportunityContactRole:
   fields:
     Id: sf_id
     Role: Role
+    IsPrimary: IsPrimary
   lookups:
     ContactId:
       table: Contact
