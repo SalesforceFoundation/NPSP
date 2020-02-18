@@ -247,6 +247,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rd.npe03__Organization__c != oldRd.npe03__Organization__c ||
             rd.npe03__Amount__c != oldRd.npe03__Amount__c ||
             rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c ||
+            rd.npe03__Installments__c != oldRd.npe03__Installments__c ||
             rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
             rd.StartDate__c != oldRd.StartDate__c ||
             rd.Day_of_Month__c != oldRd.Day_of_Month__c ||
@@ -281,8 +282,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (!rdRecord.isEnhancedFormat()) {
                 continue;
             }
-            
-            rdRecord       
+
+            rdRecord
                 .setIsNew(newRDIds.contains(rd.Id))
                 .reviseNextDonationDate(scheduleService);
 
@@ -292,8 +293,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             } else {
                 if (isNewOpportunityCandidate(rdRecord)) {
                     newOppRDs.add(rd);
-                } 
-                
+                }
+
                 if (hasOpenOpportunity(rdRecord)) {
                     updateOppRDs.add(rd);
                 }
@@ -338,8 +339,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             if (!rdRecord.isEnhancedFormat()) {
                 continue;
             }
-            
-            if (rdRecord       
+
+            if (rdRecord
                 .reviseNextDonationDate(scheduleService)
                 .reviseYearValues(yearValueProcessor)
                 .isOutdated()
@@ -500,8 +501,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         for (npe03__Recurring_Donation__c rd : [
             SELECT Id,
                 (
-                    SELECT Id 
-                    FROM npe03__Donations__r 
+                    SELECT Id
+                    FROM npe03__Donations__r
                     LIMIT 1
                 )
             FROM npe03__Recurring_Donation__c
@@ -511,7 +512,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 newRDIds.add(rd.Id);
             }
         }
-        
+
         return newRDIds;
     }
 
@@ -774,7 +775,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @description Returns the earliest date to filter open/closed Opportunities based on their Close Date.
         * If the current year is a calendar year, the current year start date is earlier than the current date.
         * If the current year is a fiscal year, the current year start date is also earlier than the current date.
-        * So regardless if we calculate calendar or fiscal year values, we can use the current year start date 
+        * So regardless if we calculate calendar or fiscal year values, we can use the current year start date
         * as the cut off date to get existing Opportunities in the Opp eval service .
         */
         public Date getStartDate() {
@@ -821,7 +822,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             List<RD2_ScheduleService.Installment> installments =
                 scheduleService.getVisualizedInstallments(startDate, endDate, schedules);
- 
+
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(startDate)
                 .includeByYear(opps, startDate.year())
                 .match(installments);
