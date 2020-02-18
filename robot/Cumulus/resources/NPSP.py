@@ -624,20 +624,22 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             locator = npsp_lex_locators['check_related_list_item'].format(list_name,value)
             self.selenium.page_should_contain_element(locator)
 
-    def verify_eng_plan_exists(self,name, delete=None):  
-        """verifies that the Engagement Plans related list has a plan stored under it and clicks on dropdown if True is passed as 2nd argument"""
-        locator = npsp_lex_locators['record']['related']['link'].format('Engagement Plans',name)
-        self.selenium.page_should_contain_element(locator) 
-        plan=self.selenium.get_webelement(locator).text       
-        return plan
-    
-    
+    # @capture_screenshot_on_error
+    # def verify_eng_plan_exists(self,name, delete=None):
+    #     """verifies that the Engagement Plans related list has a plan stored under it and clicks on dropdown if True is passed as 2nd argument"""
+    #     time.sleep(2)
+    #     locator = npsp_lex_locators['record']['related']['link'].format('Engagement Plans',name)
+    #     self.selenium.page_should_contain_element(locator)
+    #     plan=self.selenium.get_webelement(locator).text
+    #     return plan
+
     def check_activity_tasks(self, *args):
         """verifies that the specified tasks are present under activity tab """
         for value in args:
             locator = npsp_lex_locators['engagement_plan']['tasks'].format(value)
             self.selenium.page_should_contain_element(locator)
 
+    @capture_screenshot_on_error
     def enter_level_values(self, **kwargs):
         """Enter values into corresponding fields in Levels page"""
         for name, value in kwargs.items():
@@ -652,37 +654,39 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             elif name == "Maximum Amount":
                 id = "fldMaxAmount"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.salesforce._populate_field(locator, value)                    
+                self.salesforce._populate_field(locator, value)
 
-    def enter_level_dd_values(self, name,value):
-        """Enter values into corresponding fields in Levels page"""                 
-        if name == "Target":
-            id = "fldTarget"
-            locator = npsp_lex_locators['levels']['select'].format(id)
-            loc = self.selenium.get_webelement(locator)
-            self.selenium.set_focus_to_element(locator)       
-            self.selenium.select_from_list_by_label(loc,value)
-            time.sleep(2)
-        elif name == "Source Field":
-            id = "fldSourceField"
-            locator = npsp_lex_locators['levels']['select'].format(id)
-            loc = self.selenium.get_webelement(locator) 
-            self.selenium.set_focus_to_element(locator)      
-            self.selenium.select_from_list_by_label(loc,value) 
-            time.sleep(2) 
-        elif name == "Level Field":
-            id = "fldLevel"
-            locator = npsp_lex_locators['levels']['select'].format(id)
-            loc = self.selenium.get_webelement(locator) 
-            self.selenium.set_focus_to_element(locator)      
-            self.selenium.select_from_list_by_label(loc,value)
-            time.sleep(2)
-        elif name == "Previous Level Field":
-            id = "fldPreviousLevel"
-            locator = npsp_lex_locators['levels']['select'].format(id)
-            loc = self.selenium.get_webelement(locator) 
-            self.selenium.set_focus_to_element(locator)      
-            self.selenium.select_from_list_by_label(loc,value) 
+    @capture_screenshot_on_error
+    def enter_level_dd_values(self, **kwargs):
+        """Enter values into corresponding fields in Levels page"""
+        for name, value in kwargs.items():
+            if name == "Target":
+                id = "fldTarget"
+                locator = npsp_lex_locators['levels']['select'].format(id)
+                loc = self.selenium.get_webelement(locator)
+                self.selenium.set_focus_to_element(locator)
+                self.selenium.select_from_list_by_label(loc,value)
+                time.sleep(2)
+            elif name == "Source Field":
+                id = "fldSourceField"
+                locator = npsp_lex_locators['levels']['select'].format(id)
+                loc = self.selenium.get_webelement(locator)
+                self.selenium.set_focus_to_element(locator)
+                self.selenium.select_from_list_by_label(loc,value)
+                time.sleep(2)
+            elif name == "Level Field":
+                id = "fldLevel"
+                locator = npsp_lex_locators['levels']['select'].format(id)
+                loc = self.selenium.get_webelement(locator)
+                self.selenium.set_focus_to_element(locator)
+                self.selenium.select_from_list_by_label(loc,value)
+                time.sleep(2)
+            elif name == "Previous Level Field":
+                id = "fldPreviousLevel"
+                locator = npsp_lex_locators['levels']['select'].format(id)
+                loc = self.selenium.get_webelement(locator)
+                self.selenium.set_focus_to_element(locator)
+                self.selenium.select_from_list_by_label(loc,value)
 
     def select_app_launcher_link(self,title):
         locator = npsp_lex_locators['app_launcher']['select-option'].format(title) 
@@ -896,9 +900,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         return main_loc   
 
     def wait_for_locator(self, path, *args, **kwargs):
-        """Waits for 60 sec for the specified locator"""
+        """Waits for 120 sec for the specified locator"""
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
-        self.selenium.wait_until_element_is_visible(main_loc, timeout=90)
+        self.selenium.wait_until_element_is_visible(main_loc, timeout=120)
         
     @capture_screenshot_on_error    
     def wait_for_batch_to_complete(self, path, *args, **kwargs):

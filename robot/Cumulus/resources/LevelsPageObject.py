@@ -11,7 +11,6 @@ import time
 @pageobject("Home", "Level__c")
 class LevelListPage(BaseNPSPPage, HomePage):
 
-
     def _go_to_page(self, filter_name=None):
         """To go to create level page"""
         url_template = "{root}/lightning/o/{object}/new"
@@ -21,54 +20,8 @@ class LevelListPage(BaseNPSPPage, HomePage):
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
         self.npsp.wait_for_locator("frame","Levels")
-        #elf.npsp.choose_frame("Levels")
-
-    def populate_values(self, textvalues=None, dropdownvalues=None):
         self.npsp.choose_frame("Levels")
-        for field, value in textvalues.items():
-            if field == "Level Name":
-                id = "fldName"
-                locator = npsp_lex_locators['levels']['id'].format(id)
-                self.salesforce._populate_field(locator, value)
-            elif field == "Minimum Amount":
-                id = "fldMinAmount"
-                locator = npsp_lex_locators['levels']['id'].format(id)
-                self.salesforce._populate_field(locator, value)
-            elif field == "Maximum Amount":
-                id = "fldMaxAmount"
-                locator = npsp_lex_locators['levels']['id'].format(id)
-                self.salesforce._populate_field(locator, value)
-        for name, value in dropdownvalues.items():
-            """Enter values into corresponding fields in Levels page"""
-            if name == "Target":
-                id = "fldTarget"
-                locator = npsp_lex_locators['levels']['select'].format(id)
-                loc = self.selenium.get_webelement(locator)
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.select_from_list_by_label(loc,value)
-                time.sleep(2)
-            elif name == "Source Field":
-                id = "fldSourceField"
-                locator = npsp_lex_locators['levels']['select'].format(id)
-                loc = self.selenium.get_webelement(locator)
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.select_from_list_by_label(loc,value)
-                time.sleep(2)
-            elif name == "Level Field":
-                id = "fldLevel"
-                locator = npsp_lex_locators['levels']['select'].format(id)
-                loc = self.selenium.get_webelement(locator)
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.select_from_list_by_label(loc,value)
-                time.sleep(2)
-            elif name == "Previous Level Field":
-                id = "fldPreviousLevel"
-                locator = npsp_lex_locators['levels']['select'].format(id)
-                loc = self.selenium.get_webelement(locator)
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.select_from_list_by_label(loc,value)
 
-        self.selenium.click_button("Save")
 
 @pageobject("Listing", "Level__c")
 class LevelListPage(BaseNPSPPage, ListingPage):
@@ -100,6 +53,8 @@ class LevelDetailPage(BaseNPSPPage, DetailPage):
         url = "{}/lightning/r/{}/{}/edit".format(url,object_name,levelid)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
+        self.npsp.wait_for_locator("frame","Levels")
+        self.npsp.choose_frame("Levels")
         self.selenium.wait_until_location_contains("/edit",timeout=60, message="Page not loaded")
     
         

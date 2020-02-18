@@ -11,10 +11,6 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Variables ***
 &{contact_fields}           Email=test@example.com
-&{text_fields}              Level Name=AutomationLevel    Minimum Amount=0.1  Maximum Amount=0.9
-&{dropdown_fields}          Target=Contact    Source Field=Total Gifts  Level Field=Level   Previous Level Field=Previous Level
-&{text_fields_edit}         Minimum Amount=0.01  Maximum Amount=0.99
-&{dropdown_fields_edit}     Source Field=Smallest Gift
 
 
 *** Test Cases ***
@@ -27,7 +23,16 @@ Create and edit level to verify fields
 
 
     Go To Page                                          Home                      Level__c
-    Populate Values                                     ${text_fields}            ${dropdown_fields}
+    Enter Level Values
+    ...                                                 Level Name=AutomationLevel
+    ...                                                 Minimum Amount=0.1
+    ...                                                 Maximum Amount=0.9
+    Enter Level Dd Values
+    ...                                                 Target=Contact
+    ...                                                 Source Field=Smallest Gift
+    ...                                                 Level Field=Level
+    ...                                                 Previous Level Field=Previous Level
+    Click Button                                        Save
     Current Page Should be                              Details    Level__c
     ${level_id} =                                       Save Current Record ID For Deletion  Level__c
     Set Global Variable                                 ${level_id}
@@ -39,7 +44,13 @@ Create and edit level to verify fields
     Navigate To And Validate Field Value                Minimum Amount (>\=)    contains    0.10
     Navigate To And Validate Field Value                Maximum Amount (<)      contains    0.90
     Go to edit level page                               ${level_id}
-    Populate Values                                     ${text_fields_edit}    ${dropdown_fields_edit}
+    Enter Level Values
+    ...                                                 Minimum Amount=0.01
+    ...                                                 Maximum Amount=0.99
+    Enter Level Dd Values
+    ...                                                 Source Field=Smallest Gift
+
+    Click Button                                        Save
     Go To Page                                          Details
     ...                                                 Level__c
     ...                                                 object_id=${level_id}
