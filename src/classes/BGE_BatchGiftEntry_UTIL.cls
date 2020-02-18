@@ -88,6 +88,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
         } else if (batch.Batch_Gift_Entry_Version__c >= 2.0) {
 
+            fieldApiNames.add(DataImport__c.Additional_Object_JSON__c.getDescribe().getName());
+
             for (String field : getCoreDataImportFields(includeRelationshipFields)) {
                 fieldApiNames.add(field.toLowerCase());
             }
