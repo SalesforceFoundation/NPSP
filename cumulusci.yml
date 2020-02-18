@@ -815,6 +815,12 @@ plans:
                 ui_options:
                     first:
                         name: NPSP Config for Salesforce Mobile App
+        preflight_message: |
+            # Welcome to the Nonprofit Success Pack installer!
+
+            **IMPORTANT**: Salesforce does not recommend installing directly in production organizations. Instead, install NPSP in one of your free sandbox environments or a developer organization first.
+        post_install_message: |
+            Thanks for installing NPSP.  Please visit the [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) group on the Power of Us Hub for any questions about NPSP.
     new_org:
         slug: trailhead
         title: Install NPSP for Trailhead Playgrounds
@@ -855,6 +861,16 @@ plans:
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
+        preflight_message: |
+            # Welcome to the Nonprofit Success Pack installer!
+
+            **IMPORTANT**: Salesforce does not recommend installing directly in production organizations. Instead, install NPSP in one of your free sandbox environments or a developer organization first.
+
+            Warning: This installer will override unmanaged metadata including page layouts and permissions. It is intended for use with Trailhead Playground orgs, not production orgs.
+        post_install_message: |
+            Thanks for installing NPSP.  Please visit the [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe) group on the Power of Us Hub for any questions about NPSP.
+        error_message: |
+            To get help with this error, go to [help.salesforce.com](https://help.salesforce.com/), find the Support & Services area and log a technical support ticket with Salesforce. Include “NPSP” in the subject line and include in your comment the installation link shown here.
     rd2:
         slug: npsp-rd2-pilot
         title: Enhanced Recurring Donations Metadata Updates
@@ -871,6 +887,10 @@ plans:
                     unmanaged: False
                 ui_options:
                     name: "Enhanced Recurring Donations Metadata Updates"
+        preflight_message: |
+            Install new metadata (picklist values, help text, etc.) for Enhanced Recurring Donations. Once you've installed the metadata, return to your Salesforce org to continue the upgrade to Enhanced Recurring Donations.
+        post_install_message: |
+            The Enhanced Recurring Donations metadata has been successfully deployed. However, there are still tasks to complete to finish upgrading to Enhanced Recurring Donations. Log back into your org to complete the upgrade process.
     reports:
         slug: reports
         title: Install Reports & Dashboards
@@ -883,3 +903,13 @@ plans:
                     unmanaged: False
                 ui_options:
                     name: NPSP Reports & Dashboards
+        preflight_message: |
+            The NPSP Reports & Dashboards come with new Trials and installations of NPSP starting at version 3.90 (February 2017). If you started a Trial or installed NPSP before this version, use this installer to add the Reports and Dashboards. For complete information on the NPSP Reports & Dashboards, see the [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).
+
+            This installer requires the 5 Opportunity record types included in the standard Nonprofit Starter Pack trial template, and will create them if they don't exist in your org. The installer searches for the record types by Developer Name (not label), so if you changed the Developer Names of the original record types, the installer will add them again. The record type Developer Names are as follows:
+
+            * Donation
+            * MajorGift
+            * MatchingDonation
+            * Grant
+            * Membership
