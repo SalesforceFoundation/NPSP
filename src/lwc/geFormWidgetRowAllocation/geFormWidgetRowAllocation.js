@@ -1,5 +1,5 @@
-import {LightningElement, api, track} from 'lwc';
-import {fireEvent, registerListener} from 'c/pubsubNoPageRef';
+import {LightningElement, api} from 'lwc';
+import {fireEvent} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 import {isEmpty, isNotEmpty, isNumeric} from 'c/utilCommon';
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
@@ -211,21 +211,17 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * If the whole row is disabled (default GAU) then all fields in the row should be disabled
      */
     get mergedFieldList() {
-        if(this.disabled) {
-            return this.fieldList.map(f => {
-                const { element } = f;
-                return {
-                    ...f,
-                    element: {
-                        ...element,
-                        disabled: true,
-                        defaultValue: this.getDefaultForField(f.mappedField) // only needed for default GAU for now
-                    }
-                };
-            });
-        }
-
-        return this.fieldList;
+        return this.fieldList.map(field => {
+            const { element } = field;
+            return {
+                ...field,
+                element: {
+                    ...element,
+                    disabled: this.disabled,
+                    defaultValue: this.getDefaultForField(field.mappedField) 
+                }
+            };
+        });
     }
 
 }
