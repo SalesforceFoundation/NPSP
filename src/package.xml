@@ -1541,8 +1541,8 @@
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
-        <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
+        <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
         <members>RD2_NumberPlannedInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
@@ -2023,9 +2023,9 @@
         <members>healthSolutionSaveOppsFailed</members>
         <members>healthSolutionScheduleJobs</members>
         <members>healthSolutionTriggerHandlerMismatch</members>
-        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>healthSolutionUDFBadDatatypes</members>
         <members>healthSolutionUDFOppField</members>
+        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>hhCmpDedupLabelReturnToCmp</members>
         <members>hhCmpDedupeBatchMessage</members>
         <members>hhCmpDedupeBatchProgressTitle</members>

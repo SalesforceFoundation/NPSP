@@ -46,6 +46,10 @@
                 <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%ClosedReason__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>npe03__Installments__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>

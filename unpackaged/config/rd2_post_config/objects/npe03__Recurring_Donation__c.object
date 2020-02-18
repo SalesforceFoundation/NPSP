@@ -65,6 +65,7 @@
                 <value>
                     <fullName>Commitment Completed</fullName>
                     <default>false</default>
+                    <isActive>true</isActive>
                     <label>Commitment Completed</label>
                 </value>
                 <value>
@@ -291,6 +292,7 @@
                 <value>
                     <fullName>Fixed</fullName>
                     <default>false</default>
+                    <isActive>true</isActive>
                     <label>Fixed</label>
                 </value>
             </valueSetDefinition>

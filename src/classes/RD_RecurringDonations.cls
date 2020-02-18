@@ -704,7 +704,7 @@ public class RD_RecurringDonations {
 
     /*******************************************************************************************************
     * @description Future method that updates all the existing Opportunities for the specified Recurring Donations.
-    * @param recIDs The set of RD id's to processx
+    * @param recIDs The set of RD id's to process
     * @param dmlWrapper Object to store the Opps that need updating
     * @return void
     */
