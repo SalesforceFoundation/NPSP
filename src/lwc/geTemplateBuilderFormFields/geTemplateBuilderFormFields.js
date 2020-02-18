@@ -28,8 +28,8 @@ const REQUIRED_FORM_FIELDS = [
 ];
 
 const EXCLUDED_OBJECT_MAPPINGS = [
-    'Opportunity_Contact_Role_1_',
-    'Opportunity_Contact_Role_2_'
+    'Opportunity_Contact_Role_1',
+    'Opportunity_Contact_Role_2'
 ]
 
 export default class geTemplateBuilderFormFields extends LightningElement {
@@ -150,7 +150,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
             if (Object.prototype.hasOwnProperty.call(fieldMappingsByObjMappingDevName, objMappingDevName)) {
                 const isExcluded = EXCLUDED_OBJECT_MAPPINGS.includes(
-                    objMappingDevName.substring(0, objMappingDevName.length - 9));
+                    objMappingDevName.substring(0, objMappingDevName.length - 10));
 
                 if (isExcluded) {
                     continue;
