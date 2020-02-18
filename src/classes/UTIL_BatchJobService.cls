@@ -87,7 +87,7 @@ public with sharing class UTIL_BatchJobService {
             return 0;
         }
 
-        return (System.today()).daysBetween(Date.valueOf(batchJob.CompletedDate));        
+        return Date.valueOf(batchJob.CompletedDate).daysBetween(System.today());        
     }
 
     /***
@@ -299,7 +299,7 @@ public with sharing class UTIL_BatchJobService {
                 return 0;
             }
 
-            return (System.today()).daysBetween(Date.valueOf(completedDate));        
+            return Date.valueOf(completedDate).daysBetween(System.today());      
         }
 
         /***
