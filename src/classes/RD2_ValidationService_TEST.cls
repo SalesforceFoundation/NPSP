@@ -552,37 +552,44 @@ private with sharing class RD2_ValidationService_TEST {
         }
 
         System.assert(errMessage.contains(System.Label.RD2_InstallmentFrequencyMustBeValid),
-            'RD update should fail due to invalid installment frequency with the message: ' + System.Label.RD2_InstallmentFrequencyMustBeValid);
+            'RD update should fail due to invalid Installment Frequency. Actual message: ' + errMessage
+        );
     }
 
     /***
     * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty) 
     */
     @isTest
-    private static void shouldBlockRdUpdateWhenInstallmentFrequencyChangesIsInvalid() {
+    private static void houldBlockRDUpdateWhenInstallmentFrequencyIsOutOfRange() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         List<npe03__Recurring_Donation__c> rds = getRecurringDonationBuilder()
             .withContact(getContact().Id)
             .withInstallmentFrequency(10)
-            .build(2);
+            .build(3);
             
         insert rds;
 
-        rds[0].InstallmentFrequency__c = 21;
+        rds[0].InstallmentFrequency__c = 20;
         rds[1].InstallmentFrequency__c = 0;
-
-        String errMessage = '';
+        rds[2].InstallmentFrequency__c = 21;
 
         Test.startTest();
         List<Database.SaveResult> results = Database.update(rds, false);
         Test.stopTest();
 
         for (Database.SaveResult result : results) {
-            System.assert(
-                result.getErrors()[0].getMessage().contains(System.Label.RD2_InstallmentFrequencyMustBeValid),
-                'RD update should fail due to invalid installment frequency with the message: ' + System.Label.RD2_InstallmentFrequencyMustBeValid
-            );
+            if (result.getId() == rds[0].Id) {
+                System.assert(result.isSuccess(), 'Recurring Donation record should be succesfully updated when Installment Frequencey is in range');
+
+            } else {
+                System.assert(!result.isSuccess(), 'Recurring Donation record update should fail when installment frequency is out of range');
+
+                System.assert(
+                    result.getErrors()[0].getMessage().contains(System.Label.RD2_InstallmentFrequencyMustBeValid),
+                    'RD update should fail due to invalid Installment Frequency. Actual message: ' + result.getErrors()[0].getMessage()
+                );
+            }
         }
     }
 
@@ -590,7 +597,7 @@ private with sharing class RD2_ValidationService_TEST {
     * @description Verifies DML update should succeed when installment frequency is valid
     */
     @isTest
-    private static void shouldRdUpdateWhenInstallmentFrequencyIsValidChange() {
+    private static void shouldUpdateRDWhenInstallmentFrequencyIsWithinRange() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()

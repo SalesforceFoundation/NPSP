@@ -484,18 +484,12 @@ private with sharing class RD2_RecurringDonations_TEST {
     * @description Verifies Installment Frequency should default to one when RD insert with null Installment Frequency
     */
     @isTest
-    private static void shouldCreateRdWithDefaultInstallmentFrequencyOfOneWhenValueIsNull() {
+    private static void shouldCreateRDWithDefaultInstallmentFrequencyWhenNull() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Contact contact = getContact();
-
-        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
-            .withContact(contact.Id)
-            .withDayOfMonth('10')
-            .withInstallmentPeriod(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY)
-            .withAmount(100)
-            .withInstallmentFrequency(null)
-            .build();
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+        .withInstallmentFrequency(null)
+        .build();
 
         Test.startTest();
         insert rd;
@@ -503,7 +497,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
 
-        System.assertEquals(1, rd.InstallmentFrequency__c, 'Installment Frequency shhould be default to 1 when not specific');
+        System.assertEquals(1, rd.InstallmentFrequency__c, 'Installment Frequency should default to 1 when not specified on RD insert');
     }
 
 

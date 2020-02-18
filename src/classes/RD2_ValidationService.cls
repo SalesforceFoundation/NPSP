@@ -152,15 +152,6 @@ public with sharing class RD2_ValidationService {
             return;
         }
 
-        validateInstallmentData(rd);
-        validateDayOfMonth(rd);
-    }
-
-    /***
-     * @description Validate installment data on Recurring Donation
-     * @param rd Recurring Donation reocrd to evaluate
-     */
-    private void validateInstallmentData(npe03__Recurring_Donation__c rd) {
         if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
             rd.addError(System.Label.RD2_AmountMustBeValid);
         }
@@ -172,6 +163,8 @@ public with sharing class RD2_ValidationService {
                     new String[]{ rd.npe03__Installment_Period__c })
             );
         }
+
+        validateDayOfMonth(rd);
     }
 
     /***
@@ -212,8 +205,8 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
-    * @description Validate when contact or account change is permitted on update of rd
-    * @param rds The Recurring Donation to validate
+    * @description Validate when contact or account change is permitted on update of the Recurring Donation
+    * @param rd The Recurring Donation to validate
     * @param oldRd The previous version of the Recurring Donation
     * @return Boolean True when the validation pass, otherwise, false
     */
@@ -229,7 +222,7 @@ public with sharing class RD2_ValidationService {
         ) {
             return true;
         }
-            
+
         rd.addError(System.Label.RD2_ContactChangeIsRestricted);
         return false;
     }

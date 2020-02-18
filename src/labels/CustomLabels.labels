@@ -1893,7 +1893,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Validate Recurring Donations data if it has a valid installment frequency</shortDescription>
+        <shortDescription>Displayed when Installment Frequency on a Recurring Donation is not valid</shortDescription>
         <value>Installment Frequency is required. Enter a value between 1 and 20.</value>
     </labels>
      <labels>

@@ -138,7 +138,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     private void assignDefaultInstallmentFrequency(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
-        if (triggerAction !== TDTM_Runnable.Action.BeforeInsert) {
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert) {
             return;
         }
         
