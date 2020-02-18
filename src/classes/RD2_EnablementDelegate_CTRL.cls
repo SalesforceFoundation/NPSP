@@ -36,6 +36,11 @@
 public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
+    * @description Indicates how many days dry validation is valid after completion
+    */
+    private static final Integer DRY_RUN_VALID_DAYS = 7;
+
+    /***
     * @description Enablement service
     */
     @TestVisible
@@ -91,7 +96,13 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled(cacheable=false)
     public static String loadState() {
-        return JSON.serialize(getEnablementState());
+        EnablementState state = getEnablementState();
+
+        if (!state.isEnabled && state.isConfirmed && isDryRunOutdated(state)) {
+            state.isConfirmed = false;
+        }
+
+        return JSON.serialize(state);
     }
 
     /***
@@ -118,12 +129,11 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 state.isMetaLaunched = false;
                 state.isMetaConfirmed = false;
             } else {
-                if (!state.isEnabled && state.isConfirmed && isDryRunOutdated()) {
-                    state.isConfirmed = false;
-                }
                 state.isMetaLaunched = state.isMetaLaunched && state.isEnabled;
                 state.isMetaConfirmed = state.isMetaConfirmed && state.isMetaLaunched && hasMetaDeployCompleted();
-            }      
+            }   
+            
+            state.dryRunLimit = getDryRunLimit(state);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
@@ -134,10 +144,31 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
     * @description Determines if the dry run is outdated
+    * @param state Enablement state
     * @return Boolean
     */
-    private static Boolean isDryRunOutdated() {
-        return new UTIL_BatchJobService().getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > 7;
+    private static Boolean isDryRunOutdated(EnablementState state) {
+        return new UTIL_BatchJobService().getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
+    }
+
+    /***
+    * @description Retrieves number of days that dry run is valid after completion
+    * @param state Enablement state
+    * @return Integer
+    */
+    private static Integer getDryRunLimit(EnablementState state) {
+        Integer dryRunLimit = DRY_RUN_VALID_DAYS;//default
+
+        //if this is a scratch org, enable override for testing purposes
+        if (UTIL_Namespace.isScratchOrg()) {
+            try {
+                if (state.dryRunLimit != null && state.dryRunLimit > 0) {
+                    dryRunLimit = state.dryRunLimit;
+                }
+            } catch (Exception e) {}
+        }
+
+        return dryRunLimit;
     }
 
     /***
@@ -146,13 +177,13 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void confirmEnablement() {
-        if (isDryRunOutdated()) {
+        EnablementState state = getEnablementState();
+
+        if (isDryRunOutdated(state)) {
             throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
         }
 
-        EnablementState state = getEnablementState();
         state.isConfirmed = true;
-
         saveEnablementState(state);
     }
 
@@ -162,7 +193,9 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void enableEnhancement() {
-        if (isDryRunOutdated()) {
+        EnablementState state = getEnablementState();
+
+        if (isDryRunOutdated(state)) {
             throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
         }
 
@@ -173,6 +206,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 upsert STG_Panel.stgService.stgRD;
                 UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
             }
+
             System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
 
         } catch (Exception e) {
@@ -394,6 +428,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         public Boolean isMetaConfirmed = false;
         public Boolean isDryRun2 = false;
         public Boolean isMigrationEnabled = false;
+        public Integer dryRunLimit = DRY_RUN_VALID_DAYS;
     }
 
     /**
