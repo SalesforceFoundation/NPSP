@@ -885,7 +885,7 @@ private class RD2_DataMigration_TEST {
     @IsTest
     private static void shouldLogDryRunErrorWhenStoreErrorIsDisabled() {
 
-        setStoreErrorsInErrorSettings(false);
+        setStoreErrorsInErrorSettingsToFalse();
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
@@ -909,16 +909,20 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
         System.assertEquals(getLogContextDryRun(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
 
+        assertLegacyFormat(getRecords());
+
+        assertBatchSummaryFailed(jobId, 1);
+
     }
 
      /**
      * @description Verifies an error is created when store error in error log settings is disabled
-     * and migration is run.
+     * and data migration is run.
      */
     @IsTest
     private static void shouldLogDataMigrationErrorWhenStoreErrorIsDisabled() {
 
-        setStoreErrorsInErrorSettings(false);
+        setStoreErrorsInErrorSettingsToFalse();
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
@@ -941,6 +945,10 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
         System.assertEquals(getLogContextMigration(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
+
+        assertLegacyFormat(getRecords());
+
+        assertBatchSummaryFailed(jobId, 1);
 
     }
 
@@ -2001,17 +2009,25 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
+     * @description Sets store errors in error settings to false
+     * @return void
+     */
+    private static void setStoreErrorsInErrorSettingsToFalse() {
+        setStoreErrorsInErrorSettings(false);
+
+    }
+
+    /**
      * @description Sets store settings to enable or disable in error settings
      * @param isEnabled true or false
      * @return void
      */
-
     private static void setStoreErrorsInErrorSettings(Boolean isEnabled) {
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(
             new Error_Settings__c(
             Error_Notifications_On__c = isEnabled,
             Store_Errors_On__c = isEnabled
-        )
+            )
         );
     }
 
