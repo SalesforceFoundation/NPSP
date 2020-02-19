@@ -43,7 +43,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                     self.selenium.page_should_contain("Advanced Mapping is enabled")
                     break
                 except Exception:
-                    time.sleep(5)
+                    time.sleep(10)
                     i += 1
             else:
                 raise AssertionError(
