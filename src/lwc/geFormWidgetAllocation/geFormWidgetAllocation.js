@@ -26,7 +26,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track _totalAmount;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-
+    
     // need labels for field list
     @wire(getObjectInfo, { objectApiName: ALLOCATION_OBJECT })
     wiredObjectInfo({data}) {
@@ -155,6 +155,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     @api
     load(data) {
+        const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
         let dataImportRow = JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
         if (!dataImportRow) {
             return;
@@ -162,7 +163,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         let rowList = new Array();
         let fieldMappings = GeFormService.fieldMappings;
         let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
-            return key.toLowerCase().includes('gau_allocation_1');
+            return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
         });
         Object.keys(dataImportRow).forEach(diKey => {
             let properties = {};
