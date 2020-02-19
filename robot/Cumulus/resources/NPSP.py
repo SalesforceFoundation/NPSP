@@ -891,9 +891,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         return main_loc   
 
     def wait_for_locator(self, path, *args, **kwargs):
-        """Waits for 120 sec for the specified locator"""
+        """Waits for 60 sec for the specified locator"""
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
-        self.selenium.wait_until_element_is_visible(main_loc, timeout=120)
+        self.selenium.wait_until_element_is_visible(main_loc, timeout=60)
         
     @capture_screenshot_on_error    
     def wait_for_batch_to_complete(self, path, *args, **kwargs):
@@ -1340,16 +1340,17 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             # set up enegagement template based on the user input specified and link the contact to the engagement template
             engobjname = "Engagement_Plan_Template__c"
             contactobjname = "Contact__c"
-            object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), engobjname)
-            contact_object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), contactobjname)
-            engagement_id = self.salesforce.salesforce_insert(object_name, **engagement_data)
-            engagement = self.salesforce.salesforce_get(object_name,engagement_id)
+            # Fromatting the objects names with namespace prefix
+            formattedengobjname = "{}{}".format(self.cumulusci.get_namespace_prefix(), engobjname)
+            formattedcontactobjname = "{}{}".format(self.cumulusci.get_namespace_prefix(), contactobjname)
+            engagement_id = self.salesforce.salesforce_insert(formattedengobjname, **engagement_data)
+            engagement = self.salesforce.salesforce_get(formattedengobjname,engagement_id)
 
           # If the keyword is contact, link the contact to the engagement plan created
             if name.lower() == 'contact':
                 testdata={}
-                testdata.update( {contact_object_name : data[name]["Id"], object_name: engagement_id } )
-                self.salesforce.salesforce_insert(object_name, **testdata)
+                testdata.update( {formattedcontactobjname : data[name]["Id"], formattedengobjname: engagement_id } )
+                self.salesforce.salesforce_insert(formattedengobjname, **testdata)
 
             # save the engagement object to data dictionary
 

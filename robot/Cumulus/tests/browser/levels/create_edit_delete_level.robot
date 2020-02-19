@@ -11,8 +11,11 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Variables ***
 &{contact_fields}           Email=test@example.com
-
-
+${min_amount}  0.10
+${max_amount}  0.90
+${minamount_to_edit}  0.01
+${maxamount_to_edit}  0.99
+${contact_smallestvalue}  0.75
 *** Test Cases ***
 
 Create and edit level to verify fields
@@ -25,8 +28,8 @@ Create and edit level to verify fields
     Go To Page                                          Home                      Level__c
     Enter Level Values
     ...                                                 Level Name=AutomationLevel
-    ...                                                 Minimum Amount=0.1
-    ...                                                 Maximum Amount=0.9
+    ...                                                 Minimum Amount=${min_amount}
+    ...                                                 Maximum Amount=${max_amount}
     Enter Level Dd Values
     ...                                                 Target=Contact
     ...                                                 Source Field=Smallest Gift
@@ -41,12 +44,12 @@ Create and edit level to verify fields
         ...                                             object_id=${level_id}
 
     Wait Until Loading Is Complete
-    Navigate To And Validate Field Value                Minimum Amount (>\=)    contains    0.10
-    Navigate To And Validate Field Value                Maximum Amount (<)      contains    0.90
+    Navigate To And Validate Field Value                Minimum Amount (>\=)    contains    ${min_amount}
+    Navigate To And Validate Field Value                Maximum Amount (<)      contains    ${max_amount}
     Go to edit level page                               ${level_id}
     Enter Level Values
-    ...                                                 Minimum Amount=0.01
-    ...                                                 Maximum Amount=0.99
+    ...                                                 Minimum Amount=${minamount_to_edit}
+    ...                                                 Maximum Amount=${maxamount_to_edit}
     Enter Level Dd Values
     ...                                                 Source Field=Smallest Gift
 
@@ -57,7 +60,7 @@ Create and edit level to verify fields
 
     Wait Until Loading Is Complete
 
-    Navigate To And Validate Field Value    Maximum Amount (<)     contains       0.99
+    Navigate To And Validate Field Value    Maximum Amount (<)     contains       ${maxamount_to_edit}
     Navigate To And Validate Field Value    Source Field           contains       npo02__SmallestAmount__c
 
 
@@ -71,12 +74,12 @@ Create and edit level to verify fields
     # --------------------------------
     Setupdata                               contact                   contact_data=${contact_fields}
     Set Global Variable                     ${data}
-    Salesforce Update                       Contact                   ${data}[contact][Id]  npo02__SmallestAmount__c=0.75
+    Salesforce Update                       Contact                   ${data}[contact][Id]  npo02__SmallestAmount__c=${contact_smallestvalue}
     Go To Page                              Details
     ...                                     Contact
     ...                                     object_id=${data}[contact][Id]
 
-    Navigate To And Validate Field Value    Smallest Gift    contains    $0.75
+    Navigate To And Validate Field Value    Smallest Gift             contains    $${contact_smallestvalue}
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
