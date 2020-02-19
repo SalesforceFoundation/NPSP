@@ -678,6 +678,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 loc = self.selenium.get_webelement(locator)
                 self.selenium.set_focus_to_element(locator)
                 self.selenium.select_from_list_by_label(loc,value)
+                time.sleep(2)
 
     def select_app_launcher_link(self,title):
         locator = npsp_lex_locators['app_launcher']['select-option'].format(title) 
