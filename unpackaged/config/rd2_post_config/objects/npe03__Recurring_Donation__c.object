@@ -283,7 +283,7 @@
         <type>Picklist</type>
     </fields>
     <fields>
-        <fullName>InstallmentFrequency__c</fullName>
+        <fullName>%%%NAMESPACE%%%InstallmentFrequency__c</fullName>
         <description>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</inlineHelpText>
