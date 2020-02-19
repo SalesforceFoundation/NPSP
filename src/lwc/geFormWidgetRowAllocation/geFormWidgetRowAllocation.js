@@ -166,12 +166,12 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     disableField(fieldName) {
         const field = this.getFieldByName(fieldName);
-        field.element =  {...field.element, disabled: true};
+        field.disable();
     }
 
     enableField(fieldName) {
         const field = this.getFieldByName(fieldName);
-        field.element =  {...field.element, disabled: false};
+        field.enable();
     }
 
     remove() {
@@ -217,8 +217,9 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
                 ...field,
                 element: {
                     ...element,
-                    disabled: this.disabled,
-                    defaultValue: this.getDefaultForField(field.mappedField) 
+                    disabled: this.disabled ? this.disabled : element.disabled,
+                    defaultValue: this.getDefaultForField(field.mappedField),
+                    dataImportFieldMappingDevNames: [field.mappedField]
                 }
             };
         });

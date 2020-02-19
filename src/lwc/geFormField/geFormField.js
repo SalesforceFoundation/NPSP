@@ -23,6 +23,7 @@ export default class GeFormField extends LightningElement {
     @track picklistValues = [];
     @track objectDescribeInfo;
     @track richTextValid = true;
+    @track _disabled = false;
     @api element;
     @api targetFieldName;
     _defaultValue = null;
@@ -87,17 +88,6 @@ export default class GeFormField extends LightningElement {
     }
 
     connectedCallback() {
-        if(isNotEmpty(this.targetFieldName)) {
-            // Construct an element object using the field name and mapping info
-            const required = this.fieldInfo.Is_Required || (this.element && this.element.required);
-            this.element = {
-                ...this.element,
-                label: this.fieldInfo.Target_Field_Label,
-                required,
-                dataImportFieldMappingDevNames: [this.targetFieldName]
-            };
-        }
-
         const { defaultValue, recordValue } = this.element;
 
         if(recordValue) {
@@ -174,6 +164,16 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
+    disable() {
+        this._disabled = true;
+    }
+
+    @api
+    enable() {
+        this._disabled = false;
+    }
+
+    @api
     get fieldAndValue() {
         let fieldAndValue = {};
 
@@ -198,6 +198,14 @@ export default class GeFormField extends LightningElement {
 
     get formatter() {
         return GeFormService.getNumberFormatterByDescribeType(this.fieldType);
+    }
+
+    get required() {
+        return (this.fieldInfo && this.fieldInfo.Is_Required) || (this.element && this.element.required);
+    }
+
+    get disabled() {
+        return this._disabled || (this.element && this.element.disabled);
     }
 
     get granularity() {
