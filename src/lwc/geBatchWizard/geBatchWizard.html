@@ -33,27 +33,29 @@
                                             required>
                         </lightning-combobox>
                     </div>
-                    <div class={cssClassStep1}>
-                        <template if:true={hasInvalidBatchFields}>
-                            <c-util-page-level-message title={CUSTOM_LABELS.commonError}
-                                                       subtitle={missingRequiredFieldsMessage}
-                                                       variant='error'>
-                            </c-util-page-level-message>
-                        </template>
-                        <template for:each={selectedBatchHeaderFields}
-                                  for:item='batchField'>
-                            <c-util-input key={batchField.apiName}
-                                          data-id='batchHeaderField'
-                                          type={batchField.dataType}
-                                          field-api-name={batchField.apiName}
-                                          label={batchField.customLabel}
-                                          default-value={batchField.defaultValue}
-                                          value={batchField.value}
-                                          required={batchField.required}
-                                          object-info={dataImportBatchInfo}>
-                            </c-util-input>
-                        </template>
-                    </div>
+                    <template if:true={isBatchFieldStep}>
+                        <div class={cssClassStep1}>
+                            <template if:true={hasInvalidBatchFields}>
+                                <c-util-page-level-message title={CUSTOM_LABELS.commonError}
+                                                           subtitle={missingRequiredFieldsMessage}
+                                                           variant='error'>
+                                </c-util-page-level-message>
+                            </template>
+                            <template for:each={selectedBatchHeaderFields}
+                                      for:item='batchField'>
+                                <c-util-input key={batchField.apiName}
+                                              data-id='batchHeaderField'
+                                              type={batchField.dataType}
+                                              field-api-name={batchField.apiName}
+                                              label={batchField.customLabel}
+                                              default-value={batchField.defaultValue}
+                                              value={batchField.value}
+                                              required={batchField.required}
+                                              object-info={dataImportBatchInfo}>
+                                </c-util-input>
+                            </template>
+                        </div>
+                    </template>
                     <div class={cssClassStep2}>
                         <lightning-layout vertical-align="stretch"
                                           multiple-rows="true"

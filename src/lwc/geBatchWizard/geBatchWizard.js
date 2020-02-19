@@ -115,6 +115,10 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             'slds-hide';
     }
 
+    get isBatchFieldStep() {
+        return this.header === this.headers[1] ? true : false;
+    }
+
     get selectedTemplate() {
         if (this.selectedTemplateId && this.templatesById) {
             return this.templatesById[this.selectedTemplateId];
@@ -258,6 +262,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     handleTemplateChange(event) {
+        this.hasInvalidBatchFields = false;
+        this.missingBatchHeaderFieldLabels = [];
         this.selectedTemplateId = event.detail.value;
         this.formSections = this.selectedTemplate.layout.sections;
 
