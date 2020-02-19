@@ -169,7 +169,7 @@ public with sharing class RD2_ValidationService {
 
     /***
      * @description Validate Installment Frequency to be in the range
-     * @param rd Recurring Donation reocrd to validate
+     * @param rd Recurring Donation record to validate
      */
     private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd) {
         if (rd.InstallmentFrequency__c == null
