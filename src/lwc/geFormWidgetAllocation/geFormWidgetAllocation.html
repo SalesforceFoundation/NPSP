@@ -1,0 +1,35 @@
+<template>
+    <lightning-layout if:true={hasAlert}>
+        <lightning-layout-item size="12">
+            <div class={alertClass} role="alert">
+                <span class="slds-assistive-text">Allocation error</span>
+                <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small">
+                    <lightning-icon icon-name={alertIcon} variant="inverse" size="x-small"></lightning-icon>
+                </span>
+                <h2>{alertBanner.message}</h2>
+            </div>
+        </lightning-layout-item>
+    </lightning-layout>
+    <template for:each={rowList} for:item='row' for:index='index'>
+        <c-ge-form-widget-row-allocation
+                data-defaultgau={row.isDefaultGAU}
+                field-list={fieldList}
+                key={row.element.key}
+                row-index={index}
+                row-record={row.record}
+                total-amount={totalAmount}
+                remaining-amount={remainingAmount}
+                disabled={row.element.disabled}
+                onremove={handleRemove}
+                onvaluechange={handleChange}>
+        </c-ge-form-widget-row-allocation>
+    </template>
+    <lightning-layout class={footerClass}>
+        <lightning-layout-item size='3'>
+            <lightning-button label="Add New Allocation" onclick={handleAddRow}></lightning-button>
+        </lightning-layout-item>
+        <lightning-layout-item size='3' if:true={showRemainingAmount}>
+            <lightning-formatted-number value={remainingAmount} format-style='currency'></lightning-formatted-number>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
