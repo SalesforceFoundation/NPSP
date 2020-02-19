@@ -69,8 +69,8 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>NumberOfDaysFromNextDonationDate__c</fullName>
-        <defaultValue>0</defaultValue>
+        <fullName>NextDonationDateMatchRangeDays__c</fullName>
+        <defaultValue>3</defaultValue>
         <description>The number of days before or after the Next Donation Date that NPSP won't create a new installment Opportunity if the next open Opportunity's Close Date is changed. Applies only to Recurring Donations where Installment Period is Monthly.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of days before or after the Next Donation Date that NPSP won't create a new installment Opportunity if the next open Opportunity's Close Date is changed. Applies only to Recurring Donations where Installment Period is Monthly.</inlineHelpText>
