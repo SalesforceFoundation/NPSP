@@ -55,7 +55,7 @@ Create Data Import Record
     [tags]                 W-035915    feature:BDI
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
-    Click Link With Text                      Data Import Advanced Mapping  
+    Click Link With Text                      Advanced Mapping for Data Import & Gift Entry  
     Click Configure Advanced Mapping
     View Field Mappings Of The Object         CustomObject1
     Delete Field Mapping                            CO1 currency
@@ -112,7 +112,7 @@ Create Data Import Record
     [tags]                 W-035915    feature:BDI
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
-    Click Link With Text                      Data Import Advanced Mapping  
+    Click Link With Text                      Advanced Mapping for Data Import & Gift Entry  
     Click Configure Advanced Mapping
     View Field Mappings Of The Object         CustomObject1
     Create New Field Mapping                  CO1 currency (CO1_currency__c)    C1_currency (C1_currency__c)
@@ -169,7 +169,7 @@ Create Data Import Record
     [tags]                 W-035915    feature:BDI
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
-    Click Link With Text                      Data Import Advanced Mapping  
+    Click Link With Text                      Advanced Mapping for Data Import & Gift Entry  
     Click Configure Advanced Mapping
     View Field Mappings Of The Object         CustomObject1  
     Delete Mapping If Mapping Exists          CO1 Currency2

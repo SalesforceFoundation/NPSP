@@ -1,0 +1,13 @@
+<aura:component implements="force:appHostable">
+    <aura:dependency resource="c:geTemplateBuilderSectionModalBody" />
+
+    <aura:attribute name="modal" type="Object"/>
+
+    <lightning:overlayLibrary aura:id="overlayLib" />
+
+    <c:utilDedicatedListener eventName="geTemplateBuilderSectionModalBodyEvent"
+                             onreceiveevent="{!c.handleSectionModalEvent}"/>
+
+    <c:geTemplateBuilder aura:id="templateBuilder"
+                         ontogglemodal="{!c.handleShowModal}" />
+</aura:component>
