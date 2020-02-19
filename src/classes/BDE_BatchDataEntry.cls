@@ -182,9 +182,11 @@ public with sharing class BDE_BatchDataEntry {
     public static Map<String, String> mapDevNameToLabelBDEObjects() {
     	//return new string[]{'Opportunity','Contact','Lead','Account'};
     	Map<String, String> mapBDE = new Map<String, String>();
-    	Schema.DescribeSObjectResult dor = UTIL_Describe.getFullObjectDescribe(Batch__c.SObjectType);
+        // Due to move to API v48 in the UTIL_Describe class, it is not currently possible to use getObjectDescribe()
+        // from that class because an internal error.
+    	Schema.DescribeSObjectResult dor = Batch__c.SObjectType.getDescribe(SObjectDescribeOptions.FULL);
     	for (Schema.ChildRelationship cr : dor.getChildRelationships()) {
-    		// first see if they have a batch__c field
+            // first see if they have a batch__c field
     		Schema.SObjectField sfld = cr.getField();
     		if (sfld.getDescribe().getLocalName() == 'Batch__c') {
 	    		Schema.DescribeSObjectResult dr = cr.getChildSObject().getDescribe();
