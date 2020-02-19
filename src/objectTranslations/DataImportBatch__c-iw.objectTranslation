@@ -108,6 +108,11 @@
         <name>Expected_Total_Batch_Amount__c</name>
     </fields>
     <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
+    </fields>
+    <fields>
         <help><!-- This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift batches when they are set up through the Batch Gift Entry tab. Manually changing this field could have unintended consequences. --></help>
         <label><!-- Gift Batch --></label>
         <name>GiftBatch__c</name>
