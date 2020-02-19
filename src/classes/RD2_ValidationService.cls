@@ -148,7 +148,7 @@ public with sharing class RD2_ValidationService {
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return;
         }
-        
+
         if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
             rd.addError(System.Label.RD2_AmountMustBeValid);
         }
@@ -217,7 +217,7 @@ public with sharing class RD2_ValidationService {
 
     /**
     * @description Validate the currency change on the Recurring Donation
-    * that is applicable when the multi-currency is enabled and 
+    * that is applicable when the multi-currency is enabled and
     * the RD has at least one Closed Won/Lost Opportunity.
     * @param rd The Recurring Donation to validate
     * @param oldRd The previous version of the Recurring Donation
@@ -226,7 +226,7 @@ public with sharing class RD2_ValidationService {
     private void validateCurrencyChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
         if (!isMultiCurrencyEnabled) {
             return;
-        }        
+        }
 
         //Prevent the RD update if the currency has changed and the record has a closed Opportunity
         if ((String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD)
@@ -305,7 +305,7 @@ public with sharing class RD2_ValidationService {
 
         } else if (rd.npe03__Total_Paid_Installments__c > 0
                 && rd.npe03__Installments__c < rd.npe03__Total_Paid_Installments__c) {
-            rd.addError(System.Label.RD2_NumberPlannedInstallmentsCannotBeLessThanPaid);
+            rd.addError(System.Label.RD2_NumberInstallmentsCannotBeLessThanPaid);
         }
     }
 

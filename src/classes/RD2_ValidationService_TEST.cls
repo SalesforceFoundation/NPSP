@@ -398,7 +398,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies RD with a closed Opp cannot be updated 
+    * @description Verifies RD with a closed Opp cannot be updated
     * when changing from household contact to an organization account
     */
     @isTest
@@ -491,7 +491,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies RD with a closed Opp can be updated to different contact 
+    * @description Verifies RD with a closed Opp can be updated to different contact
     * when the RD is under an organization account
     */
     @isTest
@@ -611,7 +611,7 @@ private with sharing class RD2_ValidationService_TEST {
         } catch (Exception e) {
             errMessage = e.getMessage();
         }
-        System.assert(errMessage.contains(System.Label.RD2_NumberPlannedInstallmentsCannotBeLessThanPaid), errMessage);
+        System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsCannotBeLessThanPaid), errMessage);
     }
 
 
