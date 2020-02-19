@@ -43,8 +43,8 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.wait_until_location_contains("/view",timeout=60, message="Page not loaded")
 
     def perform_action_on_related_item(self,action):
-        """ Identifies the value to delete from the List and chooses delete
-            option from the menu. Confirms the delete action from the confirmation modal
+        """ Identifies the value and performs the specified action requested
+            Currently added logic for Delete. In the future can be extended for Edit
         """
         drop_down = npsp_lex_locators['opportunities_dropdown'].format(1)
         self.selenium.set_focus_to_element(drop_down)
@@ -54,11 +54,11 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.click_link(action)
 
         # Wait for the delete button from the modal and confirm the delete action
-
-        delete_btn=npsp_lex_locators["Delete_opportunity_modal_button"]
-        self.selenium.wait_until_element_is_visible(delete_btn)
-        self.selenium.click_button(delete_btn)
-        self.selenium.wait_until_location_contains("/view")
+        if action.lower() == 'delete':
+            delete_btn=npsp_lex_locators["Delete_opportunity_modal_button"]
+            self.selenium.wait_until_element_is_visible(delete_btn)
+            self.selenium.click_button(delete_btn)
+            self.selenium.wait_until_location_contains("/view")
 
     def waitfor_actions_dropdown_and_click_option(self,option):
         """Wait for the Action dropdown menu to load from the contact details page
