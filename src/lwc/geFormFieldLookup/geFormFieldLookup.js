@@ -3,6 +3,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
 import { isNotEmpty } from 'c/utilCommon';
+import { handleError } from 'c/utilTemplateBuilder';
 
 const DELAY = 300;
 
@@ -10,7 +11,8 @@ export default class GeFormFieldLookup extends LightningElement {
     @api fieldApiName;
     @api objectApiName;
     @api displayValue = '';
-    @api defaultValue;
+    @api defaultValue = null;
+    _defaultDisplayValue = '';
     @api label;
     @api required;
     @api id; // unique identifier for this field, used mainly for accessibility
@@ -23,6 +25,14 @@ export default class GeFormFieldLookup extends LightningElement {
     @track targetObjectApiName;
     @track queryFields;
     @track valid = true;
+    @track _getRecordId = null;
+
+    connectedCallback() {
+        this.value = this.defaultValue;
+        if (this.value) {
+            this._getRecordId = this.value;
+        }
+    }
 
     /**
      * Retrieve information about the object the lookup points to.
@@ -35,13 +45,17 @@ export default class GeFormFieldLookup extends LightningElement {
         }
     }
 
-    @wire(getRecord, { recordId: '$defaultValue', fields: '$queryFields'})
+    @wire(getRecord, {recordId: '$_getRecordId', fields: '$queryFields'})
     wiredGetRecord({error, data}) {
-        if(data) {
-            if(typeof this.value === 'undefined') {
-                this.value = this.defaultValue;
-                this.displayValue = data.fields.Name.value;
+        if (data) {
+            this.displayValue = data.fields.Name.value;
+            if (data.fields.Id.value === this.defaultValue) {
+                this._defaultDisplayValue = this.displayValue;
             }
+            let autocomplete = this.template.querySelector('c-ge-autocomplete');
+            autocomplete.setValue({value: this.value, displayValue: this.displayValue});
+        } else if (error) {
+            handleError(error);
         }
     }
 
@@ -172,14 +186,27 @@ export default class GeFormFieldLookup extends LightningElement {
 
     @api
     setSelected(lookupResult) {
-        const autocomplete = this.template.querySelector('c-ge-autocomplete');
-        autocomplete.setValue(lookupResult);
+        if (lookupResult.value === null) {
+            this.reset();
+            let autocomplete = this.template.querySelector('c-ge-autocomplete');
+            autocomplete.reset();
+        } else {
+            this.value = lookupResult.value || null;
+            this.displayValue = lookupResult.displayValue || null;
+        }
+
+        if (this.value && !this.displayValue) {
+            // Use getRecord to get the displayValue
+            this._getRecordId = this.value;
+        }
     }
 
     @api
     reset() {
-        let autocomplete = this.template.querySelector('c-ge-autocomplete');
-        autocomplete.reset();
+        this.setSelected({
+            value: this.defaultValue,
+            displayValue: this._defaultDisplayValue
+        });
     }
 
 }
