@@ -95,7 +95,7 @@ public with sharing class BDI_SettingsUI_CTRL {
                 // this UI is determines the field mapping to be used based on the set default
                 BDI_Donations donationImportHandler = 
                     new BDI_Donations(new BDI_DataImportService(true,
-                            BDI_DataImportService.getDefaultFieldMapping()));
+                            BDI_DataImportService.getDefaultMappingService()));
                 setFields.addAll(donationImportHandler.dataImportFieldToOpportunityField.keySet());
                 setFields.addAll(donationImportHandler.dataImportFieldToPaymentField.keySet());
 
