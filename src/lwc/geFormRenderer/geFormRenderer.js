@@ -180,8 +180,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             && Array.isArray(formTemplate.layout.sections)) {
             // add record data to the template fields
 
-             if (isNotEmpty(fieldMappings) && isNotEmpty(this.donorRecord)) {
-                 this.sections = setRecordValuesOnTemplate(formTemplate.layout.sections,
+            if (isNotEmpty(fieldMappings) && isNotEmpty(this.donorRecord)) {
+                this.sections = setRecordValuesOnTemplate(formTemplate.layout.sections,
                     fieldMappings, this.donorRecord);
             } else {
                 this.sections = formTemplate.layout.sections;
