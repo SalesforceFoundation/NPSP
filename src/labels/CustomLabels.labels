@@ -1950,7 +1950,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Validate Planned Installments field is greater than number of Paid Installments</shortDescription>
-        <value>Number of Planned Installments can't be less than the Number of Paid Installments.</value>
+        <value>Number of Planned Installments can&apos;t be less than the Number of Paid Installments.</value>
     </labels>
     <labels>
         <fullName>RD2_PageNotAvailableHeader</fullName>
