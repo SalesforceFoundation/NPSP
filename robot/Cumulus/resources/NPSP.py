@@ -10,6 +10,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchWindowException
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 from SeleniumLibrary.errors import ElementNotFound
@@ -871,7 +872,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         frames = self.selenium.get_webelements(locator)
         for frame in frames:
             if frame.is_displayed():
-                self.selenium.select_frame(frame)
+                try:
+                    print("inside try")
+                    self.selenium.select_frame(frame)
+                except NoSuchWindowException:
+                    print("inside except")
+                    self.builtin.log("caught NoSuchWindowException;trying gain..","WARN")
+                    time.sleep(.5)
+                    self.selenium.select_frame(frame)       
                 return frame
         raise Exception('unable to find visible iframe with title "{}"'.format(value))
 
