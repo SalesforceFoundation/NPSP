@@ -1888,6 +1888,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>The RD2 Batch job can only be executed when Enhanced RD is enabled</shortDescription>
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
     </labels>
+    <labels>
+        <fullName>RD2_InstallmentFrequencyMustBeValid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displayed when Installment Frequency on a Recurring Donation is not valid</shortDescription>
+        <value>Installment Frequency is required. Enter a value between 1 and 20.</value>
+    </labels>
      <labels>
         <fullName>RD2_InstallmentPeriodMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
