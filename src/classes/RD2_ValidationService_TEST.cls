@@ -560,7 +560,7 @@ private with sharing class RD2_ValidationService_TEST {
     * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty) 
     */
     @isTest
-    private static void houldBlockRDUpdateWhenInstallmentFrequencyIsOutOfRange() {
+    private static void shouldBlockRDUpdateWhenInstallmentFrequencyIsOutOfRange() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         List<npe03__Recurring_Donation__c> rds = getRecurringDonationBuilder()
@@ -580,10 +580,10 @@ private with sharing class RD2_ValidationService_TEST {
 
         for (Database.SaveResult result : results) {
             if (result.getId() == rds[0].Id) {
-                System.assert(result.isSuccess(), 'Recurring Donation record should be succesfully updated when Installment Frequencey is in range');
+                System.assert(result.isSuccess(), 'Recurring Donation record update should succeed when Installment Frequencey is in range');
 
             } else {
-                System.assert(!result.isSuccess(), 'Recurring Donation record update should fail when installment frequency is out of range');
+                System.assert(!result.isSuccess(), 'Recurring Donation record update should fail when Installment Frequency is out of range');
 
                 System.assert(
                     result.getErrors()[0].getMessage().contains(System.Label.RD2_InstallmentFrequencyMustBeValid),
