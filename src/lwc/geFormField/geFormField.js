@@ -321,19 +321,15 @@ export default class GeFormField extends LightningElement {
     load(data) {
         let value;
         if (data.hasOwnProperty(this.sourceFieldAPIName)) {
-            if (data[this.sourceFieldAPIName].hasOwnProperty('value')) {
-                value = data[this.sourceFieldAPIName].value;
+            value = data[this.sourceFieldAPIName];
+            if (value === null || value.value === null) {
+                this.reset();
             } else {
-                value = data[this.sourceFieldAPIName];
-                //if null, reset
-                if (value === null) {
-                    this.reset();
-                }
+                this.value = value.value || value;
             }
-            this.value = value;
 
             if (this.isLookup) {
-                this.loadLookUp(data, value);
+                this.loadLookUp(data, this.value);
             }
         } else {
             // Property isn't defined.  Don't do anything.

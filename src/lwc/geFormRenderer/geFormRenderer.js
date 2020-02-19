@@ -351,7 +351,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         for (const [key, value] of Object.entries(
             this.selectedDonationDataImportFieldValues)) {
             if (!diRecord.hasOwnProperty(key)) {
-                diRecord[key] = value.value || value;
+                diRecord[key] = value === null ? null : value.value || value;
             }
         }
 
