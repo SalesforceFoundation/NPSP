@@ -50,4 +50,6 @@ npsp_lex_locators.update({
             "popup_trigger": "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//tr[.//a[text()='{}']]//div[contains(@class, 'forceVirtualAction')]//a",
          },
     },
+
     })
+

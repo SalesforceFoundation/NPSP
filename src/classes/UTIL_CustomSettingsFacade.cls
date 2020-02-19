@@ -59,6 +59,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Data_Import_Settings__c dataImportSettings;
     static Customizable_Rollup_Settings__c customizableRollupSettings;
     static Levels_Settings__c levelsSettings;
+    static Gift_Entry_Settings__c giftEntrySettings;
 
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -74,6 +75,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Data_Import_Settings__c orgDataImportSettings;
     static Customizable_Rollup_Settings__c orgCustomizableRollupSettings;
     static Levels_Settings__c orgLevelsSettings;
+    static Gift_Entry_Settings__c orgGiftEntrySettings;
+
 
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after
@@ -292,6 +295,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
     * in the database.
     */
+    @AuraEnabled
     public static Data_Import_Settings__c getDataImportSettings() {
         if(Test.isRunningTest() && dataImportSettings == null) {
             dataImportSettings = new Data_Import_Settings__c();
@@ -305,6 +309,25 @@ public without sharing class UTIL_CustomSettingsFacade {
         // we'll only config those setting that are null
         configDataImportSettings(dataImportSettings);
         return dataImportSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Gift Entry Settings.
+    * @return Gift_Entry_Settings Custom settings record for Gift Entry Settings. At the org level, if no user level
+    * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
+    * in the database.
+    */
+    public static Gift_Entry_Settings__c getGiftEntrySettings() {
+        if(Test.isRunningTest() && giftEntrySettings == null) {
+            giftEntrySettings = new Gift_Entry_Settings__c();
+        } else if (giftEntrySettings == null) {
+            giftEntrySettings = Gift_Entry_Settings__c.getInstance();
+            if (giftEntrySettings.Id == null){
+                giftEntrySettings = getOrgGiftEntrySettings();
+            }
+        }
+       
+        return giftEntrySettings;
     }
 
     /*******************************************************************************************************
@@ -502,6 +525,28 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     /*******************************************************************************************************
+    * @description Returns the org-level Gift Entry settings. Default org-level settings will be created
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Gift_Entry_Settings__c Org-level settings for Gift Entry.
+    */
+    public static Gift_Entry_Settings__c getOrgGiftEntrySettings() {
+        if (orgGiftEntrySettings == null) {
+            orgGiftEntrySettings = Gift_Entry_Settings__c.getOrgDefaults();
+
+            if (orgGiftEntrySettings.Id == null) {
+                orgGiftEntrySettings.Setupownerid = UserInfo.getOrganizationId();
+                if (!Test.isRunningTest()) {
+                    upsert orgGiftEntrySettings;
+                }
+
+            }
+        }
+        return orgGiftEntrySettings;
+    }
+
+
+
+    /*******************************************************************************************************
      * Private methods that will configure the default org-level custom settings.
      **/
     private static void configContactsSettings(npe01__Contacts_And_Orgs_Settings__c cs) {
@@ -668,7 +713,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             dis.Donation_Date_Range__c = 0;
         }
         if (dis.Default_Data_Import_Field_Mapping_Set__c == null) {
-            dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+            dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         }
         if (dis.Field_Mapping_Method__c  == null) {
             dis.Field_Mapping_Method__c  = BDI_DataImportService.FM_HELP_TEXT;
@@ -879,6 +924,19 @@ public without sharing class UTIL_CustomSettingsFacade {
       return householdNamingSettings;
     }
 
+    public static Gift_Entry_Settings__c getGiftEntrySettingsForTests(Gift_Entry_Settings__c myGiftEntrySettings) {
+        if (giftEntrySettings == null) {
+            giftEntrySettings = new Gift_Entry_Settings__c();
+        }
+
+        giftEntrySettings.Default_Gift_Entry_Template__c = myGiftEntrySettings.Default_Gift_Entry_Template__c;
+
+        orgGiftEntrySettings = giftEntrySettings;
+
+        return giftEntrySettings;
+
+    }
+
     /*******************************************************************************************************
     * @description Returns the default Customizable Rollups settings.
     * @return Customizable_Rollup_Settings__c
@@ -1027,7 +1085,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         Data_Import_Settings__c dis = getDataImportSettings();
         dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
         dis.Default_Data_Import_Field_Mapping_Set__c =
-                BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         setDataImportSettings(dis);
     }
 
