@@ -1542,4 +1542,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.click_element(locator)
         self.selenium.wait_until_page_contains(title)
         link_locator=npsp_lex_locators['custom_objects']['actions-link'].format(title,title)
-        self.selenium.click_link(link_locator)     
+        self.selenium.click_link(link_locator)
+
+    def get_url_formatted_object_name(self,name):
+        """Returns a map with BaseURl and the namespace formatted object name"""
+        out = {}
+        base_url = self.cumulusci.org.lightning_base_url
+        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
+        out['baseurl'] = base_url
+        out['objectname'] = object_name
+        return out

@@ -16,16 +16,16 @@ class EngagementPlanListPage(BaseNPSPPage, ListingPage):
 
     def go_to_engagement_plan_page(self,action,engagementid=None):
         """ Navigates to the specified mode of engagement plant template page """
-        url = self.cumulusci.org.lightning_base_url
-        name = "Engagement_Plan_Template__c"
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
+
+        objectname = "Engagement_Plan_Template__c"
+        values =  self.npsp.get_url_formatted_object_name(objectname)
         if action.lower() == "create":
-            url = "{}/lightning/o/{}/new".format(url,object_name)
+            url = "{}/lightning/o/{}/new".format(values['baseurl'],values['objectname'])
             self.selenium.go_to(url)
             self.salesforce.wait_until_loading_is_complete()
             self.selenium.wait_until_location_contains("/new",timeout=60, message="Page not loaded")
         if action.lower() == "edit":
-            url = "{}/lightning/r/{}/{}/edit".format(url,object_name,engagementid)
+            url = "{}/lightning/r/{}/{}/edit".format(values['baseurl'],values['objectname'],engagementid)
             self.selenium.go_to(url)
             self.salesforce.wait_until_loading_is_complete()
             self.selenium.wait_until_location_contains("/edit",timeout=60, message="Page not loaded")

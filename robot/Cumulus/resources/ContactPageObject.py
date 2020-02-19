@@ -34,10 +34,9 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
     def go_to_related_engagement_actionplans_page(self,customerid):
 
         """ Navigates to the related engagement plans listing page"""
-        url = self.cumulusci.org.lightning_base_url
-        name = "Action_Plans__r"
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
-        url = "{}/lightning/r/{}/related/{}/view".format(url,customerid,object_name)
+        objectname = "Action_Plans__r"
+        values =  self.npsp.get_url_formatted_object_name(objectname)
+        url = "{}/lightning/r/{}/related/{}/view".format(values['baseurl'],customerid,values['objectname'])
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
         self.selenium.wait_until_location_contains("/view",timeout=60, message="Page not loaded")

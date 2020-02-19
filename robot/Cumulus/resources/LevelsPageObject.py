@@ -15,8 +15,8 @@ class LevelListPage(BaseNPSPPage, HomePage):
         """To go to create level page"""
         url_template = "{root}/lightning/o/{object}/new"
         name = self._object_name
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
-        url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
+        values =  self.npsp.get_url_formatted_object_name(name)
+        url = url_template.format(root=values['baseurl'], object=values['objectname'])
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
         self.npsp.wait_for_locator("frame","Levels")
@@ -46,11 +46,9 @@ class LevelDetailPage(BaseNPSPPage, DetailPage):
 
     def go_to_edit_level_page(self,levelid=None):
         """ Navigates to the edit view for the given level id """
-        url = self.cumulusci.org.lightning_base_url
         name = "Level_c"
-        object_name = "{}{}".format(self.cumulusci.get_namespace_prefix(), name)
-
-        url = "{}/lightning/r/{}/{}/edit".format(url,object_name,levelid)
+        values =  self.npsp.get_url_formatted_object_name(name)
+        url = "{}/lightning/r/{}/{}/edit".format(values['baseurl'],values['objectname'],levelid)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
         self.npsp.wait_for_locator("frame","Levels")
