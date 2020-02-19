@@ -151,7 +151,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 rd.npe03__Installments__c = null;
             }
 
-            rdRecord.reviseStatusForFixedLength();
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+                rdRecord.reviseStatusForFixedLength();
+            }
         }
 
     }

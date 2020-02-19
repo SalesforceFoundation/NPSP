@@ -520,18 +520,21 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @description Recurring Donation SObject wrapper
      */
     public class RecurringDonation {
+
         /**
         * @description Recurring Donation record
         */
         npe03__Recurring_Donation__c rd;
+
         /**
         * @description Indicates if the Recurring Donation is a new record
         */
         private Boolean isNew;
+
         /**
-        * @description Indicates if the Recurring Donation is outdated
+        * @description A list of the fields that have been changed by one of the revise methods.
         */
-        private Boolean isOutdated = false;
+        private Set<Schema.SObjectField> changedFields = new Set<Schema.SObjectField>();
 
         /**
         * @description Constructor
@@ -554,7 +557,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
             if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
-                isOutdated = true;
+                changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
             }
 
             return this;
@@ -570,13 +573,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             Decimal value = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
             if (value != rd.CurrentYearValue__c) {
                 rd.CurrentYearValue__c = value;
-                isOutdated = true;
+                changedFields.add(npe03__Recurring_Donation__c.CurrentYearValue__c);
             }
 
             value = processor.calcNextYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
             if (value != rd.NextYearValue__c) {
                 rd.NextYearValue__c = value;
-                isOutdated = true;
+                changedFields.add(npe03__Recurring_Donation__c.NextYearValue__c);
             }
 
             return this;
@@ -590,12 +593,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         public RecurringDonation reviseStatusForFixedLength() {
             if (isActive()
                 && isFixedLength()
-                && rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c
+                && isFixedLengthComplete()
             ) {
                 rd.Status__c = RD2_Constants.STATUS_CLOSED;
                 rd.ClosedReason__c = RD2_Constants.FIXED_TYPE_CLOSED_REASON;
                 rd.npe03__Next_Payment_Date__c = null;
-                isOutdated = true;
+                changedFields.add(npe03__Recurring_Donation__c.Status__c);
+                changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
+                changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
             }
             return this;
         }
@@ -606,7 +611,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Boolean
         */
         public Boolean isOutdated() {
-            return isOutdated;
+            return !changedFields.isEmpty();
         }
 
         /**
@@ -614,14 +619,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return npe03__Recurring_Donation__c
         */
         public npe03__Recurring_Donation__c getUpdate() {
-            return new npe03__Recurring_Donation__c(
-                Id = rd.Id,
-                npe03__Next_Payment_Date__c = rd.npe03__Next_Payment_Date__c,
-                CurrentYearValue__c = rd.CurrentYearValue__c,
-                NextYearValue__c = rd.NextYearValue__c,
-                Status__c = rd.Status__c,
-                ClosedReason__c = rd.ClosedReason__c
-            );
+            npe03__Recurring_Donation__c updatedRd = new npe03__Recurring_Donation__c(Id = rd.Id);
+            for (SObjectField s : changedFields) {
+                updatedRd.put(s, rd.get(s));
+            }
+            return updatedRd;
         }
 
         /**
@@ -654,6 +656,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         */
         public Boolean isFixedLength() {
             return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
+        }
+
+        /**
+         * @description Indicates if the number of paid installments is equal to or greater than number of planned installments
+         * @return Boolean
+         */
+        public Boolean isFixedLengthComplete() {
+            return rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c;
         }
 
         /**
