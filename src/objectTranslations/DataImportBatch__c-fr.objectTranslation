@@ -27,6 +27,10 @@
         <name>Batch_Description__c</name>
     </fields>
     <fields>
+        <label><!-- Batch Gift Entry Version --></label>
+        <name>Batch_Gift_Entry_Version__c</name>
+    </fields>
+    <fields>
         <help>Le nombre d’enregistrements à traiter en même temps dans chaque lot.</help>
         <label>Taille de lot</label>
         <name>Batch_Process_Size__c</name>
@@ -94,6 +98,11 @@
         <help>Le montant total attendu de tous les dons saisis dans ce lot.</help>
         <label>Montant par lots total attendu</label>
         <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
     </fields>
     <fields>
         <help>Ce lot est destiné à être utilisé avec une saisie de dons par lots. Les lots sont marqués autom. comme des lots de dons lorsqu&apos;ils sont configurés dans l&apos;onglet Saisie de dons par lots. La modif. manuelle de ce champ peut avoir des conséquences imprévues.</help>

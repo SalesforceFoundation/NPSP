@@ -23,6 +23,10 @@
         <name>Batch_Description__c</name>
     </fields>
     <fields>
+        <label><!-- Batch Gift Entry Version --></label>
+        <name>Batch_Gift_Entry_Version__c</name>
+    </fields>
+    <fields>
         <help>各バッチで一度に処理されるレコードの数。</help>
         <label>バッチサイズ</label>
         <name>Batch_Process_Size__c</name>
@@ -90,6 +94,11 @@
         <help>このバッチで入力が予測されているすべての支援の総額。</help>
         <label>予測合計バッチ金額</label>
         <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
     </fields>
     <fields>
         <help>このバッチは、バッチ支援エントリでの使用を想定しています。[バッチ支援エントリ] タブでバッチを設定すると、自動的に支援バッチとなります。この項目を手動で変更すると、意図しない結果を生むことがあります。</help>
