@@ -39,6 +39,12 @@ private class UTIL_OrgTelemetry_TEST {
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
 
     /**
+     * @description Number of new Gift-Entry BGE related Data Import records created within the last 30 days
+     */
+    private static final Integer NUM_NEWGE_BGE_ROWS_30_DAYS_AGO = 2;
+
+
+    /**
      * @description Number of BGE related Data Import records created within the last 30 days
      */
     private static final Integer NUM_BGE_ROWS_30_DAYS_AGO = 2;
@@ -84,15 +90,20 @@ private class UTIL_OrgTelemetry_TEST {
         insert rd;
 
         DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
+        DataImportBatch__c newDIBatch = new DataImportBatch__c(GiftBatch__c = true, 
+            Batch_Gift_Entry_Version__c = 2);
 
-        insert diBatch;
+
+        insert new List<DataImportBatch__c> {diBatch, newDIBatch};
 
         List<DataImport__c> bdiRows = buildDataImports(NUM_BDI_ROWS_30_DAYS_AGO, null);
         List<DataImport__c> bgeRows = buildDataImports(NUM_BGE_ROWS_30_DAYS_AGO, diBatch.Id);
+        List<DataImport__c> newBGERows = buildDataImports(NUM_NEWGE_BGE_ROWS_30_DAYS_AGO, newDIBatch.Id);
         List<DataImport__c> bdiRows60DaysAgo = buildDataImports(NUM_DI_ROWS_60_DAYS_AGO, null);
 
         insert bdiRows;
         insert bgeRows;
+        insert newBGERows;
         insert bdiRows60DaysAgo;
 
         Datetime sixtyDaysAgo = Datetime.now().addDays(-60);
@@ -175,6 +186,14 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageBooleanValue should have been called with the feature IsEnabled_BDICMT'
         );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_GiftEntry.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_GiftEntry'
+        );        
 
         System.assertNotEquals(
             null,
@@ -462,7 +481,7 @@ private class UTIL_OrgTelemetry_TEST {
         Test.stopTest();
 
         System.assertEquals(
-            NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO,
+            NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO + NUM_NEWGE_BGE_ROWS_30_DAYS_AGO,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name()
             ),
@@ -492,6 +511,31 @@ private class UTIL_OrgTelemetry_TEST {
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name()
             ),
             'setPackageIntegerValue should have been called with the feature Data_CountBGERowsLast30Days and set correctly'
+        );
+    }
+
+    /**
+     * @description Confirms BGE row counts related to new Gift Entry batches are calculated correctly
+     */
+    @IsTest
+    private static void validateCountOfNewGiftEntryBGERowsTelemetry() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountGERowsBatch);
+
+        System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
+        Test.stopTest();
+
+        System.assertEquals(
+            NUM_NEWGE_BGE_ROWS_30_DAYS_AGO,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountGERowsLast30DaysBatch and set correctly'
         );
     }
 

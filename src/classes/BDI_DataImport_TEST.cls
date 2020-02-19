@@ -1350,7 +1350,7 @@ public with sharing class BDI_DataImport_TEST {
         //run batch data import
         Test.StartTest();
         BDI_DataImportService dataImportService = 
-            new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance());
+            new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
@@ -1459,7 +1459,7 @@ public with sharing class BDI_DataImport_TEST {
         //run batch data import
         Test.StartTest();
         BDI_DataImportService dataImportService = 
-            new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance());
+            new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
@@ -1507,13 +1507,13 @@ public with sharing class BDI_DataImport_TEST {
 
         // create import service for dry run
         BDI_DataImportService dataImportService = 
-            new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance());
+            new BDI_DataImportService(true, BDI_MappingServiceHelpText.getInstance());
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
         
         // create import service without dry run
-        dataImportService = new BDI_DataImportService(false, BDI_FieldMappingHelpText.getInstance());
+        dataImportService = new BDI_DataImportService(false, BDI_MappingServiceHelpText.getInstance());
         bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId2 = Database.executeBatch(bdi, 10);
         Test.stopTest();
