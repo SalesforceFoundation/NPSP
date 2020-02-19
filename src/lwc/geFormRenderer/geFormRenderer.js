@@ -346,8 +346,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         // di data for save
         let { diRecord, widgetValues } = this.getData(sectionsList);
-        // Apply selected donation fields to data import record
-        diRecord = {...diRecord, ...this.selectedDonationDataImportFieldValues};
+        // Apply any selected donation fields that are not on the form
+        // to the data import record
+        for (const [key, value] of Object.entries(
+            this.selectedDonationDataImportFieldValues)) {
+            if (!diRecord.hasOwnProperty(key)) {
+                diRecord[key] = value.value || value;
+            }
+        }
 
         this.dispatchEvent(new CustomEvent('submit', {
             detail: {
