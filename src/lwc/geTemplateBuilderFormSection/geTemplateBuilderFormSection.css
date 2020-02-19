@@ -1,0 +1,32 @@
+.slds-card_extension {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+    border: 2px solid rgb(221, 219, 218);
+    transition: box-shadow 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.slds-card_extension:hover {
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.slds-card_extension_active {
+    border: 2px solid #1589ee;
+}
+
+.slds-card_extension_active:after {
+    content: "";
+    position: absolute;
+    top: -0.01rem;
+    right: 0;
+    border: 1rem solid transparent;
+    border-right-color: #1589ee;
+    border-top-color: #1589ee;
+}
+
+.slds-icon_container_extension {
+    z-index: 1;
+}
+
+.slds-icon_extension svg {
+    fill: #ffffff;
+}

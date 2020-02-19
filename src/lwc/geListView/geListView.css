@@ -1,0 +1,13 @@
+.slds-lightning-button-menu_extension {
+    font-size: var(--lwc-font-size-6, 1.125rem);
+    font-weight: var(--lwc-card-font-weight, 700);
+    line-height: var(--lwc-line-height-heading, 1.25);
+    display: block;
+}
+
+.slds-page-header_extension {
+    background: var(--lwc-color-background-alt, #ffffff);
+    border-bottom: var(--lwc-border-width-thin, 1px) solid var(--lwc-color-border-separator-alt, #dddbda);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}

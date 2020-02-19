@@ -1,0 +1,5 @@
+<design:component label="Batch Gift Entry Form">
+    <sfdc:objects>
+        <sfdc:object>DataImportBatch__c</sfdc:object>
+    </sfdc:objects>
+</design:component>

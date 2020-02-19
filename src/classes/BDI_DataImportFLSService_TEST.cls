@@ -54,7 +54,7 @@ private class BDI_DataImportFLSService_TEST {
                 new List<DataImport__c>{
                         dataImport
                 },
-                BDI_FieldMappingCustomMetadata.getInstance(),
+                BDI_MappingServiceAdvanced.getInstance(),
                 accessLevels
         );
 
@@ -83,7 +83,7 @@ private class BDI_DataImportFLSService_TEST {
                     new List<DataImport__c>{
                             dataImport
                     },
-                    BDI_FieldMappingCustomMetadata.getInstance(),
+                    BDI_MappingServiceAdvanced.getInstance(),
                     accessLevels
             );
 
@@ -125,7 +125,7 @@ private class BDI_DataImportFLSService_TEST {
         //Process the Data Import record
         BDI_DataImportService dataImportService = new BDI_DataImportService(
                 false,
-                BDI_DataImportService.getDefaultFieldMapping());
+                BDI_DataImportService.getDefaultMappingService());
         dataImportService.process(
                 null,
                 BDI_DataImportService.loadSettings(null),
@@ -203,9 +203,9 @@ private class BDI_DataImportFLSService_TEST {
                 CampaignMember.CampaignId);
         mock.mapField(DataImport__c.Campaign_Member_Status__c, CampaignMember.SObjectType,
                 CampaignMember.Status);
-        BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
-                BDI_FieldMappingCustomMetadata.class, mock);
-        BDI_FieldMappingCustomMetadata.setInstance(stub);
+        BDI_MappingServiceAdvanced stub = (BDI_MappingServiceAdvanced) Test.createStub(
+                BDI_MappingServiceAdvanced.class, mock);
+        BDI_MappingServiceAdvanced.setInstance(stub);
 
         Campaign campaign = new Campaign(Name = 'Test Campaign');
         insert campaign;
@@ -219,7 +219,7 @@ private class BDI_DataImportFLSService_TEST {
                 new List<DataImport__c> {
                         dataImport
                 },
-                BDI_DataImportService.getDefaultFieldMapping(),
+                BDI_DataImportService.getDefaultMappingService(),
                 accessLevels
         );
 
