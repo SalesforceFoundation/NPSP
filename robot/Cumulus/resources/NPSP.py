@@ -292,8 +292,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 #                 list_found = True
 #                 break
 #  
-#         assert list_found, "locator not found"  
-    @capture_screenshot_on_error 
+#         assert list_found, "locator not found" 
+    @selenium_retry
+    @capture_screenshot_on_error  
     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
