@@ -593,17 +593,17 @@ private class RD2_OpportunityEvaluation_TEST {
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be calculated for the next year projected installments');
     }
- 
+
     /**
     * @description Verifies the next Opportunity on Recurring Donation is not created
     * when Installment Auto Creation Setting is set to Disable All Installments.
     */
     @IsTest
-    private static void shouldNotCreateNextOppWhenDisableAllInstallments() {        
+    private static void shouldNotCreateNextOppWhenDisableAllInstallments() {
         npe03__Recurring_Donation__c rd = runInstallmentCreateTestFor(
             RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()
         );
-        
+
         List<Opportunity> opps = oppGateway.getRecords(rd);
         System.assertEquals(0, opps.size(), 'The next installment Opp should not be created: ' + opps);
 
@@ -630,7 +630,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
-        
+
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
         return rd;
@@ -667,7 +667,92 @@ private class RD2_OpportunityEvaluation_TEST {
             'Next Year Value should be calculated for the next year projected installments');
     }
 
+    /**
+     * @description Verifies that a Fixed Length RD is closed when the NumberOfPaidInstallments matches or exceeds
+     * the NumberOfPlannedInstallments field value.
+     */
+    @IsTest
+    private static void shouldLeaveFixedRDActiveIfPlannedInstallmentsNotReached() {
+        Integer PLANNED_INSTALLMENTS = 5;
 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(PLANNED_INSTALLMENTS)
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(START_DATE)
+            .build();
+
+        // Disable the trigger to ensure the change happens in the batch job vs. the trigger.
+        TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
+
+        rd.npe03__Total_Paid_Installments__c = PLANNED_INSTALLMENTS-1;
+        update rd;
+
+        // Make sure the RD is still Active
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
+            'The Recurring Donation should still be Active');
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH());
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
+            'The Recurring Donation should still be Active');
+    }
+
+
+    /**
+     * @description Verifies that a Fixed Length RD is closed when the NumberOfPaidInstallments matches or exceeds
+     * the NumberOfPlannedInstallments field value.
+     */
+    @IsTest
+    private static void shouldCloseFixedRDWhenPlannedInstallmentsReached() {
+        Integer PLANNED_INSTALLMENTS = 5;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(PLANNED_INSTALLMENTS)
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withClosedWonStage()
+            .withCloseDate(START_DATE)
+            .build();
+
+        // Disable the trigger to ensure the change happens in the batch job vs. the trigger.
+        TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
+
+        rd.npe03__Total_Paid_Installments__c = PLANNED_INSTALLMENTS;
+        update rd;
+
+        // Make sure the RD is still Active
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
+            'The Recurring Donation should still be Active');
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH());
+
+        assertBatchJobIteration(1);
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c,
+            'The Recurring Donation should be Closed');
+        System.assertEquals(null, rd.npe03__Next_Payment_Date__c,
+            'The Next Donation Date should be null');
+        System.assertEquals(RD2_Constants.FIXED_TYPE_CLOSED_REASON, rd.ClosedReason__c,
+            'The Closed Reason should be set to ' + RD2_Constants.FIXED_TYPE_CLOSED_REASON);
+    }
 
 
     // Helpers

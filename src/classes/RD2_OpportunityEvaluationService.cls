@@ -341,6 +341,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             if (rdRecord
+                .reviseStatusForFixedLength()
                 .reviseNextDonationDate(scheduleService)
                 .reviseYearValues(yearValueProcessor)
                 .isOutdated()
@@ -415,7 +416,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             && rd.hasSchedule()
             && rd.hasOpenOpportunity();
     }
-
 
     /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
@@ -583,6 +583,25 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
+        * @description Revises and modifies the Recurring Donation if it is Fixed Length and is now fully completed
+        * based on the Number of Planned Installments as compared to the Number of Paid Installments.
+        * @return RecurringDonation This record instance
+        */
+        public RecurringDonation reviseStatusForFixedLength() {
+            if (isActive()
+                && isFixedLength()
+                && rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c
+            ) {
+                rd.Status__c = RD2_Constants.STATUS_CLOSED;
+                rd.ClosedReason__c = RD2_Constants.FIXED_TYPE_CLOSED_REASON;
+                rd.npe03__Next_Payment_Date__c = null;
+                isOutdated = true;
+            }
+            return this;
+        }
+
+
+        /**
         * @description Indicates if the Recurring Donation is outdated and requiring an update
         * @return Boolean
         */
@@ -599,7 +618,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 Id = rd.Id,
                 npe03__Next_Payment_Date__c = rd.npe03__Next_Payment_Date__c,
                 CurrentYearValue__c = rd.CurrentYearValue__c,
-                NextYearValue__c = rd.NextYearValue__c
+                NextYearValue__c = rd.NextYearValue__c,
+                Status__c = rd.Status__c,
+                ClosedReason__c = rd.ClosedReason__c
             );
         }
 
@@ -617,6 +638,22 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         */
         public Boolean isClosed() {
             return rd.Status__c == RD2_Constants.STATUS_CLOSED;
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation is open ended
+        * @return Boolean
+        */
+        public Boolean isOpenEnded() {
+            return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN;
+        }
+
+        /**
+        * @description Indicates if the Recurring Donation is fixed length
+        * @return Boolean
+        */
+        public Boolean isFixedLength() {
+            return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
         }
 
         /**

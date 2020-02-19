@@ -145,16 +145,13 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN
-                    && rd.npe03__Installments__c == 1) {
+            RD2_OpportunityEvaluationService.RecurringDonation rdRecord = new RD2_OpportunityEvaluationService.RecurringDonation(rd);
+
+            if (rdRecord.isOpenEnded() && rd.npe03__Installments__c == 1) {
                 rd.npe03__Installments__c = null;
             }
 
-            if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED
-                    && rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c) {
-                rd.ClosedReason__c = RD2_Constants.FIXED_TYPE_CLOSED_REASON;
-                rd.Status__c = RD2_Constants.STATUS_CLOSED;
-            }
+            rdRecord.reviseStatusForFixedLength();
         }
 
     }
