@@ -77,7 +77,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track mappingSet = '';
     @track version = '';
     @track formTemplateId;
-    @track batchDefaults;
+    _batchDefaults;
 
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
@@ -209,7 +209,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     wiredBatch({data, error}) {
         if (data) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
-            this.batchDefaults = data.fields[BATCH_DEFAULTS_FIELD.fieldApiName].value;
+            this._batchDefaults = data.fields[BATCH_DEFAULTS_FIELD.fieldApiName].value;
             GeFormService.getFormTemplateById(this.formTemplateId)
                 .then(template => {
                     let errorObject = checkPermissionErrors(template);
@@ -896,10 +896,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @param templateSections
      * @returns {sections}
      */
-    setBatchDefaults(templateSections){
+    setBatchDefaults(templateSections) {
         let sections = deepClone(templateSections);
-        if (isNotEmpty(this.batchDefaults)) {
-            let batchDefaultsObject = JSON.parse(this.batchDefaults);
+        if (isNotEmpty(this._batchDefaults)) {
+            let batchDefaultsObject = JSON.parse(this._batchDefaults);
             sections.forEach(section => {
                 const elements = section.elements;
                 elements.forEach(element => {
