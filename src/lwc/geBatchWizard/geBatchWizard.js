@@ -44,6 +44,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     @track selectedTemplateId;
     @track isLoading = true;
     @track donationMatchingBehaviors;
+    @track hasInvalidBatchFields = false;
 
     dataImportBatchFieldInfos;
     dataImportBatchInfo;
@@ -235,6 +236,14 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     handleNext() {
+        if (this.step === 1) {
+            this.validateBatchHeaderFields();
+
+            if (this.hasInvalidBatchFields) {
+                return;
+            }
+        }
+
         if (this.step < MAX_STEPS) {
             this.step += 1;
         }
@@ -252,6 +261,20 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Method collects all batch header fields and checks for their
+    * validity.
+    */
+    validateBatchHeaderFields() {
+        this.hasInvalidBatchFields = false;
+        let inputComponents = this.template.querySelectorAll('c-util-input[data-id="batchHeaderField"]');
+        for (let i = 0; i < inputComponents.length; i++) {
+            if (!inputComponents[i].isValid()) {
+                this.hasInvalidBatchFields = true;
+            }
         }
     }
 

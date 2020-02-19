@@ -54,6 +54,16 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return null;
     }
 
+    get fieldApiName() {
+        if (this.field && this.field.apiName) {
+            return this.field.apiName;
+        }
+
+        if (this.field && this.field.fieldApiName) {
+            return this.field.fieldApiName;
+        }
+    }
+
     get labelHelpText() {
         if (this.fieldMapping && this.fieldMapping.Target_Object_Mapping_Dev_Name) {
             const objectMapping =
