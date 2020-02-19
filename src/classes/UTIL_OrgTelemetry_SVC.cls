@@ -51,7 +51,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * against a table (such as a really huge Opportunity object) were to fail.
      */
     public enum TelemetryBatchCategory {
-        CustomInstallment_Settings,
         NPSP_Settings,
         Org_Environment,
         Data_MaxNumRelatedOpps,
@@ -60,7 +59,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountPaymentOpps,
         Data_CountErrorLog,
         Data_CountBDIRows,
-        Data_CountBGERows
+        Data_CountBGERows,
+        Data_CountFixedLengthRd
     }
 
     /**
@@ -168,10 +168,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     public void processTelemetryType(TelemetryBatchCategory telemetryCategory) {
 
         switch on (telemetryCategory) {
-            when CustomInstallment_Settings {
-                handleCustomInstallmentSettings();
-            }
-
             // Simple Boolean FeatureParameters based strictly on NPSP Settings that can be processed in a single
             // operation.
             when NPSP_Settings {
@@ -223,6 +219,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                          you move forward with Data_OppPaymentsWithoutPaymentsEnabled
                 //featureManager.setPackageIntegerValue(TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), -1); */
             }
+
+            when Data_CountFixedLengthRd {
+                featureManager.setPackageIntegerValue(TelemetryParameterName.DataCount_ONETIME_Use.name(), -1);
+            }
         }
     }
 
@@ -254,23 +254,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
-    }
-
-    /**
-     * @description Checks if custom installments are enabled and sets feature parameter. Enabled defined as having
-     * custom installment settings and having at least one recurring donation that has one of those custom installments
-     */
-    private void handleCustomInstallmentSettings() {
-        Set<String> customInstallments = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings().keySet();
-
-        Boolean hasCustomInstallments =
-            !customInstallments.isEmpty()
-            && ![SELECT Id FROM npe03__Recurring_Donation__c WHERE npe03__Installment_Period__c IN :customInstallments LIMIT 1].isEmpty();
-
-        featureManager.setPackageIntegerValue(
-            UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(),
-            hasCustomInstallments ? 1 : 0
-        );
     }
 
     /**
