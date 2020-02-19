@@ -45,6 +45,8 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     @track isLoading = true;
     @track donationMatchingBehaviors;
     @track hasInvalidBatchFields = false;
+    @track missingBatchHeaderFieldLabels = [];
+    @track missingRequiredFieldsMessage;
 
     dataImportBatchFieldInfos;
     dataImportBatchInfo;
@@ -270,11 +272,23 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     */
     validateBatchHeaderFields() {
         this.hasInvalidBatchFields = false;
+        this.missingBatchHeaderFieldLabels = [];
+
         let inputComponents = this.template.querySelectorAll('c-util-input[data-id="batchHeaderField"]');
         for (let i = 0; i < inputComponents.length; i++) {
             if (!inputComponents[i].isValid()) {
                 this.hasInvalidBatchFields = true;
+                this.missingBatchHeaderFieldLabels =
+                    [...this.missingBatchHeaderFieldLabels, inputComponents[i].uiLabel];
             }
+        }
+
+        if (this.hasInvalidBatchFields &&
+            (this.missingBatchHeaderFieldLabels && this.missingBatchHeaderFieldLabels.length > 0)) {
+
+            this.missingRequiredFieldsMessage = GeLabelService.format(
+                this.CUSTOM_LABELS.commonMissingRequiredFields,
+                [this.missingBatchHeaderFieldLabels.join(', ')]);
         }
     }
 

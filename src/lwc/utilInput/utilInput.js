@@ -144,6 +144,7 @@ export default class utilInput extends LightningElement {
         }
     }
 
+    @api
     get uiLabel() {
         if (this.label) {
             return this.label;
