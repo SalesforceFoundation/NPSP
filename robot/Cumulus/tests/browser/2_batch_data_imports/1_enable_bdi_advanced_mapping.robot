@@ -14,9 +14,9 @@ Enable Advanced Mapping
     [tags]             feature:BDI
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
-    Click Link With Text                      Data Import Advanced Mapping
+    Click Link With Text                      Advanced Mapping for Data Import & Gift Entry
     Verify Advanced Mapping Is Not Enabled
-    Click Toggle Button                       DataImportAdvancedMapping
-    Wait Until Advanced Mapping Is Enabled
+    Click Toggle Button                       Advanced Mapping
+    Wait For Message                          Advanced Mapping is enabled
 
 
