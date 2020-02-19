@@ -80,6 +80,7 @@ public inherited sharing class RD2_Constants {
     * @description Recurring Donation "Recurring Type" picklist API values
     */
     public static final String RECURRING_TYPE_OPEN = 'Open';
+    public static final String RECURRING_TYPE_FIXED = 'Fixed';
 
     /**
     * @description Returns all valid Installment Periods

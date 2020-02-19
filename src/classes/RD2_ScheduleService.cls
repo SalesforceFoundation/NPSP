@@ -104,9 +104,22 @@ public without sharing class RD2_ScheduleService {
 
         newSchedules.add(schedule);
 
+        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED || rd.npe03__Installments__c == null) {
+            Date endDate = getFixedLengthEndDate(newSchedules, rd);
+
+            for (RecurringDonationSchedule__c sc : newSchedules) {
+                sc.EndDate__c = endDate;
+            }
+        }
+
         return newSchedules;
     }
 
+    private Date getFixedLengthEndDate(List<RecurringDonationSchedule__c> schedules, npe03__Recurring_Donation__c rd) {
+        List<Installment> installments = getVisualizedInstallments(currentDate, rd.npe03__Installments__c.intValue(), schedules);
+
+        return installments[installments.size() - 1].nextDonationDate;
+    }
     /***
     * @description Determines whether '1st and 15th' is the schedule selected.
     * @param rd Recurring Donation record
