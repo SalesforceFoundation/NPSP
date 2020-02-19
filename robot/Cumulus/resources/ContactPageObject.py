@@ -49,7 +49,6 @@ class ContactDetailPage(BaseNPSPPage, DetailPage):
         drop_down = npsp_lex_locators['opportunities_dropdown'].format(1)
         self.selenium.set_focus_to_element(drop_down)
         self.selenium.wait_until_element_is_visible(drop_down)
-        self.selenium.wait_until_element_is_enabled(drop_down)
         self.selenium.click_element(drop_down)
         self.selenium.wait_until_page_contains(action)
         self.selenium.click_link(action)
