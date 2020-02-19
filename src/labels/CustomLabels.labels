@@ -1945,7 +1945,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Number of Planned Installments is for Fixed Recurring Donations only. Remove the value in Number of Planned Installments or change the Recurring Type to Fixed.</value>
     </labels>
     <labels>
-        <fullName>RD2_NumberPlannedInstallmentsCannotBeLessThanPaid</fullName>
+        <fullName>RD2_NumberInstallmentsCannotBeLessThanPaid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>

@@ -1549,7 +1549,7 @@
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
-        <members>RD2_NumberPlannedInstallmentsCannotBeLessThanPaid</members>
+        <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
         <members>RD2_ScheduleLWCEndDate</members>
