@@ -121,6 +121,7 @@ export default class GeFormSection extends LightningElement {
             }
         });
 
+        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
         widgetList.forEach(widget => {
             widget.load(data);
         });
