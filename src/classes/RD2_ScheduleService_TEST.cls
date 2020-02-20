@@ -1156,6 +1156,103 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(startDate, rdsNeedUpdate.get(updatedRds[0].Id).StartDate__c, 'Start date should be 12 years from today\'s date');
     }
 
+    /***
+    * @description Validates End Date on Schedule record should be calculated correctly when Recurring Donation record is Fixed Length
+    */
+    @isTest
+    private static void shouldGenerateScheduleWithEndDateWhenRecurringDonationIsFixedLength() {
+        getScheduleServiceForCurrentDate(DATE_ESTABLISHED);
+
+        String dayOfMonth = DATE_ESTABLISHED.day().format();
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withDayOfMonth(dayOfMonth)
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(5)
+            .build();
+
+        Test.startTest();
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+        Test.stopTest();
+
+        Date expectedEndDate = DATE_ESTABLISHED.addMonths(4);
+
+        System.assertEquals(1, schedules.size(), 'One schedule should exist for a new monthly RD');
+        System.assertEquals(rd.npe03__Amount__c, schedules[0].InstallmentAmount__c, 'Installment Amount should match RD Amount');
+        System.assertEquals(rd.InstallmentFrequency__c, schedules[0].InstallmentFrequency__c, 'Installment Frequency should match RD Installment Frequency');
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].InstallmentPeriod__c, 'Installment Period should match RD Installment Period');
+        System.assertEquals(dayOfMonth, schedules[0].DayOfMonth__c, 'Day of Month should be 15');
+        System.assertEquals(DATE_ESTABLISHED, schedules[0].StartDate__c, 'Start Date should match RD Established Date');
+        System.assertEquals(expectedEndDate, schedules[0].EndDate__c, 'Schedule End Date should be set to match the last planned installments');
+    }
+
+    /***
+    * @description Validates End Date on Schedule records should be calculated correctly when Recurring Donation record is changed to Open
+    */
+    @isTest
+    private static void shouldGenerateScheduleWithNoEndDateWhenRecurringDonationIsUpdatedToOpen() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        getScheduleServiceForCurrentDate(DATE_ESTABLISHED);
+
+        String dayOfMonth = DATE_ESTABLISHED.day().format();
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withDayOfMonth(dayOfMonth)
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(5)
+            .build();
+
+        insert rd;
+
+        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
+
+        System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist for a new monthly RD');
+        Set<DateTime> endDates = UTIL_SObject.extractDatetime(rdSchedules, RecurringDonationSchedule__c.EndDate__c);
+
+        System.assertEquals(2, endDates.size(), 'Two Schedules with different end date should be present');
+        System.assert(endDates.contains(null), 'A Open Schedule should be created for the Open Recurring Donation');
+        System.assert(endDates.contains(DATE_ESTABLISHED.addDays(-1)),
+            'A Schedule should be have an end date of the day before start date to indicate it is no longer valid');
+    }
+
+    /***
+    * @description Validates End Date on Schedule records should be calculated correctly when Recurring Donation record is changed to Fixed Length
+    */
+    @isTest
+    private static void shouldGenerateScheduleWithEndDateWhenRecurringDonationIsUpdateFixedLength() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        getScheduleServiceForCurrentDate(DATE_ESTABLISHED);
+
+        String dayOfMonth = DATE_ESTABLISHED.day().format();
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withDayOfMonth(dayOfMonth)
+            .withRecurringTypeOpen()
+            .withPlannedInstallments(5)
+            .build();
+
+        insert rd;
+
+        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_FIXED;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
+
+        System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist for a new monthly RD');
+        Set<DateTime> endDates = UTIL_SObject.extractDatetime(rdSchedules, RecurringDonationSchedule__c.EndDate__c);
+
+        System.assertEquals(2, endDates.size(), 'Two Schedules with different end date should be present');
+        System.assert(endDates.contains(DATE_ESTABLISHED.addMonths(4)),
+            'A Schedule should with a future end date should be created for the Fixed Length Recurring Donation');
+        System.assert(endDates.contains(DATE_ESTABLISHED.addDays(-1)),
+            'A Schedule should be have an end date of the day before start date to indicate it is no longer valid');
+    }
 
     //// Helpers
 

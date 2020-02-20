@@ -296,6 +296,16 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets Number of Planned Installments for a Fixed Length RD
+    * @param numberOfInstallments Number of Planned Installments
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withPlannedInstallments(Integer numberOfInstallments) {
+        valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
+        return this;
+    }
+
+    /***
     * @description Sets Installment Frequency
     * @param frequency Installment Frequency
     * @return TEST_RecurringDonationBuilder Builder instance
@@ -455,6 +465,15 @@ public without sharing class TEST_RecurringDonationBuilder {
     */
     public TEST_RecurringDonationBuilder withRecurringTypeOpen() {
         return withRecurringType(RD2_Constants.RECURRING_TYPE_OPEN);
+    }
+
+    /***
+    * @description Sets Recurring Type field
+    * @param recurringType Recurring Type value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withRecurringTypeFixed() {
+        return withRecurringType(RD2_Constants.RECURRING_TYPE_FIXED);
     }
 
     /***

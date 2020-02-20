@@ -81,10 +81,6 @@ public without sharing class RD2_ScheduleService {
         schedule.RecurringDonation__c = rd.Id;
         schedule.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
 
-        /* TODO: For fixed length recurring donations we may need to calculate this
-        schedule.EndDate__c = ??
-         */
-
         schedule.InstallmentAmount__c = rd.npe03__Amount__c;
         schedule.InstallmentFrequency__c = rd.InstallmentFrequency__c;
         schedule.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
@@ -104,19 +100,32 @@ public without sharing class RD2_ScheduleService {
 
         newSchedules.add(schedule);
 
-        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED || rd.npe03__Installments__c == null) {
+        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED && rd.npe03__Installments__c != null) {
             Date endDate = getFixedLengthEndDate(newSchedules, rd);
 
-            for (RecurringDonationSchedule__c sc : newSchedules) {
-                sc.EndDate__c = endDate;
+            for (RecurringDonationSchedule__c fixedLengthSc : newSchedules) {
+                fixedLengthSc.EndDate__c = endDate;
             }
         }
 
         return newSchedules;
     }
 
+    /***
+    * @description Calculate the end date of Fixed Length Recurring Donation Schedule
+    * @param schedules The schedules of the Recurring Donation
+    * @param rd Recurring Donation record 
+    */
     private Date getFixedLengthEndDate(List<RecurringDonationSchedule__c> schedules, npe03__Recurring_Donation__c rd) {
-        List<Installment> installments = getVisualizedInstallments(currentDate, rd.npe03__Installments__c.intValue(), schedules);
+        List<Installment> installments = getVisualizedInstallments(
+            currentDate,
+            rd.npe03__Installments__c.intValue(),
+            schedules
+        );
+
+        if (installments.size() == 0) {
+            return currentDate;
+        }
 
         return installments[installments.size() - 1].nextDonationDate;
     }
@@ -201,7 +210,9 @@ public without sharing class RD2_ScheduleService {
             newRd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c ||
             newRd.PaymentMethod__c != oldRd.PaymentMethod__c ||
             newRd.Status__c != oldRd.Status__c ||
-            newRd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c)
+            newRd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c ||
+            newRd.RecurringType__c != oldRd.RecurringType__c ||
+            newRd.npe03__Installments__c != oldRd.npe03__Installments__c)
         {
             isNeeded = true;
         }
