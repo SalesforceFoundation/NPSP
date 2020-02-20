@@ -1161,6 +1161,7 @@ private with sharing class RD2_ScheduleService_TEST {
     */
     @isTest
     private static void shouldGenerateScheduleWithEndDateWhenRecurringDonationIsFixedLength() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         getScheduleServiceForCurrentDate(DATE_ESTABLISHED);
 
         String dayOfMonth = DATE_ESTABLISHED.day().format();
@@ -1171,8 +1172,10 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         Test.startTest();
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+        insert rd;
         Test.stopTest();
+
+        List<RecurringDonationSchedule__c> schedules = scheduleGateway.getRecords(rd);
 
         Date expectedEndDate = DATE_ESTABLISHED.addMonths(4);
 
@@ -1180,9 +1183,9 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(rd.npe03__Amount__c, schedules[0].InstallmentAmount__c, 'Installment Amount should match RD Amount');
         System.assertEquals(rd.InstallmentFrequency__c, schedules[0].InstallmentFrequency__c, 'Installment Frequency should match RD Installment Frequency');
         System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, schedules[0].InstallmentPeriod__c, 'Installment Period should match RD Installment Period');
-        System.assertEquals(dayOfMonth, schedules[0].DayOfMonth__c, 'Day of Month should be 15');
+        System.assertEquals(rd.Day_of_Month__c, schedules[0].DayOfMonth__c, 'Day of Month should be set correctly from the RD');
         System.assertEquals(DATE_ESTABLISHED, schedules[0].StartDate__c, 'Start Date should match RD Established Date');
-        System.assertEquals(expectedEndDate, schedules[0].EndDate__c, 'Schedule End Date should be set to match the last planned installments');
+        System.assertEquals(expectedEndDate, schedules[0].EndDate__c, 'Schedule End Date should be set to match the last planned installment');
     }
 
     /***
@@ -1210,10 +1213,10 @@ private with sharing class RD2_ScheduleService_TEST {
 
         List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
 
-        System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist for a new monthly RD');
         Set<DateTime> endDates = UTIL_SObject.extractDatetime(rdSchedules, RecurringDonationSchedule__c.EndDate__c);
 
-        System.assertEquals(2, endDates.size(), 'Two Schedules with different end date should be present');
+        System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist when RD recurring type change');
+        System.assertEquals(2, endDates.size(), 'Two Schedules with different end date should be presented');
         System.assert(endDates.contains(null), 'A Open Schedule should be created for the Open Recurring Donation');
         System.assert(endDates.contains(DATE_ESTABLISHED.addDays(-1)),
             'A Schedule should be have an end date of the day before start date to indicate it is no longer valid');
@@ -1243,15 +1246,14 @@ private with sharing class RD2_ScheduleService_TEST {
         Test.stopTest();
 
         List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
-
-        System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist for a new monthly RD');
         Set<DateTime> endDates = UTIL_SObject.extractDatetime(rdSchedules, RecurringDonationSchedule__c.EndDate__c);
 
-        System.assertEquals(2, endDates.size(), 'Two Schedules with different end date should be present');
+        System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist when RD recurring type change');
+        System.assertEquals(2, endDates.size(), 'Two Schedules with different end date should be presented');
         System.assert(endDates.contains(DATE_ESTABLISHED.addMonths(4)),
-            'A Schedule should with a future end date should be created for the Fixed Length Recurring Donation');
+            'One Schedule with a future end date should be created for the Fixed Length Recurring Donation');
         System.assert(endDates.contains(DATE_ESTABLISHED.addDays(-1)),
-            'A Schedule should be have an end date of the day before start date to indicate it is no longer valid');
+            'One Schedule should be updated to an end date before the start date to indicate it is no longer valid');
     }
 
     //// Helpers
