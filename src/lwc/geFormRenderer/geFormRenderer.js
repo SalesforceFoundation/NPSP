@@ -27,7 +27,11 @@ import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__
 import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
 import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.DonationImportStatus__c';
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
-import PAYMENT_OPPORTUNITY_NAME_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__r.Name';
+import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
+import OPP_PAYMENT_AMOUNT
+    from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
+import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
 
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
 import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
@@ -721,8 +725,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (this.selectedDonation && applySelectedDonationFieldValues) {
             dataImport = {...dataImport, ...this.selectedDonationDataImportFieldValues};
         }
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
+        if (this.selectedDonation && this.selectedDonation.Id &&
+            this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix)) {
+            // If the selected donation is a Payment, set Donation Amount
+            // and Donation Date to the values from the selected Payment.
+            dataImport[DONATION_AMOUNT.fieldApiName] =
+                this.selectedDonation[OPP_PAYMENT_AMOUNT.fieldApiName];
+            dataImport[DONATION_DATE.fieldApiName] =
+                this.selectedDonation[SCHEDULED_DATE.fieldApiName];
+        }
+
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         sectionsList.forEach(section => {
             section.load(dataImport);
         });
