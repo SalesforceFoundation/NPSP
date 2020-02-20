@@ -288,11 +288,4 @@ export default class utilInput extends LightningElement {
     stopPropagation(event) {
         event.stopPropagation();
     }
-
-    @api
-    reset() {
-        if (this.value) {
-            this.value = this.defaultValue;
-        }
-    }
 }

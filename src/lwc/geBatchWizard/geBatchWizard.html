@@ -42,7 +42,7 @@
                         </template>
                         <template for:each={selectedBatchHeaderFields}
                                   for:item='batchField'>
-                            <c-util-input key={batchField.apiName}
+                            <c-util-input key={batchField.key}
                                           data-id='batchHeaderField'
                                           type={batchField.dataType}
                                           field-api-name={batchField.apiName}

@@ -10,7 +10,7 @@ import {
     generateRecordInputForCreate
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { handleError } from 'c/utilTemplateBuilder';
+import { handleError, addKeyToCollectionItems } from 'c/utilTemplateBuilder';
 import { getNestedProperty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
@@ -254,14 +254,16 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     handleTemplateChange(event) {
         this.selectedTemplateId = event.detail.value;
-        this.selectedBatchHeaderFields = this.selectedTemplate.batchHeaderFields;
+        this.selectedBatchHeaderFields = [];
+
+        this.selectedBatchHeaderFields = addKeyToCollectionItems(this.selectedTemplate.batchHeaderFields);
         this.formSections = this.selectedTemplate.layout.sections;
 
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
-        } else {
-            this.resetFieldValues();
         }
+
+        this.resetValidations();
     }
 
     /*******************************************************************************
@@ -394,12 +396,5 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     resetValidations() {
         this.hasInvalidBatchFields = false;
         this.missingBatchHeaderFieldLabels = [];
-    }
-
-    resetFieldValues() {
-        let utilInputs = this.template.querySelectorAll('c-util-input');
-        utilInputs.forEach(input => {
-            input.reset();
-        });
     }
 }
