@@ -32,6 +32,7 @@ import PAYMENT_OPPORTUNITY_NAME_FIELD from '@salesforce/schema/npe01__OppPayment
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
 import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
+import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import PARENT_OPPORTUNITY_FIELD
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
 
@@ -150,7 +151,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get oppPaymentKeyPrefix() {
         return this.oppPaymentObjectInfo.data.keyPrefix;
     }
-    
+
+    get opportunityKeyPrefix() {
+        return this.opportunityObjectInfo.data.keyPrefix;
+    }
+
     selectedRecordIdByObjectMappingDevName = {};
     selectedRecordId;
     selectedRecordFields;
@@ -164,7 +169,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // an object with at least one property "value" - but could have more, for
             // instance "displayValue" for lookup fields, etc.
             // See response from getRecord for data structure guidance.
-            this.load(dataImport);
+            this.load(dataImport, false);
 
             if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
                 data.id === this.selectedDonation.Id) {
@@ -181,6 +186,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @wire(getObjectInfo, {objectApiName: OPP_PAYMENT_OBJECT.objectApiName})
     oppPaymentObjectInfo;
+
+    @wire(getObjectInfo, {objectApiName: OPPORTUNITY_OBJECT.objectApiName})
+    opportunityObjectInfo;
 
     mapRecordValuesToDataImportFields(record) {
         //reverse map to create an object with relevant source field api names to values
@@ -307,7 +315,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleCancel() {
-        this.dataImport = undefined;
+        this.dataImport = null;
         this.reset();
 
         // if not in batch mode, go back to point of origin
@@ -702,7 +710,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     @api
-    load(dataImport) {
+    load(dataImport, applySelectedDonationFieldValues = true) {
         if (dataImport.Id) {
             // Lookups might also use this method to load related fields.  By setting
             // this.dataImport only when the DataImport has an Id, we know we are
@@ -710,7 +718,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.dataImport = dataImport;
         }
 
-        if (this.selectedDonation) {
+        if (this.selectedDonation && applySelectedDonationFieldValues) {
             dataImport = {...dataImport, ...this.selectedDonationDataImportFieldValues};
         }
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
@@ -727,6 +735,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let fieldMappingDevNames = null;
         if (objectMappingDeveloperName === null) {
             this.dataImport = undefined;
+            this.setReviewDonationsDonorProperties(null);
         } else {
             fieldMappingDevNames =
                 Object.values(GeFormService.fieldMappings).filter(
@@ -739,8 +748,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             section.reset(fieldMappingDevNames);
         });
         this.widgetData = {};
-
-        this.setReviewDonationsDonorProperties(null);
     }
 
     get mode() {
@@ -845,11 +852,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     getSiblingFields(objectMappingDeveloperName) {
-        // for a given field, get the full list of fields related to its object mapping
+        // For a given field, get the full list of fields related to its object mapping
 
-        //1. Get this field's object mapping
-        //2. Get the other field mappings that have the same Target_Object_Mapping_Dev_Name
-        //3. Return the list of fields from those mappings
+        // 1. Get this field's object mapping
+        // 2. Get the other field mappings that have the same Target_Object_Mapping_Dev_Name
+        // 3. Return the list of fields from those mappings
 
         const objectMapping =
             GeFormService.getObjectMappingWrapper(objectMappingDeveloperName);
@@ -860,7 +867,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     Target_Object_Mapping_Dev_Name === objectMapping.DeveloperName);
 
         // Return the sibling fields used by Advanced Mapping
-        // TODO: filter down to return only the fields that are IN USE by the template
         return relevantFieldMappings.map(
             ({Target_Field_API_Name}) =>
                 `${objectMapping.Object_API_Name}.${Target_Field_API_Name}`);
@@ -948,20 +954,24 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     setReviewDonationsDonorProperties(recordId) {
-        if (recordId) {
-            this.selectedDonorId = recordId;
-            this.selectedDonorType = this._donationDonor;
-        } else {
-            this.selectedDonation = undefined;
-            this.opportunities = undefined;
-            this.selectedDonorId = undefined;
-            this.selectedDonorType = undefined;
-
-            if (isUndefined(this.opportunities) && this.hasPreviouslySelectedDonation) {
-                // Reset populated donation/payment imported fields
-                this.resetDonationAndPaymentImportedFields();
+        if (recordId && this._donationDonor) {
+            if ((this._donationDonor === this.donationDonorEnum.account1 &&
+                recordId.startsWith('001')) ||
+                (this._donationDonor === this.donationDonorEnum.contact1 &&
+                    recordId.startsWith('003'))) {
+                this.selectedDonorId = recordId;
+                this.selectedDonorType = this._donationDonor;
+                return;
             }
         }
+
+        // If _donationDonor and recordId don't align or aren't set,
+        // reset all selected donation properties and form fields
+        this.selectedDonorType = undefined;
+        this.selectedDonorId = undefined;
+        this.selectedDonation = undefined;
+        this.opportunities = undefined;
+        this.resetDonationAndPaymentImportedFields();
     }
 
     handleChangeSelectedDonation(event) {
@@ -996,7 +1006,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     };
                 this.selectedDonationDataImportFieldValues[donationImportStatus] =
                     userSelectedMatch;
-            } else {
+            } else if (this.selectedDonation.Id.startsWith(this.opportunityKeyPrefix)) {
                 this.selectedDonationDataImportFieldValues[donationImported] =
                     {
                         value: this.selectedDonation.Id,
@@ -1015,19 +1025,52 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.selectedDonationDataImportFieldValues[paymentImportStatus] = null;
             }
         }
+
+        // Load the "imported" and "imported status" fields in case they are on the form
         this.load(this.selectedDonationDataImportFieldValues);
-        this.loadSelectedRecordFieldValues(
-            this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix) ?
-                paymentImported :
-                donationImported,
-            this.selectedDonation.Id
-        );
+
+        if (this.selectedDonation.Id) {
+            // Load the sibling field values (parented by the same object mapping)
+            // for the donation and payment "imported" fields
+            this.loadSelectedRecordFieldValues(
+                this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix) ?
+                    paymentImported :
+                    donationImported,
+                this.selectedDonation.Id
+            );
+
+            if (this.selectedDonation.Id.startsWith(this.opportunityKeyPrefix)) {
+                // If the selected donation is an Opportunity, reset form fields that have
+                // field mappings parented by PaymentImported__c
+                this.reset(
+                    GeFormService.getObjectMappingWrapperByImportedFieldName(
+                        DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
+                    ).DeveloperName);
+            }
+        }
     }
 
     resetDonationAndPaymentImportedFields() {
+        // Reset the stored values for selected donation
         for (let prop in this.selectedDonationDataImportFieldValues) {
             this.selectedDonationDataImportFieldValues[prop] = null;
         }
+
+        // Reset the "imported" and "imported status" donation fields if they are on the
+        // form by loading the stored (now null) values for those fields
+        this.load(this.selectedDonationDataImportFieldValues);
+
+        // Reset form fields that have field mappings parented by DonationImported__c
+        this.reset(
+            GeFormService.getObjectMappingWrapperByImportedFieldName(
+                DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName
+            ).DeveloperName);
+
+        // Reset form fields that have field mappings parented by PaymentImported__c
+        this.reset(
+            GeFormService.getObjectMappingWrapperByImportedFieldName(
+                DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
+            ).DeveloperName);
     }
 
 }

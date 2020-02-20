@@ -326,10 +326,10 @@ export default class GeFormField extends LightningElement {
                 this.reset();
             } else {
                 this.value = value.value || value;
-            }
 
-            if (this.isLookup) {
-                this.loadLookUp(data, this.value);
+                if (this.isLookup) {
+                    this.loadLookUp(data, this.value);
+                }
             }
         } else {
             // Property isn't defined.  Don't do anything.

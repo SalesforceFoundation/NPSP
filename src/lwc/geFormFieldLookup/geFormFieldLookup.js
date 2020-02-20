@@ -28,6 +28,9 @@ export default class GeFormFieldLookup extends LightningElement {
     @track _getRecordId = null;
 
     connectedCallback() {
+        if (this.defaultValue === undefined) {
+            this.defaultValue = null;
+        }
         this.value = this.defaultValue;
         if (this.value) {
             this._getRecordId = this.value;
@@ -186,10 +189,8 @@ export default class GeFormFieldLookup extends LightningElement {
 
     @api
     setSelected(lookupResult) {
-        if (lookupResult.value === null) {
+       if (lookupResult.value === null) {
             this.reset();
-            let autocomplete = this.template.querySelector('c-ge-autocomplete');
-            autocomplete.reset();
         } else {
             this.value = lookupResult.value || null;
             this.displayValue = lookupResult.displayValue || null;
@@ -198,15 +199,18 @@ export default class GeFormFieldLookup extends LightningElement {
         if (this.value && !this.displayValue) {
             // Use getRecord to get the displayValue
             this._getRecordId = this.value;
+            this.queryFields = this.getQueryFields().splice(0);
         }
     }
 
     @api
     reset() {
-        this.setSelected({
-            value: this.defaultValue,
-            displayValue: this._defaultDisplayValue
-        });
+        this.value = this.defaultValue;
+        this.displayValue = this._defaultDisplayValue;
+
+        let autocomplete = this.template.querySelector('c-ge-autocomplete');
+        autocomplete.value = this.value;
+        autocomplete.displayValue = this.displayValue;
     }
 
 }
