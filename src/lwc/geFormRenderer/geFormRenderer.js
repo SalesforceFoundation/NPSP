@@ -899,23 +899,28 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     setBatchDefaults(templateSections) {
         let sections = deepClone(templateSections);
         if (isNotEmpty(this._batchDefaults)) {
-            let batchDefaultsObject = JSON.parse(this._batchDefaults);
-            sections.forEach(section => {
-                const elements = section.elements;
-                elements.forEach(element => {
-                    for (let key in batchDefaultsObject) {
-                        if (batchDefaultsObject.hasOwnProperty(key)) {
-                            const batchDefault = batchDefaultsObject[key];
-                            if (batchDefault.objectApiName === element.objectApiName &&
-                                batchDefault.fieldApiName === element.fieldApiName) {
-                                if (!isUndefined(batchDefault.value)) {
-                                    element.defaultValue = batchDefault.value;
+            let batchDefaultsObject;
+            try {
+                batchDefaultsObject = JSON.parse(this._batchDefaults);
+                sections.forEach(section => {
+                    const elements = section.elements;
+                    elements.forEach(element => {
+                        for (let key in batchDefaultsObject) {
+                            if (batchDefaultsObject.hasOwnProperty(key)) {
+                                const batchDefault = batchDefaultsObject[key];
+                                if (batchDefault.objectApiName === element.objectApiName &&
+                                    batchDefault.fieldApiName === element.fieldApiName) {
+                                    if (!isUndefined(batchDefault.value)) {
+                                        element.defaultValue = batchDefault.value;
+                                    }
                                 }
                             }
                         }
-                    }
+                    });
                 });
-            });
+            } catch (err) {
+                handleError(err);
+            }
         }
         return sections;
     }
