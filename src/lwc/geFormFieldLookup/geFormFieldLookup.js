@@ -192,9 +192,13 @@ export default class GeFormFieldLookup extends LightningElement {
        if (lookupResult.value === null) {
             this.reset();
         } else {
-            this.value = lookupResult.value || null;
-            this.displayValue = lookupResult.displayValue || null;
-        }
+           this.value = lookupResult.value || null;
+           this.displayValue = lookupResult.displayValue || null;
+
+           let autocomplete = this.template.querySelector('c-ge-autocomplete');
+           autocomplete.value = this.value;
+           autocomplete.displayValue = this.displayValue;
+       }
 
         if (this.value && !this.displayValue) {
             // Use getRecord to get the displayValue
