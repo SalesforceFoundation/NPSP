@@ -26,9 +26,12 @@
     },
 
     closeModal: function (component) {
-        component.get('v.modal').then(modal => {
-            modal.close();
-        });
+        const modalReference = component.get('v.modal');
+        if (modalReference) {
+            modalReference.then(modal => {
+                modal.close();
+            });
+        }
     },
 
     handleReviewDonationsModal: function (component, event, helper) {
