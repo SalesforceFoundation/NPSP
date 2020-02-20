@@ -32,22 +32,24 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         """ specify the partial id of submenu under which the checkbox exists """
         locator = npsp_lex_locators["npsp_settings"]["checkbox"].format(page_name)
         self.selenium.wait_until_element_is_enabled(locator,error="Checkbox could not be found on the page")
+        self.selenium.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).click()
     
-    def wait_until_advanced_mapping_is_enabled(self):
-        """Waits for the text 'Advanced Mapping is enabled' to be displayed on the page for 1 min"""
+
+    def wait_for_message(self,message):
+        """Waits for the text passed in message to be displayed on the page for 6 min"""
         i=0
         while True:
             if i<=12:
                 try:
-                    self.selenium.page_should_contain("Advanced Mapping is enabled")
+                    self.selenium.page_should_contain(message)
                     break
                 except Exception:
                     time.sleep(5)
                     i += 1
             else:
                 raise AssertionError(
-                    "Timed out waiting for Advanced Mapping is enabled to display"
+                    f"Timed out waiting for {message} to display"
                 )
                 
     def click_configure_advanced_mapping(self):
