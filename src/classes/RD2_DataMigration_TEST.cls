@@ -1746,7 +1746,7 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldConvertFixedLengthRecurringDonation() {
-        Integer installments = 12;
+        final Integer installments = 12;
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
             .withOpenEndedStatusNone()
@@ -1762,14 +1762,14 @@ private class RD2_DataMigration_TEST {
         System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, convertedRD.RecurringType__c,
             'The RecurringType should be fixed');
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, convertedRD.Status__c,
-            'Number of Status should be active');
+            'The Recurring Donation Status should be active');
     }
 
     /**
      * @description Verifies that the NumberOfPlannedInstallments field is set to null when converting an open ended RD
      */
     @IsTest
-    private static void shouldSetNumPlannedInstallmentsToNullForOpenEndedRD() {
+    private static void shouldSetNumberOfPlannedInstallmentsToNullForOpenEndedRD() {
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder()
             .withOpenEndedStatusOpen()
             .withPlannedInstallments(12)

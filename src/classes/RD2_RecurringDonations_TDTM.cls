@@ -94,8 +94,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         autogenerateNames(rds, oldRds, triggerAction);
         validate(rds, oldRds, triggerAction);
-        handleDataTransformationInBeforeContext(rds, oldRds, triggerAction);
-        handleRDSchedules(rds, oldRds, triggerAction);
+        handleRDScheduleAndDataCalculations(rds, oldRds, triggerAction);
 
         // Insert/Update any pending RecurringDonationSchedule records before the
         // evaluation service is called so that the full schedule is available to the
@@ -135,15 +134,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, BeforeUpdate, etc.
     */
-    public void handleDataTransformationInBeforeContext(List<npe03__Recurring_Donation__c> rds,
+    private void transformDataInBeforeContext(List<npe03__Recurring_Donation__c> rds,
             List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction
     ) {
-
-        if (triggerAction != TDTM_Runnable.Action.BeforeInsert
-            && triggerAction != TDTM_Runnable.Action.BeforeUpdate
-        ) {
-            return;
-        }
 
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityEvaluationService.RecurringDonation rdRecord = new RD2_OpportunityEvaluationService.RecurringDonation(rd);
@@ -239,15 +232,17 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
-    private void handleRDSchedules(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
+    private void handleRDScheduleAndDataCalculations(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            transformDataInBeforeContext(rds, oldRds, triggerAction);
             calculateNextDonationDates(rds);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             buildNewSchedules(rds);
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            transformDataInBeforeContext(rds, oldRds, triggerAction);
             calculateNextDonationDateBeforeUpdate(rds, oldRds);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
