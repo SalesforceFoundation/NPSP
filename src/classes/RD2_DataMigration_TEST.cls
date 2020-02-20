@@ -867,7 +867,8 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'Validation error should be logged');
 
-        System.assertEquals(true, errors[0].Full_Message__c.contains(System.Label.RD_DonorIsRequired), 'Error message should match');
+        assertDonorIsRequiredError(errors);
+
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
@@ -885,7 +886,7 @@ private class RD2_DataMigration_TEST {
     @IsTest
     private static void shouldLogDryRunErrorWhenStoreErrorIsDisabled() {
 
-        setStoreErrorsInErrorSettingsToFalse();
+        disableStoreErrorSettings();
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
@@ -903,7 +904,8 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'Validation error should be logged');
 
-        System.assertEquals(true, errors[0].Full_Message__c.contains(System.Label.RD_DonorIsRequired), 'Error message should match');
+        assertDonorIsRequiredError(errors);
+
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
@@ -922,7 +924,7 @@ private class RD2_DataMigration_TEST {
     @IsTest
     private static void shouldLogDataMigrationErrorWhenStoreErrorIsDisabled() {
 
-        setStoreErrorsInErrorSettingsToFalse();
+        disableStoreErrorSettings();
 
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
@@ -940,7 +942,8 @@ private class RD2_DataMigration_TEST {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'Validation error should be logged');
 
-        System.assertEquals(true, errors[0].Full_Message__c.contains(System.Label.RD_DonorIsRequired), 'Error message should match');
+        assertDonorIsRequiredError(errors);
+
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
         System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
         System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
@@ -2012,8 +2015,8 @@ private class RD2_DataMigration_TEST {
      * @description Sets store errors in error settings to false
      * @return void
      */
-    private static void setStoreErrorsInErrorSettingsToFalse() {
-        setStoreErrorsInErrorSettings(false);
+    private static void disableStoreErrorSettings() {
+        setStoreErrorSettings(false);
 
     }
 
@@ -2022,10 +2025,10 @@ private class RD2_DataMigration_TEST {
      * @param isEnabled true or false
      * @return void
      */
-    private static void setStoreErrorsInErrorSettings(Boolean isEnabled) {
+    private static void setStoreErrorSettings(Boolean isEnabled) {
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(
             new Error_Settings__c(
-            Error_Notifications_On__c = isEnabled,
+            Error_Notifications_On__c = false,
             Store_Errors_On__c = isEnabled
             )
         );
@@ -2200,6 +2203,16 @@ private class RD2_DataMigration_TEST {
             System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, rd.Day_of_Month__c,
                 'Day of Month should be set as the Last Day');
         }
+    }
+
+    /****
+    * @description Asserts if the error message contains Donor is required field error
+    * @param Errors
+    * @return void
+    */
+    private static void assertDonorIsRequiredError(List<Error__c> errors) {
+        System.assertEquals(true, errors[0].Full_Message__c.contains(System.Label.RD_DonorIsRequired), 'Error message should match');
+
     }
 
     /***

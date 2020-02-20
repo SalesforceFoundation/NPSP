@@ -402,7 +402,7 @@ public class ERR_Handler {
         processErrorsOnly(new List<Error__c>{ error }, context);
     }
 
-    /**
+    /***
     * @description returns true if this method is calling from data migration
     * or validate migration context
     * @returns Boolean
