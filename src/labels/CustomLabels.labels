@@ -305,7 +305,7 @@
         <categories>AlternativeText</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>AssistiveTextInfo</shortDescription>
+        <shortDescription>AssistiveText for &quot;Info&quot;</shortDescription>
         <value>Info</value>
     </labels>
     <labels>

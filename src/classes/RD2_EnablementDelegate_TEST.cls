@@ -129,11 +129,8 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         System.assertEquals(true, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'Custom Settings field should be set');
 
-        List<AsyncApexJob> asyncJobs = [SELECT Id
-            FROM AsyncApexJob
-            WHERE ApexClass.Name = 'RD2_EnablementDelegate_CTRL'
-            LIMIT 1];
-        System.assert(!asyncJobs.isEmpty(), 'Expected to find a Queueable job after enabling Enhanced Recurring Donations');
+        AsyncApexJob job = jobGateway.getRecord('RD2_EnablementDelegate_CTRL');
+        System.assertNotEquals(null, job, 'Expected to find a Queueable job after enabling Enhanced Recurring Donations');
     }
 
     /****
@@ -395,6 +392,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match: ' + state);
         System.assertEquals(expectedState.isMetaLaunched, state.isMetaLaunched, 'isMetaLaunched should match: ' + state);
         System.assertEquals(expectedState.isMetaConfirmed, state.isMetaConfirmed, 'isMetaConfirmed should match: ' + state);
+        System.assertEquals(RD2_EnablementDelegate_CTRL.DRY_RUN_VALID_DAYS, state.dryRunLimit, 'dryRunLimit should match default: ' + state);
     }
 
     /****

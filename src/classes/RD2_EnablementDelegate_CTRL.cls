@@ -38,6 +38,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     /***
     * @description Indicates how many days dry validation is valid after completion
     */
+    @TestVisible
     private static final Integer DRY_RUN_VALID_DAYS = 7;
 
     /***

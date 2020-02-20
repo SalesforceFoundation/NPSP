@@ -344,6 +344,66 @@ public with sharing class UTIL_BatchJobService_TEST {
         }
     }
 
+    /***
+    * @description Stub for the batch job service
+    */
+    public class Stub implements System.StubProvider {
+        private Boolean isInProgress = false;
+        private Integer completedDaysBetween = 0;
+        private AsyncApexJob asyncJob;
+
+        /***
+        * @description Sets the batch job to be in progress
+        */
+        public Stub withIsInProgress() {
+            isInProgress = true;
+            return this;
+        }
+
+        /***
+        * @description Sets number of days passed since the batch job has completed
+        */
+        public Stub withCompletedDaysBetween(Integer completedDaysBetween) {
+            this.completedDaysBetween = completedDaysBetween;
+            return this;
+        }
+
+        /***
+        * @description Sets the AsyncApexJob to return
+        */
+        public Stub withAsyncApexJob(AsyncApexJob asyncJob) {
+            this.asyncJob = asyncJob;
+            return this;
+        }
+
+        /***
+        * @description Stubs class methods
+        */
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String methodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
+        ) {
+            switch on methodName {
+                when 'isInProgress' {
+                    return isInProgress;
+
+                } when 'getCompletedDaysBetween' {
+                    return completedDaysBetween;
+
+                } when 'getAsyncApexJob' {
+                    return asyncJob;
+
+                } when else {
+                    return null;
+                }
+            }
+        }
+    }
+
 
     // Helpers
     /////////////
