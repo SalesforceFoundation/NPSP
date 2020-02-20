@@ -46,8 +46,8 @@ class LevelDetailPage(BaseNPSPPage, DetailPage):
 
     def go_to_edit_level_page(self,levelid=None):
         """ Navigates to the edit view for the given level id """
-        name = "Level_c"
-        values =  self.npsp.get_url_formatted_object_name(name)
+        objectname = "Level_c"
+        values =  self.npsp.get_url_formatted_object_name(objectname)
         url = "{}/lightning/r/{}/{}/edit".format(values['baseurl'],values['objectname'],levelid)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
