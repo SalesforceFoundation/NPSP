@@ -11,7 +11,7 @@ import {
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { handleError } from 'c/utilTemplateBuilder';
-import { checkNestedProperty, getNestedProperty } from 'c/utilCommon';
+import { getNestedProperty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
@@ -40,6 +40,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     @track step = 0;
     @track templates;
+    @track selectedBatchHeaderFields = [];
     @track formSections = [];
     @track selectedTemplateId;
     @track isLoading = true;
@@ -87,12 +88,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         return false;
     }
 
-    get selectedBatchHeaderFields() {
-        return checkNestedProperty(this.selectedTemplate, 'batchHeaderFields') ?
-            this.selectedTemplate.batchHeaderFields :
-            [];
-    }
-
     get header() {
         return this.headers[this.step];
     }
@@ -113,10 +108,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
         return this.header === this.headers[2] ?
             'slds-p-horizontal_large slds-p-bottom_x-large slds-size_1-of-1' :
             'slds-hide';
-    }
-
-    get isBatchFieldStep() {
-        return this.header === this.headers[1] ? true : false;
     }
 
     get selectedTemplate() {
@@ -262,13 +253,14 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     handleTemplateChange(event) {
-        this.hasInvalidBatchFields = false;
-        this.missingBatchHeaderFieldLabels = [];
         this.selectedTemplateId = event.detail.value;
+        this.selectedBatchHeaderFields = this.selectedTemplate.batchHeaderFields;
         this.formSections = this.selectedTemplate.layout.sections;
 
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
+        } else {
+            this.resetFieldValues();
         }
     }
 
@@ -277,6 +269,7 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     * validity.
     */
     validateBatchHeaderFields() {
+        this.resetValidations();
         this.hasInvalidBatchFields = false;
         this.missingBatchHeaderFieldLabels = [];
 
@@ -395,6 +388,18 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 recordId: recordId,
                 actionName: 'view'
             }
+        });
+    }
+
+    resetValidations() {
+        this.hasInvalidBatchFields = false;
+        this.missingBatchHeaderFieldLabels = [];
+    }
+
+    resetFieldValues() {
+        let utilInputs = this.template.querySelectorAll('c-util-input');
+        utilInputs.forEach(input => {
+            input.reset();
         });
     }
 }

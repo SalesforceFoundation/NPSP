@@ -55,7 +55,17 @@ export default class utilInput extends LightningElement {
         if (this.isLightningCheckbox) {
             return isNotEmpty(this.value) ? this.value : this.checkboxDefaultValue;
         }
-        return this.value !== undefined ? this.value : this.defaultValue;
+        if (this.value !== undefined) {
+            return this.value;
+        }
+        if (this.defaultValue !== undefined) {
+            return this.defaultValue;
+        }
+        // Workaround to empty a rich text input if an explicit value or default value isn't provided
+        if (this.isLightningRichText) {
+            return '';
+        }
+        return undefined;
     }
 
     get checkboxDefaultValue() {
@@ -233,7 +243,7 @@ export default class utilInput extends LightningElement {
         // We need to check for invalid values, regardless if the field is required
         let fieldIsValid = this.checkFieldValidity();
         if (this.fieldDescribe !== null && this.isRequired) {
-            return isNotEmpty(this.value) && fieldIsValid;
+            return isNotEmpty(this.fieldValue) && fieldIsValid;
         }
 
         return fieldIsValid;
@@ -277,5 +287,12 @@ export default class utilInput extends LightningElement {
 
     stopPropagation(event) {
         event.stopPropagation();
+    }
+
+    @api
+    reset() {
+        if (this.value) {
+            this.value = this.defaultValue;
+        }
     }
 }
