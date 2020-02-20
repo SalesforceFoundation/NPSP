@@ -380,7 +380,9 @@ public class ERR_Handler {
             return;
         }
 
-        Database.insert(errorRecords, false);
+        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c || isValidateOrDataMigration(context)) {
+            Database.insert(errorRecords, false);
+        }
 
         ERR_Notifier.sendErrorNotifications(context);
     }
@@ -398,6 +400,18 @@ public class ERR_Handler {
 
         Error__c error = createError(e, context);
         processErrorsOnly(new List<Error__c>{ error }, context);
+    }
+
+    /**
+    * @description returns true if this method is calling from data migration
+    * or validate migration context
+    * @returns Boolean
+    */
+    public static Boolean isValidateOrDataMigration(String context) {
+        return
+            context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_DRY_RUN)
+            || context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_MIGRATION);
+
     }
 
     /*******************************************************************************************************
