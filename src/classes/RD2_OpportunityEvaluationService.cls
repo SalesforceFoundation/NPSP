@@ -620,8 +620,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         */
         public npe03__Recurring_Donation__c getUpdate() {
             npe03__Recurring_Donation__c updatedRd = new npe03__Recurring_Donation__c(Id = rd.Id);
-            for (SObjectField s : changedFields) {
-                updatedRd.put(s, rd.get(s));
+            for (SObjectField field : changedFields) {
+                updatedRd.put(field, rd.get(field));
             }
             return updatedRd;
         }

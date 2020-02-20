@@ -139,8 +139,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction
     ) {
 
-        if (triggerAction != TDTM_Runnable.Action.BeforeInsert &&
-                triggerAction != TDTM_Runnable.Action.BeforeUpdate) {
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert
+            && triggerAction != TDTM_Runnable.Action.BeforeUpdate
+        ) {
             return;
         }
 

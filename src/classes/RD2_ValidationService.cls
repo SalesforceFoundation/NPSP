@@ -292,7 +292,8 @@ public with sharing class RD2_ValidationService {
      */
     private void validateFixedLength(npe03__Recurring_Donation__c rd) {
         if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN
-                && rd.npe03__Installments__c > 1) {
+            && rd.npe03__Installments__c > 1
+        ) {
             rd.addError(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen);
         }
 
@@ -304,7 +305,8 @@ public with sharing class RD2_ValidationService {
             rd.addError(System.Label.RD2_NumberInstallmentsRequiredWhenFixed);
 
         } else if (rd.npe03__Total_Paid_Installments__c > 0
-                && rd.npe03__Installments__c < rd.npe03__Total_Paid_Installments__c) {
+            && rd.npe03__Installments__c < rd.npe03__Total_Paid_Installments__c
+        ) {
             rd.addError(System.Label.RD2_NumberInstallmentsCannotBeLessThanPaid);
         }
     }

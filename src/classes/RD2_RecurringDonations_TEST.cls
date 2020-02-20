@@ -457,7 +457,7 @@ private with sharing class RD2_RecurringDonations_TEST {
     }
 
     /***
-    * @description Verifies that no new RD schedule is created 
+    * @description Verifies that no new RD schedule is created
     * when no relevant field for the schedule is updated on the RD
     */
     @isTest
@@ -476,20 +476,22 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         Test.stopTest();
 
-        System.assertEquals(numSchedulesPreUpdate, rdScheduleGateway.getRecords(rd).size(), 
+        System.assertEquals(numSchedulesPreUpdate, rdScheduleGateway.getRecords(rd).size(),
             'Number of schedules pre- and post-update should be equal');
     }
 
     /***
-    * @description Verifies that when an Open Ended RD is created with a NumberOfPlannedInstallments equal
+    * @description Verifies that when an Open Ended RD is created with a Number Of Planned Installments equal
     * to one, that the NumberOfPlannedInstallments field is changed to null
     */
     @isTest
-    private static void shouldSetNumPlannedInstallmentsToNullWhenOpenEnded() {
+    private static void shouldSetNumberOfPlannedInstallmentsToNullWhenOpenEnded() {
+        final Integer PLANNED_INSTALLMENTS = 1;
+
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withPlannedInstallments(1)
+            .withPlannedInstallments(PLANNED_INSTALLMENTS)
             .withRecurringTypeOpen()
             .build();
 
@@ -499,7 +501,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(null, rd.npe03__Installments__c,
-            'The NumberOfPlannedInstallments field should be null for an Open Ended RD');
+            'The Number Of Planned Installments field should be null for an Open Ended RD');
     }
 
     /***
@@ -507,11 +509,13 @@ private with sharing class RD2_RecurringDonations_TEST {
     * of one, that the value remains unchanged
     */
     @isTest
-    private static void shouldNotChangePlannedInstallmentsWhenFixedLength() {
+    private static void shouldNotChangeNumberOfPlannedInstallmentsWhenFixedLength() {
+        final Integer PLANNED_INSTALLMENTS = 1;
+
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withPlannedInstallments(1)
+            .withPlannedInstallments(PLANNED_INSTALLMENTS)
             .withRecurringTypeFixed()
             .build();
 
@@ -521,7 +525,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(1, rd.npe03__Installments__c,
-            'The NumberOfPlannedInstallments field should be unchanged');
+            'The Number Of Planned Installments field should be unchanged');
     }
 
     /***
@@ -530,10 +534,12 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldNotChangeFixedLengthRecurringDonationWhenNumberPaidInstallmentsChanged() {
+        final Integer PLANNED_INSTALLMENTS = 5;
+
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withPlannedInstallments(5)
+            .withPlannedInstallments(PLANNED_INSTALLMENTS)
             .withRecurringTypeFixed()
             .build();
 
@@ -546,7 +552,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(5, rd.npe03__Installments__c,
-            'The NumberOfPlannedInstallments field should be unchanged');
+            'The Number Of Planned Installments field should be unchanged');
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c,
             'The RD Status should be Active');
     }
@@ -556,11 +562,13 @@ private with sharing class RD2_RecurringDonations_TEST {
     * the same value as the Number of Planned Installments, that the RD is Closed
     */
     @isTest
-    private static void shouldCloseFixedLengthRecurringDonationWhenReachNumPlannedInstallments() {
+    private static void shouldCloseFixedLengthRecurringDonationWhenReachNumberPlannedInstallments() {
+        final Integer PLANNED_INSTALLMENTS = 5;
+
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withPlannedInstallments(5)
+            .withPlannedInstallments(PLANNED_INSTALLMENTS)
             .withPaidInstallments(4)
             .withRecurringTypeFixed()
             .build();
@@ -578,7 +586,7 @@ private with sharing class RD2_RecurringDonations_TEST {
 
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(5, rd.npe03__Installments__c,
-            'The NumberOfPlannedInstallments field should be unchanged');
+            'The Number Of Planned Installments field should be unchanged');
         System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c,
             'The RD Status should be Closed');
         System.assertEquals(RD2_Constants.FIXED_TYPE_CLOSED_REASON, rd.ClosedReason__c,

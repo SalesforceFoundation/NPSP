@@ -637,9 +637,9 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-     * @description Verifies Current and Next Year Values are updated by the nightly batch
-     * when the current/next year changes
-     */
+    * @description Verifies Current and Next Year Values are updated by the nightly batch
+    * when the current/next year changes
+    */
     @IsTest
     private static void shouldUpdateYearValuesWhenYearChanges() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -668,12 +668,12 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
-     * @description Verifies that a Fixed Length RD is closed when the NumberOfPaidInstallments matches or exceeds
-     * the NumberOfPlannedInstallments field value.
-     */
+    * @description Verifies that a Fixed Length RD stays active when the number of paid installments is less
+    * than the number of planned installments..
+    */
     @IsTest
     private static void shouldLeaveFixedRDActiveIfPlannedInstallmentsNotReached() {
-        Integer PLANNED_INSTALLMENTS = 5;
+        final Integer PLANNED_INSTALLMENTS = 5;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -710,12 +710,12 @@ private class RD2_OpportunityEvaluation_TEST {
 
 
     /**
-     * @description Verifies that a Fixed Length RD is closed when the NumberOfPaidInstallments matches or exceeds
-     * the NumberOfPlannedInstallments field value.
-     */
+    * @description Verifies that a Fixed Length RD is closed when the number of paid installments matches or
+    * exceeds the number of planned installments.
+    */
     @IsTest
     private static void shouldCloseFixedRDWhenPlannedInstallmentsReached() {
-        Integer PLANNED_INSTALLMENTS = 5;
+        final Integer PLANNED_INSTALLMENTS = 5;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
