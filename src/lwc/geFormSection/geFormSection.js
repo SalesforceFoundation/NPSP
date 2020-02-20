@@ -1,4 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
+import {getSubsetObject} from "c/utilCommon";
 
 export default class GeFormSection extends LightningElement {
     @api section;
@@ -113,11 +114,12 @@ export default class GeFormSection extends LightningElement {
     @api
     load(data) {
         const fields = this.template.querySelectorAll('c-ge-form-field');
-        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-
         fields.forEach(fieldCmp => {
             if (Object.keys(data).includes(fieldCmp.sourceFieldAPIName)) {
-                fieldCmp.load(data);
+                fieldCmp.load(
+                    getSubsetObject(
+                        data,
+                        [fieldCmp.sourceFieldAPIName]));
             }
         });
 

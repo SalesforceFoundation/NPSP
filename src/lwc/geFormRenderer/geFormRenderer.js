@@ -13,7 +13,16 @@ import {
     checkPermissionErrors
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch, getValueFromDotNotationString } from 'c/utilCommon';
+import {
+    getQueryParameters,
+    isEmpty,
+    isNotEmpty,
+    format,
+    isUndefined,
+    checkNestedProperty,
+    arraysMatch,
+    getSubsetObject
+} from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import {getRecord, getFieldValue} from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -738,7 +747,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         sectionsList.forEach(section => {
-            section.load(dataImport);
+            section.load(
+                getSubsetObject(
+                    dataImport,
+                    Object.keys(section.getAllFieldsByAPIName())));
         });
     }
 
