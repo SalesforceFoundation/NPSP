@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2011, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this List of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -36,13 +36,13 @@
 */
 
 @isTest
-public class UTIL_UnitTestData_TEST { 
+public class UTIL_UnitTestData_TEST {
 
     /** @description A mock Account Id .*/
     public static final String MOCK_ACCOUNT_ID = Account.SObjectType.getDescribe().getKeyPrefix() + '000000000001AAA';
-    
-    public static final String PROFILE_STANDARD_USER = 'Standard User';
-    public static final String PROFILE_READONLY_USER = 'Read Only';
+
+    public static final String PROFILE_STANDARD_USER = UTIL_Profile.PROFILE_STANDARD_USER;
+    public static final String PROFILE_READONLY_USER = UTIL_Profile.PROFILE_READ_ONLY;
 
     // =====================================================================================================
     // Methods to retrieve configured Stage/Status labels for the Opportunity and Task objects
@@ -65,14 +65,14 @@ public class UTIL_UnitTestData_TEST {
                 WHERE IsActive = TRUE
                 AND IsWon = TRUE
             ];
-            
+
             if (closedWonStages.size()>0) {
                 closedWonStage = closedWonStages[0].MasterLabel;
             } else {
                 closedWonStage = '';
             }
         }
-        
+
         return closedWonStage;
     }
 
@@ -95,7 +95,7 @@ public class UTIL_UnitTestData_TEST {
                 closedLostStage = '';
             }
         }
-        
+
         return closedLostStage;
     }
 
@@ -117,7 +117,7 @@ public class UTIL_UnitTestData_TEST {
                 openStage = '';
             }
         }
-        
+
         return openStage;
     }
 
@@ -127,14 +127,14 @@ public class UTIL_UnitTestData_TEST {
     public static String getClosedTaskStatus() {
         if (closedTaskStatus == null) {
             List<TaskStatus> closedTaskStatuses = [SELECT MasterLabel FROM TaskStatus WHERE IsClosed = true];
-            
+
             if (closedTaskStatuses.size()>0) {
                 closedTaskStatus = closedTaskStatuses[0].MasterLabel;
             } else {
                 closedTaskStatus = '';
             }
         }
-        
+
         return closedTaskStatus;
     }
 
@@ -144,14 +144,14 @@ public class UTIL_UnitTestData_TEST {
     public static String getOpenTaskStatus() {
         if (openTaskStatus == null) {
             List<TaskStatus> openTaskStatuses = [SELECT MasterLabel FROM TaskStatus WHERE IsClosed = false];
-            
+
             if (openTaskStatuses.size()>0) {
                 openTaskStatus = openTaskStatuses[0].MasterLabel;
             } else {
                 openTaskStatus = '';
             }
         }
-        
+
         return openTaskStatus;
     }
 
@@ -182,7 +182,7 @@ public class UTIL_UnitTestData_TEST {
      * @return List<Contact>
      */
     public static List<Contact> createMultipleTestContacts(Integer n) {
-        
+
         List<Contact> contactsToAdd = new List<Contact> ();
 
         for (Integer i=0; i<n; i++) {
@@ -231,7 +231,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForContactListByRecTypeId(List<Contact> contacts, Id campaignId,
         String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for ( Contact thisCon : contacts ) {
@@ -284,7 +284,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForContactWithAccountListByRecTypeId (List<Contact> contacts, Id campaignId,
             String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for (Contact thisCon : contacts) {
@@ -337,7 +337,7 @@ public class UTIL_UnitTestData_TEST {
     public static List<Opportunity> oppsForAccountListByRecTypeId (List<Account> accounts, Id campaignId,
             String stage, Date closeDate, Double amt, Id rtId, String oppType
     ) {
-     
+
         List<Opportunity> oppsToAdd = new List<Opportunity> ();
 
         for (Account acc : accounts) {
@@ -365,9 +365,9 @@ public class UTIL_UnitTestData_TEST {
      * @return List<Account>
      */
     public static List<Account> createMultipleTestAccounts (Integer n, String strType) {
-        
+
         List<Account> accountsToAdd = new List<Account> ();
-        
+
         for (Integer i=0; i<n; i++) {
             Account newAcct = new Account (
                 Name = 'Test Account ' + getUniqueString(),
@@ -381,9 +381,44 @@ public class UTIL_UnitTestData_TEST {
             }
             accountsToAdd.add (newAcct);
         }
-        
+
         return accountsToAdd;
     }
+
+    /**
+    * @description Build multiple Organization Accounts
+    * @param size size of organization accounts being created
+    * @return List<Account>
+    */
+    public static List<Account> buildOrganizationAccounts(Integer size) {
+        List<Account> organizations = new List<Account>();
+        
+        for (Integer i = 0; i < size; i++) {
+            organizations.add(buildOrganizationAccount());
+        }
+
+        return organizations;
+    }
+
+    /**
+     * @description Builds an Organization Account
+     * @return Account
+     */
+    public static Account buildOrganizationAccount() {
+        return new Account(
+            Name = getUniqueString(),
+            npe01__SYSTEMIsIndividual__c = false
+        );
+    }
+
+    /***
+    * @description Builds a Household Account
+    * @return Account
+    */
+    public static Account buildHouseholdAccount() {
+        return createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
+    }
+
 
     public static List<Account> listAccT;
     public static List<Contact> listConT;
@@ -399,8 +434,8 @@ public class UTIL_UnitTestData_TEST {
     **********************************************************************************************************/
     public static void createAccountContactTestData(String accType, Integer cAcc, Integer cCon, Integer iUnique) {
 
-        listConT = UTIL_UnitTestData_TEST.createMultipleTestContacts(cAcc * cCon);
-        listAccT = UTIL_UnitTestData_TEST.createMultipleTestAccounts(cAcc, accType);
+        listConT = createMultipleTestContacts(cAcc * cCon);
+        listAccT = createMultipleTestAccounts(cAcc, accType);
         insert listAccT;
 
         for (Integer i = 0; i < cAcc; i++) {
@@ -419,6 +454,75 @@ public class UTIL_UnitTestData_TEST {
         insert listConT;
     }
 
+    //Utility method for creating a sample template.
+    public static FORM_Template createSampleTemplate () {
+        
+        FORM_Element field = new FORM_Element('field',
+                                              'True',
+                                               null,
+                                               'CustomLabel',
+                                               new List<String>{'Account_1_Name','Account_1_Country'});
+        
+        FORM_Element widget = new FORM_Element('widget',
+                                               'DisplayRule',
+                                               'ComponentName',
+                                                new List<String>{'Contact_1_First_Name',                        'Contact_1_Last_Name'});
+        
+        FORM_Element[] elements = new FORM_Element[]{field,widget};
+
+        FORM_Section section = new FORM_Section('SectionLabel',
+                                                'Accordion',
+                                                'Expanded',
+                                                'True',
+                                                elements);
+        
+        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
+                                            new FORM_Section[]{section});
+
+        FORM_Template template = new FORM_Template('Sample Template',
+                                                   'This is the description.',
+                                                   '1.0',
+                                                   layout);
+        return template;
+    }
+
+    //Utility method for creating sample column headers.
+    public static List<Custom_Column_Header__c> createSampleColumnHeaders () {
+        
+        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
+        columnHeader.Name = 'sampleColumnHeader';
+        columnHeader.List_Name__c = 'Sample List';
+        columnHeader.Index__c = 0;
+        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
+
+        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
+        columnHeader2.Name = 'sampleColumnHeader2';
+        columnHeader2.List_Name__c = 'Sample List 2';
+        columnHeader2.Index__c = 0;
+        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
+
+        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
+        columnHeader3.Name = 'sampleColumnHeader3';
+        columnHeader3.List_Name__c = 'Sample List 2';
+        columnHeader3.Index__c = 1;
+        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
+
+        return new List<Custom_Column_Header__c> { columnHeader, columnHeader2, columnHeader3 };
+    }
+
+    // Method to create instance of field mappings to use in test data
+    public static BDI_MappingServiceAdvanced createSampleFieldMappings() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =                                                            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+        
+        return mappingService;
+    }
+
     /**
      * @description Create Engagement Plan Templates for unit testing.
      * @param n The number of Engagement Plan Templates to be created
@@ -426,11 +530,11 @@ public class UTIL_UnitTestData_TEST {
      */
     public static List<Engagement_Plan_Template__c> createEPTemplates (Integer n) {
         List<Engagement_Plan_Template__c> EPTemplatesToAdd = new List<Engagement_Plan_Template__c>();
-        
+
         for (Integer i=0 ;i<n; i++) {
             EPTemplatesToAdd.add(new Engagement_Plan_Template__c(Name = 'Test ' + getUniqueString()));
         }
-        
+
         return EPTemplatesToAdd;
     }
 
@@ -442,7 +546,7 @@ public class UTIL_UnitTestData_TEST {
      */
     public static List<Engagement_Plan_Task__c> createEPTasksForTemplates (Integer n, List<Engagement_Plan_Template__c> listEPTemplates) {
         List<Engagement_Plan_Task__c> EPTasksToAdd = new List<Engagement_Plan_Task__c>();
-        
+
         for (Engagement_Plan_Template__c epTemplate : listEPTemplates) {
             for (Integer i=0 ;i<n; i++) {
                 EPTasksToAdd.add(
@@ -453,7 +557,7 @@ public class UTIL_UnitTestData_TEST {
                 );
             }
         }
-        
+
         return EPTasksToAdd;
     }
 
@@ -468,19 +572,13 @@ public class UTIL_UnitTestData_TEST {
      * @return User
      */
     public static User createNewUserWithRoleForTests(String strUsername, String strRolename) {
-        Profile p = [
-            SELECT Id
-            FROM Profile
-            WHERE Name = :PROFILE_STANDARD_USER
-        ];
-
         UserRole r;
         User u;
 
         // to work around mixed DML errors during tests, you must
         // create user roles and accounts in their own transactions.
         // got this hack from the web.
-        System.runAs(new User(Id = UserInfo.getUserId())) {
+        System.runAs(getCurrentUserForRunAs()) {
             Integer existingRoleCount = [
                 SELECT COUNT()
                 FROM UserRole
@@ -499,18 +597,9 @@ public class UTIL_UnitTestData_TEST {
                 insert r;
             }
 
-            u = new User(
-                Alias = 'jsmith',
-                Email = 'jsmith@acme.com',
-                EmailEncodingKey = 'UTF-8',
-                LanguageLocaleKey = 'en_US',
-                LastName = 'Smith',
-                LocaleSidKey = 'en_US',
-                ProfileId = p.Id,
-                TimeZoneSidKey = 'America/Los_Angeles',
-                UserRoleId = r.Id,
-                Username = strUsername
-            );
+            u = buildUser('Smith', PROFILE_STANDARD_USER);
+            u.UserRoleId = r.Id;
+            u.Username = strUsername;
 
             insert u;
         }
@@ -534,7 +623,7 @@ public class UTIL_UnitTestData_TEST {
     public static User createNewInactiveUserForTests(String strUsername) {
         User u = createNewUserForTests(strUsername);
 
-        System.runAs(new User(Id = UserInfo.getUserId())) {
+        System.runAs(UTIL_UnitTestData_TEST.getCurrentUserForRunAs())  {
             u.IsActive = false;
             update u;
         }
@@ -561,8 +650,8 @@ public class UTIL_UnitTestData_TEST {
         //create the user
         System.runAs(u) {}
 
-        return u;      
-    } 
+        return u;
+    }
 
     /**
      * @description Build a User having specified profile assigned, but do not insert
@@ -591,33 +680,51 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
-     * @description Set new User fields
+     * @description Build a new User using the Locale and Language settings from the Current User
      * @param lastName Last Name
      * @param profileName Profile Name
      * @return User
      */
     private static User buildUser(String lastName, String profileName) {
-        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName];
+        return buildUser(lastName, profileName, UserInfo.getLocale());
+    }
+
+    /**
+     * @description Build a new User using the specified Locale.
+     * @param lastName Last Name
+     * @param profileName Profile Name
+     * @param localSidKey An NPSP supported locale key (EN_us, es, de, fr, or NL_nl)
+     * @return User
+     */
+    private static User buildUser(String lastName, String profileName, String localSidKey) {
+        Profile p = [SELECT Id FROM Profile WHERE Name = :profileName LIMIT 1];
+
         String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
         String email = lastName.left(70) + '@email.npsp';
 
         return new User(
-            LastName = lastName, 
-            Email = email, 
+            LastName = lastName,
+            Email = email,
             ProfileId = p.Id,
             Username = email,
-            Alias = alias, 
-            TimeZoneSidKey = 'America/Los_Angeles',
-            LocaleSidKey = 'en_US', 
-            LanguageLocaleKey = 'en_US',
+            Alias = alias,
+            TimeZoneSidKey = UserInfo.getTimeZone().toString(),
+            LocaleSidKey = (localSidKey != null ? localSidKey : UserInfo.getLocale()),
+            LanguageLocaleKey = UserInfo.getLanguage(),
             EmailEncodingKey = 'ISO-8859-1'
         );
+    }
+
+    /**
+     * @description Retrieve the current User record
+     */
+    public static User getCurrentUserForRunAs() {
+        return new User(Id = UserInfo.getUserId());
     }
 
     // =====================================================================================================
     // Methods to configure Household Naming Settings
     // =====================================================================================================
-
 
     /*********************************************************************************************************
     * @description Turns on Automatic Household Naming
@@ -666,7 +773,7 @@ public class UTIL_UnitTestData_TEST {
     * @return Household_Naming_Settings__c
     **********************************************************************************************************/
     public static Household_Naming_Settings__c setupHHNamingSettings() {
-        return setupHHNamingSettings(            
+        return setupHHNamingSettings(
             '{!{!FirstName} {!LastName}} Household',
             '{!{!Title} {!FirstName}} {!LastName}',
             '{!{!FirstName}}'
@@ -674,7 +781,7 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Configures Household Naming Settings 
+    * @description Configures Household Naming Settings
     * @param hhNameFormat Household Naming Format
     * @param formalGreetingFormat Formal Greeting Format
     * @param informalGreetingFormat Informal Greeting Format
@@ -748,7 +855,7 @@ public class UTIL_UnitTestData_TEST {
     public static void disableHHNamingTriggers() {
         createDefaultTDTMHandlers();
         TDTM_ProcessControl.toggleTriggerState('Contact', 'HH_Households_TDTM', false);
-        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        turnOffAutomaticHHNaming();
     }
     /* @description Disable all HH Naming related trigger handlers and setting when not needed to improve performance */
     public static void disableAddressTriggers() {
@@ -757,7 +864,7 @@ public class UTIL_UnitTestData_TEST {
         TDTM_ProcessControl.toggleTriggerState('Contact', 'ADDR_Contact_TDTM', false);
         TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Addresses_TDTM', false);
         TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Address__c'), 'ADDR_Validator_TDTM', false);
-        UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
+        turnOffAutomaticHHNaming();
     }
 
     /**
@@ -776,21 +883,12 @@ public class UTIL_UnitTestData_TEST {
     // Miscellaneous Utility Methods specifically for ue in Unit Tests
     // =====================================================================================================
 
-    /*********************************************************************************************************
-    * @description Extracts Ids of sObjects
-    * @param sObjects List of sObjects
-    * @return Set<Id> Set of sObjects' Ids
-    **********************************************************************************************************/
-    public static Set<Id> extractIds(List<sObject> sObjects) {
-        return (new Map<Id, sObject>(sObjects)).keySet();
-    }
-
-    /*********************************************************************************************************
+    /***
     * @description Sets the Fixed Search Results to the Ids of the sObjects
     * @param sObjects List of sObjects
-    **********************************************************************************************************/
+    */
     public static void setFixedSearchResults(List<sObject> sObjects) {
-        Test.setFixedSearchResults(new List<Id>(extractIds(sObjects)));
+        Test.setFixedSearchResults(new List<Id>(UTIL_SObject.extractIds(sObjects)));
     }
 
     /**
@@ -822,7 +920,7 @@ public class UTIL_UnitTestData_TEST {
         set;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Ensures that mockIds() does not produce the same ID twice
     */
     private static Integer dummyIdCounter {
@@ -836,14 +934,14 @@ public class UTIL_UnitTestData_TEST {
         set;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Generates a mock Id for an sObject
     */
     public static Id mockId(SObjectType sObjectType) {
         return mockIds(sObjectType, 1)[0];
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Generates mock Ids for an sObject
     */
     public static List<Id> mockIds(SObjectType sObjectType, Integer size) {
@@ -858,7 +956,7 @@ public class UTIL_UnitTestData_TEST {
         return ids;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets mock Ids for a list of sObjects
     */
     public static void setMockIds(List<SObject> records) {

@@ -90,38 +90,6 @@ public with sharing class BDI_MigrationMappingUtility {
     public static final String HELP_TEXT = 'Help Text';
 
     /*******************************************************************************************************
-    * @description These fields are used to hold information, import status and lookup id, on the newly
-    * created/imported records. The default and migrated field mapping set created by the migration utility
-    * don't need Data Import Field Mappings for these fields because they're now stored in their corresponding
-    * Data Import Object Mapping Custom Metadata Type.
-    */
-    private final Set<String> DATA_IMPORT_IMPORT_FIELDS = new Set<String>{
-        'account1imported__c',
-        'account2imported__c',
-        'account1importstatus__c',
-        'account2importstatus__c',
-        'contact1imported__c',
-        'contact1importstatus__c',
-        'contact2imported__c',
-        'contact2importstatus__c',
-        'donationcampaignimported__c',
-        'donationcampaignimportstatus__c',
-        'donationimported__c',
-        'donationimportstatus__c',
-        'gau_allocation_1_import_status__c',
-        'gau_allocation_1_imported__c',
-        'gau_allocation_2_import_status__c',
-        'gau_allocation_2_imported__c',
-        'homeaddressimported__c',
-        'homeaddressimportstatus__c',
-        'householdaccountimported__c',
-        'opportunity_contact_role_1_imported__c',
-        'opportunity_contact_role_2_imported__c',
-        'paymentimported__c',
-        'paymentimportstatus__c'
-    };
-
-    /*******************************************************************************************************
     * @description These are known standard Help Text mappings that could be picked up by the migration
     * utility as bad help text mappings and need to be skipped
     */
@@ -165,7 +133,7 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
-    * @description List of BDI_FieldMappingHelpText.DataImportFieldMappings built from good help text mappings
+    * @description List of BDI_MappingServiceHelpText.DataImportFieldMappings built from good help text mappings
     */
     public List<DataImportFieldMapping> dataImportFieldMappings = new List<DataImportFieldMapping>();
 
@@ -383,14 +351,13 @@ public with sharing class BDI_MigrationMappingUtility {
 
             String unnamespacedDIFieldName =
                 UTIL_Namespace.alignSchemaNSWithEnvironment(helpTextFieldMapping.dataImportFieldAPIName.toLowerCase());
-            Boolean isSkippable = DATA_IMPORT_IMPORT_FIELDS.contains(unnamespacedDIFieldName);
 
             Boolean isException = false;
             if (helpTextFieldMapping.helpText != null) {
                 isException = HELP_TEXT_EXCEPTIONS.contains(helpTextFieldMapping.helpText);
             }
 
-            if (isSkippable || isException) {
+            if (isException) {
                 continue;
             }
 
@@ -831,13 +798,14 @@ public with sharing class BDI_MigrationMappingUtility {
         public String dataImportFieldName { get;set; }
         public String dataImportFieldAPIName { get;set; }
         public String helpText { get;set; }
+        private final UTIL_Describe describeService = UTIL_Describe.getInstance();
 
         public HelpTextFieldMapping() {}
 
         public HelpTextFieldMapping(Schema.DescribeFieldResult dfr) {
             this.dataImportFieldName = dfr.Label;
             this.dataImportFieldAPIName = dfr.Name;
-            this.helpText = dfr.getInlineHelpText();
+            this.helpText = describeService.getHelpText(dfr.getSobjectField());
             this.isRequired = dfr.isNillable() ? 'No' : 'Yes';
 
             if (this.helpText != null) {

@@ -30,7 +30,6 @@
         <name>Imported_Record_Status_Field_Name__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing. --></help>
         <label><!-- Is Deleted --></label>
         <name>Is_Deleted__c</name>
     </fields>

@@ -119,7 +119,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
 
         } else {
             oppIds.addAll(
-                extractIds(setController.getSelected())
+                UTIL_SObject.extractIds(setController.getSelected())
             );
             recordId = Opportunity.SObjectType.getDescribe().getKeyPrefix();            
         }
@@ -225,15 +225,6 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     public PageReference close() {
         redirect = true;
         return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Extracts Ids from the list of SObjects
-    * @param sobjects - List of SObjects
-    * @return Set<Id>
-    */
-    private Set<Id> extractIds(List<SObject> sobjects) {
-        return (new Map<Id, Sobject>(sobjects)).keySet();
     }
     
     /*******************************************************************************************************

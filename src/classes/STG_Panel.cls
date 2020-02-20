@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -35,23 +35,23 @@
 * @description Controller for the base settings panel class.
 */
 public with sharing virtual class STG_Panel {
-	
+
     /*******************************************************************************************************
     * @description Class constructor
-    */ 
+    */
 	public STG_Panel() {
 		//UTIL_Debug.debug('***** STG_Panel constructor');
 		isEditMode = false;
 	}
-	
+
     /*******************************************************************************************************
     * @description the id of the panel, which we assume all derived classes will override.
-    */ 
+    */
 	public virtual string idPanel() { return null; }
 
     /*******************************************************************************************************
     * @description Opportunity object label
-    */ 
+    */
     static public string oppLabel {
         get {
             if(oppLabel == null){
@@ -63,7 +63,7 @@ public with sharing virtual class STG_Panel {
 
     /*******************************************************************************************************
     * @description Payment object label
-    */ 
+    */
 	static public string paymentLabel {
         get {
             if(paymentLabel == null){
@@ -72,27 +72,36 @@ public with sharing virtual class STG_Panel {
             return paymentLabel;
         } private set;
     }
-	
+
     /*******************************************************************************************************
     * @description is the panel in Edit Mode
-    */ 
+    */
 	public boolean isEditMode { get; set; }
-	
+
     /*******************************************************************************************************
     * @description is the panel in Read Only Mode
-    */ 
+    */
 	public boolean isReadOnlyMode {
 		get {
 			return !isEditMode;
 		} private set;
 	}
-    
+
+    /*********************************************************************************************************
+    * @description Checks if Enhanced Recurring Donations are enabled
+    */
+    public Boolean isRD2Enabled {
+        get {
+            return RD2_EnablementService.isRecurringDonations2Enabled;
+        } private set;
+    }
+
     /*******************************************************************************************************
     * @description the shared Settings Service object panels should use.
-    */ 
+    */
     static public STG_SettingsService stgService {
         get {
-            if (stgService == null) { 
+            if (stgService == null) {
             	stgService = STG_SettingsService.stgService;
             }
             return stgService;
@@ -103,8 +112,8 @@ public with sharing virtual class STG_Panel {
     * @description Action Method to save all settings changes in the Settings Service.  Derived classes can override, if
     * they need to do any custom saving first.
     * @return void
-    */ 
-    public virtual PageReference saveSettings() { 
+    */
+    public virtual PageReference saveSettings() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
         try {
@@ -116,14 +125,14 @@ public with sharing virtual class STG_Panel {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
-        
+
     }
 
     /*******************************************************************************************************
     * @description Action Method to put the current page into Edit mode.
     * @return null
-    */ 
-    public virtual PageReference editSettings() { 
+    */
+    public virtual PageReference editSettings() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         isEditMode = true;
         return null;
@@ -132,16 +141,16 @@ public with sharing virtual class STG_Panel {
     /*******************************************************************************************************
     * @description Action Method to cancel the current page's Edit mode.
     * @return null
-    */ 
+    */
     public virtual PageReference cancelEdit() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         isEditMode = false;
         return null;
     }
-       
+
     /*******************************************************************************************************
     * @description list of SelectOptions for the Account Model.
-    */ 
+    */
     static public list<SelectOption> listSOAccountModels {
         get {
             if (listSOAccountModels == null) {
@@ -157,13 +166,13 @@ public with sharing virtual class STG_Panel {
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Opportunity Contact Roles
-    */ 
+    */
     static public list<SelectOption> listSOContactRoles {
-        get {    
+        get {
             if (listSOContactRoles == null) {
                 listSOContactRoles = new list<SelectOption>();
                 listSOContactRoles.add(new SelectOption('', Label.stgLabelNone));
-                Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role; 
+                Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
                     listSOContactRoles.add(new SelectOption(pe.getLabel(), pe.getLabel()));
@@ -176,7 +185,7 @@ public with sharing virtual class STG_Panel {
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Household Object Creation Rules
-    */ 
+    */
     static public list<SelectOption> listSOHHRules {
         get {
             if (listSOHHRules == null) {
@@ -189,21 +198,21 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }
-    
+
     /*******************************************************************************************************
     * @description list of SelectOptions for Contact Record Types
-    */ 
+    */
     static public list<SelectOption> listSOContactRecTypes {
         get {
             if (listSOContactRecTypes == null) {
                 listSOContactRecTypes = new list<SelectOption>();
                 listSOContactRecTypes.add(new SelectOption('', Label.stgLabelNone));
-                listSOContactRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList(Contact.sObjectType));            
-            }       
+                listSOContactRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList(Contact.sObjectType));
+            }
             return listSOContactRecTypes;
         }
         private set;
-    }    
+    }
 
     /*
     * @description list of SelectOptions for Contact Record Type Ids
@@ -213,7 +222,7 @@ public with sharing virtual class STG_Panel {
             if (listSOContactRecTypeIds == null) {
                 listSOContactRecTypeIds = new list<SelectOption>();
                 listSOContactRecTypeIds.add(new SelectOption('', Label.stgLabelNone));
-                listSOContactRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Contact.sObjectType));            
+                listSOContactRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Contact.sObjectType));
             }
             return listSOContactRecTypeIds;
         }
@@ -222,52 +231,52 @@ public with sharing virtual class STG_Panel {
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Acount Record Type Ids
-    */ 
+    */
     static public list<SelectOption> listSOAccountRecTypeIds {
         get {
             if (listSOAccountRecTypeIds == null) {
                 listSOAccountRecTypeIds = new list<SelectOption>();
                 listSOAccountRecTypeIds.add(new SelectOption('', Label.stgLabelNone));
-                listSOAccountRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Account.sObjectType));            
-            }       
+                listSOAccountRecTypeIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Account.sObjectType));
+            }
             return listSOAccountRecTypeIds;
         }
         private set;
-    }    
+    }
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Opportunity Record Types
-    */ 
+    */
     static public list<SelectOption> listSOOppRecTypes {
         get {
             if (listSOOppRecTypes == null) {
                 listSOOppRecTypes = new list<SelectOption>();
                 listSOOppRecTypes.add(new SelectOption('', Label.stgLabelNone));
-                listSOOppRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList(Opportunity.sObjectType));            
-            }       
+                listSOOppRecTypes.addAll(UTIL_RecordTypes.getStringRecordTypesForSelectList(Opportunity.sObjectType));
+            }
             return listSOOppRecTypes;
         }
         private set;
-    }    
-        
+    }
+
     /*******************************************************************************************************
     * @description list of SelectOptions for Opportunity Record Type Ids
-    */ 
+    */
     static public list<SelectOption> listSOOppRecTypesIds {
         get {
             if (listSOOppRecTypesIds == null) {
                 listSOOppRecTypesIds = new list<SelectOption>();
                 listSOOppRecTypesIds.add(new SelectOption('', Label.stgLabelNone));
-                listSOOppRecTypesIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.sObjectType));            
-            }       
+                listSOOppRecTypesIds.addAll(UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.sObjectType));
+            }
             return listSOOppRecTypesIds;
         }
         private set;
-    }    
+    }
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Allocation Level setting
-    */ 
+    */
     static public list<SelectOption> listSOAllocationLevels {
         get {
             if (listSOAllocationLevels == null) {
@@ -282,13 +291,13 @@ public with sharing virtual class STG_Panel {
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Opportunity Contact Roles
-    */ 
+    */
     static public list<SelectOption> listSOOppContactRoles {
         get {
             if (listSOOppContactRoles == null) {
                 listSOOppContactRoles = new list<SelectOption>();
                 listSOOppContactRoles.add(new SelectOption('', Label.stgLabelNone));
-                Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role; 
+                Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for(Schema.PicklistEntry pe : P) {
                     listSOOppContactRoles.add(new SelectOption(pe.getLabel(), pe.getLabel()));
@@ -298,18 +307,18 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }
-    
+
     /*******************************************************************************************************
     * @description list of SelectOptions for Opportunity Types
-    */ 
+    */
     static public list<SelectOption> listSOOppTypes {
     	get {
 	        if (listSOOppTypes == null) {
 	            listSOOppTypes = new list<SelectOption>();
 	            listSOOppTypes.add(new SelectOption('', Label.stgLabelNone));
-	            Schema.DescribeFieldResult F = Schema.sObjectType.Opportunity.fields.Type; 
+	            Schema.DescribeFieldResult F = Schema.sObjectType.Opportunity.fields.Type;
 	            list<Schema.PicklistEntry> P = F.getPicklistValues();
-	        
+
 	            for (Schema.PicklistEntry plistentry: P) {
 	                listSOOppTypes.add(new SelectOption(plistentry.getLabel(),plistentry.getLabel()));
 	            }
@@ -321,13 +330,13 @@ public with sharing virtual class STG_Panel {
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Relationships Types
-    */ 
+    */
      static public list<SelectOption> listSORelTypes {
-        get {    
+        get {
             if (listSORelTypes == null) {
                 listSORelTypes = new list<SelectOption>();
                 listSORelTypes.add(new SelectOption('', Label.stgLabelNone));
-                Schema.DescribeFieldResult F = Schema.sObjectType.npe4__Relationship__c.fields.npe4__Type__c; 
+                Schema.DescribeFieldResult F = Schema.sObjectType.npe4__Relationship__c.fields.npe4__Type__c;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
                     listSORelTypes.add(new SelectOption(pe.getLabel(), pe.getLabel()));
@@ -340,13 +349,13 @@ public with sharing virtual class STG_Panel {
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Campaign Types
-    */ 
+    */
      static public list<SelectOption> listSOCampaignTypes {
-        get {    
+        get {
             if (listSOCampaignTypes == null) {
                 listSOCampaignTypes = new list<SelectOption>();
                 listSOCampaignTypes.add(new SelectOption('', Label.stgLabelNone));
-                Schema.DescribeFieldResult F = Schema.sObjectType.Campaign.fields.Type; 
+                Schema.DescribeFieldResult F = Schema.sObjectType.Campaign.fields.Type;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
                     listSOCampaignTypes.add(new SelectOption(pe.getLabel(), pe.getLabel()));
@@ -359,7 +368,7 @@ public with sharing virtual class STG_Panel {
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Mailing Report Ids (mail is in the report name)
-    */ 
+    */
     static public list<SelectOption> listSOMailingReportIds {
         get {
             if (listSOMailingReportIds == null) {
@@ -378,7 +387,7 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }
-  
+
     /**
      * @description Given an sObjectType and a list of semicolon ';' separated
      * ids corresponding to record types, return a comma ',' separated string

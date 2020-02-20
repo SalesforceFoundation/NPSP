@@ -7,6 +7,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>If the standard Email field is newly entered or changed AND the Preferred Email picklist is set to Alternate THEN Salesforce will fill in the Alternate Email field with the email address entered in the standard Email field.</description>
         <formula>AND(      ISPICKVAL( npe01__Preferred_Email__c ,&quot;Alternate&quot;),      OR(           AND(                ISNEW(),                LEN(Email)&gt;0           ),           ISCHANGED( Email )      ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -17,6 +18,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>If the standard Email field is newly entered or changed AND the Preferred Email picklist is set to Personal or Home THEN Salesforce will fill in the Personal Email field with the email address entered in the standard Email field.</description>
         <formula>AND(     OR( ISPICKVAL( npe01__Preferred_Email__c ,&quot;Personal&quot;),ISPICKVAL( npe01__Preferred_Email__c ,&quot;Home&quot;)),      OR(           AND(                ISNEW(),                LEN(Email)&gt;0           ),           ISCHANGED( Email )      ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -27,6 +29,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>If the standard Email field is newly entered or changed AND the Preferred Email picklist is set to Work THEN Salesforce will fill in the Work Email field with the email address entered in the standard Email field.</description>
         <formula>AND(      ISPICKVAL( npe01__Preferred_Email__c ,&quot;Work&quot;),      OR(           AND(                ISNEW(),                LEN(Email)&gt;0           ),           ISCHANGED( Email )      ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -37,6 +40,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>If the standard Phone field is newly entered or changed AND the Preferred Phone picklist is set to Home THEN Salesforce will fill in the Home Phone field with the phone number entered in the standard Phone field.</description>
         <formula>AND(      ISPICKVAL( npe01__PreferredPhone__c ,&quot;Home&quot;),      OR(           AND(                ISNEW(),                LEN(Phone)&gt;0           ),           ISCHANGED( Phone )      ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -47,6 +51,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>If the standard Phone field is newly entered or changed AND the Preferred Phone picklist is set to Mobile THEN Salesforce will fill in the Mobile Phone field with the phone number entered in the standard Phone field.</description>
         <formula>AND(      ISPICKVAL( npe01__PreferredPhone__c ,&quot;Mobile&quot;),      OR(           AND(                ISNEW(),                LEN(Phone)&gt;0           ),           ISCHANGED( Phone )      ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -57,6 +62,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>If the standard Phone field is newly entered or changed AND the Preferred Phone picklist is set to Other THEN Salesforce will fill in the Other Phone field with the phone number entered in the standard Phone field.</description>
         <formula>AND(      ISPICKVAL( npe01__PreferredPhone__c ,&quot;Other&quot;),      OR(           AND(                ISNEW(),                LEN(Phone)&gt;0           ),           ISCHANGED( Phone )      ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -67,6 +73,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
+        <description>If the standard Phone field is newly entered or changed AND the Preferred Phone picklist is set to Work THEN Salesforce will fill in the Work Phone field with the phone number entered in the standard Phone field.</description>
         <formula>AND(      ISPICKVAL( npe01__PreferredPhone__c ,&quot;Work&quot;),      OR(           AND(                ISNEW(),                LEN(Phone)&gt;0           ),           ISCHANGED( Phone )      ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
@@ -123,7 +130,7 @@
             <field>Contact.npe01__WorkEmail__c</field>
             <operation>equals</operation>
         </criteriaItems>
-        <description>If there is a value in Email but no values in any email fields or Preferred Email</description>
+        <description>If there is a value in the standard Email field AND no values in any NPSP email fields or Preferred Email, then Salesforce updates two fields: Work Email is updated with the email address in the standard Email field and Preferred Email is set to Work.</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -162,7 +169,7 @@
             <field>Contact.OtherPhone</field>
             <operation>equals</operation>
         </criteriaItems>
-        <description>A new phone value is added to the Phone field and there is no preferred Phone</description>
+        <description>If there is a value in the standard Phone field AND no values in any NPSP phone fields or Preferred Phone, then Salesforce updates two fields: Work Phone is updated with the phone number in the standard Phone field and Preferred Phone is set to Work.</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
 </Workflow>

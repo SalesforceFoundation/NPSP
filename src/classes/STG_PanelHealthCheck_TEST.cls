@@ -508,7 +508,11 @@ private with sharing class STG_PanelHealthCheck_TEST {
 
         healthCheck.verifyRecordTypes();
 
-        System.assertEquals(10, healthCheck.listDR.size(), 'A Detect Result should be created for each invalid record type: ' + healthCheck.listDR);  
+        System.assertEquals(10, healthCheck.listDR.size(), 'A Detect Result should be created for each invalid record type: ' + healthCheck.listDR);
+
+        for (STG_PanelHealthCheck_CTRL.DetectResult dr : healthCheck.listDR) {
+            System.assertEquals(STG_PanelHealthCheck_CTRL.statusError, dr.strStatus, 'Defect Result status should match');
+        } 
     }
 
     /*********************************************************************************************************

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS v2 --></label>
+        <name>BDE_Entry_FS_v2</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- New BDE List v2 --></label>
+        <name>BDE_List_FS_v2</name>
+    </fieldSets>
     <fields>
         <help>受領確認の日付。</help>
         <label>受領確認日</label>
@@ -44,6 +52,11 @@
         <help>支援の質問が成功しなかった理由に関するメモ。</help>
         <label>不成立の理由</label>
         <name>Closed_Lost_Reason__c</name>
+    </fields>
+    <fields>
+        <help>選択すると、一部の支援個人の役割の自動化が無効になり、不正なデータや重複データが発生することがあります。詳細は、商品ドキュメントを参照してください。</help>
+        <label>自動的な個人の役割の無効化</label>
+        <name>DisableContactRoleAutomation__c</name>
     </fields>
     <fields>
         <help>現物支援の公正な時価。</help>
@@ -135,19 +148,19 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <help>この支援をマッチングする会社の団体。</help>
-        <label>マッチングギフトの団体</label>
+        <help>この支援をマッチングする会社の団体レコードに対する参照。</help>
+        <label>マッチング支援の団体</label>
         <name>Matching_Gift_Account__c</name>
         <relationshipLabel>マッチングされたギフト</relationshipLabel>
     </fields>
     <fields>
         <help>この支援をマッチングする会社の名前。</help>
-        <label>マッチングギフト利用者</label>
+        <label>マッチング支援利用者</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>
-        <help>マッチングされるこの支援の状況。</help>
-        <label>マッチングギフトの状況</label>
+        <help>この支援のマッチング支援の状況 (送信済みや受信済みなど)。</help>
+        <label>マッチング支援の状況</label>
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
             <masterLabel>Potential</masterLabel>
@@ -163,14 +176,14 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>この従業員の支援のマッチングギフト。</help>
-        <label>マッチングギフト</label>
+        <help>この支援のマッチング支援の支援レコードに対する参照。</help>
+        <label>マッチング支援</label>
         <name>Matching_Gift__c</name>
         <relationshipLabel>マッチングされたギフト</relationshipLabel>
     </fields>
     <fields>
-        <help>NPSP では、次の助成金期日レコードに基づいてこの項目が自動的に更新されます。</help>
-        <label>次の助成金期日</label>
+        <help>NPSP では、次の提出書類期日レコードに基づいてこの項目が自動的に更新されます。</help>
+        <label>次の提出書類期日</label>
         <name>Next_Grant_Deadline_Due_Date__c</name>
     </fields>
     <fields>
@@ -272,7 +285,7 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Information --></label>
+            <label>マッチング支援情報</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -280,7 +293,7 @@
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label><!-- Tribute Information --></label>
+            <label>敬意/追悼情報</label>
             <section>Tribute Information</section>
         </sections>
     </layouts>
@@ -325,7 +338,7 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Information --></label>
+            <label>マッチング支援情報</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -333,7 +346,7 @@
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label><!-- Tribute Information --></label>
+            <label>敬意/追悼情報</label>
             <section>Tribute Information</section>
         </sections>
     </layouts>
@@ -399,4 +412,4 @@
         <label>名前の更新</label>
         <name>Refresh_Name</name>
     </webLinks>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

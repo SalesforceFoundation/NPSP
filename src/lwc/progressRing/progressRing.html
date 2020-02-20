@@ -1,0 +1,24 @@
+<template>
+    <div class={ringClass}>
+
+        <div class="slds-progress-ring__progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+            aria-valuenow={valueNow}>
+            <svg viewBox="-1 -1 2 2">
+                <path class="slds-progress-ring__path" id="slds-progress-ring-path-160" d={arcValue}></path>
+            </svg>
+        </div>
+
+        <div class="slds-progress-ring__content slds-text-body_small">
+            <template if:true={iconName}>
+                <lightning-icon icon-name={iconName} size="xx-small" title={assistiveText}
+                    alternative-text={assistiveText}>
+                </lightning-icon>
+            </template>
+
+            <template if:true={isContentVisible}>
+                {ringContent}
+            </template>
+        </div>
+
+    </div>
+</template>

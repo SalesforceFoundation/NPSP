@@ -35,7 +35,7 @@
 * Needs to be "without sharing" so that the Install Script can run it.
 */
 public without sharing class UTIL_CustomSettingsFacade {
-    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
+    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = CAO_Constants.OCR_DONOR_ROLE;
     public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
     public static final Integer DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE = 1000;
@@ -59,6 +59,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Data_Import_Settings__c dataImportSettings;
     static Customizable_Rollup_Settings__c customizableRollupSettings;
     static Levels_Settings__c levelsSettings;
+    static Gift_Entry_Settings__c giftEntrySettings;
 
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -74,6 +75,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Data_Import_Settings__c orgDataImportSettings;
     static Customizable_Rollup_Settings__c orgCustomizableRollupSettings;
     static Levels_Settings__c orgLevelsSettings;
+    static Gift_Entry_Settings__c orgGiftEntrySettings;
+
 
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after
@@ -102,8 +105,8 @@ public without sharing class UTIL_CustomSettingsFacade {
     */
     public static npe01__Contacts_And_Orgs_Settings__c getContactsSettings() {
         if(Test.isRunningTest() && contactsSettings == null) {
-        	contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
-        	configContactsSettings(contactsSettings);
+            contactsSettings = new npe01__Contacts_And_Orgs_Settings__c();
+            configContactsSettings(contactsSettings);
         } else if (contactsSettings == null) {
             contactsSettings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
             if(contactsSettings.Id == null)
@@ -137,17 +140,23 @@ public without sharing class UTIL_CustomSettingsFacade {
     * returned record already exists or doesn't exist in the database.
     */
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettings() {
-        if(Test.isRunningTest() && recurringDonationsSettings == null) {
-        	recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
-        	configRecurringDonationsSettings(recurringDonationsSettings);
+
+        if (Test.isRunningTest() && recurringDonationsSettings == null) {
+            recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
+            configRecurringDonationsSettings(recurringDonationsSettings);
+
         } else if (recurringDonationsSettings == null) {
             recurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getInstance();
-            if(recurringDonationsSettings.Id == null)
+
+            if (recurringDonationsSettings.Id == null) {
                 recurringDonationsSettings = getOrgRecurringDonationsSettings();
-            else if (recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
+
+            } else if (recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
                 configRecurringDonationsSettings(recurringDonationsSettings);
-                if(!Test.isRunningTest())
+
+                if (!Test.isRunningTest()) {
                     upsert recurringDonationsSettings;
+                }
             }
         }
         return recurringDonationsSettings;
@@ -286,6 +295,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
     * in the database.
     */
+    @AuraEnabled
     public static Data_Import_Settings__c getDataImportSettings() {
         if(Test.isRunningTest() && dataImportSettings == null) {
             dataImportSettings = new Data_Import_Settings__c();
@@ -299,6 +309,25 @@ public without sharing class UTIL_CustomSettingsFacade {
         // we'll only config those setting that are null
         configDataImportSettings(dataImportSettings);
         return dataImportSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Gift Entry Settings.
+    * @return Gift_Entry_Settings Custom settings record for Gift Entry Settings. At the org level, if no user level
+    * settings are defined. The ID field should be checked to determine if the returned record already exists or doesn't exist
+    * in the database.
+    */
+    public static Gift_Entry_Settings__c getGiftEntrySettings() {
+        if(Test.isRunningTest() && giftEntrySettings == null) {
+            giftEntrySettings = new Gift_Entry_Settings__c();
+        } else if (giftEntrySettings == null) {
+            giftEntrySettings = Gift_Entry_Settings__c.getInstance();
+            if (giftEntrySettings.Id == null){
+                giftEntrySettings = getOrgGiftEntrySettings();
+            }
+        }
+       
+        return giftEntrySettings;
     }
 
     /*******************************************************************************************************
@@ -343,14 +372,18 @@ public without sharing class UTIL_CustomSettingsFacade {
     * @return npe03__Recurring_Donations_Settings__c Org-level settings for Recurring Donations.
     */
     public static npe03__Recurring_Donations_Settings__c getOrgRecurringDonationsSettings() {
-        if(orgRecurringDonationsSettings == null) {
+        if (orgRecurringDonationsSettings == null) {
             orgRecurringDonationsSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
-            if(orgRecurringDonationsSettings.Id == null || orgRecurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
+
+            if (orgRecurringDonationsSettings.Id == null || orgRecurringDonationsSettings.npe03__Open_Opportunity_Behavior__c == null) {
                 configRecurringDonationsSettings(orgRecurringDonationsSettings);
-                if(!Test.isRunningTest())
+
+                if (!Test.isRunningTest()) {
                     upsert orgRecurringDonationsSettings;
+                }
             }
         }
+
         return orgRecurringDonationsSettings;
     }
 
@@ -492,6 +525,28 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     /*******************************************************************************************************
+    * @description Returns the org-level Gift Entry settings. Default org-level settings will be created
+    * if none exist. Meant to be called only from settings page and install script.
+    * @return Gift_Entry_Settings__c Org-level settings for Gift Entry.
+    */
+    public static Gift_Entry_Settings__c getOrgGiftEntrySettings() {
+        if (orgGiftEntrySettings == null) {
+            orgGiftEntrySettings = Gift_Entry_Settings__c.getOrgDefaults();
+
+            if (orgGiftEntrySettings.Id == null) {
+                orgGiftEntrySettings.Setupownerid = UserInfo.getOrganizationId();
+                if (!Test.isRunningTest()) {
+                    upsert orgGiftEntrySettings;
+                }
+
+            }
+        }
+        return orgGiftEntrySettings;
+    }
+
+
+
+    /*******************************************************************************************************
      * Private methods that will configure the default org-level custom settings.
      **/
     private static void configContactsSettings(npe01__Contacts_And_Orgs_Settings__c cs) {
@@ -512,7 +567,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         String oldProcessor = '';
         //modified to check again the Id instead of the object
         //get the model they used to be in
-        Schema.DescribeFieldResult F = Schema.sObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c;
+        Schema.DescribeFieldResult F = Schema.SObjectType.Contact.fields.npo02__SystemHouseholdProcessor__c;
         List<Schema.PicklistEntry> P = F.getPicklistValues();
 
         for(Schema.PicklistEntry pe : P){
@@ -538,7 +593,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         }
 
-        hs.npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role;
+        hs.npo02__Household_Member_Contact_Role__c = CAO_Constants.HH_MEMBER_CONTACT_ROLE;
         hs.npo02__Always_Rollup_to_Primary_Contact__c = false;
         hs.npo02__Enable_Opp_Rollup_Triggers__c = true;
         hs.npo02__Excluded_Account_Opp_Rectypes__c = null;
@@ -565,22 +620,28 @@ public without sharing class UTIL_CustomSettingsFacade {
         }
     }
 
-    private static void configRecurringDonationsSettings(npe03__Recurring_Donations_Settings__c rds) {
+    private static void configRecurringDonationsSettings(npe03__Recurring_Donations_Settings__c settings) {
         //if the save behavior is null, then we'll need to upsert new settings, otherwise, we have valid settings as its
         //the only field w/o a default defined
-        if (rds.npe03__Open_Opportunity_Behavior__c == null) {
-            rds.npe03__Add_Campaign_to_All_Opportunites__c = true;
-            rds.npe03__Enable_Update_Check__c = true;
-            //rds.npe03__Error_Email_Notifications__c = 'All Sys Admins'; *This field has been moved to the ERR_Settings__c custom setting
-            rds.npe03__Maximum_Donations__c = 50;
-            rds.Recurring_Donation_Batch_Size__c = 50;
-            rds.npe03__Opportunity_Forecast_Months__c = 12;
-            rds.npe03__Update_Check_Interval__c = 90;
-            rds.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
-            rds.IsRecurringDonations2Enabled__c = false;
-            List<RecordType> oppRecordTypes = [select id from RecordType where sobjecttype = 'Opportunity' and IsActive = true];
-            if(oppRecordTypes.size() > 0) {
-                rds.npe03__Record_Type__c = oppRecordTypes[0].id;
+        if (settings.npe03__Open_Opportunity_Behavior__c == null) {
+
+            settings.npe03__Add_Campaign_to_All_Opportunites__c = true;
+            settings.npe03__Enable_Update_Check__c = true;
+            settings.npe03__Maximum_Donations__c = 50;
+            settings.Recurring_Donation_Batch_Size__c = 50;
+            settings.DataMigrationBatchSize__c = 25;
+            settings.npe03__Opportunity_Forecast_Months__c = 12;
+            settings.npe03__Update_Check_Interval__c = 90;
+            settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
+            settings.InstallmentOppAutoCreateOption__c = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
+            settings.DisableRollupsWhenCreatingInstallments__c = false;
+
+            settings.EnableAutomaticNaming__c = false;
+            settings.IsRecurringDonations2Enabled__c = false;
+
+            List<RecordType> oppRecordTypes = [select id from RecordType where SObjectType = 'Opportunity' and IsActive = true];
+            if (oppRecordTypes.size() > 0) {
+                settings.npe03__Record_Type__c = oppRecordTypes[0].id;
             }
         }
     }
@@ -598,6 +659,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         es.Error_Notifications_On__c = true;
         es.Error_Notifications_To__c = ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
         es.Disable_Error_Handling__c = false;
+        es.OverrideFeature_PilotEnabled__c = false;
         es.Enable_Debug__c = false;
         es.Respect_Duplicate_Rule_Settings__c = false;
     }
@@ -651,7 +713,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             dis.Donation_Date_Range__c = 0;
         }
         if (dis.Default_Data_Import_Field_Mapping_Set__c == null) {
-            dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+            dis.Default_Data_Import_Field_Mapping_Set__c = BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         }
         if (dis.Field_Mapping_Method__c  == null) {
             dis.Field_Mapping_Method__c  = BDI_DataImportService.FM_HELP_TEXT;
@@ -781,6 +843,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         errorSettings.Error_Notifications_On__c = mySettings.Error_Notifications_On__c;
         errorSettings.Error_Notifications_To__c = mySettings.Error_Notifications_To__c;
+        errorSettings.OverrideFeature_PilotEnabled__c = mySettings.OverrideFeature_PilotEnabled__c;
         errorSettings.Store_Errors_On__c = mySettings.Store_Errors_On__c;
         errorSettings.Respect_Duplicate_Rule_Settings__c = mySettings.Respect_Duplicate_Rule_Settings__c;
         orgErrorSettings = errorSettings;
@@ -811,21 +874,31 @@ public without sharing class UTIL_CustomSettingsFacade {
     /*******************************************************************************************************
     * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
     * as the configured settings.
-    * @parameter mySettings Settings instance with the values to set.
+    * @parameter settings Settings instance with the values to set.
     * @return npe03__Recurring_Donations_Settings__c The configured settings.
     **/
-    public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettingsForTest(npe03__Recurring_Donations_Settings__c mySettings) {
-        if (recurringDonationsSettings == null)
+    public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettingsForTest(npe03__Recurring_Donations_Settings__c settings) {
+        if (recurringDonationsSettings == null) {
             recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
+        }
 
-        recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = mySettings.npe03__Opportunity_Forecast_Months__c;
-        recurringDonationsSettings.npe03__Maximum_Donations__c = mySettings.npe03__Maximum_Donations__c;
-        recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = mySettings.npe03__Open_Opportunity_Behavior__c;
-        recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = mySettings.npe03__Add_Campaign_to_All_Opportunites__c;
-        recurringDonationsSettings.npe03__Error_Email_Notifications__c = mySettings.npe03__Error_Email_Notifications__c;
-        recurringDonationsSettings.Recurring_Donation_Batch_Size__c = mySettings.Recurring_Donation_Batch_Size__c;
-        recurringDonationsSettings.IsRecurringDonations2Enabled__c = mySettings.IsRecurringDonations2Enabled__c;
+        recurringDonationsSettings.npe03__Opportunity_Forecast_Months__c = settings.npe03__Opportunity_Forecast_Months__c;
+        recurringDonationsSettings.npe03__Maximum_Donations__c = settings.npe03__Maximum_Donations__c;
+        recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = settings.npe03__Open_Opportunity_Behavior__c;
+        recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = settings.npe03__Add_Campaign_to_All_Opportunites__c;
+        recurringDonationsSettings.npe03__Error_Email_Notifications__c = settings.npe03__Error_Email_Notifications__c;
+        recurringDonationsSettings.Recurring_Donation_Batch_Size__c = settings.Recurring_Donation_Batch_Size__c;
+
+        recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
+        recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
+        recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
+        recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
+        recurringDonationsSettings.DisableRollupsWhenCreatingInstallments__c = settings.DisableRollupsWhenCreatingInstallments__c;
+        recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
+        recurringDonationsSettings.InstallmentOppAutoCreateOption__c = settings.InstallmentOppAutoCreateOption__c;
+
         orgRecurringDonationsSettings = recurringDonationsSettings;
+
         return recurringDonationsSettings;
     }
 
@@ -849,6 +922,19 @@ public without sharing class UTIL_CustomSettingsFacade {
 
       orgHouseholdNamingSettings = householdNamingSettings;
       return householdNamingSettings;
+    }
+
+    public static Gift_Entry_Settings__c getGiftEntrySettingsForTests(Gift_Entry_Settings__c myGiftEntrySettings) {
+        if (giftEntrySettings == null) {
+            giftEntrySettings = new Gift_Entry_Settings__c();
+        }
+
+        giftEntrySettings.Default_Gift_Entry_Template__c = myGiftEntrySettings.Default_Gift_Entry_Template__c;
+
+        orgGiftEntrySettings = giftEntrySettings;
+
+        return giftEntrySettings;
+
     }
 
     /*******************************************************************************************************
@@ -989,5 +1075,27 @@ public without sharing class UTIL_CustomSettingsFacade {
     public static void setDataImportSettings(Data_Import_Settings__c dis) {
         // New default settings for the Batch Data Import engine
         dataImportSettings = dis;
+    }
+
+    /**
+    * @description Used to configure default Advanced Mapping settings in tests.
+    */
+    @TestVisible
+    private static void enableAdvancedMapping(){
+        Data_Import_Settings__c dis = getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        setDataImportSettings(dis);
+    }
+
+    /**
+    * @description Used to configure default Help Text Mapping settings in tests.
+    */
+    @TestVisible
+    private static void enableHelpTextMapping(){
+        Data_Import_Settings__c dis = getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_HELP_TEXT;
+        setDataImportSettings(dis);
     }
 }

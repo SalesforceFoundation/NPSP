@@ -2,45 +2,45 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Gedeeltelijke soft credit</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Partial Soft Credit --></value>
+        <value>Gedeeltelijke soft credits</value>
     </caseValues>
     <fields>
-        <help>Het bedrag wat soft credit moet worden.</help>
+        <help>Het bedrag dat soft credit moet worden.</help>
         <label>Bedrag</label>
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>De contactpersoon&apos;s volledige naam.</help>
-        <label>Contactpersoon Naam</label>
+        <help>De volledige naam van de Contactpersoon die deze soft credit krijgt (alleen lezen).</help>
+        <label>Naam van Contactpersoon</label>
         <name>Contact_Name__c</name>
     </fields>
     <fields>
-        <help>De Opportunity Contactpersoon Rol waar deze Soft Credit betrekking op heeft.</help>
-        <label>Contactpersoon Rol ID</label>
+        <help>De Opportunitycontactpersoonrol waarop deze soft credit van toepassing is.</help>
+        <label>Contactpersoonrol-ID</label>
         <name>Contact_Role_ID__c</name>
     </fields>
     <fields>
-        <help>De contactpersoon die deze soft credit krijgt.</help>
+        <help>Opzoeking van Contactpersoon die deze soft credit krijgt.</help>
         <label>Contactpersoon</label>
         <name>Contact__c</name>
         <relationshipLabel>Gedeeltelijke Soft Credits</relationshipLabel>
     </fields>
     <fields>
-        <help>De Opportunity waar deze Soft Credit betrekking op heeft.</help>
-        <label><!-- Opportunity --></label>
+        <help>De Opportunity waarop deze soft credit van toepassing is.</help>
+        <label>Opportunity</label>
         <name>Opportunity__c</name>
         <relationshipLabel>Gedeeltelijke Soft Credits</relationshipLabel>
     </fields>
     <fields>
-        <help>De Rol van deze Soft Credit.</help>
-        <label>Rol Naam</label>
+        <help>De Rol van deze soft credit.</help>
+        <label>Rolnaam</label>
         <name>Role_Name__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Feminine</gender>
     <layouts>
         <layout>Partial Soft Credit Layout</layout>
         <sections>
@@ -48,9 +48,9 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Partial Soft Credit Name --></nameFieldLabel>
+    <nameFieldLabel>Naam van Gedeeltelijke Soft Credits</nameFieldLabel>
     <webLinks>
-        <label>Beheer Soft Credits</label>
+        <label>Soft Credits beheren</label>
         <name>Manage_Soft_Credits</name>
     </webLinks>
 </CustomObjectTranslation>

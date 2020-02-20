@@ -1,45 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value><!-- Recurring Donations Settings --></value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value><!-- Recurring Donations Settings --></value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value><!-- Recurring Donations Settings --></value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value><!-- Recurring Donations Settings --></value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value><!-- Recurring Donations Settings --></value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value><!-- Recurring Donations Settings --></value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value><!-- Recurring Donations Settings --></value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value><!-- Recurring Donations Settings --></value>
-    </caseValues>
+    <fields>
+        <help><!-- The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model. --></help>
+        <label><!-- Enhanced RD Data Migration Batch Size --></label>
+        <name>DataMigrationBatchSize__c</name>
+    </fields>
+    <fields>
+        <help><!-- If enabled, Salesforce automatically populates the Recurring Donation Name. --></help>
+        <label><!-- Automatic Recurring Donation Naming --></label>
+        <name>EnableAutomaticNaming__c</name>
+    </fields>
     <fields>
         <help><!-- The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation. --></help>
         <label><!-- Stage Name for Installment Opportunities --></label>
@@ -51,9 +21,13 @@
         <name>IsRecurringDonations2Enabled__c</name>
     </fields>
     <fields>
-        <help><!-- The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits. --></help>
-        <label><!-- Recurring Donation Batch Size --></label>
+        <help><!-- Contains Enhanced Recurring Donation enablement confirmations and state. --></help>
+        <label><!-- Recurring Donations Enablement State --></label>
+        <name>RecurringDonations2EnablementState__c</name>
+    </fields>
+    <fields>
+        <help>Die Anz. d. Datensätze, die beim Ausführen des Wiederkehrende Spenden-Batchauftrags verarbeitet werden sollen. Die Standardgröße ist 50. Verringern Sie die Anzahl, wenn der Wiederkehrende Spenden-Batchauftrag aufgrund von Systembeschränkungen fehlschlägt.</help>
+        <label>Batchgröße Wiederkehrende Spende</label>
         <name>Recurring_Donation_Batch_Size__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

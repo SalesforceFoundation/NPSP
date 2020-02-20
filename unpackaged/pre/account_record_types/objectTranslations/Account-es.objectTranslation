@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <recordTypes>
+    <name>HH_Account</name>
+    <label>Cuenta de hogar</label>
+    <description>Una cuenta que representa un hogar que contiene una o más personas.</description>
+  </recordTypes>
+  <recordTypes>
+    <name>Organization</name>
+    <label>Organización</label>
+    <description>Una cuenta que representa una organización</description>
+  </recordTypes>
+</CustomObjectTranslation>

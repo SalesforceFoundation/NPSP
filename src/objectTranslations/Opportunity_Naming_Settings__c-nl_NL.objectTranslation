@@ -9,23 +9,23 @@
         <value><!-- Opportunity Naming Settings --></value>
     </caseValues>
     <fields>
-        <help>Of deze instelling geldt voor individuele Opportunities, organisatie Opportunities, of allebei.</help>
+        <help>Of deze instelling geldt voor individuele opportunities, organisatie-opportunities, of beide.</help>
         <label>Toekenning</label>
         <name>Attribution__c</name>
     </fields>
     <fields>
-        <help>Het formaat voor data ingesloten in deze Opportunity Naam.</help>
-        <label>Datum Formaat</label>
+        <help>Het formaat voor datums in deze opportunitynaam.</help>
+        <label>Datumformaat</label>
         <name>Date_Format__c</name>
     </fields>
     <fields>
-        <help>Het formaat wat gebruikt moet worden voor de naamgeving van een Opportunity.</help>
-        <label>Opportunity Naam Formaat</label>
+        <help>Het formaat dat gebruikt moet worden voor het benoemen van een Opportunity.</help>
+        <label>Formaat van Opportunitynaam</label>
         <name>Opportunity_Name_Format__c</name>
     </fields>
     <fields>
-        <help>Specificeert het Opportunity Recordtype waar dit naamgeving schema voor is.</help>
-        <label>Opportunity Recordtypen</label>
+        <help>Specificeert het type opportunityrecord waar dit benoemingsschema voor dient.</help>
+        <label>Typen Opportunityrecords</label>
         <name>Opportunity_Record_Types__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

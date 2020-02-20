@@ -51,7 +51,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * against a table (such as a really huge Opportunity object) were to fail.
      */
     public enum TelemetryBatchCategory {
-        CustomInstallment_Settings,
         NPSP_Settings,
         Org_Environment,
         Data_MaxNumRelatedOpps,
@@ -60,7 +59,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountPaymentOpps,
         Data_CountErrorLog,
         Data_CountBDIRows,
-        Data_CountBGERows
+        Data_CountBGERows,
+        Data_CountGERowsBatch,
+        Data_CountFixedLengthRd
     }
 
     /**
@@ -73,6 +74,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         IsEnabled_BDICMT,
         IsEnabled_CustomizableRollups,
         IsEnabled_DefaultGAU,
+        IsEnabled_GiftEntry,
+        IsEnabled_PaymentAllocations,
         IsEnabled_RecurringDonations2,
         Data_CountErrorLog,
         Data_CountOppsWithMultiplePayments,
@@ -85,6 +88,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountRecurringDonationsAll,
         Data_CountBDIRowsLast30Days,
         Data_CountBGERowsLast30Days,
+        Data_CountGERowsLast30DaysBatch,
         Data_MaxNumRelatedOpps,
         DataCount_ONETIME_Use,
         HasUserManagedTDTM,
@@ -167,10 +171,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     public void processTelemetryType(TelemetryBatchCategory telemetryCategory) {
 
         switch on (telemetryCategory) {
-            when CustomInstallment_Settings {
-                handleCustomInstallmentSettings();
-            }
-
             // Simple Boolean FeatureParameters based strictly on NPSP Settings that can be processed in a single
             // operation.
             when NPSP_Settings {
@@ -210,6 +210,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 handleBGECount();
             }
 
+            when Data_CountGERowsBatch {
+                handleGEBatchCount();
+            }
+
             when Data_CountErrorLog {
                 handleErrorLogCount();
             }
@@ -221,6 +225,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 /* TODO: Holding on Data_OppPaymentsWithoutPaymentsEnabled metric, reenable test when
                          you move forward with Data_OppPaymentsWithoutPaymentsEnabled
                 //featureManager.setPackageIntegerValue(TelemetryParameterName.Data_OppPaymentsWithoutPaymentsEnabled.name(), -1); */
+            }
+
+            when Data_CountFixedLengthRd {
+                featureManager.setPackageIntegerValue(TelemetryParameterName.DataCount_ONETIME_Use.name(), -1);
             }
         }
     }
@@ -246,28 +254,15 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_BDICMT.name(),
                 (stgSvc.stgDI.Field_Mapping_Method__c == DATA_IMPORT_FIELD_MAPPING ? true : false));
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_GiftEntry.name(),
+                (stgSvc.stgGiftEntry.Enable_Gift_Entry__c == true));
         featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_RecurringDonations2.name(),
                 (stgSvc.stgRD.IsRecurringDonations2Enabled__c == true));
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_PaymentAllocations.name(), 
+                (stgSvc.stgAllo.Payment_Allocations_Enabled__c == true));
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
         }
-    }
-
-    /**
-     * @description Checks if custom installments are enabled and sets feature parameter. Enabled defined as having
-     * custom installment settings and having at least one recurring donation that has one of those custom installments
-     */
-    private void handleCustomInstallmentSettings() {
-        Set<String> customInstallments = UTIL_ListCustomSettingsFacade.getMapCustomInstallmentSettings().keySet();
-
-        Boolean hasCustomInstallments =
-            !customInstallments.isEmpty()
-            && ![SELECT Id FROM npe03__Recurring_Donation__c WHERE npe03__Installment_Period__c IN :customInstallments LIMIT 1].isEmpty();
-
-        featureManager.setPackageIntegerValue(
-            UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name(),
-            hasCustomInstallments ? 1 : 0
-        );
     }
 
     /**
@@ -412,10 +407,34 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     private void handleBGECount() {
         try {
-            Integer bgeCount = Database.countQuery('SELECT count() FROM DataImport__c WHERE CreatedDate = Last_n_days:30 AND NPSP_Data_Import_Batch__r.GiftBatch__c = true');
+            Integer bgeCount = Database.countQuery(
+                'SELECT count() FROM DataImport__c '+
+                'WHERE CreatedDate = Last_n_days:30 '+
+                'AND NPSP_Data_Import_Batch__r.GiftBatch__c = true '+
+                'AND (NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c = null OR '+
+                    'NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c <= 1)');
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), bgeCount);
         } catch (Exception ex) {
             featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountBGERowsLast30Days.name(), -1);
+        }
+    }
+
+    /**
+     * @description Total number of Gift Entry Data Import records connected to a new GE batch (version = 2)
+     * created in the last 30 days
+     */
+    private void handleGEBatchCount() {
+        try {
+            Integer geBatchDataImportCount = Database.countQuery(
+                'SELECT count() FROM DataImport__c '+
+                'WHERE CreatedDate = Last_n_days:30 '+
+                'AND NPSP_Data_Import_Batch__r.GiftBatch__c = true '+
+                'AND NPSP_Data_Import_Batch__r.Batch_Gift_Entry_Version__c >= 2'
+            );
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(),
+                geBatchDataImportCount);
+        } catch (Exception ex) {
+            featuremanager.setPackageIntegerValue(TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name(), -1);
         }
     }
 

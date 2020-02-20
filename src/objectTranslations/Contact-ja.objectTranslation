@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Contact Merge Found FS --></label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
     <fields>
         <help>この住所を検証する必要がある場合は、住所ページの上部にある [住所を検証] ボタンをクリックします。詳細は、Power of Us Hub のヘルプドキュメントを参照してください。</help>
         <label>住所検証状況</label>
@@ -14,9 +26,6 @@
     <fields>
         <help>個人の郵送先項目が入力された現在の住所。</help>
         <label>現在の住所</label>
-        <lookupFilter>
-            <informationalMessage>個人の世帯のすべての住所を参照するには、検索ウィンドウに「A-*」と入力します</informationalMessage>
-        </lookupFilter>
         <name>Current_Address__c</name>
         <relationshipLabel>個人 (現在の住所)</relationshipLabel>
     </fields>
@@ -57,7 +66,7 @@
     </fields>
     <fields>
         <help>世帯団体または世帯オブジェクトの現在の世帯の ID を保持します。</help>
-        <label><!-- HHId --></label>
+        <label>HHId</label>
         <name>HHId__c</name>
     </fields>
     <fields>
@@ -157,7 +166,7 @@
             <section>Misc</section>
         </sections>
         <sections>
-            <label><!-- Soft Credit Totals --></label>
+            <label>ソフトクレジット合計</label>
             <section>Soft Credit Totals</section>
         </sections>
     </layouts>
@@ -182,7 +191,7 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label>積み上げ集計の再計算</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

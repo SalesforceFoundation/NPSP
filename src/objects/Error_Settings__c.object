@@ -70,6 +70,16 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</description>
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>OverrideFeature_PilotEnabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product License in the LMO.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product License in the LMO.</inlineHelpText>
+        <label>Scratch Org Override: Pilot Enabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Respect_Duplicate_Rule_Settings__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Ensures that the &quot;Allow&quot; setting (on the Duplicate Rule) is respected when duplicates are identified.</description>

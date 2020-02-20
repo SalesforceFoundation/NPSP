@@ -189,7 +189,7 @@ public class CRLP_Operation_SVC {
 
         // If multi currency is enabled in the organization, get the "From" CurrencyCode to use for conversion
         // default just in case there's an issue getting the detail record currency
-        String fromCurrency = UserInfo.getDefaultCurrency(); 
+        String fromCurrency = UserInfo.getDefaultCurrency();
 
         try {
             Object currencyIsoCode = amtSObject.get('CurrencyIsoCode');
@@ -359,7 +359,11 @@ public class CRLP_Operation_SVC {
                     }
                 }
             } else {
-                rollup.countByYear.put(theYear, 1);
+                if (rollup.countByYear.containsKey(theYear)) {
+                    rollup.countByYear.put(theYear, rollup.countByYear.get(theYear) + 1);
+                } else {
+                    rollup.countByYear.put(theYear, 1);
+                }
                 if (amountValue != null) {
                     rollup.sumByYear.put(theYear, amountValue);
                     rollup.minByYear.put(theYear, amountValue);

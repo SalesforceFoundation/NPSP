@@ -2,38 +2,46 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
         <plural>false</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Soft credit van account</value>
     </caseValues>
     <caseValues>
         <plural>true</plural>
-        <value><!-- Account Soft Credit --></value>
+        <value>Soft credits van account</value>
     </caseValues>
     <fields>
-        <label><!-- Account --></label>
+        <help>De Account die deze soft credit ontvangt.</help>
+        <label>Account</label>
         <name>Account__c</name>
-        <relationshipLabel><!-- Account Soft Credits --></relationshipLabel>
+        <relationshipLabel>Soft Credits van Account</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Amount --></label>
+        <help>Het bedrag dat soft credit moet worden.</help>
+        <label>Bedrag</label>
         <name>Amount__c</name>
     </fields>
     <fields>
-        <label><!-- Opportunity --></label>
+        <help>De Opportunity waarop deze soft credit van toepassing is.</help>
+        <label>Opportunity</label>
         <name>Opportunity__c</name>
-        <relationshipLabel><!-- Account Soft Credits --></relationshipLabel>
+        <relationshipLabel>Soft Credits van Account</relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Role --></label>
+        <help>De rol die aan deze soft credit is gekoppeld. De rol beschrijft hoe de Account betrokken was bij de Opportunity.</help>
+        <label>Rol</label>
         <name>Role__c</name>
         <picklistValues>
-            <masterLabel>Influence</masterLabel>
-            <translation><!-- Influence --></translation>
+            <masterLabel>Donation Source</masterLabel>
+            <translation>Donatiebron</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Influencer</masterLabel>
+            <translation>Beïnvloeder</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Match</masterLabel>
-            <translation><!-- Match --></translation>
+            <translation>Overeenstemming</translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
-    <nameFieldLabel><!-- Account Soft Credit Name --></nameFieldLabel>
+    <gender>Feminine</gender>
+    <nameFieldLabel>Naam van Soft Credit van Account</nameFieldLabel>
 </CustomObjectTranslation>

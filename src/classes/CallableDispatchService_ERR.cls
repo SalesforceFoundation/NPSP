@@ -30,7 +30,11 @@
 * @group API
 * @group-content ../../ApexDocContent/API.htm
 * @description Dispatches calls from the Callable API to the NPSP Error and RecordError APIs,
-*              depending on the ActionType that is set
+*              depending on the ActionType that is set.
+*             This method is to be used only by Salesforce.org apps and is subject to change at
+*             any time. Do NOT call this method.  If you do so, your functionality can break
+*             without any warning or liability from Salesforce.
+*             If you have any questions, please inquire on the Power of Us Hub.
 */
 public with sharing class CallableDispatchService_ERR {
     /*******************************************************************************************************
@@ -59,7 +63,11 @@ public with sharing class CallableDispatchService_ERR {
 
     /**
      * @description Returns an instance of the CallableDispatchService_ERR class, initialized with the
-     * parameters passed to it
+     * parameters passed to it.
+     *            This method is to be used only by Salesforce.org apps and is subject to change at
+     *            any time. Do NOT call this method.  If you do so, your functionality can break
+     *            without any warning or liability from Salesforce.
+     *            If you have any questions, please inquire on the Power of Us Hub.
      * @param CallableApiParameters paramService Parameteters passed to the Callable API as part of it's invocation
      * @return CallableDispatchService_ERR instance ready to use
      */
@@ -70,6 +78,10 @@ public with sharing class CallableDispatchService_ERR {
     /**
      * @description Dispatches invocations to the Error (ERR) Handling functionality from the Callable API to different methods
      * based on an "ActionType" parameter
+     *            This method is to be used only by Salesforce.org apps and is subject to change at
+     *            any time. Do NOT call this method.  If you do so, your functionality can break
+     *            without any warning or liability from Salesforce.
+     *            If you have any questions, please inquire on the Power of Us Hub.
      * @return Object The result of the dispatch action's invocation
      */
     public Object dispatch() {

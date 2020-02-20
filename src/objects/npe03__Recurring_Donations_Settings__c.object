@@ -1,12 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>DataMigrationBatchSize__c</fullName>
+        <defaultValue>25</defaultValue>
+        <description>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</inlineHelpText>
+        <label>Enhanced RD Data Migration Batch Size</label>
+        <precision>4</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DisableRollupsWhenCreatingInstallments__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When selected, and if Customizable Rollups are enabled, then immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When selected, and if Customizable Rollups are enabled, then immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation.</inlineHelpText>
+        <label>Disable CRLP When Creating Installments</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>EnableAutomaticNaming__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If enabled, Salesforce automatically populates the Recurring Donation Name.</inlineHelpText>
+        <label>Automatic Recurring Donation Naming</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>InstallmentOppStageName__c</fullName>
         <description>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</inlineHelpText>
         <label>Stage Name for Installment Opportunities</label>
         <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>InstallmentOppAutoCreateOption__c</fullName>
+        <description>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</inlineHelpText>
+        <label>Installment Opportunity Auto-Creation</label>
+        <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -21,6 +67,30 @@
         <label>Enhanced Recurring Donations</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>RecurringDonations2EnablementState__c</fullName>
+        <description>Contains Enhanced Recurring Donation enablement confirmations and state.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Contains Enhanced Recurring Donation enablement confirmations and state.</inlineHelpText>
+        <label>Recurring Donations Enablement State</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RecurringDonations2MigrationState__c</fullName>
+        <description>Contains latest dry run and data migration results.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Contains latest dry run and data migration results.</inlineHelpText>
+        <label>Enhanced RD Data Migration State</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Recurring_Donation_Batch_Size__c</fullName>

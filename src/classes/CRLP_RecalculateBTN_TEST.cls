@@ -49,15 +49,15 @@ private class CRLP_RecalculateBTN_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
         insert gau;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
-        rd.Name = 'test';
-        rd.npe03__Installments__c = 2;
-        rd.npe03__Contact__c = c.Id;
-        rd.npe03__Amount__c = 1;
-        rd.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
-        rd.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        rd.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        rd.npe03__Open_Ended_Status__c = 'None'; 
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallments(2)
+            .withContact(c.Id)
+            .withAmount(1)
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(1970,6,12))
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusNone()
+            .build();
         insert rd;
     }
 
@@ -70,7 +70,7 @@ private class CRLP_RecalculateBTN_TEST {
         Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
 
         // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
-        Id roProfileId = [SELECT Id FROM Profile WHERE Name = 'Read Only' LIMIT 1].Id;
+        Id roProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.PROFILE_READ_ONLY LIMIT 1].Id;
         User roUser = new User(
                 FirstName = 'UNITTEST', LastName = 'UNITTEST', Alias = 'UNITTEST',
                 Email = 'UNITTEST@NOWHERE.NET', UserName = 'UNITTEST@NOWHERE.NET',
@@ -105,7 +105,7 @@ private class CRLP_RecalculateBTN_TEST {
         c.npo02__TotalOppAmount__c = 100;
         c.npo02__Soft_Credit_Total__c = 100;
         update c;
-        
+
         General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
 
         npe03__Recurring_Donation__c rd = [SELECT npe03__Paid_Amount__c, (SELECT StageName FROM npe03__Donations__r) FROM npe03__Recurring_Donation__c LIMIT 1];

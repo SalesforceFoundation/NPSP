@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value><!-- Households Settings --></value>
-    </caseValues>
     <fields>
-        <help>マッチングギフトのソフトクレジットを受け取る個人に割り当てられる役割。</help>
-        <label>一致する支援者の役割</label>
+        <help>マッチ支援者の個人の役割を選択します。</help>
+        <label>マッチ支援者の役割</label>
         <name>Matched_Donor_Role__c</name>
     </fields>
     <fields>
-        <help><!-- Check this box to use Dated Conversion Rates when Advanced Currency Management is enabled in this Organization. If unchecked and ACM is enabled, all NPSP roll-ups will use the default exchange rate for by currency. --></help>
-        <label><!-- Use Dated Conversion Rates if available --></label>
+        <help><!-- Number of records per batch to process when setting seasonal address as the mailing address. --></help>
+        <label><!-- Seasonal Address Batch Size --></label>
+        <name>Seasonal_Addresses_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>高度な為替管理がこの団体で有効な場合に日次変換レートを使用するには、このボックスをオンにします。この設定がオフで ACM が有効な場合、すべての NPSP 積み上げ集計は通貨のデフォルト為替レートを使用します。</help>
+        <label>可能な場合日次変換レートを使用</label>
         <name>Use_Dated_Conversion_Rates__c</name>
     </fields>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

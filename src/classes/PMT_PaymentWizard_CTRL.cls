@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2011, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -37,17 +37,17 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Opportunity for the opp we're coming from
-    */ 
+    */
     public Opportunity currentOpp { get; private set; }
 
     /*******************************************************************************************************
     * @description does the Opp have an outstanding balance
-    */ 
+    */
     public Boolean haveAmount { get; private set; }
 
     /*******************************************************************************************************
     * @description after successful save set to true to redirect page
-    */ 
+    */
     public Boolean redirect { get; set; }
 
     /**
@@ -59,11 +59,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Class that stored numbered payment
-    */ 
+    */
     public class Payment {
         public Integer paymentNumber { get; private set; }
         public npe01__OppPayment__c oppPayment { get; set; }
-        
+
         public Payment(Integer i) {
             paymentNumber = i;
             oppPayment = new npe01__OppPayment__c();
@@ -72,75 +72,75 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description is this the Writeoff wizard
-    */ 
+    */
     public Boolean isWriteoffWizard{ get; set; }
 
     /*******************************************************************************************************
     * @description is this the Schedule Payments wizard
-    */ 
-    public Boolean isScheduleWizard{ get; set; }    
+    */
+    public Boolean isScheduleWizard{ get; set; }
 
     /*******************************************************************************************************
     * @description is this opportunity in a closed/lost stage
-    */ 
+    */
     public Boolean isClosedLost{ get; set; }
-    
+
     /*******************************************************************************************************
     * @description list of new payments to be created
-    */ 
+    */
     List<Payment> newPayments = new List<Payment>();
 
     /*******************************************************************************************************
     * @description get the new payments list
     * @return List<Payment> the list of new payments to be created
-    */ 
+    */
     public List<Payment> getPayments() {
         return newPayments ;
     }
-  
+
     /*******************************************************************************************************
     * @description holds a sample payment object for use on the page
-    */ 
+    */
     public npe01__oppPayment__c samplePayment { get; set; }
 
     /*******************************************************************************************************
     * @description holds the payment to represent a writeoff of outstanding balance
-    */ 
+    */
     public npe01__oppPayment__c writeoffPayment { get; set; }
-    
+
     /*******************************************************************************************************
     * @description number of payments to write off for the opp
-    */ 
+    */
     public Integer writeoffPaymentCount { get; set; }
-    
+
     /*******************************************************************************************************
     * @description decimal for amount float
-    */ 
+    */
     public Decimal oppAmountFloat { get; set; }
 
     /*******************************************************************************************************
     * @description integer for the number of installments to create
-    */ 
+    */
     public Integer numberOfPayments { get; set; }
 
     /*******************************************************************************************************
     * @description integer to hold the interval chosen
-    */ 
+    */
     public Integer interval { get; set; }
-    
+
     /*******************************************************************************************************
     * @description boolean to remove paid payments and create a new schedule
-    */ 
+    */
     public Boolean removePaidPayments { get; set; }
 
     /*******************************************************************************************************
     * @description holds Contact & Org Settings that contain the payment related settings
-    */ 
-    public npe01__Contacts_and_Orgs_Settings__c paymentsSettings;
+    */
+    private npe01__Contacts_and_Orgs_Settings__c paymentsSettings;
 
     /*******************************************************************************************************
     * @description Returns true if the user has access to the payment SObject
-    */ 
+    */
     public Boolean hasPaymentAccess {
         get {
             if (hasPaymentAccess == null) {
@@ -154,35 +154,47 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description decimal for amount already written off
-    */ 
+    */
     private Decimal amountWrittenOff { get; set; }
 
 
     /*******************************************************************************************************
     * @description Integer for count of invalid payment records
-    */ 
+    */
     private Integer invalidPaymentRecordCount { get; set; }
 
     /*******************************************************************************************************
     * @description Boolean to indicate if the wizard page should be enabled
-    */ 
+    */
     public Boolean isWizardEnabled { get; set; }
-    
+
     /*******************************************************************************************************
     * @description gets the payment related settings
     * @return npe01__Contacts_and_Orgs_Settings__c the settings object
-    */ 
+    */
     public npe01__Contacts_and_Orgs_Settings__c getPaymentsSettings(){
         if (paymentsSettings == null) {
            paymentsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
         }
-        
+
         return paymentsSettings;
     }
-  
+
+    /*******************************************************************************************************
+    * @description Returns true if Payments enabled is true on paymentsSettings
+    * @return Boolean
+    */
+    public Boolean getIsPaymentsEnabled() {
+        if (getPaymentsSettings() == null) {
+            return false;
+        }
+        return getPaymentsSettings().npe01__Payments_Enabled__c == true;
+
+    }
+
     /*******************************************************************************************************
     * @description Constructor for the wizard that initializes data structures
-    */ 
+    */
     public PMT_PaymentWizard_CTRL() {
         this.redirect = this.removePaidPayments = false;
         this.isWizardEnabled = true;
@@ -190,7 +202,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
         if (wizardType == 'writeoff'){
             setupWriteoffWizard();
-            
+
         } else if (wizardType == 'payment'){
             setupPaymentWizard();
         }
@@ -202,7 +214,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description initialize payment figures and make sure the opportunity has valid amounts
     */
     private void setupPaymentAmounts(Opportunity opp) {
-        // Set default values 
+        // Set default values
         this.writeoffPaymentCount = 1;
         this.amountWrittenOff = 0;
         this.invalidPaymentRecordCount = 0;
@@ -220,19 +232,19 @@ public with sharing class PMT_PaymentWizard_CTRL {
                     invalidPaymentRecordCount++;
                 }
                 continue;
-            } 
-            
+            }
+
             if (payment.npe01__Written_Off__c == true) {
                 if (payment.npe01__Payment_Amount__c != null) {
                     amountWrittenOff += payment.npe01__Payment_Amount__c;
                 }
                 continue;
             }
-            
+
             outstandingPaymentCount++;
         }
 
-        // if there are no payments outstanding then we set the count to 1 as 
+        // if there are no payments outstanding then we set the count to 1 as
         // we will create a single payment for the new write off amount
         if (outstandingPaymentCount>0) {
             writeoffPaymentCount = outstandingPaymentCount;
@@ -243,11 +255,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }
     }
 
-    
+
     /*******************************************************************************************************
     * @description initializes data for the Payment wizard
     * @return void
-    */ 
+    */
     @TestVisible
     private void setupPaymentWizard() {
         String id = ApexPages.currentPage().getParameters().get('id');
@@ -255,7 +267,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
         isWriteoffWizard = false;
         isScheduleWizard = true;
-        
+
         if (o.isEmpty()) {
             haveAmount = false;
             return;
@@ -265,7 +277,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         setupPaymentAmounts(currentOpp);
 
         haveAmount = (getAmountOutstanding() > 0);
-        
+
         isClosedLost = currentOpp.isClosed && !currentOpp.isWon;
         samplePayment = new npe01__OppPayment__c();
         samplePayment.npe01__Scheduled_Date__c = System.today();
@@ -274,11 +286,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
         intervalUnit = 'Month';
 
     }
-    
+
     /*******************************************************************************************************
     * @description initializes data for the Writeoff wizard
     * @return void
-    */ 
+    */
     @TestVisible
     private void setupWriteoffWizard() {
         String id = ApexPages.currentPage().getParameters().get('id');
@@ -291,7 +303,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
             haveAmount = false;
             return;
         }
-         
+
         currentOpp = o[0];
         setupPaymentAmounts(currentOpp);
 
@@ -301,50 +313,50 @@ public with sharing class PMT_PaymentWizard_CTRL {
         writeoffPayment.npe01__Written_Off__c = true;
         writeoffPayment.npe01__Opportunity__c = currentOpp.Id;
         writeoffPayment.npe01__Payment_Date__c = System.today();
-        
+
         if (UserInfo.isMultiCurrencyOrganization()) {
             writeoffPayment.put('CurrencyIsoCode', (String) currentOpp.get('CurrencyIsoCode'));
         }
-        
+
     }
 
     /*******************************************************************************************************
     * @description Creates an opportunity query with payment mapping and currency fields, filtered on id paramter.
     * @return string An opportunity query string.
-    */ 
+    */
     public string makeOppQuery() {
         // requery the Opportunity for all fields that we need.
         String query = 'SELECT name, amount, stagename, npe01__payments_made__c, npe01__amount_outstanding__c, description, closedate, npe01__Number_of_Payments__c, isClosed, isWon';
-        
+
         // add any opportunity fields from payment field mappings
         for (String s : PMT_PaymentCreator.paymentMappings.keyset()) {
             npe01__Payment_Field_Mapping_Settings__c pfms = PMT_PaymentCreator.paymentMappings.get(s);
 
             if (!query.contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {
                 query += ', ' + pfms.npe01__Opportunity_Field__c;
-            }   
+            }
         }
         query += ', (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__r)';
-        
+
         //if currencyiso field exists add it to query for use later
         if (Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null) {
             query = query + ',CurrencyIsoCode';
         }
-            
+
         query += ' FROM Opportunity';
         return query;
     }
-    
+
     /*******************************************************************************************************
-    * @description ActionMethod for the Calculate button that given the current opp outstanding balance, 
+    * @description ActionMethod for the Calculate button that given the current opp outstanding balance,
     * creates the specified new payments to cover the amount.
     * @return PageReference null
-    */ 
+    */
     public pageReference calculate() {
         if (haveAmount || removePaidPayments) {
             // clear the list
             newPayments.clear();
-                        
+
             Decimal OppAmountFloat = getAmountOutstanding();
             if (removePaidPayments == true) {
                 OppAmountFloat = currentOpp.Amount;
@@ -353,7 +365,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
             //divide the amount by the number of installments, and deal with the remainder
             Decimal paymentAmount = OppAmountFloat.divide(numberOfPayments, 2, system.roundingmode.FLOOR);
             Decimal remainder = OppAmountFloat - (paymentAmount * numberOfPayments);
-    
+
             // get the start date
             Date nextDate;
             if (samplePayment.npe01__Scheduled_Date__c != null) {
@@ -362,13 +374,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,System.Label.exceptionRequiredField + ' ' + System.Label.pmtWizardFirstPaymentDate));
                 return null;
             }
-            
+
             // Multicurrency support
             // James Melville 05/03/2011 Added to support multi-currency sfdc.  */
             // CurrencyIsoCode doesn't exist in non-multi-currency orgs
             SObjectField OppCurrencyField = Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode');
             SObjectField PaymentCurrencyField = Schema.sObjectType.npe01__OppPayment__c.fields.getMap().get('CurrencyIsoCode');
-            
+
             for (Integer i=1; i <= numberOfPayments; i++) {
 
                 // create the payment record
@@ -385,7 +397,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 } else {
                     thisPayment.oppPayment.npe01__Payment_Amount__c = paymentAmount;
                 }
-                
+
                 //in multicurrency SFDC set the payment currency field to equal the opp currency
                 if (PaymentCurrencyField != null && OppCurrencyField != null) {
                     thisPayment.oppPayment.put(PaymentCurrencyField, currentOpp.get(OppCurrencyField));
@@ -401,37 +413,37 @@ public with sharing class PMT_PaymentWizard_CTRL {
                             thisPayment.oppPayment.put(pfms.npe01__Payment_Field__c, currentOpp.get(x));
                         }
                     }
-                }   
-                                    
+                }
+
                 //put the payment in the list
                 newPayments.add(thisPayment);
-    
+
                 //add the interval unit
                 if (intervalUnit == 'Week') {
-                    nextDate = nextDate.addDays(7 * interval); 
+                    nextDate = nextDate.addDays(7 * interval);
                 } else if (intervalUnit == 'Month') {
-                    nextDate = nextDate.addMonths(interval); 
+                    nextDate = nextDate.addMonths(interval);
                 } else if (intervalUnit == 'Year') {
                     nextDate = nextDate.addYears(interval);
                 }
             }
-            
+
         }
 
         getPageValidationMessages();
 
         return null;
     }
-    
+
     /*******************************************************************************************************
     * @description ActionMethod for the WriteOff button
     * @return PageReference null
-    */ 
+    */
     public pageReference writeoff() {
     	Savepoint sp = Database.setSavepoint();
     	try {
 	        List<npe01__OppPayment__c> paymentsToDelete = new List<npe01__OppPayment__c>();
-	        
+
 	        for (npe01__OppPayment__c thisPayment : currentOpp.npe01__OppPayment__r){
 	            if (thisPayment.npe01__Paid__c == false && thisPayment.npe01__Written_Off__c == false) {
 	                paymentsToDelete.add(thisPayment);
@@ -441,7 +453,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 	        if (!paymentsToDelete.isEmpty()) {
                 delete paymentsToDelete;
             }
-            
+
             insert writeoffPayment;
 
 	        redirect = true;
@@ -463,22 +475,20 @@ public with sharing class PMT_PaymentWizard_CTRL {
             return;
         }
 
-        getPaymentsSettings();
-
-        if (paymentsSettings == null || paymentsSettings.npe01__Payments_Enabled__c == false) {
+        if (!getIsPaymentsEnabled()) {
             ApexPages.addMessage(new ApexPages.Message(
-                ApexPages.Severity.WARNING, 
-                System.Label.pmtWizardPaymentsDisabledTitle, 
+                ApexPages.Severity.WARNING,
+                System.Label.pmtWizardPaymentsDisabledTitle,
                 System.Label.pmtWizardPaymentsDisabled)
             );
             return;
-        } 
-        
+        }
+
         if (currentOpp == null) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
             return;
-        } 
-        
+        }
+
         if (currentOpp.Amount == null || currentOpp.Amount == 0) {
             if (isScheduleWizard) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardScheduleNoAmount));
@@ -500,7 +510,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         if (isClosedLost == true) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
         }
-        
+
         if (!removePaidPayments && isScheduleWizard == true && haveAmount == false && isClosedLost == false) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoUnpaidAmount));
         } else if (!removePaidPayments && isWriteoffWizard == true && haveAmount == false) {
@@ -512,7 +522,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description Displays an error message when then user has no permission to modify payments
     * @return void
-    */ 
+    */
     private void displayNoAccessMessage() {
         String errorMsg;
 
@@ -530,7 +540,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description Returns true if the user has permissions to access, create and delete npe01__oppPayment__c
     * @return Boolean
-    */ 
+    */
     private Boolean hasPaymentAccess() {
         Schema.DescribeSObjectResult paymentDescribe = npe01__oppPayment__c.sObjectType.getDescribe();
 
@@ -540,7 +550,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description list of items for picklist of the number of payments to be created
     * @return List<SelectOption>
-    */ 
+    */
     public List<SelectOption> getItems() {
         List<SelectOption> options = new List<SelectOption>();
         Decimal maxPayments;
@@ -550,7 +560,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         } else {
             maxPayments = 12;
         }
-        
+
         for (Integer i = 1; i <= maxPayments; i++) {
             String s = i.format();
             options.add(new SelectOption(s, s));
@@ -561,7 +571,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description list of items for picklist of the interval between payments to be created
     * @return List<SelectOption>
-    */ 
+    */
     public List<SelectOption> getIntervals() {
         List<SelectOption> options = new List<SelectOption>();
 
@@ -574,13 +584,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description the unit of the interval
-    */ 
+    */
     public String intervalUnit { get; set; }
 
     /*******************************************************************************************************
     * @description list of items for picklist of the interval unit between payments to be created
     * @return List<SelectOption>
-    */ 
+    */
     public List<SelectOption> getIntervalUnits() {
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('Week', System.Label.pmtWizardWeek));
@@ -606,11 +616,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description ActionMethod for the Create Payments button
     * @return PageReference null
-    */ 
+    */
     public PageReference createPayments() {
     	Savepoint sp = Database.setSavepoint();
         try {
-            List<npe01__oppPayment__c> paymentsToDelete = new List<npe01__OppPayment__c>(); 
+            List<npe01__oppPayment__c> paymentsToDelete = new List<npe01__OppPayment__c>();
             List<npe01__OppPayment__c> existingPayments = [
                 SELECT Id, npe01__Paid__c, npe01__Written_Off__c
                 FROM npe01__OppPayment__c
@@ -630,18 +640,18 @@ public with sharing class PMT_PaymentWizard_CTRL {
             if (!paymentsToDelete.isEmpty()) {
                 delete paymentsToDelete;
             }
-	        
+
 	        // get the new payments into a list
 	        npe01__oppPayment__c[] pmts = new npe01__oppPayment__c[0];
 	        for (Payment p : newPayments) {
                 pmts.add(p.oppPayment);
             }
-	        
+
 	        // create the payment records
 	        insert pmts;
-	        
+
 	        redirect = true;
-        
+
         } catch(Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
@@ -654,7 +664,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description ActionMethod for the Remove Paid Payments button, which sets the internal flag to
     * track this.
     * @return PageReference null
-    */ 
+    */
     public pageReference removePaidPayments() {
         removePaidPayments = true;
         return null;
@@ -695,7 +705,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         formattedCurrency = formattedCurrency.left(formattedCurrency.length() - 1);
 
         return getCurrencySymbol() + formattedCurrency;
-     
+
     }
 
     /*******************************************************************************************************

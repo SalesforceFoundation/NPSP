@@ -64,18 +64,22 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
         Set<Id> opportunityAllocationsUpdated = new Set<Id>();
 
         List<Allocation__c> triggerAllocations;
+        List<Allocation__c> triggerAllocationsForValidation;
         Map<Id, Allocation__c> oldMap;
         Set<Id> paymentIdSet = new Set<Id>();
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             triggerAllocations = (List<Allocation__c>) newList;
+            triggerAllocationsForValidation = (List<Allocation__c>)newList;
         }
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             triggerAllocations = (List<Allocation__c>) newList;
+            triggerAllocationsForValidation = (List<Allocation__c>)oldList;
             oldMap = new Map<Id, Allocation__c>((List<Allocation__c>) oldList);
         }
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             triggerAllocations = (List<Allocation__c>) oldList;
+            triggerAllocationsForValidation = (List<Allocation__c>) oldList;
         }
 
         //only validate and synchronize allocations with substantial updates
@@ -105,7 +109,7 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
 
         Map<Id, npe01__OppPayment__c> paymentMap = new Map<Id, npe01__oppPayment__c>([Select Id, npe01__Written_Off__c FROM npe01__oppPayment__c WHERE Id in: paymentIdSet]);
 
-        ALLO_PaymentSync_SVC service = new ALLO_PaymentSync_SVC(triggerAllocations);
+        ALLO_PaymentSync_SVC service = new ALLO_PaymentSync_SVC(triggerAllocations, triggerAllocationsForValidation);
 
         for (Allocation__c paymentAllocation : paymentAllocations.values()) {
 

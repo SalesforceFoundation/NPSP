@@ -3,45 +3,45 @@
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>false</plural>
-        <value><!-- Error --></value>
+        <value>Fehler</value>
     </caseValues>
     <caseValues>
         <caseType>Nominative</caseType>
         <plural>true</plural>
-        <value><!-- Error --></value>
+        <value>Fehler</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>false</plural>
-        <value><!-- Error --></value>
+        <value>Fehler</value>
     </caseValues>
     <caseValues>
         <caseType>Accusative</caseType>
         <plural>true</plural>
-        <value><!-- Error --></value>
+        <value>Fehler</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>false</plural>
-        <value><!-- Error --></value>
+        <value>Fehlers</value>
     </caseValues>
     <caseValues>
         <caseType>Genitive</caseType>
         <plural>true</plural>
-        <value><!-- Error --></value>
+        <value>Fehler</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>false</plural>
-        <value><!-- Error --></value>
+        <value>Fehler</value>
     </caseValues>
     <caseValues>
         <caseType>Dative</caseType>
         <plural>true</plural>
-        <value><!-- Error --></value>
+        <value>Fehlern</value>
     </caseValues>
     <fields>
-        <help>Kontext, der den Fehler verursacht hat, falls bekannt</help>
+        <help>Kontext, der den Fehler verursacht hat, sofern bekannt</help>
         <label>Kontexttyp</label>
         <name>Context_Type__c</name>
     </fields>
@@ -66,26 +66,36 @@
         <name>Full_Message__c</name>
     </fields>
     <fields>
-        <help>Objekttyp, zu dem der Fehler aufgetreten ist, falls bekannt</help>
+        <help>Objekttyp, zu dem der Fehler aufgetreten ist, sofern bekannt</help>
         <label>Objekttyp</label>
         <name>Object_Type__c</name>
     </fields>
     <fields>
-        <help>Gibt an, ob der Fehler in Chatter gepostet wurde</help>
+        <help>Gibt an, ob der Fehler in Chatter gepostet wurde.</help>
         <label>Gepostet in Chatter</label>
         <name>Posted_in_Chatter__c</name>
     </fields>
     <fields>
-        <help>Link zum Datensatz, der den Fehler verursacht hat, falls verfügbar.</help>
+        <help>Link zum Datensatz, der den Fehler verursacht hat, sofern verfügbar.</help>
         <label>Datensatz-URL</label>
         <name>Record_URL__c</name>
     </fields>
     <fields>
-        <help>Stapel-Trace für den ausgegebenen Fehler, falls bei Laufzeit verfügbar</help>
-        <label>Stapel-Trace</label>
+        <help><!-- The Salesforce ID of the record associated with this error. --></help>
+        <label><!-- Related Record ID --></label>
+        <name>Related_Record_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- When selected, indicates that the record specified in Related Record ID will be reprocessed in the next scheduled process. If reprocessing succeeds, this field is then deselected. Applies to specific types of errors that occur during scheduled processes. --></help>
+        <label><!-- Retry Pending? --></label>
+        <name>Retry_Pending__c</name>
+    </fields>
+    <fields>
+        <help>Stapelverfolgung für den ausgegebenen Fehler, falls bei Laufzeit verfügbar</help>
+        <label>Stapelverfolgung</label>
         <name>Stack_Trace__c</name>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender>Masculine</gender>
     <layouts>
         <layout>Error Layout</layout>
         <sections>
@@ -93,5 +103,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Error Number --></nameFieldLabel>
+    <nameFieldLabel>Fehlernummer</nameFieldLabel>
 </CustomObjectTranslation>

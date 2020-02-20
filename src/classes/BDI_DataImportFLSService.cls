@@ -41,19 +41,29 @@ public class BDI_DataImportFLSService {
     List<DataImport__c> dataImportsValidated;
     List<DataImport__c> dataImportsInvalidated;
     Map<Id, List<SObjectFieldWrapper>> invalidFieldsByDataImportId;
+    UTIL_Describe describeService;
+    UTIL_Permissions permissionsService;
 
     public enum AccessLevel {
         VALIDATE_READ, VALIDATE_CREATE, VALIDATE_UPDATE
     }
 
+    public BDI_DataImportFLSService (Set<AccessLevel> accessLevels){
+        this.accessLevels = accessLevels;
+        describeService = UTIL_Describe.getInstance();
+        permissionsService = UTIL_Permissions.getInstance();
+    }
+
     public BDI_DataImportFLSService(List<DataImport__c> dataImports,
-            BDI_FieldMapping fieldMapping,
+            BDI_MappingService mappingService,
             Set<AccessLevel> accessLevels){
         this.accessLevels = accessLevels;
-        this.targetFieldsBySObjectFields = fieldMapping.getTargetFieldsBySourceField();
+        this.targetFieldsBySObjectFields = mappingService.getTargetFieldsBySourceField();
         this.dataImportsValidated = new List<DataImport__c>();
         this.dataImportsInvalidated = new List<DataImport__c>();
         this.invalidFieldsByDataImportId = new Map<Id, List<SObjectFieldWrapper>>();
+        describeService = UTIL_Describe.getInstance();
+        permissionsService = UTIL_Permissions.getInstance();
         validateTargetMappingFieldLevelSecurity(dataImports);
     }
 
@@ -111,7 +121,7 @@ public class BDI_DataImportFLSService {
 
                 for (SObjectType objectType : targetFieldsByObject.keySet()) {
                     for (SObjectField field : targetFieldsByObject.get(objectType)) {
-                        if (!isValid(field)) {
+                        if (!isValid(objectType, field)) {
                             invalidFields.add(
                                     new SObjectFieldWrapper(
                                             objectType,
@@ -132,19 +142,38 @@ public class BDI_DataImportFLSService {
         }//END loop of Data Import records
     }
 
-    private Boolean isValid(SObjectField field) {
+    @TestVisible
+    private Boolean isValid(SObjectType objectType, SObjectField field) {
+        Set<SObjectField> fieldSet = new Set<SObjectField>{
+                field
+        };
         if ((accessLevels.contains(AccessLevel.VALIDATE_CREATE)
-                && !field.getDescribe().isCreateable())
+                && !permissionsService.canCreate(fieldSet))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_UPDATE)
-                        && !field.getDescribe().isUpdateable())
+                        && !isValidateUpdateException(objectType, field))
                 ||
                 (accessLevels.contains(AccessLevel.VALIDATE_READ)
-                        && !field.getDescribe().isAccessible())) {
+                        && !permissionsService.canRead(fieldSet))) {
             return false;
         } else {
             return true;
         }
+    }
+
+
+    private Boolean isValidateUpdateException(SObjectType objectType, SObjectField field) {
+        if (describeService.isMasterDetailField(field)) {
+            return true;
+        } else {
+            if (objectType == CampaignMember.SObjectType
+                    && field == CampaignMember.CampaignId) {
+                return true;
+            }else if (permissionsService.canUpdate(new Set<SObjectField>{field})) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class SObjectFieldWrapper {

@@ -68,6 +68,7 @@
         <externalId>false</externalId>
         <label>Account1 Imported</label>
         <referenceTo>Account</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Account1 Imported)</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -171,6 +172,7 @@
         <externalId>false</externalId>
         <label>Account2 Imported</label>
         <referenceTo>Account</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Account2 Imported)</relationshipLabel>
         <relationshipName>Data_Imports1</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -259,6 +261,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Additional_Object_JSON__c</fullName>
+        <description>This field allows a dynamic number of records for a dynamic number of objects to be created from a single Data Import record. Additional object information is stored here in JSON format.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This field allows a dynamic number of records for a dynamic number of objects to be created from a single Data Import record. Additional object information is stored here in JSON format.</inlineHelpText>
+        <label>Additional Object JSON</label>
+        <length>131072</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
         <fullName>ApexJobId__c</fullName>
         <description>The ApexJobID of the Batch Job that processed the record.</description>
         <externalId>false</externalId>
@@ -296,6 +309,7 @@
         <externalId>false</externalId>
         <label>Contact1 Imported</label>
         <referenceTo>Contact</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Contact1 Imported)</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -499,6 +513,7 @@
         <externalId>false</externalId>
         <label>Contact2 Imported</label>
         <referenceTo>Contact</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Contact2 Imported)</relationshipLabel>
         <relationshipName>Data_Imports1</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -702,6 +717,7 @@
         <externalId>false</externalId>
         <label>Donation Imported</label>
         <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>NPSP Data Imports (Opportunity1 Imported)</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -725,6 +741,7 @@
         <inlineHelpText>Opportunity.CampaignId</inlineHelpText>
         <label>Donation Campaign Source</label>
         <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -1048,6 +1065,7 @@
         <externalId>false</externalId>
         <label>Home Address Imported</label>
         <referenceTo>Address__c</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
         <relationshipName>Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -1112,7 +1130,7 @@
         <externalId>false</externalId>
         <label>Household Account Imported</label>
         <referenceTo>Account</referenceTo>
-        <relationshipLabel>NPSP Data Imports (Household Account Imported)</relationshipLabel>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
         <relationshipName>NPSP_Data_Imports</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>

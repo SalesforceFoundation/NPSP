@@ -333,7 +333,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         List<Account> accounts = createMockAccounts(DEFAULT_ACCT_TYPE);
 
         List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.extractHouseholdIds(accounts);
-        System.assert(UTIL_UnitTestData_TEST.extractIds(accounts).equals(new Set<Id>(actualIds)), 'Expected the returned Ids to match the account Ids passed in.');
+        System.assert(UTIL_SObject.extractIds(accounts).equals(new Set<Id>(actualIds)), 'Expected the returned Ids to match the account Ids passed in.');
     }
 
     /***************************************************************************************************************
@@ -345,7 +345,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         List<Contact> contacts = createMockContacts(accounts);
 
         List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.extractHouseholdIds(contacts);
-        System.assert(UTIL_UnitTestData_TEST.extractIds(accounts).equals(new Set<Id>(actualIds)), 'Expected the returned Ids to match the account Ids of the contacts passed in.');
+        System.assert(UTIL_SObject.extractIds(accounts).equals(new Set<Id>(actualIds)), 'Expected the returned Ids to match the account Ids of the contacts passed in.');
     }
 
     /***************************************************************************************************************
@@ -377,7 +377,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
     @IsTest
     private static void shouldReturnAccountIdByMasterContactIdWhenAccountsAreIndividualType() {
         List<Account> accounts = createMockAccounts(DEFAULT_ACCT_TYPE);
-        Set<Id> accountIds = UTIL_UnitTestData_TEST.extractIds(accounts);
+        Set<Id> accountIds = UTIL_SObject.extractIds(accounts);
         Set<Id> contactIds = new Set<Id>(UTIL_UnitTestData_TEST.mockIds(Contact.SObjectType, accounts.size()));
         CON_ContactMerge_TDTM.mergeProcessor.oldAccountIds = new List<Id>(accountIds);
         CON_ContactMerge_TDTM.mergeProcessor.masterContactIds = new List<Id>(contactIds);
@@ -394,8 +394,8 @@ private with sharing class CON_ContactMergeTDTM_TEST {
     private static void shouldReturnAccountIdByMasterContactIdWhenContactsAccountsAreIndividualType() {
         List<Account> accounts = createMockAccounts(CAO_Constants.BUCKET_ORGANIZATION_TYPE);
         List<Contact> contacts = createMockContacts(accounts);
-        Set<Id> accountIds = UTIL_UnitTestData_TEST.extractIds(accounts);
-        Set<Id> contactIds = UTIL_UnitTestData_TEST.extractIds(contacts);
+        Set<Id> accountIds = UTIL_SObject.extractIds(accounts);
+        Set<Id> contactIds = UTIL_SObject.extractIds(contacts);
 
         Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.extractAcctIdByMasterId(contacts);
         System.assert(contactIds.equals(accountIdsByContactId.keySet()), 'Expected the returned Ids to match the master contact Ids.');
@@ -408,7 +408,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
     @IsTest
     private static void shouldReturnEmptyMapWhenAccountsAreIndividualType() {
         List<Account> accounts = createMockAccounts('');
-        Set<Id> accountIds = UTIL_UnitTestData_TEST.extractIds(accounts);
+        Set<Id> accountIds = UTIL_SObject.extractIds(accounts);
         Set<Id> contactIds = new Set<Id>(UTIL_UnitTestData_TEST.mockIds(Contact.SObjectType, accounts.size()));
         CON_ContactMerge_TDTM.mergeProcessor.oldAccountIds = new List<Id>(accountIds);
         CON_ContactMerge_TDTM.mergeProcessor.masterContactIds = new List<Id>(contactIds);
@@ -425,8 +425,8 @@ private with sharing class CON_ContactMergeTDTM_TEST {
     private static void shouldReturnEmptyMapWhenContactsAccountsAreIndividualType() {
         List<Account> accounts = createMockAccounts('');
         List<Contact> contacts = createMockContacts(accounts);
-        Set<Id> accountIds = UTIL_UnitTestData_TEST.extractIds(accounts);
-        Set<Id> contactIds = UTIL_UnitTestData_TEST.extractIds(contacts);
+        Set<Id> accountIds = UTIL_SObject.extractIds(accounts);
+        Set<Id> contactIds = UTIL_SObject.extractIds(contacts);
 
         Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.extractAcctIdByMasterId(contacts);
         System.assert(accountIdsByContactId.isEmpty(), 'Expected an empty map to be returned.');

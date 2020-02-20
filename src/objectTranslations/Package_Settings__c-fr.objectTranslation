@@ -9,8 +9,8 @@
         <value><!-- NPSP Package Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- The active package namespace prefix for NPSP. Do not edit manually. --></help>
-        <label><!-- Namespace Prefix --></label>
+        <help>Préfixe d&apos;espace de noms de package actif pour NPSP. Ne pas modifier manuellement.</help>
+        <label>Préfixe d&apos;espace de noms</label>
         <name>Namespace_Prefix__c</name>
     </fields>
     <gender><!-- Masculine --></gender>

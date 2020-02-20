@@ -3,20 +3,16 @@
 #### For Users
 
 * <a href="https://powerofus.force.com" target="_blank">Ask questions or get help</a>
-* <a href="https://github.com/SalesforceFoundation/Cumulus/issues/new" target="_blank">Log a confirmed Issue</a> or <a href="https://powerofus.force.com/hub-ideas" target="_blank">Feature Request</a>
+* <a href="https://github.com/SalesforceFoundation/NPSP/issues/new" target="_blank">Log a confirmed Issue</a> or <a href="https://powerofus.force.com/hub-ideas" target="_blank">Feature Request</a>
 * <a href="https://powerofus.force.com/NPSP_Documentation" target="_blank">User Documentation</a>
-* Check out existing <a href="https://github.com/SalesforceFoundation/Cumulus/labels/bug" target="_blank">bugs</a> and <a href="https://powerofus.force.com/hub-ideas?product=NPSP" target="_blank">feature and enhancement requests.</a>
-* <a href="https://github.com/SalesforceFoundation/Cumulus/releases" target="_blank">Release Notes and Beta Releases</a>
+* Check out existing <a href="https://github.com/SalesforceFoundation/NPSP/labels/bug" target="_blank">bugs</a> and <a href="https://powerofus.force.com/hub-ideas?product=NPSP" target="_blank">feature and enhancement requests.</a>
+* <a href="https://github.com/SalesforceFoundation/NPSP/releases" target="_blank">Release Notes and Beta Releases</a>
 
 #### For Developers
 
 The Nonprofit Success Pack is released under the open source BSD license (see link below for additional license information).  Contributions (code and otherwise) are welcome and encouraged.  
 For information on contributing code, see our <a href="http://www.salesforce.org/help/nonprofitstarterpack/contribute/" target="_blank">code contributor's guide</a> and our <a href="http://developer.salesforcefoundation.org/Cumulus/ApexDocumentation/" target="_blank">NPSP 3 codebase documentation</a>.
-Please see the <a href="https://github.com/SalesforceFoundation/Cumulus/wiki" target="_blank">project wiki</a> for additional information.
-
-#### Why "Cumulus"?
-
-Project Cumulus was the codename for version 3 of the Nonprofit Success Pack, the most recent update and enhancement.
+Please see the <a href="https://github.com/SalesforceFoundation/NPSP/wiki" target="_blank">project wiki</a> for additional information.
 
 #### Meta
 

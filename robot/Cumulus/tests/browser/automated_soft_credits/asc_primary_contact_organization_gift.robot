@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -25,5 +27,5 @@ Create ASC for Primary Contact on Organization Gift
     Go To Record Home    &{Contact}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Soft Credit This Year    $50.00    Y
-    Confirm Value    Soft Credit Total    $50.00    Y
+    Navigate To And Validate Field Value    Soft Credit This Year    contains    $50.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $50.00

@@ -226,20 +226,15 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Returns the Data Import DFRs for a set of target objects
-    * @return list of DescribeFieldResults
+    * @description Returns a map of Data Import fields to their mapped target fields
+    * used to determine the list of fields to display as available in the BGE Configuration
+    * Wizard.
+    * @return Map of SObjectFields to target fields in BDI_TargetFields format.
     */
     public static Map<SObjectField, BDI_TargetFields> getRelevantFields() {
 
-        // these fields have been whitelisted since they have special handling in BDI
-        Set<String> allowedFields = new Set<String>{
-            'Donation_Record_Type_Name__c'
-        };
-
         Map<SObjectField, BDI_TargetFields> filteredTargetFieldsBySourceField = 
             new Map<SObjectField, BDI_TargetFields>();
-
-        BDI_FieldMapping fieldMapping = BDI_DataImportService.getDefaultFieldMapping();
 
         Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField = 
             BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField;
@@ -267,7 +262,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 && (mappedToAllowedObject
                     && allowedDataTypes.contains(sourceDFR.type)
                     && !bannedFields.contains(dataImportFieldApiName)
-                    || allowedFields.contains(dataImportFieldApiName)
                 )
             );
 

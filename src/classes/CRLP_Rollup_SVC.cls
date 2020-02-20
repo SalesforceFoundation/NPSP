@@ -40,7 +40,8 @@
 */
 public class CRLP_Rollup_SVC {
 
-    private static final Boolean DO_NOT_UPDATE_NULL_TO_ZERO = false;
+    @TestVisible
+    private static Boolean UPDATE_NULL_TO_ZERO = false;
 
     private static final String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
     private static final String ocrObjectName = UTIL_Describe.getObjectDescribe('OpportunityContactRole').getName();
@@ -141,7 +142,7 @@ public class CRLP_Rollup_SVC {
                         hasValueChanged = true;
                     }
 
-                } else if (DO_NOT_UPDATE_NULL_TO_ZERO == false && summaryFieldType == SoapType.DOUBLE) {
+                } else if (UPDATE_NULL_TO_ZERO == false && summaryFieldType == SoapType.DOUBLE) {
 
                     // If the value in the object is null and the updated value is something other than null or zero,
                     // then the record has been changed. Otherwise, don't update a NULL value to zero or vice-versa.

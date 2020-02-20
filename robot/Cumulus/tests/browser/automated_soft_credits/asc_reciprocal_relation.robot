@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -23,15 +25,15 @@ ASC Reciprocal Relationship Test Case 1
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Soft Credit This Year    $500.00    Y
-    Confirm Value    Soft Credit Total    $500.00    Y
+    Navigate To And Validate Field Value    Soft Credit This Year    contains    $500.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $500.00
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Total Gifts This Year    $500.00    Y
-    Confirm Value    Total Gifts    $500.00    Y
-    Confirm Value    Soft Credit This Year    $0.00    Y
-    Confirm Value    Soft Credit Total    $0.00    Y
+    Navigate To And Validate Field Value    Total Gifts This Year    contains    $500.00
+    Navigate To And Validate Field Value   Total Gifts    contains    $500.00
+    Navigate To And Validate Field Value    Soft Credit This Year    contains    $0.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $0.00
     
 Test Case 2
     [tags]  unstable
@@ -41,11 +43,10 @@ Test Case 2
     &{relation} =  API Create Relationship    &{contact1}[Id]    &{contact2}[Id]    Coworker    ${ns}Related_Opportunity_Contact_Role__c=Soft Credit
     Go To Record Home    &{contact2}[Id]
     Select Tab  Related
-    Click Related Item Link    Relationships    &{contact1}[FirstName] &{contact1}[LastName]
+    Click Related Table Item Link    Relationships    &{contact1}[FirstName] &{contact1}[LastName]
     Click Button    title=Edit Related Opportunity Contact Role
-    Wait For Locator  record.edit_form
-    Click Dropdown            Related Opportunity Contact Role
-    Click link    title:Soft Credit
+    Wait For Locator  record.footer
+    Click Flexipage Dropdown   Related Opportunity Contact Role              Soft Credit
     Click Button    Save
     &{opportunity} =  API Create Opportunity    &{contact1}[AccountId]    Donation    Name=Reciprocal test $500 donation    Amount=500    ${ns}Primary_Contact__c=&{contact1}[Id]  
     Go To Record Home    &{opportunity}[Id]
@@ -58,12 +59,12 @@ Test Case 2
     Go To Record Home    &{Contact2}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Soft Credit This Year    $500.00    Y
-    Confirm Value    Soft Credit Total    $500.00    Y
+    Navigate To And Validate Field Value    Soft Credit This Year    contains    $500.00
+    Navigate To And Validate Field Value   Soft Credit Total    contains    $500.00
     Go To Record Home    &{Contact1}[Id]
     ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
-    Confirm Value    Total Gifts This Year    $500.00    Y
-    Confirm Value    Total Gifts    $500.00    Y
-    Confirm Value    Soft Credit This Year    $0.00    Y
-    Confirm Value    Soft Credit Total    $0.00    Y
+    Navigate To And Validate Field Value    Total Gifts This Year    contains    $500.00
+    Navigate To And Validate Field Value    Total Gifts    contains    $500.00
+    Navigate To And Validate Field Value   Soft Credit This Year    contains    $0.00
+    Navigate To And Validate Field Value    Soft Credit Total    contains    $0.00

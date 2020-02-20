@@ -1,16 +1,28 @@
 <apex:page controller="STG_PanelRDCustomFieldMapping_CTRL" docType="html-5.0" standardStylesheets="false" >
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDFieldMap}" />
+
         <div class="slds-grid">
             <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
-                <p class="slds-text-body_small slds-m-top_x-small">{!$Label.stgHelpRDFieldMap}</p>
+                <p class="slds-text-body_small slds-m-top_x-small">{!IF(isRD2Enabled, '', $Label.stgHelpRDFieldMap)}</p>
             </div>        
         </div>
+
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
-            <apex:commandButton id="newRDFieldMapping" value="{!$Label.stgBtnNewRDFieldMap}" action="{!newCustomFieldMapping}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+
+        <div class="slds-illustration slds-illustration_large {!IF(isRD2Enabled, '', 'slds-hide')}" aria-hidden="true">
+            <img src="/img/chatter/Desert.svg" class="slds-illustration__svg" alt="Desert" />
+            <div class="slds-text-color_weak">
+                <h3 class="slds-text-heading_medium">{!$Label.RD2_PageNotAvailableHeader}</h3>
+                <p class="slds-text-body_regular">{!$Label.RD2_PageNotAvailableMessage}</p>
+            </div>
         </div>
-        <apex:outputPanel rendered="{!isEditMode}">
+
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="newRDFieldMapping" value="{!$Label.stgBtnNewRDFieldMap}" action="{!newCustomFieldMapping}" status="statusLoad" rendered="{!and(isReadOnlyMode, not(isRD2Enabled))}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+        </div>
+
+        <apex:outputPanel rendered="{!and(isEditMode, not(isRD2Enabled))}">
             <div class="slds-section">
                 <div class="slds-section-title_divider" >{!$Label.stgLabelNewRDFieldMap}</div>
             </div>
@@ -38,7 +50,7 @@
                 <apex:commandButton id="cancelRDFieldMapping" value="{!$Label.stgBtnCancel}" action="{!cancelCustomFieldMapping}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </div>
         </apex:outputPanel>
-        <apex:outputPanel rendered="{!AND(NOT(ISNULL(listRDCustomFieldMapping)), listRDCustomFieldMapping.size > 0)}">
+        <apex:outputPanel rendered="{!AND(NOT(ISNULL(listRDCustomFieldMapping)), listRDCustomFieldMapping.size > 0, not(isRD2Enabled))}">
             <table class="slds-table slds-table_bordered" >
                 <thead>
                     <tr class="slds-text-heading_label">

@@ -1,129 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Contact Merge Found FS --></label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
     <fields>
-        <help>Si esta dirección requiere verificación, hacer click en el botón Verificar Dirección. Consultar la documentación de ayuda en el Power of Us Hub para más información.</help>
+        <help>El estado de verificación de la dirección vigente. Si requiere verificación, navegue al registro de dirección actual y seleccione Verificar dirección. Consulte la documentación de Power of Us Hub para más información sobre la verificación de direcciones.</help>
         <label>Estado de verificación de dirección</label>
         <name>Address_Verification_Status__c</name>
     </fields>
     <fields>
-        <help>Lote en el que el contacto fue creado.</help>
+        <help>Consulta del lote en el que se creó este contacto.</help>
         <label>Lote</label>
         <name>Batch__c</name>
         <relationshipLabel>Contactos</relationshipLabel>
     </fields>
     <fields>
-        <help>La dirección actual con la que se completa los campos de dirección de correo.</help>
+        <help>Consulta del registro de la dirección actual para este contacto. NPSP rellena el campo de dirección postal del contacto con la con la calle, la ciudad, el estado o provincia y el código postal procedentes del registro de la dirección actual.</help>
         <label>Dirección actual</label>
-        <lookupFilter>
-            <informationalMessage>Para ver todas las direcciones para la familia del contacto, completar con A-* en la ventana de búsqueda</informationalMessage>
-        </lookupFilter>
         <name>Current_Address__c</name>
         <relationshipLabel>Contactos (Dirección actual)</relationshipLabel>
     </fields>
     <fields>
-        <help>Cuando se encuentra seleccionado, se excluye al contacto de el nombre y saludos de la familia, correos electrónicos y llamados.</help>
+        <help>Indica que el contacto ha fallecido. Cuando se selecciona, NPSP excluye al contacto de la nomenclatura del hogar (a no ser que este contacto sea el único del hogar) y listas telefónicas y correo electrónico estándar.</help>
         <label>Fallecido</label>
         <name>Deceased__c</name>
     </fields>
     <fields>
-        <help>Cuando se encuentra seleccionado, excluye a este contacto de correos electrónicos y llamados.</help>
+        <help>Indica que el contacto no desea que su organización lo llame o le envíe mensajes de correo electrónico. Cuando se selecciona, NPSP excluye este contacto de los reconocimientos de oportunidades.</help>
         <label>No contactar</label>
         <name>Do_Not_Contact__c</name>
     </fields>
     <fields>
-        <help>Seleccionar esta opción excluirá este contacto del saludo formal de la familia.</help>
-        <label>Excluir del saludo formal de familia</label>
+        <help>Cuando se selecciona, NPSP excluye este contacto del saludo formal del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
+        <label>Excluir del saludo formal de hogar</label>
         <name>Exclude_from_Household_Formal_Greeting__c</name>
     </fields>
     <fields>
-        <help>Seleccionar esta opción excluirá este contacto del saludo informal de la familia.</help>
-        <label>Excluir del saludo informal de familia</label>
+        <help>Cuando se selecciona, NPSP excluye este contacto del saludo informal del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
+        <label>Excluir del saludo informal de hogar</label>
         <name>Exclude_from_Household_Informal_Greeting__c</name>
     </fields>
     <fields>
-        <help>Seleccionar esta opción excluirá este contacto del nombre de la familia.</help>
-        <label>Excluir del nombre de la familia</label>
+        <help>Cuando se selecciona, NPSP excluye este contacto del nombre del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
+        <label>Excluir del nombre de hogar</label>
         <name>Exclude_from_Household_Name__c</name>
     </fields>
     <fields>
-        <help>El monto del primer crédito blando</help>
-        <label>Monto del primer crédito blando</label>
+        <help>El importe del primer crédito blando de este contacto.</help>
+        <label>Importe del primer crédito blando</label>
         <name>First_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>Fecha del primer crédito blando</help>
+        <help>La fecha del primer crédito blando de este contacto.</help>
         <label>Fecha del primer crédito blando</label>
         <name>First_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>Contiene el ID de la familia, ya sea que se usen cuentas o el objeto familias.</help>
-        <label>Id de familia</label>
+        <help>Contiene el Id. del registro del hogar (ya sea la cuenta del hogar o el objeto Hogar) con el que este contacto está asociado en estos momentos (solo lectura).</help>
+        <label>Id. de Hogar</label>
         <name>HHId__c</name>
     </fields>
     <fields>
-        <help>El monto del mayor crédito blando</help>
-        <label>Mayor monto de crédito blando</label>
+        <help>El importe más gran del crédito blando de este contacto.</help>
+        <label>Importe más grande de crédito blando</label>
         <name>Largest_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>Fecha del mayor crédito blando</help>
-        <label>Fecha del mayor crédito blando</label>
+        <help>La fecha del crédito blando más grande de este contacto.</help>
+        <label>Fecha del crédito blando más grande</label>
         <name>Largest_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>Monto el último crédito blando</help>
-        <label>Monto el último crédito blando</label>
+        <help>El importe del último crédito blando de este contacto.</help>
+        <label>Importe del último crédito blando</label>
         <name>Last_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>Fecha del último crédito blando</help>
+        <help>La fecha del último crédito blando de este contacto.</help>
         <label>Fecha del último crédito blando</label>
         <name>Last_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>La cantidad de créditos blandos, cerradas en los últimos días definidos en la configuración del NPSP</help>
-        <label>Cantidad de créd. blandos últimos N días</label>
+        <help>El número de créditos blandos atribuidos a este contacto que se cerraron en los últimos N días. El valor de N se define en Configuración de NPSP | Donaciones | Datos estadísticos de donantes.</help>
+        <label>Número créditos blandos en últimos N días</label>
         <name>Number_of_Soft_Credits_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Cantidad de créditos blandos el año pasado</help>
-        <label>Cantidad de créd. blandos año pasado</label>
+        <help>El número de créditos blandos atribuidos a este contacto en el año de calendario anterior.</help>
+        <label>Número de créditos blandos el año pasado</label>
         <name>Number_of_Soft_Credits_Last_Year__c</name>
     </fields>
     <fields>
-        <help>Cantidad de créditos blandos este año</help>
-        <label>Cantidad de créd. blandos este año</label>
+        <help>El número de créditos blandos atribuidos a este contacto este año de calendario.</help>
+        <label>Número de créditos blandos este año</label>
         <name>Number_of_Soft_Credits_This_Year__c</name>
     </fields>
     <fields>
-        <help>Cantidad de créditos blandos hace dos años</help>
-        <label>Cantidad de créd. blandos hace dos años</label>
+        <help>El número de créditos blandos atribuidos a este contacto hace dos años de calendario.</help>
+        <label>Número de créditos blandos hace dos años</label>
         <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help>Cantidad de créditos blandos</help>
-        <label>Cantidad de créditos blandos</label>
+        <help>El número total de créditos blandos atribuidos a este contacto.</help>
+        <label>Número de créditos blandos</label>
         <name>Number_of_Soft_Credits__c</name>
     </fields>
     <fields>
-        <help>Cuenta de la afiliación seleccionada como Principal</help>
+        <help>La cuenta está marcada como principal en la lista de afiliaciones de organizaciones de este contacto.</help>
         <label>Afiliación principal</label>
         <name>Primary_Affiliation__c</name>
-        <relationshipLabel>No usar - usar Afiliaciones de la organización</relationshipLabel>
+        <relationshipLabel>No utilizar. Utilizar las afiliaciones de la organización</relationshipLabel>
     </fields>
     <fields>
-        <help>Este campo esta seleccionado si es el contacto principal en la cuenta. El contacto principal puede editarse en la cuenta.</help>
+        <help>Indica si este contacto está designado como el contacto principal en su cuenta (solo lectura).</help>
         <label>Contacto principal</label>
         <name>Primary_Contact__c</name>
     </fields>
     <fields>
-        <help>Monto total de crédito blando, ganado en los últimos N días. N se define en la configuración del NPSP.</help>
-        <label>Crédito blando últimos N días</label>
+        <help>El importe total de créditos blandos atribuidos a este contacto en los últimos N días. El valor de N se define en Configuración de NPSP | Donaciones | Datos estadísticos de donantes.</help>
+        <label>Créditos blandos en últimos N días</label>
         <name>Soft_Credit_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Si seleccionado, la dirección en el campo Dirección actual en el contacto sobrescribe la dirección por defecto o la dirección de la temporada de la familia.</help>
-        <label>Sobrescribir dirección</label>
+        <help>Cuando se selecciona, NPSP no sincronizará la dirección de este contacto con la predeterminada del hogar o la dirección de temporada. Utilice esta opción para mantener una dirección postal separada para este contacto en particular.</help>
+        <label>Sustituir dirección</label>
         <name>is_Address_Override__c</name>
     </fields>
     <layouts>
@@ -133,7 +142,7 @@
             <section>Contact Details</section>
         </sections>
         <sections>
-            <label>Información de las donaciones</label>
+            <label>Información de la donación</label>
             <section>Donation Information</section>
         </sections>
         <sections>
@@ -141,23 +150,23 @@
             <section>Donation Totals</section>
         </sections>
         <sections>
-            <label>Direcciones de familia</label>
+            <label>Dirección de hogar</label>
             <section>Household Address</section>
         </sections>
         <sections>
-            <label>Donaciones de la familia</label>
+            <label>Información de donaciones de hogar</label>
             <section>Household Donation Info</section>
         </sections>
         <sections>
-            <label>Información de membresías</label>
+            <label>Información de afiliaciones</label>
             <section>Membership Information</section>
         </sections>
         <sections>
-            <label>Otros</label>
+            <label>Miscelánea</label>
             <section>Misc</section>
         </sections>
         <sections>
-            <label>Total crédito blando</label>
+            <label>Totales de créditos blandos</label>
             <section>Soft Credit Totals</section>
         </sections>
     </layouts>
@@ -174,7 +183,7 @@
         <name>New_Relationship</name>
     </quickActions>
     <quickActions>
-        <label>Actualización rápido</label>
+        <label>Actualización rápida</label>
         <name>Quick_Update</name>
     </quickActions>
     <webLinks>
@@ -182,7 +191,7 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label>Volver a calcular totales</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

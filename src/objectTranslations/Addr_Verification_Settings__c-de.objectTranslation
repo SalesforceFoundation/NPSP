@@ -66,12 +66,12 @@
         <name>Enable_Automatic_Verification__c</name>
     </fields>
     <fields>
-        <help><!-- Prevents the Cicero API from overwriting Addresses during verification. --></help>
-        <label><!-- Prevent Address Overwrite --></label>
+        <help>Verhindert, dass die Cicero-API während der Überprüfung Adressen überschreibt.</help>
+        <label>Überschreiben der Adresse verhindern</label>
         <name>Prevent_Address_Overwrite__c</name>
     </fields>
     <fields>
-        <help>Markiert zweideutige Adressen als ungültig, wenn die API mehr als eine Adresse zurückgibt Wenn diese Option nicht ausgewählt ist, übernimmt Salesforce die erste vorgeschlagene Adresse als gültige Adresse.</help>
+        <help>Markiert zweideutige Adressen als ungültig, wenn die API mehr als eine Adresse zurückgibt. Wenn diese Option nicht ausgewählt ist, übernimmt Salesforce die erste vorgeschlagene Adresse als gültige Adresse.</help>
         <label>Zweideutige Adressen ablehnen</label>
         <name>Reject_Ambiguous_Addresses__c</name>
     </fields>
@@ -82,7 +82,7 @@
     </fields>
     <fields>
         <help>Gibt an, ob Sie den SmartyStreets-Service zur Adressenüberprüfung verwenden</help>
-        <label><!-- DEPRECATED - Using SmartyStreets --></label>
+        <label>ERSETZT – Verwenden von SmartyStreets</label>
         <name>Using_SmartyStreets__c</name>
     </fields>
     <fields>

@@ -35,8 +35,11 @@
 */
 @isTest
 private class ERR_Handler_TEST {
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
+    private static final String ERROR_CONTEXT = ERR_Handler_API.Context.STTG.name();
 
     private static Id chatterGroupId;
+    private static StringException testException = new StringException('Test Exception');
 
     /*******************************************************************************************************
     * @description test setup of error notifications via chatter
@@ -50,18 +53,21 @@ private class ERR_Handler_TEST {
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
             npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
 
-        if(Schema.SObjectType.User.isFeedEnabled()) {
+        if (Schema.SObjectType.User.isFeedEnabled()) {
             SObject chatterGroup = (SObject)System.Type.forName('CollaborationGroup').newInstance();
             chatterGroup.put('Name', 'ChatterTestGroup');
             chatterGroup.put('CollaborationType', 'Private');
             insert chatterGroup;
+
             chatterGroupId = chatterGroup.Id;
-            UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true,
-            Error_Notifications_To__c = chatterGroup.Id, Store_Errors_On__c = true, Respect_Duplicate_Rule_Settings__c = true));
-        } else {
-            UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true,
-            Error_Notifications_To__c = null, Store_Errors_On__c = true, Respect_Duplicate_Rule_Settings__c = true));
         }
+
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
+            Error_Notifications_On__c = true,
+            Error_Notifications_To__c = chatterGroupId,
+            Store_Errors_On__c = true,
+            Respect_Duplicate_Rule_Settings__c = true
+        ));
     }
 
     /*******************************************************************************************************
@@ -77,8 +83,13 @@ private class ERR_Handler_TEST {
             npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
 
         User user = UTIL_UnitTestData_TEST.CreateNewUserForTests(System.now().getTime() + '@testerson.com');
-        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Error_Notifications_On__c = true,
-            Error_Notifications_To__c = user.Id, Store_Errors_On__c = true, Respect_Duplicate_Rule_Settings__c = true));
+
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
+            Error_Notifications_On__c = true,
+            Error_Notifications_To__c = user.Id,
+            Store_Errors_On__c = true,
+            Respect_Duplicate_Rule_Settings__c = true
+        ));
     }
 
     /**
@@ -90,10 +101,9 @@ private class ERR_Handler_TEST {
     private static void errorsStoredInDbTdtmCustomConfigPostToChatter() {
         setupWithChatterNotifications();
 
-        StringException testException = new StringException('Test Exception');
         ERR_Handler.processError(testException, ERR_Handler_API.Context.TDTM);
 
-        List<Error__c> errors = getErrors();
+        List<Error__c> errors = errorGateway.getRecords();
 
         System.assertEquals(1, errors.size());
         UTIL_Debug.debug('****Errors: ' + JSON.serializePretty(errors));
@@ -119,12 +129,11 @@ private class ERR_Handler_TEST {
 
         Test.startTest();
 
-        StringException testException = new StringException('Test Exception');
         ERR_Handler.processError(testException, ERR_Handler_API.Context.TDTM);
 
         Test.stopTest();
 
-        List<Error__c> errors = getErrors();
+        List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size());
 
         //Verify error was emailed
@@ -181,7 +190,7 @@ private class ERR_Handler_TEST {
 
         ERR_Handler.processError('Test Message', 'Test Context');
 
-        List<Error__c> errs = getErrors();
+        List<Error__c> errs = errorGateway.getRecords();
 
         System.assertEquals(1, errs.size(), '1 error should be present');
         System.assertEquals(true, errs[0].Full_Message__c.contains('Test Message'), 'Full Message should contain Test Message, Actual: ' + errs[0].Full_Message__c);
@@ -224,57 +233,118 @@ private class ERR_Handler_TEST {
             Error_Notifications_On__c = true,
             Error_Notifications_To__c = u.Id,
             Store_Errors_On__c = true,
-            Respect_Duplicate_Rule_Settings__c = true));
+            Respect_Duplicate_Rule_Settings__c = true
+        ));
 
         Test.startTest();
-
-        StringException testException = new StringException('Test Exception');
         ERR_Handler.processError(testException, ERR_Handler_API.Context.TDTM);
-
         Test.stopTest();
 
-        List<Error__c> errors = getErrors();
+        List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size());
 
         //Verify error was NOT emailed
-        for(Error__c error : errors) {
+        for (Error__c error : errors) {
             System.assertEquals(true, error.Email_Sent__c);
             System.assertEquals(ERR_Handler_API.Context.TDTM.name(), error.Context_Type__c);
         }
     }
 
     /**
-     * @description Trigger error notification processing by calling
-     * ERR_Handler.sendErrorNotification() and verify that the error was created.
+     * @description Verifies error notification processing.
+     * The error message is not displayed on the NPSP Settings page
      */
     @IsTest
     private static void shouldCreateErrorBySendErrorNotification() {
+        Test.setCurrentPage(Page.STG_SettingsManager);
 
         Test.startTest();
-        StringException testException = new StringException('Test Exception');
-        ERR_Handler.sendErrorNotification(testException, ERR_Handler_API.Context.STTG.name());
+        ERR_Handler.sendErrorNotification(testException, ERROR_CONTEXT);
         Test.stopTest();
 
-        List<Error__c> errors = getErrors();
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be generated: ' + errors);
+        System.assertEquals(true, errors[0].Email_Sent__c, 'The error should be emailed');
 
-        System.assertEquals(1, errors.size());
-
+        List<ApexPages.Message> pageMessages = ApexPages.getMessages();
+        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page: ' + pageMessages);
     }
-
-    // Helpers
-    ////////////
 
     /**
-     * @description Helper method to retrieve all error records
+     * @description Verifies error notification processing.
+     * The error message is not displayed on the NPSP Settings page
      */
-    private static List<Error__c> getErrors() {
-        return [SELECT Id,
-                Full_Message__c,
-                Stack_Trace__c,
-                Email_Sent__c,
-                Posted_in_Chatter__c,
-                Context_Type__c
-            FROM Error__c
-        ];
+    @IsTest
+    private static void shouldProcessErrorOnlyButNotDisplayItOnPage() {
+        Test.setCurrentPage(Page.STG_SettingsManager);
+
+        List<Error__c> errors = new List<Error__c>{
+            ERR_Handler.createError(testException, ERROR_CONTEXT)
+        };
+        System.assertEquals(false, errors[0].Email_Sent__c, 'The error should not have emailed setting on');
+
+        Test.startTest();
+        ERR_Handler.processErrorsOnly(errors, ERROR_CONTEXT);
+        Test.stopTest();
+
+        errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be generated: ' + errors);
+        System.assertEquals(true, errors[0].Email_Sent__c, 'The error should be emailed');
+
+        List<ApexPages.Message> pageMessages = ApexPages.getMessages();
+        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page: ' + pageMessages);
     }
+
+    /**
+     * @description Verifies error notification processing.
+     * The error message is not displayed on the NPSP Settings page
+     */
+    @IsTest
+    private static void shouldProcessErrorResultButNotDisplayItOnPage() {
+        Test.setCurrentPage(Page.STG_SettingsManager);
+
+        ERR_Handler.Errors errorResult = new ERR_Handler.Errors();
+        errorResult.errorsExist = true;
+        errorResult.errorRecords.add(
+            ERR_Handler.createError(testException, ERROR_CONTEXT)
+        );
+
+        Test.startTest();
+        ERR_Handler.processErrorsOnly(errorResult, ERROR_CONTEXT);
+        Test.stopTest();
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be generated: ' + errors);
+        System.assertEquals(true, errors[0].Email_Sent__c, 'The error should be emailed');
+
+        List<ApexPages.Message> pageMessages = ApexPages.getMessages();
+        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page: ' + pageMessages);
+    }
+
+    /**
+     * @description Verifies error notification processing.
+     * The error message is displayed on the NPSP Settings page
+     */
+    @IsTest
+    private static void shouldProcessErrorAndDisplayItOnPage() {
+        Test.setCurrentPage(Page.STG_SettingsManager);
+
+        List<Error__c> errors = new List<Error__c>{
+            ERR_Handler.createError(testException, ERROR_CONTEXT)
+        };
+        System.assertEquals(false, errors[0].Email_Sent__c, 'The error should not have emailed setting on');
+
+        Test.startTest();
+        ERR_Handler.processErrors(errors, ERROR_CONTEXT);
+        Test.stopTest();
+
+        errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'An error should be generated: ' + errors);
+        System.assertEquals(true, errors[0].Email_Sent__c, 'The error should be emailed');
+
+        List<ApexPages.Message> pageMessages = ApexPages.getMessages();
+        System.assertEquals(1, pageMessages.size(), 'Error message should be displayed on the page: ' + pageMessages);
+    }
+
+
 }

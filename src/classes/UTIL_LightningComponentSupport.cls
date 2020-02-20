@@ -78,4 +78,28 @@ public with sharing class UTIL_LightningComponentSupport {
         }
     }
 
+    /**
+    * @description Values used to set the variant property on a Notice.
+    */
+    public enum Variant {
+        INFO, WARNING, ERROR
+    }
+
+    /**
+    * @description An Apex class that represents the Notice object in the
+    * lightning:notificationsLibrary.  Used to construct instances in Apex that can then be
+    * referenced in lightning.
+    */
+    public virtual class Notice {
+        public String header { get; set; }
+        public String title { get; set; }
+        public String message { get; set; }
+        public String variant { get; private set; }
+
+        public void setVariant(Variant variant) {
+            if (variant != null) {
+                this.variant = variant.name().toLowerCase();
+            }
+        }
+    }
 }

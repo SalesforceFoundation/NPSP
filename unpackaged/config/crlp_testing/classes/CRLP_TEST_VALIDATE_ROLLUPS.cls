@@ -498,6 +498,10 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 // ========================================================================================================
 
     private static void createAccountsAndContacts() {
+        npo02__Households_Settings__c hhSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        hhSettings.npo02__Advanced_Household_Naming__c = false;
+        update hhSettings;
+
         Account hh1 =  new Account(
             Name = 'CRLP TEST HOUSEHOLD 1',
             Site = TEST_SITE_NAME,
@@ -589,6 +593,12 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         hh2.npe01__One2OneContact__c = hh2Con1.Id;
         rdAcct.npe01__One2OneContact__c = rdCon.Id;
         update new List<Account>{ hh1, hh2, rdAcct };
+
+        rdAcct.Name = ACCOUNT_NAME_RD;
+        hh1.Name = 'CRLP TEST HOUSEHOLD 1';
+        hh2.Name = 'CRLP TEST HOUSEHOLD 2';
+        hh3.Name = 'CRLP TEST HOUSEHOLD 3';
+        update new List<Account>{ hh1, hh2, hh3, rdAcct };
     }
 
     private static void createGAU() {
@@ -810,9 +820,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             npe03__Contact__c = rdContact.Id,
             /*npe03__Organization__c = rdContact.AccountId,*/
             npe03__Amount__c = RD_AMOUNT_USD,
-            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
+            npe03__Installment_Period__c = RD_Constants.INSTALLMENT_PERIOD_MONTHLY,
             npe03__Date_Established__c = Date.Today().addMonths(-12),
-            npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+            npe03__Schedule_Type__c = RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY,
             npe03__Open_Ended_Status__c = 'Open'
         );
         insert rd;

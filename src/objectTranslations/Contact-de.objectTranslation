@@ -1,128 +1,137 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Contact Merge Found FS --></label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
     <fields>
-        <help>Klicken Sie oben auf der Seite &quot;Adresse&quot; auf die Schaltfläche &quot;Adresse überprüfen&quot;, falls diese Adresse überprüft werden muss. Weitere Informationen finden Sie in der Hilfedokumentation im &quot;Power of Us&quot;-Hub.</help>
+        <help>Klicken Sie oben auf der Seite &quot;Adresse&quot; auf die Schaltfläche &quot;Adresse überprüfen&quot;, falls diese Adresse überprüft werden muss. Weitere Informationen zur Adressenüberprüfung finden Sie in der Hilfedokumentation im &quot;Power of Us&quot;-Hub.</help>
         <label>Adressenüberprüfungsstatus</label>
         <name>Address_Verification_Status__c</name>
     </fields>
     <fields>
-        <help>Nachschlageoption zum Batch, in dem dieser Kontakt erstellt wurde</help>
-        <label><!-- Batch --></label>
+        <help>Nachschlageoption zum Batch, in dem dieser Kontakt erstellt wurde.</help>
+        <label>Batch</label>
         <name>Batch__c</name>
         <relationshipLabel>Kontakte</relationshipLabel>
     </fields>
     <fields>
-        <help>Die aktuelle Adresse, die in den Anschriftfeldern des Kontakts eingetragen ist</help>
+        <help>Nachschlageoption zum aktuellen Adressdatensatz für diesen Kontakt. NPSP gibt die Straße, die Stadt, das Bundesland und die Postleitzahl aus dem aktuellen Adressdatensatz in das Postadressenfeld des Kontakts ein. </help>
         <label>Aktuelle Adresse</label>
-        <lookupFilter>
-            <informationalMessage>Geben Sie im Suchfenster &quot;A-*&quot; ein, um alle Adressen für den Haushalt des Kontakts zu sehen.</informationalMessage>
-        </lookupFilter>
         <name>Current_Address__c</name>
         <relationshipLabel>Kontakte (Aktuelle Adresse)</relationshipLabel>
     </fields>
     <fields>
-        <help>Wenn diese Option ausgewählt ist, wird der Kontakt als verstorben gekennzeichnet und von Benennung, E-Mails und Telefonanrufen ausgeschlossen.</help>
+        <help>Gibt an, dass der Kontakt verstorben ist. Bei Auswahl dieser Option wird der Kontakt als verstorben gekennz. und von der Haushalt-Benennung und von den Standard-E-Mails und Telefonanrufen ausgeschl. (Wenn er nicht der einzige Kontakt i. d. Haush. ist).</help>
         <label>Verstorben</label>
         <name>Deceased__c</name>
     </fields>
     <fields>
-        <help>Wenn diese Option ausgewählt ist, wird der Kontakt von E-Mails und Telefonanrufen ausgeschlossen.</help>
+        <help>Gibt an, dass der Kontakt keine Anrufe und E-Mails von Ihrer Organisation erhalten möchte. Mit diesem Feld filtern Sie Kontakte aus den E-Mail- und Telefonlisten heraus. Mit dieser Option wird dieser Kontakt aus den Opp.-Bestätigungen ausgeschl.</help>
         <label>Nicht kontaktieren</label>
         <name>Do_Not_Contact__c</name>
     </fields>
     <fields>
-        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt von der formellen Anrede des Haushalts ausgeschlossen.</help>
+        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt von der formellen Anrede des Haushalts ausgeschlossen (Einstellung unter NPSP-Einstellungen | Personen | Haushalte).</help>
         <label>Von formeller Anrede d. Haush. ausschl.</label>
         <name>Exclude_from_Household_Formal_Greeting__c</name>
     </fields>
     <fields>
-        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt von der informellen Anrede des Haushalts ausgeschlossen.</help>
+        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt von der informellen Anrede des Haushalts ausgeschlossen (Einstellung unter NPSP-Einstellungen | Personen | Haushalte).</help>
         <label>Von inform. Anrede des Haush. ausschl.</label>
         <name>Exclude_from_Household_Informal_Greeting__c</name>
     </fields>
     <fields>
-        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt im Haushalt-Namen ausgeschlossen.</help>
-        <label>Im Haushalt-Namen ausschließen</label>
+        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt aus dem Haushalt-Namen ausgeschlossen (Einstellung unter NPSP-Einstellungen | Personen | Haushalte).</help>
+        <label>Aus Haushalt-Namen ausschließen</label>
         <name>Exclude_from_Household_Name__c</name>
     </fields>
     <fields>
-        <help>Der Betrag des ersten weichen Kredits</help>
-        <label>Betrag des ersten weichen Kredits</label>
+        <help>Der Betrag des ersten Soft Credit</help>
+        <label>Betrag des ersten Soft Credit</label>
         <name>First_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>Der Betrag des ersten weichen Kredits</help>
-        <label>Datum des ersten weichen Kredits</label>
+        <help>Das Datum des ersten Soft Credit</help>
+        <label>Datum des ersten Soft Credit</label>
         <name>First_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>Enthält die Kennung des aktuellen Haushalts, sei es ein Haushalt-Account oder ein Haushalt-Objekt.</help>
+        <help>Enthält die Kennung des Haushalt-Datensatzes (entweder Haushalt-Account oder Haushalt-Objekt), mit dem dieser Kontakt aktuell verbunden ist (schreibgeschützt).</help>
         <label>HH-Kennung</label>
         <name>HHId__c</name>
     </fields>
     <fields>
-        <help>Der Betrag des höchsten weichen Kredits</help>
-        <label>Betrag des höchsten weichen Kredits</label>
+        <help>Der Betrag des höchsten Soft Credit dieses Kontakts</help>
+        <label>Betrag des höchsten Soft Credit</label>
         <name>Largest_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>Das Datum des höchsten weichen Kredits</help>
-        <label>Datum des höchsten weichen Kredits</label>
+        <help>Das Datum des höchsten Soft Credit dieses Kontakts</help>
+        <label>Datum des höchsten Soft Credit</label>
         <name>Largest_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>Der Betrag des letzten weichen Kredits</help>
-        <label>Betrag des letzten weichen Kredits</label>
+        <help>Der Betrag des letzten Soft Credit dieses Kontakts</help>
+        <label>Betrag des letzten Soft Credit</label>
         <name>Last_Soft_Credit_Amount__c</name>
     </fields>
     <fields>
-        <help>Das Datum des letzten weichen Kredits</help>
-        <label>Datum des letzten weichen Kredits</label>
+        <help>Das Datum des letzten Soft Credit</help>
+        <label>Datum des letzten Soft Credit</label>
         <name>Last_Soft_Credit_Date__c</name>
     </fields>
     <fields>
-        <help>Die Anzahl der weichen Kredite, die in den letzten Tagen abgeschlossen wurden, wie in den NPSP-Einstellungen definiert</help>
-        <label>Anz. weiche Kredite i. d. letzt. N Tagen</label>
+        <help>Die Anzahl der Soft Credits, die in den letzten Tagen abgeschlossen wurden, wie in den NPSP-Einstellungen definiert</help>
+        <label>Anz. Soft Credits i. d. letzt. N Tagen</label>
         <name>Number_of_Soft_Credits_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Die Anzahl der weichen Kredite im letzten Jahr</help>
-        <label>Anzahl der weichen Kredite letztes Jahr</label>
+        <help>Die Anzahl der diesem Kontakt im letzten Kalenderjahr zugewiesenen Soft Credits</help>
+        <label>Anzahl Soft Credits letztes Jahr</label>
         <name>Number_of_Soft_Credits_Last_Year__c</name>
     </fields>
     <fields>
-        <help>Die Anzahl der weichen Kredite in diesem Jahr</help>
-        <label>Anzahl der weichen Kredite dieses Jahr</label>
+        <help>Die Anzahl der diesem Kontakt in diesem Kalenderjahr zugewiesenen Soft Credits</help>
+        <label>Anzahl Soft Credits dieses Jahr</label>
         <name>Number_of_Soft_Credits_This_Year__c</name>
     </fields>
     <fields>
-        <help>Die Anzahl der weichen Kredite vor zwei Jahren</help>
-        <label>Anzahl weiche Kredite vor zwei Jahren</label>
+        <help>Die Anzahl der diesem Kontakt vor zwei Kalenderjahren zugewiesenen Soft Credits</help>
+        <label>Anzahl Soft Credits vor zwei Jahren</label>
         <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help>Die Anzahl der weichen Kredite</help>
-        <label>Anzahl der weichen Kredite</label>
+        <help>Die Gesamtzahl der diesem Kontakt zugewiesenen Soft Credits</help>
+        <label>Anzahl Soft Credits</label>
         <name>Number_of_Soft_Credits__c</name>
     </fields>
     <fields>
-        <help>Wird zur Verfolgung des Account des Datensatzes mit der Unternehmenszugehörigkeit des Kontakts verwendet</help>
+        <help>Der in der Liste der Organisationszugehörigkeiten dieses Kontakts als &quot;Primär&quot; gekennzeichnete Account.</help>
         <label>Primäre Zugehörigkeit</label>
         <name>Primary_Affiliation__c</name>
-        <relationshipLabel>Nicht verwenden  Verwenden Sie &quot;Organisationszugehörigkeiten&quot;.</relationshipLabel>
+        <relationshipLabel>Nicht verwenden. Verwenden Sie &quot;Organisationszugehörigkeiten&quot;.</relationshipLabel>
     </fields>
     <fields>
-        <help>Diese Option wird aktiviert, wenn der Benutzer der Hauptansprechpartner für seinen Account ist.  Der Hauptansprechpartner kann im Account bearbeitet werden.</help>
+        <help>Gibt an, ob dieser Kontakt in seinem Account als Hauptansprechpartner festgelegt ist (schreibgeschützt).</help>
         <label>Hauptansprechpartner</label>
         <name>Primary_Contact__c</name>
     </fields>
     <fields>
-        <help>Der Gesamtbetrag des weichen Kredits, der in den letzten Tagen abgeschlossen wurde, wie in den Haushalt-Einstellungen definiert</help>
-        <label>Weiche Kredite in den letzten N Tagen</label>
+        <help>Der Gesamtbetrag des diesem Kontakt in den letzten N Tagen zugewiesenen Soft Credit. Der Wert N wird in den NPSP-Einstellungen unter &quot;Spenden&quot; &gt; &quot;Spenderstatistik&quot; definiert.</help>
+        <label>Soft Credits in den letzten N Tagen</label>
         <name>Soft_Credit_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Wenn diese Option aktiviert ist, wird die Standardadresse oder saisonale Adresse des Haushalts durch die aktuelle Adresse des Kontakts überschrieben.</help>
+        <help>Wenn diese Option aktiviert ist, wird die Adresse dieses Kontakts nicht mit dem Standardhaushalt oder der saisonalen Adresse synchronisiert. Auf diese Weise erhalten Sie eine separate Postanschrift für diesen speziellen Kontakt.</help>
         <label>Überschreiben der Adresse</label>
         <name>is_Address_Override__c</name>
     </fields>
@@ -157,7 +166,7 @@
             <section>Misc</section>
         </sections>
         <sections>
-            <label>Weicher Kredit gesamt</label>
+            <label>Soft Credit gesamt</label>
             <section>Soft Credit Totals</section>
         </sections>
     </layouts>
@@ -182,7 +191,7 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label>Rollups neu berechnen</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
-</CustomObjectTranslation>
+    </CustomObjectTranslation>

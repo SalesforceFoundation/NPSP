@@ -58,6 +58,7 @@
         <externalId>false</externalId>
         <label>Account</label>
         <referenceTo>Account</referenceTo>
+        <relationshipLabel>Engagement Plans</relationshipLabel>
         <relationshipName>Action_Plans</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -69,6 +70,7 @@
         <externalId>false</externalId>
         <label>Campaign</label>
         <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>Engagement Plans</relationshipLabel>
         <relationshipName>Action_Plans</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -80,6 +82,7 @@
         <externalId>false</externalId>
         <label>Case</label>
         <referenceTo>Case</referenceTo>
+        <relationshipLabel>Engagement Plans</relationshipLabel>
         <relationshipName>Action_Plans</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -103,6 +106,7 @@
         <externalId>false</externalId>
         <label>Contact</label>
         <referenceTo>Contact</referenceTo>
+        <relationshipLabel>Engagement Plans</relationshipLabel>
         <relationshipName>Action_Plans</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -127,6 +131,7 @@
         <externalId>false</externalId>
         <label>Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Engagement Plans</relationshipLabel>
         <relationshipName>Action_Plans</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -138,6 +143,7 @@
         <externalId>false</externalId>
         <label>Recurring Donation</label>
         <referenceTo>npe03__Recurring_Donation__c</referenceTo>
+        <relationshipLabel>Engagement Plans</relationshipLabel>
         <relationshipName>Action_Plans</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>

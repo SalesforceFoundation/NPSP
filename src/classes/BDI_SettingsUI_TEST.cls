@@ -65,4 +65,49 @@ private with sharing class BDI_SettingsUI_TEST {
         Test.stopTest();
     }
 
+    /*******************************************************************************************************************
+     * @description Verifies that the right Mapping Method is loaded - Help Text
+     *
+     */
+    @IsTest
+    static void testBDI_SettingsUIMapping_HelpText(){
+        UTIL_CustomSettingsFacade.enableHelpTextMapping();
+        BDI_SettingsUI_CTRL ctrl = new BDI_SettingsUI_CTRL();
+        Boolean containsImportedField = false;
+
+        for (SelectOption option : ctrl.listSODonationFields) {
+            if (option.getValue() == UTIL_Namespace.alignSchemaNSWithEnvironment(
+                    'npsp__donationcampaignimported__c')) {
+                containsImportedField = true;
+                break;
+            }
+        }
+        Test.startTest();
+        System.assert(containsImportedField, 'Help Text Mapping Enabled');
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************************
+     * @description Verifies that the right Mapping Method is loaded - Advanced Mapping
+     *
+     */
+    @IsTest
+    static void testBDI_SettingsUIMapping_AdvancedMapping(){
+        UTIL_CustomSettingsFacade.enableAdvancedMapping();
+        BDI_SettingsUI_CTRL ctrl = new BDI_SettingsUI_CTRL();
+        Boolean containsImportedField = false;
+
+        for (SelectOption option : ctrl.listSODonationFields) {
+            if (option.getValue() == UTIL_Namespace.alignSchemaNSWithEnvironment(
+                    'npsp__donationcampaignimported__c')) {
+                containsImportedField = true;
+                break;
+            }
+        }
+        Test.startTest();
+        System.assert(!containsImportedField, 'Advanced Field Mapping Enabled');
+        Test.stopTest();
+    }
+
+
 }

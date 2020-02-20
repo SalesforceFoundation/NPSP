@@ -8,6 +8,10 @@
         <plural>true</plural>
         <value>Engagement Plan Templates</value>
     </caseValues>
+    <fieldSets>
+        <label><!-- Manage EP Template FS --></label>
+        <name>ManageEPTemplateFS</name>
+    </fieldSets>
     <fields>
         <help><!-- Recalculates a child Task&apos;s due date based on when the parent Task was actually completed. --></help>
         <label><!-- Automatically Update Child Task Due Date --></label>

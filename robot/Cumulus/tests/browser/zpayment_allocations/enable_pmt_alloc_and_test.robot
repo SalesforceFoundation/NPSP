@@ -2,6 +2,7 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/OpportunityPageObject.py
 ...             robot/Cumulus/resources/PaymentPageObject.py
 Suite Setup     Run keywords
 ...             Open Test Browser
@@ -18,10 +19,10 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
     Load Related List    GAU Allocations
-    Click Link    &{payment}[Name]    
+    Click Link With Text    &{payment}[Name]    
     Select Window
     Select Tab    Related
-    Load Page Object        Detail    npe01__OppPayment__c
+    Load Page Object        Details    npe01__OppPayment__c
     Verify Payment Allocations    
     ...    &{def_gau}[Name]=$100.00
     Click Wrapper Related List Button    Payment Allocations    New
@@ -41,6 +42,8 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
 
 Update GAU Allocations and Verify Payment Allocations Sync
     [tags]    unstable
+    Go To Page    Details    Opportunity    object_id=&{opportunity}[Id]
+    Select Tab    Related
     Click Special Related List Button  GAU Allocations    Manage Allocations
     Choose Frame    Manage Allocations
     Add GAU Allocation    Percent 0    60
@@ -50,7 +53,7 @@ Update GAU Allocations and Verify Payment Allocations Sync
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
     # As a workaround for lightning cache issue, going to the payment record directly as it would reload the record
-    Go To Record Home    &{payment}[Id]
+    Go To Page    Details    npe01__OppPayment__c    object_id=&{payment}[Id]
     Select Tab    Related
     Verify Payment Allocations    
     ...    &{def_gau}[Name]=$40.00
@@ -71,8 +74,8 @@ Enable Payment Allocations
     Checkbox Status    Default Allocations Enabled    Not Checked
     Click Button    Edit
     Choose Frame    Allocations Settings
-    Select Lightning Checkbox    Default_Allocations_Enabled
-    Select Lightning Checkbox    Payment_Allocations_Enabled
+    Set Checkbutton To    Default_Allocations_Enabled    checked
+    Set Checkbutton To    Payment_Allocations_Enabled    checked
     Populate Field With Id    Default__c    &{def_gau}[Id]
     Click Button    Save    
     
@@ -87,8 +90,8 @@ Disable Payment Allocations
     Checkbox Status    Default Allocations Enabled    Checked
     Click Button    Edit
     Choose Frame    Allocations Settings
-    Select Lightning Checkbox    Default_Allocations_Enabled
-    Select Lightning Checkbox    Payment_Allocations_Enabled
+    Set Checkbutton To    Default_Allocations_Enabled    unchecked
+    Set Checkbutton To    Payment_Allocations_Enabled    unchecked
     Populate Field With Id    Default__c    null
     Click Button    Save      
     

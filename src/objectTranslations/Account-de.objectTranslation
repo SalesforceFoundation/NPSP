@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Manage Household Custom --></label>
+        <name>Manage_Household_Custom</name>
+    </fieldSets>
     <fields>
-        <help>Der Batch, in dem dieser Account erstellt wurde</help>
-        <label><!-- Batch --></label>
+        <help>Der Batch, in dem dieser Account erstellt wurde.</help>
+        <label>Batch</label>
         <name>Batch__c</name>
-        <relationshipLabel><!-- Accounts --></relationshipLabel>
+        <relationshipLabel>Accounts</relationshipLabel>
     </fields>
     <fields>
-        <help>Die allgemeinen Programmbereiche, die diese Organisation finanziert</help>
+        <help>Die allgemeinen Programmbereiche, die diese Organisation finanziert.</help>
         <label>Finanzierungsfokus</label>
         <name>Funding_Focus__c</name>
         <picklistValues>
@@ -40,22 +52,22 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Gibt an, dass diese Organisation ein Geldgeber ist Kann u. a. auf Stiftungen, Behörden, Firmen zutreffen</help>
+        <help>Gibt an, dass diese Organisation eine Geldgeberorganisation ist. </help>
         <label>Geldgeber</label>
         <name>Grantmaker__c</name>
     </fields>
     <fields>
-        <help>Der Name des Verwalters von zugewiesenen Geschenken im Unternehmen</help>
-        <label>Name d. Kontakts von zugew. Geschenken</label>
+        <help>Der Name des Verwalters von zugewiesenen Spenden des Unternehmens</help>
+        <label>Name d. Verwalters von zugew. Spenden</label>
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
-        <help>Der maximale Betrag, den das Unternehmen jedem einzelnen Geschenk zuweist</help>
+        <help>Der maximale Betrag, den das Unternehmen jedem einzelnen Geschenk zuweist.</help>
         <label>Zugewiesener Spendenbetrag maximal</label>
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
     <fields>
-        <help>Das kleinste Geschenk, das das Unternehmen zuweist</help>
+        <help>Der kleinste Betrag, den das Unternehmen in einer einzelnen Spende zuweist.</help>
         <label>Zugewiesener Spendenbetrag minimal</label>
         <name>Matching_Gift_Amount_Min__c</name>
     </fields>
@@ -66,22 +78,22 @@
     </fields>
     <fields>
         <help>Weitere Hinweise zum Verwalter von zugewiesenen Geschenken im Unternehmen</help>
-        <label>Kommentare zu zugewiesenem Spenden</label>
+        <label>Kommentare zu zugewiesenen Spenden</label>
         <name>Matching_Gift_Comments__c</name>
     </fields>
     <fields>
-        <help>Ist dies ein Unternehmen, das zugewiesene Geschenke anbietet?</help>
+        <help>Gibt an, dass dies ein Unternehmen ist, das zugewiesene Geschenke anbietet.</help>
         <label>Unternehmen mit zugewiesenen Geschenken</label>
         <name>Matching_Gift_Company__c</name>
     </fields>
     <fields>
         <help>Die E-Mail-Adresse des Verwalters von zugewiesenen Geschenken im Unternehmen</help>
-        <label>E-Mail-Adr. d. Kontakts v. zugew. Spende</label>
+        <label>E-Mail zu zugewiesenen Spenden</label>
         <name>Matching_Gift_Email__c</name>
     </fields>
     <fields>
         <help>Das Datum, an dem die Informationen über zugewiesene Geschenke zuletzt aktualisiert wurden</help>
-        <label>Aktualisierung d. Info üb. zugew. Spende</label>
+        <label>Aktualis. Info über zugewies. Geschenke.</label>
         <name>Matching_Gift_Info_Updated__c</name>
     </fields>
     <fields>
@@ -90,27 +102,27 @@
         <name>Matching_Gift_Percent__c</name>
     </fields>
     <fields>
-        <help>Telefonnummer des Büros des Verwalters von zugewiesenen Geschenken</help>
-        <label>Telefonnr. d. Kont. v. zugew. Spende.</label>
+        <help>Die Telefonnummer des Büros des Verwalters von zugewiesenen Geschenken</help>
+        <label>Telefonnummer der zugewiesenen Spende.</label>
         <name>Matching_Gift_Phone__c</name>
     </fields>
     <fields>
-        <help>Einschränkungen für die Zuweisung alter Geschenke</help>
+        <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für die Zuweisung von Geschenken zu vermerken.</help>
         <label>Letzter Termin f. Anfr. n. zugew. Spende</label>
         <name>Matching_Gift_Request_Deadline__c</name>
     </fields>
     <fields>
-        <help>Formel: Die Anzahl der Jahre, für die dieser Haushalt ein Mitglied hatte</help>
+        <help>Die Anzahl der Jahre, für die ein Mitglied dieses Haushalts eine Mitgliedschaft hatte (schreibgeschützt).</help>
         <label>Zeitraum der Mitgliedschaft</label>
         <name>Membership_Span__c</name>
     </fields>
     <fields>
-        <help>Formel: Aktuell, Abgelaufen oder Kulanzzeitraum  Standardkulanzzeitraum in den Haushalt-Einstellungen</help>
+        <help>Der Mitgliedsch‘status dieses Haush., z. B. &quot;Aktuell&quot;, &quot;Abgelaufen&quot; o. &quot;Kulanzzeitraum&quot;. Der Wert basiert a. d. Ende der Mitgliedsch. u. der Kulanzzeit. Die Stand‘kulanzzeit wird i. d. NPSP-Einst‘en i. d. Haush.-Einstell‘en festgelegt. Schreibgesch. Feld.</help>
         <label>Mitgliedschaftsstatus</label>
         <name>Membership_Status__c</name>
     </fields>
     <fields>
-        <help>Die Anzahl der Kontakte im Haushalt für Haushalt-Accounts</help>
+        <help>Die Anzahl der Kontakte, die Mitglieder in diesem Haushalt sind.</help>
         <label>Anzahl der Haushalt-Mitglieder</label>
         <name>Number_of_Household_Members__c</name>
     </fields>
@@ -168,19 +180,19 @@
             <section>Donation Totals</section>
         </sections>
         <sections>
-            <label>Folder</label>
+            <label>Felder</label>
             <section>Fields</section>
         </sections>
         <sections>
-            <label>Unterstützungsinformationen</label>
+            <label>Geldgeberinformationen</label>
             <section>Grantmaking Information</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Comments --></label>
+            <label>Kommentare zu zugewiesenem Geschenk</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
-            <label>Information zum Spenden Ausweis</label>
+            <label>Zugewiesenes Geschenk Details</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -209,7 +221,7 @@
         <name>Manage_Household</name>
     </webLinks>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label>Rollups neu berechnen</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>
