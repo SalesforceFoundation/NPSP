@@ -98,6 +98,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track selectedDonorType;
     @track hasPreviouslySelectedDonation = false;
 
+    donationDonorEnum = {
+        account1: 'Account1',
+        contact1: 'Contact1'
+    }
+
+    _donationDonor;
+    _account1Imported;
+    _contact1Imported;
+
     get hasPendingDonations() {
         return this.opportunities && this.opportunities.length > 0 ? true : false;
     }
@@ -128,105 +137,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         } else if (error) {
             console.error(JSON.stringify(error));
         }
-    }
-
-    /**
-     * @description Retrieves a records mapped target field values and
-     *              loads them into the appropriate source fields in use
-     *              on the Gift Entry form.
-     * @param lookupFieldApiName Api name of the lookup field.
-     * @param selectedRecordId Id of the selected record.
-     */
-    loadSelectedRecordFieldValues(lookupFieldApiName, selectedRecordId) {
-        this.selectedRecordId = selectedRecordId;
-        this.selectedRecordFields =
-            this.getSiblingFieldsForSourceField(lookupFieldApiName);
-
-        if (selectedRecordId &&
-            selectedRecordId.startsWith(this.oppPaymentKeyPrefix) &&
-            this.selectedDonation.Id === selectedRecordId) {
-            // This is the selected payment, so add in the parent opp field so
-            // it can be used to populate the parent Opportunities' fields.
-            this.selectedRecordFields.push(
-                this.getQualifiedFieldName(OPP_PAYMENT_OBJECT, PARENT_OPPORTUNITY_FIELD));
-        }
-
-        this.storeSelectedRecordIdByObjectMappingName(
-            this.getObjectMapping(lookupFieldApiName).DeveloperName,
-            selectedRecordId
-        );
-    }
-
-    getQualifiedFieldName(objectInfo, fieldInfo) {
-        return `${objectInfo.objectApiName}.${fieldInfo.fieldApiName}`;
-    }
-
-    get oppPaymentKeyPrefix() {
-        return this.oppPaymentObjectInfo.data.keyPrefix;
-    }
-
-    get opportunityKeyPrefix() {
-        return this.opportunityObjectInfo.data.keyPrefix;
-    }
-
-    selectedRecordIdByObjectMappingDevName = {};
-    selectedRecordId;
-    selectedRecordFields;
-    @wire(getRecord, {recordId: '$selectedRecordId',  optionalFields: '$selectedRecordFields'})
-    getSelectedRecord({error, data}){
-        if (error) {
-            handleError(error);
-        } else if (data) {
-            const dataImport = this.mapRecordValuesToDataImportFields(data);
-            // dataImport should be object with keys = source field api name, and value =
-            // an object with at least one property "value" - but could have more, for
-            // instance "displayValue" for lookup fields, etc.
-            // See response from getRecord for data structure guidance.
-            this.load(dataImport, false);
-
-            if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
-                data.id === this.selectedDonation.Id) {
-                const oppId = this.parentOpportunityId(data);
-                this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
-            }
-        }
-    }
-
-    parentOpportunityId(oppPaymentRecord) {
-        const parentOppId = getFieldValue(oppPaymentRecord, PARENT_OPPORTUNITY_FIELD);
-        return parentOppId;
-    }
-
-    @wire(getObjectInfo, {objectApiName: OPP_PAYMENT_OBJECT.objectApiName})
-    oppPaymentObjectInfo;
-
-    @wire(getObjectInfo, {objectApiName: OPPORTUNITY_OBJECT.objectApiName})
-    opportunityObjectInfo;
-
-    mapRecordValuesToDataImportFields(record) {
-        //reverse map to create an object with relevant source field api names to values
-        let dataImport = {};
-
-        let objectMappingDevNames = [];
-        for (let [key, value] of Object.entries(
-            this.selectedRecordIdByObjectMappingDevName)) {
-            if (value === record.id) {
-                objectMappingDevNames.push(key);
-            }
-        }
-
-        for (const objectMappingName of objectMappingDevNames) {
-            //relevant field mappings
-            for (const fieldMapping of Object.values(GeFormService.fieldMappings)
-                .filter(({Target_Object_Mapping_Dev_Name}) =>
-                    Target_Object_Mapping_Dev_Name === objectMappingName)) {
-
-                const value = record.fields[fieldMapping.Target_Field_API_Name];
-                dataImport[fieldMapping.Source_Field_API_Name] = value;
-            }
-        }
-
-        return dataImport;
     }
 
     connectedCallback() {
@@ -348,13 +258,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         // handle error on callback from promise
         const handleCatchError = (err) => this.handleCatchOnSave(err);
 
-        GeFormService.handleSave(sectionsList, this.donorRecord, this.selectedDonationDataImportFieldValues).then(opportunityId => {
-            this.navigateToRecordPage(opportunityId);
-        }).catch(error => {
-            enableSave();
-            toggle();
-            handleCatchError(error);
-        });
+        GeFormService.handleSave(
+            sectionsList,
+            this.donorRecord,
+            this.selectedDonationDataImportFieldValues)
+            .then(opportunityId => {
+                this.navigateToRecordPage(opportunityId);
+            })
+            .catch(error => {
+                enableSave();
+                toggle();
+                handleCatchError(error);
+            });
 
     }
 
@@ -725,9 +640,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api
     load(dataImport, applySelectedDonationFieldValues = true) {
         if (dataImport.Id) {
-            // Lookups might also use this method to load related fields.  By setting
-            // this.dataImport only when the DataImport has an Id, we know we are
-            // updating an existing DataImport record (which changes the UI).
+            // Set this.dataImport when the record Id is present so
+            // the form knows it is in update mode
             this.dataImport = dataImport;
         }
 
@@ -898,34 +812,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 `${objectMapping.Object_API_Name}.${Target_Field_API_Name}`);
     }
 
-    getObjectMapping(fieldApiName) {
-        return Object.values(GeFormService.objectMappings)
-            .find(({Imported_Record_Field_Name}) =>
-                Imported_Record_Field_Name == fieldApiName);
-    }
-
-    storeSelectedRecordIdByObjectMappingName(objectMappingName, recordId) {
-        this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
-    }
-
-    handleChangeDonationDonor(event) {
-        this._donationDonor = event.detail.value;
-        if (!isUndefined(this.donorId)) {
-            this.setReviewDonationsDonorProperties(this.donorId);
-        }
-    }
-
-    get donorId() {
-        switch (this._donationDonor) {
-            case this.donationDonorEnum.account1:
-                return this._account1Imported;
-            case this.donationDonorEnum.contact1:
-                return this._contact1Imported;
-            default:
-                return false;
-        }
-    }
-
     handleLookupRecordSelect(event) {
         const recordId = event.detail.value; // Reset the field if null
         const fieldApiName = event.detail.fieldApiName;
@@ -949,33 +835,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.handleDonorAccountChange(recordId);
         } else if (fieldApiName === contact1Imported) {
             this.handleDonorContactChange(recordId);
-        }
-    }
-
-    donationDonorEnum = {
-        account1: 'Account1',
-        contact1: 'Contact1'
-    }
-
-    _donationDonor;
-    _account1Imported;
-    _contact1Imported;
-
-    handleDonorAccountChange(selectedRecordId) {
-        this._account1Imported = selectedRecordId;
-        if (this._donationDonor === this.donationDonorEnum.account1) {
-            this.setReviewDonationsDonorProperties(this._account1Imported);
-        } else if (this._donationDonor === null) {
-            // TODO: Maybe auto-set to 'Account1'?
-        }
-    }
-
-    handleDonorContactChange(selectedRecordId) {
-        this._contact1Imported = selectedRecordId;
-        if (this._donationDonor === this.donationDonorEnum.contact1) {
-            this.setReviewDonationsDonorProperties(this._contact1Imported);
-        } else if (this._donationDonor === null) {
-            // TODO: Maybe auto-set to 'Contact1'?
         }
     }
 
@@ -1016,7 +875,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     userSelectedNewOpp;
             }
         } else {
-
             if (this.selectedDonation.Id.startsWith(this.oppPaymentKeyPrefix)) {
                 this.selectedDonationDataImportFieldValues[paymentImported] =
                     {
@@ -1097,6 +955,148 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             GeFormService.getObjectMappingWrapperByImportedFieldName(
                 DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName
             ).DeveloperName);
+    }
+
+    /**
+     * @description Retrieves a records mapped target field values and
+     *              loads them into the appropriate source fields in use
+     *              on the Gift Entry form.
+     * @param lookupFieldApiName Api name of the lookup field.
+     * @param selectedRecordId Id of the selected record.
+     */
+    loadSelectedRecordFieldValues(lookupFieldApiName, selectedRecordId) {
+        this.selectedRecordId = selectedRecordId;
+        this.selectedRecordFields =
+            this.getSiblingFieldsForSourceField(lookupFieldApiName);
+
+        if (selectedRecordId &&
+            selectedRecordId.startsWith(this.oppPaymentKeyPrefix) &&
+            this.selectedDonation.Id === selectedRecordId) {
+            // This is the selected payment, so add in the parent opp field so
+            // it can be used to populate the parent Opportunities' fields.
+            this.selectedRecordFields.push(
+                this.getQualifiedFieldName(OPP_PAYMENT_OBJECT, PARENT_OPPORTUNITY_FIELD));
+        }
+
+        this.storeSelectedRecordIdByObjectMappingName(
+            this.getObjectMapping(lookupFieldApiName).DeveloperName,
+            selectedRecordId
+        );
+    }
+
+    getQualifiedFieldName(objectInfo, fieldInfo) {
+        return `${objectInfo.objectApiName}.${fieldInfo.fieldApiName}`;
+    }
+
+    get oppPaymentKeyPrefix() {
+        return this.oppPaymentObjectInfo.data.keyPrefix;
+    }
+
+    get opportunityKeyPrefix() {
+        return this.opportunityObjectInfo.data.keyPrefix;
+    }
+
+    getObjectMapping(fieldApiName) {
+        return Object.values(GeFormService.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name == fieldApiName);
+    }
+
+    selectedRecordIdByObjectMappingDevName = {};
+    selectedRecordId;
+    selectedRecordFields;
+
+    @wire(getRecord, {recordId: '$selectedRecordId', optionalFields: '$selectedRecordFields'})
+    getSelectedRecord({error, data}) {
+        if (error) {
+            handleError(error);
+        } else if (data) {
+            const dataImport = this.mapRecordValuesToDataImportFields(data);
+            this.load(dataImport, false);
+
+            if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
+                data.id === this.selectedDonation.Id) {
+                const oppId = this.parentOpportunityId(data);
+                this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
+            }
+        }
+    }
+
+    parentOpportunityId(oppPaymentRecord) {
+        const parentOppId = getFieldValue(oppPaymentRecord, PARENT_OPPORTUNITY_FIELD);
+        return parentOppId;
+    }
+
+    @wire(getObjectInfo, {objectApiName: OPP_PAYMENT_OBJECT.objectApiName})
+    oppPaymentObjectInfo;
+
+    @wire(getObjectInfo, {objectApiName: OPPORTUNITY_OBJECT.objectApiName})
+    opportunityObjectInfo;
+
+    mapRecordValuesToDataImportFields(record) {
+        //reverse map to create an object with relevant source field api names to values
+        let dataImport = {};
+
+        let objectMappingDevNames = [];
+        for (let [key, value] of Object.entries(
+            this.selectedRecordIdByObjectMappingDevName)) {
+            if (value === record.id) {
+                objectMappingDevNames.push(key);
+            }
+        }
+
+        for (const objectMappingName of objectMappingDevNames) {
+            //relevant field mappings
+            for (const fieldMapping of Object.values(GeFormService.fieldMappings)
+                .filter(({Target_Object_Mapping_Dev_Name}) =>
+                    Target_Object_Mapping_Dev_Name === objectMappingName)) {
+
+                const value = record.fields[fieldMapping.Target_Field_API_Name];
+                dataImport[fieldMapping.Source_Field_API_Name] = value;
+            }
+        }
+
+        return dataImport;
+    }
+
+    storeSelectedRecordIdByObjectMappingName(objectMappingName, recordId) {
+        this.selectedRecordIdByObjectMappingDevName[objectMappingName] = recordId;
+    }
+
+    handleChangeDonationDonor(event) {
+        this._donationDonor = event.detail.value;
+        if (!isUndefined(this.donorId)) {
+            this.setReviewDonationsDonorProperties(this.donorId);
+        }
+    }
+
+    get donorId() {
+        switch (this._donationDonor) {
+            case this.donationDonorEnum.account1:
+                return this._account1Imported;
+            case this.donationDonorEnum.contact1:
+                return this._contact1Imported;
+            default:
+                return false;
+        }
+    }
+
+    handleDonorAccountChange(selectedRecordId) {
+        this._account1Imported = selectedRecordId;
+        if (this._donationDonor === this.donationDonorEnum.account1) {
+            this.setReviewDonationsDonorProperties(this._account1Imported);
+        } else if (this._donationDonor === null) {
+            // TODO: Maybe auto-set to 'Account1'?
+        }
+    }
+
+    handleDonorContactChange(selectedRecordId) {
+        this._contact1Imported = selectedRecordId;
+        if (this._donationDonor === this.donationDonorEnum.contact1) {
+            this.setReviewDonationsDonorProperties(this._contact1Imported);
+        } else if (this._donationDonor === null) {
+            // TODO: Maybe auto-set to 'Contact1'?
+        }
     }
 
 }
