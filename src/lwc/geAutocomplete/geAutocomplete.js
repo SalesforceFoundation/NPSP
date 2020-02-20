@@ -99,12 +99,6 @@ export default class GeAutocomplete extends LightningElement {
         this.valid = true;
     }
 
-    @api
-    reset() {
-        this.displayValue = '';
-        this.value = null;
-    }
-
     /*******************************************
      Dynamic CSS/Id / Display Attributes below here
      *******************************************/
