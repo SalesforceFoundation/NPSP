@@ -490,6 +490,10 @@ public class ALLO_AllocationsUtil_TEST {
      *                           flagged for review [Only if Default Allocations Are Enabled]
      *              Scenario 5 - Confirm that Opportunities with Amount that does not match sum of Allocations
      *                           are flagged for review [Only if Default Allocations Are Enabled]
+     *              Scenario 6 - Confirm Opportunity with Payments with non null/zero Amount and no Allocations
+     *                           are flagged for review
+     *              Scenario 7 - Confirm Opportunity with Payments with non null/zero Amount and valid
+     *                           Allocations are not flagged for review
      *              [ALLO_AllocationsUtil.isRequiresReview]
      */
     @isTest private static void confirmOnlyOppsNeedingReviewAreFlaggedWhenDefaultAllocEnabled() {
@@ -502,7 +506,15 @@ public class ALLO_AllocationsUtil_TEST {
         oppIdsAsSet.addAll(oppIds);
 
         Map<Id, Opportunity> oppsById = ALLO_AllocationsUtil.retrieveOpportunities(oppIdsAsSet);
-        List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, new Set<ID>(), new Set<Id>(), new Set<Id>());
+
+        Set<Id> pmtIds = new Set<Id>();
+        for (Opportunity opp : oppsById.values()) {
+            for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                pmtIds.add(pmt.Id);
+            }
+        }
+
+        List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, pmtIds, new Set<Id>(), new Set<Id>());
 
         ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
 
@@ -516,6 +528,8 @@ public class ALLO_AllocationsUtil_TEST {
         Opportunity opp3 = oppsById.get(oppIds[3]);
         Opportunity opp4 = oppsById.get(oppIds[4]);
         Opportunity opp5 = oppsById.get(oppIds[5]);
+        Opportunity opp6 = oppsById.get(oppIds[6]);
+        Opportunity opp7 = oppsById.get(oppIds[7]);
 
         // Confirm that Opportunities are flagged for review if Boundary Date is null
         System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp0, recsForRev.oppsAllocations.get(opp0.Id), null), 'Opportunity 0, no boundary date');
@@ -533,6 +547,11 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp4, recsForRev.oppsAllocations.get(opp4.Id), System.now().addDays(1)), 'Opportunity 4, boundary date of tomorrow');
         // Confirm that Opportunities with null/0 Amount and Allocations with non null/0 amount are flagged for review
         System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp5, recsForRev.oppsAllocations.get(opp5.Id), System.now().addDays(1)), 'Opportunity 5, boundary date of tomorrow');
+        // Confirm Opportunity with Payments with non null/zero Amount and no Allocations are flagged for review [Only if Default Allocations Are Enabled]
+        System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp6.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp6.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 6 - Payment 0, boundary date of tomorrow');
+        // Confirm Opportunity with Payments with non null/zero Amount and valid Allocations are not flagged for review
+        System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp7.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp7.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 7 - Payment 0, boundary date of tomorrow');
+
     }
 
     /**
@@ -546,6 +565,11 @@ public class ALLO_AllocationsUtil_TEST {
      *                           flagged for review
      *              Scenario 5 - Confirm that Opportunities with Amount that does not match sum of Allocations
      *                           are not flagged for review
+     *              Scenario 6 - Confirm Opportunity with Payments with non null/zero Amount and no Allocations
+     *                           are not flagged for review
+     *              Scenario 7 - Confirm Opportunity with Payments with non null/zero Amount and valid
+     *                           Allocations are not flagged for review
+
      *              [ALLO_AllocationsUtil.isRequiresReview]
      */
     @isTest private static void confirmOnlyOppsNeedingReviewAreFlaggedWhenDefaultAllocNotEnabled() {
@@ -553,13 +577,20 @@ public class ALLO_AllocationsUtil_TEST {
         // Turn Off Allocation Triggers
         ALLO_AllocationsUtil.disableAllocationTriggers();
 
-        List<Id> oppIds = createTestDataAndReturnOppIds(false, false);
-
+        List<Id> oppIds = createTestDataAndReturnOppIds(true, false);
         Set<Id> oppIdsAsSet = new Set<Id>();
         oppIdsAsSet.addAll(oppIds);
 
         Map<Id, Opportunity> oppsById = ALLO_AllocationsUtil.retrieveOpportunities(oppIdsAsSet);
-        List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, new Set<ID>(), new Set<Id>(), new Set<Id>());
+
+        Set<Id> pmtIds = new Set<Id>();
+        for (Opportunity opp : oppsById.values()) {
+            for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                pmtIds.add(pmt.Id);
+            }
+        }
+
+        List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, pmtIds, new Set<Id>(), new Set<Id>());
 
         ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
 
@@ -573,6 +604,8 @@ public class ALLO_AllocationsUtil_TEST {
         Opportunity opp3 = oppsById.get(oppIds[3]);
         Opportunity opp4 = oppsById.get(oppIds[4]);
         Opportunity opp5 = oppsById.get(oppIds[5]);
+        Opportunity opp6 = oppsById.get(oppIds[6]);
+        Opportunity opp7 = oppsById.get(oppIds[7]);
 
    		// Confirm that Opportunities are flagged for review if Boundary Date is null
         System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp0, recsForRev.oppsAllocations.get(opp0.Id), null), 'Opportunity 0, no boundary date');
@@ -590,131 +623,88 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp4, recsForRev.oppsAllocations.get(opp4.Id), System.now().addDays(1)), 'Opportunity 4, boundary date of tomorrow');
         // Confirm that Opportunities with null/0 Amount and Allocations with non null/0 amount are flagged for review
         System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp5, recsForRev.oppsAllocations.get(opp5.Id), System.now().addDays(1)), 'Opportunity 5, boundary date of tomorrow');
+        // Confirm Opportunity with Payments with non null/zero Amount and no Allocations are not flagged for review [Only if Default Allocations Are Not Enabled]
+        System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp6.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp6.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 6 - Payment 0, boundary date of tomorrow');
+        // Confirm Opportunity with Payments with non null/zero Amount and valid Allocations are not flagged for review
+        System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp7.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp7.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 7 - Payment 0, boundary date of tomorrow');
     }
 
     // [DEFERRED] isRequiresReview: Confirm that Opportunities with Allocations Modified Since Boundary are flagged for review
         // (TODO: Determine viable approach...Difficult to make work with limitations of setting LastModified versus boundary date in tests distinct for Allocations versus Opportunity)
 
-    // Confirm that Opportunities with Payments that match any of the following conditions are flagged for review [If Payment Allocations Enabled]
-            // Any Payments with non null/zero Amount and no allocations [Only if Default Allocations Are Enabled]
-            // Any Payments with Amount that does not match sum of Allocations [Only if Default Allocations Are Enabled]
-            // Any Payments with Allocations Modified Since Boundary
-            // Any Payments with non null/zero Amount and Allocations with null/0 amount
-            // Any Payments with null/0 Amount and Allocations with non null/0 amount
+     /**
+     * @description Confirm determines necessary Allocations changes, as well as errors based
+     *              on records passed to processOpportunityAllocations
+     *              [ALLO_AllocationsUtil.processOpportunityAllocations]
+     */
+    @isTest private static void confirmProcessingOfOpportunitiesWhenDefaultAllocEnabled() {
 
-    private static List<Id> createTestDataAndReturnOppIds(Boolean paymentAllocationsEnabled, Boolean defaultAllocationsEnabled) {
-        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
-        insert accs;
+        // Turn Off Allocation Triggers
+        ALLO_AllocationsUtil.disableAllocationTriggers();
 
-        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
-        gaus[2].Name = 'Default GAU';
-        General_Accounting_Unit__c defaultGau = gaus[2];
-        insert gaus;
+        List<Id> oppIds = createTestDataAndReturnOppIds(true, true);
+        Set<Id> oppIdsAsSet = new Set<Id>();
+        oppIdsAsSet.addAll(oppIds);
 
-        setupSettings(
-            new Allocations_Settings__c(
-                Payment_Allocations_Enabled__c = paymentAllocationsEnabled,
-                Default_Allocations_Enabled__c = defaultAllocationsEnabled,
-                Default__c = defaultAllocationsEnabled ? defaultGau.Id : null
-            )
-        );
+        Map<Id, Opportunity> oppsById = ALLO_AllocationsUtil.retrieveOpportunities(oppIdsAsSet);
+        Set<Id> campaignIds = new Set<Id>();
+        Set<Id> recurringDonationIds = new Set<Id>();
+        Set<Id> pmtIds = new Set<Id>();
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withInstallmentPeriodYearly()
-            .withDateEstablished(Date.newInstance(1984,01,29))
-            .withAccount(accs[0].Id)
-            .withAmount(20)
-            .withScheduleTypeMultiplyValue()
-            .withOpenEndedStatusOpen()
-            .build();
-        insert rd;
-
-        Campaign cam = new Campaign(Name='Test Campaign: ' + UTIL_UnitTestData_TEST.getUniqueString(), IsActive=true);
-        insert cam;
-
-        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(6);
-        insert ctcs;
-
-        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 20, null, null);
-        opps[0].npe03__Recurring_Donation__c = rd.Id;
-        opps[1].npe03__Recurring_Donation__c = rd.Id;
-        opps[5].Amount = 0;
-        insert opps;
-
-        List<Allocation__c> allosForInsert = new list<Allocation__c>();
-        // Recurring Donation Allocations
-        allosForInsert.add(
-            new Allocation__c(
-                Recurring_Donation__c = rd.id,
-                Percent__c = 50,
-                General_Accounting_Unit__c = gaus[0].id
-            )
-        );
-
-        allosForInsert.add(
-            new Allocation__c(
-                Recurring_Donation__c = rd.id,
-                Amount__c = 10,
-                General_Accounting_Unit__c = gaus[1].id
-            )
-        );
-
-        // Opportunity Allocations
-        allosForInsert.add(
-            new Allocation__c(
-                Opportunity__c = opps[0].Id,
-                Amount__c = 10,
-                Percent__c = 50,
-                General_Accounting_Unit__c = gaus[0].Id
-            )
-        );
-
-        allosForInsert.add(
-            new Allocation__c(
-                Opportunity__c = opps[0].Id,
-                Amount__c = 10,
-                General_Accounting_Unit__c = gaus[1].id
-            )
-        );
-
-        // Opportunity Allocations < Opp Amount
-        allosForInsert.add(
-            new Allocation__c(
-                Opportunity__c=opps[3].Id,
-                Amount__c = 10,
-                General_Accounting_Unit__c = gaus[1].Id
-                )
-        );
-
-        allosForInsert.add(
-            new Allocation__c(
-                Opportunity__c=opps[4].Id,
-                Percent__c = 100,
-                General_Accounting_Unit__c = gaus[1].Id
-            )
-        );
-
-        allosForInsert.add(
-            new Allocation__c(
-                Opportunity__c=opps[5].Id,
-                Amount__c = 20,
-                Percent__c = 100,
-                General_Accounting_Unit__c = gaus[1].Id
-            )
-        );
-
-        insert allosForInsert;
-
-        // Need to query data so critical fields like LastModifiedDate are populated
-        List<Id> oppIds = new List<Id>();
-        for (Opportunity opp : opps) {
-            oppIds.add(opp.Id);
+        for (Opportunity opp : oppsById.values()) {
+            if (opp.CampaignId != null) {
+                campaignIds.add(opp.CampaignId);
+            }
+            if (opp.npe03__Recurring_Donation__c != null) {
+                recurringDonationIds.add(opp.npe03__Recurring_Donation__c);
+            }
+            for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                pmtIds.add(pmt.Id);
+            }
         }
 
-        return oppIds;
-    }
+        List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, pmtIds, campaignIds, recurringDonationIds);
 
-    //TODO: Method: processOpportunityAllocations
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        for (Allocation__c alloc : allocs) {
+            recsForRev.addAllocationByType(alloc);
+        }
+
+         // Will track exclusions across processes
+         ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUtil.RecordExclusions();
+
+        // Process Opportunity Allocations
+        ALLO_AllocationsUtil.AllocationResults allocResults = ALLO_AllocationsUtil.processOpportunityAllocations(oppsById, recsForRev.oppsAllocations, recsForRev.campaignAllocations, recsForRev.recurringDonationAllocations, recExcl);
+
+        System.debug(allocResults);
+        // Delete Allocation Results
+        System.debug('Delete Allocations:');
+        for (Allocation__c alloc : allocResults.allocationsForDelete) {
+            System.debug (alloc);
+        }
+
+        System.debug('Insert Allocations:');
+        for (Allocation__c alloc : allocResults.allocationsForInsert) {
+            System.debug (alloc);
+        }
+
+        System.debug('Update Allocations:');
+        for (Allocation__c alloc : allocResults.allocationsForUpdate) {
+            System.debug (alloc);
+        }
+
+        Map<Id, List<Allocation__c>> deletedAllocsByOppId = new Map<Id, List<Allocation__c>>();
+        for (Allocation__c alloc : allocResults.allocationsForDelete) {
+            Id oppId = alloc.Opportunity__c;
+            List<Allocation__c> allocs2 = (deletedAllocsByOppId.containsKey(oppId)) ? deletedAllocsByOppId.get(oppId) : new List<Allocation__c>();
+            allocs2.add(alloc);
+            deletedAllocsByOppId.put(oppId, allocs2);
+        }
+
+        System.assertEquals (true, deletedAllocsByOppId.containsKey(oppIds[8]), 'Allocation for Opportunity 8 should be in the delete list');
+
+    }
     // Identify Opportunities with no allocations, and allocate from the Default (No Parent)
     // Identify Opportunities with no allocations, and allocate from Recurring Donations Allocations (Recurring Donation Parent)
     // Identify Opportunities with no allocations, and allocate from Campaign Allocations (Campaign Allocation Parent)
@@ -772,11 +762,120 @@ public class ALLO_AllocationsUtil_TEST {
     /*******************************************************************************************************
      * Helper Methods - Record Retrieval Tests
      ********************************************************************************************************/
-    // TODO: Method: retrieveOpportunities
-    // Confirm retrieves Opportunity and Payment Data for the the Opportunity Ids specified
 
-    // TODO: Method: retrieveAllocations
-    // Confirm retrieves Allocation Data for the Opportunities, Payments, Recurring Donations, and Campaigns specified (via Ids)
+     /**
+     * @description Confirm retrieves Opportunity and Payment Data for the the Opportunity Ids specified
+     *              [ALLO_AllocationsUtil.retrieveOpportunities]
+     */
+    @isTest private static void confirmOpportunitiesInSetAreRetrievedSuccessfully() {
+
+        // Turn Off Allocation Triggers
+        ALLO_AllocationsUtil.disableAllocationTriggers();
+
+        List<Id> oppIds = createTestDataAndReturnOppIds(true, false);
+        Set<Id> oppIdsAsSet = new Set<Id>();
+        oppIdsAsSet.addAll(oppIds);
+
+        Map<Id, Opportunity> oppsById = ALLO_AllocationsUtil.retrieveOpportunities(oppIdsAsSet);
+
+        System.assertEquals (oppIds.size(), oppsById.size(), '# of Opportunities');
+
+        Opportunity opp0 = oppsById.get(oppIds[0]);
+        System.assertNotEquals(null, opp0.Name, 'Opportunity 0 - Name');
+        System.assertEquals(UTIL_UnitTestDATA_TEST.getClosedWonStage(), opp0.StageName, 'Opportunity 0 - StageName');
+        System.assertEquals(20, opp0.Amount, 'Opportunity 0 - Amount');
+        System.assertEquals(null, opp0.CampaignId, 'Opportunity 0 - Campaign Id');
+        System.assertNotEquals(null, opp0.npe03__Recurring_Donation__c, 'Opportunity - Recurring Donation');
+        System.assertEquals(true, opp0.IsClosed, 'Opportunity 0 - IsClosed');
+        System.assertNotEquals(null, opp0.LastModifiedDate, 'Opportunity 0 - LastModifiedDate');
+        System.assertEquals(null, opp0.Type, 'Opportunity 0 - Type');
+
+        Opportunity opp6 = oppsById.get(oppIds[6]);
+        System.assertEquals (1, opp6.npe01__OppPayment__r.size(), 'Opportunity 6 - # of Payments');
+
+        npe01__OppPayment__c opp6pmt0 = opp6.npe01__OppPayment__r[0];
+        System.assertNotEquals(null, opp6pmt0.Name, 'Opportunity 6 - Payment 0 - Name');
+        System.assertEquals(10, opp6pmt0.npe01__Payment_Amount__c, 'Opportunity 6 - Payment 0 - Payment Amount');
+        System.assertEquals(null, opp6pmt0.npe01__Payment_Date__c, 'Opportunity 6 - Payment 0 - Payment Date');
+        System.assertEquals(System.today(), opp6pmt0.npe01__Scheduled_Date__c, 'Opportunity 6 - Payment 0 - Scheduled Date');
+        System.assertEquals(false, opp6pmt0.npe01__Written_Off__c, 'Opportunity 6 - Payment 0 - Written Off');
+        System.assertEquals(false, opp6pmt0.npe01__Paid__c, 'Opportunity 6 - Payment 0 - Paid');
+        System.assertEquals(opp6.Id, opp6pmt0.npe01__Opportunity__c, 'Opportunity 6 - Payment 0 - Opportunity Id');
+        System.assertNotEquals(null, opp6pmt0.LastModifiedDate, 'Opportunity 6 - Payment 0 - LastModifiedDate');
+    }
+
+    /**
+     * @description Confirm retrieves Allocation Data for the Opportunities, Payments, Recurring Donations, and
+     *              Campaigns specified (via Ids)
+     *              [ALLO_AllocationsUtil.retrieveAllocations]
+     */
+    @isTest private static void confirmAllocationsAreRetrievedSuccessfully() {
+
+        // Turn Off Allocation Triggers
+        ALLO_AllocationsUtil.disableAllocationTriggers();
+
+        List<Id> oppIds = createTestDataAndReturnOppIds(true, false);
+        Set<Id> oppIdsAsSet = new Set<Id>();
+        oppIdsAsSet.addAll(oppIds);
+
+        Map<Id, Opportunity> oppsById = ALLO_AllocationsUtil.retrieveOpportunities(oppIdsAsSet);
+
+        Set<Id> campaignIds = new Set<Id>();
+        Set<Id> recurringDonationIds = new Set<Id>();
+        Set<Id> pmtIds = new Set<Id>();
+        Id recurringDonationId = null;
+        for (Opportunity opp : oppsById.values()) {
+            if (opp.CampaignId != null) {
+                campaignIds.add(opp.CampaignId);
+            }
+            if (opp.npe03__Recurring_Donation__c != null) {
+                recurringDonationIds.add(opp.npe03__Recurring_Donation__c);
+                recurringDonationId = opp.npe03__Recurring_Donation__c;
+            }
+            for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                pmtIds.add(pmt.Id);
+            }
+        }
+
+        List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, pmtIds, campaignIds, recurringDonationIds);
+
+        System.assertEquals (10, allocs.size(), '# of Allocations');
+
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        for (Allocation__c alloc : allocs) {
+            recsForRev.addAllocationByType(alloc);
+        }
+
+        System.assertEquals(2, recsForRev.oppsAllocations.get(oppIds[0]).size(), 'Opportunity 0 - # of Allocations');
+        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[3]).size(), 'Opportunity 3 - # of Allocations');
+        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[4]).size(), 'Opportunity 4 - # of Allocations');
+        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[5]).size(), 'Opportunity 5 - # of Allocations');
+        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[6]).size(), 'Opportunity 6 - # of Allocations');
+        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[7]).size(), 'Opportunity 7 - # of Allocations');
+
+        Allocation__c alloc = recsForRev.oppsAllocations.get(oppIds[7])[0];
+        assertOpportunityAllocation(alloc, oppIds[7], 20, 100, 'GAU 2', 'Opportunity 7 - Allocation 0' );
+
+        System.assertEquals(1, recsForRev.paymentAllocations.size(), 'Payment Allocations');
+
+        Opportunity opp7 = oppsById.get(oppIds[7]);
+
+        alloc = recsForRev.paymentAllocations.get(opp7.npe01__OppPayment__r[0].Id)[0];
+        assertPaymentAllocation(alloc, opp7.npe01__OppPayment__r[0].Id, 10, 100, 'GAU 2', 'Opportunity 7 - Payment 0 - Allocation 0');
+
+        System.assertEquals(2, recsForRev.recurringDonationAllocations.get(recurringDonationId).size(), 'Recurring Donation Allocations');
+        alloc = recsForRev.recurringDonationAllocations.get(recurringDonationId)[0];
+        Allocation__c alloc2 = null;
+        if (alloc.Percent__c != null) {
+            alloc2 = recsForRev.recurringDonationAllocations.get(recurringDonationId)[1];
+        } else {
+            alloc2 = alloc;
+            alloc = recsForRev.recurringDonationAllocations.get(recurringDonationId)[1];
+        }
+        assertRecurringDonationAllocation(alloc, recurringDonationId, null, 50, 'GAU 1', 'Recurring Donation - Allocation 0');
+        assertRecurringDonationAllocation(alloc2, recurringDonationId, 10, null, 'GAU 2', 'Recurring Donation - Allocation 1');
+    }
 
     /*******************************************************************************************************
      * Helper Methods - Allocation Triggers
@@ -1029,5 +1128,224 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, configProblems.isEmpty(), 'Payment Allocation configuration validated - Errors were expected');
     }
 
+    /***************************
+     * Helper Methods - Test Data
+     ***************************/
 
+    /**
+     * @description Supports certain tests, creating Opportunities and Related Information
+     * @param paymentAllocationsEnabled Boolean if true, Payment Allocations will be enabled
+     * @param defaultAllocationsEnabled Boolean if true, Default Allocations will be enabled
+     * @return List<Id> List of Opportunities Ids, in the order they were inserted
+     */
+    private static List<Id> createTestDataAndReturnOppIds(Boolean paymentAllocationsEnabled, Boolean defaultAllocationsEnabled) {
+        List<Account> accs = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        insert accs;
+
+        List<General_Accounting_Unit__c> gaus = UTIL_UnitTestData_TEST.createGAUs(3);
+        gaus[0].Name = 'GAU 1';
+        gaus[1].Name = 'GAU 2';
+        gaus[2].Name = 'Default GAU';
+        General_Accounting_Unit__c defaultGau = gaus[2];
+        insert gaus;
+
+        setupSettings(
+            new Allocations_Settings__c(
+                Payment_Allocations_Enabled__c = paymentAllocationsEnabled,
+                Default_Allocations_Enabled__c = defaultAllocationsEnabled,
+                Default__c = defaultAllocationsEnabled ? defaultGau.Id : null
+            )
+        );
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(Date.newInstance(1984,01,29))
+            .withAccount(accs[0].Id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
+        insert rd;
+
+        Campaign cam = new Campaign(Name='Test Campaign: ' + UTIL_UnitTestData_TEST.getUniqueString(), IsActive=true);
+        insert cam;
+
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(9);
+        insert ctcs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 20, null, null);
+        opps[0].npe03__Recurring_Donation__c = rd.Id;
+        opps[1].npe03__Recurring_Donation__c = rd.Id;
+        opps[5].Amount = 0;
+        opps[8].Amount = null;
+
+        for (Opportunity opp : opps) {
+            opp.npe01__Do_Not_Automatically_Create_Payment__c = true;
+        }
+        insert opps;
+
+        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>();
+
+        pmts.add(
+            new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = 10,
+                npe01__Opportunity__c = opps[6].Id,
+                npe01__Scheduled_Date__c = System.today()
+            )
+        );
+        pmts.add(
+            new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = 10,
+                npe01__Opportunity__c = opps[7].Id,
+                npe01__Scheduled_Date__c = System.today()
+            )
+        );
+        insert pmts;
+
+        List<Allocation__c> allosForInsert = new list<Allocation__c>();
+        // Recurring Donation Allocations
+        allosForInsert.add(
+            new Allocation__c(
+                Recurring_Donation__c = rd.id,
+                Percent__c = 50,
+                General_Accounting_Unit__c = gaus[0].id
+            )
+        );
+
+        allosForInsert.add(
+            new Allocation__c(
+                Recurring_Donation__c = rd.id,
+                Amount__c = 10,
+                General_Accounting_Unit__c = gaus[1].id
+            )
+        );
+
+        // Opportunity 0 Allocation(s) - Properly Allocated, parent Recurring Donation
+        allosForInsert.add(
+            new Allocation__c(
+                Opportunity__c = opps[0].Id,
+                Amount__c = 10,
+                Percent__c = 50,
+                General_Accounting_Unit__c = gaus[0].Id
+            )
+        );
+
+        allosForInsert.add(
+            new Allocation__c(
+                Opportunity__c = opps[0].Id,
+                Amount__c = 10,
+                General_Accounting_Unit__c = gaus[1].id
+            )
+        );
+
+        // Opportunity 1 Allocation(s) - No Allocations present, parent Recurring Donation
+
+        // Opportunity 2 Allocation(s) - No Allocations present, no parent
+
+        // Opportunity 3 Allocation(s) - Sum of Allocations Amount < Opp Amount
+        allosForInsert.add(
+            new Allocation__c(
+                Opportunity__c=opps[3].Id,
+                Amount__c = 10,
+                General_Accounting_Unit__c = gaus[1].Id
+                )
+        );
+
+        // Opportunity 4 Allocation(s) - Allocation with Percent and No Amount
+        allosForInsert.add(
+            new Allocation__c(
+                Opportunity__c=opps[4].Id,
+                Percent__c = 100,
+                General_Accounting_Unit__c = gaus[1].Id
+            )
+        );
+
+        // Opportunity 5 Allocation(s) - Opportunity with Amount 0 and non zero Allocations
+        allosForInsert.add(
+            new Allocation__c(
+                Opportunity__c=opps[5].Id,
+                Amount__c = 20,
+                Percent__c = 100,
+                General_Accounting_Unit__c = gaus[1].Id
+            )
+        );
+
+        // Opportunity 6 Allocation(s) - Opportunity Allocated, Related Payment not Allocated
+        allosForInsert.add(
+            new Allocation__c(
+                Opportunity__c=opps[6].Id,
+                Amount__c = 20,
+                Percent__c = 100,
+                General_Accounting_Unit__c = gaus[1].Id
+            )
+        );
+
+        // Opportunity 7 Allocation(s) - Opportunity Allocated, Related Payment Allocated
+        allosForInsert.add(
+            new Allocation__c(
+                Opportunity__c=opps[7].Id,
+                Amount__c = 20,
+                Percent__c = 100,
+                General_Accounting_Unit__c = gaus[1].Id
+            )
+        );
+
+        // Opportunity 8 Allocation(s) - Opportunity with null Amount and non zero Allocations
+        allosForInsert.add(
+            new Allocation__c(
+                Opportunity__c=opps[8].Id,
+                Amount__c = 20,
+                Percent__c = 100,
+                General_Accounting_Unit__c = gaus[1].Id
+            )
+        );
+
+        // Opportunity 7, Payment Allocation(s) - Payment Properly Allocated
+        allosForInsert.add(
+            new Allocation__c(
+                Payment__c = pmts[1].Id,
+                Amount__c = 10,
+                Percent__c = 100,
+                General_Accounting_Unit__c = gaus[1].Id
+            )
+        );
+
+
+        insert allosForInsert;
+
+        // Need to query data so critical fields like LastModifiedDate are populated
+        List<Id> oppIds = new List<Id>();
+        for (Opportunity opp : opps) {
+            oppIds.add(opp.Id);
+        }
+
+        return oppIds;
+    }
+
+    private static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Decimal percentage, String gauName, String message) {
+        assertAllocation(alloc, opportunityId, null, null, null, amount, percentage, gauName, message);
+    }
+
+    private static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Decimal percentage, String gauName, String message) {
+        assertAllocation(alloc, null, paymentId, null, null, amount, percentage, gauName, message);
+    }
+
+    private static void assertRecurringDonationAllocation(Allocation__c alloc, Id recurringDonationId, Decimal amount, Decimal percentage, String gauName, String message) {
+        assertAllocation(alloc, null, null, recurringDonationId, null, amount, percentage, gauName, message);
+    }
+
+    private static void assertCampaignAllocation(Allocation__c alloc, Id campaignId, Decimal amount, Decimal percentage, String gauName, String message) {
+        assertAllocation(alloc, null, null, null, campaignId, amount, percentage, gauName, message);
+    }
+
+    private static void assertAllocation(Allocation__c alloc, Id opportunityId, Id paymentId, Id recurringDonationId, Id campaignId, Decimal amount, Decimal percentage, String gauName, String message) {
+        System.assertNotEquals(null, alloc, message + ' - Not Null');
+        System.assertEquals(opportunityId, alloc.Opportunity__c, message + 'Opportunity' );
+        System.assertEquals(paymentId, alloc.Payment__c, message + 'Payment');
+        System.assertEquals(recurringDonationId, alloc.Recurring_Donation__c, message + 'Recurring Donation');
+        System.assertEquals(campaignId, alloc.Campaign__c, message + 'Campaign');
+        System.assertEquals(amount, alloc.Amount__c, message + ' - Amount');
+        System.assertEquals(percentage, alloc.Percent__c, message + ' - Percent');
+        System.assertEquals(gauName, alloc.General_Accounting_Unit__r.Name, message + '- GAU');
+    }
 }

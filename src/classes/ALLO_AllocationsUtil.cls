@@ -1552,6 +1552,11 @@ public class ALLO_AllocationsUtil {
             if (amount != null && allocAmount != amount) {
                 return true;
             }
+        } else {
+            // If Amount = 0/null and Alloc Amount is non null/0 it needs review.
+            if ((amount == null || amount == 0) && (allocAmount != 0 && allocAmount != null)) {
+                return true;
+            }
         }
 
         // Positive checks exhausted.
