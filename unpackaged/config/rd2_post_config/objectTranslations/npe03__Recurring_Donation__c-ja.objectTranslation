@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>予定されている (支援) 回数。固定期間の継続支援でのみ使用されます。</help>
-        <label>Deprecated-回数</label>
-        <name>npe03__Installments__c</name>
-    </fields>
-    <fields>
         <help>無期限の継続支援には [Open] を選択します。固定期間の継続支援には [なし] を選択します。継続支援を終了する場合は [Closed] を選択します。</help>
         <label>Deprecated-状況</label>
         <name>npe03__Open_Ended_Status__c</name>

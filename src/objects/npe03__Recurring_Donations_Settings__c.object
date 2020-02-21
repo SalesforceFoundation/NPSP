@@ -69,6 +69,20 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>NextDonationDateMatchRangeDays__c</fullName>
+        <defaultValue>3</defaultValue>
+        <description>The number of days before or after the Next Donation Date that NPSP won&apos;t create a new installment Opportunity if the next open Opportunity&apos;s Close Date is changed. Applies only to Recurring Donations where Installment Period is Monthly.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of days before or after the Next Donation Date that NPSP won&apos;t create a new installment Opportunity if the next open Opportunity&apos;s Close Date is changed. Applies only to Recurring Donations where Installment Period is Monthly.</inlineHelpText>
+        <label>Next Donation Date Match Range</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>RecurringDonations2EnablementState__c</fullName>
         <description>Contains Enhanced Recurring Donation enablement confirmations and state.</description>
         <externalId>false</externalId>
@@ -105,5 +119,15 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>UseFiscalYearForRecurringDonationValue__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, this option enables fiscal year for Recurring Donation value totals. To set the fiscal year start month, go to Setup | Company Settings | Fiscal Year. NOTE: Use Standard Fiscal Year only. Do not enable Custom Fiscal Year.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, this option enables fiscal year for Recurring Donation value totals. To set the fiscal year start month, go to Setup | Company Settings | Fiscal Year. NOTE: Use Standard Fiscal Year only. Do not enable Custom Fiscal Year.</inlineHelpText>
+        <label>Use Fiscal Year for Recurring Donations</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
 </CustomObject>
