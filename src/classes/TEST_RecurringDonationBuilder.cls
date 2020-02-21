@@ -294,16 +294,6 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Number of Planned Installments for a Fixed Length RD
-    * @param numberOfInstallments Number of Planned Installments
-    * @return TEST_RecurringDonationBuilder Builder instance
-    */
-    public TEST_RecurringDonationBuilder withPlannedInstallments(Integer numberOfInstallments) {
-        valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
-        return this;
-    }
-
-    /***
     * @description Sets Installment Frequency
     * @param frequency Installment Frequency
     * @return TEST_RecurringDonationBuilder Builder instance
