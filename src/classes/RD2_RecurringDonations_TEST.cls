@@ -486,12 +486,12 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldSetNumberOfPlannedInstallmentsToNullWhenOpenEnded() {
-        final Integer PLANNED_INSTALLMENTS = 1;
+        final Integer plannedInstallments = 1;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withPlannedInstallments(PLANNED_INSTALLMENTS)
+            .withPlannedInstallments(plannedInstallments)
             .withRecurringTypeOpen()
             .build();
 
@@ -510,12 +510,12 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldNotChangeNumberOfPlannedInstallmentsWhenFixedLength() {
-        final Integer PLANNED_INSTALLMENTS = 1;
+        final Integer plannedInstallments = 1;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withPlannedInstallments(PLANNED_INSTALLMENTS)
+            .withPlannedInstallments(plannedInstallments)
             .withRecurringTypeFixed()
             .build();
 
@@ -534,12 +534,12 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldNotChangeFixedLengthRecurringDonationWhenNumberPaidInstallmentsChanged() {
-        final Integer PLANNED_INSTALLMENTS = 5;
+        final Integer plannedInstallments = 5;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withPlannedInstallments(PLANNED_INSTALLMENTS)
+            .withPlannedInstallments(plannedInstallments)
             .withRecurringTypeFixed()
             .build();
 
@@ -563,12 +563,12 @@ private with sharing class RD2_RecurringDonations_TEST {
     */
     @isTest
     private static void shouldCloseFixedLengthRecurringDonationWhenReachNumberPlannedInstallments() {
-        final Integer PLANNED_INSTALLMENTS = 5;
+        final Integer plannedInstallments = 5;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withPlannedInstallments(PLANNED_INSTALLMENTS)
+            .withPlannedInstallments(plannedInstallments)
             .withPaidInstallments(4)
             .withRecurringTypeFixed()
             .build();

@@ -673,13 +673,13 @@ private class RD2_OpportunityEvaluation_TEST {
     */
     @IsTest
     private static void shouldLeaveFixedRDActiveIfPlannedInstallmentsNotReached() {
-        final Integer PLANNED_INSTALLMENTS = 5;
+        final Integer plannedInstallments = 5;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withRecurringTypeFixed()
-            .withPlannedInstallments(PLANNED_INSTALLMENTS)
+            .withPlannedInstallments(plannedInstallments)
             .build();
         insert rd;
 
@@ -691,7 +691,7 @@ private class RD2_OpportunityEvaluation_TEST {
         // Disable the trigger to ensure the change happens in the batch job vs. the trigger.
         TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
 
-        rd.npe03__Total_Paid_Installments__c = PLANNED_INSTALLMENTS-1;
+        rd.npe03__Total_Paid_Installments__c = plannedInstallments-1;
         update rd;
 
         // Make sure the RD is still Active
@@ -715,13 +715,13 @@ private class RD2_OpportunityEvaluation_TEST {
     */
     @IsTest
     private static void shouldCloseFixedRDWhenPlannedInstallmentsReached() {
-        final Integer PLANNED_INSTALLMENTS = 5;
+        final Integer plannedInstallments = 5;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withRecurringTypeFixed()
-            .withPlannedInstallments(PLANNED_INSTALLMENTS)
+            .withPlannedInstallments(plannedInstallments)
             .build();
         insert rd;
 
@@ -733,7 +733,7 @@ private class RD2_OpportunityEvaluation_TEST {
         // Disable the trigger to ensure the change happens in the batch job vs. the trigger.
         TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
 
-        rd.npe03__Total_Paid_Installments__c = PLANNED_INSTALLMENTS;
+        rd.npe03__Total_Paid_Installments__c = plannedInstallments;
         update rd;
 
         // Make sure the RD is still Active
