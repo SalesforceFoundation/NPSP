@@ -10,7 +10,9 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%Day_of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%RecurringType__c</members>
         <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%StartDate__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Date_Established__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Amount__c</members>
@@ -19,6 +21,7 @@
         <members>npe03__Recurring_Donation__c.npe03__Installment_Period__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c</members>
+        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%InstallmentFrequency__c</members>
         <name>CustomField</name>
     </types>
     <types>

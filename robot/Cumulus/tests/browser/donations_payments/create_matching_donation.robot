@@ -1,6 +1,8 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/OpportunityPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -9,7 +11,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Create Matching Donation
     &{contact} =  API Create Contact    Email=skristem@robot.com
-    Go To Object Home         Opportunity
+    Go To Page                Listing    Opportunity    
     Click Object Button       New
     Select Record Type        Matching Gift
 
@@ -23,5 +25,5 @@ Create Matching Donation
     Set Checkbutton To    Do Not Automatically Create Payment    checked
     Click Modal Button        Save
     ${match_name}    Get Main Header
-    Go To Object Home         Opportunity
+    Go To Page                Listing    Opportunity
     Click Link    link=${match_name} 
