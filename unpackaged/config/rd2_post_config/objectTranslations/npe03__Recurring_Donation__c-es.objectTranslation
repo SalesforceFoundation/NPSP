@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>Número de cuotas (donaciones) que se esperan recibir. Para donaciones recurrentes con duración fija únicamente.</help>
-        <label>Deprecated-Cuotas</label>
-        <name>npe03__Installments__c</name>
-    </fields>
-    <fields>
         <help>Elija Abierto para donaciones recurrentes sin finalización definida. Seleccione Ninguno para donaciones recurrentes con duración fija. Seleccione Cerrada para cerrar una donación recurrente.</help>
         <label>Depreca-Estado sin finalización definida</label>
         <name>npe03__Open_Ended_Status__c</name>
