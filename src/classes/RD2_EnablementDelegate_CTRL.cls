@@ -56,6 +56,20 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description The batch job service
+    */
+    @TestVisible
+    private static UTIL_BatchJobService batchJobService {
+        get {
+            if (batchJobService == null) {
+                batchJobService = new UTIL_BatchJobService();
+            }
+            return batchJobService;
+        }
+        set;
+    }
+
+    /***
     * @description Returns Day of Month field picklist value specific to enhanced Recurring Donations
     */
     @TestVisible
@@ -149,7 +163,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return Boolean
     */
     private static Boolean isDryRunOutdated(EnablementState state) {
-        return new UTIL_BatchJobService().getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
+        return batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
     }
 
     /***

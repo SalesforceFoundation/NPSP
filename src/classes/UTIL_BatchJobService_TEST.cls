@@ -83,6 +83,10 @@ public with sharing class UTIL_BatchJobService_TEST {
         System.assertEquals('3 ' + TIME_ELAPSED_DAYS + ' 00:00:00', batchJob.timeElapsed);
         System.assertEquals(100, batchJob.percentComplete);
         System.assertEquals(false, batchJob.isInProgress);
+
+        Integer expectedDaysBetween = Date.valueOf(batchJob.completedDate).daysBetween(Date.today());
+        System.assert(expectedDaysBetween > 0, 'Days between should be a positive number');
+        System.assertEquals(expectedDaysBetween, batchJob.completedDaysBetween);
     }
 
     /***
@@ -170,6 +174,27 @@ public with sharing class UTIL_BatchJobService_TEST {
         System.assertEquals(100, percentComplete);
     }
 
+    /***
+    * @description Verifies days between is calculated correctly
+    */
+    @isTest
+    private static void shouldSetDaysBetween() {
+        TestAsyncApexJob jobBuilder = new TestAsyncApexJob()
+            .withId(MOCK_BATCH_ID)
+            .withCreatedBy(getUser());
+
+        UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService.BatchJob(
+            jobBuilder.withCompletedDate(Date.today()).build()
+        );
+        System.assertEquals(0, batchJob.completedDaysBetween, 
+            'Days between should be zero when batch job is completed today');
+        
+        batchJob = new UTIL_BatchJobService.BatchJob(
+            jobBuilder.withCompletedDate(Date.today().addDays(-2)).build()
+        );        
+        System.assertEquals(2, batchJob.completedDaysBetween, 
+            'Days between should be a positive number when batch job is completed in past');
+    }
 
     /***
     * @description Verifies batch job summary is set correctly
@@ -300,6 +325,16 @@ public with sharing class UTIL_BatchJobService_TEST {
         */
         public TestAsyncApexJob withStatus(String status) {
             valuesByFieldName.put('Status', status);
+            return this;
+        }
+
+        /***
+        * @description Sets the batch completed date
+        * @param completedDate
+        * @return TestAsyncApexJob
+        */
+        public TestAsyncApexJob withCompletedDate(DateTime completedDate) {
+            valuesByFieldName.put('CompletedDate', completedDate);
             return this;
         }
 
