@@ -574,48 +574,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Validates if the specified record is present on the page"""   
         locator= npsp_lex_locators['object']['record'].format(title)
         self.selenium.wait_until_page_does_not_contain_element(locator) 
-             
-                         
-               
+
     def click_special_object_button(self, title):
         """Clicks a button in an object's actions but doesn't wait for a model to open"""
         locator = npsp_lex_locators['object']['button'].format(title)
         self.selenium.wait_until_element_is_visible(locator,error="Button "+ title +" not found on the page")
         self.selenium.get_webelement(locator).click()
         
-    def click_eng_plan_dropdown(self, title):
-        locator = npsp_lex_locators['engagement_plan']['dropdown'].format(title)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
-        
-    def select_eng_plan_checkbox(self,title):
-        """"""
-        if title=="Skip Weekends":
-            locator=npsp_lex_locators['engagement_plan']['checkbox'].format("span",title)
-            self.selenium.get_webelement(locator).click()
-        else:
-            locator=npsp_lex_locators['engagement_plan']['checkbox'].format("label",title)
-            self.selenium.get_webelement(locator).click()
-            
-    def enter_eng_plan_values(self, name, value):
-        """Enter values into corresponding fields in Engagement Plan Templet page"""
-        locator = npsp_lex_locators['id'].format(name) 
-        self.salesforce._populate_field(locator, value)
-    
-    
 
-                
-    def enter_task_id_and_subject(self, id, value):
-        """Enter values into corresponding task subject fields based on last 2 digits of id"""
-        locator = npsp_lex_locators['engagement_plan']['input_box'].format(id) 
-        self.selenium.get_webelement(locator).send_keys(value)
-    
-    
-    def click_task_button(self, task_id, name):
-        """Click Task button based on Task id and button label"""          
-        locator = npsp_lex_locators['engagement_plan']['button'].format(task_id, name)
-        self.selenium.get_webelement(locator).click()    
-          
     
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
@@ -629,56 +595,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         for value in args:
             locator = npsp_lex_locators['engagement_plan']['tasks'].format(value)
             self.selenium.page_should_contain_element(locator)
-
-    @capture_screenshot_on_error
-    def enter_level_values(self, **kwargs):
-        """Enter values into corresponding fields in Levels page"""
-        for name, value in kwargs.items():
-            if name == "Level Name":
-                id = "fldName"
-                locator = npsp_lex_locators['levels']['id'].format(id)
-                self.salesforce._populate_field(locator, value)      
-            elif name == "Minimum Amount":
-                id = "fldMinAmount"
-                locator = npsp_lex_locators['levels']['id'].format(id)
-                self.salesforce._populate_field(locator, value)  
-            elif name == "Maximum Amount":
-                id = "fldMaxAmount"
-                locator = npsp_lex_locators['levels']['id'].format(id)
-                self.salesforce._populate_field(locator, value)
-
-    @capture_screenshot_on_error
-    def enter_level_dd_values(self, **kwargs):
-        """Enter values into corresponding fields in Levels page"""
-        for name, value in kwargs.items():
-            if name == "Target":
-                id = "fldTarget"
-                locator = npsp_lex_locators['levels']['select'].format(id)
-                loc = self.selenium.get_webelement(locator)
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.select_from_list_by_label(loc,value)
-                time.sleep(2)
-            elif name == "Source Field":
-                id = "fldSourceField"
-                locator = npsp_lex_locators['levels']['select'].format(id)
-                loc = self.selenium.get_webelement(locator)
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.select_from_list_by_label(loc,value)
-                time.sleep(2)
-            elif name == "Level Field":
-                id = "fldLevel"
-                locator = npsp_lex_locators['levels']['select'].format(id)
-                loc = self.selenium.get_webelement(locator)
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.select_from_list_by_label(loc,value)
-                time.sleep(2)
-            elif name == "Previous Level Field":
-                id = "fldPreviousLevel"
-                locator = npsp_lex_locators['levels']['select'].format(id)
-                loc = self.selenium.get_webelement(locator)
-                self.selenium.set_focus_to_element(locator)
-                self.selenium.select_from_list_by_label(loc,value)
-                time.sleep(2)
 
     def select_app_launcher_link(self,title):
         locator = npsp_lex_locators['app_launcher']['select-option'].format(title) 
@@ -781,8 +697,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """clicks on the button on the payments page"""      
         locator=npsp_lex_locators['button'].format(title)
         self.selenium.get_webelement(locator).click()
-        
-         
+
     def verify_details(self, **kwargs):
        """To verify no. of records with given same column values
           key is value in a table column, value is expected count of rows with that value     
@@ -791,8 +706,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            locators = npsp_lex_locators['payments']['pays'].format(key)
            list_ele = self.selenium.get_webelements(locators)
            p_count=len(list_ele)
-           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)  
-           
+           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)
            
     def verify_allocations(self,header, **kwargs):
        """To verify allocations, header is related list
@@ -810,8 +724,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['payments']['check_occurrence'].format(title)
         occ_value=self.selenium.get_webelement(locator).text
         return occ_value        
-        
-        
+
     def verify_payment(self):
         locators=npsp_lex_locators['payments']['no_payments']
         list_ele=self.selenium.get_webelements(locators)
@@ -832,8 +745,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
         loc = self.selenium.get_webelement(locator)
         self.selenium.set_focus_to_element(locator)       
-        self.selenium.select_from_list_by_label(loc,value) 
-          
+        self.selenium.select_from_list_by_label(loc,value)
         
     def select_value_from_bge_dd(self, list_name,value):
         list_found = False
@@ -872,14 +784,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         raise Exception('unable to find visible iframe with title "{}"'.format(value))
 
     def select_frame_and_click_element(self,iframe,path, *args, **kwargs):
-        """Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks """
+        """Waits for the iframe and Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks """
+        self.wait_for_locator('frame',iframe)
         self.choose_frame(iframe)
         loc = self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.wait_until_element_is_visible(loc, timeout=60)
         self.selenium.scroll_element_into_view(loc)
         self.selenium.click_element(loc)
-        
-        
+
     def get_npsp_locator(self, path, *args, **kwargs):
         """ Returns a rendered locator string from the npsp_lex_locators
             dictionary.  This can be useful if you want to use an element in
@@ -1009,8 +921,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         time.sleep(1)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
-  
-           
     
     def verify_title(self,title,value):
         """"""
@@ -1040,7 +950,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Clears the data in input field and enters the value specified """
         locator=npsp_lex_locators['bge']['edit_field'].format(title)
         field=self.salesforce._populate_field(locator, value)
- 
         
     def verify_row_count(self,value):
         """verifies if actual row count matches with expected value"""
@@ -1221,7 +1130,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         url = "{}/lightning/setup/{}/home".format(url,page)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
-
 
     def click_wrapper_related_list_button(self,heading,button_title):  
         """Clicks a button in the heading of a related list when the related list is enclosed in wrapper.
