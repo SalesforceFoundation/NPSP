@@ -188,10 +188,11 @@ public class RD_RecurringDonations {
     * @return void
     */
     public static void updateRecurringDonationOnOppChange(Set<Id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        Boolean CRLPEnabled = CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
 
-        // only use this hard-coded RD rollup code if Customizable Rollups aren't enabled
-        if (CRLPEnabled) {
+        // do not calculate legacy rollups if customizable rollups or enhanced Recurring Donations are enabled
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
+            || RD2_EnablementService.isRecurringDonations2Enabled
+        ) {
             return;
         }
 
