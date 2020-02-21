@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>Nombre de versements (dons) que vous prévoyez de recevoir. Uniquement utilisé avec des dons récurrents avec date de fin.</help>
-        <label>Deprecated-Nombre de versements</label>
-        <name>npe03__Installments__c</name>
-    </fields>
-    <fields>
         <help>Choisissez Ouvert pour les dons récurrents sans date de fin. Choisissez Aucun pour un don récurrent avec une date de fin. Choisissez Fermé pour fermer un don récurrent.</help>
         <label>Deprecated-Statut de date de fin</label>
         <name>npe03__Open_Ended_Status__c</name>
