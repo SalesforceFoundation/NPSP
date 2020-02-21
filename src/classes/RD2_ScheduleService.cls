@@ -300,8 +300,14 @@ public without sharing class RD2_ScheduleService {
     */
     public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
         //ensure the passed in schedules are active within the time period
-        return schedule.EndDate__c == null
+        Boolean isActive = schedule.EndDate__c == null 
             || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
+
+        Boolean isInstallmentFrequencyValid = schedule.InstallmentFrequency__c != null
+            && schedule.InstallmentFrequency__c >= 1
+            && schedule.InstallmentFrequency__c <= 20;
+
+        return isActive && isInstallmentFrequencyValid;
     }
 
     /***
@@ -417,10 +423,6 @@ public without sharing class RD2_ScheduleService {
     * @return Date The Next Donation Date
     */
     private Date getNextDonationDateGreaterThan(RecurringDonationSchedule__c schedule, Date referenceDate) {
-        if (schedule.InstallmentFrequency__c == null || schedule.InstallmentFrequency__c < 1) {
-            return null; 
-        }
-
         Date firstValid = getFirstPossibleDonationDateFromStart(schedule);
 
         if (firstValid >= referenceDate) {
