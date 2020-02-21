@@ -30,22 +30,18 @@ Create a Contact and Add Engagement Plan
 
     Go To Page                                       Listing                            Engagement_Plan_Template__c
     Go To Engagement Plan Page                       create
-    Wait For Locator                                 frame                              Manage Engagement Plan Template
-
-    Select Frame And Click Element                   Manage Engagement Plan Template    id    idName
+    Current Page Should Be                           Home                               Engagement_Plan_Template__c
     Enter Eng Plan Values                            idName                             Automation_Plan
     Enter Eng Plan Values                            idDesc                             This plan is created via Automation
-    Click Button                                     Add Task
-    Wait Until Page Contains                         Task 1
+    Click Task Button                                Task 1
     Enter Task Id and Subject                        Task 1                             Task_1
-    Click Task Button                                  1                                Add Dependent Task
+    Click Task Button                                Add Dependent Task                 1                               subtask
     Enter Task Id and Subject                        Task 1-1                           Sub_task_1.1
-    Click Button                                     Add Task
-    Wait Until Page Contains                         Task 2
+    Click Task Button                                Task 2
     Enter Task Id and Subject                        Task 2                             Task_2
-    Page Scroll To Locator                           button                             Save
-    Click Button                                     Save
-    wait until location contains                     /view
+    Save Engagement Plan Template
+
+    Current Page Should Be                           Details                            Engagement_Plan_Template__c
     ${ns} =  Get NPSP Namespace Prefix
 
     Save Current Record ID For Deletion              ${ns}Engagement_Plan_Template__c
@@ -65,7 +61,6 @@ Create a Contact and Add Engagement Plan
     Go To Page                                       Details
     ...                                              Contact
     ...                                              object_id=${data}[contact][Id]
-    Scroll Page To Location                          0                      0
     Click More Activity Button
     Check Activity Tasks                            Task_1    Sub_task_1.1    Task_2
 

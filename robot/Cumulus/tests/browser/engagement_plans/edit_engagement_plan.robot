@@ -33,19 +33,13 @@ Create Engagement Plan And Edit the Plan
 
     Go To Page                                        Listing                             Engagement_Plan_Template__c
     Go To Engagement Plan Page                        Edit                                ${data}[engagement][Id]
-    Wait For Locator                                 frame                               Manage Engagement Plan Template
+    Current Page Should Be                            Home                                Engagement_Plan_Template__c
 
-    Select Frame And Click Element                   Manage Engagement Plan Template     id    idName
-
-    Click Button                                     Add Task
-    Wait Until Page Contains                         Task 1
-    Enter Task Id and Subject                        Task 1                             Task_1
-    Click Button                                     Add Task
-    Wait Until Page Contains                         Task 2
-    Enter Task Id and Subject                        Task 2                             Task_2
-    Page Scroll To Locator                           button                             Save
-    Click Button                                     Save
-
+    Click Task Button                                 Task 1
+    Enter Task Id and Subject                         Task 1                             Task_1
+    Click Task Button                                 Task 2
+    Enter Task Id and Subject                         Task 2                             Task_2
+    Save Engagement Plan Template
 
     Go To Page                                        Detail
     ...                                               EngagementTemplate

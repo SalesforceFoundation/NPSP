@@ -4,6 +4,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/LevelsPageObject.py
+...             robot/Cumulus/resources/CreateLevelPageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
@@ -24,8 +25,10 @@ Create and edit level to verify fields
     ...                                  are persisted on the details page.
     [tags]                               W-038641                 feature:Levels
 
+    Go To Page                                       Listing                      Level__c
+    Click Special Object Button                      New
+    Current Page Should Be                           Custom                             Level__c
 
-    Go To Page                                          Home                      Level__c
     Enter Level Values
     ...                                                 Level Name=AutomationLevel
     ...                                                 Minimum Amount=${min_amount}
@@ -46,7 +49,11 @@ Create and edit level to verify fields
     Wait Until Loading Is Complete
     Navigate To And Validate Field Value                Minimum Amount (>\=)    contains    ${min_amount}
     Navigate To And Validate Field Value                Maximum Amount (<)      contains    ${max_amount}
-    Go to edit level page                               ${level_id}
+
+    Click Show More Actions Button                      Edit
+    Current Page Should Be                              Custom                             Level__c
+
+
     Enter Level Values
     ...                                                 Minimum Amount=${minamount_to_edit}
     ...                                                 Maximum Amount=${maxamount_to_edit}
@@ -59,7 +66,7 @@ Create and edit level to verify fields
     ...                                                 object_id=${level_id}
 
     Wait Until Loading Is Complete
-
+    Navigate To And Validate Field Value    Minimum Amount (>\=)   contains       ${minamount_to_edit}
     Navigate To And Validate Field Value    Maximum Amount (<)     contains       ${maxamount_to_edit}
     Navigate To And Validate Field Value    Source Field           contains       npo02__SmallestAmount__c
 
@@ -70,10 +77,11 @@ Create and edit level to verify fields
 
     [tags]                                  W-038641                 feature:Level
     # --------------------------------
-    # Modify the SmallestGift field to allow the level to be applied
+    # update the SmallestGift field value to allow the level to be applied
     # --------------------------------
     Setupdata                               contact                   contact_data=${contact_fields}
     Set Global Variable                     ${data}
+
     Salesforce Update                       Contact                   ${data}[contact][Id]  npo02__SmallestAmount__c=${contact_smallestvalue}
     Go To Page                              Details
     ...                                     Contact

@@ -8,21 +8,6 @@ from logging import exception
 import time
 
 
-@pageobject("Home", "Level__c")
-class LevelListPage(BaseNPSPPage, HomePage):
-
-    def _go_to_page(self, filter_name=None):
-        """To go to create level page"""
-        url_template = "{root}/lightning/o/{object}/new"
-        name = self._object_name
-        values =  self.npsp.get_url_formatted_object_name(name)
-        url = url_template.format(root=values['baseurl'], object=values['objectname'])
-        self.selenium.go_to(url)
-        self.salesforce.wait_until_loading_is_complete()
-        self.npsp.wait_for_locator("frame","Levels")
-        self.npsp.choose_frame("Levels")
-
-
 @pageobject("Listing", "Level__c")
 class LevelListPage(BaseNPSPPage, ListingPage):
 
@@ -44,16 +29,8 @@ class LevelDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail view did not open in 1 min")
         self.selenium.location_should_contain("/lightning/r/",message="Current page is not Level record detail view")
 
-    def go_to_edit_level_page(self,levelid=None):
-        """ Navigates to the edit view for the given level id """
-        objectname = "Level_c"
-        values =  self.npsp.get_url_formatted_object_name(objectname)
-        url = "{}/lightning/r/{}/{}/edit".format(values['baseurl'],values['objectname'],levelid)
-        self.selenium.go_to(url)
-        self.salesforce.wait_until_loading_is_complete()
-        self.npsp.wait_for_locator("frame","Levels")
-        self.npsp.choose_frame("Levels")
-        self.selenium.wait_until_location_contains("/edit",timeout=60, message="Page not loaded")
+
+
     
         
         

@@ -5,6 +5,7 @@ npsp_lex_locators={
     'spl-breadcrumb':"//div[@class= 'slds-media__body']/p[text()='{}']",
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'obj-header':"//h1//*[text()='{}']",
+    'dropdown_spinner': 'css: div#divLoading',
     'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
@@ -76,6 +77,7 @@ npsp_lex_locators={
     'Delete_opportunity_modal_button': 'css: div.forceModalActionContainer button.uiButton--brand',
     'modal_field':"//div[contains(@class, 'lookupInput')][./label[contains(text(), '{}')]]/div//span[@class='lookupInput']/input",
     'name':'//tbody/tr/th/span/a',
+    'engagementtext':'//tbody/tr/th/td/span/a',
     'select_name':'//tbody//a[text()= "{}"]',
     'opportunities_dropdown':"css:a.slds-button.slds-button--icon-border-filled",
     'locate_dropdown':'//tbody/tr[{}]/td/span//div/a/lightning-icon',

@@ -1,8 +1,61 @@
 from cumulusci.robotframework.pageobjects import ListingPage
+from cumulusci.robotframework.pageobjects import HomePage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
+
+@pageobject("Home", "Engagement_Plan_Template__c")
+class EngagementPlanHomePage(BaseNPSPPage, HomePage):
+
+    def _is_current_page(self):
+        """
+        Waits for the current page to be a Engagement Plan list view page
+        """
+        self.npsp.wait_for_locator('frame','Manage Engagement Plan Template')
+        self.npsp.choose_frame('Manage Engagement Plan Template')
+
+    def click_eng_plan_dropdown(self, title):
+        locator = npsp_lex_locators['engagement_plan']['dropdown'].format(title)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
+
+    def select_eng_plan_checkbox(self,title):
+        """"""
+        if title=="Skip Weekends":
+            locator=npsp_lex_locators['engagement_plan']['checkbox'].format("span",title)
+            self.selenium.get_webelement(locator).click()
+        else:
+            locator=npsp_lex_locators['engagement_plan']['checkbox'].format("label",title)
+            self.selenium.get_webelement(locator).click()
+
+    def enter_eng_plan_values(self, name, value):
+        """Enter values into corresponding fields in Engagement Plan Templet page"""
+        locator = npsp_lex_locators['id'].format(name)
+        self.salesforce._populate_field(locator, value)
+
+    def click_and_wait_for_task(self, taskname):
+        self.selenium.click_button('Add Task')
+        self.selenium.wait_until_page_contains(taskname)
+
+    def enter_task_id_and_subject(self, id, value):
+        """Enter values into corresponding task subject fields based on last 2 digits of id"""
+        locator = npsp_lex_locators['engagement_plan']['input_box'].format(id)
+        self.selenium.get_webelement(locator).send_keys(value)
+
+    def save_engagement_plan_template(self):
+        self.npsp.page_scroll_to_locator('button', 'Save')
+        self.selenium.click_button('Save')
+
+    def click_task_button(self, name, task_id=None, type=None):
+        """Click Task button based on Task id and button label"""
+        if type == 'subtask':
+            locator = npsp_lex_locators['engagement_plan']['button'].format(task_id, name)
+            self.selenium.get_webelement(locator).click()
+        else:
+            self.selenium.click_button('Add Task')
+            self.selenium.wait_until_page_contains(name)
+
 
 @pageobject("Listing", "Engagement_Plan_Template__c")
 class EngagementPlanListPage(BaseNPSPPage, ListingPage):
@@ -32,7 +85,7 @@ class EngagementPlanListPage(BaseNPSPPage, ListingPage):
 
         self.npsp.wait_for_locator("frame","Manage Engagement Plan Template")
 
-    
+
 @pageobject("Details", "Engagement_Plan_Template__c")
 class EngagementPlanDetailPage(BaseNPSPPage, DetailPage):
 
