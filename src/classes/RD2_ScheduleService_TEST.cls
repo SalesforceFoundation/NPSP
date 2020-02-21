@@ -1206,6 +1206,7 @@ private with sharing class RD2_ScheduleService_TEST {
         insert rd;
 
         rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+        rd.npe03__Installments__c = 0;
 
         Test.startTest();
         update rd;
@@ -1234,12 +1235,12 @@ private with sharing class RD2_ScheduleService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
             .withDayOfMonth(dayOfMonth)
             .withRecurringTypeOpen()
-            .withPlannedInstallments(5)
             .build();
 
         insert rd;
 
         rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_FIXED;
+        rd.npe03__Installments__c = 5;
 
         Test.startTest();
         update rd;
