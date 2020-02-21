@@ -864,7 +864,7 @@ private class RD2_DataMigration_TEST {
 
         Id jobId = runDataMigration();
 
-        assertDonorIsRequiredError(jobId, getRecords()[0]);
+        assertDonorIsRequiredError(jobId);
 
         assertLegacyFormat(getRecords());
 
@@ -893,7 +893,7 @@ private class RD2_DataMigration_TEST {
 
         Id jobId = executeAndFinishDryRun();
 
-        assertDonorIsRequiredError(jobId, getRecords()[0]);
+        assertDonorIsRequiredError(jobId);
 
         assertLegacyFormat(getRecords());
 
@@ -923,7 +923,7 @@ private class RD2_DataMigration_TEST {
 
         Id jobId = runDataMigration();
 
-        assertDonorIsRequiredError(jobId, getRecords()[0]);
+        assertDonorIsRequiredError(jobId);
 
         assertLegacyFormat(getRecords());
 
@@ -2012,12 +2012,14 @@ private class RD2_DataMigration_TEST {
 
     /****
     * @description Asserts if the error message contains Donor is required field error
-    * @param Errors
+    * @param jobId Batch job Id
     * @return void
     */
-    private static void assertDonorIsRequiredError(Id jobId, npe03__Recurring_Donation__c rd) {
+    private static void assertDonorIsRequiredError(Id jobId) {
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(1, errors.size(), 'Validation error should be logged');
+
+        npe03__Recurring_Donation__c rd = getRecords()[0];
 
         System.assertEquals(true, errors[0].Full_Message__c.contains(System.Label.RD_DonorIsRequired), 'Error message should match');
         System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');

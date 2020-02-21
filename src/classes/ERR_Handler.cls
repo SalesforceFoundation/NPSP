@@ -405,6 +405,7 @@ public class ERR_Handler {
     /***
     * @description returns true if this method is calling from data migration
     * or validate migration context
+    * @param The context the errors were raised on.
     * @returns Boolean
     */
     public static Boolean isRD2MigrationContext(String context) {
