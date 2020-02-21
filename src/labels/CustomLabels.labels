@@ -2041,6 +2041,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Refresh Opportunities</value>
     </labels>
     <labels>
+        <fullName>RD_ErrorAddDonationLimitedToLegacyMode</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh Opportunities button action can be executed in the legacy mode only</shortDescription>
+        <value>The Refresh Opportunities button has no function in Enhanced Recurring Donations. Ask your administrator to remove this button from Recurring Donation page layouts.</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorAddDonationMissingId</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
