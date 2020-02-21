@@ -12,7 +12,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Enter a donation for an account with exact payment match
     #Enter a donation for an account that has an exact payment match, don't select the match, and process batch
-    [tags]  stable
+    [tags]  unstable
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    
@@ -42,7 +42,7 @@ Enter a donation for an account with exact payment match
     ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
     Log To Console    ${pay_no}
     Page Should Contain    &{opportunity}[Name]
-    Click Button    title:Close this window
+    Click Button With Title     Close this window
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100

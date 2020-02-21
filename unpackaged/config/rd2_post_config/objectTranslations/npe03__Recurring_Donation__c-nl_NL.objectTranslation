@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>Aantal termijnen (donaties), dat u verwacht te ontvangen. Dit is alleen voor terugkerende donaties met een vaste duur.</help>
-        <label>Deprecated-Termijnen</label>
-        <name>npe03__Installments__c</name>
-    </fields>
-    <fields>
         <help>Kies Open voor een doorlopende Terugkerende donatie (een Terugkerende donatie voor onbepaalde duur). Kies Geen voor een Terugkerende donatie met een vaste duur. Kies Gesloten om de Terugkerende donatie te sluiten.</help>
         <label>Deprecated-Status voor onbepaalde duur</label>
         <name>npe03__Open_Ended_Status__c</name>
