@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>Anzahl der Raten (Spenden), mit deren Eingang Sie rechnen. Nur für wiederkehrende Spenden mit fester Dauer.</help>
-        <label>Deprecated-Raten</label>
-        <name>npe03__Installments__c</name>
-    </fields>
-    <fields>
         <help>Wählen Sie bei einer Wiederkehrenden Spende mit offenem Ende &quot;Offen&quot;. Wählen Sie &quot;Keine&quot; bei einer Wiederkehrenden Spende mit fester Dauer. Wählen Sie &quot;Geschlossen&quot;, um eine wiederkehrende Spende zu schließen.</help>
         <label>Deprecated-Status &quot;Unbefristet&quot;</label>
         <name>npe03__Open_Ended_Status__c</name>

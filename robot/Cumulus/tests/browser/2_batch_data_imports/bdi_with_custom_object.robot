@@ -52,7 +52,7 @@ Create Data Import Record
     ...                    and create and process a DI record with a value in Currency1 field.
     ...                    Verify that Currency1 value is not mapped over to currency1 field on object 'CustomObject1' 
     ...                    and verify that all other records(Account, contact, Opportunity and payment) are created correctly 
-    [tags]                 W-035915    feature:BDI
+    [tags]                 W-035915    feature:BDI    unstable
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Advanced Mapping for Data Import & Gift Entry  
@@ -109,7 +109,7 @@ Create Data Import Record
     ...                    and Create and process DI record with Contact, Account, Opportunity, Payment and CustomObject1 details
     ...                    and verify that all records are created as expected along with currency1 
     ...                    on DI mapped to currency1 on object 'CustomObject1'
-    [tags]                 W-035915    feature:BDI
+    [tags]                 W-035915    feature:BDI    unstable
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Advanced Mapping for Data Import & Gift Entry  
@@ -166,7 +166,7 @@ Create Data Import Record
     ...                    Create and process DI record with Contact, Account, Opportunity, Payment and CustomObject1 details 
     ...                    and verify that all records are created as expected along with 
     ...                    currency1 on DI mapped to currency2 on object 'CustomObject1'   
-    [tags]                 W-035915    feature:BDI
+    [tags]                 W-035915    feature:BDI    unstable
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Advanced Mapping for Data Import & Gift Entry  
