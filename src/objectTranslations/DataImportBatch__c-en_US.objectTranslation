@@ -27,6 +27,10 @@
         <name>Batch_Description__c</name>
     </fields>
     <fields>
+        <label><!-- Batch Gift Entry Version --></label>
+        <name>Batch_Gift_Entry_Version__c</name>
+    </fields>
+    <fields>
         <help><!-- The number of records to process at a time in each batch. --></help>
         <label><!-- Batch Process Size --></label>
         <name>Batch_Process_Size__c</name>
@@ -94,6 +98,11 @@
         <help><!-- The expected total amount of all gifts entered in this Batch. --></help>
         <label><!-- Expected Total Batch Amount --></label>
         <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
     </fields>
     <fields>
         <help><!-- This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift batches when they are set up through the Batch Gift Entry tab. Manually changing this field could have unintended consequences. --></help>

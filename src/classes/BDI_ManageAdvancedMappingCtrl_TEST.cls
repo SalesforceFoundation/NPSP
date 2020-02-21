@@ -79,7 +79,7 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
         '"Required":"No",' +
         '"Source_Field_API_Name":"Account1_Test_Field__c",' +
         '"Target_Field_API_Name":"Test_Field__c",' +
-        '"Target_Object_Mapping":"Account1"}';
+        '"Target_Object_Mapping_Dev_Name":"Account1"}';
 
     /*******************************************************************************************************
     * @description Instance of Data_Import_Object_Mapping__mdt as JSON
@@ -140,7 +140,7 @@ private class BDI_ManageAdvancedMappingCtrl_TEST {
             FROM Data_Import_Object_Mapping__mdt
             WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSet.Id];
 
-        BDI_ManageAdvancedMappingCtrl.DataImportObjectMappingWrapper[] objectMappingWrappers =
+        BDI_ObjectMapping[] objectMappingWrappers =
             BDI_ManageAdvancedMappingCtrl.getObjectMappings();
 
         System.assertEquals(defaultObjectMappings.size(), objectMappingWrappers.size());
