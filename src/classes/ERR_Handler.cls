@@ -380,7 +380,7 @@ public class ERR_Handler {
             return;
         }
 
-        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c || isValidateOrDataMigration(context)) {
+        if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c || isRD2MigrationContext(context)) {
             Database.insert(errorRecords, false);
         }
 
@@ -407,11 +407,12 @@ public class ERR_Handler {
     * or validate migration context
     * @returns Boolean
     */
-    public static Boolean isValidateOrDataMigration(String context) {
-        return
-            context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_DRY_RUN)
-            || context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_MIGRATION);
-
+    public static Boolean isRD2MigrationContext(String context) {
+        return String.isNotBlank(context)
+            && (
+                context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_DRY_RUN)
+                || context.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_MIGRATION)
+            );
     }
 
     /*******************************************************************************************************
