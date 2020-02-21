@@ -27,6 +27,10 @@
         <name>Batch_Description__c</name>
     </fields>
     <fields>
+        <label><!-- Batch Gift Entry Version --></label>
+        <name>Batch_Gift_Entry_Version__c</name>
+    </fields>
+    <fields>
         <help>Het aantal records om tegelijkertijd te verwerken in elke batch.</help>
         <label>Verwerkingsgrootte van Batch</label>
         <name>Batch_Process_Size__c</name>
@@ -86,6 +90,11 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
+    </fields>
+    <fields>
         <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
         <label>Verwachte telling van giften</label>
         <name>Expected_Count_of_Gifts__c</name>
@@ -94,6 +103,11 @@
         <help>Het verwachte totale bedrag van alle giften ingevoerd in deze Batch.</help>
         <label>Verwachte totale bedrag van batch</label>
         <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
     </fields>
     <fields>
         <help>Deze batch is bedoeld voor gebruik met Batchgiftinvoer. Batches worden automatisch gemarkeerd als giftbatches wanneer ze via het tabblad Batchgiftinvoer worden ingesteld. Dit veld handmatig wijzigen, kan onbedoelde gevolgen hebben.</help>

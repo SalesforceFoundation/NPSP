@@ -1,0 +1,28 @@
+<template>
+    <template if:true={isBatchMode}>
+        <c-ge-batch-gift-entry-header
+                batch-id={recordId}
+                is-permission-error={isPermissionError}
+                onbatchdryrun={handleBatchDryRun}
+                onedit={handleEditBatch}>
+        </c-ge-batch-gift-entry-header>
+        <br/>
+    </template>
+    
+    <c-ge-form-renderer
+            batch-id={recordId}
+            onsubmit={handleSubmit}
+            onsectionsretrieved={handleSectionsRetrieved}
+            onpermissionerror={handlePermissionErrors}
+            ontogglemodal={handleReviewDonationsModal}>
+    </c-ge-form-renderer>
+
+    <template if:false={isPermissionError}>
+        <template if:true={isBatchMode}>
+            <c-ge-batch-gift-entry-table
+                    batch-id={recordId}
+                    onloaddata={handleLoadData}>
+            </c-ge-batch-gift-entry-table>
+        </template>
+    </template>
+</template>

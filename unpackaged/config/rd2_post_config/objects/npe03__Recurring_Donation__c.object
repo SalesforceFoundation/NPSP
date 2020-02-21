@@ -45,6 +45,53 @@
         <type>Date</type>
     </fields>
     <fields>
+        <fullName>%%%NAMESPACE%%%ClosedReason__c</fullName>
+        <description>The reason this Recurring Donation was closed.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The reason this Recurring Donation was closed.</inlineHelpText>
+        <label>Closed Reason</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Card Expired</fullName>
+                    <default>false</default>
+                    <label>Card Expired</label>
+                </value>
+                <value>
+                    <fullName>Commitment Completed</fullName>
+                    <default>false</default>
+                    <isActive>true</isActive>
+                    <label>Commitment Completed</label>
+                </value>
+                <value>
+                    <fullName>Deceased Donor</fullName>
+                    <default>false</default>
+                    <label>Deceased Donor</label>
+                </value>
+                <value>
+                    <fullName>Financial Difficulty</fullName>
+                    <default>false</default>
+                    <label>Financial Difficulty</label>
+                </value>
+                <value>
+                    <fullName>No Longer Interested</fullName>
+                    <default>false</default>
+                    <label>No Longer Interested</label>
+                </value>
+                <value>
+                    <fullName>Unknown</fullName>
+                    <default>false</default>
+                    <label>Unknown</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
         <fullName>%%%NAMESPACE%%%Day_of_Month__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly.</inlineHelpText>
@@ -219,6 +266,34 @@
                     <default>false</default>
                     <isActive>false</isActive>
                     <label>31</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>%%%NAMESPACE%%%RecurringType__c</fullName>
+        <description>Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.</inlineHelpText>
+        <label>Recurring Type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Open</fullName>
+                    <default>true</default>
+                    <label>Open</label>
+                </value>
+                <value>
+                    <fullName>Fixed</fullName>
+                    <default>false</default>
+                    <isActive>true</isActive>
+                    <label>Fixed</label>
                 </value>
             </valueSetDefinition>
         </valueSet>
