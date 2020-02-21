@@ -307,18 +307,6 @@ public class ERR_RecordError {
 
     /*******************************************************************************************************
     * @description Resets the Retry Pending flag and adds a message for a Set of Record IDs.  It only does
-    * this if the recordID is present in map of Errors by Record ID
-    * @param Set<String> recordIds
-    * @param String message
-    */
-    public void clearErrors(Set<String> recordIds, String message) {
-        for (String recordId :recordIds) {
-            clearError(recordId, message);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Resets the Retry Pending flag and adds a message for a Set of Record IDs.  It only does
     *              this for record IDs that are present in the map of Errors by Record ID
     * @param Set<String> recordIds
     * @param String message

@@ -307,6 +307,8 @@ public class ERR_Handler {
         }
     }
 
+
+
     /*******************************************************************************************************
     * @description Creates error records from passed in exceptions.
     *   If the Error Settings is enabled, errors are stored in the database.

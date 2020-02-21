@@ -107,12 +107,9 @@ private class ERR_RecordErrorReprocessBatch_TEST {
     private static void shouldProperlyConstructBatch() {
         DateTime boundary = System.now().addDays(-1);
 
-        ERR_RecordErrorReprocessBatch_MOCK reprocessBatch =  new ERR_RecordErrorReprocessBatch_MOCK(boundary);
-        System.assertEquals(boundary, reprocessBatch.boundary, 'Boundary Only Constructor [boundary]');
-
-        reprocessBatch =  new ERR_RecordErrorReprocessBatch_MOCK(150, boundary);
+        ERR_RecordErrorReprocessBatch_MOCK reprocessBatch =  new ERR_RecordErrorReprocessBatch_MOCK();
+        reprocessBatch.setBoundary(boundary);
         System.assertEquals(boundary, reprocessBatch.boundary, 'BatchSize and Boundary Constructor [boundary]');
-        System.assertEquals(150, reprocessBatch.getBatchSize(), 'BatchSize and Boundary Constructor [batchsize');
     }
 
     // Helpers
