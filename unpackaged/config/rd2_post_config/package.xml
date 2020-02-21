@@ -21,6 +21,7 @@
         <members>npe03__Recurring_Donation__c.npe03__Installment_Period__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c</members>
         <members>npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c</members>
+        <members>npe03__Recurring_Donation__c.%%%NAMESPACE%%%InstallmentFrequency__c</members>
         <name>CustomField</name>
     </types>
     <types>
