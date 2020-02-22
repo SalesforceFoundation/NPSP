@@ -91,6 +91,7 @@ public with sharing class RD2_ValidationService {
         set;
     }
 
+
     /**
     * @description Constructor for the RD2_ValidationService class
     * @param rds New rds that will be validated
@@ -116,6 +117,7 @@ public with sharing class RD2_ValidationService {
     public void validate() {
         for (npe03__Recurring_Donation__c rd : rds) {
             validateActiveRecurringDonation(rd);
+            validateInstallmentFrequency(rd);
             validateDonor(rd, accountById.get(rd.npe03__Organization__c));
         }
     }
@@ -130,9 +132,10 @@ public with sharing class RD2_ValidationService {
             npe03__Recurring_Donation__c oldRd = oldRds[i];
 
             validateActiveRecurringDonation(rd);
+            validateInstallmentFrequency(rd);
             validateCurrencyChange(rd, oldRd);
 
-            Boolean isValid = validateDonorChange(rd, oldRd);
+            Boolean isValid = validateDonorChange(rd, oldRd);	            
             if (isValid) {
                 validateDonor(rd, accountById.get(rd.npe03__Organization__c));
             }
@@ -140,7 +143,7 @@ public with sharing class RD2_ValidationService {
     }
 
     /***
-    * @description Validates installment data on Recurring Donation
+    * @description Validates data on Recurring Donation is valid
     * @param rd The Recurring Donation to validate
     * @return void
     */
@@ -148,7 +151,7 @@ public with sharing class RD2_ValidationService {
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return;
         }
-        
+
         if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
             rd.addError(System.Label.RD2_AmountMustBeValid);
         }
@@ -162,6 +165,18 @@ public with sharing class RD2_ValidationService {
         }
 
         validateDayOfMonth(rd);
+    }
+
+    /***
+     * @description Validate Installment Frequency to be in the range
+     * @param rd Recurring Donation record to validate
+     */
+    private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd) {
+        if (rd.InstallmentFrequency__c == null
+            || rd.InstallmentFrequency__c < 1
+            || rd.InstallmentFrequency__c > 20) {
+            rd.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
+        }
     }
 
     /***
@@ -184,7 +199,6 @@ public with sharing class RD2_ValidationService {
 
         if (rd.npe03__Contact__c == null) {
             rd.addError(System.Label.RD_ContactMustBelongToAccount);
-
         } else if (!UTIL_SObject.extractIds(acct.Contacts).contains(rd.npe03__Contact__c)) {
             rd.addError(System.Label.RD_ContactMustBelongToAccount);
         }
