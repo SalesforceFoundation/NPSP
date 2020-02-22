@@ -441,7 +441,8 @@ Insert Campaign:
 Insert CampaignMemberStatus:
   sf_object: CampaignMemberStatus
   table: CampaignMemberStatus
-  filter: Label != 'Sent' AND Label != 'Responded'
+  filters: 
+    - "Label != 'Sent' AND Label != 'Responded'"
   fields:
     Id: sf_id
     HasResponded: HasResponded
