@@ -847,15 +847,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             let displayValue;
 
             if (isDonorLookupAndHasValue) {
+                displayValue = this.selectedDonation.Name;
+
                 if (fieldApiName === donationImported) {
                     if (donationType === 'payment') {
                         displayValue = getValueFromDotNotationString(
                             this.selectedDonation,
                             PAYMENT_OPPORTUNITY_NAME_FIELD.fieldApiName);
-                        return;
                     }
                 }
-                displayValue = this.selectedDonation.Name;
             }
 
             this.setFormFieldValue(fieldApiName, value, displayValue);
