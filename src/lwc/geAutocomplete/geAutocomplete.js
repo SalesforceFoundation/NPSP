@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import { isNotEmpty, isEmpty } from 'c/utilCommon';
+import { isNotEmpty, isEmpty, isUndefined } from 'c/utilCommon';
 
 const COMBO_BOX_CLASS = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
 const INPUT_CLASS = 'slds-input slds-combobox__input';
@@ -100,9 +100,12 @@ export default class GeAutocomplete extends LightningElement {
     }
 
     @api
-    reset() {
-        this.displayValue = '';
-        this.value = null;
+    reset(defaultValue) {
+        if (isUndefined(defaultValue)) {
+            this.displayValue = '';
+            this.value = null;
+        }
+
         const payload = {
             detail: {
                 value: this.value,
