@@ -11,7 +11,6 @@ Suite Teardown  Delete Records and Close Browser
 
 Create Open Recurring Donation With Monthly Installment
     [Documentation]              This test verifies that a Recurring Donation can be created through the UI.
-    [tags]                       unstable
     &{contact} =                 API Create Contact    Email=skristem@robot.com		
     Go To Page                   Details    Contact    object_id=&{contact}[Id]		
     Click More Actions Button		
