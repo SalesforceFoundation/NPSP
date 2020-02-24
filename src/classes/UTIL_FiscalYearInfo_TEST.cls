@@ -34,7 +34,7 @@
 * @description Unit tests for the fiscal year info determination
 *
 */
-@IsTest(IsParallel=false)
+@IsTest(IsParallel=true)
 private with sharing class UTIL_FiscalYearInfo_TEST {
 
     /**
@@ -125,18 +125,31 @@ private with sharing class UTIL_FiscalYearInfo_TEST {
         fiscalYearInfo.isStartMonthYearBeginning = true; 
 
         Date today = Date.newInstance(2014, 3, 31);
+        Date yearStartDate = Date.newInstance(2013, 4, 1);
+        Date yearEndDate = Date.newInstance(2014, 3, 31);
+        Integer fiscalYear = 2013;
         UTIL_FiscalYearInfo.YearInfo yearInfo = fiscalYearInfo.getYearInfo(today);
 
-        System.assertEquals(Date.newInstance(2013, 4, 1), yearInfo.startDate, 'The fiscal year started last calendar year');
-        System.assertEquals(Date.newInstance(2014, 3, 31), yearInfo.endDate, 'The current fiscal year ends today');
-        System.assertEquals(2013, fiscalYearInfo.getFiscalYear(today), 'The fiscal year is the last calendar year');
+        System.assertEquals(yearStartDate, yearInfo.startDate, 'The fiscal year started last calendar year');
+        System.assertEquals(yearEndDate, yearInfo.endDate, 'The current fiscal year ends today');
+        System.assertEquals(fiscalYear, fiscalYearInfo.getFiscalYear(today), 'The fiscal year is the last calendar year');
 
         today = Date.newInstance(2014, 4, 1);
+        yearStartDate = Date.newInstance(2014, 4, 1);
+        yearEndDate = Date.newInstance(2015, 3, 31);
+        fiscalYear = 2014;
         yearInfo = fiscalYearInfo.getYearInfo(today);
 
-        System.assertEquals(Date.newInstance(2014, 4, 1), yearInfo.startDate, 'The next fiscal year starts today');
-        System.assertEquals(Date.newInstance(2015, 3, 31), yearInfo.endDate, 'The next fiscal year ends in the next calendar year');
-        System.assertEquals(2014, fiscalYearInfo.getFiscalYear(today), 'The fiscal year is the current calendar year');
+        System.assertEquals(yearStartDate, yearInfo.startDate, 'The next fiscal year starts today');
+        System.assertEquals(yearEndDate, yearInfo.endDate, 'The next fiscal year ends in the next calendar year');
+        System.assertEquals(fiscalYear, fiscalYearInfo.getFiscalYear(today), 'The fiscal year is the current calendar year');
+
+        today = Date.newInstance(2015, 3, 1);
+        yearInfo = fiscalYearInfo.getYearInfo(today);
+
+        System.assertEquals(yearStartDate, yearInfo.startDate, 'The fiscal year start date should match');
+        System.assertEquals(yearEndDate, yearInfo.endDate, 'The fiscal year end date should match');
+        System.assertEquals(fiscalYear, fiscalYearInfo.getFiscalYear(today), 'The fiscal year should match');
     }
 
     /**
@@ -153,17 +166,31 @@ private with sharing class UTIL_FiscalYearInfo_TEST {
         fiscalYearInfo.isStartMonthYearBeginning = false; 
 
         Date today = Date.newInstance(2014, 3, 31);
+        Date yearStartDate = Date.newInstance(2013, 4, 1);
+        Date yearEndDate = Date.newInstance(2014, 3, 31);
+        Integer fiscalYear = 2014;
         UTIL_FiscalYearInfo.YearInfo yearInfo = fiscalYearInfo.getYearInfo(today);
 
-        System.assertEquals(Date.newInstance(2013, 4, 1), yearInfo.startDate, 'The fiscal year started last calendar year');
-        System.assertEquals(Date.newInstance(2014, 3, 31), yearInfo.endDate, 'The current fiscal year ends today');
-        System.assertEquals(2014, fiscalYearInfo.getFiscalYear(today), 'The fiscal year is the current calendar year');
+        System.assertEquals(yearStartDate, yearInfo.startDate, 'The fiscal year started last calendar year');
+        System.assertEquals(yearEndDate, yearInfo.endDate, 'The current fiscal year ends today');
+        System.assertEquals(fiscalYear, fiscalYearInfo.getFiscalYear(today), 'The fiscal year is the current calendar year');
 
         today = Date.newInstance(2014, 4, 1);
+        yearStartDate = Date.newInstance(2014, 4, 1);
+        yearEndDate = Date.newInstance(2015, 3, 31);
+        fiscalYear = 2015;
         yearInfo = fiscalYearInfo.getYearInfo(today);
 
-        System.assertEquals(Date.newInstance(2014, 4, 1), yearInfo.startDate, 'The next fiscal year starts today');
-        System.assertEquals(Date.newInstance(2015, 3, 31), yearInfo.endDate, 'The next fiscal year ends in the next calendar year');
-        System.assertEquals(2015, fiscalYearInfo.getFiscalYear(today), 'The fiscal year is the next calendar year');
+        System.assertEquals(yearStartDate, yearInfo.startDate, 'The next fiscal year starts today');
+        System.assertEquals(yearEndDate, yearInfo.endDate, 'The next fiscal year ends in the next calendar year');
+        System.assertEquals(fiscalYear, fiscalYearInfo.getFiscalYear(today), 'The fiscal year is the next calendar year');
+
+        today = Date.newInstance(2015, 3, 1);
+        yearInfo = fiscalYearInfo.getYearInfo(today);
+
+        System.assertEquals(yearStartDate, yearInfo.startDate, 'The fiscal year start date should match');
+        System.assertEquals(yearEndDate, yearInfo.endDate, 'The fiscal year end date should match');
+        System.assertEquals(fiscalYear, fiscalYearInfo.getFiscalYear(today), 'The fiscal year should match');
     }
+
 }

@@ -660,6 +660,34 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+     * @description The Current and Next Year Value based on the fiscal year
+     * should be calculated when a Recurring Donation is created
+     */
+    @IsTest
+    private static void fiscalYearValuesShouldBeCalculatedWhenRDIsCreated() {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpUseFiscalYear(true);
+        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(11, true);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(rd.npe03__Amount__c * 2, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated when RD is created');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated when RD is created');
+    }
+
+
+    /**
      * @description The Current and Next Year Value should include past/future Closed Won and Open Opps.
      * The value in this test is calculated when Recurring Donation is updated.
      */
@@ -1104,5 +1132,16 @@ private class RD2_OpportunityEvaluationService_TEST {
         rd = TEST_RecurringDonationBuilder.addRelatedList(rd, UTIL_Namespace.StrTokenNSPrefix('RecurringDonationSchedules__r'), schedules);
 
         return rd;
+    }
+
+    /**
+     * @description Sets up fiscal year usage configuration
+     * @param isEnabled Indicates if the fiscal year should used in the calculations
+     * @return void
+     */
+    private static void setUpUseFiscalYear(Boolean isEnabled) {
+        RD2_Settings_TEST.setUpConfiguration(
+            new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => isEnabled }
+        );
     }
 }

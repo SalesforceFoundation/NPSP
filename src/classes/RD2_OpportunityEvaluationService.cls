@@ -146,6 +146,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     /***
     * @description Calculates Current and Next Year Values for a Recurring Donation
     */
+    @TestVisible
     private YearValueProcessor yearValueProcessor {
         get {
             if (yearValueProcessor == null) {
@@ -708,6 +709,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @description Contains year info and configuration.
         * Fiscal year will be used if the configuration indicates it should be used.
         */
+        @TestVisible
         private UTIL_FiscalYearInfo fiscalYearInfo {
             get {
                 if (fiscalYearInfo == null) {
@@ -769,46 +771,80 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @description Calculates the Current Year Value
         * NOTE: the value is calculated based on the calendar year currently.
         *
-        * @param opps A Recurring Donation Opportunities
-        * @param schedules A Recurring Donation Schedules
+        * @param opps Opportunities on a Recurring Donation
+        * @param schedules Schedules on a Recurring Donation
         * @return Decimal
         */
         public Decimal calcCurrentYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            return calcCalendarYearValue(opps, schedules, currentDate, currentYearInfo.endDate);
+            return fiscalYearInfo.useFiscalYear
+                ? calcFiscalYearValue(opps, schedules, currentYearInfo.startDate, currentYearInfo.endDate)
+                : calcCalendarYearValue(opps, schedules, currentDate, currentYearInfo.endDate);
         }
 
         /**
         * @description Calculates the Next Year Value
         * NOTE: the value is calculated based on the calendar year currently.
         *
-        * @param opps A Recurring Donation Opportunities
-        * @param schedules A Recurring Donation Schedules
+        * @param opps Opportunities on a Recurring Donation
+        * @param schedules Schedules on a Recurring Donation
         * @return Decimal
         */
         public Decimal calcNextYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            return calcCalendarYearValue(opps, schedules, nextYearInfo.startDate, nextYearInfo.endDate);
+            return fiscalYearInfo.useFiscalYear
+                ? calcFiscalYearValue(opps, schedules, nextYearInfo.startDate, nextYearInfo.endDate)
+                : calcCalendarYearValue(opps, schedules, nextYearInfo.startDate, nextYearInfo.endDate);
+        }
+
+        /**
+        * @description Calculates fiscal Current or Next Year Value.
+        * @param opps Opportunities on a Recurring Donation
+        * @param schedules Schedules on a Recurring Donation
+        * @param startDate The fiscal year start date
+        * @param endDate The fiscal year end date
+        * @return Decimal
+        */
+        public Decimal calcFiscalYearValue(
+            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules, Date startDate, Date endDate
+        ) {
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
+                .includeByFiscalYear(opps, startDate, endDate);
+
+            return calcYearValue(schedules, startDate, endDate, matcher);
         }
 
         /**
         * @description Calculates calendar Current or Next Year Value.
-        * @param opps A Recurring Donation Opportunities
-        * @param schedules A Recurring Donation Schedules
+        * @param opps Opportunities on a Recurring Donation
+        * @param schedules Schedules on a Recurring Donation
         * @param startDate Start date is the start cutoff date for existing Opps and projected installments
         * @param endDate End date is the end cutoff date for projected installments
         * @return Decimal
         */
         public Decimal calcCalendarYearValue(
-            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules,
-            Date startDate, Date endDate
+            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules, Date startDate, Date endDate
+        ) { 
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(startDate)
+                .includeByYear(opps, startDate.year());
+
+            return calcYearValue(schedules, startDate, endDate, matcher);
+        }
+
+        /**
+        * @description Calculates Current or Next Year Value.
+        * @param schedules Schedules on a Recurring Donation
+        * @param startDate Start date is the start cutoff date for existing Opps and projected installments
+        * @param endDate End date is the end cutoff date for projected installments
+        * @param matcher Opportunity to projected installments matcher
+        * @return Decimal
+        */
+        private Decimal calcYearValue(
+            List<RecurringDonationSchedule__c> schedules, Date startDate, Date endDate, RD2_OpportunityMatcher matcher
         ) {
             Decimal value = 0;
-
-            List<RD2_ScheduleService.Installment> installments =
-                scheduleService.getVisualizedInstallments(startDate, endDate, schedules);
  
-            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(startDate)
-                .includeByYear(opps, startDate.year())
-                .match(installments);
+            matcher.match(
+                scheduleService.getVisualizedInstallments(startDate, endDate, schedules)
+            );
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
                 if (!record.isClosedLost()) {

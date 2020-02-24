@@ -36,9 +36,10 @@
 public with sharing class UTIL_FiscalYearInfo {
     public Integer startMonth { get; set; }
     public Boolean isStartMonthYearBeginning { get; set; }
-    private Boolean useFiscalYear = false;
+    public Boolean useFiscalYear { get; private set; }
 
     /** @description static instance of the current class. It is used as the instance in a Singleton context */
+    @TestVisible
     private static UTIL_FiscalYearInfo fiscalYearInfo;
 
     /***
@@ -61,8 +62,19 @@ public with sharing class UTIL_FiscalYearInfo {
     * @param org Organization details containing the fiscal year settings
     */
     public UTIL_FiscalYearInfo(Organization org) {
-        this.startMonth = org.FiscalYearStartMonth;
-        this.isStartMonthYearBeginning = org.UsesStartDateAsFiscalYearName;
+        this(org.FiscalYearStartMonth, org.UsesStartDateAsFiscalYearName);
+    }
+
+    /***
+    * @description Constructor
+    * @param startMonth Fiscal year start month
+    * @param isStartMonthYearBeginning Indicates if the fiscal year starts or ends in the startMonth
+    */
+    @TestVisible
+    private UTIL_FiscalYearInfo(Integer startMonth, Boolean isStartMonthYearBeginning) {
+        this.startMonth = startMonth;
+        this.isStartMonthYearBeginning = isStartMonthYearBeginning;
+        this.useFiscalYear = false;
     }
 
     /***
