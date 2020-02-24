@@ -476,8 +476,6 @@ public without sharing class TEST_RecurringDonationBuilder {
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withNextDonationDate(Date dt) {
-        validateMode(Mode.Enhanced);
-
         valuesByFieldName.put('npe03__Next_Payment_Date__c', dt);
         return this;
     }

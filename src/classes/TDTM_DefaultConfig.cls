@@ -184,7 +184,11 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'RD_RecurringDonations_TDTM', Load_Order__c = 1, Object__c = 'npe03__Recurring_Donation__c',
               Trigger_Action__c = 'BeforeDelete;BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
-        // Enhanced Recurring Donations trigger handler
+        // Enhanced Recurring Donations trigger handlers
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'RD2_RecurringDonationsOpp_TDTM', Load_Order__c = 2, Object__c = 'Opportunity',
+              Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate;AfterDelete'));
+
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'RD2_RecurringDonations_TDTM', Load_Order__c = 2, Object__c = 'npe03__Recurring_Donation__c',
               Trigger_Action__c = 'BeforeDelete;BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
@@ -359,6 +363,10 @@ public without sharing class TDTM_DefaultConfig {
 
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
                 Class__c = 'GAU_TDTM', Load_Order__c = 1, Object__c = 'General_Accounting_Unit__c',
+                Trigger_Action__c = 'BeforeDelete;'));
+
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+                Class__c = 'BGE_FormTemplate_TDTM', Load_Order__c = 1, Object__c = 'Form_Template__c',
                 Trigger_Action__c = 'BeforeDelete;'));
 
         return handlers;

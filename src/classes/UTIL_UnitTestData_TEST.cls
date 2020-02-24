@@ -386,6 +386,21 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+    * @description Build multiple Organization Accounts
+    * @param size size of organization accounts being created
+    * @return List<Account>
+    */
+    public static List<Account> buildOrganizationAccounts(Integer size) {
+        List<Account> organizations = new List<Account>();
+
+        for (Integer i = 0; i < size; i++) {
+            organizations.add(buildOrganizationAccount());
+        }
+
+        return organizations;
+    }
+
+    /**
      * @description Builds an Organization Account
      * @return Account
      */
@@ -439,6 +454,74 @@ public class UTIL_UnitTestData_TEST {
         insert listConT;
     }
 
+    //Utility method for creating a sample template.
+    public static FORM_Template createSampleTemplate () {
+
+        FORM_Element field = new FORM_Element('field',
+                                              'True',
+                                               null,
+                                               'CustomLabel',
+                                               new List<String>{'Account_1_Name','Account_1_Country'});
+
+        FORM_Element widget = new FORM_Element('widget',
+                                               'DisplayRule',
+                                               'ComponentName',
+                                                new List<String>{'Contact_1_First_Name',                        'Contact_1_Last_Name'});
+
+        FORM_Element[] elements = new FORM_Element[]{field,widget};
+
+        FORM_Section section = new FORM_Section('SectionLabel',
+                                                'Accordion',
+                                                'Expanded',
+                                                'True',
+                                                elements);
+
+        FORM_Layout layout = new FORM_Layout('DefaultMappingSet',
+                                            new FORM_Section[]{section});
+
+        FORM_Template template = new FORM_Template('Sample Template',
+                                                   'This is the description.',
+                                                   '1.0',
+                                                   layout);
+        return template;
+    }
+
+    //Utility method for creating sample column headers.
+    public static List<Custom_Column_Header__c> createSampleColumnHeaders () {
+
+        Custom_Column_Header__c columnHeader = new Custom_Column_Header__c();
+        columnHeader.Name = 'sampleColumnHeader';
+        columnHeader.List_Name__c = 'Sample List';
+        columnHeader.Index__c = 0;
+        columnHeader.Field_Api_Name__c = 'Sample_Field__c';
+
+        Custom_Column_Header__c columnHeader2 = new Custom_Column_Header__c();
+        columnHeader2.Name = 'sampleColumnHeader2';
+        columnHeader2.List_Name__c = 'Sample List 2';
+        columnHeader2.Index__c = 0;
+        columnHeader2.Field_Api_Name__c = 'Sample_Field_2__c';
+
+        Custom_Column_Header__c columnHeader3 = new Custom_Column_Header__c();
+        columnHeader3.Name = 'sampleColumnHeader3';
+        columnHeader3.List_Name__c = 'Sample List 2';
+        columnHeader3.Index__c = 1;
+        columnHeader3.Field_Api_Name__c = 'Sample_Field_3__c';
+
+        return new List<Custom_Column_Header__c> { columnHeader, columnHeader2, columnHeader3 };
+    }
+
+    // Method to create instance of field mappings to use in test data
+    public static BDI_MappingServiceAdvanced createSampleFieldMappings() {
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =                                                            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
+
+        BDI_MappingServiceAdvanced mappingService = BDI_MappingServiceAdvanced.getInstance(
+            BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME, true);
+
+        return mappingService;
+    }
 
     /**
      * @description Create Engagement Plan Templates for unit testing.
@@ -485,51 +568,21 @@ public class UTIL_UnitTestData_TEST {
     /**
      * @description Create a new user for unit testing.
      * @param strUsername The username for the user to be created
-     * @param strRolename The name of the UserRole to associate with the user (will be created if does not exist)
      * @return User
      */
-    public static User createNewUserWithRoleForTests(String strUsername, String strRolename) {
-        UserRole r;
+    public static User createNewUserForTests(String strUsername) {
         User u;
 
         // to work around mixed DML errors during tests, you must
         // create user roles and accounts in their own transactions.
         // got this hack from the web.
         System.runAs(getCurrentUserForRunAs()) {
-            Integer existingRoleCount = [
-                SELECT COUNT()
-                FROM UserRole
-                WHERE Name = :strRolename
-            ];
-
-            if (existingRoleCount >= 1) {
-                r = [
-                    SELECT Id
-                    FROM UserRole
-                    WHERE Name = :strRolename
-                    LIMIT 1
-                ];
-            } else {
-                r = new UserRole(Name=strRolename);
-                insert r;
-            }
-
             u = buildUser('Smith', PROFILE_STANDARD_USER);
-            u.UserRoleId = r.Id;
             u.Username = strUsername;
 
             insert u;
         }
         return u;
-    }
-
-    /**
-     * @description Create a new user for unit testing.
-     * @param strUsername The username for the user to be created
-     * @return User
-     */
-    public static User createNewUserForTests(String strUsername) {
-        return createNewUserWithRoleForTests(strUsername, 'COO');
     }
 
     /**
@@ -927,45 +980,18 @@ public class UTIL_UnitTestData_TEST {
      * @description Verify that a new User is inserted with the specified Username
      */
     @IsTest
-    private static void shouldCreateNewUserWithDefaultRole() {
+    private static void shouldCreateNewUser() {
         String randomUsername = 'test@test.com.' + getUniqueString();
 
         User returnedUser = createNewUserForTests(randomUsername);
         User queriedUser = [
             SELECT
-                Username,
-                UserRole.Name
+                Username
             FROM User
             WHERE Id = :returnedUser.Id
         ];
 
         System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
-        System.assertEquals('COO', queriedUser.UserRole.Name);
-    }
-
-    /**
-     * @description Verify that a new User is inserted with the specified Username and a random Role Name
-     */
-    @IsTest
-    private static void shouldCreateNewUserWithRandomRole() {
-        String randomUsername = 'test@test.com.' + getUniqueString();
-        String randomRolename = 'RoleName' + getUniqueString();
-
-        User returnedUser = createNewUserWithRoleForTests(
-            randomUsername,
-            randomRolename
-        );
-
-        User queriedUser = [
-            SELECT
-                Username,
-                UserRole.Name
-            FROM User
-            WHERE Id = :returnedUser.Id
-        ];
-
-        System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
-        System.assert(randomRoleName.equalsIgnoreCase(queriedUser.UserRole.Name));
     }
 
     /**

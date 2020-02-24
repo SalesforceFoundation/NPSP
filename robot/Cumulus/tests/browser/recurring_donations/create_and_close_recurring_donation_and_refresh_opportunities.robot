@@ -1,6 +1,9 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 Suite Setup     Run Keywords
 ...             Open Test Browser
 ...             Setup Variables
@@ -35,29 +38,29 @@ Create and Close a Recurring Donation and Refresh Opportunities
     #Find 1st Opportunity for Recurring Donation and Close It
     @{opportunity1} =            API Query Installment          &{recurringdonation}[Id]    (1)
     Store Session Record         Opportunity                    ${opportunity1}[0][Id]
-    Go To Record Home            ${opportunity1}[0][Id]
-    Click Link                   link=Edit
+    Go To Page                   Details                        Opportunity                 object_id=${opportunity1}[0][Id]
+    Click Object Button          Edit
     Select Value From Dropdown   Stage    Closed Won
     Click Modal Button           Save
 
     #Find 2nd Opportunity for Recurring Donation and Close It
     @{opportunity2} =            API Query Installment          &{recurringdonation}[Id]    (2)
     Store Session Record         Opportunity                    ${opportunity2}[0][Id]
-    Go To Record Home            ${opportunity2}[0][Id]
-    Click Link                   link=Edit
+    Go To Page                   Details                        Opportunity                 object_id=${opportunity2}[0][Id]
+    Click Object Button          Edit
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
 
     #Close Recurring Donation and Refresh Opportunities
-    Go To Record Home            &{recurringdonation}[Id]
-    Click Link                   link=Edit
+    Go To Page                   Details                        npe03__Recurring_Donation__c   object_id=&{recurringdonation}[Id]
+    Click Actions Button         Edit
     Select Value From Dropdown   Open Ended Status              Closed
     Click Modal Button           Save
-    Click Link                   link=Show more actions
-    Click Link                   link=Refresh Opportunities
+    Wait Until Modal Is Closed
+    Refresh Opportunities
 
     #Find 3rd Opportunity for Recurring Donation
     @{opportunity3} =            API Query Installment          &{recurringdonation}[Id]    (3)
-    Go To Record Home            ${opportunity3}[0][Id]
+    Go To Page                   Details                        Opportunity                 object_id=${opportunity3}[0][Id]
     Select Tab                   Details
     Navigate To And Validate Field Value          Stage                          contains                    Closed Lost
