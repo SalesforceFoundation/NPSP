@@ -25,8 +25,9 @@ Create and edit level to verify fields
     ...                                  are persisted on the details page.
     [tags]                               W-038641                 feature:Levels
 
-    Go To Page                                       Listing                      Level__c
+    Go To Page                                       Listing                            Level__c
     Click Special Object Button                      New
+    Wait Until Loading Is Complete
     Current Page Should Be                           Custom                             Level__c
 
     Enter Level Values
