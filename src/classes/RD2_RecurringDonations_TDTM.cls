@@ -93,6 +93,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         autogenerateNames(rds, oldRds, triggerAction);
+        transformDataBeforeInsert(rds, triggerAction);
+
         validate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
@@ -167,10 +169,27 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
     }
 
+    /** @description ransformation Actions for Before Insert; and before validation
+    * - Assign Installment Frequency to the recurring donation record if the field is null on insert
+    * @param rds Trigger.new records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    private void transformDataBeforeInsert(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+        if (triggerAction != TDTM_Runnable.Action.BeforeInsert) {
+            return;
+        }
+        
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.InstallmentFrequency__c == null) {
+                rd.InstallmentFrequency__c = 1;
+            }
+        }
+    }
+
     /***
     * @description Validates Recurring Donations data
     * @param rds Trigger.new records
-    * @param triggerAction BeforeInsert, BeforeUpdate, etc.
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     public void validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
         RD2_ValidationService validationService = new RD2_ValidationService(rds);

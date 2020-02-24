@@ -5,10 +5,10 @@
             type={inputType}
             formatter={formatter}
             step={granularity}
-            required={element.required}
+            required={required}
             onchange={handleValueChange} 
             label={fieldLabel}
-            disabled={element.disabled}>
+            disabled={disabled}>
         </lightning-input>
     </template>
     <template if:true={isLookup}>
@@ -17,16 +17,16 @@
                                 object-api-name={objectApiName}
                                 onchange={handleValueChange}
                                 default-value={element.defaultValue}
-                                required={element.required}
+                                required={required}
                                 id={element.id}
                                 object-describe-info={objectDescribeInfo}
                                 label={fieldLabel}
-                                disabled={element.disabled}>
+                                disabled={disabled}>
         </c-ge-form-field-lookup>
     </template>
     <template if:true={isRichText}>
         <label class="slds-form-element__label">
-            <abbr class="slds-required" title="required" if:true={element.required}>*</abbr>
+            <abbr class="slds-required" title="required" if:true={required}>*</abbr>
             {fieldLabel}
         </label>
         <lightning-input-rich-text data-id='inputComponent'
@@ -42,7 +42,7 @@
     <template if:true={isPicklist}>
         <c-ge-form-field-picklist data-id='inputComponent'
             value={value}
-            required={element.required}
+            required={required}
             field-name={fieldApiName}
             object-name={objectApiName}
             onchange={handleValueChange}
@@ -53,7 +53,7 @@
     <template if:true={isTextArea}>
         <lightning-textarea data-id='inputComponent'
             value={value}
-            required={element.required}
+            required={required}
             onchange={handleValueChange}
             label={fieldLabel}>
         </lightning-textarea>
