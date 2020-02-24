@@ -25,10 +25,8 @@ import {
     sort
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
-import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
 const FORMAT_VERSION = '1.0';
-const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 const GIFT_ENTRY = 'Gift_Entry';
 const SORTED_BY = 'required';
