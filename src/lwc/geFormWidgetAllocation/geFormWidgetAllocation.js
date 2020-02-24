@@ -6,6 +6,7 @@ import { isNumeric, isNotEmpty } from 'c/utilCommon';
 import { registerListener } from 'c/pubsubNoPageRef';
 
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
+import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
@@ -25,10 +26,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track _totalAmount;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-
+    
     // need labels for field list
     @wire(getObjectInfo, { objectApiName: ALLOCATION_OBJECT })
-    wiredObjectInfo({data, error}) {
+    wiredObjectInfo({data}) {
         // Represents the fields in a row of the widget
         if(data) {
             this.fieldList = [
@@ -152,6 +153,39 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.init();
     }
 
+    @api
+    load(data) {
+        const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
+        let dataImportRow = JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
+        if (!dataImportRow) {
+            return;
+        }
+        let rowList = new Array();
+        let fieldMappings = GeFormService.fieldMappings;
+        let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
+            return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
+        });
+        Object.keys(dataImportRow).forEach(diKey => {
+            let properties = {};
+
+            gauMappingKeys.forEach(fieldMappingKey => {
+                let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
+                let sourceObj = dataImportRow[diKey].sourceObj;
+
+                if(Object.keys(sourceObj).includes(sourceField)) {
+                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
+                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
+                    
+                    properties[targetField] = diSourceField;
+
+                }
+            });
+            rowList.push(properties);
+        });
+        
+        this.addRows(rowList);
+    }
+
     /**
      * Handle Add Row being clicked
      */
@@ -159,14 +193,20 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.addRow(false);
     }
 
+    addRows(records) {
+        records.forEach(record => {
+            this.addRow(false, record);      
+        });
+    }
+
     /**
      * Add a new record to the list
      * @param isDefaultGAU {boolean} When initializing the first row, this should be true.
      */
-    addRow(isDefaultGAU) {
+    addRow(isDefaultGAU, properties) {
         let element = {};
         element.key = this.rowList.length;
-        const record = { apiName: ALLOCATION_OBJECT.objectApiName };
+        const record = { apiName: ALLOCATION_OBJECT.objectApiName, ...properties};
         let row = {};
         if(isDefaultGAU === true) {
             // default GAU should be locked.
@@ -296,8 +336,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
                 return true;
             })
             .reduce((accumulator, current) => {
-                const currentAmount =
-                    current.record[`${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`];
+                let fullFieldName = `${ALLOCATION_OBJECT.objectApiName}.${AMOUNT_FIELD.fieldApiName}`;
+                let localFieldName = AMOUNT_FIELD.fieldApiName;
+                let currentKey = current.record.hasOwnProperty(fullFieldName) ? fullFieldName : localFieldName;
+                
+                const currentAmount = current.record[currentKey];
 
                 if(isNumeric(currentAmount)) {
                     // prefix + to ensure operand is treated as a number
