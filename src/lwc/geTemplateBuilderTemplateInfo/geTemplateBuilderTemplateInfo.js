@@ -13,6 +13,18 @@ export default class geTemplateBuilderTemplateInfo extends LightningElement {
     @api templateName;
     @api templateDescription;
 
+    /*******************************************************************************
+    * Start getters for data-qa-locator attributes
+    */
+
+    get qaLocatorTemplateName() {
+        return `input field label ${this.CUSTOM_LABELS.geLabelTemplateInfoNameField}`;
+    }
+
+    /*******************************************************************************
+    * End getters for data-qa-locator attributes
+    */
+
     @api
     validate() {
         return new Promise(async (resolve, reject) => {

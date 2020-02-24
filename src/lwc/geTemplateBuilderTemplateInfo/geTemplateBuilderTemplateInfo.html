@@ -30,7 +30,8 @@
                                          value={templateName}
                                          required
                                          maxlength="80"
-                                         onblur={handleChangeTemplateInfoName}>
+                                         onblur={handleChangeTemplateInfoName}
+                                         data-qa-locator={qaLocatorTemplateName}>
                         </lightning-input>
                         <lightning-textarea name={CUSTOM_LABELS.geLabelTemplateInfoDescriptionField}
                                             label={CUSTOM_LABELS.geLabelTemplateInfoDescriptionField}

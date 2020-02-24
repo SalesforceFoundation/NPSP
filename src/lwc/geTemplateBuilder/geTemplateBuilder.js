@@ -133,6 +133,18 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         return this.currentNamespace ? `${this.currentNamespace}__` : '';
     }
 
+    /*******************************************************************************
+    * Start getters for data-qa-locator attributes
+    */
+
+    get qaLocatorNextFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonBuilderNavFormFields}`;
+    }
+
+    /*******************************************************************************
+    * End getters for data-qa-locator attributes
+    */
+
     connectedCallback() {
         this.connected = true;
 

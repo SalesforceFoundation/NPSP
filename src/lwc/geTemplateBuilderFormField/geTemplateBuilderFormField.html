@@ -12,7 +12,8 @@
                                          onblur={handleOnBlurCustomLabel}
                                          onclick={stopPropagation}
                                          type="text"
-                                         value={field.customLabel}>
+                                         value={field.customLabel}
+                                         data-qa-locator={qaLocatorInputFieldLabel}>
                         </lightning-input>
                     </div>
                 </template>
@@ -26,7 +27,8 @@
                                   default-value={field.defaultValue}
                                   value={field.value}
                                   variant="label-hidden"
-                                  onchangevalue={handleOnChange}>
+                                  onchangevalue={handleOnChange}
+                                  data-qa-locator={qaLocatorInputDefaultValue}>
                     </c-util-input>
                 </div>
 
@@ -43,7 +45,8 @@
                                          onchange={handleOnChangeRequiredField}
                                          onclick={stopPropagation}
                                          type="checkbox"
-                                         variant="label-hidden">
+                                         variant="label-hidden"
+                                         data-qa-locator={qaLocatorCheckboxRequired}>
                         </lightning-input>
                     </template>
                 </div>
