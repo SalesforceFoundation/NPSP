@@ -480,26 +480,6 @@ private with sharing class RD2_RecurringDonations_TEST {
             'Number of schedules pre- and post-update should be equal');
     }
 
-    /**
-    * @description Verifies Installment Frequency should default to one when RD insert with null Installment Frequency
-    */
-    @isTest
-    private static void shouldCreateRDWithDefaultInstallmentFrequencyWhenNull() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-        .withInstallmentFrequency(null)
-        .build();
-
-        Test.startTest();
-        insert rd;
-        Test.stopTest();
-
-        rd = rdGateway.getRecord(rd.Id);
-        System.assertEquals(1, rd.InstallmentFrequency__c,
-            'Installment Frequency should default to 1 when not specified on RD insert');      
-    }
-
     /***
     * @description Verifies that when an Open Ended RD is created with a Number Of Planned Installments equal
     * to one, that the NumberOfPlannedInstallments field is changed to null
@@ -515,13 +495,13 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withRecurringTypeOpen()
             .build();
 
-            Test.startTest();
-            insert rd;
-            Test.stopTest();
-    
-            rd = rdGateway.getRecord(rd.Id);
-            System.assertEquals(null, rd.npe03__Installments__c,
-                'The Number Of Planned Installments field should be null for an Open Ended RD');
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(null, rd.npe03__Installments__c,
+            'The Number Of Planned Installments field should be null for an Open Ended RD');
     }
 
     /***
@@ -611,6 +591,26 @@ private with sharing class RD2_RecurringDonations_TEST {
             'The RD Status should be Closed');
         System.assertEquals(RD2_Constants.FIXED_TYPE_CLOSED_REASON, rd.ClosedReason__c,
             'The RD ClosedReason field should be set to "' + RD2_Constants.FIXED_TYPE_CLOSED_REASON + '"');
+    }
+
+    /***
+    * @description Verifies Installment Frequency should default to one when RD insert with null Installment Frequency
+    */
+    @isTest
+    private static void shouldCreateRDWithDefaultInstallmentFrequencyWhenNull() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withInstallmentFrequency(null)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(1, rd.InstallmentFrequency__c,
+            'Installment Frequency should default to 1 when not specified on RD insert');
     }
 
     // Helpers

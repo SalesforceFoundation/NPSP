@@ -613,8 +613,9 @@ private with sharing class RD2_ValidationService_TEST {
         }
         System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsCannotBeLessThanPaid), errMessage);
     }
-    
-    /*** @description Verifies DML should fail when installment frequency is updated to null 
+
+    /***
+    * @description Verifies DML should fail when installment frequency is updated to null 
     */
     @isTest
     private static void shouldBlockRdUpdateWhenInstallmentFrequencyChangesToNull() {
