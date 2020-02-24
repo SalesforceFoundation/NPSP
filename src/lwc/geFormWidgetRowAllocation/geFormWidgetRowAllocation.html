@@ -1,0 +1,21 @@
+<template>
+    <lightning-layout>
+        <template for:each={mergedFieldList} for:item='field'>
+            <lightning-layout-item key={field.mappedField}
+                                   size='3'>
+                <article class='slds-p-horizontal_small'>
+                    <c-ge-form-field target-field-name={field.mappedField}
+                                     onvaluechange={handleChange}
+                                     element={field.element}
+                                     data-fieldname={field.mappedField}>
+                    </c-ge-form-field>
+                </article>
+            </lightning-layout-item>
+        </template>
+        <lightning-layout-item size='3' class='slds-align-bottom'>
+            <span if:true={isRemovable}>
+                <lightning-button variant='destructive' onclick={remove} label={CUSTOM_LABELS.commonDelete}></lightning-button>
+            </span>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

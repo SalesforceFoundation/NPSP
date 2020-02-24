@@ -39,6 +39,12 @@ private class UTIL_OrgTelemetry_TEST {
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
 
     /**
+     * @description Number of new Gift-Entry BGE related Data Import records created within the last 30 days
+     */
+    private static final Integer NUM_NEWGE_BGE_ROWS_30_DAYS_AGO = 2;
+
+
+    /**
      * @description Number of BGE related Data Import records created within the last 30 days
      */
     private static final Integer NUM_BGE_ROWS_30_DAYS_AGO = 2;
@@ -84,15 +90,20 @@ private class UTIL_OrgTelemetry_TEST {
         insert rd;
 
         DataImportBatch__c diBatch = new DataImportBatch__c(GiftBatch__c = true);
+        DataImportBatch__c newDIBatch = new DataImportBatch__c(GiftBatch__c = true, 
+            Batch_Gift_Entry_Version__c = 2);
 
-        insert diBatch;
+
+        insert new List<DataImportBatch__c> {diBatch, newDIBatch};
 
         List<DataImport__c> bdiRows = buildDataImports(NUM_BDI_ROWS_30_DAYS_AGO, null);
         List<DataImport__c> bgeRows = buildDataImports(NUM_BGE_ROWS_30_DAYS_AGO, diBatch.Id);
+        List<DataImport__c> newBGERows = buildDataImports(NUM_NEWGE_BGE_ROWS_30_DAYS_AGO, newDIBatch.Id);
         List<DataImport__c> bdiRows60DaysAgo = buildDataImports(NUM_DI_ROWS_60_DAYS_AGO, null);
 
         insert bdiRows;
         insert bgeRows;
+        insert newBGERows;
         insert bdiRows60DaysAgo;
 
         Datetime sixtyDaysAgo = Datetime.now().addDays(-60);
@@ -179,6 +190,14 @@ private class UTIL_OrgTelemetry_TEST {
         System.assertNotEquals(
             null,
             featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_GiftEntry.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_GiftEntry'
+        );        
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_RecurringDonations2.name()
             ),
             'setPackageBooleanValue should have been called with the feature IsEnabled_RecurringDonations2'
@@ -192,72 +211,6 @@ private class UTIL_OrgTelemetry_TEST {
             'setPackageBooleanValue should have been called with the feature IsEnabled_PaymentAllocations'
         );
     }
-
-    /**
-     * @description Confirms DataCount_ONETIME_Use feature parameter is set to true when custom
-     * installments are enabled
-     */
-    @IsTest
-    private static void validateCustomInstallmentSettingsTelemetryWhenEnabled() {
-        final String CUSTOM_INSTALLMENT_PERIOD = 'Bi-Weekly';
-
-        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
-        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
-            npe03__Increment__c = 'Weeks',
-            npe03__Value__c = 2,
-            Name = CUSTOM_INSTALLMENT_PERIOD
-        );
-        insert customInstallment;
-
-        Account donorAccount = new Account(Name = 'foo');
-        insert donorAccount;
-
-        insert new TEST_RecurringDonationBuilder()
-            .withInstallmentPeriod(CUSTOM_INSTALLMENT_PERIOD)
-            .withDateEstablished(System.today())
-            .withAccount(donorAccount.Id)
-            .withAmount(20)
-            .withScheduleTypeMultiplyValue()
-            .withOpenEndedStatusOpen()
-            .build();
-
-        Test.startTest();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
-        Test.stopTest();
-
-        System.assertEquals(
-            1,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
-            ),
-            'setPackageBooleanValue should have been called with the feature DataCount_ONETIME_Use'
-        );
-    }
-
-    /**
-     * @description Confirms DataCount_ONETIME_Use feature parameter is set to true when custom
-     * installments are enabled
-     */
-    @IsTest
-    private static void validateCustomInstallmentSettingsTelemetryWhenDisabled() {
-        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
-
-        Test.startTest();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.CustomInstallment_Settings);
-        Test.stopTest();
-
-        System.assertEquals(
-            0,
-            featureManagementMock.packageIntegerValuesByName.get(
-                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
-            ),
-            'setPackageBooleanValue should have been called with the feature DataCount_ONETIME_Use'
-        );
-    }
-
 
     /**
      * @description Confirms that the payment opportunities count settings telemetry data is defaulted correctly
@@ -443,6 +396,29 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
+    * @description Verifies Data_CountFixLengthRd telemetry data is retrieved and set up correctly
+    */
+    @IsTest
+    private static void shouldSetDataCountOneTimeWhenRDFixedLengthCountCategory() {
+        Test.startTest();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountFixedLengthRd);
+
+        Test.stopTest();
+
+        System.assertEquals(
+            -1, 
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.DataCount_ONETIME_Use.name()
+            ),
+            'Telemetry field DataCount_ONETIME_Use should defaulted to -1 with the feature of Data_CountFixedLengthRd.'
+        );
+    }
+
+    /**
      * @description Test that the Data_CountOfErrorLog settings telemetry data is retrieved.
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
@@ -505,7 +481,7 @@ private class UTIL_OrgTelemetry_TEST {
         Test.stopTest();
 
         System.assertEquals(
-            NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO,
+            NUM_BDI_ROWS_30_DAYS_AGO + NUM_BGE_ROWS_30_DAYS_AGO + NUM_NEWGE_BGE_ROWS_30_DAYS_AGO,
             featureManagementMock.packageIntegerValuesByName.get(
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBDIRowsLast30Days.name()
             ),
@@ -535,6 +511,31 @@ private class UTIL_OrgTelemetry_TEST {
                 UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountBGERowsLast30Days.name()
             ),
             'setPackageIntegerValue should have been called with the feature Data_CountBGERowsLast30Days and set correctly'
+        );
+    }
+
+    /**
+     * @description Confirms BGE row counts related to new Gift Entry batches are calculated correctly
+     */
+    @IsTest
+    private static void validateCountOfNewGiftEntryBGERowsTelemetry() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountGERowsBatch);
+
+        System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
+        Test.stopTest();
+
+        System.assertEquals(
+            NUM_NEWGE_BGE_ROWS_30_DAYS_AGO,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountGERowsLast30DaysBatch.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountGERowsLast30DaysBatch and set correctly'
         );
     }
 

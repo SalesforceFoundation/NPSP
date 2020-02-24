@@ -27,6 +27,10 @@
         <name>Batch_Description__c</name>
     </fields>
     <fields>
+        <label><!-- Batch Gift Entry Version --></label>
+        <name>Batch_Gift_Entry_Version__c</name>
+    </fields>
+    <fields>
         <help>El número de registros a procesar al mismo tiempo en cada lote.</help>
         <label>Tamaño de procesamiento de lotes</label>
         <name>Batch_Process_Size__c</name>
@@ -94,6 +98,11 @@
         <help>El importe total esperado de todos los regalos introducidos en este lote.</help>
         <label>Importe de lote total esperado</label>
         <name>Expected_Total_Batch_Amount__c</name>
+    </fields>
+    <fields>
+        <label><!-- Form Template --></label>
+        <name>Form_Template__c</name>
+        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
     </fields>
     <fields>
         <help>Este lote se utilizará con la entrada de regalos en lote. Los lotes se marcan automáticamente como lotes de regalos cuando se configuran a través de la ficha Entrada de regalo en lote. El cambio manual de este campo podría tener consecuencias inesperadas.</help>

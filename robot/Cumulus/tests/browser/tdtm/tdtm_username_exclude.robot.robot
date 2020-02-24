@@ -1,6 +1,10 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/TriggerHandlerPageObject.py
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/RecurringDonationsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -34,21 +38,21 @@ Update a Trigger Handler to Exclude a Username
     @{scratchuser} =             Salesforce Query               User
     ...                          select=Username
     ...                          Name=User User
-    Go To Record Home            ${triggerhandler}[0][Id]
+    Go To Page                   Details            Trigger_Handler__c            object_id=${triggerhandler}[0][Id]
     ${uppercaseusername} =       Convert To Uppercase           ${scratchuser}[0][Username]
     API Modify Trigger Handler   ${triggerhandler}[0][Id]       ${ns}Usernames_to_Exclude__c=${uppercaseusername}
 
     # Create a Recurring Donation and verify no Opportunities are created
     &{contact} =                 API Create Contact             Email=jjoseph@robot.com
-    Go To Record Home            &{contact}[Id]
+    Go To Page                   Details            Contact           object_id=&{contact}[Id]
     &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=&{contact}[Id]
     ...                          Name=Julian Recurring Donation
     ...                          npe03__Amount__c=1200
     ...                          npe03__Installments__c=12
     ...                          npe03__Schedule_Type__c=Divide By
     ...                          npe03__Installment_Period__c=Monthly
-    Go To Record Home            &{recurringdonation}[Id]
-    Go To Record Home            &{contact}[Id]
+    Go To Page                   Details           npe03__Recurring_Donation__c           object_id=&{recurringdonation}[Id]
+    Go To Page                   Details           Contact           object_id=&{contact}[Id]
 
     #Verify no Opportunities were created
     @{opportunity} =             Salesforce Query             Opportunity
