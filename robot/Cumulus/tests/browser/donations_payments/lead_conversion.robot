@@ -11,8 +11,6 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Convert Lead To Account
-    [tags]  unstable
-    #marking test unstable due to chrome issue
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
     ${company} =              Generate Random String  
