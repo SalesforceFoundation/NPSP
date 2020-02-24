@@ -97,7 +97,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Beggining of the current calendar or fiscal year, whichever is earlier.
+     * @description Beginning of the current calendar or fiscal year, whichever is earlier.
     */
     private Date startDate {
         get {
@@ -705,57 +705,41 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         private Date currentDate;
 
         /**
-        * @description Date at the beginning of the current calendar or fiscal year.
-        * Used to retrieve current year Opportunities regardless if they are open or closed.
+        * @description Contains year info and configuration.
+        * Fiscal year will be used if the configuration indicates it should be used.
         */
-        private Date currentYearStartDate {
+        private UTIL_FiscalYearInfo fiscalYearInfo {
             get {
-                if (currentYearStartDate == null) {
-                    currentYearStartDate = Date.newInstance(currentDate.year(), 1, 1);
+                if (fiscalYearInfo == null) {
+                    fiscalYearInfo = UTIL_FiscalYearInfo.getInstance()
+                        .withUseFiscalYear(new RD2_Settings().useFiscalYear);
                 }
-                return currentYearStartDate;
+                return fiscalYearInfo;
             }
             set;
         }
 
         /**
-        * @description Date at the end of the current calendar or fiscal year.
-        * Used to set end date for projected installments' Close Date.
+        * @description Contains the current fiscal/calendar year start and end dates
         */
-        private Date currentYearEndDate {
+        private UTIL_FiscalYearInfo.YearInfo currentYearInfo {
             get {
-                if (currentYearEndDate == null) {
-                    currentYearEndDate = Date.newInstance(currentDate.year(), 12, 31);
+                if (currentYearInfo == null) {
+                    currentYearInfo = fiscalYearInfo.getYearInfo(currentDate);
                 }
-                return currentYearEndDate;
+                return currentYearInfo;
             }
             set;
         }
-
         /**
-        * @description Date at the beginning of the next calendar or fiscal year.
-        * Used to retrieve next year Opportunities regardless if they are open or closed.
+        * @description Contains the next fiscal/calendar year start and end dates
         */
-        private Date nextYearStartDate {
+        private UTIL_FiscalYearInfo.YearInfo nextYearInfo {
             get {
-                if (nextYearStartDate == null) {
-                    nextYearStartDate = Date.newInstance(currentDate.addYears(1).year(), 1, 1);
+                if (nextYearInfo == null) {
+                    nextYearInfo = fiscalYearInfo.getYearInfo(currentDate.addYears(1));
                 }
-                return nextYearStartDate;
-            }
-            set;
-        }
-
-        /**
-        * @description Date at the end of the next calendar or fiscal year.
-        * Used to set end date for projected installments' Close Date.
-        */
-        private Date nextYearEndDate {
-            get {
-                if (nextYearEndDate == null) {
-                    nextYearEndDate = Date.newInstance(currentDate.addYears(1).year(), 12, 31);
-                }
-                return nextYearEndDate;
+                return nextYearInfo;
             }
             set;
         }
@@ -778,11 +762,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * as the cut off date to get existing Opportunities in the Opp eval service .
         */
         public Date getStartDate() {
-            return currentYearStartDate;
+            return currentYearInfo.startDate;
         }
 
         /**
-        * @description Calculates Current Year Value
+        * @description Calculates the Current Year Value
         * NOTE: the value is calculated based on the calendar year currently.
         *
         * @param opps A Recurring Donation Opportunities
@@ -790,11 +774,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Decimal
         */
         public Decimal calcCurrentYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            return calcCalendarYearValue(opps, schedules, currentDate, currentYearEndDate);
+            return calcCalendarYearValue(opps, schedules, currentDate, currentYearInfo.endDate);
         }
 
         /**
-        * @description Calculates Next Year Value
+        * @description Calculates the Next Year Value
         * NOTE: the value is calculated based on the calendar year currently.
         *
         * @param opps A Recurring Donation Opportunities
@@ -802,7 +786,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Decimal
         */
         public Decimal calcNextYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            return calcCalendarYearValue(opps, schedules, nextYearStartDate, nextYearEndDate);
+            return calcCalendarYearValue(opps, schedules, nextYearInfo.startDate, nextYearInfo.endDate);
         }
 
         /**
