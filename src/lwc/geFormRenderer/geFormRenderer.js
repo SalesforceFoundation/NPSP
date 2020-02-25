@@ -241,7 +241,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleCancel() {
-        this.dataImport = null;
         this.reset();
 
         // if not in batch mode, go back to point of origin
@@ -677,7 +676,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         let fieldMappingDevNames = null;
         if (objectMappingDeveloperName === null) {
-            this.dataImport = undefined;
+            this.dataImport = null;
             this.setReviewDonationsDonorProperties(null);
         } else {
             fieldMappingDevNames =
