@@ -1033,8 +1033,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     parentOpportunityId(oppPaymentRecord) {
-        const parentOppId = getFieldValue(oppPaymentRecord, PARENT_OPPORTUNITY_FIELD);
-        return parentOppId;
+        return getFieldValue(oppPaymentRecord, PARENT_OPPORTUNITY_FIELD);
     }
 
     @wire(getObjectInfo, {objectApiName: OPP_PAYMENT_OBJECT.objectApiName})
