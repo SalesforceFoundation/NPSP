@@ -212,7 +212,6 @@ class GeFormService {
     }
 
     saveAndDryRun(batchId, dataImport, widgetData) {
-        console.log('JSON.parse(JSON.stringify(dataImport)): ', JSON.parse(JSON.stringify(dataImport)));
         return new Promise((resolve, reject) => {
             saveAndDryRunDataImport({batchId, dataImport, widgetData})
                 .then((result) => {
