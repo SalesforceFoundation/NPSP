@@ -1092,7 +1092,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             case this.donationDonorEnum.contact1:
                 return this._contact1Imported;
             default:
-                return false;
+                return null;
         }
     }
 
