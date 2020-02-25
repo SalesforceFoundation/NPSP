@@ -1512,9 +1512,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")    
         
     def click_more_actions_button(self):
-        """"""   
+        """clicks on the more actions dropdown button in the actions container on record page"""   
         locator=npsp_lex_locators['link'].format("more actions","more actions")
-        self.selenium.click_element(locator)     
+        self.salesforce._jsclick(locator)    
         
         
     @capture_screenshot_on_error
