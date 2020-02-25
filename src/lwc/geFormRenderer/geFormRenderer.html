@@ -23,15 +23,17 @@
                 </lightning-layout-item>
             </template>
 
-            <template if:true={hasPendingDonations}>
-                <lightning-layout-item size='12'>
-                    <c-ge-review-donations ontogglemodal={toggleModal}
-                                           onchangeselecteddonation={handleChangeSelectedDonation}
-                                           opportunities={opportunities}
-                                           donor-id={selectedDonorId}
-                                           selected-donation={selectedDonation}>
-                    </c-ge-review-donations>
-                </lightning-layout-item>
+            <template if:false={isPermissionError}>
+                <template if:true={hasPendingDonations}>
+                    <lightning-layout-item size='12'>
+                        <c-ge-review-donations ontogglemodal={toggleModal}
+                                               onchangeselecteddonation={handleChangeSelectedDonation}
+                                               opportunities={opportunities}
+                                               donor-id={selectedDonorId}
+                                               selected-donation={selectedDonation}>
+                        </c-ge-review-donations>
+                    </lightning-layout-item>
+                </template>
             </template>
 
             <lightning-layout-item size='12'
