@@ -369,7 +369,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         );
 
         System.assertEquals(true, loadState.isConfirmed,
-            'Enablement confirmation should stays checked when dry run validation is valid');
+            'Enablement confirmation should remain checked when dry run validation is valid');
     }
 
 
