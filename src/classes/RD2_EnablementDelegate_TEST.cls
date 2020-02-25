@@ -499,7 +499,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(System.Label.RD2_EnablementDryRunOutdatedError,
             actualException.getMessage(), 'The exception message should match');
 
-        System.assertEquals(false, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'Custom Settings field should not be set');
+        System.assertEquals(false, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'IsRecurringDonations2Enabled field should not be checked');
 
         AsyncApexJob job = jobGateway.getRecord('RD2_EnablementDelegate_CTRL');
         System.assertEquals(null, job, 'A Queueable job after error on Enhanced Recurring Donations should not be running');
