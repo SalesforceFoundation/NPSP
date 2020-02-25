@@ -371,22 +371,22 @@ const getValueFromDotNotationString = (obj, dotNotationString) => {
 
 /*******************************************************************************
  * @description Returns an object that contains a subset of the source object's
- *              properties.  Includes related object data when present on the
+ *              properties.  Return includes related object data when present on the
  *              source object.
  */
 const getSubsetObject = (sourceObj, propertyNames) => {
-    const objToLoad = {};
+    const subsetObject = {};
     propertyNames.forEach(propertyName => {
         if (Object.keys(sourceObj).includes(propertyName)) {
-            objToLoad[propertyName] = sourceObj[propertyName];
+            subsetObject[propertyName] = sourceObj[propertyName];
 
             if (Object.keys(sourceObj).includes(propertyName.replace('__c', '__r'))) {
-                objToLoad[propertyName.replace('__c', '__r')] =
+                subsetObject[propertyName.replace('__c', '__r')] =
                     sourceObj[propertyName.replace('__c', '__r')];
             }
         }
     });
-    return objToLoad;
+    return subsetObject;
 }
 
 export {
