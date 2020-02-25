@@ -42,7 +42,9 @@ import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
 
+import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
+import CONTACT_OBJECT from '@salesforce/schema/Contact';
 import CONTACT_NAME_FIELD from '@salesforce/schema/Contact.Name';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
@@ -841,9 +843,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     setReviewDonationsDonorProperties(recordId) {
         if (recordId && this._donationDonor) {
             if ((this._donationDonor === this.donationDonorEnum.account1 &&
-                recordId.startsWith('001')) ||
+                recordId.startsWith(this.accountKeyPrefix)) ||
                 (this._donationDonor === this.donationDonorEnum.contact1 &&
-                    recordId.startsWith('003'))) {
+                    recordId.startsWith(this.contactKeyPrefix))) {
                 this.selectedDonorId = recordId;
                 this.selectedDonorType = this._donationDonor;
                 return;
@@ -996,6 +998,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         return this.opportunityObjectInfo.data.keyPrefix;
     }
 
+    get accountKeyPrefix() {
+        return this.accountObjectInfo.data.keyPrefix;
+    }
+
+    get contactKeyPrefix() {
+        return this.contactObjectInfo.data.keyPrefix;
+    }
+
     getObjectMapping(fieldApiName) {
         return Object.values(GeFormService.objectMappings)
             .find(({Imported_Record_Field_Name}) =>
@@ -1032,6 +1042,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @wire(getObjectInfo, {objectApiName: OPPORTUNITY_OBJECT.objectApiName})
     opportunityObjectInfo;
+
+    @wire(getObjectInfo, {objectApiName: ACCOUNT_OBJECT.objectApiName})
+    accountObjectInfo;
+
+    @wire(getObjectInfo, {objectApiName: CONTACT_OBJECT.objectApiName})
+    contactObjectInfo;
 
     mapRecordValuesToDataImportFields(record) {
         //reverse map to create an object with relevant source field api names to values
