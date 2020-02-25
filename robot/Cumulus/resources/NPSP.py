@@ -10,6 +10,7 @@ from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchWindowException
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
 from SeleniumLibrary.errors import ElementNotFound
@@ -291,9 +292,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 #                 list_found = True
 #                 break
 #  
-#         assert list_found, "locator not found"  
-    @capture_screenshot_on_error 
-    def navigate_to_and_validate_field_value(self, field, status, value, section=None):
+#         assert list_found, "locator not found"
+    @selenium_retry
+    @capture_screenshot_on_error
+    def navigate_to_and_validate_field_value(self, field,status,value,section=None):
         """If status is 'contains' then the specified value should be present in the field
                         'does not contain' then the specified value should not be present in the field
         """
@@ -779,7 +781,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         frames = self.selenium.get_webelements(locator)
         for frame in frames:
             if frame.is_displayed():
-                self.selenium.select_frame(frame)
+                try:
+                    print("inside try")
+                    self.selenium.select_frame(frame)
+                except NoSuchWindowException:
+                    print("inside except")
+                    self.builtin.log("caught NoSuchWindowException;trying gain..","WARN")
+                    time.sleep(.5)
+                    self.selenium.select_frame(frame)
                 return frame
         raise Exception('unable to find visible iframe with title "{}"'.format(value))
 
@@ -807,7 +816,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Waits for 60 sec for the specified locator"""
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
         self.selenium.wait_until_element_is_visible(main_loc, timeout=60)
-        
+
+    def wait_for_locator_is_not_visible(self, path, *args, **kwargs):
+        """Waits for 60 sec for the specified locator"""
+        main_loc = self.get_npsp_locator(path,*args, **kwargs)
+        self.selenium.wait_until_element_is_not_visible(main_loc, timeout=60)
+
     @capture_screenshot_on_error    
     def wait_for_batch_to_complete(self, path, *args, **kwargs):
         """Checks every 15 secs for upto 3.5mins for batch with given status
@@ -1074,9 +1088,18 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            table=ns + obj_api
        else:
             table=obj_api
-       rec=self.salesforce.salesforce_get(table,rec_id)
-       for key, value in kwargs.items():
-           self.builtin.should_be_equal_as_strings(rec[key], value)
+       try :
+           rec=self.salesforce.salesforce_get(table,rec_id)
+           for key, value in kwargs.items():
+               print(f"executing {key}, {value} pair")
+               self.builtin.should_be_equal_as_strings(rec[key], value)
+       except Exception :
+           print("Retrying after exception")
+           time.sleep(10)
+           rec=self.salesforce.salesforce_get(table,rec_id)
+           for key, value in kwargs.items():
+               print(f"executing {key}, {value} pair")
+               self.builtin.should_be_equal_as_strings(rec[key], value)
 
     def get_org_namespace_prefix(self):
         if self.cumulusci.org.namespaced:
@@ -1444,6 +1467,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["record"]["activity-button"].format('showMoreButton') 
         self.salesforce._jsclick(locator) 
         
+    def click_button_with_title(self,title):
+        """Clicks button identified by title using Javascript"""
+        locator = npsp_lex_locators["button-title"].format(title)
+        self.salesforce._jsclick(locator)
+
     def click_show_more_actions_button(self,title):
         """Clicks on more actions dropdown and click the given title"""   
         locator=npsp_lex_locators['link-contains'].format("more actions")

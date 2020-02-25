@@ -17,6 +17,9 @@ ${max_amount}  0.90
 ${minamount_to_edit}  0.01
 ${maxamount_to_edit}  0.99
 ${contact_smallestvalue}  0.75
+${contact_smallestvalue_2}  2.0
+${level_name}   AutomationLevel
+
 *** Test Cases ***
 
 Create and edit level to verify fields
@@ -62,6 +65,8 @@ Create and edit level to verify fields
     ...                                                 Source Field=Smallest Gift
 
     Click Button                                        Save
+    Wait For Locator Is Not Visible                     frame                             Levels
+
     Go To Page                                          Details
     ...                                                 Level__c
     ...                                                 object_id=${level_id}
@@ -72,9 +77,11 @@ Create and edit level to verify fields
     Navigate To And Validate Field Value    Source Field           contains       npo02__SmallestAmount__c
 
 
-2 Validate Level Assignment in Batch Job
+2 Validate Level Assignment in Batch Job With SmallestAmount Value within level threshold limit and with a value above the threshold
     [Documentation]                      Create a contact, edit the smallgift field value to apply a valid
-    ...                                  level by running the batch process
+    ...                                  level that is within the limit values by running the batch process
+    ...                                  Edit the smallestAmount value to a value greater than the limit threshold
+    ...                                  Run the batch job and verify the correct levels are applied.
 
     [tags]                                  W-038641                 feature:Level
     # --------------------------------
@@ -101,7 +108,32 @@ Create and edit level to verify fields
     Go To Page                              Details
     ...                                     Contact
     ...                                     object_id=${data}[contact][Id]
-    Navigate To And Validate Field Value    Level    contains          AutomationLevel
+    Navigate To And Validate Field Value    Level    contains          ${level_name}
+
+    # --------------------------------
+    # Update the contact's smallest Amount to a value greater than the level threshorld limit
+    # --------------------------------
+
+    Salesforce Update                       Contact                   ${data}[contact][Id]    npo02__SmallestAmount__c=${contact_smallestvalue_2}
+    Go To Page                              Details
+    ...                                     Contact
+    ...                                     object_id=${data}[contact][Id]
+
+    # --------------------------------
+    # Open NPSP Settings and run the Levels batch job
+    # --------------------------------
+    Open NPSP Settings                      Bulk Data Processes         Level Assignment Batch
+    Click Settings Button                   idPanelLvlAssignBatch       Run Batch
+    Wait For Batch To Process               LVL_LevelAssign_BATCH       Completed
+
+
+
+    Go To Page                              Details
+    ...                                     Contact
+    ...                                     object_id=${data}[contact][Id]
+
+    Navigate To And Validate Field Value           Level      does not contain         ${level_name}    section=Donation Information
+    Navigate To And Validate Field Value           Previous Level     contains         ${level_name}    section=Donation Information
 
 3. Delete a Level
     [Documentation]                      Delete the Level from the levels listing page
@@ -115,4 +147,4 @@ Create and edit level to verify fields
     Go To Page                              Details
     ...                                     Contact
     ...                                     object_id=${data}[contact][Id]
-    Navigate To And Validate Field Value    Level      does not contain    AutomationLevel    section=Donation Totals
+    Navigate To And Validate Field Value    Level      does not contain    ${level_name}    section=Donation Totals
