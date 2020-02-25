@@ -78,7 +78,6 @@ npsp_lex_locators={
     'Delete_opportunity_modal_button': 'css: div.forceModalActionContainer button.uiButton--brand',
     'modal_field':"//div[contains(@class, 'lookupInput')][./label[contains(text(), '{}')]]/div//span[@class='lookupInput']/input",
     'name':'//tbody/tr/th/span/a',
-    'engagementtext':'//tbody/tr/th/td/span/a',
     'select_name':'//tbody//a[text()= "{}"]',
     'opportunities_dropdown':"css:a.slds-button.slds-button--icon-border-filled",
     'locate_dropdown':'//tbody/tr[{}]/td/span//div/a/lightning-icon',
@@ -185,7 +184,7 @@ npsp_lex_locators={
         'button':'//form[.//h1[contains(text(),"{}")]]//input[contains(@value,"{}")]',
         'completed':'//span[contains(@class, \'slds-theme_success\')]',
         'batch-button':'//div[@id="{}"]//child::input[@value="{}"]',
-        'checkbox':'//div[@id= "idPanelDataImportAdvancedMapping"]//label[./span[text()="{}"]]/descendant::span[@class="slds-checkbox_faux"]'
+        'checkbox':'//div[@id= "idPanel{}"]/descendant::span[@class="slds-checkbox_faux"]'
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',

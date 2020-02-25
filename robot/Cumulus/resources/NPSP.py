@@ -582,9 +582,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators['object']['button'].format(title)
         self.selenium.wait_until_element_is_visible(locator,error="Button "+ title +" not found on the page")
         self.selenium.get_webelement(locator).click()
-        
 
-    
+
+
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
         self.salesforce.load_related_list(list_name)
@@ -708,7 +708,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            locators = npsp_lex_locators['payments']['pays'].format(key)
            list_ele = self.selenium.get_webelements(locators)
            p_count=len(list_ele)
-           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)
+           assert p_count == int(value), "Expected {} payment with status {} but found {}".format(value, key, p_count)  
+           
            
     def verify_allocations(self,header, **kwargs):
        """To verify allocations, header is related list
@@ -1244,6 +1245,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             contact_data and opportunity_data is specified
             Creates a contact and sets up an engagement plan with both contact and engagement plan information is provided
          """
+
         # get the data variable, or an empty dictionary if not set
 
         data = self.builtin.get_variable_value("${data}", {})
@@ -1439,9 +1441,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")    
         
     def click_more_actions_button(self):
-        """"""   
+        """clicks on the more actions dropdown button in the actions container on record page"""
         locator=npsp_lex_locators['link'].format("more actions","more actions")
-        self.selenium.click_element(locator)     
+        self.salesforce._jsclick(locator)
         
         
     @capture_screenshot_on_error
@@ -1466,7 +1468,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Clicks on View More button on Activity tab of the record""" 
         locator = npsp_lex_locators["record"]["activity-button"].format('showMoreButton') 
         self.salesforce._jsclick(locator) 
-        
+
     def click_button_with_title(self,title):
         """Clicks button identified by title using Javascript"""
         locator = npsp_lex_locators["button-title"].format(title)
