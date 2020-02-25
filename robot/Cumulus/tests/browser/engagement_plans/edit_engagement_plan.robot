@@ -2,34 +2,48 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/AccountPageObject.py
 ...             robot/Cumulus/resources/EngagementPlanTemplatesPageObject.py
-Suite Setup     Open Test Browser
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
+***Keywords***
+# Setup a contact with parameters specified
+Setup Test Data
+    Setupdata   engagement  engagement_data=${engagement_fields}
+
+
 *** Variables ***
-${task3_1}  Follow-Up Phone Call3
+${task1}  Task_1
+${task2}  Task_2
+&{engagement_fields}  Name=AutomationTestPlan
 
 
 *** Test Cases ***
+Create Engagement Plan And Edit the Plan
+    [Documentation]                      Create an engagement plan , Edit the Engagement plan and add tasks
+    ...                                  Verify the engagement plan added appears in the list with the edited
+    ...                                  tasks.
+    [tags]                               W-038641                 feature:Engagements
 
-Create Engagement Plan and Edit to Add New Task
-    [tags]  unstable
-    ${plan_name}     ${task1_1}    ${sub_task1_1}     ${task2_1}     Create Engagement Plan
-    Unselect Frame
-    Go To Page                        Listing                 Engagement_Plan_Template__c
-    Click Link    link=${plan_name}
-    Current Page Should Be    Details   Engagement_Plan_Template__c
-    Click Show More Actions Button    Edit
-    Click New Task Button   Manage Engagement Plan Template    button    Add Task
-    Enter Task Id and Subject    Task 3    ${task3_1}
-    Page Scroll To Locator    button    Save
-    Click Button With Value    Save
-    Wait Until Location Contains    /view    
-    Unselect Frame
-    Verify Engagement Plan    ${plan_name}    ${task1_1}    ${sub_task1_1}     ${task2_1}    ${task3_1}
-    
-*** Keywords ***
-Click New Task Button
-    [Arguments]       ${frame_name}    ${ele_path}     @{others}
-    Wait Until Location Contains    /edit
-    Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
+
+    Go To Page                                        Listing                             Engagement_Plan_Template__c
+    Go To Engagement Plan Page                        Edit                                ${data}[engagement][Id]
+    Current Page Should Be                            Home                                Engagement_Plan_Template__c
+
+    Click Task Button                                 Task 1
+    Enter Task Id and Subject                         Task 1                             Task_1
+    Click Task Button                                 Task 2
+    Enter Task Id and Subject                         Task 2                             Task_2
+    Save Engagement Plan Template
+
+    Go To Page                                        Detail
+    ...                                               EngagementTemplate
+    ...                                               object_id=${data}[engagement][Id]
+    Check Field Value                                 Engagement Plan Template Name         AutomationTestPlan
+    Select Tab                                        Related
+    Check Related List Values                         Engagement Plan Tasks                 ${task1}  ${task2}
