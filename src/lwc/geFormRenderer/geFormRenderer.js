@@ -93,11 +93,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track dataImport; // Row being updated when in update mode
     @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
+
+    @track selectedDonorId;
+    @track selectedDonorType;
     @track opportunities;
     @track selectedDonation;
     @track selectedDonationDataImportFieldValues = {};
-    @track selectedDonorId;
-    @track selectedDonorType;
     @track hasPreviouslySelectedDonation = false;
 
     donationDonorEnum = {
