@@ -261,6 +261,12 @@ class GeFormService {
         );
     }
 
+    getObjectMappingWrapperByImportedFieldName(importedFieldName) {
+        return Object.values(this.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name === importedFieldName);
+    }
+
 }
 
 const geFormServiceInstance = new GeFormService();
