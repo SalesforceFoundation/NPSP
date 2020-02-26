@@ -27,6 +27,11 @@ const REQUIRED_FORM_FIELDS = [
     CONTACT1_LASTNAME_INFO.fieldApiName
 ];
 
+const EXCLUDED_OBJECT_MAPPINGS = [
+    'Opportunity_Contact_Role_1',
+    'Opportunity_Contact_Role_2'
+]
+
 const ADVANCED_MAPPING_MASTER_NAMES = [
     'Account 2',
     'Contact 2',
@@ -163,6 +168,13 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         for (const objMappingDevName in fieldMappingsByObjMappingDevName) {
 
             if (Object.prototype.hasOwnProperty.call(fieldMappingsByObjMappingDevName, objMappingDevName)) {
+                const isExcluded = EXCLUDED_OBJECT_MAPPINGS.includes(
+                    objMappingDevName.substring(0, objMappingDevName.length - 10));
+
+                if (isExcluded) {
+                    continue;
+                }
+
                 this.objectMappingNames = [...this.objectMappingNames, objMappingDevName];
 
                 let fieldMappings = TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName];
