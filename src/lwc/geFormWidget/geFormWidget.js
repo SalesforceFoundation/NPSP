@@ -15,6 +15,11 @@ export default class GeFormWidget extends LightningElement {
     }
 
     @api
+    load(data) {
+        this.widgetComponent.load(data);
+    }
+
+    @api
     get widgetAndValues() {
         let widgetAndValues = {};
         const thisWidget = this.widgetComponent;

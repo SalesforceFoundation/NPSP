@@ -231,9 +231,9 @@ public with sharing class GE_FormRendererService {
 
         String relationshipField;
         if (donorType == 'Account') {
-            relationshipField = 'AccountId';
+            relationshipField = SObjectType.Opportunity.fields.AccountId.Name;
         } else if (donorType == 'Contact') {
-            relationshipField = 'npsp__Primary_Contact__c';
+            relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
         }
 
         // Could eventually be used to display unpaid payments on the donation matching modal
