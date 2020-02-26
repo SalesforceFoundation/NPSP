@@ -301,12 +301,36 @@
         <value>Expired</value>
     </labels>
     <labels>
+        <fullName>AssistiveTextInfo</fullName>
+        <categories>AlternativeText</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>AssistiveText for &quot;Info&quot;</shortDescription>
+        <value>Info</value>
+    </labels>
+    <labels>
         <fullName>AssistiveTextNewWindow</fullName>
         <categories>AlternativeText</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>AssistiveTextNewWindow</shortDescription>
         <value>Link opens in a new window</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunOutdatedError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when migration validation is outdated</shortDescription>
+        <value>It&apos;s been longer than 7 days since you completed a migration validation. Refresh the page and click Validate Migration to confirm that your data will migrate without errors.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunOutdatedInfo</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Information displayed when migration validation is outdated</shortDescription>
+        <value>It&apos;s been longer than 7 days since you completed a migration validation. Click Validate Migration to confirm that your data will migrate without errors.</value>
     </labels>
     <labels>
         <fullName>AssistiveTextRecordIcon</fullName>
@@ -1660,7 +1684,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Validation section introduction and guidelines</shortDescription>
-        <value>In this step, NPSP will simulate migrating your existing data to the Enhanced Recurring Donations model and will identify any errors. If there are errors, go to NPSP Settings | System Tools | Error Log. After you fix the errors, return here and validate the migration again. Once the validation completes without errors, you can proceed to the next step.&lt;br/&gt;&lt;br/&gt;The validation process may take some time to complete. You can leave this page and return later to check the progress.</value>
+        <value>NPSP simulates migrating your existing data to the Enhanced Recurring Donations model and identifies errors. If there are errors, go to NPSP Settings | System Tools | Error Log. After you fix the errors, return here and validate the migration again. Once the validation completes without errors, you can proceed to the next step.&lt;br/&gt;&lt;br/&gt;The validation process may take some time to complete. You can leave this page and return later to check the progress.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableConfirm</fullName>
@@ -1676,7 +1700,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Enablement section introduction and details</shortDescription>
-        <value>This step changes your Recurring Donations processing logic to use Enhanced Recurring Donations instead. Recurring Donations will not function the same way as before.</value>
+        <value>This step replaces the current Recurring Donations processing logic with Enhanced Recurring Donations logic.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementEnableMessage</fullName>
@@ -1710,7 +1734,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Enablement page introduction and guidelines</shortDescription>
         <value>Greetings! Enhanced Recurring Donations is our redesigned and improved Recurring Donations feature for the Nonprofit Success Pack (NPSP). A big thanks to our community members who offered their feedback and helped make Enhanced Recurring Donations possible.
         &lt;br/&gt;&lt;br/&gt;Since there's already a Recurring Donations feature in NPSP, you'll need to perform several upgrade tasks and move your existing data to the Enhanced Recurring Donations model. We've outlined the required tasks for you below.
-        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
+        &lt;br/&gt;&lt;br/&gt;You'll probably have questions along the way and we want you to be fully prepared at each step. Refer to the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt; as you work through the upgrade process.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployConfirm</fullName>
@@ -1776,10 +1800,12 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Message displayed on a successful migration</shortDescription>
         <value>&lt;b&gt;Upgrade process complete!&lt;/b&gt;&lt;br/&gt;
         &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:&lt;br/&gt;
-        &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to conversion.&lt;/li&gt;
-        &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles. You should also remove the old Recurring Donations page layout from all profiles.&lt;/li&gt;
-        &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your custom profiles and permission sets.&lt;/li&gt;
-        &lt;li&gt;Adjust existing Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
+        &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to upgrade.&lt;/li&gt;
+        &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles and remove the old Recurring Donations page layout.&lt;/li&gt;
+        &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;   
+        &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;    
+        &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your profiles and permission sets.&lt;/li&gt;
+        &lt;li&gt;Adjust Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
         &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;</value>
     </labels>
     <labels>
@@ -1812,7 +1838,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Migration section validation context guidelines</shortDescription>
-        <value>You may validate the data migration again by clicking Validate Migration. If you're all set to run the actual migration, click Skip Validation, then click Run Migration.</value>
+        <value>You may validate the data migration again by clicking Validate Migration.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMigrationStepFinal</fullName>
@@ -1844,7 +1870,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Migration section warning</shortDescription>
-        <value>&lt;b&gt;WARNING: Run Migration rearranges existing Recurring Donation data to match the Enhanced Recurring Donations model. Backup your database if you haven't already done so.&lt;/b&gt;</value>
+        <value>&lt;b&gt;WARNING: Run Migration modifies existing Recurring Donation data to match the Enhanced Recurring Donations model. Backup your database if you haven't already done so.&lt;/b&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepIntro</fullName>
@@ -1862,7 +1888,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>Enablement preparation tasks introduction and guidelines</shortDescription>
         <value>&lt;ul&gt;&lt;li&gt;Disable workflows, processes, validation rules and triggers on the Recurring Donations, Opportunity, and Payment objects.&lt;/li&gt;
 &lt;li&gt;Backup your database, including all Recurring Donations and their related records.&lt;/li&gt;
-&lt;li&gt;Read the Enhanced Recurring Donations &lt;a href=&quot;https://powerofus.force.com/s/group/0F91E000000Xd5OSAS/enhanced-recurring-donations-pilot&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</value>
+&lt;li&gt;Read the Enhanced Recurring Donations &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;documentation&lt;/a&gt;.&lt;/li&gt;&lt;/ul&gt;</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementPrepTitle</fullName>
@@ -1888,6 +1914,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <shortDescription>The RD2 Batch job can only be executed when Enhanced RD is enabled</shortDescription>
         <value>You must enable Enhanced Recurring Donations before you can run the Enhanced Recurring Donations batch job.</value>
     </labels>
+    <labels>
+        <fullName>RD2_InstallmentFrequencyMustBeValid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displayed when Installment Frequency on a Recurring Donation is not valid</shortDescription>
+        <value>Installment Frequency is required. Enter a value between 1 and 20.</value>
+    </labels>
      <labels>
         <fullName>RD2_InstallmentPeriodMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1895,6 +1929,30 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if it is valid install period</shortDescription>
         <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Require Planned Installments field on the RD when Recurring Type is Fixed</shortDescription>
+        <value>Number of Planned Installments is required when Recurring Type is Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NumberInstallmentsNotAllowedWhenOpen</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Disallow a value in Planned Installments on the RD for Recurring Type is Open</shortDescription>
+        <value>Number of Planned Installments is for Fixed Recurring Donations only. Remove the value in Number of Planned Installments or change the Recurring Type to Fixed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NumberInstallmentsCannotBeLessThanPaid</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validate Planned Installments field is greater than number of Paid Installments</shortDescription>
+        <value>Number of Planned Installments can&apos;t be less than the Number of Paid Installments.</value>
     </labels>
     <labels>
         <fullName>RD2_PageNotAvailableHeader</fullName>
@@ -2015,6 +2073,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Refresh Opportunities</shortDescription>
         <value>Refresh Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>RD_ErrorAddDonationLimitedToLegacyMode</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh Opportunities button action can be executed in the legacy mode only</shortDescription>
+        <value>The Refresh Opportunities button has no function in Enhanced Recurring Donations. Ask your administrator to remove this button from Recurring Donation page layouts.</value>
     </labels>
     <labels>
         <fullName>RD_ErrorAddDonationMissingId</fullName>
