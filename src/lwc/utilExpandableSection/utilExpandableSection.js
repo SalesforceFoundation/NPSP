@@ -7,7 +7,6 @@ export default class utilExpandableSection extends LightningElement {
     @api isCollapsed = false;
     @api alternativeText;
     @api bodyClass;
-    @track hasSlotContent = false;
 
     get containerClass() {
         let classItems = ['slds-section', 'slds-is-open'];
@@ -46,21 +45,15 @@ export default class utilExpandableSection extends LightningElement {
     }
 
     get ariaExpanded() {
-        return this.isCollapsed ? false : true;
+        return !this.isCollapsed;
     }
 
     get ariaHidden() {
-        return this.isCollapsed ? true : false;
+        return this.isCollapsed;
     }
 
     toggleSection() {
         this.isCollapsed = !this.isCollapsed;
     }
 
-    handleSlotChange() {
-        this.hasSlotContent = true;
-        if (this.isCollapsed) {
-            this.isCollapsed = false;
-        }
-    }
 }

@@ -1993,6 +1993,7 @@
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyBatchHeaderWarning</members>
         <members>geBodyEmptyFormSection</members>
+        <members>geBodyFieldBundlesLeftCol</members>
         <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
@@ -2073,6 +2074,14 @@
         <members>geHeaderPageLevelError</members>
         <members>geHeaderSingleGiftEntry</members>
         <members>geHeaderTemplateInfoLeftCol</members>
+        <members>geHelpTextAccount1Mapping</members>
+        <members>geHelpTextAccount2Mapping</members>
+        <members>geHelpTextAddressMapping</members>
+        <members>geHelpTextAllocation1Mapping</members>
+        <members>geHelpTextAllocation2Mapping</members>
+        <members>geHelpTextAllocationBundle</members>
+        <members>geHelpTextContact1Mapping</members>
+        <members>geHelpTextContact2Mapping</members>
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>

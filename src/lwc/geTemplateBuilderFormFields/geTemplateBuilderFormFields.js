@@ -32,6 +32,26 @@ const EXCLUDED_OBJECT_MAPPINGS = [
     'Opportunity_Contact_Role_2'
 ]
 
+const ADVANCED_MAPPING_MASTER_NAMES = [
+    'Account 2',
+    'Contact 2',
+    'GAU Allocation 2',
+    'Household',
+    'Opportunity Contact Role 1',
+    'Opportunity Contact Role 2'
+];
+
+const OBJECT_MAPPING_HELP_TEXT = {
+    'Account 1': 'geHelpTextAccount1Mapping',
+    'Account 2': 'geHelpTextAccount2Mapping',
+    'Address': 'geHelpTextAddressMapping',
+    'Contact 1': 'geHelpTextContact1Mapping',
+    'Contact 2': 'geHelpTextContact2Mapping',
+    'GAU Allocation 1': 'geHelpTextAllocation1Mapping',
+    'GAU Allocation 2': 'geHelpTextAllocation2Mapping',
+    'Allocations': 'geHelpTextAllocationBundle'
+};
+
 export default class geTemplateBuilderFormFields extends LightningElement {
 
     // Expose labels to template
@@ -131,7 +151,6 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
     init = async () => {
         this.objectMappings = await this.buildObjectMappingsList();
-
         this.handleSortFieldMappings();
         this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
         this.isLoading = false;
@@ -168,14 +187,14 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 let objectMapping = {
                     ...TemplateBuilderService.objectMappingByDevName[objMappingDevName],
                     Field_Mappings: fieldMappings
-                }
+                };
 
                 objectMappings.push(objectMapping)
             }
         }
 
         return objectMappings;
-    }
+    };
 
     /*******************************************************************************
     * @description Sorts the field mappings within their respective object mappings
@@ -479,4 +498,60 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             REQUIRED_FORM_FIELDS_MESSAGE += objectData.fields[REQUIRED_FORM_FIELDS[i]].label + character;
         }
     }
+
+    /**
+     * For a given object mapping, check if help text exists for it and append it to the mapping javascript object.
+     * @param {object} mapping to look up help text for
+     * @return {{helpText: *}|*} mapping with help text appended to it
+     */
+    mapHelpText = (mapping) => {
+        const labelName = OBJECT_MAPPING_HELP_TEXT[mapping.MasterLabel];
+        if(labelName) {
+            const helpText = this.CUSTOM_LABELS[labelName];
+            return { ...mapping, helpText };
+        }
+        return mapping;
+    };
+
+    /**
+     * Get basic object mappings by filtering the list of object mappings. These mappings are shown in the form
+     * template builder by default.
+     * @return {*[]|*}
+     */
+    get basicObjectMappings() {
+        if(this.objectMappings) {
+            return this.objectMappings
+                .filter(mapping =>
+                    !ADVANCED_MAPPING_MASTER_NAMES.includes(mapping.MasterLabel) &&
+                    mapping.MasterLabel !== this.CUSTOM_LABELS.geHeaderFieldBundles)
+                .map(this.mapHelpText);
+        }
+        return [];
+    }
+
+    /**
+     * Get advanced object mappings for the sidebar. These mappings are hidden by default
+     * @return {*[]|*}
+     */
+    get advancedObjectMappings() {
+        if(this.objectMappings) {
+            return this.objectMappings
+                .filter(mapping => ADVANCED_MAPPING_MASTER_NAMES.includes(mapping.MasterLabel))
+                .map(this.mapHelpText);
+        }
+        return [];
+    }
+
+    /**
+     * Get field bundle mappings for the sidebar.
+     */
+    get fieldBundleMappings() {
+        if(this.objectMappings) {
+            return this.objectMappings
+                .filter(mapping => mapping.MasterLabel === this.CUSTOM_LABELS.geHeaderFieldBundles)
+                .map(this.mapHelpText);
+        }
+        return [];
+    }
+
 }
