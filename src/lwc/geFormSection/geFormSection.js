@@ -175,7 +175,7 @@ export default class GeFormSection extends LightningElement {
      *              geFormRenderer to each section during load() flow.
      */
     @api
-get sourceFields() {
+    get sourceFields() {
         let fields = Object.keys(this.getAllFieldsByAPIName());
 
         this.template.querySelectorAll('c-ge-form-widget')
