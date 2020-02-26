@@ -754,6 +754,31 @@ private class RD2_OpportunityEvaluation_TEST {
             'The Closed Reason should be set to ' + RD2_Constants.FIXED_TYPE_CLOSED_REASON);
     }
 
+    /***
+    * @description Verifies that a fix length RD has proper curent and next year value
+    */
+    @IsTest
+    private static void shouldHaveValidCurrentAndNextYearValueWhenRDIsFixed() {
+        final Integer plannedInstallments = MONTHS_TO_YEAR_END * 2;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = START_DATE;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(plannedInstallments)
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(plannedInstallments / 2 * rd.npe03__Amount__c, rd.CurrentYearValue__c,
+            'Current Year Value should be calcuated correctly for fixed length RD');
+            System.assertEquals(plannedInstallments / 2 * rd.npe03__Amount__c, rd.NextYearValue__c,
+            'Next Year Value should be calcuated correctly for fixed length RD');
+    }
 
     // Helpers
     //////////////

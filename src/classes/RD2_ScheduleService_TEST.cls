@@ -1192,9 +1192,9 @@ private with sharing class RD2_ScheduleService_TEST {
     * @description Validates End Date on Schedule records should be calculated correctly when Recurring Donation record is changed to Open
     */
     @isTest
-    private static void shouldGenerateScheduleWithNoEndDateWhenRecurringDonationIsUpdatedToOpen() {
+    private static void shouldGenerateScheduleWithNoEndDateWhenRDIsUpdatedToOpen() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        getScheduleServiceForCurrentDate(DATE_ESTABLISHED);
+        getScheduleServiceForCurrentDate(DATE_ESTABLISHED.addDays(-1));
 
         String dayOfMonth = DATE_ESTABLISHED.day().format();
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
@@ -1202,32 +1202,36 @@ private with sharing class RD2_ScheduleService_TEST {
             .withRecurringTypeFixed()
             .withPlannedInstallments(5)
             .build();
-
+        
         insert rd;
 
         rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
         rd.npe03__Installments__c = 0;
+        getScheduleServiceForCurrentDate(DATE_ESTABLISHED);
 
         Test.startTest();
         update rd;
         Test.stopTest();
 
-        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
-
-        Set<DateTime> endDates = UTIL_SObject.extractDatetime(rdSchedules, RecurringDonationSchedule__c.EndDate__c);
+        List<RecurringDonationSchedule__c> rdSchedules = [
+            SELECT EndDate__c,
+                StartDate__c
+            FROM RecurringDonationSchedule__c
+            WHERE RecurringDonation__c =: rd.Id
+            ORDER BY EndDate__c ASC NULLS LAST
+        ];
 
         System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist when RD recurring type change');
-        System.assertEquals(2, endDates.size(), 'Two Schedules with different end date should be presented');
-        System.assert(endDates.contains(null), 'A Open Schedule should be created for the Open Recurring Donation');
-        System.assert(endDates.contains(DATE_ESTABLISHED.addDays(-1)),
-            'A Schedule should be have an end date of the day before start date to indicate it is no longer valid');
+        System.assertEquals(DATE_ESTABLISHED.addDays(-1), rdSchedules[0].EndDate__c,
+            'The old Schedule should be have an end date of the day before start date to indicate it is no longer valid');
+        System.assertEquals(null, rdSchedules[1].EndDate__c, 'A Open Schedule should be created for the Open Recurring Donation');
     }
 
     /***
     * @description Validates End Date on Schedule records should be calculated correctly when Recurring Donation record is changed to Fixed Length
     */
     @isTest
-    private static void shouldGenerateScheduleWithEndDateWhenRecurringDonationIsUpdateFixedLength() {
+    private static void shouldGenerateScheduleWithEndDateWhenRDIsUpdatedToFixedLength() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         getScheduleServiceForCurrentDate(DATE_ESTABLISHED);
 
@@ -1246,15 +1250,19 @@ private with sharing class RD2_ScheduleService_TEST {
         update rd;
         Test.stopTest();
 
-        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
-        Set<DateTime> endDates = UTIL_SObject.extractDatetime(rdSchedules, RecurringDonationSchedule__c.EndDate__c);
+        List<RecurringDonationSchedule__c> rdSchedules = [
+            SELECT EndDate__c,
+                StartDate__c
+            FROM RecurringDonationSchedule__c
+            WHERE RecurringDonation__c =: rd.Id
+            ORDER BY EndDate__c ASC
+        ];
 
         System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist when RD recurring type change');
-        System.assertEquals(2, endDates.size(), 'Two Schedules with different end date should be presented');
-        System.assert(endDates.contains(DATE_ESTABLISHED.addMonths(4)),
-            'One Schedule with a future end date should be created for the Fixed Length Recurring Donation');
-        System.assert(endDates.contains(DATE_ESTABLISHED.addDays(-1)),
-            'One Schedule should be updated to an end date before the start date to indicate it is no longer valid');
+        System.assertEquals(DATE_ESTABLISHED.addDays(-1), rdSchedules[0].EndDate__c,
+            'Old Schedule should be updated to an end date before the start date to indicate it is no longer valid');
+        System.assertEquals(DATE_ESTABLISHED.addMonths(4), rdSchedules[1].EndDate__c, 
+            'New Schedule with a future end date should be created for the Fixed Length Recurring Donation');
     }
 
     //// Helpers

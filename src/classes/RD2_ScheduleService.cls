@@ -100,13 +100,8 @@ public without sharing class RD2_ScheduleService {
 
         newSchedules.add(schedule);
 
-        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED && rd.npe03__Installments__c != null) {
-            Date endDate = getFixedLengthEndDate(newSchedules, rd);
-
-            for (RecurringDonationSchedule__c fixedLengthSc : newSchedules) {
-                fixedLengthSc.EndDate__c = endDate;
-            }
-        }
+        
+        setFixedLengthEndDate(newSchedules, rd);
 
         return newSchedules;
     }
@@ -116,19 +111,29 @@ public without sharing class RD2_ScheduleService {
     * @param schedules The schedules of the Recurring Donation
     * @param rd Recurring Donation record 
     */
-    private Date getFixedLengthEndDate(List<RecurringDonationSchedule__c> schedules, npe03__Recurring_Donation__c rd) {
+    public void setFixedLengthEndDate(List<RecurringDonationSchedule__c> schedules, npe03__Recurring_Donation__c rd) {
+        if (rd.RecurringType__c != RD2_Constants.RECURRING_TYPE_FIXED || rd.npe03__Installments__c == null) {
+            return;
+        }
+        Integer paidInstallments = (rd.npe03__Total_Paid_Installments__c != null)
+            ? rd.npe03__Total_Paid_Installments__c.intValue()
+            : 0;
+
         List<Installment> installments = getVisualizedInstallments(
             currentDate,
-            rd.npe03__Installments__c.intValue(),
+            rd.npe03__Installments__c.intValue() - paidInstallments,
             schedules
         );
 
-        if (installments.size() == 0) {
-            return currentDate;
-        }
+        Date endDate = installments.isEmpty() 
+            ? currentDate
+            : installments[installments.size() - 1].nextDonationDate;        
 
-        return installments[installments.size() - 1].nextDonationDate;
+        for (RecurringDonationSchedule__c schedule : schedules) {
+            schedule.EndDate__c = endDate;
+        }
     }
+
     /***
     * @description Determines whether '1st and 15th' is the schedule selected.
     * @param rd Recurring Donation record
