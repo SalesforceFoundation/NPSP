@@ -776,7 +776,7 @@ private class RD2_OpportunityEvaluation_TEST {
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(plannedInstallments / 2 * rd.npe03__Amount__c, rd.CurrentYearValue__c,
             'Current Year Value should be calcuated correctly for fixed length RD');
-            System.assertEquals(plannedInstallments / 2 * rd.npe03__Amount__c, rd.NextYearValue__c,
+        System.assertEquals(plannedInstallments / 2 * rd.npe03__Amount__c, rd.NextYearValue__c,
             'Next Year Value should be calcuated correctly for fixed length RD');
     }
 
