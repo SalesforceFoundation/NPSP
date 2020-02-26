@@ -100,6 +100,7 @@ import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
+import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
@@ -267,6 +268,7 @@ class GeLabelService {
         geErrorPageLevelMissingRequiredFields,
         geErrorPageLevelMissingRequiredGroupFields,
         geErrorRequiredField,
+        geHeaderAdvancedFormFields,
         geHeaderBatchEnterInfo,
         geHeaderBatchGiftEntry,
         geHeaderBatchHeaderLeftCol,

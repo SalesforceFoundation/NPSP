@@ -27,10 +27,14 @@ const REQUIRED_FORM_FIELDS = [
     CONTACT1_LASTNAME_INFO.fieldApiName
 ];
 
+const FIELD_BUNDLES_SECTION_ID = 'fieldBundles';
+const FORM_FIELDS_SECTION_ID = 'formFields';
+const ADVANCED_FIELDS_SECTION_ID = 'advancedFormFields';
+
 const EXCLUDED_OBJECT_MAPPINGS = [
     'Opportunity_Contact_Role_1',
     'Opportunity_Contact_Role_2'
-]
+];
 
 const ADVANCED_MAPPING_MASTER_NAMES = [
     'Account 2',
@@ -73,6 +77,12 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     @track hasErrors = false;
     @track errors;
 
+    // identifiers for use with querySelectors
+    LOCATORS = {
+        FIELD_BUNDLES_SECTION_ID,
+        FORM_FIELDS_SECTION_ID,
+        ADVANCED_FIELDS_SECTION_ID
+    };
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
     dataImportObjectInfo({ data, error }) {
@@ -133,6 +143,31 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         dispatch(this, 'togglemodal', event.detail);
     }
 
+    toggleExpandableSection(sectionId) {
+        const section = this.getSectionById(sectionId);
+        section.isCollapsed = !section.isCollapsed;
+        return section.isCollapsed;
+    }
+
+    expandSubSections(sectionId, objectMappings) {
+        const lightningAccordion = this.template.querySelector(`[data-section-id=${sectionId}] lightning-accordion`);
+        lightningAccordion.activeSectionName = objectMappings.map(mapping => mapping.DeveloperName);
+    }
+
+    collapseSubSections(sectionId) {
+        const lightningAccordion = this.template.querySelector(`[data-section-id=${sectionId}] lightning-accordion`);
+        lightningAccordion.activeSectionName = '';
+    }
+
+    isSectionCollapsed(sectionId) {
+        const section = this.getSectionById(sectionId);
+        return section && section.isCollapsed;
+    }
+
+    getSectionById(sectionId) {
+        return this.template.querySelector(`[data-section-id=${sectionId}]`);
+    }
+
     renderedCallback() {
         if (!this.isInitialized && this.isLoading === false && this.previousSaveAttempted) {
             this.isInitialized = true;
@@ -154,7 +189,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         this.handleSortFieldMappings();
         this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
         this.isLoading = false;
-    }
+    };
 
     /*******************************************************************************
     * @description Intermediary async method for pulling the object and field mappings
@@ -433,30 +468,38 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         }
     }
 
-    /*******************************************************************************
-    * @description Handles onclick event handler of lightning-button.
-    * Toggles all sections open and sets the isAllSectionsExpanded property.
-    *
-    * @param {object} event: Event object from lightning-button onclick
-    * event handler.
-    */
-    handleExpandAllSections() {
-        const lightningAccordion = this.template.querySelector('lightning-accordion');
-        lightningAccordion.activeSectionName = [...this.objectMappingNames];
-        this.isAllSectionsExpanded = true;
+    /**
+     * Expand/collapse the header and all sub-sections for advanced form fields
+     * @param event
+     */
+    handleToggleAdvancedSection(event) {
+        const collapsed = this.toggleExpandableSection(this.LOCATORS.ADVANCED_FIELDS_SECTION_ID);
+        if(collapsed) {
+            this.collapseSubSections(this.LOCATORS.ADVANCED_FIELDS_SECTION_ID);
+        } else {
+            this.expandSubSections(this.LOCATORS.ADVANCED_FIELDS_SECTION_ID, this.advancedObjectMappings);
+        }
     }
 
-    /*******************************************************************************
-    * @description Handles onclick event handler of lightning-button.
-    * Toggles all sections closed and sets the isAllSectionsExpanded property.
-    *
-    * @param {object} event: Event object from lightning-button onclick
-    * event handler.
-    */
-    handleCollapseAllSections() {
-        const lightningAccordion = this.template.querySelector('lightning-accordion');
-        lightningAccordion.activeSectionName = [];
-        this.isAllSectionsExpanded = false;
+    /**
+     * Expand/collapse the bundles section, no sub-sections currently present for this section
+     * @param event
+     */
+    handleToggleBundlesSection(event) {
+        this.toggleExpandableSection(this.LOCATORS.FIELD_BUNDLES_SECTION_ID);
+    }
+
+    /**
+     * Expand/collapse the header and all sub-section for basic form fields
+     * @param event
+     */
+    handleToggleBasicSection(event) {
+        const collapsed = this.toggleExpandableSection(this.LOCATORS.FORM_FIELDS_SECTION_ID);
+        if(collapsed) {
+            this.collapseSubSections(this.LOCATORS.FORM_FIELDS_SECTION_ID);
+        } else {
+            this.expandSubSections(this.LOCATORS.FORM_FIELDS_SECTION_ID, this.basicObjectMappings);
+        }
     }
 
     /*******************************************************************************
@@ -540,6 +583,19 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 .map(this.mapHelpText);
         }
         return [];
+    }
+
+    get advancedSectionCollapsed() {
+        return this.isSectionCollapsed(this.LOCATORS.ADVANCED_FIELDS_SECTION_ID);
+    }
+
+    get basicSectionCollapsed() {
+        return this.isSectionCollapsed(this.LOCATORS.FORM_FIELDS_SECTION_ID);
+
+    }
+
+    get bundlesSectionCollapsed() {
+        return this.isSectionCollapsed(this.LOCATORS.FIELD_BUNDLES_SECTION_ID);
     }
 
     /**
