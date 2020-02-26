@@ -945,8 +945,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     resetDonationAndPaymentImportedFields() {
         // Reset the stored values for selected donation
+        let selectedDonationFieldsNeedReset = false;
         for (let prop in this.selectedDonationDataImportFieldValues) {
-            this.selectedDonationDataImportFieldValues[prop] = null;
+            if (prop) {
+                this.selectedDonationDataImportFieldValues[prop] = null;
+                selectedDonationFieldsNeedReset = true;
+            }
+        }
+
+        if (!selectedDonationFieldsNeedReset) {
+            return;
         }
 
         // Reset the "imported" and "imported status" donation fields if they are on the
