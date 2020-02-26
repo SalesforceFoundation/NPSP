@@ -1,5 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import { checkNestedProperty } from 'c/utilCommon';
+import ADDITIONAL_OBJECT_JSON
+    from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 
 const PAYMENT_WIDGET = 'geFormWidgetPayment';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -59,4 +61,16 @@ export default class GeFormWidget extends LightningElement {
     get totalAmount() {
         return checkNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
     }
+
+    /**
+     * @description This method should return a list of DataImport__c field api names
+     *              that the widget uses so that parent components (geFormSection) know
+     *              which fields to include when calling this component's load() function.
+     * @returns An Array of field names used by this component.
+     */
+    @api
+    get allFieldsByAPIName() {
+        return [ADDITIONAL_OBJECT_JSON.fieldApiName];
+    }
+
 }

@@ -167,4 +167,22 @@ export default class GeFormSection extends LightningElement {
             { detail: event.detail });
         this.dispatchEvent(changeDonationDonorEvent);
     }
+
+    /**
+     * @description Inspects all fields and widgets in the section and
+     *              returns a list of DataImport__c field api names used as
+     *              source fields.  Helps to only send relevant data down from
+     *              geFormRenderer to each section during load() flow.
+     */
+    @api
+get sourceFields() {
+        let fields = Object.keys(this.getAllFieldsByAPIName());
+
+        this.template.querySelectorAll('c-ge-form-widget')
+            .forEach(widgetCmp => {
+                fields.push(...widgetCmp.allFieldsByAPIName);
+            });
+
+        return fields;
+    }
 }
