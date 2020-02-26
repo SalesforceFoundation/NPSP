@@ -61,7 +61,7 @@ private with sharing class UTIL_FiscalYearInfo_TEST {
 
         //override the organization fiscal year settings for testing purposes
         fiscalYearInfo.startMonth = 4; 
-        fiscalYearInfo.isStartMonthYearBeginning = true; 
+        fiscalYearInfo.isStartDateYearFiscalYear = true; 
         
         //A fiscal year is April through March.
         //The fiscal year and the current calendar year align beginning the start month, ie
@@ -85,7 +85,7 @@ private with sharing class UTIL_FiscalYearInfo_TEST {
 
         //override the organization fiscal year settings for testing purposes
         fiscalYearInfo.startMonth = 4; 
-        fiscalYearInfo.isStartMonthYearBeginning = false; 
+        fiscalYearInfo.isStartDateYearFiscalYear = false; 
         
         //A fiscal year is April through March.
         //The fiscal year and the current calendar year align before the start month, ie
@@ -122,7 +122,7 @@ private with sharing class UTIL_FiscalYearInfo_TEST {
         //when the standard fiscal year is not configured for the Organization, 
         //these settings are applied in the Organization SObject
         fiscalYearInfo.startMonth = 1; 
-        fiscalYearInfo.isStartMonthYearBeginning = false; 
+        fiscalYearInfo.isStartDateYearFiscalYear = false; 
 
         UTIL_FiscalYearInfo.YearInfo yearInfo = fiscalYearInfo.getYearInfo(Date.newInstance(2014, 3, 31));
             
@@ -141,7 +141,7 @@ private with sharing class UTIL_FiscalYearInfo_TEST {
 
         //override the organization fiscal year settings for testing purposes
         fiscalYearInfo.startMonth = 4; 
-        fiscalYearInfo.isStartMonthYearBeginning = true; 
+        fiscalYearInfo.isStartDateYearFiscalYear = true; 
 
         Date today = Date.newInstance(2014, 3, 31);
         Date yearStartDate = Date.newInstance(2013, 4, 1);
@@ -182,7 +182,7 @@ private with sharing class UTIL_FiscalYearInfo_TEST {
 
         //override the organization fiscal year settings for testing purposes
         fiscalYearInfo.startMonth = 4; 
-        fiscalYearInfo.isStartMonthYearBeginning = false; 
+        fiscalYearInfo.isStartDateYearFiscalYear = false; 
 
         Date today = Date.newInstance(2014, 3, 31);
         Date yearStartDate = Date.newInstance(2013, 4, 1);

@@ -37,8 +37,11 @@ public with sharing class UTIL_FiscalYearInfo {
     /** @description Fiscal year start or ending month (see below) */
     public Integer startMonth { get; set; }
 
-    /** @description Defines if the fiscal year starts or ends in the start month */
-    public Boolean isStartMonthYearBeginning { get; set; }
+    /** @description Defines the fiscal year value.
+     * If true, then the fiscal year starts on the start month that same year.
+     * If false, then fiscal year ends on the start month that year and the next one begins.
+     */
+    public Boolean isStartDateYearFiscalYear { get; set; }
 
     /** @description Defines if the Use Fiscal Year is set for a specific Custom Settings configuration */
     public Boolean useFiscalYear { get; private set; }
@@ -73,18 +76,18 @@ public with sharing class UTIL_FiscalYearInfo {
     /***
     * @description Constructor
     * @param startMonth Fiscal year start month
-    * @param isStartMonthYearBeginning Indicates if the fiscal year starts or ends in the startMonth
+    * @param isStartDateYearFiscalYear Indicates if the fiscal year value is the same as the start date *year*.
     */
     @TestVisible
-    private UTIL_FiscalYearInfo(Integer startMonth, Boolean isStartMonthYearBeginning) {
+    private UTIL_FiscalYearInfo(Integer startMonth, Boolean isStartDateYearFiscalYear) {
         this.startMonth = startMonth;
-        this.isStartMonthYearBeginning = isStartMonthYearBeginning;
+        this.isStartDateYearFiscalYear = isStartDateYearFiscalYear;
         this.useFiscalYear = false;
     }
 
     /***
     * @description Passes in the configuration for the fiscal year usage
-    * @param useFiscalYear Configured Use Fiscal Year value
+    * @param useFiscalYear Configured Use Fiscal Year value in a custom settings
     * @return UTIL_FiscalYearInfo This class instance
     */
     public UTIL_FiscalYearInfo withUseFiscalYear(Boolean useFiscalYear) {
@@ -116,10 +119,10 @@ public with sharing class UTIL_FiscalYearInfo {
 
         YearInfo yearInfo = getYearInfo(targetDate);
 
-        if (targetDate < yearInfo.startDate && isStartMonthYearBeginning) {
+        if (targetDate < yearInfo.startDate && isStartDateYearFiscalYear) {
             return yearInfo.startDate.year() - 1;
 
-        } else if (targetDate >= yearInfo.startDate && !isStartMonthYearBeginning) {//the next fiscal year has been started
+        } else if (targetDate >= yearInfo.startDate && !isStartDateYearFiscalYear) {//the next fiscal year has been started
             return yearInfo.startDate.year() + 1;
         }
 
