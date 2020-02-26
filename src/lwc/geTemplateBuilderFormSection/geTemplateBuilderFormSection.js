@@ -41,6 +41,26 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     }
 
     /*******************************************************************************
+    * Start getters for data-qa-locator attributes
+    */
+
+    get qaLocatorSectionSettings() {
+        return `button Settings ${this.formSection.label}`;
+    }
+
+    get qaLocatorSectionUp() {
+        return `button Up ${this.formSection.label}`;
+    }
+
+    get qaLocatorSectionDown() {
+        return `button Down ${this.formSection.label}`;
+    }
+
+    /*******************************************************************************
+    * End getters for data-qa-locator attributes
+    */
+
+    /*******************************************************************************
     * @description Dispatches an event notifying the parent component GE_TemplateBuilder
     * to open a modal for editing the section.
     *

@@ -145,6 +145,18 @@ export default class geTemplateBuilderFormField extends LightningElement {
         return `checkbox ${this.CUSTOM_LABELS.commonRequired} ${this.field.label}`;
     }
 
+    get qaLocatorButtonDelete() {
+        return `button Delete ${this.field.label}`;
+    }
+
+    get qaLocatorButtonUp() {
+        return `button Up ${this.field.label}`;
+    }
+
+    get qaLocatorButtonDown() {
+        return `button Down ${this.field.label}`;
+    }
+
     /*******************************************************************************
     * End getters for data-qa-locator attributes
     */

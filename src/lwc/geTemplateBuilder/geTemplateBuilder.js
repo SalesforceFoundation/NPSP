@@ -105,7 +105,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.needToInit = true;
             }
         } else if (error) {
-            handleError(this, error);
+            handleError(error);
         }
     }
 
@@ -139,6 +139,26 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     get qaLocatorNextFormFields() {
         return `button ${this.CUSTOM_LABELS.geButtonBuilderNavFormFields}`;
+    }
+
+    get qaLocatorNextBatchHeaderFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonBuilderNavBatchHeader}`;
+    }
+
+    get qaLocatorSaveAndClose() {
+        return `button ${this.CUSTOM_LABELS.commonSaveAndClose}`;
+    }
+
+    get qaLocatorBackTemplateInfo() {
+        return `button ${this.CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}`;
+    }
+
+    get qaLocatorBackFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonBuilderNavBackFormFields}`;
+    }
+
+    get qaLocatorCancel() {
+        return `button ${this.CUSTOM_LABELS.commonCancel}`;
     }
 
     /*******************************************************************************
