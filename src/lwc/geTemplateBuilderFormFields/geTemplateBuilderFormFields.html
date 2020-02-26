@@ -32,25 +32,27 @@
                     </template>
                 </div>
                 <div class="slds-size_1-of-1">
-                    <template if:false={isAllSectionsExpanded}>
+                    <template if:true={bundlesSectionCollapsed}>
                         <lightning-button class="slds-float_right"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
-                                          onclick={handleExpandAllSections}>
+                                          onclick={handleToggleBundlesSection}>
                         </lightning-button>
                     </template>
-                    <template if:true={isAllSectionsExpanded}>
+                    <template if:false={bundlesSectionCollapsed}>
                         <lightning-button class="slds-float_right"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
-                                          onclick={handleCollapseAllSections}>
+                                          onclick={handleToggleBundlesSection}>
                         </lightning-button>
                     </template>
                 </div>
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderFieldBundles}>
+                    <c-util-expandable-section
+                            label={CUSTOM_LABELS.geHeaderFieldBundles}
+                            data-section-id={LOCATORS.FIELD_BUNDLES_SECTION_ID}>
                         <template for:each={fieldBundleMappings}
                                   for:item="objectMapping">
                             <template for:each={objectMapping.Field_Mappings}
@@ -77,7 +79,28 @@
                 </div>
 
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section label={CUSTOM_LABELS.geTabFormFields}>
+                    <template if:true={basicSectionCollapsed}>
+                        <lightning-button class="slds-float_right"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
+                                          onclick={handleToggleBasicSection}>
+                        </lightning-button>
+                    </template>
+                    <template if:false={basicSectionCollapsed}>
+                        <lightning-button class="slds-float_right"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
+                                          onclick={handleToggleBasicSection}>
+                        </lightning-button>
+                    </template>
+                </div>
+
+                <div class="slds-size_1-of-1">
+                    <c-util-expandable-section
+                            label={CUSTOM_LABELS.geTabFormFields}
+                            data-section-id={LOCATORS.FORM_FIELDS_SECTION_ID}>
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
                                              active-section-name={activeSections}>
@@ -117,7 +140,29 @@
                 </div>
 
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderAdvancedFormFields} is-collapsed="true">
+                    <template if:true={advancedSectionCollapsed}>
+                        <lightning-button class="slds-float_right"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
+                                          onclick={handleToggleAdvancedSection}>
+                        </lightning-button>
+                    </template>
+                    <template if:false={advancedSectionCollapsed}>
+                        <lightning-button class="slds-float_right"
+                                          variant="base"
+                                          label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
+                                          title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
+                                          onclick={handleToggleAdvancedSection}>
+                        </lightning-button>
+                    </template>
+                </div>
+
+                <div class="slds-size_1-of-1">
+                    <c-util-expandable-section
+                            label={CUSTOM_LABELS.geHeaderAdvancedFormFields}
+                            is-collapsed="true"
+                            data-section-id={LOCATORS.ADVANCED_FIELDS_SECTION_ID}>
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
                                              active-section-name={activeSections}>
