@@ -103,10 +103,29 @@ private with sharing class UTIL_FiscalYearInfo_TEST {
      */
     @IsTest
     private static void shouldReturnCalendarYearInfoWhenFiscalYearIsNotConfigured() {
+        UTIL_FiscalYearInfo.YearInfo yearInfo = UTIL_FiscalYearInfo.getInstance()
+            .withUseFiscalYear(false)
+            .getYearInfo(Date.newInstance(2014, 3, 31));
+
+        System.assertEquals(Date.newInstance(2014, 1, 1), yearInfo.startDate, 'Start Date should be the calendar year start');
+        System.assertEquals(Date.newInstance(2014, 12, 31), yearInfo.endDate, 'End Date should be the calendar year end');
+    }
+
+    /**
+     * @description Verifies calendar year start and end dates are returned when the fiscal year should not be used
+     */
+    @IsTest
+    private static void shouldReturnCalendarYearInfoWhenFiscalYearIsConfiguredButNotSetForTheOrg() {
         UTIL_FiscalYearInfo fiscalYearInfo = UTIL_FiscalYearInfo.getInstance()
-            .withUseFiscalYear(false);
+            .withUseFiscalYear(true);//A custom settings has Use Fiscal Year as checked
+
+        //when the standard fiscal year is not configured for the Organization, 
+        //these settings are applied in the Organization SObject
+        fiscalYearInfo.startMonth = 1; 
+        fiscalYearInfo.isStartMonthYearBeginning = false; 
 
         UTIL_FiscalYearInfo.YearInfo yearInfo = fiscalYearInfo.getYearInfo(Date.newInstance(2014, 3, 31));
+            
         System.assertEquals(Date.newInstance(2014, 1, 1), yearInfo.startDate, 'Start Date should be the calendar year start');
         System.assertEquals(Date.newInstance(2014, 12, 31), yearInfo.endDate, 'End Date should be the calendar year end');
     }

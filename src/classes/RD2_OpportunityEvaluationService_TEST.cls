@@ -635,7 +635,8 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
-     * @description The Current and Next Year Value should be calculated when a Recurring Donation is created
+     * @description Verifies the calendar Current and Next Year Values 
+     * should be calculated when a Recurring Donation is created
      */
     @IsTest
     private static void yearValuesShouldBeCalculatedWhenRDIsCreated() {
@@ -658,34 +659,6 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be calculated when RD is created');
     }
-
-    /**
-     * @description The Current and Next Year Value based on the fiscal year
-     * should be calculated when a Recurring Donation is created
-     */
-    @IsTest
-    private static void fiscalYearValuesShouldBeCalculatedWhenRDIsCreated() {
-        final Date today = START_DATE;
-        RD2_ScheduleService.currentDate = today;
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-
-        setUpUseFiscalYear(true);
-        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(11, true);
-
-        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
-
-        Test.startTest();
-        insert rd;
-        Test.stopTest();
-
-        rd = rdGateway.getRecord(rd.Id);
-
-        System.assertEquals(rd.npe03__Amount__c * 2, rd.CurrentYearValue__c,
-            'Current Year Value should be calculated when RD is created');
-        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
-            'Next Year Value should be calculated when RD is created');
-    }
-
 
     /**
      * @description The Current and Next Year Value should include past/future Closed Won and Open Opps.
@@ -1019,7 +992,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         }
         opps.add(oppBuilder
             .withName()
-            .withCloseDate(START_DATE.addMonths(MONTHS_TO_YEAR_END + 2))//Open Opp in Feb next year
+            .withCloseDate(START_DATE.addMonths(MONTHS_TO_YEAR_END + 1))//Open Opp in Feb next year
             .withOpenStage()
             .build()
         );
@@ -1037,6 +1010,182 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Amount__c, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
             'Next Year Value should include next year Closed Won amounts when RD is Closed');
     }
+
+    /**
+     * @description Verifies the fiscal year Current and Next Year Values
+     * should be calculated when custom settings Use Fiscal Year is checked
+     * and a Recurring Donation is created
+     */
+    @IsTest
+    private static void fiscalYearValuesShouldBeCalculatedWhenConfiguredAndRDIsCreated() {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpUseFiscalYear(true);
+        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(11, true);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(rd.npe03__Amount__c * 2, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated when RD is created');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated when RD is created');
+    }
+
+    /**
+     * @description Verifies the fiscal year Current and Next Year Values
+     * should be calculated when custom settings Use Fiscal Year is checked
+     * and a Recurring Donation is updated
+     */
+    @IsTest
+    private static void fiscalYearValuesShouldBeCalculatedWhenConfiguredAndRDIsUpdated() {
+        //set current date override
+        final Date startDate = Date.newInstance(2019, 7, 1);
+        final Date today = Date.newInstance(2020, 1, 15);
+        RD2_ScheduleService.currentDate = today;
+
+        setUpUseFiscalYear(true);
+        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(4, true);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDateEstablished(startDate)
+            .withStartDate(startDate)
+            .withDayOfMonth(String.valueOf(startDate.day()))
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+
+        Date closeDate = startDate;
+        while (closeDate <= Date.newInstance(2019, 11, 1)) {
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(closeDate)
+                .build()
+            );
+            closeDate = closeDate.addMonths(1);
+        }
+        opps.add(oppBuilder
+            .withName()
+            .withAmount(RD_AMOUNT + 10)//$10 more donated for a past closed Opp
+            .withCloseDate(Date.newInstance(2019, 12, 1))
+            .build()
+        );
+        opps.add(oppBuilder
+            .withName()
+            .withAmount(RD_AMOUNT)
+            .withCloseDate(Date.newInstance(2020, 1, 1))//past open Opp
+            .withOpenStage()
+            .build()
+        );
+        opps.add(oppBuilder
+            .withName()
+            .withCloseDate(Date.newInstance(2020, 2, 1))//future open Opp
+            .build()
+        );
+        insert opps;
+
+        Test.startTest();
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        rd.StartDate__c = today;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD_AMOUNT * 7 + 10 + RD_NEW_AMOUNT * 2, rd.CurrentYearValue__c,
+            'Current Year Value should include July 2019 - Jan 2020 past Opps, ' 
+            + 'a Feb 2020 open Opp with updated Amount and March 1st projected installment '
+            + 'for the current fiscal year ending on March 31, 2020');
+        System.assertEquals(RD_NEW_AMOUNT * 12, rd.NextYearValue__c,
+            'Next Year Value should include next fiscal year projected installments');
+    }
+
+    /**
+     * @description The fiscal Current and Next Year Value should not count projected installments after RD is Closed
+     */
+    @IsTest
+    private static void fiscalYearValuesShouldExcludeInstallmentsWhenRDIsClosed() {
+        //set current date override
+        final Date today = START_DATE.addMonths(1).addDays(-1);
+        RD2_ScheduleService.currentDate = today;
+
+        setUpUseFiscalYear(true);
+        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(11, true);
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Integer i = 0; i < MONTHS_TO_YEAR_END + 1; i++) {
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(i))
+                .build()
+            );
+        }
+        opps.add(oppBuilder
+            .withName()
+            .withCloseDate(START_DATE.addMonths(MONTHS_TO_YEAR_END + 1))//Open Opp in Feb next year
+            .withOpenStage()
+            .build()
+        );
+        insert opps;
+
+        Test.startTest();
+        rd.Status__c = RD2_Constants.STATUS_CLOSED;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(rd.npe03__Amount__c * 2, rd.CurrentYearValue__c,
+            'Current Year Value should include Sep-Oct 2019 Opps for the current fiscal year ending on Oct 31, 2019');
+        System.assertEquals(rd.npe03__Amount__c * 3, rd.NextYearValue__c,//Open Opp in Feb is voided when RD is closed
+            'Next Year Value should include Nov-Dec 2019 and Jan 2020 closed Opps when RD is Closed');
+    }
+
+    /**
+     * @description Verifies the calendar year Current and Next Year Values
+     * should be calculated when custom settings Use Fiscal Year is unchecked
+     */
+    @IsTest
+    private static void calendarYearValuesShouldBeCalculatedWhenFiscalYearNotConfigured() {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpUseFiscalYear(false);//do not use fiscal year
+        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(11, true);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated when RD is created');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated when RD is created');
+    }
+
+
 
 
 

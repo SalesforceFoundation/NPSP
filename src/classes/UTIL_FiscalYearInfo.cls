@@ -30,12 +30,17 @@
 * @author Salesforce.org
 * @date 2020
 * @group Utilities
-* @description Utility for the fiscal year details
+* @description Utility for the *standard* fiscal year processing and determination
 *
 */
 public with sharing class UTIL_FiscalYearInfo {
+    /** @description Fiscal year start or ending month (see below) */
     public Integer startMonth { get; set; }
+
+    /** @description Defines if the fiscal year starts or ends in the start month */
     public Boolean isStartMonthYearBeginning { get; set; }
+
+    /** @description Defines if the Use Fiscal Year is set for a specific Custom Settings configuration */
     public Boolean useFiscalYear { get; private set; }
 
     /** @description static instance of the current class. It is used as the instance in a Singleton context */

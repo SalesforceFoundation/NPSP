@@ -776,9 +776,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Decimal
         */
         public Decimal calcCurrentYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            return fiscalYearInfo.useFiscalYear
-                ? calcFiscalYearValue(opps, schedules, currentYearInfo.startDate, currentYearInfo.endDate)
-                : calcCalendarYearValue(opps, schedules, currentDate, currentYearInfo.endDate);
+            return calcYearValue(opps, schedules, currentDate, currentYearInfo);
         }
 
         /**
@@ -790,62 +788,39 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return Decimal
         */
         public Decimal calcNextYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            return fiscalYearInfo.useFiscalYear
-                ? calcFiscalYearValue(opps, schedules, nextYearInfo.startDate, nextYearInfo.endDate)
-                : calcCalendarYearValue(opps, schedules, nextYearInfo.startDate, nextYearInfo.endDate);
+            return calcYearValue(opps, schedules, nextYearInfo.startDate, nextYearInfo);
         }
 
         /**
-        * @description Calculates fiscal Current or Next Year Value.
+        * @description Calculates calendar/fiscal Current or Next Year Value.
         * @param opps Opportunities on a Recurring Donation
         * @param schedules Schedules on a Recurring Donation
-        * @param startDate The fiscal year start date
-        * @param endDate The fiscal year end date
+        * @param asOfCurrentDate This is the current date for the current year calculations
+        * or the next year start date for the next year value calculations.
+        * It is used as a start cutoff date for existing Opps in order to 
+        * determine their matching projected installments.
+        * Installments are built for the current/future donation dates.
+        * @param yearInfo The current or next year info object containing the year start and end dates
         * @return Decimal
         */
-        public Decimal calcFiscalYearValue(
-            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules, Date startDate, Date endDate
+        public Decimal calcYearValue(
+            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules, 
+            Date asOfCurrentDate, UTIL_FiscalYearInfo.YearInfo yearInfo
         ) {
-            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-                .includeByFiscalYear(opps, startDate, endDate);
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(asOfCurrentDate);
 
-            return calcYearValue(schedules, startDate, endDate, matcher);
-        }
+            if (fiscalYearInfo.useFiscalYear) {
+                matcher.includeByFiscalYear(opps, yearInfo.startDate, yearInfo.endDate);
 
-        /**
-        * @description Calculates calendar Current or Next Year Value.
-        * @param opps Opportunities on a Recurring Donation
-        * @param schedules Schedules on a Recurring Donation
-        * @param startDate Start date is the start cutoff date for existing Opps and projected installments
-        * @param endDate End date is the end cutoff date for projected installments
-        * @return Decimal
-        */
-        public Decimal calcCalendarYearValue(
-            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules, Date startDate, Date endDate
-        ) { 
-            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(startDate)
-                .includeByYear(opps, startDate.year());
+            } else {
+                matcher.includeByYear(opps, yearInfo.startDate.year());
+            }
 
-            return calcYearValue(schedules, startDate, endDate, matcher);
-        }
-
-        /**
-        * @description Calculates Current or Next Year Value.
-        * @param schedules Schedules on a Recurring Donation
-        * @param startDate Start date is the start cutoff date for existing Opps and projected installments
-        * @param endDate End date is the end cutoff date for projected installments
-        * @param matcher Opportunity to projected installments matcher
-        * @return Decimal
-        */
-        private Decimal calcYearValue(
-            List<RecurringDonationSchedule__c> schedules, Date startDate, Date endDate, RD2_OpportunityMatcher matcher
-        ) {
-            Decimal value = 0;
- 
             matcher.match(
-                scheduleService.getVisualizedInstallments(startDate, endDate, schedules)
+                scheduleService.getVisualizedInstallments(asOfCurrentDate, yearInfo.endDate, schedules)
             );
 
+            Decimal value = 0;
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
                 if (!record.isClosedLost()) {
                     value += record.getAmount();
@@ -855,7 +830,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return value;
         }
     }
-
 
     /**
      * @description Database DML service to insert/update/delete records and keep track of failed RD Ids
