@@ -5795,7 +5795,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text about GAU Allocation field bundle</shortDescription>
+        <shortDescription>Help text for GAU Allocation 1 object group</shortDescription>
         <value>Use this field bundle to allocate donations across multiple General Accounting Units.</value>
     </labels>
     <labels>
@@ -5803,7 +5803,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text for GAU Allocation 1 object group</shortDescription>
+        <shortDescription>Help text for GAU Allocation 2 object group</shortDescription>
         <value>This Object Group only allows you to enter a single GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
     </labels>
     <labels>
@@ -5811,7 +5811,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text for GAU Allocation 2 Object Group</shortDescription>
+        <shortDescription>Help text about GAU Allocation field bundle</shortDescription>
         <value>This Object Group only allows you to enter a second GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
     </labels>
     <labels>
