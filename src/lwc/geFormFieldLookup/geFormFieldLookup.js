@@ -196,8 +196,7 @@ export default class GeFormFieldLookup extends LightningElement {
            this.displayValue = lookupResult.displayValue || null;
 
            let autocomplete = this.template.querySelector('c-ge-autocomplete');
-           autocomplete.value = this.value;
-           autocomplete.displayValue = this.displayValue;
+           autocomplete.setValue({value: this.value, displayValue: this.displayValue});
        }
 
         if (this.value && !this.displayValue) {
@@ -213,8 +212,7 @@ export default class GeFormFieldLookup extends LightningElement {
         this.displayValue = this._defaultDisplayValue;
 
         let autocomplete = this.template.querySelector('c-ge-autocomplete');
-        autocomplete.value = this.value;
-        autocomplete.displayValue = this.displayValue;
+        autocomplete.setValue({value: this.value, displayValue: this.displayValue});
     }
 
 }
