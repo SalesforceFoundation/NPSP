@@ -108,6 +108,7 @@ import geHeaderBatchSelectTemplate from '@salesforce/label/c.geHeaderBatchSelect
 import geHeaderBatchSetDefaultValues from '@salesforce/label/c.geHeaderBatchSetDefaultValues';
 import geHeaderCustomTableHeaders from '@salesforce/label/c.geHeaderCustomTableHeaders';
 import geHeaderEmptyFormSection from '@salesforce/label/c.geHeaderEmptyFormSection';
+import geHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
 import geHeaderFormFieldsModalDeleteSection from '@salesforce/label/c.geHeaderFormFieldsModalDeleteSection';
@@ -124,6 +125,14 @@ import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import geHeaderPageLevelError from '@salesforce/label/c.geHeaderPageLevelError';
 import geHeaderSingleGiftEntry from '@salesforce/label/c.geHeaderSingleGiftEntry';
 import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
+import geHelpTextAccount1Mapping from '@salesforce/label/c.geHelpTextAccount1Mapping';
+import geHelpTextAccount2Mapping from '@salesforce/label/c.geHelpTextAccount2Mapping';
+import geHelpTextContact1Mapping from '@salesforce/label/c.geHelpTextContact1Mapping';
+import geHelpTextContact2Mapping from '@salesforce/label/c.geHelpTextContact2Mapping';
+import geHelpTextAddressMapping from '@salesforce/label/c.geHelpTextAddressMapping';
+import geHelpTextAllocation1Mapping from '@salesforce/label/c.geHelpTextAllocation1Mapping';
+import geHelpTextAllocation2Mapping from '@salesforce/label/c.geHelpTextAllocation2Mapping';
+import geHelpTextAllocationBundle from '@salesforce/label/c.geHelpTextAllocationBundle';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
@@ -266,6 +275,7 @@ class GeLabelService {
         geHeaderBatchSetDefaultValues,
         geHeaderCustomTableHeaders,
         geHeaderEmptyFormSection,
+        geHeaderFieldBundles,
         geHeaderFormFieldsDefaultSectionName,
         geHeaderFormFieldsLeftCol,
         geHeaderFormFieldsModalDeleteSection,
@@ -282,6 +292,14 @@ class GeLabelService {
         geHeaderPageLevelError,
         geHeaderSingleGiftEntry,
         geHeaderTemplateInfoLeftCol,
+        geHelpTextAccount1Mapping,
+        geHelpTextAccount2Mapping,
+        geHelpTextContact1Mapping,
+        geHelpTextContact2Mapping,
+        geHelpTextAddressMapping,
+        geHelpTextAllocation1Mapping,
+        geHelpTextAllocation2Mapping,
+        geHelpTextAllocationBundle,
         geHelpTextBatchHeaderFieldLabelLabel,
         geHelpTextFormFieldsFieldCustomLabel,
         geHelpTextFormFieldsFieldLabelLabel,

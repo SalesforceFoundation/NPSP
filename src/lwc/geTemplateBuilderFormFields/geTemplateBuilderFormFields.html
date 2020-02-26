@@ -50,20 +50,12 @@
                     </template>
                 </div>
                 <div class="slds-size_1-of-1">
-                    <lightning-accordion allow-multiple-sections-open
-                                         onsectiontoggle={handleSectionToggle}
-                                         active-section-name={activeSections}>
-
-                        <template for:each={objectMappings}
+                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderFieldBundles}>
+                        <template for:each={fieldBundleMappings}
                                   for:item="objectMapping">
-
-                            <lightning-accordion-section key={objectMapping.DeveloperName}
-                                                         name={objectMapping.DeveloperName}
-                                                         label={objectMapping.MasterLabel}
-                                                         class="slds-truncate slds-accordion__section_extension">
-
-                                <template for:each={objectMapping.Field_Mappings}
-                                          for:item="fieldMapping">
+                            <template for:each={objectMapping.Field_Mappings}
+                                      for:item="fieldMapping">
+                                <div key={fieldMapping.DeveloperName} class="slds-p-horizontal--small slds-p-top--medium">
                                     <lightning-input type="checkbox"
                                                      key={fieldMapping.DeveloperName}
                                                      label={fieldMapping.Target_Field_Label}
@@ -78,12 +70,90 @@
                                                      data-field-mapping={fieldMapping.DeveloperName}
                                                      data-object-mapping={objectMapping.DeveloperName}>
                                     </lightning-input>
-                                </template>
-
-                            </lightning-accordion-section>
+                                </div>
+                            </template>
                         </template>
+                    </c-util-expandable-section>
+                </div>
 
-                    </lightning-accordion>
+                <div class="slds-size_1-of-1">
+                    <c-util-expandable-section label='Form Fields'>
+                        <lightning-accordion allow-multiple-sections-open
+                                             onsectiontoggle={handleSectionToggle}
+                                             active-section-name={activeSections}>
+                            <template for:each={basicObjectMappings}
+                                      for:item="objectMapping">
+                                <lightning-accordion-section key={objectMapping.DeveloperName}
+                                                             name={objectMapping.DeveloperName}
+                                                             label={objectMapping.MasterLabel}
+                                                             class="slds-truncate slds-accordion__section_extension">
+                                    <lightning-helptext if:true={objectMapping.helpText}
+                                                        slot="actions"
+                                                        content={objectMapping.helpText}>
+                                    </lightning-helptext>
+                                    <template for:each={objectMapping.Field_Mappings}
+                                              for:item="fieldMapping">
+                                        <div key={fieldMapping.DeveloperName}>
+                                            <lightning-input type="checkbox"
+                                                             key={fieldMapping.DeveloperName}
+                                                             label={fieldMapping.Target_Field_Label}
+                                                             value={fieldMapping.DeveloperName}
+                                                             checked={fieldMapping.checked}
+                                                             onchange={handleToggleFieldMapping}
+                                                             class="slds-truncate slds-p-bottom_xxx-small"
+                                                             title={fieldMapping.DeveloperName}
+                                                             required={fieldMapping.Is_Required}
+                                                             data-source-api-name={fieldMapping.Source_Field_API_Name}
+                                                             data-object-mapping-label={objectMapping.MasterLabel}
+                                                             data-field-mapping={fieldMapping.DeveloperName}
+                                                             data-object-mapping={objectMapping.DeveloperName}>
+                                            </lightning-input>
+                                        </div>
+                                    </template>
+                                </lightning-accordion-section>
+                            </template>
+                        </lightning-accordion>
+                    </c-util-expandable-section>
+                </div>
+
+                <div class="slds-size_1-of-1">
+                    <c-util-expandable-section label='Advanced Form Fields' is-collapsed="true">
+                        <lightning-accordion allow-multiple-sections-open
+                                             onsectiontoggle={handleSectionToggle}
+                                             active-section-name={activeSections}>
+
+                            <template for:each={advancedObjectMappings}
+                                      for:item="objectMapping">
+                                <lightning-accordion-section key={objectMapping.DeveloperName}
+                                                             name={objectMapping.DeveloperName}
+                                                             label={objectMapping.MasterLabel}
+                                                             class="slds-truncate slds-accordion__section_extension">
+                                    <lightning-helptext if:true={objectMapping.helpText}
+                                                        slot="actions"
+                                                        content={objectMapping.helpText}>
+                                    </lightning-helptext>
+                                    <template for:each={objectMapping.Field_Mappings}
+                                              for:item="fieldMapping">
+                                        <lightning-input type="checkbox"
+                                                         key={fieldMapping.DeveloperName}
+                                                         label={fieldMapping.Target_Field_Label}
+                                                         value={fieldMapping.DeveloperName}
+                                                         checked={fieldMapping.checked}
+                                                         onchange={handleToggleFieldMapping}
+                                                         class="slds-truncate slds-p-bottom_xxx-small"
+                                                         title={fieldMapping.DeveloperName}
+                                                         required={fieldMapping.Is_Required}
+                                                         data-source-api-name={fieldMapping.Source_Field_API_Name}
+                                                         data-object-mapping-label={objectMapping.MasterLabel}
+                                                         data-field-mapping={fieldMapping.DeveloperName}
+                                                         data-object-mapping={objectMapping.DeveloperName}>
+                                        </lightning-input>
+                                    </template>
+
+                                </lightning-accordion-section>
+                            </template>
+                        </lightning-accordion>
+                    </c-util-expandable-section>
                 </div>
             </div>
         </div>
