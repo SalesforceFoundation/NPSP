@@ -115,13 +115,20 @@ public without sharing class RD2_ScheduleService {
         if (rd.RecurringType__c != RD2_Constants.RECURRING_TYPE_FIXED || rd.npe03__Installments__c == null) {
             return;
         }
+
         Integer paidInstallments = (rd.npe03__Total_Paid_Installments__c != null)
             ? rd.npe03__Total_Paid_Installments__c.intValue()
             : 0;
 
+        Integer numFutureInstallments = rd.npe03__Installments__c.intValue() - paidInstallments;
+
+        if (numFutureInstallments < 0) {
+            return;
+        }
+
         List<Installment> installments = getVisualizedInstallments(
             currentDate,
-            rd.npe03__Installments__c.intValue() - paidInstallments,
+            numFutureInstallments,
             schedules
         );
 

@@ -1213,13 +1213,7 @@ private with sharing class RD2_ScheduleService_TEST {
         update rd;
         Test.stopTest();
 
-        List<RecurringDonationSchedule__c> rdSchedules = [
-            SELECT EndDate__c,
-                StartDate__c
-            FROM RecurringDonationSchedule__c
-            WHERE RecurringDonation__c =: rd.Id
-            ORDER BY EndDate__c ASC NULLS LAST
-        ];
+        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
 
         System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist when RD recurring type change');
         System.assertEquals(DATE_ESTABLISHED.addDays(-1), rdSchedules[0].EndDate__c,
@@ -1250,13 +1244,7 @@ private with sharing class RD2_ScheduleService_TEST {
         update rd;
         Test.stopTest();
 
-        List<RecurringDonationSchedule__c> rdSchedules = [
-            SELECT EndDate__c,
-                StartDate__c
-            FROM RecurringDonationSchedule__c
-            WHERE RecurringDonation__c =: rd.Id
-            ORDER BY EndDate__c ASC
-        ];
+        List<RecurringDonationSchedule__c> rdSchedules = scheduleGateway.getRecords(rd);
 
         System.assertEquals(2, rdSchedules.size(), 'Two schedule should exist when RD recurring type change');
         System.assertEquals(DATE_ESTABLISHED.addDays(-1), rdSchedules[0].EndDate__c,
