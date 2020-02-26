@@ -346,6 +346,13 @@ export default class GeFormField extends LightningElement {
                 fireEvent(null, 'widgetData', {donationAmount: this.value});
             }
 
+        } else if (data.value) {
+            // When the geFormField cmp is used inside of geFormWidgetAllocation,
+            // geFormWidgetAllocation selects the field cmp to load a value into manually,
+            // and passes an {value: <value>} object.  To support that case this block
+            // loads the value directly even though data does not have a property for
+            // this.sourceFieldAPIName
+           this.value = data.value;
         } else {
             // Property isn't defined.  Don't do anything.
             return false;
