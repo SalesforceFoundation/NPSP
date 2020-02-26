@@ -36,6 +36,11 @@
                     <label>Card Expired</label>
                 </value>
                 <value>
+                    <fullName>Commitment Completed</fullName>
+                    <default>false</default>
+                    <label>Commitment Completed</label>
+                </value>
+                <value>
                     <fullName>Deceased Donor</fullName>
                     <default>false</default>
                     <label>Deceased Donor</label>
@@ -60,9 +65,9 @@
     </fields>
     <fields>
         <fullName>CurrentYearValue__c</fullName>
-        <description>This Recurring Donation&quot;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</description>
+        <description>This Recurring Donation&apos;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>This Recurring Donation&quot;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</inlineHelpText>
+        <inlineHelpText>This Recurring Donation&apos;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</inlineHelpText>
         <label>Current Year Value</label>
         <precision>18</precision>
         <required>false</required>
@@ -244,9 +249,9 @@
     </fields>
     <fields>
         <fullName>InstallmentFrequency__c</fullName>
-        <description>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</description>
+        <description>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</inlineHelpText>
+        <inlineHelpText>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</inlineHelpText>
         <label>Installment Frequency</label>
         <precision>3</precision>
         <required>false</required>
@@ -258,9 +263,9 @@
     </fields>
     <fields>
         <fullName>NextYearValue__c</fullName>
-        <description>This Recurring Donation&quot;s total expected amount for the next calendar or fiscal year (read only).</description>
+        <description>This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only).</description>
         <externalId>false</externalId>
-        <inlineHelpText>This Recurring Donation&quot;s total expected amount for the next calendar or fiscal year (read only).</inlineHelpText>
+        <inlineHelpText>This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only).</inlineHelpText>
         <label>Next Year Value</label>
         <precision>18</precision>
         <required>false</required>
@@ -319,15 +324,20 @@
                     <default>true</default>
                     <label>Open</label>
                 </value>
+                <value>
+                    <fullName>Fixed</fullName>
+                    <default>false</default>
+                    <label>Fixed</label>
+                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
     <fields>
         <fullName>StartDate__c</fullName>
         <defaultValue>Today()</defaultValue>
-        <description>The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation should take effect. The default is the current date.</description>
+        <description>The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation takes effect. The default is the current date.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation should take effect. The default is the current date.</inlineHelpText>
+        <inlineHelpText>The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation takes effect. The default is the current date.</inlineHelpText>
         <label>Effective Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>

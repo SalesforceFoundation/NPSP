@@ -4,119 +4,147 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/LevelsPageObject.py
+...             robot/Cumulus/resources/CreateLevelPageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
+
 *** Variables ***
-${level_name}
-${contact_id}
+&{contact_fields}           Email=test@example.com
+${min_amount}  0.10
+${max_amount}  0.90
+${minamount_to_edit}  0.01
+${maxamount_to_edit}  0.99
+${contact_smallestvalue}  0.75
+${contact_smallestvalue_2}  2.0
+${level_name}   AutomationLevel
 
 *** Test Cases ***
 
-1 Create Level and Verify Fields
-    [tags]  unstable
-    ${level_name}=    Generate Random String
-    Go To Page       Home        Level__c
-    Enter Level Values
-    ...            Level Name=${level_name}
-    ...            Minimum Amount=0.1
-    ...            Maximum Amount=0.9
-    Enter Level Dd Values    Target    Contact
-    Enter Level Dd Values    Source Field    Total Gifts
-    Enter Level Dd Values    Level Field    Level
-    Enter Level Dd Values    Previous Level Field    Previous Level
-    Set Focus To Element   xpath: //input[@value='Save']
-    Click Button  Save
-    Current Page Should be    Details    Level__c
-    ${level_id} =   Save Current Record ID For Deletion  Level__c
-    Set Global Variable      ${level_name}
-    Set Global Variable      ${level_id}
-    Unselect Frame
-    Navigate To And Validate Field Value    Minimum Amount (>\=)   contains    0.10
-    Navigate To And Validate Field Value    Maximum Amount (<)    contains    0.90
+Create and edit level to verify fields
+    [Documentation]                      Create a level and verify the fields on the created level details page
+    ...                                  Edit the level details and update the fields. Verify the updated fields
+    ...                                  are persisted on the details page.
+    [tags]                               W-038641                 feature:Levels
 
-2 Edit Level and Verify Fields
-    # --------------------------------
-    # Modify the Level Values and validate that they save correctly
-    # --------------------------------
-    [tags]  unstable
-    Go To Page         Details         Level__c        object_id=${level_id}
-    Click Show More Actions Button    Edit
-    Wait Until Location Contains    /edit
-    Wait For Locator    frame    Levels
-    Choose Frame    Levels
-    Enter Level Dd Values    Source Field    Smallest Gift
-    Enter Level Values
-    ...            Minimum Amount=0.01
-    ...            Maximum Amount=0.99
-    Set Focus To Element   xpath: //input[@value='Save']
-    Click Button  Save
-    #adding a workaround to go back to levels tab due to core issue
-    Current Page Should Be     Details    Level__c
-    Go To Page         Details         Level__c        object_id=${level_id}
-    Navigate To And Validate Field Value   Minimum Amount (>\=)    contains    0.01
-    Navigate To And Validate Field Value   Maximum Amount (<)     contains    0.99
-    Navigate To And Validate Field Value    Source Field    contains    npo02__SmallestAmount__c
-
-3 Validate Level Assignment in Batch Job
-    [tags]  unstable
-    # --------------------------------
-    # Modify the SmallestGift field to allow the level to be applied
-    # --------------------------------
-    &{contact} =  API Create Contact
-    Set Global Variable     ${contact_id}       &{contact}[Id]
-    Go To Page    Details    Contact       object_id=${contact_id}
-    Scroll Element Into View    text:Donation Totals
-    Click Button       title:Edit Smallest Gift
-    Wait For Locator  record.footer
-    Populate Field          Smallest Gift     0.75
-    Click Record Button     Save
+    Go To Page                                       Listing                            Level__c
+    Click Special Object Button                      New
     Wait Until Loading Is Complete
-    Navigate To And Validate Field Value          Smallest Gift    contains    $0.75    section=Donation Totals
+    Current Page Should Be                           Custom                             Level__c
+
+    Enter Level Values
+    ...                                                 Level Name=AutomationLevel
+    ...                                                 Minimum Amount=${min_amount}
+    ...                                                 Maximum Amount=${max_amount}
+    Enter Level Dd Values
+    ...                                                 Target=Contact
+    ...                                                 Source Field=Smallest Gift
+    ...                                                 Level Field=Level
+    ...                                                 Previous Level Field=Previous Level
+    Click Button                                        Save
+    Current Page Should be                              Details    Level__c
+    ${level_id} =                                       Save Current Record ID For Deletion  Level__c
+    Set Global Variable                                 ${level_id}
+    Go To Page                                          Details
+        ...                                             Level__c
+        ...                                             object_id=${level_id}
+
+    Wait Until Loading Is Complete
+    Navigate To And Validate Field Value                Minimum Amount (>\=)    contains    ${min_amount}
+    Navigate To And Validate Field Value                Maximum Amount (<)      contains    ${max_amount}
+
+    Click Show More Actions Button                      Edit
+    Current Page Should Be                              Custom                             Level__c
+
+
+    Enter Level Values
+    ...                                                 Minimum Amount=${minamount_to_edit}
+    ...                                                 Maximum Amount=${maxamount_to_edit}
+    Enter Level Dd Values
+    ...                                                 Source Field=Smallest Gift
+
+    Click Button                                        Save
+    Wait For Locator Is Not Visible                     frame                             Levels
+
+    Go To Page                                          Details
+    ...                                                 Level__c
+    ...                                                 object_id=${level_id}
+
+    Wait Until Loading Is Complete
+    Navigate To And Validate Field Value    Minimum Amount (>\=)   contains       ${minamount_to_edit}
+    Navigate To And Validate Field Value    Maximum Amount (<)     contains       ${maxamount_to_edit}
+    Navigate To And Validate Field Value    Source Field           contains       npo02__SmallestAmount__c
+
+
+2 Validate Level Assignment in Batch Job With SmallestAmount Value within level threshold limit and with a value above the threshold
+    [Documentation]                      Create a contact, edit the smallgift field value to apply a valid
+    ...                                  level that is within the limit values by running the batch process
+    ...                                  Edit the smallestAmount value to a value greater than the limit threshold
+    ...                                  Run the batch job and verify the correct levels are applied.
+
+    [tags]                                  W-038641                 feature:Level
+    # --------------------------------
+    # update the SmallestGift field value to allow the level to be applied
+    # --------------------------------
+    Setupdata                               contact                   contact_data=${contact_fields}
+    Set Global Variable                     ${data}
+
+    Salesforce Update                       Contact                   ${data}[contact][Id]  npo02__SmallestAmount__c=${contact_smallestvalue}
+    Go To Page                              Details
+    ...                                     Contact
+    ...                                     object_id=${data}[contact][Id]
+
+    Navigate To And Validate Field Value    Smallest Gift             contains    $${contact_smallestvalue}
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
-    Open NPSP Settings      Bulk Data Processes         Level Assignment Batch
-    Click Settings Button    idPanelLvlAssignBatch    Run Batch
-    Wait For Batch To Process        LVL_LevelAssign_BATCH    Completed
+    Open NPSP Settings                      Bulk Data Processes         Level Assignment Batch
+    Click Settings Button                   idPanelLvlAssignBatch       Run Batch
+    Wait For Batch To Process               LVL_LevelAssign_BATCH       Completed
     # --------------------------------
     # Return to the Contact to validate the updated Level field
     # --------------------------------
-    Go To Page    Details    Contact       object_id=${contact_id}
-    Navigate To And Validate Field Value          Level    contains    ${level_name}    section=Donation Totals
+    Go To Page                              Details
+    ...                                     Contact
+    ...                                     object_id=${data}[contact][Id]
+    Navigate To And Validate Field Value    Level    contains          ${level_name}
 
     # --------------------------------
-    # Modify the SmallestGift field to change the applied level
+    # Update the contact's smallest Amount to a value greater than the level threshorld limit
     # --------------------------------
-    Scroll Element Into View    text:Donation Totals
-    Click Button       title:Edit Smallest Gift
-    Wait For Locator  record.footer
-    Populate Field          Smallest Gift     2.0
-    Click Record Button     Save
-    Wait Until Loading Is Complete
-    Navigate To And Validate Field Value           Smallest Gift    contains    $2.00    section=Donation Totals
+
+    Salesforce Update                       Contact                   ${data}[contact][Id]    npo02__SmallestAmount__c=${contact_smallestvalue_2}
+    Go To Page                              Details
+    ...                                     Contact
+    ...                                     object_id=${data}[contact][Id]
+
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
-    Open NPSP Settings      Bulk Data Processes         Level Assignment Batch
-    Click Settings Button    idPanelLvlAssignBatch    Run Batch
-    Wait For Batch To Process        LVL_LevelAssign_BATCH    Completed
-    # --------------------------------
-    # Return to the Contact to validate the updated Level field
-    # --------------------------------
-    Go To Page    Details    Contact       object_id=${contact_id}
-    Navigate To And Validate Field Value           Level      does not contain         ${level_name}    section=Donation Totals
-    Navigate To And Validate Field Value           Previous Level     contains         ${level_name}    section=Donation Totals
+    Open NPSP Settings                      Bulk Data Processes         Level Assignment Batch
+    Click Settings Button                   idPanelLvlAssignBatch       Run Batch
+    Wait For Batch To Process               LVL_LevelAssign_BATCH       Completed
 
 
-4 Delete Level and Validate Contact
-    [tags]  unstable
-    # --------------------------------
-    # Delete the Level and validate that it was removed from the Contact
-    # --------------------------------
-    Go To Page               Details               Level__c                                object_id=${level_id}
-    Click Show More Actions Button    Delete
-    Click Modal Button    Delete
-    Go To Page    Details    Contact       object_id=${contact_id}
+
+    Go To Page                              Details
+    ...                                     Contact
+    ...                                     object_id=${data}[contact][Id]
+
+    Navigate To And Validate Field Value           Level      does not contain         ${level_name}    section=Donation Information
+    Navigate To And Validate Field Value           Previous Level     contains         ${level_name}    section=Donation Information
+
+3. Delete a Level
+    [Documentation]                      Delete the Level from the levels listing page
+    [tags]                                  W-038641                 feature:Level
+
+    Go To Page                              Details
+    ...                                     Level__c
+    ...                                     object_id=${level_id}
+    Click Show More Actions Button          Delete
+    Click Modal Button                      Delete
+    Go To Page                              Details
+    ...                                     Contact
+    ...                                     object_id=${data}[contact][Id]
     Navigate To And Validate Field Value    Level      does not contain    ${level_name}    section=Donation Totals
