@@ -4,7 +4,6 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/LevelsPageObject.py
-...             robot/Cumulus/resources/CreateLevelPageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
@@ -26,12 +25,12 @@ Create and edit level to verify fields
     [Documentation]                      Create a level and verify the fields on the created level details page
     ...                                  Edit the level details and update the fields. Verify the updated fields
     ...                                  are persisted on the details page.
-    [tags]                               W-038641                 feature:Levels
+    [tags]                               W-038641                 feature:Levels    unstable
 
-    Go To Page                                       Listing                            Level__c
-    Click Special Object Button                      New
+    Go To Page                                          Listing                            Level__c
+    Click Special Object Button                         New
     Wait Until Loading Is Complete
-    Current Page Should Be                           Custom                             Level__c
+    Current Page Should Be                              Home                               Level__c
 
     Enter Level Values
     ...                                                 Level Name=AutomationLevel
@@ -83,7 +82,7 @@ Create and edit level to verify fields
     ...                                  Edit the smallestAmount value to a value greater than the limit threshold
     ...                                  Run the batch job and verify the correct levels are applied.
 
-    [tags]                                  W-038641                 feature:Level
+    [tags]                                  W-038641                 feature:Level    unstable
     # --------------------------------
     # update the SmallestGift field value to allow the level to be applied
     # --------------------------------
@@ -137,7 +136,7 @@ Create and edit level to verify fields
 
 3. Delete a Level
     [Documentation]                      Delete the Level from the levels listing page
-    [tags]                                  W-038641                 feature:Level
+    [tags]                                  W-038641                 feature:Level    unstable
 
     Go To Page                              Details
     ...                                     Level__c
