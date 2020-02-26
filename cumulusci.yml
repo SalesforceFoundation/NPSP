@@ -856,7 +856,7 @@ plans:
                         name: NPSP Reports & Dashboards
                         is_required: False
     rd2:
-        slug: npsp-rd2-pilot
+        slug: enhanced-recurring-donations
         title: Enhanced Recurring Donations Metadata Updates
         tier: additional
         is_listed: False

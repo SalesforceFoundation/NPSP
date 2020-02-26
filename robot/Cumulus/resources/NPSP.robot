@@ -169,59 +169,7 @@ New Contact for HouseHold
     Current Page Should be    Details    Contact
     ${contact_id} =           Save Current Record ID For Deletion      Contact
     [return]                  ${contact_id} 
-        
-Create Engagement Plan
-    ${plan_name} =     Generate Random String
-    # Select App Launcher Tab  Engagement Plan Templates
-    Go To Page                        Listing                 Engagement_Plan_Template__c
-    Click Special Object Button       New
-    Wait For Locator    frame    Manage Engagement Plan Template
-    # Choose Frame    Manage Engagement Plan Template
-    # Wait For Locator    id    idName
-    Select Frame And Click Element    Manage Engagement Plan Template    id    idName
-    Enter Eng Plan Values    idName    ${plan_name}
-    Enter Eng Plan Values    idDesc    This plan is created via Automation  
-    Click Button    Add Task
-    Wait Until Page Contains  Task 1
-    Enter Task Id and Subject    Task 1    ${task1}
-    Click Task Button    1    Add Dependent Task
-    Enter Task Id and Subject    Task 1-1    ${sub_task}
-    Click Button    Add Task
-    Wait Until Page Contains  Task 2
-    Enter Task Id and Subject    Task 2    ${task2}
-    Page Scroll To Locator    button    Save
-    Click Button    Save
-    ${ns} =  Get NPSP Namespace Prefix    
-    Current Page Should be       Details   Engagement_Plan_Template__c
-    Save Current Record ID For Deletion    ${ns}Engagement_Plan_Template__c
-    [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
-    
-Create Level
-    ${level_name}=    Generate Random String
-    Go To Page                        Listing                 Level__c
-    Click Special Object Button       New
-    Choose Frame    Levels
-    Enter Level Values
-    ...            Level Name=${level_name}
-    ...            Minimum Amount=0.1
-    ...            Maximum Amount=0.9
-    Enter Level Dd Values    Target    Contact
-    Enter Level Dd Values    Source Field    Total Gifts
-    Enter Level Dd Values    Level Field    Level
-    Enter Level Dd Values    Previous Level Field    Previous Level
-    Set Focus To Element   xpath: //input[@value='Save']
-    Click Button  Save
-    Current Page Should be    Details    Level__c
-    ${level_id} =   Save Current Record ID For Deletion  Level__c  
-    [Return]    ${level_id}  ${level_name}
 
-Verify Engagement Plan
-    [Arguments]       ${plan_name}     @{others}
-    Go To Page                        Listing                 Engagement_Plan_Template__c
-    Click Link    link=${plan_name}
-    Check Field Value    Engagement Plan Template Name    ${plan_name}
-    Select Tab    Related
-    Check Related List Values    Engagement Plan Tasks      @{others}
 
 Create GAU
     ${gau_name} =         Generate Random String
