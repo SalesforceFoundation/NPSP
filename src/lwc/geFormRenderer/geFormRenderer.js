@@ -678,8 +678,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (objectMappingDeveloperName === null) {
             this.dataImport = null;
             this.setReviewDonationsDonorProperties(null);
-            this.handleDonorAccountChange(null);
-            this.handleDonorContactChange(null);
+            if (this._account1Imported) {
+                this.handleDonorAccountChange(null);
+            }
+            if (this._contact1Imported) {
+                this.handleDonorContactChange(null);
+            }
         } else {
             fieldMappingDevNames =
                 Object.values(GeFormService.fieldMappings).filter(
