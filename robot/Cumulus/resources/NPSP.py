@@ -800,7 +800,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_frame_and_click_element(self,iframe,path, *args, **kwargs):
         """Waits for the iframe and Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks """
-        self.wait_for_locator('frame_new',iframe)
+        self.wait_for_locator('frame_new',iframe,iframe)
         self.choose_frame(iframe)
         loc = self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.wait_until_element_is_visible(loc, timeout=60)
