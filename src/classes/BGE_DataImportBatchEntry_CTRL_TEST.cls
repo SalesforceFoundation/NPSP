@@ -446,14 +446,14 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
             () {
         UTIL_CustomSettingsFacade.enableAdvancedMapping();
 
-        //Create a stub of BDI_FieldMappingCustomMetadata, to mock the scenario where some
+        //Create a stub of BDI_MappingServiceAdvanced, to mock the scenario where some
         //active/selected fields on the Batch are not mapped.
         BDIFieldMappingMock mock = new BDIFieldMappingMock();
-        BDI_FieldMappingCustomMetadata stub = (BDI_FieldMappingCustomMetadata) Test.createStub(
-                BDI_FieldMappingCustomMetadata.class,
+        BDI_MappingServiceAdvanced stub = (BDI_MappingServiceAdvanced) Test.createStub(
+                BDI_MappingServiceAdvanced.class,
                 mock
         );
-        BDI_FieldMappingCustomMetadata.setInstance(stub);
+        BDI_MappingServiceAdvanced.setInstance(stub);
 
         givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncludedOnBGEForm(mock);
     }
@@ -464,14 +464,14 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
             () {
         UTIL_CustomSettingsFacade.enableHelpTextMapping();
 
-        //Create a stub of BDI_FieldMappingHelpText, to mock the scenario where some
+        //Create a stub of BDI_MappingServiceHelpText, to mock the scenario where some
         //active/selected fields on the Batch are not mapped.
         BDIFieldMappingMock mock = new BDIFieldMappingMock();
-        BDI_FieldMappingHelpText stub = (BDI_FieldMappingHelpText) Test.createStub(
-                BDI_FieldMappingHelpText.class,
+        BDI_MappingServiceHelpText stub = (BDI_MappingServiceHelpText) Test.createStub(
+                BDI_MappingServiceHelpText.class,
                 mock
         );
-        BDI_FieldMappingHelpText.setInstance(stub);
+        BDI_MappingServiceHelpText.setInstance(stub);
 
         givenActiveFieldIsUnmappedWhenLoadedThenColumnNotIncludedOnBGEForm(mock);
     }

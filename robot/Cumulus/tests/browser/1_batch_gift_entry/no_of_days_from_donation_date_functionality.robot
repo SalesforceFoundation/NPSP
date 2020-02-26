@@ -26,7 +26,7 @@ Match Based on Number of Days from Donation Date Functionality
     Page Should Contain    &{opp}[Name]
     ${pay_no}    Get BGE Card Header    &{opp}[Name]
     Log To Console    ${pay_no}
-    Click Button    title:Close this window
+    Click Button With Title     Close this window
     Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
