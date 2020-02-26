@@ -780,7 +780,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Returns the first displayed iframe on the page with the given name or title"""
         locator = npsp_lex_locators['frame_new'].format(value,value)
         frames = self.selenium.get_webelements(locator)
+        self.selenium.capture_page_screenshot()
+        print(f'list of frames {frames}')
         for frame in frames:
+            print(f'inside for loop for {frame}')
+            self.selenium.capture_page_screenshot()
             if frame.is_displayed():
                 try:
                     print("inside try")
@@ -793,9 +797,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 return frame
         raise Exception('unable to find visible iframe with title "{}"'.format(value))
 
+    @capture_screenshot_on_error
     def select_frame_and_click_element(self,iframe,path, *args, **kwargs):
         """Waits for the iframe and Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks """
-        self.wait_for_locator('frame',iframe)
+        self.wait_for_locator('frame_new',iframe,iframe)
         self.choose_frame(iframe)
         loc = self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.wait_until_element_is_visible(loc, timeout=60)
