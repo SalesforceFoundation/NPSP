@@ -5,7 +5,7 @@ project:
         name: Cumulus
         name_managed: Nonprofit Success Pack
         namespace: npsp
-        api_version: 46.0
+        api_version: 47.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
@@ -855,7 +855,7 @@ plans:
                         name: NPSP Reports & Dashboards
                         is_required: False
     rd2:
-        slug: npsp-rd2-pilot
+        slug: enhanced-recurring-donations
         title: Enhanced Recurring Donations Metadata Updates
         tier: additional
         is_listed: False
