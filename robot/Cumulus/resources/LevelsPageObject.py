@@ -1,7 +1,7 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
-from cumulusci.robotframework.pageobjects import BasePage
+from cumulusci.robotframework.pageobjects import HomePage
 from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
@@ -31,8 +31,8 @@ class LevelDetailPage(BaseNPSPPage, DetailPage):
         self.selenium.location_should_contain("/lightning/r/",message="Current page is not Level record detail view")
 
 
-@pageobject("Custom", "Level_c")
-class CreateLevelPage(BaseNPSPPage, BasePage):
+@pageobject("Home", "Level_c")
+class CreateLevelPage(BaseNPSPPage, HomePage):
 
     def _is_current_page(self):
         """
