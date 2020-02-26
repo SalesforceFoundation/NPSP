@@ -5,6 +5,8 @@ npsp_lex_locators={
     'spl-breadcrumb':"//div[@class= 'slds-media__body']/p[text()='{}']",
     'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'obj-header':"//h1//*[text()='{}']",
+    'button-title':"//button[@title='{}']",
+    'dropdown_spinner': 'css: div#divLoading',
     'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
@@ -182,7 +184,7 @@ npsp_lex_locators={
         'button':'//form[.//h1[contains(text(),"{}")]]//input[contains(@value,"{}")]',
         'completed':'//span[contains(@class, \'slds-theme_success\')]',
         'batch-button':'//div[@id="{}"]//child::input[@value="{}"]',
-        'checkbox':'//div[@id= "idPanelDataImportAdvancedMapping"]//label[./span[text()="{}"]]/descendant::span[@class="slds-checkbox_faux"]'
+        'checkbox':'//div[@id= "idPanel{}"]/descendant::span[@class="slds-checkbox_faux"]'
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
