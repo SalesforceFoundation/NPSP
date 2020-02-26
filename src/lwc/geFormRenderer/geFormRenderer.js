@@ -678,12 +678,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (objectMappingDeveloperName === null) {
             this.dataImport = null;
             this.setReviewDonationsDonorProperties(null);
-            if (this._account1Imported) {
-                this.handleDonorAccountChange(null);
-            }
-            if (this._contact1Imported) {
-                this.handleDonorContactChange(null);
-            }
+            this.resetStoredDonationDonorProperties();
         } else {
             fieldMappingDevNames =
                 Object.values(GeFormService.fieldMappings).filter(
@@ -696,6 +691,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             section.reset(fieldMappingDevNames);
         });
         this.widgetData = {};
+    }
+
+    resetStoredDonationDonorProperties() {
+        this._donationDonor = null;
+        this._account1Imported = null;
+        this._contact1Imported = null;
     }
 
     get mode() {
