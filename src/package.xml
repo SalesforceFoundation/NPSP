@@ -1329,9 +1329,11 @@
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppAutoCreateOption__c</members>
         <members>npe03__Recurring_Donations_Settings__c.InstallmentOppStageName__c</members>
         <members>npe03__Recurring_Donations_Settings__c.IsRecurringDonations2Enabled__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.NextDonationDateMatchRangeDays__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2EnablementState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.RecurringDonations2MigrationState__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.UseFiscalYearForRecurringDonationValue__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
         <members>npe5__Affiliation__c.Related_Opportunity_Contact_Role__c</members>
@@ -1380,6 +1382,7 @@
         <members>AssistiveTextActive</members>
         <members>AssistiveTextComplete</members>
         <members>AssistiveTextError</members>
+        <members>AssistiveTextInfo</members>
         <members>AssistiveTextNewWindow</members>
         <members>AssistiveTextRecordIcon</members>
         <members>AssistiveTextWarning</members>
@@ -1556,6 +1559,8 @@
         <members>RD2_EnablementDryRunComplete</members>
         <members>RD2_EnablementDryRunIntro</members>
         <members>RD2_EnablementDryRunNextButton</members>
+        <members>RD2_EnablementDryRunOutdatedError</members>
+        <members>RD2_EnablementDryRunOutdatedInfo</members>
         <members>RD2_EnablementDryRunSkipButton</members>
         <members>RD2_EnablementDryRunStopButton</members>
         <members>RD2_EnablementDryRunTitle</members>
@@ -1586,7 +1591,11 @@
         <members>RD2_EnablementPrepTitle</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
+        <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
+        <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
+        <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
+        <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
         <members>RD2_PageNotAvailableHeader</members>
         <members>RD2_PageNotAvailableMessage</members>
         <members>RD2_ScheduleLWCEndDate</members>
@@ -1601,6 +1610,7 @@
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
+        <members>RD_ErrorAddDonationLimitedToLegacyMode</members>
         <members>RD_ErrorAddDonationMissingId</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
         <members>RD_ErrorLegacyBatchJobCannotBeRun</members>
@@ -2222,9 +2232,9 @@
         <members>healthSolutionSaveOppsFailed</members>
         <members>healthSolutionScheduleJobs</members>
         <members>healthSolutionTriggerHandlerMismatch</members>
-        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>healthSolutionUDFBadDatatypes</members>
         <members>healthSolutionUDFOppField</members>
+        <members>healthSolutionUnsupportedPicklistValue</members>
         <members>hhCmpDedupLabelReturnToCmp</members>
         <members>hhCmpDedupeBatchMessage</members>
         <members>hhCmpDedupeBatchProgressTitle</members>

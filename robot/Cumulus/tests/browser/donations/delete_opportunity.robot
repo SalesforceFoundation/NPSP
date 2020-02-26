@@ -39,7 +39,6 @@ Create Donation from a Contact and Delete Opportunity
     ...                                  Opportunity
     Wait Until Loading Is Complete
     Perform Delete Menu Operation On     ${donation_name}          Delete
-    Verify Toast Message                 Opportunity "${donation_name}" was deleted. Undo
 
 
     Go To Page                           Details
