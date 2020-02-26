@@ -77,7 +77,7 @@
                 </div>
 
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section label='Form Fields'>
+                    <c-util-expandable-section label={CUSTOM_LABELS.geTabFormFields}>
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
                                              active-section-name={activeSections}>
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section label='Advanced Form Fields' is-collapsed="true">
+                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderAdvancedFormFields} is-collapsed="true">
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
                                              active-section-name={activeSections}>
