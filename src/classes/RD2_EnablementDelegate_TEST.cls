@@ -521,20 +521,6 @@ public with sharing class RD2_EnablementDelegate_TEST {
         ];
     }
 
-    /**
-     * @description Sets RD Settings
-     * @return void
-     */
-    private static void setRDSettings() {
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
-                npe03__Maximum_Donations__c = 50,
-                npe03__Opportunity_Forecast_Months__c = 6
-            )
-        );
-    }
-
     /****
     * @description Sets enablement state in the custom settings
     * @param state
