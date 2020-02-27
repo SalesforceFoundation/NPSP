@@ -84,9 +84,8 @@ public with sharing class UTIL_BatchJobService_TEST {
         System.assertEquals(100, batchJob.percentComplete);
         System.assertEquals(false, batchJob.isInProgress);
 
-        Integer expectedDaysBetween = Date.valueOf(batchJob.completedDate).daysBetween(Date.today());
-        System.assert(expectedDaysBetween > 0, 'Days between should be a positive number');
-        System.assertEquals(expectedDaysBetween, batchJob.completedDaysBetween);
+        System.assertEquals(UTIL_BatchJobService.MAX_DAYS_EXCEEDED, batchJob.completedDaysBetween,
+            'Should reported the max days between instead of actual number since it is not relevant for any further calculations');
     }
 
     /***
