@@ -184,7 +184,7 @@ npsp_lex_locators={
         'button':'//form[.//h1[contains(text(),"{}")]]//input[contains(@value,"{}")]',
         'completed':'//span[contains(@class, \'slds-theme_success\')]',
         'batch-button':'//div[@id="{}"]//child::input[@value="{}"]',
-        'checkbox':'//div[@id= "idPanel{}"]/descendant::span[@class="slds-checkbox_faux"]'
+        'checkbox':'//label[./span[text()="{}"]]/descendant::span[@class="slds-checkbox_faux"]'
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
