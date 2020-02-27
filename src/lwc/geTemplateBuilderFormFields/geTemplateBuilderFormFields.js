@@ -618,6 +618,38 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         return `section ${this.CUSTOM_LABELS.geHeaderFieldBundles}`;
     }
 
+    get qaLocatorExpandFieldBundles() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsExpandAll} ${this.CUSTOM_LABELS.geHeaderFieldBundles}`;
+    }
+
+    get qaLocatorCollapseFieldBundles() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsCollapseAll} ${this.CUSTOM_LABELS.geHeaderFieldBundles}`;
+    }
+
+    get qaLocatorSectionFormFields() {
+        return `section ${this.CUSTOM_LABELS.geTabFormFields}`;
+    }
+
+    get qaLocatorExpandFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsExpandAll} ${this.CUSTOM_LABELS.geTabFormFields}`;
+    }
+
+    get qaLocatorCollapseFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsCollapseAll} ${this.CUSTOM_LABELS.geTabFormFields}`;
+    }
+
+    get qaLocatorSectionAdvancedFormFields() {
+        return `section ${this.CUSTOM_LABELS.geHeaderAdvancedFormFields}`;
+    }
+
+    get qaLocatorExpandAdvancedFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsExpandAll} ${this.CUSTOM_LABELS.geHeaderAdvancedFormFields}`;
+    }
+
+    get qaLocatorCollapseAdvancedFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsCollapseAll} ${this.CUSTOM_LABELS.geHeaderAdvancedFormFields}`;
+    }
+
     /*******************************************************************************
     * End getters for data-qa-locator attributes
     */

@@ -37,7 +37,8 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
-                                          onclick={handleToggleBundlesSection}>
+                                          onclick={handleToggleBundlesSection}
+                                          data-qa-locator={qaLocatorExpandFieldBundles}>
                         </lightning-button>
                     </template>
                     <template if:false={bundlesSectionCollapsed}>
@@ -45,15 +46,15 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
-                                          onclick={handleToggleBundlesSection}>
+                                          onclick={handleToggleBundlesSection}
+                                          data-qa-locator={qaLocatorCollapseFieldBundles}>
                         </lightning-button>
                     </template>
                 </div>
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section
-                            label={CUSTOM_LABELS.geHeaderFieldBundles}
-                            data-section-id={LOCATORS.FIELD_BUNDLES_SECTION_ID}
-                            data-qa-locator={qaLocatorSectionFieldBundles}>
+                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderFieldBundles}
+                                               data-section-id={LOCATORS.FIELD_BUNDLES_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionFieldBundles}>
                         <template for:each={fieldBundleMappings}
                                   for:item="objectMapping">
                             <template for:each={objectMapping.Field_Mappings}
@@ -87,7 +88,8 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
-                                          onclick={handleToggleBasicSection}>
+                                          onclick={handleToggleBasicSection}
+                                          data-qa-locator={qaLocatorExpandFormFields}>
                         </lightning-button>
                     </template>
                     <template if:false={basicSectionCollapsed}>
@@ -95,15 +97,16 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
-                                          onclick={handleToggleBasicSection}>
+                                          onclick={handleToggleBasicSection}
+                                          data-qa-locator={qaLocatorCollapseFormFields}>
                         </lightning-button>
                     </template>
                 </div>
 
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section
-                            label={CUSTOM_LABELS.geTabFormFields}
-                            data-section-id={LOCATORS.FORM_FIELDS_SECTION_ID}>
+                    <c-util-expandable-section label={CUSTOM_LABELS.geTabFormFields}
+                                               data-section-id={LOCATORS.FORM_FIELDS_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionFormFields}>
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
                                              active-section-name={activeSections}>
@@ -150,7 +153,8 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
-                                          onclick={handleToggleAdvancedSection}>
+                                          onclick={handleToggleAdvancedSection}
+                                          data-qa-locator={qaLocatorExpandAdvancedFormFields}>
                         </lightning-button>
                     </template>
                     <template if:false={advancedSectionCollapsed}>
@@ -158,16 +162,17 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
-                                          onclick={handleToggleAdvancedSection}>
+                                          onclick={handleToggleAdvancedSection}
+                                          data-qa-locator={qaLocatorCollapseAdvancedFormFields}>
                         </lightning-button>
                     </template>
                 </div>
 
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section
-                            label={CUSTOM_LABELS.geHeaderAdvancedFormFields}
-                            is-collapsed="true"
-                            data-section-id={LOCATORS.ADVANCED_FIELDS_SECTION_ID}>
+                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderAdvancedFormFields}
+                                               is-collapsed="true"
+                                               data-section-id={LOCATORS.ADVANCED_FIELDS_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionAdvancedFormFields}>
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
                                              active-section-name={activeSections}>
