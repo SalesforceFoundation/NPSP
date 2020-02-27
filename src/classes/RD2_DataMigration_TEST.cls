@@ -866,18 +866,71 @@ private class RD2_DataMigration_TEST {
 
         Id jobId = runDataMigration();
 
-        List<Error__c> errors = errorGateway.getRecords();
-        System.assertEquals(1, errors.size(), 'Validation error should be logged');
-
-        System.assertEquals(true, errors[0].Full_Message__c.contains(System.Label.RD_DonorIsRequired), 'Error message should match');
-        System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
-        System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
-        System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
-        System.assertEquals(getLogContextMigration(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
+        assertDonorIsRequiredError(jobId, rd);
 
         assertLegacyFormat(getRecords());
 
         assertBatchSummaryFailed(jobId, 1);
+    }
+
+    /**
+     * @description Verifies an error is created when store error in error log settings is disabled
+     * and migration is run in dry run mode
+     */
+    @IsTest
+    private static void shouldLogDryRunErrorWhenStoreErrorIsDisabled() {
+
+        disableStoreErrorSettings();
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .build();
+        insert rd;
+
+        //Make sure an error is generated when dry run is run
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        rd.npe03__Contact__c = null;
+        update rd;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+
+        Id jobId = executeAndFinishDryRun();
+
+        assertDonorIsRequiredError(jobId, rd);
+
+        assertLegacyFormat(getRecords());
+
+        assertBatchSummaryFailed(jobId, 1);
+
+    }
+
+     /**
+     * @description Verifies an error is created when store error in error log settings is disabled
+     * and data migration is run.
+     */
+    @IsTest
+    private static void shouldLogDataMigrationErrorWhenStoreErrorIsDisabled() {
+
+        disableStoreErrorSettings();
+
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .build();
+        insert rd;
+
+       //Make sure an error is generated when data migration is run
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
+        rd.npe03__Contact__c = null;
+        update rd;
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, false);
+
+        Id jobId = runDataMigration();
+
+        assertDonorIsRequiredError(jobId, rd);
+
+        assertLegacyFormat(getRecords());
+
+        assertBatchSummaryFailed(jobId, 1);
+
     }
 
     /**
@@ -1979,6 +2032,29 @@ private class RD2_DataMigration_TEST {
         );
     }
 
+    /**
+     * @description Sets store errors in error settings to false
+     * @return void
+     */
+    private static void disableStoreErrorSettings() {
+        setStoreErrorSettings(false);
+
+    }
+
+    /**
+     * @description Sets store settings to enable or disable in error settings
+     * @param isEnabled true or false
+     * @return void
+     */
+    private static void setStoreErrorSettings(Boolean isEnabled) {
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(
+            new Error_Settings__c(
+                Error_Notifications_On__c = false,
+                Store_Errors_On__c = isEnabled
+            )
+        );
+    }
+
     /****
     * @description Returns expected data migration log context
     * @param jobId Batch job Id
@@ -2148,6 +2224,29 @@ private class RD2_DataMigration_TEST {
             System.assertEquals(RD2_Constants.DAY_OF_MONTH_LAST_DAY, rd.Day_of_Month__c,
                 'Day of Month should be set as the Last Day');
         }
+    }
+
+    /****
+    * @description Asserts if the error message contains Donor is required field error
+    * @param jobId Batch job Id
+    * @param rd Recurring Donation record
+    * @return void
+    */
+    private static void assertDonorIsRequiredError(Id jobId, npe03__Recurring_Donation__c rd) {
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(1, errors.size(), 'Validation error should be logged');
+
+        System.assertEquals(true, errors[0].Full_Message__c.contains(System.Label.RD_DonorIsRequired), 'Error message should match');
+        System.assertEquals(System.Label.errErrorTypeValidationFailed, errors[0].Error_Type__c, 'Error Type should match');
+        System.assertEquals(rd.Id, errors[0].Related_Record_ID__c, 'Error related record Id should be RD Id');
+        System.assertEquals(ERR_Handler.getRecordURL(rd.Id), errors[0].Record_URL__c, 'Error record URL should match');
+
+        if (errors[0].Context_Type__c.contains(RD2_DataMigrationBase_BATCH.LOG_CONTEXT_DRY_RUN)) {
+            System.assertEquals(getLogContextDryRun(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
+        } else {
+            System.assertEquals(getLogContextMigration(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
+        }
+
     }
 
     /***
