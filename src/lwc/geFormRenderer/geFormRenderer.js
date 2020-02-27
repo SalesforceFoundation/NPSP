@@ -622,6 +622,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             section.reset();
         });
         this.widgetData = {};
+        this.blankDataImportRecord = {};
     }
 
     get mode() {
