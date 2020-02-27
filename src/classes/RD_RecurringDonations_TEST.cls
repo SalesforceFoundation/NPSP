@@ -960,7 +960,7 @@ public class RD_RecurringDonations_TEST {
         return TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(contactId)
             .withAmount(100)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriod(installmentPeriod)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
             .withScheduleTypeMultiplyValue()
