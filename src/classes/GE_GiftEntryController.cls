@@ -38,18 +38,18 @@
 public with sharing class GE_GiftEntryController {
 
     /**
-     * @description Wraps the UTIL_Namespace.alignClassNSWithEnvironment method in a
+     * @description Wraps the UTIL_Namespace.alignSchemaNSWithEnvironment method in a
      * try...catch statement to facilitate throwing an AuraHandledException when
      * an Exception is encountered.
      *
-     * @param name The class name that needs to be namespace aligned.
+     * @param name The field or object name that needs to be namespace aligned.
      *
-     * @return The name of the class prepended with the appropriate namespace.
+     * @return The field or object name prepended with the appropriate namespace.
      */
     @AuraEnabled
-    public static String alignClassNSWithEnvironment(String name) {
+    public static String alignSchemaNSWithEnvironment(String name) {
         try {
-            return UTIL_Namespace.alignClassNSWithEnvironment(name);
+            return UTIL_Namespace.alignSchemaNSWithEnvironment(name);
         } catch (Exception e) {
             throw new AuraHandledException(
                     'A problem was encountered while aligning the namespace for ' + name + '.'
