@@ -44,6 +44,10 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     * Start getters for data-qa-locator attributes
     */
 
+    get qaLocatorSection() {
+        return `form section ${this.formSection.label}`;
+    }
+
     get qaLocatorSectionSettings() {
         return `button Settings ${this.formSection.label}`;
     }
