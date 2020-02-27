@@ -10,6 +10,8 @@ import TAB_HEADER_LABEL from '@salesforce/label/c.bgeTabHeader';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import {handleError} from 'c/utilTemplateBuilder';
 
+const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
+
 export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningElement) {
 
     batchDryRunLabel = BATCH_DRY_RUN_LABEL;
@@ -33,7 +35,7 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
 
     async connectedCallback() {
         try {
-            await TemplateBuilderService.init('Migrated_Custom_Field_Mapping_Set');
+            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
             this.bdiDataImportPageName =
                 TemplateBuilderService.alignSchemaNSWithEnvironment('BDI_DataImport');
         } catch (error) {
