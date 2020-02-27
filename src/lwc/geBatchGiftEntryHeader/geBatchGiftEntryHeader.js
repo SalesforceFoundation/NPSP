@@ -8,8 +8,8 @@ import PROCESS_BATCH_LABEL from '@salesforce/label/c.bgeProcessBatch';
 import EDIT_BATCH_INFO_LABEL from '@salesforce/label/c.geEditBatchInfo';
 import TAB_HEADER_LABEL from '@salesforce/label/c.bgeTabHeader';
 
-import alignClassNSWithEnvironment
-    from '@salesforce/apex/GE_GiftEntryController.alignClassNSWithEnvironment';
+import alignSchemaNSWithEnvironment
+    from '@salesforce/apex/GE_GiftEntryController.alignSchemaNSWithEnvironment';
 import {handleError} from 'c/utilTemplateBuilder';
 
 export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningElement) {
@@ -34,7 +34,7 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
     }
 
     connectedCallback() {
-        alignClassNSWithEnvironment({name:'BDI_DataImport'})
+        alignSchemaNSWithEnvironment({name:'npsp__BDI_DataImport'})
             .then(bdiDataImportPageName => {
                 this.bdiDataImportPageName = bdiDataImportPageName;
             })
