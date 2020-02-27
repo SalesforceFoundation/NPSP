@@ -7,10 +7,10 @@ import BATCH_DRY_RUN_LABEL from '@salesforce/label/c.bgeBatchDryRun';
 import PROCESS_BATCH_LABEL from '@salesforce/label/c.bgeProcessBatch';
 import EDIT_BATCH_INFO_LABEL from '@salesforce/label/c.geEditBatchInfo';
 import TAB_HEADER_LABEL from '@salesforce/label/c.bgeTabHeader';
-
-import alignSchemaNSWithEnvironment
-    from '@salesforce/apex/GE_GiftEntryController.alignSchemaNSWithEnvironment';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 import {handleError} from 'c/utilTemplateBuilder';
+
+const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 
 export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningElement) {
 
@@ -33,12 +33,14 @@ export default class GeBatchGiftEntryHeader extends NavigationMixin(LightningEle
         return getFieldValue(this.batch.data, NAME_FIELD);
     }
 
-    connectedCallback() {
-        alignSchemaNSWithEnvironment({name:'npsp__BDI_DataImport'})
-            .then(bdiDataImportPageName => {
-                this.bdiDataImportPageName = bdiDataImportPageName;
-            })
-            .catch(error => handleError(error));
+    async connectedCallback() {
+        try {
+            await TemplateBuilderService.init(DEFAULT_FIELD_MAPPING_SET);
+            this.bdiDataImportPageName =
+                TemplateBuilderService.alignSchemaNSWithEnvironment('BDI_DataImport');
+        } catch (error) {
+            handleError(error);
+        }
     }
 
     handleClick(event) {
