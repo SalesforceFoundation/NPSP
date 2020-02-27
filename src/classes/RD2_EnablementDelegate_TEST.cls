@@ -144,7 +144,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         String url = RD2_EnablementDelegate_CTRL.getMetaDeployURL();
 
-        String expectedUrl = 'https://install.salesforce.org/products/npsp/npsp-rd2-pilot';
+        String expectedUrl = 'https://install.salesforce.org/products/npsp/enhanced-recurring-donations';
 
         System.assertEquals(expectedURL, url, 'URL should match');
     }
@@ -621,6 +621,20 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         // Deserialize the rollups to use for testing
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+    }
+
+    /**
+     * @description Sets RD Settings
+     * @return void
+     */
+    private static void setRDSettings() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                npe03__Open_Opportunity_Behavior__c = RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name(),
+                npe03__Maximum_Donations__c = 50,
+                npe03__Opportunity_Forecast_Months__c = 6
+            )
+        );
     }
 
     /**

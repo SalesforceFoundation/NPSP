@@ -101,7 +101,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @description An empty method called from actionFunction to reRender panels when it completes
     */
     public void refreshPanels() {
-        
+
     }
 
 
@@ -235,7 +235,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled(cacheable=false)
     public static String getMetaDeployURL() {
-        String urlFormat = 'https://install.salesforce.org/products/npsp/{0}npsp-rd2-pilot';
+        String urlFormat = 'https://install.salesforce.org/products/npsp/{0}enhanced-recurring-donations';
         String version;
 
         if (UTIL_Namespace.isCustomerOrg()) {
@@ -337,7 +337,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     @AuraEnabled
     public static Id runDryRun() {
         Id jobId;
-        
+
         try {
             Boolean isStateUpdate = false;
             EnablementState state = getEnablementState();
@@ -361,7 +361,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
-        
+
         return jobId;
     }
 
@@ -411,7 +411,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             return;
         }
 
-        try {            
+        try {
             System.abortJob(batchId);
 
         } catch (Exception e) {
@@ -529,6 +529,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
     }
 
-    
+
 
 }
