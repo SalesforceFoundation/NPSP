@@ -37,27 +37,6 @@
 */
 public with sharing class GE_GiftEntryController {
 
-    /**
-     * @description Wraps the UTIL_Namespace.alignSchemaNSWithEnvironment method in a
-     * try...catch statement to facilitate throwing an AuraHandledException when
-     * an Exception is encountered.
-     *
-     * @param name The field or object name that needs to be namespace aligned.
-     *
-     * @return The field or object name prepended with the appropriate namespace.
-     */
-    @AuraEnabled
-    public static String alignSchemaNSWithEnvironment(String name) {
-        try {
-            return UTIL_Namespace.alignSchemaNSWithEnvironment(name);
-        } catch (Exception e) {
-            throw new AuraHandledException(
-                    'A problem was encountered while aligning the namespace for ' + name + '.'
-                    + ' Error details: ' + JSON.serialize(e)
-            );
-        }
-    }
-
     /*******************************************************************************************************
     * @description Creates an AuraHandledException with the specified error message
     *
