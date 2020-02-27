@@ -414,7 +414,7 @@ public class RD_RecurringDonations {
                     paidInstallments = Integer.valueOf(r.npe03__Total_Paid_Installments__c);
                     j = paidInstallments;
 
-                    if (r.npe03__Schedule_Type__c != Label.npe03.RecurringDonationMultiplyValue &&
+                    if (r.npe03__Schedule_Type__c != RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY &&
                         installments - paidInstallments > 0
                     ) {
                         installmentAmount = (r.npe03__Amount__c - paidAmount) / (installments - paidInstallments);
