@@ -69,14 +69,14 @@ private with sharing class RD_AddDonationsBTN_TEST {
 
         PageReference returnPage = ctrl.buttonClick();
         System.assertNotEquals(null, returnPage, 'Page should be redirected on the button click');
-        System.assertNotEquals('/' + rd.Id, returnPage.getUrl(), 
+        System.assertNotEquals('/' + rd.Id, returnPage.getUrl(),
             'The button should redirect to the Recurring Donation detail page on successful Opp refresh');
 
         System.assertEquals(false, oppGateway.getRecords(rd).isEmpty(), 'Opportunities should be recreated');
     }
 
     /***
-    * @description Ensures proper message is displayed when navigating to Visualforce page 
+    * @description Ensures proper message is displayed when navigating to Visualforce page
     * without a Recurring Donation Id
     */
     @isTest
@@ -93,7 +93,7 @@ private with sharing class RD_AddDonationsBTN_TEST {
         //No redirect should occur on the error message display
         System.assertEquals(null, ctrl.buttonClick());
 
-        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationMissingId, ApexPages.Severity.ERROR);        
+        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationMissingId, ApexPages.Severity.ERROR);
 
         String expectedPageUrl = '/' + npe03__Recurring_Donation__c.SObjectType.getDescribe().getKeyPrefix();
         System.assertEquals(expectedPageUrl, ctrl.redirectToRecurringDonationsPage().getUrl(),
@@ -148,7 +148,7 @@ private with sharing class RD_AddDonationsBTN_TEST {
     private static TEST_RecurringDonationBuilder getLegacyRDBuilder() {
         return TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAmount(100)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriodWeekly()
             .withDateEstablished(DATE_ESTABLISHED)
             .withScheduleTypeMultiplyValue()
