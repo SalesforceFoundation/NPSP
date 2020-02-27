@@ -647,6 +647,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.dataImport = dataImport;
         }
 
+        // If the dataImport being loaded has Donation Donor, Contact1Imported,
+        // or Account1Imported set, set the Renderer's stored property values
+        this.setStoredDonationDonorProperties(dataImport);
+
+        // If there is a currently selected Donation and the caller wants those values
+        // applied to the dataImport record, add them (used during save operation)
         if (this.selectedDonation && applySelectedDonationFieldValues) {
             dataImport = {...dataImport, ...this.selectedDonationDataImportFieldValues};
         }
@@ -668,6 +674,24 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     dataImport,
                     section.sourceFields));
         });
+    }
+
+    setStoredDonationDonorProperties(dataImport) {
+        if (dataImport[DONATION_DONOR_FIELDS.donationDonorField]) {
+            this.handleDonationDonorChange(
+                dataImport[DONATION_DONOR_FIELDS.donationDonorField]
+            );
+        }
+        if (dataImport[DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName]) {
+            this.handleDonorAccountChange(
+                dataImport[DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName]
+            );
+        }
+        if (dataImport[DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName]) {
+            this.handleDonorContactChange(
+                dataImport[DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName]
+            );
+        }
     }
 
     @api
@@ -946,9 +970,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     resetDonationAndPaymentImportedFields() {
         // Reset the stored values for selected donation
         let selectedDonationFieldsNeedReset = false;
-        for (let prop in this.selectedDonationDataImportFieldValues) {
-            if (prop) {
-                this.selectedDonationDataImportFieldValues[prop] = null;
+        for (let [key, value] in this.selectedDonationDataImportFieldValues) {
+            if (value) {
+                this.selectedDonationDataImportFieldValues[key] = null;
                 selectedDonationFieldsNeedReset = true;
             }
         }
@@ -1094,10 +1118,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleChangeDonationDonor(event) {
-        this._donationDonor = event.detail.value;
-        if (!isUndefined(this.donorId)) {
-            this.setReviewDonationsDonorProperties(this.donorId);
-        }
+        this.handleDonationDonorChange(event.detail.value);
     }
 
     get donorId() {
@@ -1126,6 +1147,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.setReviewDonationsDonorProperties(this._contact1Imported);
         } else if (this._donationDonor === null) {
             // TODO: Maybe auto-set to 'Contact1'?
+        }
+    }
+
+    handleDonationDonorChange(donationDonorValue) {
+        this._donationDonor = donationDonorValue;
+        if (!isUndefined(this.donorId)) {
+            this.setReviewDonationsDonorProperties(this.donorId);
         }
     }
 
