@@ -58,7 +58,6 @@ public with sharing class FORM_PermissionValidator {
 
     public FORM_Template validateTemplate() {
         Map<String, Set<String>> permissionErrorsBySObject = new Map<String, Set<String>>();
-        Map<String, Set<String>> fieldMappingsByTargetObject = new Map<String, Set<String>>();
 
         BDI_FieldMappingSet fieldMappings =  BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
         for (FORM_Section section : template.layout.sections) {
@@ -69,10 +68,10 @@ public with sharing class FORM_PermissionValidator {
                         if(fieldMappings.fieldMappingByDevName.containsKey(fieldDevName)) {
                             BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldDevName);
                             
-                            String targetObjDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Object_API_Name);
-                            String targetFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Target_Field_API_Name);
+                            String targetObjDevName = fieldMapping.Target_Object_API_Name;
+                            String targetFieldDevName = fieldMapping.Target_Field_API_Name;
                             String sourceObjDevName = Schema.SObjectType.DataImport__c.getName();
-                            String sourceFieldDevName = UTIL_Namespace.StrAllNSPrefix(fieldMapping.Source_Field_API_Name);
+                            String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
 
                             if(!isValid(sourceObjDevName, accessLevels)) {
                                 permissionErrorsBySObject.put(sourceObjDevName, new Set<String>{OBJECT_CRUD_ERROR});
