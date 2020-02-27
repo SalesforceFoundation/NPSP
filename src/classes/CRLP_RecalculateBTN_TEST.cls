@@ -50,7 +50,7 @@ private class CRLP_RecalculateBTN_TEST {
         insert new General_Accounting_Unit__c(Name = 'UNITTEST');
 
         insert new TEST_RecurringDonationBuilder()
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withContact(c.Id)
             .withAmount(1)
             .withInstallmentPeriodYearly()
