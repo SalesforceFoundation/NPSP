@@ -34,17 +34,38 @@
 * @description Batch job service
 */
 public with sharing class UTIL_BatchJobService {
+    /***
+    * @description A batch job custom exception
+    */
     public class BatchException extends Exception {}
 
+    /***
+    * @description An error message thrown when batch job is undefined.
+    */
     @TestVisible
     private static final String BATCH_JOB_REQUIRED = 'Batch job is required';
-
+    /***
+    * @description Value used to query Apex batch jobs
+    */
     private static final String JOB_TYPE_BATCH = 'BatchApex';
 
+    /***
+    * @description Contains max number of batch completed days to report.
+    * The actual number of days passes is not relevant for any display after this point. 
+    */
+    @TestVisible
+    private static final Integer MAX_DAYS_EXCEEDED = 365;
+
+    /***
+    * @description AsyncApexJob possible status values
+    */
     public enum ApexJobStatus {
         HOLDING, QUEUED, PREPARING, PROCESSING, COMPLETED, FAILED, ABORTED
     }
 
+    /***
+    * @description AsyncApexJob possible status values indicating the batch job is in progress
+    */
     public static final Set<String> IN_PROGRESS_STATUSES = new Set<String>{
         ApexJobStatus.HOLDING.name(),
         ApexJobStatus.QUEUED.name(),
@@ -63,6 +84,47 @@ public with sharing class UTIL_BatchJobService {
         }
 
         return (Database.countQuery('SELECT Count() FROM AsyncApexJob WHERE Id = :batchId AND Status IN :IN_PROGRESS_STATUSES') > 0);
+    }
+
+    /***
+    * @description Determines if the batch job is in progress
+    * @param status Batch job status
+    * @return Boolean
+    */
+    public Boolean isInProgress(String status) {
+        return IN_PROGRESS_STATUSES.contains(status.toUpperCase());
+    }
+
+    /***
+    * @description Determines number of days passed since the batch job has completed
+    * @param className Batch job class name
+    * @return Integer
+    */
+    public Integer getCompletedDaysBetween(String className) {
+        AsyncApexJob batchJob = getAsyncApexJob(className);
+
+        if (batchJob == null) {
+            return 0;
+        }
+
+        return getCompletedDaysBetween(batchJob.CompletedDate, batchJob.Status);
+    }
+
+    /***
+    * @description Determines number of days passed since the batch job has completed
+    * @param completedDate Batch completed date and time
+    * @param status Batch status
+    * @return Integer
+    */
+    public Integer getCompletedDaysBetween(Datetime completedDate, String status) {
+        if (completedDate == null || isInProgress(status)) {
+            return 0;
+        }
+
+        Long milliseconds = Datetime.now().getTime() - completedDate.getTime();
+        Long days = milliseconds /1000 /60 /60 /24;
+
+        return days > MAX_DAYS_EXCEEDED ? MAX_DAYS_EXCEEDED : Integer.valueOf(days);      
     }
 
     /***
@@ -85,13 +147,12 @@ public with sharing class UTIL_BatchJobService {
         return apexJobs.isEmpty() ? null : apexJobs[0];
     }
 
-
     /***
-    * @description Loads the latest batch job for the specified batch class name
+    * @description Returns the latest batch job for the specified batch class name
     * @param className Batch class name
-    * @return BatchJob
+    * @return AsyncApexJob
     */
-    public BatchJob getBatchJob(String className) {
+    public AsyncApexJob getAsyncApexJob(String className) {
         String namespacePrefix = UTIL_Namespace.getNamespace();
 
         List<AsyncApexJob> apexJobs = [
@@ -108,8 +169,20 @@ public with sharing class UTIL_BatchJobService {
             LIMIT 1
         ];
 
-        return apexJobs.isEmpty() ? null : new BatchJob(apexJobs[0]);
+        return apexJobs.isEmpty() ? null : apexJobs[0];
     }
+
+    /***
+    * @description Loads the latest batch job for the specified batch class name
+    * @param className Batch class name
+    * @return BatchJob
+    */
+    public BatchJob getBatchJob(String className) {
+        AsyncApexJob batchJob = getAsyncApexJob(className);
+
+        return batchJob == null ? null : new BatchJob(batchJob);
+    }
+
 
     /***
     * @description Batch job descriptor
@@ -128,6 +201,7 @@ public with sharing class UTIL_BatchJobService {
 
         public String timeElapsed;
         public Long percentComplete = 0;
+        public Integer completedDaysBetween = 0;
         public Boolean isInProgress = false;
         public JobSummary summary;
 
@@ -155,6 +229,7 @@ public with sharing class UTIL_BatchJobService {
 
             timeElapsed = calcTimeElapsed(createdDate, completedDate);
             percentComplete = calcPercentComplete(jobItemsProcessed, totalJobItems, status);
+            completedDaysBetween = getCompletedDaysBetween();
         }
 
         /***
@@ -251,6 +326,14 @@ public with sharing class UTIL_BatchJobService {
             }
 
             return percentComplete;
+        }
+
+        /***
+        * @description Determines number of days passed since the batch job has completed
+        * @return Integer
+        */
+        private Integer getCompletedDaysBetween() {
+            return new UTIL_BatchJobService().getCompletedDaysBetween(completedDate, status);    
         }
 
         /***
