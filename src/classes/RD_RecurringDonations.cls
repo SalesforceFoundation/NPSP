@@ -188,10 +188,11 @@ public class RD_RecurringDonations {
     * @return void
     */
     public static void updateRecurringDonationOnOppChange(Set<Id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        Boolean CRLPEnabled = CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
 
-        // only use this hard-coded RD rollup code if Customizable Rollups aren't enabled
-        if (CRLPEnabled) {
+        // do not calculate legacy rollups if customizable rollups or enhanced Recurring Donations are enabled
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled
+            || RD2_EnablementService.isRecurringDonations2Enabled
+        ) {
             return;
         }
 
@@ -413,7 +414,7 @@ public class RD_RecurringDonations {
                     paidInstallments = Integer.valueOf(r.npe03__Total_Paid_Installments__c);
                     j = paidInstallments;
 
-                    if (r.npe03__Schedule_Type__c != Label.npe03.RecurringDonationMultiplyValue &&
+                    if (r.npe03__Schedule_Type__c != RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY &&
                         installments - paidInstallments > 0
                     ) {
                         installmentAmount = (r.npe03__Amount__c - paidAmount) / (installments - paidInstallments);

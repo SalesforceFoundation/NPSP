@@ -400,6 +400,7 @@
         <members>RD2_VisualizeScheduleController</members>
         <members>RD2_VisualizeScheduleController_TEST</members>
         <members>RD_AddDonationsBTN_CTRL</members>
+        <members>RD_AddDonationsBTN_TEST</members>
         <members>RD_BulkTests_TEST</members>
         <members>RD_CascadeDeleteLookups_TDTM</members>
         <members>RD_CascadeDeleteLookups_TEST</members>

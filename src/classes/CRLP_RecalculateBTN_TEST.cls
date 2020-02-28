@@ -35,6 +35,7 @@
 */
 @isTest
 private class CRLP_RecalculateBTN_TEST {
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
     /**
      * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
@@ -46,11 +47,10 @@ private class CRLP_RecalculateBTN_TEST {
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
-        insert gau;
+        insert new General_Accounting_Unit__c(Name = 'UNITTEST');
 
-        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
-            .withInstallments(2)
+        insert new TEST_RecurringDonationBuilder()
+            .withPlannedInstallments(2)
             .withContact(c.Id)
             .withAmount(1)
             .withInstallmentPeriodYearly()
@@ -58,33 +58,24 @@ private class CRLP_RecalculateBTN_TEST {
             .withScheduleTypeMultiplyValue()
             .withOpenEndedStatusNone()
             .build();
-        insert rd;
     }
 
     /**
      * @description Validate that a User with no update permissions to the Contact object gets a pageMessage
      * error when the recalculate controller constructor is executed.
      */
-    static testMethod void test_nopermissions() {
-        // Retrieve the dummy Contact
-        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
-
-        // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
-        Id roProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.PROFILE_READ_ONLY LIMIT 1].Id;
-        User roUser = new User(
-                FirstName = 'UNITTEST', LastName = 'UNITTEST', Alias = 'UNITTEST',
-                Email = 'UNITTEST@NOWHERE.NET', UserName = 'UNITTEST@NOWHERE.NET',
-                ProfileId = roProfileId,  TimeZoneSidKey = 'America/Los_Angeles',
-                LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
-                EmailEncodingKey = 'ISO-8859-1'
-        );
+    @isTest
+    private static void test_nopermissions() {
+        // Get a user with ReadOnly profile (a Salesforce standard profile)
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
 
         // Verify that controller detects the User doesn't have update permissions on the Contact object
         Test.startTest();
-        System.runAs(roUser) {
-            CRLP_RecalculateBTN_CTRL ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(c));
+        System.runAs(readOnlyUser) {
+            CRLP_RecalculateBTN_CTRL ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(getContact()));
+
             System.assertEquals(true, ctlr.hasError, 'The controller constructor should have generated an error ' +
-                    'because the Read Only user does not have update permissions to the Contact object');
+                'because the Read Only user does not have update permissions to the Contact object');
         }
         Test.stopTest();
     }
@@ -92,15 +83,13 @@ private class CRLP_RecalculateBTN_TEST {
     /**
      * @description Simple validation of clicking the button when legacy rollups are enabled.
      */
-    static testMethod void test_legacy_rollups() {
+    @isTest
+    private static void test_legacy_rollups() {
 
         // Ensure that Customizable Rollups are disabled
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = false
-                ));
+        disableCustomizableRollups();
 
-        // Retrieve the dummy Contact
-        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        Contact c = getContact();
         // Set a random Total Gift and Soft Credit.
         c.npo02__TotalOppAmount__c = 100;
         c.npo02__Soft_Credit_Total__c = 100;
@@ -118,84 +107,59 @@ private class CRLP_RecalculateBTN_TEST {
         TDTM_TriggerHandler.disableTDTM = false;
 
         // Confirm that the initial value of the next payment is null.
-        rd = [SELECT npe03__Paid_Amount__c FROM npe03__Recurring_Donation__c LIMIT 1];
+        rd = rdGateway.getRecord(rd.Id);
         System.assert(rd.npe03__Paid_Amount__c == null);
 
         Test.startTest();
 
-        CRLP_RecalculateBTN_CTRL ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(c));
-        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
-        ctlr.buttonClick();
+        clickRecalculateRollupsFor(c);
 
-        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
-        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
-        ctlr.buttonClick();
+        clickRecalculateRollupsFor(gau);
 
-        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(rd));
-        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
-        ctlr.buttonClick();
+        clickRecalculateRollupsFor(rd);
 
         Test.stopTest();
 
         // Confirm that the legacy rollup logic updates the value of the Total Gift and
         // Soft Credit to a value different than the original value (100);
-        c = [SELECT npo02__TotalOppAmount__c, npo02__Soft_Credit_Total__c FROM Contact LIMIT 1];
+        c = getContact();
         System.assert(c.npo02__TotalOppAmount__c != 100);
         System.assert(c.npo02__Soft_Credit_Total__c != 100);
 
         // Confirm that the legacy rollup logic updates the value of the RD rollup field Paid Amount.
         // to a value different than the original value (null).
-        rd = [SELECT npe03__Paid_Amount__c FROM npe03__Recurring_Donation__c LIMIT 1];
+        rd = rdGateway.getRecord(rd.Id);
         System.assert(rd.npe03__Paid_Amount__c != null);
     }
 
     /**
      * @description Simple validation of clicking the button when the new customizable rollups are enabled
      */
-    static testMethod void test_new_rollups() {
+    @isTest
+    private static void test_new_rollups() {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_Skew__c = 200,
-                        Rollups_Account_SkewMode_Batch_Size__c = 200,
-                        Rollups_Contact_SkewMode_Batch_Size__c = 200,
-                        Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
-                        Rollups_Account_Soft_Credit_Batch_Size__c = 200,
-                        Rollups_AcctContactSoftCredit_Batch_Size__c = 200,
-                        Rollups_Account_Batch_Size__c = 20,
-                        Rollups_Contact_Batch_Size__c = 20,
-                        Rollups_GAU_Batch_Size__c = 400
-                ));
+        enableCustomizableRollups();
 
-        // Retrieve the dummy Contact
-        Contact c = [SELECT Id, FirstName, LastName, AccountId, Account.Id FROM Contact LIMIT 1];
+        Contact c = getContact();
         Account a = c.Account;
         General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
-        npe03__Recurring_Donation__c rd = [SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1];
-
-        System.assertEquals(0, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
-                'Zero jobs should be currently scheduled');
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
 
         Test.startTest();
 
         Integer expectedJobCount = 0;
+        assertCRLPBatchSubmitted(expectedJobCount);
 
-        CRLP_RecalculateBTN_CTRL ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(c));
-        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
-
-        ctlr.buttonClick();
+        clickRecalculateRollupsFor(c);
 
         expectedJobCount++;
         if (CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Contact.SObjectType)) {
             expectedJobCount++;
-        }
-        System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
-                expectedJobCount + ' jobs should been queued');
+        }        
+        assertCRLPBatchSubmitted(expectedJobCount);
 
-        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(a));
-        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
-        ctlr.buttonClick();
+        clickRecalculateRollupsFor(a);
 
         expectedJobCount++;
         if (CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Account.SObjectType)) {
@@ -203,24 +167,142 @@ private class CRLP_RecalculateBTN_TEST {
         }
         if (CRLP_Rollup_SVC.hasActiveAccountSoftCreditRollupsForSObject(Account.SObjectType)) {
             expectedJobCount++;
-        }
-        System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
-                expectedJobCount + ' jobs should been queued');
+        }        
+        assertCRLPBatchSubmitted(expectedJobCount);
 
-        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
-        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
-        ctlr.buttonClick();
+        clickRecalculateRollupsFor(gau);
         expectedJobCount++;
 
-        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(rd));
-        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
-        ctlr.buttonClick();
+        clickRecalculateRollupsFor(rd);
         expectedJobCount++;
 
-        // validate that the jobs were submitted
-        System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
-                expectedJobCount + ' jobs should been queued');
+        assertCRLPBatchSubmitted(expectedJobCount);
 
         Test.stopTest();
+    }
+
+    /**
+     * @description Verifies a Customizable Rollup batch is submitted when button is clicked on 
+     * and Customizable Rollups are enabled and enhanced RDs are enabled
+     */
+    @isTest
+    private static void shouldSubmitCRLPBatchWhenCRLPAndEhancedRDsAreEnabled() {
+
+        enableCustomizableRollups();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .build();
+        insert rd;
+
+        Test.startTest();
+        
+        clickRecalculateRollupsFor(rd);
+
+        assertCRLPBatchSubmitted(1);
+
+        Test.stopTest();
+    }
+
+    /**
+     * @description Verifies legacy rollups do not modify Recurring Donation rollup fields when button is clicked on 
+     * and Customizable Rollups are not enabled and enhanced RDs are enabled
+     */
+    @isTest
+    private static void shouldNotUpdateRollupFieldsOnRDWhenCRLPIsDisabledAndEhancedRDsAreEnabled() {
+
+        disableCustomizableRollups();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withDefaultValues()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .build();
+        insert rd;
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(null, rd.npe03__Paid_Amount__c, 'Paid Amount on RD should not be set initially');
+
+        Test.startTest();        
+        clickRecalculateRollupsFor(rd);
+        Test.stopTest();
+
+        // Confirm that the legacy rollup logic does not update the value of the RD rollup field Paid Amount
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(null, rd.npe03__Paid_Amount__c, 'Paid Amount on RD should not be updated by legacy rollups');
+    }
+
+
+
+    // Helpers
+    //////////////////
+
+
+    /****
+    * @description Simulates Recalculate Rollups button click
+    * @param sObj Record to recalculate rollups for
+    * @return void
+    */
+    private static void clickRecalculateRollupsFor(SObject sObj) {
+        CRLP_RecalculateBTN_CTRL ctrl = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(sObj));
+        System.assertEquals(false, ctrl.hasError, 'The controller constructor should have not generated an error');
+        
+        ctrl.buttonClick();
+    }
+
+    /****
+    * @description Disables Customizable Rollups
+    * @return void
+    */
+    private static void disableCustomizableRollups() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = false
+        ));
+    }
+
+    /****
+    * @description Enables Customizable Rollups (which disables all legacy rollup operations)
+    * @return void
+    */
+    private static void enableCustomizableRollups() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
+            Customizable_Rollups_Enabled__c = true,
+            Rollups_Limit_on_Attached_Opps_for_Skew__c = 200,
+            Rollups_Account_SkewMode_Batch_Size__c = 200,
+            Rollups_Contact_SkewMode_Batch_Size__c = 200,
+            Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
+            Rollups_Account_Soft_Credit_Batch_Size__c = 200,
+            Rollups_AcctContactSoftCredit_Batch_Size__c = 200,
+            Rollups_Account_Batch_Size__c = 20,
+            Rollups_Contact_Batch_Size__c = 20,
+            Rollups_GAU_Batch_Size__c = 400
+        ));
+    }
+
+    /****
+    * @description Asserts CRLP batch jobs are submitted
+    * @return void
+    */
+    private static void assertCRLPBatchSubmitted(Integer expectedJobCount) {
+        System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
+            expectedJobCount + ' jobs should been queued');
+    }
+
+    /****
+    * @description Returns contact record
+    * @return Contact
+    */
+    private static Contact getContact() {
+        return [
+            SELECT FirstName, LastName, 
+                AccountId, Account.Id,
+                npo02__TotalOppAmount__c, npo02__Soft_Credit_Total__c
+            FROM Contact
+            LIMIT 1
+        ];
     }
 }
