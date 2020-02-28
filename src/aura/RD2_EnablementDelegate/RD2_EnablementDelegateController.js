@@ -27,6 +27,7 @@
     handleDryRunStatusChange: function (component, event, helper) {
         helper.handleBatchEvent(component, event, 'v.dryRunBatch');
         helper.refreshDryRun(component);
+        helper.refreshEnable(component);
     },
     handleDryRunError: function (component, event, helper) {
         helper.handleBatchError(component, event, 'dryRun');
