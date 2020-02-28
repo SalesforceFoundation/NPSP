@@ -81,7 +81,7 @@
                     <apex:repeat var="ac" value="{!listRelAutoCreate}" >
                         <tr>
                             <td>
-                                <apex:commandLink id="deleteAutoRel" action="{!deleteAc}" title="{!$Label.stgLinkDelete} {!ac.npe4__Object__c} - {!ac.npe4__Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:commandLink id="deleteAutoRel" action="{!deleteAc}" title="{!$Label.stgLinkDelete} {!ac.npe4__Object__c} - {!ac.npe4__Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!JSENCODE($Label.stgLabelAreYouSure)}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!acIdDelete}" name="idDeleteAc" value="{!ac.Id}" />
                                 </apex:commandLink>
                             </td>
