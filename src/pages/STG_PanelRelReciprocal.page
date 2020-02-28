@@ -71,7 +71,7 @@
                 <apex:repeat var="rl" value="{!listRelLookup}" >
                     <tr>
                         <td>
-                            <apex:commandLink id="deleteRelReciprocal" action="{!deleteRl}" title="{!$Label.stgLinkDelete} {!rl.Name}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                            <apex:commandLink id="deleteRelReciprocal" action="{!deleteRl}" title="{!$Label.stgLinkDelete} {!rl.Name}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!JSENCODE($Label.stgLabelAreYouSure)}')==false) { return false;}" rerender="form" >
                                 <apex:param assignTo="{!rlIdDelete}" name="idDeleteRl" value="{!rl.Id}" />
                             </apex:commandLink>
                         </td>
