@@ -83,6 +83,9 @@ public with sharing class UTIL_BatchJobService_TEST {
         System.assertEquals('3 ' + TIME_ELAPSED_DAYS + ' 00:00:00', batchJob.timeElapsed);
         System.assertEquals(100, batchJob.percentComplete);
         System.assertEquals(false, batchJob.isInProgress);
+
+        System.assertEquals(UTIL_BatchJobService.MAX_DAYS_EXCEEDED, batchJob.completedDaysBetween,
+            'Should reported the max days between instead of actual number since it is not relevant for any further calculations');
     }
 
     /***
@@ -170,6 +173,27 @@ public with sharing class UTIL_BatchJobService_TEST {
         System.assertEquals(100, percentComplete);
     }
 
+    /***
+    * @description Verifies days between is calculated correctly
+    */
+    @isTest
+    private static void shouldSetDaysBetween() {
+        TestAsyncApexJob jobBuilder = new TestAsyncApexJob()
+            .withId(MOCK_BATCH_ID)
+            .withCreatedBy(getUser());
+
+        UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService.BatchJob(
+            jobBuilder.withCompletedDate(Datetime.now()).build()
+        );
+        System.assertEquals(0, batchJob.completedDaysBetween, 
+            'Days between should be zero when batch job is completed today');
+        
+        batchJob = new UTIL_BatchJobService.BatchJob(
+            jobBuilder.withCompletedDate(Datetime.now().addDays(-2)).build()
+        );        
+        System.assertEquals(2, batchJob.completedDaysBetween, 
+            'Days between should be a positive number when batch job is completed in past');
+    }
 
     /***
     * @description Verifies batch job summary is set correctly
@@ -304,6 +328,16 @@ public with sharing class UTIL_BatchJobService_TEST {
         }
 
         /***
+        * @description Sets the batch completed date
+        * @param completedDate
+        * @return TestAsyncApexJob
+        */
+        public TestAsyncApexJob withCompletedDate(DateTime completedDate) {
+            valuesByFieldName.put('CompletedDate', completedDate);
+            return this;
+        }
+
+        /***
         * @description Builds AsyncApexJob SObject based on the provided values
         * @return TestAsyncApexJob
         */
@@ -341,6 +375,66 @@ public with sharing class UTIL_BatchJobService_TEST {
 
         public Id getChildJobId() {
             return childJobId;
+        }
+    }
+
+    /***
+    * @description Stub for the batch job service
+    */
+    public class Stub implements System.StubProvider {
+        private Boolean isInProgress = false;
+        private Integer completedDaysBetween = 0;
+        private AsyncApexJob asyncJob;
+
+        /***
+        * @description Sets the batch job to be in progress
+        */
+        public Stub withIsInProgress() {
+            isInProgress = true;
+            return this;
+        }
+
+        /***
+        * @description Sets number of days passed since the batch job has completed
+        */
+        public Stub withCompletedDaysBetween(Integer completedDaysBetween) {
+            this.completedDaysBetween = completedDaysBetween;
+            return this;
+        }
+
+        /***
+        * @description Sets the AsyncApexJob to return
+        */
+        public Stub withAsyncApexJob(AsyncApexJob asyncJob) {
+            this.asyncJob = asyncJob;
+            return this;
+        }
+
+        /***
+        * @description Stubs class methods
+        */
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String methodName,
+            Type returnType,
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
+        ) {
+            switch on methodName {
+                when 'isInProgress' {
+                    return isInProgress;
+
+                } when 'getCompletedDaysBetween' {
+                    return completedDaysBetween;
+
+                } when 'getAsyncApexJob' {
+                    return asyncJob;
+
+                } when else {
+                    return null;
+                }
+            }
         }
     }
 
