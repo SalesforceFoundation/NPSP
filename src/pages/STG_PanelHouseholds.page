@@ -49,7 +49,7 @@
     function setNameSpec(sl, idTxt, strLabel) {
         var strFormat = sl.value;
         //var nslabel = sl.item(sl.selectedIndex).text;
-        if (strFormat == '{!$Label.stgLabelOther}') {
+        if (strFormat == '{!JSENCODE($Label.stgLabelOther)}') {
             j$("[id$='" + idTxt + "']").show();
             strFormat = j$("[id$='" + idTxt + "']").val();
         } else if (idTxt != null) {
@@ -79,7 +79,7 @@
         var txt = j$("[id$='" + idTxt + "']");
 
         if (sl.val() == '' && txt.val() != '') {
-            sl.val('{!$Label.stgLabelOther}');
+            sl.val('{!JSENCODE($Label.stgLabelOther)}');
             txt.show();
         }
     }
