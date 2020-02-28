@@ -50,7 +50,7 @@ public inherited sharing class RD2_Constants {
     public enum InstallmentCreateOptions {
         Always_Create_Next_Installment,
         Disable_First_Installment,
-        Disable_All_Installments 
+        Disable_All_Installments
     }
 
     /**
@@ -80,6 +80,12 @@ public inherited sharing class RD2_Constants {
     * @description Recurring Donation "Recurring Type" picklist API values
     */
     public static final String RECURRING_TYPE_OPEN = 'Open';
+    public static final String RECURRING_TYPE_FIXED = 'Fixed';
+
+    /**
+    * @description Recurring Donation "Closed Reason" picklist API value when Fixed Length is completed
+    */
+    public static final String FIXED_TYPE_CLOSED_REASON = 'Commitment Completed';
 
     /**
     * @description Returns all valid Installment Periods
