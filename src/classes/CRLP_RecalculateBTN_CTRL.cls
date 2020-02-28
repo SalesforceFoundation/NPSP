@@ -138,18 +138,25 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             if (this.objType == Contact.SObjectType) {
                 calculateContactSoftCredit(recordId);
                 RLLP_OppRollup.rollupContactsFuture(new Set<Id>{ recordId });
+
             } else if (this.objType == Account.SObjectType) {
                 RLLP_OppRollup.rollupAccountsFuture(new Set<Id>{ recordId });
 
             } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
                 ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(recordId);
                 rollup.runRollups();
-            } else if (this.objType == npe03__Recurring_Donation__c.SObjectType) {
+
+            } else if (this.objType == npe03__Recurring_Donation__c.SObjectType
+                && !RD2_EnablementService.isRecurringDonations2Enabled
+            ) {
                 RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(new Set<Id>{ recordId });
             }
-
         }
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, String.format(System.Label.CRLP_BatchCalculating, new List<String>{this.objType.getDescribe().label})));
+
+        ApexPages.addMessage(new ApexPages.Message(
+            ApexPages.Severity.INFO, 
+            String.format(System.Label.CRLP_BatchCalculating, new List<String>{this.objType.getDescribe().label})
+        ));
         return null;
     }
 

@@ -37,8 +37,8 @@
 private class ACCT_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Tests cascade delete: deletes accounts, which deletes recurring donations allocations 
-    * and relationships. 
+    * @description Tests cascade delete: deletes accounts, which deletes recurring donations allocations
+    * and relationships.
     * Verifies results. Then undeletes accounts, which undeletes recurring donations allocations and relationships.
     */
     static testMethod void testAccountCascadeGrandchildren() {
@@ -49,8 +49,8 @@ private class ACCT_CascadeDeleteLookups_TEST {
 
         //Retrieve auto created HH Accounts
         List<Account> accounts = [
-            SELECT Name 
-            FROM Account 
+            SELECT Name
+            FROM Account
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id IN :contacts)
         ];
 
@@ -112,8 +112,8 @@ private class ACCT_CascadeDeleteLookups_TEST {
 
         //Retrieve auto created HH Accounts
         List<Account> accounts = [
-            SELECT Name 
-            FROM Account 
+            SELECT Name
+            FROM Account
             WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :contacts)
         ];
 
@@ -160,7 +160,7 @@ private class ACCT_CascadeDeleteLookups_TEST {
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
         return new TEST_RecurringDonationBuilder()
             .withAmount(2)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriodYearly()
             .withDateEstablished()
             .withScheduleTypeMultiplyValue();
