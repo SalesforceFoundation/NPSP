@@ -398,7 +398,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies RD with a closed Opp cannot be updated 
+    * @description Verifies RD with a closed Opp cannot be updated
     * when changing from household contact to an organization account
     */
     @isTest
@@ -491,7 +491,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /***
-    * @description Verifies RD with a closed Opp can be updated to different contact 
+    * @description Verifies RD with a closed Opp can be updated to different contact
     * when the RD is under an organization account
     */
     @isTest
@@ -525,7 +525,188 @@ private with sharing class RD2_ValidationService_TEST {
             'The RD should have the household contact as its primary contact');
     }
 
+    /***
+    * @description Verifies if it displays error message when a fixed length RD has no value in
+    * the NumberOfPlannedInstallments field
+    */
+    @isTest
+    private static void shouldFailWhenFixedLengthWithNoInstallments() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilderFixed()
+            .withContact(getContact().Id)
+            .withPlannedInstallments(null)
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsRequiredWhenFixed), errMessage);
+    }
+
+    /***
+    * @description Verifies if it displays error message when a Open Ended RD has a
+    * the NumberOfPlannedInstallments value greater than one
+    */
+    @isTest
+    private static void shouldFailWhenOpenWithInstallmentsGreaterThanOne() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withPlannedInstallments(2)
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsNotAllowedWhenOpen), errMessage);
+    }
+
+    /***
+    * @description Verifies if it displays error message when a fixed length RD has a negative value in
+    * the NumberOfPlannedInstallments field
+    */
+    @isTest
+    private static void shouldFailWhenFixedLengthInstallmentsNegative() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilderFixed()
+            .withContact(getContact().Id)
+            .withPlannedInstallments(-1)
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsRequiredWhenFixed), errMessage);
+    }
+
+    /***
+    * @description Verifies if it displays error message when a fixed length RD has a NumberOfPlannedInstallments
+    * value that is less than the NumberOfPaidInstallments field.
+    */
+    @isTest
+    private static void shouldFailWhenFixedLengthPaidInstallmentsGreaterThanPlanned() {
+        String errMessage = '';
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilderFixed()
+            .withContact(getContact().Id)
+            .withPlannedInstallments(12)
+            .withPaidInstallments(13)
+            .build();
+
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.assert(errMessage.contains(System.Label.RD2_NumberInstallmentsCannotBeLessThanPaid), errMessage);
+    }
+
+    /***
+    * @description Verifies DML should fail when installment frequency is updated to null 
+    */
+    @isTest
+    private static void shouldBlockRdUpdateWhenInstallmentFrequencyChangesToNull() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withInstallmentFrequency(10)
+            .build();
+
+        insert rd;
+
+        rd.InstallmentFrequency__c = null;
+
+        String errMessage = '';
+
+        try {
+            Test.startTest();
+            update rd;
+            Test.stopTest();
+        } catch (DmlException e) {
+            errMessage = e.getMessage();
+        }
+
+        System.assert(errMessage.contains(System.Label.RD2_InstallmentFrequencyMustBeValid),
+            'RD update should fail due to invalid Installment Frequency. Actual message: ' + errMessage
+        );
+    }
+
+    /***
+    * @description Verifies DML should fail when installment frequency is updated to a invalid value (greater than twenty) 
+    */
+    @isTest
+    private static void shouldBlockRDUpdateWhenInstallmentFrequencyIsOutOfRange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        List<npe03__Recurring_Donation__c> rds = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withInstallmentFrequency(10)
+            .build(3);
+            
+        insert rds;
+
+        rds[0].InstallmentFrequency__c = 20;
+        rds[1].InstallmentFrequency__c = 0;
+        rds[2].InstallmentFrequency__c = 21;
+
+        Test.startTest();
+        List<Database.SaveResult> results = Database.update(rds, false);
+        Test.stopTest();
+
+        for (Database.SaveResult result : results) {
+            if (result.getId() == rds[0].Id) {
+                System.assert(result.isSuccess(), 'Recurring Donation record update should succeed when Installment Frequencey is in range');
+
+            } else {
+                System.assert(!result.isSuccess(), 'Recurring Donation record update should fail when Installment Frequency is out of range');
+
+                System.assert(
+                    result.getErrors()[0].getMessage().contains(System.Label.RD2_InstallmentFrequencyMustBeValid),
+                    'RD update should fail due to invalid Installment Frequency. Actual message: ' + result.getErrors()[0].getMessage()
+                );
+            }
+        }
+    }
+
+    /***
+    * @description Verifies DML update should succeed when installment frequency is valid
+    */
+    @isTest
+    private static void shouldUpdateRDWhenInstallmentFrequencyIsWithinRange() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withInstallmentFrequency(10)
+            .build();
+            
+        insert rd;
+
+        rd.InstallmentFrequency__c = 20;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+        
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(20, rd.InstallmentFrequency__c,
+            'Installment Frequency should update when the value change is valid');
+    }
 
     // Helper Methods
     /////////////////////
@@ -562,6 +743,12 @@ private with sharing class RD2_ValidationService_TEST {
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)
             .withCalculateNextDonationDate();
+    }
+
+    private static TEST_RecurringDonationBuilder getRecurringDonationBuilderFixed() {
+        return getRecurringDonationBuilder()
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(12);
     }
 
     /**
