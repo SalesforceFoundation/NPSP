@@ -397,7 +397,8 @@ public inherited sharing class STG_PanelRDHealthCheck {
         };
 
         public Set<String> recurringTypes = new Set<String>{
-            RD2_Constants.RECURRING_TYPE_OPEN
+            RD2_Constants.RECURRING_TYPE_OPEN,
+            RD2_Constants.RECURRING_TYPE_FIXED
         };
 
         public Set<String> dayOfMonthValues {
