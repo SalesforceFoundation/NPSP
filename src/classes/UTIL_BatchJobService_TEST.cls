@@ -183,13 +183,13 @@ public with sharing class UTIL_BatchJobService_TEST {
             .withCreatedBy(getUser());
 
         UTIL_BatchJobService.BatchJob batchJob = new UTIL_BatchJobService.BatchJob(
-            jobBuilder.withCompletedDate(Date.today()).build()
+            jobBuilder.withCompletedDate(Datetime.now()).build()
         );
         System.assertEquals(0, batchJob.completedDaysBetween, 
             'Days between should be zero when batch job is completed today');
         
         batchJob = new UTIL_BatchJobService.BatchJob(
-            jobBuilder.withCompletedDate(Date.today().addDays(-2)).build()
+            jobBuilder.withCompletedDate(Datetime.now().addDays(-2)).build()
         );        
         System.assertEquals(2, batchJob.completedDaysBetween, 
             'Days between should be a positive number when batch job is completed in past');
