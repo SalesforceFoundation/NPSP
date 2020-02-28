@@ -269,6 +269,7 @@ public class RD2_DataMigrationMapper {
         return installmentDate == null ? null : installmentDate.day().format();
     }
 
+
     /**
      * @description Sets Status field
      * @param rd Recurring Donation in the legacy format
@@ -304,7 +305,16 @@ public class RD2_DataMigrationMapper {
      * @return void
      */
     private void setOtherFields(npe03__Recurring_Donation__c rd) {
-        rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+        if (rd.npe03__Open_Ended_Status__c == RD_Constants.OPEN_ENDED_STATUS_NONE
+                || rd.npe03__Open_Ended_Status__c == null) {
+            rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_FIXED;
+        } else {
+            rd.RecurringType__c = RD2_Constants.RECURRING_TYPE_OPEN;
+        }
+
+        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN) {
+            rd.npe03__Installments__c = null;
+        }
     }
 
     /**

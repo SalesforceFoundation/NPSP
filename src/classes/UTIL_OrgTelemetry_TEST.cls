@@ -80,7 +80,7 @@ private class UTIL_OrgTelemetry_TEST {
 
         npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
             .withContact(c.Id)
-            .withInstallments(3)
+            .withPlannedInstallments(3)
             .withAmount(100)
             .withInstallmentPeriodYearly()
             .withDateEstablished(Date.newInstance(2018,6,15))

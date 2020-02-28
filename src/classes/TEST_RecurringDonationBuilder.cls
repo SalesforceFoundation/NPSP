@@ -284,13 +284,11 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets number of Installments
-    * @param numberOfInstallments Number of Installments
+    * @description Sets Number of Planned Installments for a Fixed Length RD
+    * @param numberOfInstallments Number of Planned Installments
     * @return TEST_RecurringDonationBuilder Builder instance
     */
-    public TEST_RecurringDonationBuilder withInstallments(Integer numberOfInstallments) {
-        validateMode(Mode.Legacy);
-
+    public TEST_RecurringDonationBuilder withPlannedInstallments(Integer numberOfInstallments) {
         valuesByFieldName.put('npe03__Installments__c', numberOfInstallments);
         return this;
     }
@@ -308,13 +306,11 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets Paid Installments
-    * @param Total Paid installments
+    * @description Sets Number of Paid Installments (a Rollup Field used by both Legacy and Enhanced)
+    * @param Total Number of Paid installments
     * @return TEST_RecurringDonationBuilder Builder instance
     */
     public TEST_RecurringDonationBuilder withPaidInstallments(Integer installment) {
-        validateMode(Mode.Enhanced);
-
         valuesByFieldName.put('npe03__Total_Paid_Installments__c', installment);
         return this;
     }
@@ -455,6 +451,15 @@ public without sharing class TEST_RecurringDonationBuilder {
     */
     public TEST_RecurringDonationBuilder withRecurringTypeOpen() {
         return withRecurringType(RD2_Constants.RECURRING_TYPE_OPEN);
+    }
+
+    /***
+    * @description Sets Recurring Type field
+    * @param recurringType Recurring Type value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withRecurringTypeFixed() {
+        return withRecurringType(RD2_Constants.RECURRING_TYPE_FIXED);
     }
 
     /***
