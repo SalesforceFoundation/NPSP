@@ -172,6 +172,10 @@ public without sharing class RD2_ScheduleService {
         } else if (oldRd == null) {
             isNeeded = true;
 
+        // Invalid Installment Frequency should never result in a schedule update. This is a fail safe measure only
+        } else if (newRd.InstallmentFrequency__c == null || newRd.InstallmentFrequency__c < 1 || newRd.InstallmentFrequency__c > 20) {
+            isNeeded = false;
+
         // These two special conditions should never result in a schedule update.
         } else if
                 ((newRd.Status__c == RD2_Constants.STATUS_LAPSED && oldRd.Status__c == RD2_Constants.STATUS_ACTIVE) ||
@@ -246,6 +250,7 @@ public without sharing class RD2_ScheduleService {
         Date referenceDate = startDate == null ? currentDate : startDate;
         while (installments.size() < numInstallments) {
             Installment inst = getNextInstallment(referenceDate, schedules);
+
             if (inst == null) {
                 break;
             }
@@ -295,8 +300,14 @@ public without sharing class RD2_ScheduleService {
     */
     public Boolean isActive(RecurringDonationSchedule__c schedule, Date referenceDate) {
         //ensure the passed in schedules are active within the time period
-        return schedule.EndDate__c == null
+        Boolean isActive = schedule.EndDate__c == null 
             || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
+
+        Boolean isInstallmentFrequencyValid = schedule.InstallmentFrequency__c != null
+            && schedule.InstallmentFrequency__c >= 1
+            && schedule.InstallmentFrequency__c <= 20;
+
+        return isActive && isInstallmentFrequencyValid;
     }
 
     /***

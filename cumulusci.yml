@@ -480,7 +480,7 @@ tasks:
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Name__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Stage__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
