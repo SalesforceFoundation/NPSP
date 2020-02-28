@@ -66,7 +66,7 @@
         $A.enqueueAction(action);
     },
     /****
-    * @description Enables enhanced Recurring Donations 
+    * @description Enables enhanced Recurring Donations
     */
     completeEnable: function (component) {
         //disable the current active step so the next step is enabled only on current step success
@@ -116,7 +116,7 @@
                 component.set('v.metaDeployURL', metaDeployURL);
 
             } else if (state === "ERROR") {
-                component.set('v.metaDeployURL', 'https://install.salesforce.org/products/npsp/npsp-rd2-pilot');
+                component.set('v.metaDeployURL', 'https://install.salesforce.org/products/npsp/enhanced-recurring-donations');
             }
         });
 
@@ -577,14 +577,14 @@
         component.set('v.errorMessage', message);
     },
     /**
-     * @description: shows specific spinner 
+     * @description: shows specific spinner
      */
     showSpinner: function (component, element) {
         var spinner = component.find(element);
         $A.util.removeClass(spinner, 'slds-hide');
     },
     /**
-     * @description: hides specific spinner 
+     * @description: hides specific spinner
      */
     hideSpinner: function (component, element) {
         var spinner = component.find(element);
