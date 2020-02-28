@@ -64,11 +64,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>%%%NAMESPACE%%%InstallmentFrequency__c</field>
+                <field>npe03__Installment_Period__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npe03__Installment_Period__c</field>
+                <field>%%%NAMESPACE%%%InstallmentFrequency__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
