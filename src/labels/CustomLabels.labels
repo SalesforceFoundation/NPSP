@@ -317,22 +317,6 @@
         <value>Link opens in a new window</value>
     </labels>
     <labels>
-        <fullName>RD2_EnablementDryRunOutdatedError</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error displayed when migration validation is outdated</shortDescription>
-        <value>It&apos;s been longer than 7 days since you completed a migration validation. Refresh the page and click Validate Migration to confirm that your data will migrate without errors.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementDryRunOutdatedInfo</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Information displayed when migration validation is outdated</shortDescription>
-        <value>It&apos;s been longer than 7 days since you completed a migration validation. Click Validate Migration to confirm that your data will migrate without errors.</value>
-    </labels>
-    <labels>
         <fullName>AssistiveTextRecordIcon</fullName>
         <categories>AlternativeText</categories>
         <language>en_US</language>
@@ -1653,6 +1637,22 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Button label displayed to enable the migration context</shortDescription>
         <value>Ready to Migrate</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunOutdatedError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when migration validation is outdated</shortDescription>
+        <value>It&apos;s been longer than 7 days since you completed a migration validation. Refresh the page and click Validate Migration to confirm that your data will migrate without errors.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementDryRunOutdatedInfo</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Information displayed when migration validation is outdated</shortDescription>
+        <value>It&apos;s been longer than 7 days since you completed a migration validation. Click Validate Migration to confirm that your data will migrate without errors.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementDryRunSkipButton</fullName>
