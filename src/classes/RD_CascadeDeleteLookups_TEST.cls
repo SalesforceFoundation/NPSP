@@ -79,8 +79,8 @@ private class RD_CascadeDeleteLookups_TEST {
         undelete recurringDonations;
 
         List<Opportunity> undeletedRDOpportunities = [
-            SELECT Id 
-            FROM Opportunity 
+            SELECT Id
+            FROM Opportunity
             WHERE IsDeleted = false
         ];
         System.assertEquals(deletedRDOpportunities.size(), undeletedRDOpportunities.size(), 'The deleted Recurring Donation Opportunities should be cascade undeleted.');
@@ -119,7 +119,7 @@ private class RD_CascadeDeleteLookups_TEST {
             caughException = ex;
         }
         Test.stopTest();
-        
+
         System.assertNotEquals(null, caughException, 'An exception should be caught.');
         System.assert(caughException.getMessage().contains(expectedError.getMessage()), 'Exception message is not the one expected');
         System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
@@ -127,7 +127,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
     * @description Attempts to delete 2 Recurring Donations, 1 with Closed Won Opportunity and the other one
-    * with Closed Lost Opportunity. The first one should have an error, and its Closed Won Opportunity should 
+    * with Closed Lost Opportunity. The first one should have an error, and its Closed Won Opportunity should
     * not be deleted. The other one should be deleted, and its Closed Lost Opportunity deleted.
     */
     static testMethod void testRDDeleteWithMixExceptionAndSuccess(){
@@ -140,18 +140,18 @@ private class RD_CascadeDeleteLookups_TEST {
         insert recurringDonations;
 
         List<Opportunity> rdOpportunities = new List<Opportunity>();
-        
+
         //Create a Closed Won Opportunity for the first Recurring Donation.
         rdOpportunities.add(
             CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(
-                new List<npe03__Recurring_Donation__c>{recurringDonations[0]}, 
+                new List<npe03__Recurring_Donation__c>{recurringDonations[0]},
                 UTIL_UnitTestData_TEST.getClosedWonStage()
             )[0]
         );
         //Create a Closed Lost Opportunity for the first Recurring Donation.
         rdOpportunities.add(
             CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(
-                new List<npe03__Recurring_Donation__c>{recurringDonations[1]}, 
+                new List<npe03__Recurring_Donation__c>{recurringDonations[1]},
                 UTIL_UnitTestData_TEST.getClosedLostStage()
             )[0]
         );
@@ -186,8 +186,8 @@ private class RD_CascadeDeleteLookups_TEST {
 
         List<npe03__Recurring_Donation__c> nonDeletedRecurringDonations = CDL_CascadeDeleteLookups_TEST.getNonDeletedRecurringDonations();
         List<Opportunity> nonDeletedRDOpportunities = [
-            SELECT Id 
-            FROM Opportunity 
+            SELECT Id
+            FROM Opportunity
             WHERE IsDeleted = false
             AND npe03__Recurring_Donation__c = :recurringDonations[0].Id
         ];
@@ -204,8 +204,8 @@ private class RD_CascadeDeleteLookups_TEST {
             ALL ROWS
         ];
         List<Opportunity> deletedRDOpportunities = [
-            SELECT Id 
-            FROM Opportunity 
+            SELECT Id
+            FROM Opportunity
             WHERE IsDeleted = true
             ALL ROWS
         ];
@@ -216,7 +216,7 @@ private class RD_CascadeDeleteLookups_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Attempts to delete recurring donation with closed/won and org opps, verifies correct Lightning 
+    * @description Attempts to delete recurring donation with closed/won and org opps, verifies correct Lightning
     * exception is thrown.
     */
     static testMethod void testRDDeleteException_LightningThemeContext(){
@@ -302,7 +302,7 @@ private class RD_CascadeDeleteLookups_TEST {
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
         return new TEST_RecurringDonationBuilder()
             .withAmount(2)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriodYearly()
             .withDateEstablished()
             .withScheduleTypeMultiplyValue();

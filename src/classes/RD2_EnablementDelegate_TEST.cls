@@ -147,7 +147,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         String url = RD2_EnablementDelegate_CTRL.getMetaDeployURL();
 
-        String expectedUrl = 'https://install.salesforce.org/products/npsp/npsp-rd2-pilot';
+        String expectedUrl = 'https://install.salesforce.org/products/npsp/enhanced-recurring-donations';
 
         System.assertEquals(expectedURL, url, 'URL should match');
     }
@@ -186,7 +186,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isConfirmed = true;
         expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
-        
+
         stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
@@ -211,7 +211,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isConfirmed = true;
         expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
-        
+
         stubRD2ReadyAndEnabled();
 
         //mock value that does not exist but is expected
@@ -251,7 +251,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         Test.startTest();
         Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
         Test.stopTest();
-        
+
         AsyncApexJob job = jobGateway.getRecord('RD2_DataMigrationDryRun_BATCH');
         System.assertEquals(1, job.JobItemsProcessed,
             'The batch should have run with one child batch processed'
@@ -261,7 +261,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /**
-     * @description Verifies Enhanced Recurring Donations dry run migration batch job sets "isDryRun2" 
+     * @description Verifies Enhanced Recurring Donations dry run migration batch job sets "isDryRun2"
      * if metadata deployment has been confirmed
      */
     @IsTest
@@ -280,7 +280,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isEnabled = true;
         expectedState.isMetaLaunched = true;
         expectedState.isMetaConfirmed = true;
-        setEnablementState(JSON.serialize(expectedState));        
+        setEnablementState(JSON.serialize(expectedState));
 
         Test.startTest();
         Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
@@ -302,7 +302,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isReady = true;
         expectedState.isEnabled = true;
         setEnablementState(JSON.serialize(expectedState));
-        
+
         stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.skipDryRun();
@@ -312,7 +312,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /****
-    * @description Verifies migration enabled flag is unchecked when user skips migration 
+    * @description Verifies migration enabled flag is unchecked when user skips migration
     * and goes back to the validation
     */
     @isTest
@@ -321,7 +321,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isReady = true;
         expectedState.isEnabled = true;
         setEnablementState(JSON.serialize(expectedState));
-        
+
         stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.skipMigration();
@@ -425,7 +425,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /**
-     * @description Sets RD Settings 
+     * @description Sets RD Settings
      * @return void
      */
     private static void setRDSettings() {
