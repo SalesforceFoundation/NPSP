@@ -324,12 +324,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
         updateDefaultRollupSettings();
         updateDefaultOrgContactsSettings();
         updateOpportunityNamingSettings();
+        createDefaultGiftEntrySettings();
     }
 
     /***
     * @description Update Opportunity Naming Settings Attribution value to the AttributionOptions API value
     */
-    public static void updateOpportunityNamingSettings() {
+    private static void updateOpportunityNamingSettings() {
         List <Opportunity_Naming_Settings__c> oppSettings = new List <Opportunity_Naming_Settings__c>();
         STG_PanelOppNaming_CTRL.AttributionSettings attributionSettings = new STG_PanelOppNaming_CTRL.AttributionSettings();
 
@@ -345,7 +346,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * @description Ensure that any default Org Contacts Settings Records are updated for custom settings
     * objects accordingly.
     */
-    public static void updateDefaultOrgContactsSettings() {
+    private static void updateDefaultOrgContactsSettings() {
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
         if (npe01Settings.Contact_Role_for_Organizational_Opps__c == null) {
             npe01Settings.Contact_Role_for_Organizational_Opps__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
@@ -358,7 +359,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * objects accordingly.  There was a swap of custom setting fields to get the account soft credit settings
     * pointed to the corresponding setting
     */
-    public static void updateDefaultRollupSettings() {
+    private static void updateDefaultRollupSettings() {
         Customizable_Rollup_Settings__c rollupSettings = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
         Boolean isUpdateNeeded = false;
         Decimal currentAccountSoftCreditBatchSize = UTIL_CustomSettingsFacade.DEFAULT_ROLLUP_BATCH_SIZE;
@@ -375,6 +376,15 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if (isUpdateNeeded) {
             update rollupSettings;
         }
+
+    }
+
+    /**
+     * @description Create the default gift entry and data import settings records for all new push upgrades
+     */
+    private static void createDefaultGiftEntrySettings() {
+        UTIL_CustomSettingsFacade.getOrgGiftEntrySettings();
+        UTIL_CustomSettingsFacade.getOrgDataImportSettings();
 
     }
 
