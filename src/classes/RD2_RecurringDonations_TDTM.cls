@@ -152,12 +152,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             : new Map<Id, List<RecurringDonationSchedule__c>>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            RD2_OpportunityEvaluationService.RecurringDonation rdRecord = new RD2_OpportunityEvaluationService.RecurringDonation(rd);
-
-            rdRecord.revisePlannedInstallments();
+            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
+                .revisePlannedInstallments();
 
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                rdRecord.reviseNextDonationDate(scheduleService, scheduleService.buildNewSchedules(rd));
+                rdRecord.reviseNextDonationDateBeforeInsert(scheduleService);
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 rdRecord

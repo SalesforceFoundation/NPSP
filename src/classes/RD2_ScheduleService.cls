@@ -173,7 +173,7 @@ public without sharing class RD2_ScheduleService {
             isNeeded = true;
 
         // Invalid Installment Frequency should never result in a schedule update. This is a fail safe measure only
-        } else if (!(new RD2_OpportunityEvaluationService.RecurringDonation(newRd)).isValidInstallmentFrequency()) {
+        } else if (!(new RD2_RecurringDonation(newRd)).isValidInstallmentFrequency()) {
             isNeeded = false;
 
         // These two special conditions should never result in a schedule update.
@@ -307,10 +307,10 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-     * @description Determines if the Installment Frequency is in the range
+    * @description Determines if the Installment Frequency is in the range
     * @param schedule Recurring Donation schedule
-     * @return Boolean
-     */
+    * @return Boolean
+    */
     private Boolean isValidInstallmentFrequency(RecurringDonationSchedule__c schedule) {
         return schedule.InstallmentFrequency__c != null
             && schedule.InstallmentFrequency__c >= 1
@@ -380,19 +380,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         return nextInstallment;
-    }
-
-    /***
-    * @description Calculates the date of the next donation
-    * @param rd Recurring Donation record
-    * @return Date
-    */
-    public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
-            return null;
-        }
-
-        return getNextDonationDate(buildNewSchedules(rd));
     }
 
     /***

@@ -237,7 +237,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .withStatusClosed()
             .build();
 
-        System.assertEquals(null, service.getNextDonationDate(rd), 'Next Donation Date should be null');
+        System.assertEquals(null, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should be null');
     }
 
     /***
@@ -255,7 +255,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -274,7 +274,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -293,7 +293,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -311,7 +311,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -328,7 +328,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -343,7 +343,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(startDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(startDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -358,7 +358,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(startDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(startDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -377,7 +377,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -396,7 +396,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -416,7 +416,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -435,7 +435,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -454,7 +454,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -469,7 +469,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         RD2_ScheduleService service = new RD2_ScheduleService();
-        System.assertEquals(Date.today(), service.getNextDonationDate(rd), 'Next donation date should equal today.');
+        System.assertEquals(Date.today(), service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next donation date should equal today.');
     }
 
     /***
