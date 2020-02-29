@@ -550,11 +550,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return RecurringDonation This record instance
         */
         public RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
-            if (isClosed()) {
-                return this;
-            }
+            return reviseNextDonationDate(scheduleService, rd.RecurringDonationSchedules__r);
+        }
 
-            Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
+        /**
+        * @description Revises and modifies the Recurring Donation Next Donation Date
+        * @param scheduleService RD Schedule Service
+        * @param rdSchedules Schedules on the Recurring Donation
+        * @return RecurringDonation This record instance
+        */
+        public RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) {
+
+            Date nextDonationDate = isClosed() ? null : scheduleService.getNextDonationDate(rdSchedules);
+
             if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
                 changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
@@ -605,6 +613,20 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return this;
         }
 
+        /**
+        * @description Revises and modifies the Number of Planned Installments when
+        * RecurringType is Open and Number of Planned Installments = 1, set Number of Planned Installments to null
+        * @return RecurringDonation This record instance
+        */
+        public RecurringDonation revisePlannedInstallments() {
+
+            if (isOpenEnded() && rd.npe03__Installments__c == 1) {
+                rd.npe03__Installments__c = null;
+                changedFields.add(npe03__Recurring_Donation__c.npe03__Installments__c);
+            }
+
+            return this;
+        }
 
         /**
         * @description Indicates if the Recurring Donation is outdated and requiring an update
@@ -679,6 +701,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         */
         public Boolean hasNextDonationDate() {
             return rd.npe03__Next_Payment_Date__c != null;
+        }
+
+        /***
+         * @description Determines if the Installment Frequency is in the range
+         * @return Boolean
+         */
+        public Boolean isValidInstallmentFrequency() {
+            return rd.InstallmentFrequency__c != null
+                && rd.InstallmentFrequency__c >= 1
+                && rd.InstallmentFrequency__c <= 20;
         }
 
         /**

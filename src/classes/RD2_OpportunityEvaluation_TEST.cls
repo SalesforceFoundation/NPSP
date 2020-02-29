@@ -918,7 +918,7 @@ private class RD2_OpportunityEvaluation_TEST {
         TDTM_TriggerHandler.disableTDTM = false;
 
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        Database.insert(scheduleService.getNewSchedules(rd));
+        Database.insert(scheduleService.buildNewSchedules(rd));
 
         System.assertEquals(0, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
             'There should be no installment Opportunities created for this RD');

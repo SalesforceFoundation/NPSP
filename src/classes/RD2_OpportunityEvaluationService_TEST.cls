@@ -127,7 +127,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
-        rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.getNewSchedules(rd1));
+        rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.buildNewSchedules(rd1));
 
         // Recurring Donation with no Schedule records
         npe03__Recurring_Donation__c rd2 = getRecurringDonationBuilder()
@@ -145,7 +145,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withCalculateNextDonationDate()
             .build();
         rd3.npe03__Next_Payment_Date__c = null;
-        rd3 = mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.getNewSchedules(rd3));
+        rd3 = mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.buildNewSchedules(rd3));
 
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
@@ -169,7 +169,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
-        rdNew = mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.getNewSchedules(rdNew));
+        rdNew = mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.buildNewSchedules(rdNew));
 
         // Old Opportunity (has related Opps) - Not New RD
         npe03__Recurring_Donation__c rdOld = getRecurringDonationBuilder()
@@ -185,7 +185,7 @@ private class RD2_OpportunityEvaluationService_TEST {
                 .withCloseDate(rdOld.npe03__Next_Payment_Date__c)
                 .build()
         };
-        rdOld = mockRecurringDonationFullQueryResult(rdOld, opps, scheduleService.getNewSchedules(rdOld));
+        rdOld = mockRecurringDonationFullQueryResult(rdOld, opps, scheduleService.buildNewSchedules(rdOld));
 
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
