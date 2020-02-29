@@ -227,6 +227,7 @@ public with sharing class STG_InstallScript_TEST {
         Household_Naming_Settings__c householdNamingSettings = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
         Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getOrgDataImportSettings();
+        Gift_Entry_Settings__c geSettings = UTIL_CustomSettingsFacade.getOrgGiftEntrySettings();
         Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
 
         //If it's a new install we want to set the Household model by default
@@ -283,9 +284,13 @@ public with sharing class STG_InstallScript_TEST {
 
         System.assertEquals('HH_NameSpec',householdNamingSettings.Implementing_Class__c);
         System.assertEquals(365,allocationsSettings.Rollup_N_Day_Value__c);
+
         System.assertEquals(50,dataImportSettings.Batch_Size__c);
 
-        System.assertNotEquals(pkgSettings.Id, null);
+        System.assertEquals(UserInfo.getOrganizationId(), geSettings.SetupOwnerId);
+
+        System.assertNotEquals(pkgSettings.Id, null, 'A default PackageSettings record should have been created');
+
     }
 
     /*********************************************************************************************************
