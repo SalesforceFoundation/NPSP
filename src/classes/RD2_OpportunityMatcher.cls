@@ -253,7 +253,13 @@ public inherited sharing class RD2_OpportunityMatcher {
      */
     private Record getFuzzyMatch(Map<Date, Record> recordByCloseDate, Date startDate, Date endDate) {
 
-        for (Record record : recordByCloseDate.values()) {            
+        for (Record record : recordByCloseDate.values()) {  
+            if (record.isNew() //the record does not contain an Opp to match the installment with
+                || record.getInstallment() != null //the record has a matching installment already
+            ) {
+                continue;
+            }   
+
             Date closeDate = record.getOpportunity().CloseDate;
             
             if (closeDate >= startDate && closeDate <= endDate) {//TODO, should you find the closest one to the installment NDD?
