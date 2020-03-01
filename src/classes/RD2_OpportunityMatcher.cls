@@ -82,7 +82,7 @@ public inherited sharing class RD2_OpportunityMatcher {
     * @description Contains all included Opportunities and/or projected installments mapped by their Close Date
     */
     private Map<Date, Record> recordByCloseDate = new Map<Date, Record>();
-    private Map<Date, Record> boundaryRecordsByCloseDate = new Map<Date, Record>();
+    private Map<Date, Record> boundaryRecordByCloseDate = new Map<Date, Record>();
 
 
     /***
@@ -123,7 +123,7 @@ public inherited sharing class RD2_OpportunityMatcher {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
 
             } else if (opp.CloseDate >= cutoffDate) {
-                boundaryRecordsByCloseDate.put(opp.CloseDate, new Record(opp));
+                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
         return this;
@@ -144,7 +144,7 @@ public inherited sharing class RD2_OpportunityMatcher {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
 
             } else if (opp.CloseDate >= cutoffDate) {
-                boundaryRecordsByCloseDate.put(opp.CloseDate, new Record(opp));
+                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
         return this;
@@ -158,7 +158,6 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
     public RD2_OpportunityMatcher includeCurrentOrOpen(List<Opportunity> opps) {
-        //remove past and closed and unmatched
         for (Opportunity opp : opps) {
             if (isClosedLostInMigration(opp)) {
                 continue;
@@ -167,7 +166,7 @@ public inherited sharing class RD2_OpportunityMatcher {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
 
             } else if (opp.CloseDate >= cutoffDate) {
-                boundaryRecordsByCloseDate.put(opp.CloseDate, new Record(opp));
+                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
         return this;
@@ -199,9 +198,9 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Matches today's or future projected installment with existing Opp.
-     * If the matching Opp is found, add installment to the record.
-     * Otherwise, create a record containing the installment only,
+     * @description Matches today's or future projected installment with an existing Opp.
+     * If the matching Opp is found, adds installment to the record.
+     * Otherwise, creates a record containing the installment only,
      * @param installment Today's or future projected installment
      * @return void
      */
@@ -225,9 +224,13 @@ public inherited sharing class RD2_OpportunityMatcher {
         Date endDate = installment.nextDonationDate.addDays(nextDonationDateMatchDays);
 
         //check if there is any match with an Opp with Close Date < current date
-        matched = getFuzzyMatch(boundaryRecordsByCloseDate, startDate, endDate);
+        matched = getFuzzyMatch(boundaryRecordByCloseDate, startDate, endDate);
         if (matched != null) {
-            recordByCloseDate.put(installment.nextDonationDate, new Record(matched.getOpportunity()).attachInstallment(installment));
+            recordByCloseDate.put(
+                installment.nextDonationDate, 
+                new Record(matched.getOpportunity()).attachInstallment(installment)
+            );
+            boundaryRecordByCloseDate.remove(matched.getOpportunity().CloseDate);
             return;
         }
 
@@ -245,7 +248,7 @@ public inherited sharing class RD2_OpportunityMatcher {
     /***
      * @description Determines if an Opportunity matches a projected installment.
      * Matching is done by the exact Close Date match or when 
-     * the Close Date is within the installment Next Donation Date +/- match days range
+     * the Close Date is within the installment Next Donation Date +/- match days range.
      * @param recordByCloseDate Record by Close Date map
      * @param startDate Installment range start date 
      * @param endDate Installment range end date 
@@ -260,8 +263,7 @@ public inherited sharing class RD2_OpportunityMatcher {
                 continue;
             }   
 
-            Date closeDate = record.getOpportunity().CloseDate;
-            
+            Date closeDate = record.getOpportunity().CloseDate;            
             if (closeDate >= startDate && closeDate <= endDate) {//TODO, should you find the closest one to the installment NDD?
                 return record;
             }
