@@ -166,6 +166,24 @@ public with sharing class RD2_Settings {
     }
 
     /***
+    * @description Specifies number of days before and after the installment Close Date
+    * so it can be matched with an existing Opportunity
+    */
+    public Integer nextDonationDateMatchDays {
+        get {
+            if (nextDonationDateMatchDays == null) {
+                Decimal value = settings.NextDonationDateMatchRangeDays__c;
+
+                nextDonationDateMatchDays = value == null || value < 0
+                    ? 3//default 
+                    : Integer.valueOf(value);
+            }
+            return nextDonationDateMatchDays;
+        } 
+        private set;
+    }
+
+    /***
     * @description Saves latest Recurring Donation batch results
     */
     public void saveLatestBatchResults(Id jobId, Integer recordsProcessed, Integer recordsFailed) {

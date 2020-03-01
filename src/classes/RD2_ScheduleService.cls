@@ -321,24 +321,25 @@ public without sharing class RD2_ScheduleService {
     * @description Wrapper class for Recurring Donation Installment data
     */
     public class Installment {
-
         public Id       campaignId {get; set;}
         public String   campaignName {get; set;}
+        public Date     startDate {get; set;}
         public Date     endDate {get; set;}
-        public Decimal  installmentAmount {get; set;}
         public Date     nextDonationDate {get; set;}
+        public String   installmentPeriod {get; set;}
+        public Decimal  installmentAmount {get; set;}
         public String   paymentMethod {get; set;}
         public Id       scheduleId {get; set;}
-        public Date     startDate {get; set;}
 
         Installment(RecurringDonationSchedule__c rdSchedule) {
             campaignId =            rdSchedule.Campaign__c;
             campaignName =          rdSchedule.Campaign__r.Name;
+            startDate =             rdSchedule.StartDate__c;
             endDate =               rdSchedule.EndDate__c;
+            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
             installmentAmount =     rdSchedule.InstallmentAmount__c;
             paymentMethod =         rdSchedule.PaymentMethod__c;
             scheduleId =            rdSchedule.Id;
-            startDate =             rdSchedule.StartDate__c;
         }
     }
 
