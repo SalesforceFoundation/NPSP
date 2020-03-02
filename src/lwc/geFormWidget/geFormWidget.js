@@ -3,7 +3,8 @@ import { checkNestedProperty } from 'c/utilCommon';
 
 const PAYMENT_WIDGET = 'geFormWidgetPayment';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
-const WIDGET_LIST = [PAYMENT_WIDGET, ALLOCATION_WIDGET];
+const TOKENIZECARD_WIDGET = 'geFormWidgetTokenizeCard';
+const WIDGET_LIST = [PAYMENT_WIDGET, ALLOCATION_WIDGET, TOKENIZECARD_WIDGET];
 
 export default class GeFormWidget extends LightningElement {
     @api element;
@@ -47,6 +48,10 @@ export default class GeFormWidget extends LightningElement {
     get isPaymentScheduler() {
         return this.element.componentName === PAYMENT_WIDGET;
     }
+
+    get isElevateTokenizeCard() {
+        return this.element.componentName === TOKENIZECARD_WIDGET;
+    }    
 
     get isAllocation() {
         return this.element.componentName === ALLOCATION_WIDGET;
