@@ -125,11 +125,13 @@ private with sharing class RD_AddDonationsBTN_TEST {
             new ApexPages.StandardController(rd)
         );
 
-        //No redirect should occur on the error message display
-        System.assertEquals(null, ctrl.buttonClick());
-
+        // The error should be generated and rendered by the constructor
         UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationLimitedToLegacyMode, ApexPages.Severity.ERROR);
 
+        // No redirect should occur on this, even though it should be unreachable
+        System.assertEquals(null, ctrl.buttonClick());
+
+        // Validate that the cancel operation redirects to the correct RD
         System.assertEquals('/' + String.valueOf(rd.Id).left(15), ctrl.redirectToRecurringDonationsPage().getUrl(),
             'The Cancel should redirect to the Recurring Donation detail page'
         );
