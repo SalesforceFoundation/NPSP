@@ -582,6 +582,43 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+     * @description Verifies past open Opp matching future projected installment
+     * is not updated when an active RD is updated
+     */
+    @IsTest
+    private static void shouldNotUpdatePastOpenOppMatchingFutureInstallmentWhenRDIsUpdated() {
+        //set current date override
+        final Date today = START_DATE.addDays(1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withCalculateNextDonationDate()
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withCloseDate(START_DATE)
+            .withOpenStage()
+            .build();
+
+        Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(today.addDays(1).day());
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
+        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Amount should not be updated on a past open Opp');
+        System.assertEquals(START_DATE, opps[0].CloseDate, 'Close Date should not be updated on a past open Opp');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /**
      * @description Verifies future open Opp is updated when an active RD is updated.
      * The future Closed Won Opp is not updated.
      */

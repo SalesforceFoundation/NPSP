@@ -205,6 +205,7 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @return void
      */
     private void match(RD2_ScheduleService.Installment installment) {
+
         Record matched = recordByCloseDate.get(installment.nextDonationDate);
 
         if (matched != null) {//matches the Opp Close Date exactly
@@ -226,11 +227,7 @@ public inherited sharing class RD2_OpportunityMatcher {
         //check if there is any match with an Opp with Close Date < current date
         matched = getFuzzyMatch(boundaryRecordByCloseDate, startDate, endDate);
         if (matched != null) {
-            recordByCloseDate.put(
-                installment.nextDonationDate, 
-                new Record(matched.getOpportunity()).attachInstallment(installment)
-            );
-            boundaryRecordByCloseDate.remove(matched.getOpportunity().CloseDate);
+            addMatchedBoundaryOpp(matched.getOpportunity(), installment);
             return;
         }
 
@@ -264,12 +261,38 @@ public inherited sharing class RD2_OpportunityMatcher {
             }   
 
             Date closeDate = record.getOpportunity().CloseDate;            
-            if (closeDate >= startDate && closeDate <= endDate) {//TODO, should you find the closest one to the installment NDD?
+            if (closeDate >= startDate && closeDate <= endDate) {
                 return record;
             }
         }
 
         return null;
+    }
+
+    /***
+     * @description Matches a future projected installment a past Opportunity 
+     * having Close Date < currentDate but >= cutoffDate.
+     * The record is added to the matched but it is sorted by the Opp Close Date so
+     * returned records are ordered by the Close Date when matched or Next Donation Date when unmatched
+     * 
+     * @param opp Opportunity
+     * @param installment Installment
+     * @return void
+     */
+    private void addMatchedBoundaryOpp(Opportunity opp, RD2_ScheduleService.Installment installment) {
+
+        recordByCloseDate.put(opp.CloseDate, new Record(opp).attachInstallment(installment));
+        boundaryRecordByCloseDate.remove(opp.CloseDate);
+
+        List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
+        closeDates.sort();
+
+        //rebuild records container so they are sorted by dates
+        Map<Date, Record> recordByCloseDateClone = recordByCloseDate.clone(); 
+        recordByCloseDate = new Map<Date, Record>();
+        for (Date closeDate : closeDates) {
+            recordByCloseDate.put(closeDate, recordByCloseDateClone.get(closeDate));
+        }
     }
 
     /***
