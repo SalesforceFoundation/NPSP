@@ -116,6 +116,23 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
+     * @description Includes Opportunities matching the provided fiscal year regardless if they are open or closed.
+     * Opportunities marked as Closed Lost in data migration are ignored.
+     * @param opps Recurring Donation Opportunities
+     * @param startDate Fiscal year start date
+     * @param endDate Fiscal year end date
+     * @return RD2_OpportunityMatcher This Opportunity matcher instance
+     */
+    public RD2_OpportunityMatcher includeByFiscalYear(List<Opportunity> opps, Date startDate, Date endDate) {
+        for (Opportunity opp : opps) {
+            if (!isClosedLostInMigration(opp) && opp.CloseDate >= startDate && opp.CloseDate <= endDate) {
+                recordByCloseDate.put(opp.CloseDate, new Record(opp));
+            }
+        }
+        return this;
+    }
+
+    /***
      * @description Includes Open Opportunities with Close Date greater or equal to the current date
      * @param opps Recurring Donation Opportunities
      * @return RD2_OpportunityMatcher This Opportunity matcher instance

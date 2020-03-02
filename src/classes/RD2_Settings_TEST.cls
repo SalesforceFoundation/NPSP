@@ -290,6 +290,45 @@ public with sharing class RD2_Settings_TEST {
             'Installment Next Donation Date Match Range Days default should be returned');
     }
 
+    /**
+     * @description Verifies configured fiscal year usage is returned
+     */
+    @IsTest
+    private static void shouldReturnTrueWhenConfiguredUseFiscalYearIsChecked() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => true }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(true, settings.useFiscalYear, 
+            'Should use Fiscal Year (if configured) for the current/next year value calculations');
+    }
+
+    /**
+     * @description Verifies configured fiscal year usage is returned
+     */
+    @IsTest
+    private static void shouldReturnFalseWhenConfiguredUseFiscalYearIsUnchecked() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => false }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(false, settings.useFiscalYear, 
+            'Should use Calendar Year for the current/next year value calculations');
+    }
+
+    /**
+     * @description Verifies fiscal year is not used when it is not configured
+     */
+    @IsTest
+    private static void shouldReturnFalseWhenUseFiscalYearIsNotConfigured() {
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(false, settings.useFiscalYear, 
+            'Should use Calendar Year for the current/next year value calculations');
+    }
+
+
 
     // Helpers
     ////////////
