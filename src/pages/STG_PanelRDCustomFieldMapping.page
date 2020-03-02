@@ -63,7 +63,7 @@
                     <apex:repeat var="fm" value="{!listRDCustomFieldMapping}" >
                         <tr>
                             <td>
-                                <apex:commandLink id="deleteRDFieldMapping" action="{!deleteFm}" title="{!$Label.stgLinkDelete} {!fm.npe03__Recurring_Donation_Field__c} - {!fm.npe03__Opportunity_Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
+                                <apex:commandLink id="deleteRDFieldMapping" action="{!deleteFm}" title="{!$Label.stgLinkDelete} {!fm.npe03__Recurring_Donation_Field__c} - {!fm.npe03__Opportunity_Field__c}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!JSENCODE($Label.stgLabelAreYouSure)}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!fmIdDelete}" name="idDeleteFm" value="{!fm.Id}" />
                                 </apex:commandLink>
                             </td>
