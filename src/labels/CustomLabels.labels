@@ -5039,6 +5039,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geBodyAdvancedFieldMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Advanced Form Fields header</shortDescription>
+        <value>For more advanced gift entry options, select fields from the following Object Groups.</value>
+    </labels>
+    <labels>
         <fullName>geBodyBatchFieldBundleInfo</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5093,11 +5101,19 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
+        <shortDescription>Body below the Field Bundles header</shortDescription>
+        <value>Each field bundle is a managed set of fields that allow users to perform different gift entry actions.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
         <shortDescription>Body below the Form Fields header</shortDescription>
         <value>These fields are commonly included in gift entry forms. Custom Object Groups are also found in this section.</value>
     </labels>
     <labels>
-        <fullName>geBodyFormFieldsLeftCol</fullName>
+        <fullName>geBodyFormFieldsDescLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -5804,7 +5820,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for GAU Allocation 1 object group</shortDescription>
-        <value>Use this field bundle to allocate donations across multiple General Accounting Units.</value>
+        <value>This Object Group only allows you to enter a single GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
     </labels>
     <labels>
         <fullName>geHelpTextAllocation2Mapping</fullName>
@@ -5812,7 +5828,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for GAU Allocation 2 object group</shortDescription>
-        <value>This Object Group only allows you to enter a single GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
+        <value>This Object Group only allows you to enter a second GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
     </labels>
     <labels>
         <fullName>geHelpTextAllocationBundle</fullName>
@@ -5820,7 +5836,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text about GAU Allocation field bundle</shortDescription>
-        <value>This Object Group only allows you to enter a second GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
+        <value>Use this field bundle to allocate donations across multiple General Accounting Units.</value>
     </labels>
     <labels>
         <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>
@@ -5864,6 +5880,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Help text for Form Fields Field Label</shortDescription>
         <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextHouseholdMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Household Object Group</shortDescription>
+        <value>Additional information about Contact1's Household Account.</value>
     </labels>
     <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>

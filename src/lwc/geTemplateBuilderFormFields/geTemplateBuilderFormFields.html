@@ -53,28 +53,34 @@
                     <c-util-expandable-section
                             label={CUSTOM_LABELS.geHeaderFieldBundles}
                             data-section-id={LOCATORS.FIELD_BUNDLES_SECTION_ID}>
-                        <template for:each={fieldBundleMappings}
-                                  for:item="objectMapping">
-                            <template for:each={objectMapping.Field_Mappings}
-                                      for:item="fieldMapping">
-                                <div key={fieldMapping.DeveloperName} class="slds-p-horizontal--small slds-p-top--medium">
-                                    <lightning-input type="checkbox"
-                                                     key={fieldMapping.DeveloperName}
-                                                     label={fieldMapping.Target_Field_Label}
-                                                     value={fieldMapping.DeveloperName}
-                                                     checked={fieldMapping.checked}
-                                                     onchange={handleToggleFieldMapping}
-                                                     class="slds-truncate slds-p-bottom_xxx-small"
-                                                     title={fieldMapping.DeveloperName}
-                                                     required={fieldMapping.Is_Required}
-                                                     data-source-api-name={fieldMapping.Source_Field_API_Name}
-                                                     data-object-mapping-label={objectMapping.MasterLabel}
-                                                     data-field-mapping={fieldMapping.DeveloperName}
-                                                     data-object-mapping={objectMapping.DeveloperName}>
-                                    </lightning-input>
-                                </div>
+                        <p class="slds-text-body_small slds-p-around_small">
+                            {CUSTOM_LABELS.geBodyFieldBundlesLeftCol}
+                        </p>
+                        <div class="slds-p-horizontal--small slds-p-top--medium">
+                            <template for:each={fieldBundleMappings}
+                                      for:item="objectMapping">
+                                <template for:each={objectMapping.Field_Mappings}
+                                          for:item="fieldMapping">
+                                    <div key={fieldMapping.DeveloperName}>
+                                        <lightning-input type="checkbox"
+                                                         key={fieldMapping.DeveloperName}
+                                                         label={fieldMapping.Target_Field_Label}
+                                                         value={fieldMapping.DeveloperName}
+                                                         checked={fieldMapping.checked}
+                                                         onchange={handleToggleFieldMapping}
+                                                         class="slds-truncate slds-p-bottom_xxx-small"
+                                                         title={fieldMapping.DeveloperName}
+                                                         required={fieldMapping.Is_Required}
+                                                         field-level-help={fieldMapping.helpText}
+                                                         data-source-api-name={fieldMapping.Source_Field_API_Name}
+                                                         data-object-mapping-label={objectMapping.MasterLabel}
+                                                         data-field-mapping={fieldMapping.DeveloperName}
+                                                         data-object-mapping={objectMapping.DeveloperName}>
+                                        </lightning-input>
+                                    </div>
+                                </template>
                             </template>
-                        </template>
+                        </div>
                     </c-util-expandable-section>
                 </div>
 
@@ -101,6 +107,9 @@
                     <c-util-expandable-section
                             label={CUSTOM_LABELS.geTabFormFields}
                             data-section-id={LOCATORS.FORM_FIELDS_SECTION_ID}>
+                        <p class="slds-text-body_small slds-p-around_small">
+                            {CUSTOM_LABELS.geBodyFormFieldsDescLeftCol}
+                        </p>
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
                                              active-section-name={activeSections}>
@@ -163,6 +172,9 @@
                             label={CUSTOM_LABELS.geHeaderAdvancedFormFields}
                             is-collapsed="true"
                             data-section-id={LOCATORS.ADVANCED_FIELDS_SECTION_ID}>
+                        <p class="slds-text-body_small slds-p-around_small">
+                            {CUSTOM_LABELS.geBodyFormFieldsDescLeftCol}
+                        </p>
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
                                              active-section-name={activeSections}>

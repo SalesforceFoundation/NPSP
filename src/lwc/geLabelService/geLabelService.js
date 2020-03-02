@@ -45,13 +45,16 @@ import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
+import geBodyAdvancedFieldMapping from '@salesforce/label/c.geBodyAdvancedFieldMapping';
 import geBodyBatchDefaultValues from '@salesforce/label/c.geBodyBatchDefaultValues';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftCol';
 import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
 import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
+import geBodyFieldBundlesLeftCol from '@salesforce/label/c.geBodyFieldBundlesLeftCol';
 import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
+import geBodyFormFieldsDescLeftCol from '@salesforce/label/c.geBodyFormFieldsDescLeftCol';
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geBodyFormFieldsModalDeleteSection from '@salesforce/label/c.geBodyFormFieldsModalDeleteSection';
 import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
@@ -137,6 +140,7 @@ import geHelpTextAllocationBundle from '@salesforce/label/c.geHelpTextAllocation
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
+import geHelpTextHouseholdMapping from '@salesforce/label/c.geHelpTextHouseholdMapping';
 import geLabelCustomTableSelectedFields from '@salesforce/label/c.geLabelCustomTableSelectedFields';
 import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTableSourceFields';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
@@ -213,12 +217,15 @@ class GeLabelService {
         geAssistiveSectionUp,
         geAssistiveShowMenu,
         geAssistiveSpinner,
+        geBodyAdvancedFieldMapping,
         geBodyBatchDefaultValues,
         geBodyBatchFieldBundleInfo,
         geBodyBatchHeaderLeftCol,
         geBodyBatchHeaderRightCol,
         geBodyBatchHeaderWarning,
         geBodyEmptyFormSection,
+        geBodyFieldBundlesLeftCol,
+        geBodyFormFieldsDescLeftCol,
         geBodyFormFieldsLeftCol,
         geBodyFormFieldsLeftColAdditional,
         geBodyFormFieldsModalDeleteSection,
@@ -305,6 +312,7 @@ class GeLabelService {
         geHelpTextBatchHeaderFieldLabelLabel,
         geHelpTextFormFieldsFieldCustomLabel,
         geHelpTextFormFieldsFieldLabelLabel,
+        geHelpTextHouseholdMapping,
         geLabelCustomTableSelectedFields,
         geLabelCustomTableSourceFields,
         geLabelSectionName,

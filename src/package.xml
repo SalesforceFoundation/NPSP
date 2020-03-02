@@ -1995,6 +1995,7 @@
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
         <members>geBodyFormFieldsLeftCol</members>
+        <members>geBodyFormFieldsDescLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
@@ -2081,11 +2082,12 @@
         <members>geHelpTextAllocation1Mapping</members>
         <members>geHelpTextAllocation2Mapping</members>
         <members>geHelpTextAllocationBundle</members>
+        <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextContact1Mapping</members>
         <members>geHelpTextContact2Mapping</members>
-        <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
+        <members>geHelpTextHouseholdMapping</members>
         <members>geLabelCustomTableSelectedFields</members>
         <members>geLabelCustomTableSourceFields</members>
         <members>geLabelSectionName</members>
