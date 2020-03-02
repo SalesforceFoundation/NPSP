@@ -650,6 +650,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         return `button ${this.CUSTOM_LABELS.geButtonFormFieldsCollapseAll} ${this.CUSTOM_LABELS.geHeaderAdvancedFormFields}`;
     }
 
+    get qaLocatorAddSection() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsAddSection}`;
+    }
+
     /*******************************************************************************
     * End getters for data-qa-locator attributes
     */
