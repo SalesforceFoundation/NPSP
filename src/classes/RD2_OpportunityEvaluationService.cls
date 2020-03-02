@@ -98,10 +98,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
     /**
      * @description Beggining of the current calendar or fiscal year, whichever is earlier.
+     * The start date is offset by the Next Donation Date match days before the year start date
+     * so past Opportunities matching future projected installments are returned.
     */
     private Date startDate {
         get {
-            return yearValueProcessor.getStartDate();
+            return yearValueProcessor
+                .getStartDate()
+                .addDays(-rdSettings.nextDonationDateMatchDays);
         } set;
     }
 
@@ -606,7 +610,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * If the current year is a calendar year, the current year start date is earlier than the current date.
         * If the current year is a fiscal year, the current year start date is also earlier than the current date.
         * So regardless if we calculate calendar or fiscal year values, we can use the current year start date
-        * as the cut off date to get existing Opportunities in the Opp eval service .
+        * as the cut off date to get existing Opportunities in the Opp eval service.
         */
         public Date getStartDate() {
             return currentYearStartDate;

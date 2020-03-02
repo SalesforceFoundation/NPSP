@@ -79,9 +79,15 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-    * @description Contains all included Opportunities and/or projected installments mapped by their Close Date
+    * @description Contains all included Opportunities and/or projected installments 
+    * mapped and sorted by their Close Date
     */
     private Map<Date, Record> recordByCloseDate = new Map<Date, Record>();
+
+    /***
+    * @description Contains Opportunities with Close Date >= cutoffDate but < currentDate
+    * so they are considered when if they are in a projected installment Next Donation Date +/- match days range
+    */
     private Map<Date, Record> boundaryRecordByCloseDate = new Map<Date, Record>();
 
 
@@ -287,7 +293,7 @@ public inherited sharing class RD2_OpportunityMatcher {
         List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
         closeDates.sort();
 
-        //rebuild records container so they are sorted by dates
+        //rebuild container so records are sorted by dates
         Map<Date, Record> recordByCloseDateClone = recordByCloseDate.clone(); 
         recordByCloseDate = new Map<Date, Record>();
         for (Date closeDate : closeDates) {
