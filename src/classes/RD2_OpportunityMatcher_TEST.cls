@@ -38,7 +38,6 @@
 private class RD2_OpportunityMatcher_TEST {
 
     private static final Date TODAY = Date.newInstance(2019, 9, 21);
-    private static final Integer CURRENT_YEAR = TODAY.year();
     private static final ID RD_ID = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType);
     private static final Decimal RD_AMOUNT = 200;
 
@@ -87,12 +86,12 @@ private class RD2_OpportunityMatcher_TEST {
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .includeByYear(opps, CURRENT_YEAR)
+            .includeByYear(opps, Date.newInstance(2019, 1, 1), Date.newInstance(2019, 12, 31))
             .getRecords();
 
         System.assertEquals(3, records.size(), 'Number of included Opportunities should match: ' + records);
         for (RD2_OpportunityMatcher.Record record : records) {
-            System.assertEquals(CURRENT_YEAR, record.getOpportunity().CloseDate.year(), 'Opportunity Close Date Year should match');
+            System.assertEquals(2019, record.getOpportunity().CloseDate.year(), 'Opportunity Close Date Year should match');
             System.assertNotEquals(opps[4].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
         }
     }

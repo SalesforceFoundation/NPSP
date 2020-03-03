@@ -100,30 +100,14 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Includes Opportunities matching the provided calendar year regardless if they are open or closed.
+     * @description Includes Opportunities matching the provided fiscal or calendar year regardless if they are open or closed.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
-     * @param year Year criteria
+     * @param startDate Fiscal/calendar year start date
+     * @param endDate Fiscal/calendar year end date
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
-    public RD2_OpportunityMatcher includeByYear(List<Opportunity> opps, Integer year) {
-        for (Opportunity opp : opps) {
-            if (opp.CloseDate.year() == year && !isClosedLostInMigration(opp)) {
-                recordByCloseDate.put(opp.CloseDate, new Record(opp));
-            }
-        }
-        return this;
-    }
-
-    /***
-     * @description Includes Opportunities matching the provided fiscal year regardless if they are open or closed.
-     * Opportunities marked as Closed Lost in data migration are ignored.
-     * @param opps Recurring Donation Opportunities
-     * @param startDate Fiscal year start date
-     * @param endDate Fiscal year end date
-     * @return RD2_OpportunityMatcher This Opportunity matcher instance
-     */
-    public RD2_OpportunityMatcher includeByFiscalYear(List<Opportunity> opps, Date startDate, Date endDate) {
+    public RD2_OpportunityMatcher includeByYear(List<Opportunity> opps, Date startDate, Date endDate) {
         for (Opportunity opp : opps) {
             if (!isClosedLostInMigration(opp) && opp.CloseDate >= startDate && opp.CloseDate <= endDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
@@ -310,7 +294,7 @@ public inherited sharing class RD2_OpportunityMatcher {
         List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
         closeDates.sort();
 
-        //rebuild container so records are sorted by dates
+        //rebuild records' container so records are sorted by dates
         Map<Date, Record> recordByCloseDateClone = recordByCloseDate.clone(); 
         recordByCloseDate = new Map<Date, Record>();
         for (Date closeDate : closeDates) {
@@ -383,6 +367,17 @@ public inherited sharing class RD2_OpportunityMatcher {
                 : (isClosedLost() ? 0 : opp.Amount);
 
             return amount == null ? 0 : amount;
+        }
+
+        /***
+        * @description Returns Close Date as the Next Donation Date if the installment is not matched
+        * with an Opportunity or if matched, the Opportunity Close Date since it has prcedence of the installment values.
+        * @return Date
+        */
+        public Date getCloseDate() {
+            return isNew()
+                ? installment.nextDonationDate
+                : opp.CloseDate;
         }
 
         /***

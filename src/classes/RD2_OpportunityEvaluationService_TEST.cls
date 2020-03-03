@@ -1200,7 +1200,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * should be calculated when custom settings Use Fiscal Year is unchecked
      */
     @IsTest
-    private static void calendarYearValuesShouldBeCalculatedWhenFiscalYearNotConfigured() {
+    private static void calendarYearValuesShouldBeCalculatedWhenFiscalYearIsNotConfigured() {
         final Date today = START_DATE;
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -1222,8 +1222,71 @@ private class RD2_OpportunityEvaluationService_TEST {
             'Next Year Value should be calculated when RD is created');
     }
 
+    /**
+     * @description Verifies the fiscal/calendar year Current and Next Year Values
+     * should be calculated based on the Opp Close Date even though it matches a
+     * projected installment in the next year
+     */
+    @IsTest
+    private static void yearValuesShouldMatchByActualDateWhenOppIsMatchedWithInstallmentOutsideOfTheYear() {
+        //set current date override
+        final Date startDate = Date.newInstance(2020, 1, 1);
+        Date today = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
 
+        setUpUseFiscalYear(true);
+        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(4, true);
 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withStartDate(startDate)
+            .withDateEstablished(startDate)
+            .withDayOfMonth('1')
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Integer month = 1; month <= 3; month++) {
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(Date.newInstance(2020, month, 1))
+                .build()
+            );
+        }
+        //add an Opp with Close Date March 31 instead of the April 1
+        opps.add(oppBuilder
+            .withName()
+            .withCloseDate(Date.newInstance(2020, 3, 31))
+            .withOpenStage()
+            .build()
+        );
+        insert opps;
+
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .handleOutdatedRecurringDonations();
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD_AMOUNT * 4, rd.CurrentYearValue__c,
+            'Current Year Value should include actual Opps with Close Date <= March 31, 2020');
+        System.assertEquals(RD_AMOUNT * 11, rd.NextYearValue__c,
+            'Next Year Value should exclude April 1 Opp since it is already included in the Current Year Value');
+
+        today = Date.newInstance(2020, 4, 1);//the next fiscal year is starting today
+        RD2_ScheduleService.currentDate = today;
+
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .handleOutdatedRecurringDonations();
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD_AMOUNT * 11, rd.CurrentYearValue__c,
+            'Current Year Value should exclude April 1 Opp since it was included in the past Year Value');
+        System.assertEquals(RD_AMOUNT * 12, rd.NextYearValue__c,
+            'Next Year Value should match with projected installments');
+    }
 
 
 
