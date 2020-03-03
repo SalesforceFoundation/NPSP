@@ -2051,6 +2051,7 @@
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
         <members>geErrorRequiredField</members>
+        <members>geGauAllocationsBundle</members>
         <members>geHeaderAdvancedFormFields</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchGiftEntry</members>

@@ -5579,6 +5579,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Required field</value>
     </labels>
     <labels>
+        <fullName>geGauAllocationsBundle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name of GAU Allocations field bundle</shortDescription>
+        <value>GAU Allocations</value>
+    </labels>
+    <labels>
         <fullName>geHeaderAdvancedFormFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
