@@ -909,7 +909,6 @@ public class ALLO_AllocationsUtil {
         Boolean requiresUpdates = false;
         Boolean nonDefaultAllocationsPresent = false;
         List<Allocation__c> proposedAllocations = new List<Allocation__c>();
-        List<Allocation__c> proposedAllocDeletes = new List<Allocation__c>();
         List<Allocation__c> defaultAllocations = new List<Allocation__c>();
         String parentCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) parentObj.get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
         Boolean errorsFound = false;
@@ -971,9 +970,6 @@ public class ALLO_AllocationsUtil {
                         allocResults.allocationsForInsert.add (allocation);
                     }
                 }
-            }
-            if (!proposedAllocDeletes.isEmpty()) {
-                allocResults.allocationsForDelete.addAll (proposedAllocDeletes);
             }
 
             // Process Default Allocations
