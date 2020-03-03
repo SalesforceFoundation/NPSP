@@ -74,6 +74,8 @@ public with sharing class RD2_VisualizeScheduleController {
         List<Installment> installments = new List<Installment>();
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
+        displayNum = calculateFutureInstallmentNum(rd, displayNum);
+
         if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
             for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
                 RD2_ScheduleService.currentDate, displayNum, rd.RecurringDonationSchedules__r
@@ -132,7 +134,10 @@ public with sharing class RD2_VisualizeScheduleController {
                 'PaymentMethod__c',
                 'npe03__Recurring_Donation_Campaign__r.Name',
                 'Day_of_Month__c',
-                'Status__c'
+                'Status__c',
+                'npe03__Installments__c',
+                'npe03__Total_Paid_Installments__c',
+                'RecurringType__c'
             };
             if (UserInfo.isMultiCurrencyOrganization()) {
                 queryFields.add('CurrencyIsoCode');
@@ -151,7 +156,14 @@ public with sharing class RD2_VisualizeScheduleController {
                 'StartDate__c, ' +
                 'EndDate__c ' +
                 'FROM RecurringDonationSchedules__r)';
+
+            String installmentSubquery = 
+                '(SELECT Id ' +
+                'FROM npe03__Donations__r ' +
+                'WHERE IsClosed = false)';
+
             queryFields.add(scheduleSubquery);
+            queryFields.add(installmentSubquery);
                 
             String soql = new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -192,6 +204,27 @@ public with sharing class RD2_VisualizeScheduleController {
         } else {
             return UserInfo.getDefaultCurrency();
         }
+    }
+
+    /**
+     * @description Calculate how many future installments is available to be displayed
+     * @param rd Recurring Donation record
+     * @param displayNum Number of installments to display
+     */
+    private static Integer calculateFutureInstallmentNum(npe03__Recurring_Donation__c rd, Integer displayNum) {
+        if (rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN) {
+            return displayNum;
+        }
+
+        Integer plannedInstallments = (rd.npe03__Installments__c != null)
+            ? rd.npe03__Installments__c.intValue()
+            : 0;
+
+        Integer paidInsatllments = (rd.npe03__Total_Paid_Installments__c != null)
+            ? rd.npe03__Total_Paid_Installments__c.intValue()
+            : 0;
+
+        return plannedInstallments - paidInsatllments - rd.npe03__Donations__r.size();
     }
 
     /**
