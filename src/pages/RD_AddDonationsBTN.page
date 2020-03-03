@@ -15,14 +15,14 @@
                                 icon="custom40" iconCategory="custom"
                                 showSaveBtn="false"
                                 showCancelBtn="true" cancelAction="{!redirectToRecurringDonationsPage}"
-                                showcontinueBtn="true" continueAction="{!buttonClick}" continueDisabled="{!hideContinue}" />
+                                showcontinueBtn="true" continueAction="{!buttonClick}" continueDisabled="{!NOT(showContinueBtn)}" />
 
             <!--Page Alerts-->
             <apex:outputPanel id="pgMessages">
                 <c:UTIL_PageMessages />
             </apex:outputPanel>
 
-            <apex:outputPanel rendered="{!NOT(hideContinue)}" >
+            <apex:outputPanel rendered="{!showContinueBtn}" >
                 <div class="slds-m-around_x-large">
                     <div class="slds-grid">
                         <div class="slds-m-vertical_medium">

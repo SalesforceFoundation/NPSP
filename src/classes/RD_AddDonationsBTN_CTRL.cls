@@ -39,9 +39,9 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     private ApexPages.StandardController sc;
 
     /**
-     * @description Allow the operation to continue
+     * @description Show the Continue button on the page when true
      */
-    public Boolean hideContinue { get; set; }
+    public Boolean showContinueBtn { get; set; }
 
     /***
     * @description Class constructor
@@ -49,7 +49,7 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     */
     public RD_AddDonationsBTN_CTRL(ApexPages.StandardController sc){
         this.sc = sc;
-        this.hideContinue = true;
+        this.showContinueBtn = false;
         validate();
     }
 
@@ -152,6 +152,6 @@ public with sharing class RD_AddDonationsBTN_CTRL {
             addMessageAndReturn(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied);
         }
 
-        this.hideContinue = false;
+        this.showContinueBtn = true;
     }
 }

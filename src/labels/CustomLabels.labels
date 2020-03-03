@@ -2128,8 +2128,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Confirmation message displayed to user before the process runs</shortDescription>
-        <value>This process will refresh all future installment opportunities for the current recurring donation, which may include deleting and recreating some installments. This is the same process that would normally execute each nightly in the scheduled recurring donations batch job.
-            &lt;br/&gt;&lt;br/&gt;Click the Continue button to start the process or the Cancel button to return to the Recurring Donation page.</value>
+        <value>This process updates all future installment Opportunities to match the current data for this Recurring Donation. For some installments, NPSP may delete and recreate new installments.
+&lt;br/&gt;&lt;br/&gt;Click Continue to start the process or Cancel to return to the Recurring Donation page.</value>
     </labels>
     <labels>
         <fullName>REL_Create_New_Relationship</fullName>
