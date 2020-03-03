@@ -431,4 +431,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return GeFormService.donationFieldTemplateLabel;
     }
 
+    @api
+    get allFieldsByAPIName() {
+        return [DI_ADDITIONAL_OBJECT.fieldApiName];
+    }
+
 }

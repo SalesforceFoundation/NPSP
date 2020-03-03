@@ -1,7 +1,5 @@
 import { LightningElement, api } from 'lwc';
 import { checkNestedProperty } from 'c/utilCommon';
-import ADDITIONAL_OBJECT_JSON
-    from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 
 const PAYMENT_WIDGET = 'geFormWidgetPayment';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -70,7 +68,11 @@ export default class GeFormWidget extends LightningElement {
      */
     @api
     get allFieldsByAPIName() {
-        return [ADDITIONAL_OBJECT_JSON.fieldApiName];
+        if (this.widgetComponent.allFieldsByAPIName) {
+            return this.widgetComponent.allFieldsByAPIName;
+        } else {
+            return null;
+        }
     }
 
 }
