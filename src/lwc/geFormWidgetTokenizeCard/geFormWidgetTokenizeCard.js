@@ -1,7 +1,6 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-// import purchase call method
-// import data import token field reference
+// TODO: maybe import data import token field reference?
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
 
@@ -9,15 +8,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     
     @track token = 'token_placeholder';
 
-    @api
-    returnValues() {
-        return {
-            
-        };
-        //return { data import token field reference : token }
-    }
-
-    retrieveTokenFromIframe() {
-        //
-    }
+    // TODO: public method for returning widget data
+    // TODO: method for calling tokenize method in iframe and retrieving the token
 }
