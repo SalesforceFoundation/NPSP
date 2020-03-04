@@ -111,18 +111,9 @@ class GeTemplateBuilderService {
     addWidgetsPlaceholder = (fieldMappingByDevName, objectMappingByDevName, fieldMappingsByObjMappingDevName) => {
 
         GeWidgetService.init(objectMappingByDevName, fieldMappingByDevName);
-        const allocationWidgetDefinition = GeWidgetService.definitions.geFormWidgetAllocation;
 
-        fieldMappingByDevName.geFormWidgetAllocation = {
-            DeveloperName: 'geFormWidgetAllocation',
-            MasterLabel: 'Allocations',
-            Target_Object_Mapping_Dev_Name: 'Widgets',
-            Target_Field_Label: 'Allocations',
-            Required: 'No',
-            Element_Type: 'widget',
-            Widget_Object_Mapping_Developer_Name: allocationWidgetDefinition.objectMappingDeveloperName,
-            Widget_Field_Mapping_Developer_Names: allocationWidgetDefinition.fieldMappingDeveloperNames
-        };
+        fieldMappingByDevName.geFormWidgetAllocation = GeWidgetService.definitions.geFormWidgetAllocation;
+        fieldMappingByDevName.geFormWidgetTokenizeCard = GeWidgetService.definitions.geFormWidgetTokenizeCard;
 
         objectMappingByDevName.Widgets = {
             DeveloperName: 'Widgets',
@@ -130,7 +121,8 @@ class GeTemplateBuilderService {
         };
 
         fieldMappingsByObjMappingDevName.Widgets = [
-            fieldMappingByDevName.geFormWidgetAllocation
+            fieldMappingByDevName.geFormWidgetAllocation,
+            fieldMappingByDevName.geFormWidgetTokenizeCard
         ]
     }
 }

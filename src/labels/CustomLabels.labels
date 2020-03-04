@@ -5611,6 +5611,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Select Fields to Display</value>
     </labels>
     <labels>
+        <fullName>geHeaderElevate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>iFrame header for credit card information</shortDescription>
+        <value>Powered by Elevate</value>
+    </labels>
+    <labels>
         <fullName>geHeaderEmptyFormSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

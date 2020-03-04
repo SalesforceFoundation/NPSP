@@ -2056,6 +2056,7 @@
         <members>geHeaderBatchSelectTemplate</members>
         <members>geHeaderBatchSetDefaultValues</members>
         <members>geHeaderCustomTableHeaders</members>
+        <members>geHeaderElevate</members>
         <members>geHeaderEmptyFormSection</members>
         <members>geHeaderFieldBundles</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
@@ -3425,6 +3426,7 @@
         <members>geFormWidget</members>
         <members>geFormWidgetAllocation</members>
         <members>geFormWidgetRowAllocation</members>
+        <members>geFormWidgetTokenizeCard</members>
         <members>geGiftEntryFormApp</members>
         <members>geHome</members>
         <members>geLabelService</members>

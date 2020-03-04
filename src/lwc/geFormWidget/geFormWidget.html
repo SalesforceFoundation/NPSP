@@ -4,13 +4,20 @@
     </template>
     <template if:true={isElevateTokenizeCard}>
         <!-- TODO: Add Elevate credit card tokenization widget here -->
-        <c-ge-form-field data-id='widgetComponent' element={element}></c-ge-form-field>
-    </template>    
+        <c-ge-form-widget-tokenize-card data-id='widgetComponent'
+                                        element={element}>
+        </c-ge-form-widget-tokenize-card>
+    </template>
     <template if:true={isPaymentScheduler}>
         <!-- TODO: Add Payment Widget here -->
-        <c-ge-form-field data-id='widgetComponent' element={element}></c-ge-form-field>
+        <c-ge-form-field data-id='widgetComponent'
+                         element={element}>
+        </c-ge-form-field>
     </template>
     <template if:true={isAllocation}>
-        <c-ge-form-widget-allocation data-id='widgetComponent' element={element} total-amount={totalAmount}></c-ge-form-widget-allocation>
+        <c-ge-form-widget-allocation data-id='widgetComponent'
+                                     element={element}
+                                     total-amount={totalAmount}>
+        </c-ge-form-widget-allocation>
     </template>
 </template>
