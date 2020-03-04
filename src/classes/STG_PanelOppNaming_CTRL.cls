@@ -112,6 +112,11 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference delONS() {
+        if (!isCurrentUserHasDeleteAccess()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
+            return null;
+        }
+
         delete mapOppNameSettings.get(currentONSName);
         mapOppNameSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings();
         return null;
@@ -122,6 +127,11 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference editONS() {
+        if (!isCurrentUserHasEditAccess()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgEditPermissionError));
+            return null;
+        }
+
         currentONS = mapOppNameSettings.get(currentONSName);
         super.editSettings();
         return null;
@@ -166,6 +176,24 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
             return false;
         }
+    }
+
+    /***
+    * @description Verifies the user has Delete permissions for Opportunity naming settings.
+    * @return true when the user has the appropriate access
+    */
+    private Boolean isCurrentUserHasDeleteAccess() {
+        return Schema.SObjectType.Opportunity_Naming_Settings__c.isDeletable();
+
+    }
+
+    /***
+    * @description Verifies the user has Edit permissions for Opportunity naming settings.
+    * @return true when the user has the appropriate access
+    */
+    private Boolean isCurrentUserHasEditAccess() {
+        return Schema.SObjectType.Opportunity_Naming_Settings__c.isUpdateable();
+
     }
 
     /*********************************************************************************************************
