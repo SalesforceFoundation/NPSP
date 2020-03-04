@@ -154,7 +154,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private YearValueProcessor yearValueProcessor {
         get {
             if (yearValueProcessor == null) {
-                yearValueProcessor = new YearValueProcessor(currentDate, scheduleService, rdSettings);
+                yearValueProcessor = new YearValueProcessor(currentDate, scheduleService);
             }
             return yearValueProcessor;
         }
@@ -527,10 +527,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     * NOTE: values are calculated based on the calendar year currently.
     */
     public class YearValueProcessor {
-        /**
-        * @description Recurring Donation configuration
-        */
-        private RD2_Settings rdSettings;
 
         /**
         * @description Recurring Donation Schedule Service
@@ -590,12 +586,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @description Constructor
         * @param currentDate Current Date
         * @param scheduleService RD Schedule Service
-        * @param rdSettings Recurring Donation configuration
         */
-        public YearValueProcessor(Date currentDate, RD2_ScheduleService scheduleService, RD2_Settings rdSettings) {
+        public YearValueProcessor(Date currentDate, RD2_ScheduleService scheduleService) {
             this.currentDate = currentDate;
             this.scheduleService = scheduleService;
-            this.rdSettings = rdSettings;
         }
 
         /**
@@ -649,23 +643,23 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules, 
             Date asOfCurrentDate, UTIL_FiscalYearInfo.YearInfo yearInfo
         ) {
-            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(asOfCurrentDate);
-
-            //get Opportunities within the installment Next Donation Date +/- match days range
-            matcher.includeByYear(
-                opps, 
-                yearInfo.startDate.addDays(-rdSettings.nextDonationDateMatchDays), 
-                yearInfo.endDate.addDays(rdSettings.nextDonationDateMatchDays)
-            )
-            .match(//match with future projected installments as of current date relative to the year
-                scheduleService.getVisualizedInstallments(asOfCurrentDate, yearInfo.endDate, schedules)
-            );
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(asOfCurrentDate)
+                .includeByYear(
+                    opps, yearInfo.startDate, yearInfo.endDate
+                )
+                .match(scheduleService.getVisualizedInstallments(
+                    asOfCurrentDate, yearInfo.endDate, schedules
+                ));
 
             Decimal value = 0;
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
                 Date closeDate = record.getCloseDate();
 
-                //include open/closed won/projected matched records with date within the exact start/end dates
+                //There is additional filtering required since the matcher might return
+                //a past Opp in the last year matching with a future installment in this year.
+                //In such case, the Opp should be excluded from the next year calculations
+                //since it is already included in the current year value.
+                //Include open/closed won/projected matched records within the exact start/end dates.
                 if (!record.isClosedLost()
                     && closeDate >= yearInfo.startDate 
                     && closeDate <= yearInfo.endDate

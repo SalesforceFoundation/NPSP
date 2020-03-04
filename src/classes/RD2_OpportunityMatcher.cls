@@ -108,9 +108,18 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
     public RD2_OpportunityMatcher includeByYear(List<Opportunity> opps, Date startDate, Date endDate) {
+        Date startDateRange = startDate.addDays(-nextDonationDateMatchDays);
+        Date endDateRange = endDate.addDays(nextDonationDateMatchDays);
+
         for (Opportunity opp : opps) {
-            if (!isClosedLostInMigration(opp) && opp.CloseDate >= startDate && opp.CloseDate <= endDate) {
+            if (isClosedLostInMigration(opp)) {
+                continue;
+            }
+            if (opp.CloseDate >= startDate && opp.CloseDate <= endDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
+
+            } else if (opp.CloseDate >= startDateRange && opp.CloseDate <= endDateRange) {
+                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
         return this;
@@ -200,7 +209,6 @@ public inherited sharing class RD2_OpportunityMatcher {
         for (RD2_ScheduleService.Installment installment : installments) {
             match(installment);
         }
-
         return this;
     }
 
@@ -212,7 +220,6 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @return void
      */
     private void match(RD2_ScheduleService.Installment installment) {
-
         Record matched = recordByCloseDate.get(installment.nextDonationDate);
 
         if (matched != null) {//matches the Opp Close Date exactly
@@ -267,7 +274,7 @@ public inherited sharing class RD2_OpportunityMatcher {
                 continue;
             }   
 
-            Date closeDate = record.getOpportunity().CloseDate;            
+            Date closeDate = record.getCloseDate();            
             if (closeDate >= startDate && closeDate <= endDate) {
                 return record;
             }
