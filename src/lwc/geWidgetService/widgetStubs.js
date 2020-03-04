@@ -13,7 +13,7 @@ const ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS = {
 
 /*******************************************************************************
 * @description Stubs of object and field mapping developer names. Used to collect
-* the org specific mapping developer names for the widget geFormWidgetAllocation.
+* the org specific mapping developer names for the widget geFormWidgetTokenizeCard.
 */
 const TOKENIZE_CARD_WIDGET_NAME_STUBS = {
     objectMappingDeveloperNameStubs: 'Credit_Card',
