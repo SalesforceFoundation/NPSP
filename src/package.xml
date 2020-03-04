@@ -845,6 +845,7 @@
         <members>Address__c.Congressional_District__c</members>
         <members>Address__c.County_Name__c</members>
         <members>Address__c.Default_Address__c</members>
+        <members>Address__c.Exclude_from_Updates__c</members>
         <members>Address__c.Formula_MailingAddress__c</members>
         <members>Address__c.Formula_MailingStreetAddress__c</members>
         <members>Address__c.Geolocation__c</members>
@@ -857,6 +858,8 @@
         <members>Address__c.MailingState__c</members>
         <members>Address__c.MailingStreet2__c</members>
         <members>Address__c.MailingStreet__c</members>
+        <members>Address__c.NCOA_Evaluation_Date__c</members>
+        <members>Address__c.NCOA_Result_Code__c</members>
         <members>Address__c.Pre_Verification_Address__c</members>
         <members>Address__c.Seasonal_End_Day__c</members>
         <members>Address__c.Seasonal_End_Month__c</members>
@@ -866,6 +869,7 @@
         <members>Address__c.State_Upper_District__c</members>
         <members>Address__c.Verification_Status__c</members>
         <members>Address__c.Verified__c</members>
+        <members>Address__c.Verified_Date__c</members>
         <members>Allocation__c.Amount__c</members>
         <members>Allocation__c.Campaign__c</members>
         <members>Allocation__c.General_Accounting_Unit__c</members>

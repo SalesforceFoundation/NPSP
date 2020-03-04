@@ -167,6 +167,17 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Exclude_from_Updates__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If set to TRUE, this address should not be included in automated address update jobs</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If selected, the address won&apos;t be included in any scheduled address updates.</inlineHelpText>
+        <label>Exclude from Updates</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Formula_MailingAddress__c</fullName>
         <externalId>false</externalId>
         <formula>MailingStreet__c &amp; BR() &amp;
@@ -299,6 +310,30 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <externalId>false</externalId>
         <label>Mailing Street</label>
         <length>255</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>NCOA_Evaluation_Date__c</fullName>
+        <description>The date and time the address was evaluated by an NCOA process</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The most recent date and time the address was evaluated by the NCOA vendor.</inlineHelpText>
+        <label>NCOA Evaluation Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>NCOA_Result_Code__c</fullName>
+        <description>The result code form the NCOA vendor</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The result code form the NCOA vendor</inlineHelpText>
+        <label>NCOA Result Code</label>
+        <length>80</length>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
@@ -859,6 +894,17 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Verified_Date__c</fullName>
+        <description>The date and time the address was verified (standardized)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The most recent date and time the address was verified.</inlineHelpText>
+        <label>Verified Date</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
     </fields>
     <label>Address</label>
     <nameField>
