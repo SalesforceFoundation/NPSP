@@ -46,9 +46,26 @@ public with sharing class UTIL_FiscalYearInfo {
     /** @description Defines if the Use Fiscal Year is set for a specific Custom Settings configuration */
     public Boolean useFiscalYear { get; private set; }
 
+    /** @description Determines if the custom fiscal year is enabled for the org */
+    @TestVisible
+    public Boolean isCustomFiscalYearEnabled { 
+        get {
+            if (isCustomFiscalYearEnabled == null) {
+                List<SObject> customFiscalYearSettings = Database.query(
+                    'SELECT Id FROM FiscalYearSettings WHERE IsStandardYear = false'
+                );
+
+                isCustomFiscalYearEnabled = !customFiscalYearSettings.isEmpty();
+            }
+            return isCustomFiscalYearEnabled;
+        } 
+        private set; 
+    }
+
     /** @description static instance of the current class. It is used as the instance in a Singleton context */
     @TestVisible
     private static UTIL_FiscalYearInfo fiscalYearInfo;
+
 
     /***
     * @description Get the instance of the current class
@@ -88,10 +105,17 @@ public with sharing class UTIL_FiscalYearInfo {
     /***
     * @description Passes in the configuration for the fiscal year usage
     * @param useFiscalYear Configured Use Fiscal Year value in a custom settings
+    * The usage is supported for standard fiscal year only, ie the custom fiscal year is not supported
     * @return UTIL_FiscalYearInfo This class instance
     */
     public UTIL_FiscalYearInfo withUseFiscalYear(Boolean useFiscalYear) {
         this.useFiscalYear = useFiscalYear == true;
+
+        //Do not use fiscal year when custom fiscal year is enabled.
+        //Standard fiscal year is supported only
+        if (this.useFiscalYear) {
+            this.useFiscalYear = !isCustomFiscalYearEnabled;
+        }
         return this;
     }
 

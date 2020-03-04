@@ -1221,6 +1221,37 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be calculated when RD is created');
     }
+    
+    /**
+     * @description Verifies the calendar year Current and Next Year Values
+     * should be calculated when custom settings Use Fiscal Year is checked
+     * but the custom fiscal year has been enabled
+     */
+    @IsTest
+    private static void calendarYearValuesShouldBeCalculatedWhenCustomFiscalYearIsEnabled() {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpUseFiscalYear(true);//configuration is set to use the fiscal year
+        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(11, true);
+        //however, the custom (not standard) fiscal year is enabled
+        UTIL_FiscalYearInfo.fiscalYearInfo.isCustomFiscalYearEnabled = true;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        //values are calculated as per calendar year, since RD2 does not support the custom fiscal year
+        System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
+            'Current Year Value should be calculated when RD is created');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be calculated when RD is created');
+    }
 
     /**
      * @description Verifies the fiscal/calendar year Current and Next Year Values
@@ -1237,7 +1268,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         setUpUseFiscalYear(true);
         UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(4, true);
 
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
             .withStartDate(startDate)
