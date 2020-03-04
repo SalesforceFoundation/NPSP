@@ -46,7 +46,7 @@
     <apex:attribute name="saveLabel" type="String"
         description="Label for save button. When blank will display stgBtnSave label."/>
     <apex:attribute name="saveImmediate" type="Boolean" default="false"
-        description="Whether the save action should be immediate, defaults to true."/>
+        description="Whether the save action should be immediate, defaults to false."/>
     <apex:attribute name="saveDisabled" type="Boolean" default="false"
         description="Whether the save button should be disabled, defaults to false."/>
     <apex:attribute name="saveReRender" type="String"
@@ -59,7 +59,7 @@
     <apex:attribute name="saveAndNewLabel" type="String"
         description="Label for save and new button."/>
     <apex:attribute name="saveAndNewImmediate" type="Boolean" default="false"
-        description="Whether the save and new action should be immediate, defaults to true."/>
+        description="Whether the save and new action should be immediate, defaults to false."/>
     <apex:attribute name="saveAndNewDisabled" type="Boolean" default="false"
         description="Whether the save and new button should be disabled, defaults to false."/>
 
@@ -71,7 +71,7 @@
     <apex:attribute name="continueLabel" type="String"
                     description="Label for continue button. When blank will display btnContinue label."/>
     <apex:attribute name="continueImmediate" type="Boolean" default="false"
-                    description="Whether the continue action should be immediate, defaults to true."/>
+                    description="Whether the continue action should be immediate, defaults to false."/>
     <apex:attribute name="continueDisabled" type="Boolean" default="false"
                     description="Whether the continue button should be disabled, defaults to false."/>
 
