@@ -205,8 +205,16 @@ class GeFormService {
             diRecord[fieldWrapper.Source_Field_API_Name] = value;
         }
 
-        // Include any fields from a user selected donation
-        diRecord = {...diRecord, ...dataImportRecord};
+        // Include any fields from a user selected donation, if
+        // those fields are not already on the diRecord
+        if (dataImportRecord) {
+            for (const [key, value] of Object.entries(dataImportRecord)) {
+                if (!diRecord.hasOwnProperty(key)) {
+                    diRecord[key] = value === null || value.value === null ?
+                        null : value.value || value;
+                }
+            }
+        }
 
         return {diRecord, widgetValues};
     }
