@@ -6,9 +6,18 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/OpportunityPageObject.py
 ...             robot/Cumulus/resources/OpportunityContactRolePageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
-Suite Setup     Open Test Browser
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
+***Keywords***
+Setup Test Data
+    &{account} =  API Create Organization Account   
+    Set suite variable                   &{account}
+    &{contact} =  API Create Contact     Email=test@example.com 
+    Store Session Record                 Account               &{contact}[AccountId]
+    Set suite variable                   &{contact}
  
 *** Test Cases ***    
 Create ASC for Affiliated Contact
@@ -18,8 +27,7 @@ Create ASC for Affiliated Contact
     ...                        After running donations batch job verify contact gets soft credits
    
     [tags]                     feature:Automated Soft Credits        W-039819
-    &{account} =  API Create Organization Account   
-    &{contact} =  API Create Contact    Email=skristem@robot.com 
+    
     Go To Page                              Details                              Contact                                
     ...                                     object_id=&{contact}[Id]
     Select Tab                              Related
