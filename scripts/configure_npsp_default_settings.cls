@@ -12,7 +12,6 @@ public static void initializeNPSPSettings() {
 
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgContactsSettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
-    %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
@@ -21,7 +20,7 @@ public static void initializeNPSPSettings() {
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgBDESettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgDataImportSettings();
-    %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgGiftEntrySettings();    
+    %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgGiftEntrySettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
 
     Id rtId = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND DeveloperName = 'Membership' LIMIT 1].Id;
@@ -39,6 +38,10 @@ public static void initializeNPSPSettings() {
     %%%NAMESPACE%%%Package_Settings__c pkg = %%%NAMESPACE%%%Package_Settings__c.getOrgDefaults();
     pkg.%%%NAMESPACE%%%Namespace_Prefix__c = %%%NAMESPACE%%%UTIL_Namespace.StrTokenNSPrefix('');
     upsert pkg;
+
+    npe03__Recurring_Donations_Settings__c rdSettings = %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
+    rdSettings.EnableAutomaticNaming__c = true;
+    upsert rdSettings;
 }
 
 private static String getClosedWonStage(){
