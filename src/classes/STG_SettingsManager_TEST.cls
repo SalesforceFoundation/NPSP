@@ -36,7 +36,7 @@
 @isTest
 private with sharing class STG_SettingsManager_TEST {
     /***
-    * @description Installment Opportunities Auto Creation Setting API value 
+    * @description Installment Opportunities Auto Creation Setting API value
     */
     private static final String OPTION_NAME_DISABLE_FIRST = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
     private static final String OPTION_NAME_DISABLE_ALL = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
@@ -609,7 +609,7 @@ private with sharing class STG_SettingsManager_TEST {
         panel.init();
         system.assertNotEquals(null, panel.listSORDCloseOptions);
         system.assertNotEquals(null, panel.listSORDCloseOptions);
-        
+
         STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c = 10;
         system.assertEquals(null, panel.saveSettings());
         system.assertEquals(10, STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
@@ -695,7 +695,7 @@ private with sharing class STG_SettingsManager_TEST {
 
         String currentOppSettingLabel = panel.convertToInstallmentLabel(
             Stg_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
-        
+
         System.assertEquals(currentOppSettingLabel, panel.selectedInstallmentCreateOption,
             'The installment opp displayed label should matches the one stored in the NPSP setting');
     }
@@ -723,7 +723,7 @@ private with sharing class STG_SettingsManager_TEST {
 
     /**
     * @description Installment Auto Creation Settings - Always Allow Next Installment
-    * should be correctly conoverted to the respected label when displayed onto the RD panel 
+    * should be correctly conoverted to the respected label when displayed onto the RD panel
     */
     @isTest
     private static void shouldConvertInstallmentOppAutoCreationAlwaysAllowToLabel() {
@@ -739,7 +739,7 @@ private with sharing class STG_SettingsManager_TEST {
 
     /**
     * @description Installment Auto Creation Settings - Disalbe First Installment
-    * should be correctly conoverted to the respected label when displayed onto the RD panel 
+    * should be correctly conoverted to the respected label when displayed onto the RD panel
     */
     @isTest
     private static void shouldConvertInstallmentOppAutoCreationDisableFirstToLabel() {
@@ -755,7 +755,7 @@ private with sharing class STG_SettingsManager_TEST {
 
     /**
     * @description Installment Auto Creation Settings - Disable All Installment
-    * should be correctly conoverted to the respected label when displayed onto the RD panel 
+    * should be correctly conoverted to the respected label when displayed onto the RD panel
     */
     @isTest
     private static void shouldConvertInstallmentOppAutoCreationDisableAllToLabel() {
@@ -769,6 +769,112 @@ private with sharing class STG_SettingsManager_TEST {
             'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
+    @isTest
+    private static void shouldPreventDeleteOppNamingWhenUserDoesNotHaveDeletePermission() {
+        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
+        OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+        Opportunity_Naming_Settings__c settings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values()[0];
+
+        Test.startTest();
+        System.runAs(buildReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelOppNaming);
+            STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
+            panel.currentONS = settings;
+            panel.currentONSName = settings.Name;
+
+            panel.delONS();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assertEquals(1, panel.listOppNameSettings.size());
+            System.assertEquals(1, panel.mapOppNameSettings.size());
+            System.assert([select id, name from Opportunity_Naming_Settings__c].size() > 0);
+        }
+        Test.stopTest();
+
+    }
+
+    @isTest
+    private static void shouldVerifyDeleteOppNamingWhenUserHaveAdminPermission() {
+        Opportunity_Naming_Settings__c settings = new Opportunity_Naming_Settings__c(
+            Name = 'foo',
+            Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
+
+        );
+        insert settings;
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelOppNaming);
+        STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
+        system.assertEquals('idPanelOppNaming', panel.idPanel());
+
+        panel.currentONS = settings;
+        panel.currentONSName = settings.Name;
+
+        panel.delONS();
+        //verify if the settings are deleted
+        System.assert([select id, name from Opportunity_Naming_Settings__c].size() == 0 );
+        //System.assertEquals(0, panel.mapOppNameSettings.size());
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldPreventDeleteForFieldMappingWhenUserDoesNotHaveDelPermission() {
+        npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
+            npe03__Recurring_Donation_Field__c = 'Name',
+            npe03__Opportunity_Field__c = 'Description',
+            Name = 'CFMName00001-Test'
+        );
+        insert cfm;
+
+        Test.startTest();
+
+        System.runAs(buildReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelRDCustomFieldMapping);
+            STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
+            system.assertEquals('idPanelRDFieldMap', panel.idPanel());
+            panel.fmNew.npe03__Recurring_Donation_Field__c = cfm.npe03__Recurring_Donation_Field__c;
+            panel.fmNew.npe03__Opportunity_Field__c = cfm.npe03__Opportunity_Field__c;
+
+            panel.fmIdDelete = panel.listRDCustomFieldMapping[0].Id;
+            panel.deleteFm();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assert([select id, name from npe03__Custom_Field_Mapping__c].size() > 0 );
+            System.assertEquals(1, panel.listRDCustomFieldMapping.size());
+        }
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldVerifyDeleteForFieldMappingWhenUserHaveAdminPermission() {
+        npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
+            npe03__Recurring_Donation_Field__c = 'Name',
+            npe03__Opportunity_Field__c = 'Description',
+            Name = 'CFMName00001-Test'
+        );
+        insert cfm;
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelRDCustomFieldMapping);
+        STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
+        system.assertEquals('idPanelRDFieldMap', panel.idPanel());
+
+        panel.fmNew.npe03__Recurring_Donation_Field__c = cfm.npe03__Recurring_Donation_Field__c;
+        panel.fmNew.npe03__Opportunity_Field__c = cfm.npe03__Opportunity_Field__c;
+        panel.fmIdDelete = panel.listRDCustomFieldMapping[0].Id;
+        panel.deleteFm();
+
+        //verify if the settings are deleted
+        System.assert([select id, name from npe03__Custom_Field_Mapping__c].size() == 0 );
+        system.assertEquals(0, panel.listRDCustomFieldMapping.size());
+
+        Test.stopTest();
+
+    }
     /*********************************************************************************************************
     * @description Tests the Run RD Batch panel
     * @return void
@@ -1334,5 +1440,15 @@ private with sharing class STG_SettingsManager_TEST {
         panel.runBatch();
         Test.stopTest();
         system.assertEquals(true, panel.isRunningBatch);
+    }
+    //Helper Methods
+
+    /***
+     * @description Builds a read only user with readonly profile
+     * @return User
+     */
+    private static User buildReadOnlyUser() {
+        User usr = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        return usr;
     }
 }
