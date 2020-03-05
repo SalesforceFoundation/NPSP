@@ -16,9 +16,14 @@
 
                     <lightning-layout-item size='12'
                                            padding='around-small'>
-                        <iframe title='Elevate Payments'
-                                src={tokenizeCardPageUrl}>
-                        </iframe>
+                        <div class='iframe-container'>
+                            <template if:true={isLoading}>
+                                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                            </template>
+                            <iframe title='Elevate Payments'
+                                    src={tokenizeCardPageUrl}>
+                            </iframe>
+                        </div>
                     </lightning-layout-item>
 
                 </lightning-layout>

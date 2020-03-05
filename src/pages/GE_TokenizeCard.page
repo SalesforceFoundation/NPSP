@@ -14,6 +14,12 @@
     <script src="https://d2w37eyz6rciar.cloudfront.net/elevate.min.js"></script>
 
     <script>
+        const hostname = window.location.hostname;
+        const arr = hostname.split(".");
+        // TODO: Look into the way this url is being mutated... Better way?
+        const domain = arr[0].replace('--npsp', '');
+        const lightningOrigin = `https://${domain}.lightning.force.com`;
+
         const sfdo = new sfdoPaymentsJsSdk();
         sfdo.mount({
             id: 'payments',
@@ -34,13 +40,11 @@
                 '.fieldset.cvc {' +
                     'padding: 0;' +
                 '}'
+        })
+        .then(() => {
+            const message = JSON.stringify({ isLoaded: true });
+            postMessage(message);
         });
-
-        const hostname = window.location.hostname;
-        const arr = hostname.split(".");
-        // TODO: Look into the way this url is being mutated... Better way?
-        const instance = arr[0].replace('--npsp', '');
-        const lightningOrigin = `https://${instance}.lightning.force.com`;
 
         window.onmessage = function (event) {
             if (event && event.origin !== lightningOrigin) {
@@ -60,15 +64,19 @@
                     // Send token to lwc
                     const token = resp.token
                     console.log('token: ', token);
-                    let successString = JSON.stringify({ token: token });
-                    window.top.postMessage(successString, '*');
+                    const successString = JSON.stringify({ token: token });
+                    postMessage(successString);
                 })
                 .catch(function handleError(err) {
                     // Send error to lwc
                     console.log('error: ', err);
-                    let errorString = JSON.stringify(err);
-                    window.top.postMessage(errorString, lightningOrigin);
+                    const errorString = JSON.stringify(err);
+                    postMessage(errorString);
                 });
+        }
+
+        function postMessage(message) {
+            window.top.postMessage(message, lightningOrigin);
         }
     </script>
 

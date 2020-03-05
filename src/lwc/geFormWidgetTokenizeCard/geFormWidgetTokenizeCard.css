@@ -4,6 +4,10 @@ iframe {
     border: none;
 }
 
+.iframe-container {
+    position: relative;
+}
+
 .credit-card-container {
     border: 1px solid #0170D2;
     border-radius: 0.25rem;

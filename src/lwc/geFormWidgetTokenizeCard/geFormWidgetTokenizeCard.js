@@ -10,16 +10,14 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     
     @track domain;
     @track visualforceOrigin;
-    //@track lightningOrigin;
     @track tokenizeCardPageUrl;
-    @track isLoading;
+    @track isLoading = true;
 
     async connectedCallback() {
         let domainUrl = await getDomainUrl();
         this.domain = domainUrl.split('.')[0];
         this.visualforceOrigin = `https://${this.domain}--npsp.visualforce.com`;
         this.tokenizeCardPageUrl = `${this.visualforceOrigin}/apex/GE_TokenizeCard`;
-        //this.lightningOrigin = `https://${this.domain}.lightning.force.com`;
     }
 
     renderedCallback() {
@@ -39,18 +37,17 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 return;
             } else {
                 const message = JSON.parse(event.data);
-                component.handlePostMessage(message);
+                component.handleMessage(message);
             }
         }
     }
 
     /*******************************************************************************
-    * @description Method handles making a purchase call using a token from the
-    * received message.
+    * @description Method handles messages received from iframed visualforce page.
     *
-    * @param {object} message: Message received from a tokenization call
+    * @param {object} message: Message received from iframe
     */
-    async handlePostMessage(message) {
+    async handleMessage(message) {
         if (message.error) {
             let error = JSON.stringify(message.error);
             console.log(error);
@@ -65,6 +62,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             // TODO: End - Remove later
 
             // TODO: Save token locally in widget until form requests it
+        } else if (message.isLoaded) {
+            this.isLoading = false;
         }
     }
 
