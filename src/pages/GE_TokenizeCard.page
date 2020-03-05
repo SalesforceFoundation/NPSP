@@ -1,0 +1,75 @@
+<apex:page showHeader="false" applyHtmlTag="true" applyBodyTag="false">
+
+    <head>
+        <apex:slds />
+    </head>
+
+    <article class='slds-scope'>
+        <form onsubmit="handleForm(event)">
+            <div id="payments"></div>
+        </form>
+    </article>
+
+    <!-- TODO: Update src with production url or upload as static resource -->
+    <script src="https://d2w37eyz6rciar.cloudfront.net/elevate.min.js"></script>
+
+    <script>
+        const sfdo = new sfdoPaymentsJsSdk();
+        sfdo.mount({
+            id: 'payments',
+            clientId: '00D6g0000000000EAA',
+            designSystem: 'Lightning',
+            styles: '' +
+                '.logo {' +
+                    'left: 8px !important;' +
+                '}' +
+                '.fieldset.cc-number {' +
+                    'padding-left: 0;' +
+                    'padding-right: 1rem;' +
+                '}' +
+                '.fieldset.exp {' +
+                    'padding-left: 0;' +
+                    'padding-right: 1rem;' +
+                '}' +
+                '.fieldset.cvc {' +
+                    'padding: 0;' +
+                '}'
+        });
+
+        const hostname = window.location.hostname;
+        const arr = hostname.split(".");
+        // TODO: Look into the way this url is being mutated... Better way?
+        const instance = arr[0].replace('--npsp', '');
+        const lightningOrigin = `https://${instance}.lightning.force.com`;
+
+        window.onmessage = function (event) {
+            if (event && event.origin !== lightningOrigin) {
+                // Reject any messages from an unexpected origin
+                return;
+            } else if (event.data && event.data.action === 'createToken') {
+                handleTokenCreation();
+            }
+        }
+
+        function handleTokenCreation() {
+            sfdo
+                .createToken({
+                    nameOnCard: 'test name'
+                })
+                .then(function response(resp) {
+                    // Send token to lwc
+                    const token = resp.token
+                    console.log('token: ', token);
+                    let successString = JSON.stringify({ token: token });
+                    window.top.postMessage(successString, '*');
+                })
+                .catch(function handleError(err) {
+                    // Send error to lwc
+                    console.log('error: ', err);
+                    let errorString = JSON.stringify(err);
+                    window.top.postMessage(errorString, lightningOrigin);
+                });
+        }
+    </script>
+
+</apex:page>
