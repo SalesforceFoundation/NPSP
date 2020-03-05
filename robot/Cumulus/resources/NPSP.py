@@ -4,6 +4,7 @@ import time
 import random
 import string
 from datetime import datetime
+from datetime import timedelta
 
 
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -635,60 +636,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             id="j_id0:theForm:j_id9:j_id10:saveBTN"
             locator = npsp_lex_locators["id"].format(id)
             self.selenium.get_webelement(locator).click()
-     
-    def enter_payment_schedule(self, *args):
-        """Enter values into corresponding fields in Levels page"""                 
-        #if name == "Payments":
-        #id = ["paymentCount","intervals","intervalunits"]
-        id = ["paymentCount","vfForm:intervalnumber","intervalunits"]
-        for i in range(len(args)):
-            locator = npsp_lex_locators['id'].format(id[i])
-            loc = self.selenium.get_webelement(locator)
-            self.selenium.set_focus_to_element(locator)       
-            self.selenium.select_from_list_by_label(loc,args[i])
-            time.sleep(2)    
-                
-    def verify_payment_split(self, amount, no_payments):
-        loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
-        values = int(amount)/int(no_payments)
-        #global self.val
-        values_1 = "{:0.2f}".format(values)
-        self.val = str(values_1)
-        locator =  loc.format(self.val)
-        list_payments = self.selenium.get_webelements(locator)
-        self.t_loc=len(list_payments)
-        if  self.t_loc == int(no_payments):
-            for i in list_payments:
-                self.selenium.page_should_contain_element(i)             
-            return str(self.t_loc)
-        else:
-            return str(self.t_loc)
-       
-    def verify_date_split(self,date, no_payments, interval): 
-        ddate=[]  
-        mm, dd, yyyy = date.split("/")
-        mm, dd, yyyy = int(mm), int(dd), int(yyyy)
-        locator = npsp_lex_locators['payments']['date_loc'].format(date)
-        t_dates = self.selenium.get_webelement(locator)
-        self.selenium.page_should_contain_element(t_dates)
-#            for i in range(int(no_payments) + 1):
-        if mm <= 12:
-            date_list = [mm, dd, yyyy]
-            dates = list(map(str, date_list))
-            new_date = "/".join(dates)
-            mm = mm + int(interval)
-            dates = list(map(str, date_list))
-            #if new_date not in t_dates: 
-            locator1 = npsp_lex_locators['payments']['date_loc'].format(new_date)
-            t_dates = self.selenium.get_webelement(locator1)                  
-            self.selenium.page_should_contain_element(t_dates)
-        elif mm > 12:
-            yyyy = yyyy + 1
-            mm = (mm + int(interval))-(12+int(interval))
-            #return "pass"
-#         else:
-#             return "fail"
-        
+
     def click_viewall_related_list (self,title):  
         """clicks on the View All link under the Related List"""      
         locator=npsp_lex_locators['record']['related']['viewall'].format(title)
@@ -728,21 +676,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         occ_value=self.selenium.get_webelement(locator).text
         return occ_value        
 
-    def verify_payment(self):
-        locators=npsp_lex_locators['payments']['no_payments']
-        list_ele=self.selenium.get_webelements(locators)
-        l_no_payments = len(list_ele)
-        #return list_ele
-        #return l_no_payments, self.t_loc
-        #if self.t_loc == l_no_payments:
-        for element in list_ele:
-            payment_com=self.selenium.get_webelement(element).text
-            cc=payment_com.replace("$","")
-            if cc == str(self.val) and self.t_loc == l_no_payments :
-                return 'pass'
-            #return cc, self.val
-            else:
-                return "fail"
+
         
     def select_value_from_list(self,list_name,value): 
         locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
@@ -780,11 +714,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Returns the first displayed iframe on the page with the given name or title"""
         locator = npsp_lex_locators['frame_new'].format(value,value)
         frames = self.selenium.get_webelements(locator)
-        self.selenium.capture_page_screenshot()
-        print(f'list of frames {frames}')
         for frame in frames:
-            print(f'inside for loop for {frame}')
-            self.selenium.capture_page_screenshot()
             if frame.is_displayed():
                 try:
                     print("inside try")
@@ -797,10 +727,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 return frame
         raise Exception('unable to find visible iframe with title "{}"'.format(value))
 
-    @capture_screenshot_on_error
+
     def select_frame_and_click_element(self,iframe,path, *args, **kwargs):
         """Waits for the iframe and Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks """
-        self.wait_for_locator('frame_new',iframe,iframe)
+        self.wait_for_locator('frame',iframe)
         self.choose_frame(iframe)
         loc = self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.wait_until_element_is_visible(loc, timeout=60)
@@ -1242,7 +1172,18 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, engagement_data=None, task_data=None):
+    def scroll_button_into_view_and_click_using_js(self, type, value):
+        xpath = self.get_npsp_locator(type,value)
+        javascript = (
+            "window.document.evaluate("
+            f"    '{xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null"
+            ").singleNodeValue.scrollIntoView(true)"
+
+        )
+        self.selenium.execute_javascript(javascript)
+        self.npsp.click_button_with_value(value)
+
+    def setupdata(self, name, contact_data=None, opportunity_data=None, payment_data=None, account_data=None, engagement_data=None, task_data=None):
         """ Creates an Account if account setup data is passed
             Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
@@ -1257,9 +1198,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         if account_data is not None:
             # create the account based on the user input specified account type
-            name = self.randomString(10);
+            orgname = self.randomString(10);
             rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
-            account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
+            account_data.update( {'Name' : orgname,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
             account = self.salesforce.salesforce_get("Account",account_id)
             # save the account object to data dictionary
@@ -1309,12 +1250,27 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 Automatically_create_key = 'npe01__Do_Not_Automatically_Create_Payment__c'
                 Automatically_create_value = 'true'
                 opportunity_data.update({Automatically_create_key : Automatically_create_value})
+            if 'StageName' not in opportunity_data:
+                opportunity_data.update( {'StageName' : 'Closed Won'} )
+            if 'AccountId' not in opportunity_data:
+                opportunity_data.update( {'AccountId' : data[name]["AccountId"] } )
 
-            opportunity_data.update( {'AccountId' : data[name]["AccountId"], 'RecordTypeId': rt_id } )
+            opportunity_data.update( {'RecordTypeId': rt_id } )
             opportunity_id = self.salesforce.salesforce_insert("Opportunity", **opportunity_data)
             opportunity = self.salesforce.salesforce_get("Opportunity",opportunity_id)
             # save the opportunity
             data[f"{name}_opportunity"] = opportunity
+
+            if payment_data is not None:
+                numdays = 30
+                i = 1
+                while i <= int(payment_data['NumPayments']):
+                    payment_schedule_data = {}
+                    numdays = numdays*2
+                    scheduled_date =  (datetime.now() + timedelta(days = numdays)).strftime('%Y-%m-%d')
+                    payment_schedule_data.update( {'npe01__Opportunity__c' : data[f"{name}_opportunity"]["Id"] , 'npe01__Scheduled_Date__c' : scheduled_date, 'npe01__Payment_Amount__c' : payment_data['Amount'] } )
+                    payment_id = self.salesforce.salesforce_insert("npe01__OppPayment__c", **payment_schedule_data)
+                    i = i+1
 
         self.builtin.set_suite_variable('${data}', data)
 
