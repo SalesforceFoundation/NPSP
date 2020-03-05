@@ -392,17 +392,23 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return false;
         }
 
+        Boolean isCandidate = false;
+
         if (isBatchContext) {
-            return !rdSettings.isDisableAllInstallments;
+            isCandidate = !rdSettings.isDisableAllInstallments;
 
         } else if (rd.isNew()) {
-            return rdSettings.isFirstInstallmentEnabled;
+            isCandidate = rdSettings.isFirstInstallmentEnabled;
 
         } else if (!rd.hasCurrentOpenOpportunity(currentDate)) {
-            return rdSettings.isNextInstallmentEnabled;
+            isCandidate = rdSettings.isNextInstallmentEnabled;
         }
 
-        return false;
+        if (rd.isFixedLength()) {
+            isCandidate = isCandidate && rd.isFixedLengthNeedInstallment();
+        }
+
+        return isCandidate;
     }
 
     /**
@@ -554,6 +560,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 return this;
             }
 
+            if (isFixedLength() && getFixedLengthPlannedInstallments() - getFixedLengthPaidInstallments() - rd.npe03__Donations__r.size() <= 0) {
+                return this;
+            }
+
             Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
             if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
                 rd.npe03__Next_Payment_Date__c = nextDonationDate;
@@ -570,15 +580,26 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         * @return RecurringDonation This record instance
         */
         public RecurringDonation reviseYearValues(YearValueProcessor processor) {
-            Decimal value = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
-            if (value != rd.CurrentYearValue__c) {
-                rd.CurrentYearValue__c = value;
+            Decimal currentYearValue;
+            Decimal nextYearValue;
+
+            if (isFixedLength()) {
+                List<Decimal> yearValues = processor.calculateFixedLengthYearValue(rd.StartDate__c, getFixedLengthPlannedInstallments(), rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
+                currentYearValue = yearValues[0];
+                nextYearValue = yearValues[1];
+            } else {
+                currentYearValue = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
+                nextYearValue = processor.calcNextYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
+            }
+
+            if (currentYearValue != rd.CurrentYearValue__c) {
+                rd.CurrentYearValue__c = currentYearValue;
                 changedFields.add(npe03__Recurring_Donation__c.CurrentYearValue__c);
             }
 
-            value = processor.calcNextYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
-            if (value != rd.NextYearValue__c) {
-                rd.NextYearValue__c = value;
+
+            if (nextYearValue != rd.NextYearValue__c) {
+                rd.NextYearValue__c = nextYearValue;
                 changedFields.add(npe03__Recurring_Donation__c.NextYearValue__c);
             }
 
@@ -667,6 +688,33 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         /**
+        * @description Indicates if fixed length RD still need more installments 
+        */
+        public Boolean isFixedLengthNeedInstallment() {
+            return (getFixedLengthPlannedInstallments() - getFixedLengthPaidInstallments() - openOpportunityCount()) > 0;
+        }
+
+        /**
+        * @description Return number of planned installments for the recurring donation, default to 0 when value is null
+        * @return Integer
+        */
+        public Integer getFixedLengthPlannedInstallments() {
+            return (rd.npe03__Installments__c != null)
+                ? rd.npe03__Installments__c.intValue()
+                : 0;
+        }
+
+        /**
+        * @description Return number of paid installments for the recurring donation, default to 0 when value is null
+        * @return Integer
+        */
+        public Integer getFixedLengthPaidInstallments() {
+            return (rd.npe03__Total_Paid_Installments__c != null)
+                ? rd.npe03__Total_Paid_Installments__c.intValue()
+                : 0;
+        }
+
+        /**
         * @description Returns true if the RD record is in enhanced Recurring Donation format
         */
         public Boolean isEnhancedFormat() {
@@ -731,6 +779,22 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 }
             }
             return false;
+        }
+
+        /**
+        * @descrtipion Count number of open opportunities for the Recurring Donation
+        * @return Integer
+        */
+        public Integer openOpportunityCount() {
+            Integer openOppCounter = 0;
+            
+            for (Opportunity opp : rd.npe03__Donations__r) {
+                if (opp.IsClosed == false) {
+                    openOppCounter++;
+                }
+            }
+
+            return openOppCounter;
         }
     }
 
@@ -881,6 +945,55 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             return value;
+        }
+
+        public List<Decimal> calculateFixedLengthYearValue(
+            Date rdStartDate, Integer plannedInstallmentCount,
+            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules
+        ) {
+            Decimal currentYearValue = 0;
+            Decimal nextYearValue = 0;
+            List<RD2_OpportunityMatcher.Record> futureInstallments = constructFixedlengthInstallments(rdStartDate, plannedInstallmentCount, opps, schedules);
+            
+            System.debug('size' + futureInstallments.size());
+            for (RD2_OpportunityMatcher.Record record : futureInstallments) {
+                if (!record.isClosedLost()) {
+                    System.debug(record);
+                    if (record.getCloseDate() >= currentYearStartDate && record.getCloseDate() <= currentYearEndDate) {
+                        currentYearValue += record.getAmount();
+                    } else if (record.getCloseDate() >= nextYearStartDate && record.getCloseDate() <= nextYearEndDate) {
+                        nextYearValue += record.getAmount();
+                    }
+                }
+            }
+
+            return new List<Decimal>{currentYearValue, nextYearValue};
+        }
+
+        
+        public List<RD2_OpportunityMatcher.Record> constructFixedlengthInstallments(
+            Date rdStartDate, Integer plannedInstallmentCount,
+            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules
+        ) {
+            List<RD2_ScheduleService.Installment> installments =
+                scheduleService.getVisualizedInstallments(rdStartDate, plannedInstallmentCount, schedules);
+
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentYearStartDate)
+            .includeCurrentOrOpen(opps)
+            .match(installments);
+
+            List<RD2_OpportunityMatcher.Record> matchedInstallments = matcher.getRecords();
+            if (plannedInstallmentCount < matchedInstallments.size()) {
+                for (Integer i = matchedInstallments.size() - 1; i >= 0; i--) {
+                    if (matchedInstallments[i].isNew()) {
+                        matchedInstallments.remove(i);
+                        if (matchedInstallments.size() == plannedInstallmentCount) {
+                            break;
+                        }
+                    }
+                }
+            }
+            return matchedInstallments;
         }
     }
 

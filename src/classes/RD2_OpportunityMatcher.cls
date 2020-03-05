@@ -189,7 +189,7 @@ public inherited sharing class RD2_OpportunityMatcher {
      */
     private Record getMatchFor(Date closeDate, Integer order) {
         Record matched = recordByCloseDate.get(closeDate);
-
+        
         if (matched != null) {
             return matched;
         }
@@ -262,6 +262,14 @@ public inherited sharing class RD2_OpportunityMatcher {
                 : (isClosedLost() ? 0 : opp.Amount);
 
             return amount == null ? 0 : amount;
+        }
+
+        /***
+        * @description Return the Close date from either the opportunity or from the projected installments.
+        * @return Date
+        */
+        public Date getCloseDate() {
+            return (hasInstallment()) ? installment.nextDonationDate : opp.CloseDate;
         }
 
         /***
