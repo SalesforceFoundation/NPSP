@@ -2,30 +2,42 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/ContactPageObject.py
+...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/OpportunityContactRolePageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
-Suite Setup     Open Test Browser
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
+***Keywords***
+Setup Test Data
+    &{account} =  API Create Organization Account   
+    Set suite variable                   &{account}
+    &{contact} =  API Create Contact     Email=test@example.com 
+    Store Session Record                 Account               &{contact}[AccountId]
+    Set suite variable                   &{contact}
+    ${ns} =  Get NPSP Namespace Prefix
+    &{opportunity} =  API Create Opportunity    &{account}[Id]    Donation    Name=&{account}[Name] $50 donation    Amount=50    ${ns}Primary_Contact__c=&{contact}[Id]
+    Set suite variable    &{opportunity}
  
 *** Test Cases ***    
 Create ASC for Primary Contact on Organization Gift
     [tags]  unstable
-    &{account} =  API Create Organization Account   
-    &{contact} =  API Create Contact    Email=skristem@robot.com 
-    ${ns} =  Get NPSP Namespace Prefix
-    &{opportunity} =  API Create Opportunity    &{account}[Id]    Donation    Name=&{account}[Name] $50 donation    Amount=50    ${ns}Primary_Contact__c=&{contact}[Id]
-    Go To Record Home    &{opportunity}[Id]
-    Select Tab    Related
-    Select Relatedlist    Contact Roles
+    Go To Page                              Details                              Opportunity                                
+    ...                                     object_id=&{opportunity}[Id]
+    Select Tab                              Related
+    Select Relatedlist                      Contact Roles
+    Wait For Page Object                    Custom                               OpportunityContactRole
     Verify Related List Field Values
-    ...                     &{contact}[FirstName] &{contact}[LastName]=Soft Credit
-    Go To Record Home    &{contact}[Id]
-    Select Tab    Related
-    Load Related List    Opportunities
-    Check Record Related Item    Opportunities    &{opportunity}[Name]
+    ...                                     &{contact}[FirstName] &{contact}[LastName]=Soft Credit
+    Go To Page                              Details                              Contact                                
+    ...                                     object_id=&{contact}[Id]
+    Select Tab                              Related
+    Check Record Related Item               Opportunities                        &{opportunity}[Name]
     Run Donations Batch Process
-    Go To Record Home    &{Contact}[Id]
-    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
-    Scroll Element Into View    ${locator}
-    Navigate To And Validate Field Value    Soft Credit This Year    contains    $50.00
-    Navigate To And Validate Field Value    Soft Credit Total    contains    $50.00
+    Go To Page                              Details                              Contact                                
+    ...                                     object_id=&{Contact}[Id]
+    Navigate To And Validate Field Value    Soft Credit This Year                contains    $50.00    section=Soft Credit Total
+    Navigate To And Validate Field Value    Soft Credit Total                    contains    $50.00    section=Soft Credit Total

@@ -1398,6 +1398,20 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
         self.salesforce.populate_lookup_field(field,value)
+        
+    def edit_record_dropdown_value(self,field,value):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field and enters a value into the field"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
+        self.click_flexipage_dropdown(field, value)    
     
     def edit_record_checkbox(self,field,status):
         """Scrolls just a little below the field
