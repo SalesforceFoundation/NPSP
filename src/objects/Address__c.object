@@ -171,7 +171,7 @@
         <defaultValue>false</defaultValue>
         <description>If set to TRUE, this address should not be included in automated address update jobs</description>
         <externalId>false</externalId>
-        <inlineHelpText>If selected, the address won&apos;t be included in any scheduled address updates.</inlineHelpText>
+        <inlineHelpText>If selected, this address won&apos;t be included in address updates from the NCOA or address verification vendor.</inlineHelpText>
         <label>Exclude from Updates</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
@@ -331,7 +331,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <fullName>NCOA_Result_Code__c</fullName>
         <description>The result code form the NCOA vendor</description>
         <externalId>false</externalId>
-        <inlineHelpText>The result code form the NCOA vendor</inlineHelpText>
+        <inlineHelpText>The result code form the NCOA vendor.</inlineHelpText>
         <label>NCOA Result Code</label>
         <length>80</length>
         <required>false</required>
@@ -897,7 +897,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     </fields>
     <fields>
         <fullName>Verified_Date__c</fullName>
-        <description>The date and time the address was verified (standardized)</description>
+        <description>The date and time the address was verified</description>
         <externalId>false</externalId>
         <inlineHelpText>The most recent date and time the address was verified.</inlineHelpText>
         <label>Verified Date</label>
