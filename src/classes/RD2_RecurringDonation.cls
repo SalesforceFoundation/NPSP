@@ -160,7 +160,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation reviseScheduleEndDateForFixedLength(RD2_ScheduleService scheduleService) {
-        if (!isFixedLength()) {
+        if (!isFixedLength() || isFixedLengthComplete()) {
             return this;
         }
 
