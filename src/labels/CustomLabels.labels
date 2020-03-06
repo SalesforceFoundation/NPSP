@@ -5109,16 +5109,16 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Body below the Form Fields header</shortDescription>
-        <value>These fields are commonly included in gift entry forms. Custom Object Groups are also found in this section.</value>
+        <shortDescription>Form Fields sidebar text block</shortDescription>
+        <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsDescLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Form Fields sidebar text block</shortDescription>
-        <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+        <shortDescription>Body below the Form Fields header</shortDescription>
+        <value>These fields are commonly included in gift entry forms. Custom Object Groups are also found in this section.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftColAdditional</fullName>

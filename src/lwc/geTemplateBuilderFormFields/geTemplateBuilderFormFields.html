@@ -11,29 +11,30 @@
                     <h2 class="slds-text-heading_small slds-p-bottom_small">
                         {CUSTOM_LABELS.geHeaderFormFieldsLeftCol}
                     </h2>
-                    <p class="slds-text-body_small slds-p-bottom_small">
+                    <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
                         {CUSTOM_LABELS.geBodyFormFieldsLeftCol}
                         <template if:false={isReadMoreActive}>
-                            <span>
-                                <button class="slds-button slds-button__extension slds-p-left_xxx-small"
+                            <div>
+                                <a class="slds-p-left_xxx-small"
                                         data-id={CUSTOM_LABELS.commonReadMore}
                                         title={CUSTOM_LABELS.commonReadMore}
                                         aria-label={CUSTOM_LABELS.commonReadMore}
                                         onclick={handleBodyReadMore}>
                                     {CUSTOM_LABELS.commonReadMore}
-                                </button>
-                            </span>
+                                </a>
+                            </div>
                         </template>
                     </p>
                     <template if:true={isReadMoreActive}>
-                        <lightning-formatted-rich-text class="slds-text-body_small"
-                                                       value={CUSTOM_LABELS.geBodyFormFieldsLeftColAdditional}>
-                        </lightning-formatted-rich-text>
+                        <div class="slds-text-body_small slds-p-horizontal--small slds-p-top--small">
+                            <lightning-formatted-rich-text value={CUSTOM_LABELS.geBodyFormFieldsLeftColAdditional}>
+                            </lightning-formatted-rich-text>
+                        </div>
                     </template>
                 </div>
                 <div class="slds-size_1-of-1">
                     <template if:true={bundlesSectionCollapsed}>
-                        <lightning-button class="slds-float_right"
+                        <lightning-button class="slds-float_right slds-button__extension"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
@@ -41,7 +42,7 @@
                         </lightning-button>
                     </template>
                     <template if:false={bundlesSectionCollapsed}>
-                        <lightning-button class="slds-float_right"
+                        <lightning-button class="slds-float_right slds-button__extension"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
@@ -53,7 +54,7 @@
                     <c-util-expandable-section
                             label={CUSTOM_LABELS.geHeaderFieldBundles}
                             data-section-id={LOCATORS.FIELD_BUNDLES_SECTION_ID}>
-                        <p class="slds-text-body_small slds-p-around_small">
+                        <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
                             {CUSTOM_LABELS.geBodyFieldBundlesLeftCol}
                         </p>
                         <div class="slds-p-horizontal--small slds-p-top--medium">
@@ -86,7 +87,7 @@
 
                 <div class="slds-size_1-of-1">
                     <template if:true={basicSectionCollapsed}>
-                        <lightning-button class="slds-float_right"
+                        <lightning-button class="slds-float_right slds-button__extension"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
@@ -94,7 +95,7 @@
                         </lightning-button>
                     </template>
                     <template if:false={basicSectionCollapsed}>
-                        <lightning-button class="slds-float_right"
+                        <lightning-button class="slds-float_right slds-button__extension"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
@@ -107,7 +108,7 @@
                     <c-util-expandable-section
                             label={CUSTOM_LABELS.geTabFormFields}
                             data-section-id={LOCATORS.FORM_FIELDS_SECTION_ID}>
-                        <p class="slds-text-body_small slds-p-around_small">
+                        <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
                             {CUSTOM_LABELS.geBodyFormFieldsDescLeftCol}
                         </p>
                         <lightning-accordion allow-multiple-sections-open
@@ -150,7 +151,7 @@
 
                 <div class="slds-size_1-of-1">
                     <template if:true={advancedSectionCollapsed}>
-                        <lightning-button class="slds-float_right"
+                        <lightning-button class="slds-float_right slds-button__extension"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
@@ -158,7 +159,7 @@
                         </lightning-button>
                     </template>
                     <template if:false={advancedSectionCollapsed}>
-                        <lightning-button class="slds-float_right"
+                        <lightning-button class="slds-float_right slds-button__extension"
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
@@ -172,8 +173,8 @@
                             label={CUSTOM_LABELS.geHeaderAdvancedFormFields}
                             is-collapsed="true"
                             data-section-id={LOCATORS.ADVANCED_FIELDS_SECTION_ID}>
-                        <p class="slds-text-body_small slds-p-around_small">
-                            {CUSTOM_LABELS.geBodyFormFieldsDescLeftCol}
+                        <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
+                            {CUSTOM_LABELS.geBodyAdvancedFieldMapping}
                         </p>
                         <lightning-accordion allow-multiple-sections-open
                                              onsectiontoggle={handleSectionToggle}
@@ -184,28 +185,30 @@
                                 <lightning-accordion-section key={objectMapping.DeveloperName}
                                                              name={objectMapping.DeveloperName}
                                                              label={objectMapping.MasterLabel}
-                                                             class="slds-truncate slds-accordion__section_extension">
-                                    <lightning-helptext if:true={objectMapping.helpText}
-                                                        slot="actions"
-                                                        content={objectMapping.helpText}>
-                                    </lightning-helptext>
-                                    <template for:each={objectMapping.Field_Mappings}
-                                              for:item="fieldMapping">
-                                        <lightning-input type="checkbox"
-                                                         key={fieldMapping.DeveloperName}
-                                                         label={fieldMapping.Target_Field_Label}
-                                                         value={fieldMapping.DeveloperName}
-                                                         checked={fieldMapping.checked}
-                                                         onchange={handleToggleFieldMapping}
-                                                         class="slds-truncate slds-p-bottom_xxx-small"
-                                                         title={fieldMapping.DeveloperName}
-                                                         required={fieldMapping.Is_Required}
-                                                         data-source-api-name={fieldMapping.Source_Field_API_Name}
-                                                         data-object-mapping-label={objectMapping.MasterLabel}
-                                                         data-field-mapping={fieldMapping.DeveloperName}
-                                                         data-object-mapping={objectMapping.DeveloperName}>
-                                        </lightning-input>
-                                    </template>
+                                                             class="slds-truncate">
+                                    <div class="slds-accordion__section_extension">
+                                        <lightning-helptext if:true={objectMapping.helpText}
+                                                            slot="actions"
+                                                            content={objectMapping.helpText}>
+                                        </lightning-helptext>
+                                        <template for:each={objectMapping.Field_Mappings}
+                                                  for:item="fieldMapping">
+                                            <lightning-input type="checkbox"
+                                                             key={fieldMapping.DeveloperName}
+                                                             label={fieldMapping.Target_Field_Label}
+                                                             value={fieldMapping.DeveloperName}
+                                                             checked={fieldMapping.checked}
+                                                             onchange={handleToggleFieldMapping}
+                                                             class="slds-truncate slds-p-bottom_xxx-small"
+                                                             title={fieldMapping.DeveloperName}
+                                                             required={fieldMapping.Is_Required}
+                                                             data-source-api-name={fieldMapping.Source_Field_API_Name}
+                                                             data-object-mapping-label={objectMapping.MasterLabel}
+                                                             data-field-mapping={fieldMapping.DeveloperName}
+                                                             data-object-mapping={objectMapping.DeveloperName}>
+                                            </lightning-input>
+                                        </template>
+                                    </div>
 
                                 </lightning-accordion-section>
                             </template>
