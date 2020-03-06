@@ -771,11 +771,11 @@ private with sharing class STG_SettingsManager_TEST {
 
     @isTest
     private static void shouldPreventDeleteOppNamingWhenUserDoesNotHaveDeletePermission() {
-        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
-        OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
-        Opportunity_Naming_Settings__c settings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values()[0];
+        Opportunity_Naming_Settings__c settings = getOppNameSettings();
+        insert settings;
 
         Test.startTest();
+
         System.runAs(buildReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelOppNaming);
             STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
@@ -789,17 +789,14 @@ private with sharing class STG_SettingsManager_TEST {
             System.assertEquals(1, panel.mapOppNameSettings.size());
             System.assert([select id, name from Opportunity_Naming_Settings__c].size() > 0);
         }
+
         Test.stopTest();
 
     }
 
     @isTest
     private static void shouldVerifyDeleteOppNamingWhenUserHaveAdminPermission() {
-        Opportunity_Naming_Settings__c settings = new Opportunity_Naming_Settings__c(
-            Name = 'foo',
-            Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
-
-        );
+        Opportunity_Naming_Settings__c settings = getOppNameSettings();
         insert settings;
 
         Test.startTest();
@@ -812,20 +809,19 @@ private with sharing class STG_SettingsManager_TEST {
         panel.currentONSName = settings.Name;
 
         panel.delONS();
+        panel.listOppNameSettings = null;
+        panel.mapOppNameSettings = null;
+
         //verify if the settings are deleted
         System.assert([select id, name from Opportunity_Naming_Settings__c].size() == 0 );
-        //System.assertEquals(0, panel.mapOppNameSettings.size());
+        //System.assertEquals(0, panel.listOppNameSettings.size());
 
         Test.stopTest();
     }
 
     @isTest
     private static void shouldPreventDeleteForFieldMappingWhenUserDoesNotHaveDelPermission() {
-        npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
-            npe03__Recurring_Donation_Field__c = 'Name',
-            npe03__Opportunity_Field__c = 'Description',
-            Name = 'CFMName00001-Test'
-        );
+        npe03__Custom_Field_Mapping__c cfm = getCustomFieldMapping();
         insert cfm;
 
         Test.startTest();
@@ -850,11 +846,7 @@ private with sharing class STG_SettingsManager_TEST {
 
     @isTest
     private static void shouldVerifyDeleteForFieldMappingWhenUserHaveAdminPermission() {
-        npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
-            npe03__Recurring_Donation_Field__c = 'Name',
-            npe03__Opportunity_Field__c = 'Description',
-            Name = 'CFMName00001-Test'
-        );
+        npe03__Custom_Field_Mapping__c cfm = getCustomFieldMapping();
         insert cfm;
 
         Test.startTest();
@@ -875,6 +867,280 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
     }
+
+    @isTest
+    private static void shouldPreventDeleteForCustomInstallmtWhenUserDoesNotHaveDelPermission() {
+        npe03__Custom_Installment_Settings__c cfm = getCustomInstallmentSettings();
+        insert cfm;
+
+        Test.startTest();
+
+        System.runAs(buildReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelRDCustomInstallment);
+            STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
+            System.assertEquals('idPanelRDInstPd', panel.idPanel());
+
+            panel.ciNew.Name = cfm.Name;
+            panel.ciNew.npe03__Value__c = cfm.npe03__Value__c;
+            panel.ciNew.npe03__Increment__c = cfm.npe03__Increment__c;
+
+            panel.ciIdDelete = STG_Panel.stgService.listRDCustomInstallment[0].Id;
+            panel.deleteCi();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assert([select id, name from npe03__Custom_Installment_Settings__c].size() > 0 );
+            System.assertEquals(1, STG_Panel.stgService.listRDCustomInstallment.size());
+        }
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldVerifyDeleteForCustomInstallmtWhenUserHaveAdminPermission() {
+        npe03__Custom_Installment_Settings__c cfm = getCustomInstallmentSettings();
+        insert cfm;
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelRDCustomInstallment);
+        STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
+        System.assertEquals('idPanelRDInstPd', panel.idPanel());
+
+        panel.ciNew.Name = cfm.Name;
+        panel.ciNew.npe03__Value__c = cfm.npe03__Value__c;
+        panel.ciNew.npe03__Increment__c = cfm.npe03__Increment__c;
+
+        panel.ciIdDelete = STG_Panel.stgService.listRDCustomInstallment[0].Id;
+        panel.deleteCi();
+
+        //verify if the settings are deleted
+        System.assert([select id, name from npe03__Custom_Installment_Settings__c].size() == 0 );
+        system.assertEquals(0, STG_Panel.stgService.listRDCustomInstallment.size());
+
+        Test.stopTest();
+
+    }
+
+    @isTest
+    private static void shouldPreventDeleteForPaymentMapWhenUserDoesNotHaveDelPermission() {
+        npe01__Payment_Field_Mapping_Settings__c cfm = getPaymentFieldMapSettings();
+        insert cfm;
+
+        Test.startTest();
+
+        System.runAs(buildReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelPaymentMapping);
+            STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
+            System.assertEquals('idPanelPaymentMapping', panel.idPanel());
+
+            panel.pfmNew.npe01__Opportunity_Field__c = cfm.npe01__Opportunity_Field__c;
+            panel.pfmNew.npe01__Payment_Field__c = cfm.npe01__Payment_Field__c;
+
+            panel.pfmIdDelete = panel.listPMTFieldMapping[0].Id;
+            panel.deletePfm();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assert([select id, name from npe01__Payment_Field_Mapping_Settings__c].size() > 0 );
+            System.assertEquals(1, STG_Panel.stgService.listPMTFieldMapping.size());
+        }
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldVerifyDeleteForPaymentMapWhenUserHaveAdminPermission() {
+        npe01__Payment_Field_Mapping_Settings__c cfm = getPaymentFieldMapSettings();
+        insert cfm;
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelPaymentMapping);
+        STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
+        System.assertEquals('idPanelPaymentMapping', panel.idPanel());
+
+        panel.pfmNew.npe01__Opportunity_Field__c = cfm.npe01__Opportunity_Field__c;
+        panel.pfmNew.npe01__Payment_Field__c = cfm.npe01__Payment_Field__c;
+
+        panel.pfmIdDelete = panel.listPMTFieldMapping[0].Id;
+        panel.deletePfm();
+        //verify if the settings are deleted
+        System.assert([select id, name from npe01__Payment_Field_Mapping_Settings__c].size() == 0 );
+        System.assertEquals(0, panel.listPMTFieldMapping.size());
+
+        Test.stopTest();
+
+    }
+
+
+    @isTest
+    private static void shouldPreventDeleteForRelReciprocalWhenUserDoesNotHaveDelPermission() {
+        npe4__Relationship_Lookup__c cfm = getRelationshipLookup();
+        insert cfm;
+
+        Test.startTest();
+
+        System.runAs(buildReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelRelReciprocal);
+            STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
+            System.assertEquals('idPanelRelReciprocal', panel.idPanel());
+
+            panel.rlNew.Name = cfm.Name;
+            panel.rlNew.npe4__Male__c = cfm.npe4__Male__c;
+            panel.rlNew.npe4__Female__c = cfm.npe4__Female__c;
+            panel.rlNew.npe4__Neutral__c = cfm.npe4__Neutral__c;
+
+            panel.rlIdDelete = panel.listRelLookup[0].Id;
+            panel.deleteRl();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assert([select id, name from npe4__Relationship_Lookup__c].size() > 0 );
+            System.assertEquals(1, panel.listRelLookup.size());
+        }
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldVerifyDeleteForRelReciprocalWhenUserHaveAdminPermission() {
+        npe4__Relationship_Lookup__c cfm = getRelationshipLookup();
+        insert cfm;
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelRelReciprocal);
+        STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
+        System.assertEquals('idPanelRelReciprocal', panel.idPanel());
+
+        panel.rlNew.Name = cfm.Name;
+        panel.rlNew.npe4__Male__c = cfm.npe4__Male__c;
+        panel.rlNew.npe4__Female__c = cfm.npe4__Female__c;
+        panel.rlNew.npe4__Neutral__c = cfm.npe4__Neutral__c;
+
+        panel.rlIdDelete = panel.listRelLookup[0].Id;
+        panel.deleteRl();
+
+        System.assert([select id, name from npe4__Relationship_Lookup__c].size() == 0 );
+        System.assertEquals(0, panel.listRelLookup.size());
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldPreventDeleteForRelAutoWhenUserDoesNotHaveDelPermission() {
+        npe4__Relationship_Auto_Create__c cfm = getRelationshipAutoCreate();
+        insert cfm;
+
+        Test.startTest();
+
+        System.runAs(buildReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelRelAuto);
+            STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
+            System.assertEquals('idPanelRelAuto', panel.idPanel());
+
+            panel.acNew.npe4__Object__c = cfm.npe4__Object__c;
+            panel.acNew.npe4__Field__c = cfm.npe4__Field__c;
+            panel.acNew.npe4__Relationship_Type__c = cfm.npe4__Relationship_Type__c;
+
+
+            panel.acIdDelete = panel.listRelAutoCreate[0].Id;
+            panel.deleteAc();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assert([select id, name from npe4__Relationship_Auto_Create__c].size() > 0 );
+            System.assertEquals(1, panel.listRelAutoCreate.size());
+        }
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldVerifyDeleteForRelAutoWhenUserHaveAdminPermission() {
+        npe4__Relationship_Auto_Create__c cfm = getRelationshipAutoCreate();
+        insert cfm;
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelRelAuto);
+        STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
+        System.assertEquals('idPanelRelAuto', panel.idPanel());
+
+        panel.acNew.npe4__Object__c = cfm.npe4__Object__c;
+        panel.acNew.npe4__Field__c = cfm.npe4__Field__c;
+        panel.acNew.npe4__Relationship_Type__c = cfm.npe4__Relationship_Type__c;
+
+
+        panel.acIdDelete = panel.listRelAutoCreate[0].Id;
+        panel.deleteAc();
+
+        System.assert([select id, name from npe4__Relationship_Auto_Create__c].size() == 0 );
+        System.assertEquals(0, panel.listRelAutoCreate.size());
+
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldPreventDeleteForUserRollupWhenUserDoesNotHaveDelPermission() {
+        npo02__User_Rollup_Field_Settings__c HHurfs = getUserRollupFieldSettings();
+        insert HHurfs;
+
+        Test.startTest();
+
+        System.runAs(buildReadOnlyUser()) {
+            Test.setCurrentPage(Page.STG_PanelUserRollup);
+            STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
+            System.assertEquals('idPanelUserRollup', panel.idPanel());
+            panel.startBuild();
+
+            panel.activeUDR.SourceField = HHurfs.npo02__Source_Field__c;
+            panel.activeUDR.Operation = HHurfs.npo02__Field_Action__c;
+            panel.activeUDR.TargetObject = HHurfs.npo02__Object_Name__c;
+            panel.activeUDR.TargetField = HHurfs.npo02__Target_Field__c;
+
+            panel.activeUDR = panel.udrlist[0];
+            panel.activeUDR.deleteMe();
+
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
+            System.assert([select id, name from npo02__User_Rollup_Field_Settings__c].size() > 0 );
+            System.assertEquals(1, panel.udrlist.size());
+        }
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void shouldVerifyDeleteForUserRollupWhenUserHaveAdminPermission() {
+        npo02__User_Rollup_Field_Settings__c HHurfs = getUserRollupFieldSettings();
+        insert HHurfs;
+
+        Test.startTest();
+
+        Test.setCurrentPage(Page.STG_PanelUserRollup);
+        STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
+        System.assertEquals('idPanelUserRollup', panel.idPanel());
+
+        panel.startBuild();
+
+        panel.activeUDR.SourceField = HHurfs.npo02__Source_Field__c;
+        panel.activeUDR.Operation = HHurfs.npo02__Field_Action__c;
+        panel.activeUDR.TargetObject = HHurfs.npo02__Object_Name__c;
+        panel.activeUDR.TargetField = HHurfs.npo02__Target_Field__c;
+
+        panel.activeUDR = panel.udrlist[0];
+        panel.activeUDR.deleteMe();
+        panel.udrList = null;
+        UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
+
+        System.assert([select id, name from npo02__User_Rollup_Field_Settings__c].size() == 0 );
+        System.assertEquals(0, panel.udrlist.size());
+
+
+        Test.stopTest();
+    }
+
+
+
+
     /*********************************************************************************************************
     * @description Tests the Run RD Batch panel
     * @return void
@@ -1451,4 +1717,76 @@ private with sharing class STG_SettingsManager_TEST {
         User usr = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
         return usr;
     }
+
+    private static Opportunity_Naming_Settings__c getOppNameSettings() {
+        return
+            new Opportunity_Naming_Settings__c(
+                Name = 'foo',
+                Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
+            );
+
+    }
+
+    private static npe03__Custom_Field_Mapping__c getCustomFieldMapping() {
+        return
+            new npe03__Custom_Field_Mapping__c(
+                npe03__Recurring_Donation_Field__c = 'Name',
+                npe03__Opportunity_Field__c = 'Description',
+                Name = 'CFMName00001-Test'
+        );
+
+    }
+
+    private static npe03__Custom_Installment_Settings__c getCustomInstallmentSettings() {
+        return
+            new npe03__Custom_Installment_Settings__c(
+                Name = 'TestInstallment',
+                npe03__Value__c = 10,
+                npe03__Increment__c = 'Days'
+        );
+    }
+
+    private static npe01__Payment_Field_Mapping_Settings__c getPaymentFieldMapSettings() {
+        return
+            new npe01__Payment_Field_Mapping_Settings__c(
+                Name = 'TestMapping',
+                npe01__Opportunity_Field__c = 'Opportunity',
+                npe01__Payment_Field__c = 'npe01__OppPayment__c'
+
+            );
+    }
+
+    private static npe4__Relationship_Lookup__c getRelationshipLookup() {
+        return
+            new npe4__Relationship_Lookup__c(
+                Name = 'TestMapping',
+                npe4__Male__c = 'bar',
+                npe4__Female__c = 'baz',
+                npe4__Neutral__c = 'byz'
+
+            );
+    }
+
+     private static npe4__Relationship_Auto_Create__c getRelationshipAutoCreate() {
+        return
+            new npe4__Relationship_Auto_Create__c(
+                Name = 'TestMapping',
+                npe4__Object__c = 'Contact',
+                npe4__Field__c = 'ReportsToId',
+                npe4__Relationship_Type__c = 'coworker'
+
+            );
+    }
+
+     private static npo02__User_Rollup_Field_Settings__c getUserRollupFieldSettings() {
+        return
+            new npo02__User_Rollup_Field_Settings__c(
+                Name = 'Household Test Rollup',
+                npo02__Target_Field__c = 'lastoppamount__c',
+                npo02__Source_Field__c = 'Amount',
+                npo02__Object_Name__c = 'npo02__Household__c',
+                npo02__Field_Action__c = 'MAX'
+            );
+    }
+
 }
