@@ -821,6 +821,7 @@ private with sharing class STG_SettingsManager_TEST {
 
         //verify if the settings are deleted
         System.assert([select id, name from Opportunity_Naming_Settings__c].size() == 0 );
+        System.assertEquals(0, Opportunity_Naming_Settings__c.getAll().size());
         //System.assertEquals(0, panel.listOppNameSettings.size());
 
         Test.stopTest();
@@ -1755,17 +1756,21 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
         system.assertEquals(true, panel.isRunningBatch);
     }
-    //Helper Methods
 
-    /***
+    //Helper Methods
+    /**
      * @description Builds a read only user with readonly profile
      * @return User
-     */
+    */
     private static User buildReadOnlyUser() {
         User usr = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
         return usr;
     }
 
+    /**
+     * @description create a instance of opportunity naming settings
+     * @return opportunity naming settings
+    */
     private static Opportunity_Naming_Settings__c getOppNameSettings() {
         return
             new Opportunity_Naming_Settings__c(
@@ -1775,6 +1780,10 @@ private with sharing class STG_SettingsManager_TEST {
 
     }
 
+    /**
+    * @description create a instance of custom field mapping settings
+    * @return custom field mapping
+    */
     private static npe03__Custom_Field_Mapping__c getCustomFieldMapping() {
         return
             new npe03__Custom_Field_Mapping__c(
@@ -1785,6 +1794,10 @@ private with sharing class STG_SettingsManager_TEST {
 
     }
 
+    /**
+     * @description create a instance of custom installment settings
+     * @return custom installment settings
+    */
     private static npe03__Custom_Installment_Settings__c getCustomInstallmentSettings() {
         return
             new npe03__Custom_Installment_Settings__c(
@@ -1794,6 +1807,10 @@ private with sharing class STG_SettingsManager_TEST {
         );
     }
 
+    /**
+    * @description create a instance of payment field mapping settings
+    * @return payment field mapping settings
+    */
     private static npe01__Payment_Field_Mapping_Settings__c getPaymentFieldMapSettings() {
         return
             new npe01__Payment_Field_Mapping_Settings__c(
@@ -1804,6 +1821,10 @@ private with sharing class STG_SettingsManager_TEST {
             );
     }
 
+    /**
+    * @description create a instance of relationship lookup settings
+    * @return relationship lookup settings
+    */
     private static npe4__Relationship_Lookup__c getRelationshipLookup() {
         return
             new npe4__Relationship_Lookup__c(
@@ -1815,6 +1836,10 @@ private with sharing class STG_SettingsManager_TEST {
             );
     }
 
+    /**
+    * @description create a instance of relationship auto create settings
+    * @return relationship auto create settings
+    */
      private static npe4__Relationship_Auto_Create__c getRelationshipAutoCreate() {
         return
             new npe4__Relationship_Auto_Create__c(
@@ -1826,6 +1851,10 @@ private with sharing class STG_SettingsManager_TEST {
             );
     }
 
+    /**
+    * @description create a instance of user roll up field settings
+    * @return user roll up field settings
+    */
      private static npo02__User_Rollup_Field_Settings__c getUserRollupFieldSettings() {
         return
             new npo02__User_Rollup_Field_Settings__c(
