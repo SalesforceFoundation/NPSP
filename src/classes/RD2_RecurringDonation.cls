@@ -159,7 +159,7 @@ public inherited sharing class RD2_RecurringDonation {
     * to control how many future installments should be created
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseFixedLengthScheduleEndDate(RD2_ScheduleService scheduleService) {
+    public RD2_RecurringDonation reviseScheduleEndDateForFixedLength(RD2_ScheduleService scheduleService) {
         if (!isFixedLength()) {
             return this;
         }
@@ -167,7 +167,7 @@ public inherited sharing class RD2_RecurringDonation {
         List<RD2_OpportunityMatcher.Record> installments = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
         .includeCurrentOrOpen(rd.npe03__Donations__r)
         .match(scheduleService.getVisualizedInstallments(
-            rd.StartDate__c, getPlannedInstallments(), rd.RecurringDonationSchedules__r
+            RD2_ScheduleService.currentDate, getPlannedInstallments() - getPaidInstallments(), rd.RecurringDonationSchedules__r
         )).getRecords();
 
         Integer i = installments.size();
