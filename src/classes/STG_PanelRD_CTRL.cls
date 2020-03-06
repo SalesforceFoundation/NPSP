@@ -35,29 +35,43 @@
 */
 public with sharing class STG_PanelRD_CTRL extends STG_Panel {
 
-    /*********************************************************************************************************
+    /***
     * @description Returns the string Id of the Recurring Donations panel.
     */
-    public override string idPanel() { return 'idPanelRD'; }
+    public override String idPanel() { return 'idPanelRD'; }
 
-    /*********************************************************************************************************
+    /***
     * @description holds value to evaluate change in forecast months
     */
-    private integer originalForecastMonths;
+    private Integer originalForecastMonths;
 
-    /*********************************************************************************************************
+    /***
+    * @description Checks if the custom fiscal year is enabled
+    * Note: only standard fiscal year is supported
+    */
+    public Boolean isCustomFiscalYearEnabled {
+        get {
+            if (isCustomFiscalYearEnabled == null) {
+                isCustomFiscalYearEnabled = UTIL_FiscalYearInfo.getInstance().isCustomFiscalYearEnabled;
+            }
+            return isCustomFiscalYearEnabled;
+        } 
+        private set;
+    }
+
+    /***
     * @description The panel's constructor
     */
     public STG_PanelRD_CTRL() { }
 
-    /*********************************************************************************************************
+    /***
     * @description Initiliazes the classes data
     */
     public void init(){
-        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
+        originalForecastMonths = (Integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description Action Method to save RD settings, deal with a change in forecast months,
     * and schedule the nightly job if appropriate.
     * @return null
@@ -68,7 +82,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         try {
         	List<SObject> toUpdate = new List<SObject>();
 
-        	if(STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
+        	if (STG_Panel.stgService.stgRD != null && !Test.isRunningTest()) {
         		toUpdate.add(STG_Panel.stgService.stgRD);
         	}
 
@@ -77,15 +91,17 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
             strRDOppRecordTypeLabel = null;
             setOriginalForecastMonthsForLegacyRD();
             isEditMode = false;
+
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
+
     	return null;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description Sets Opportunity forecast months. If the new settings is higher, starts the batch job to
     * update RDs. The settings is applicable to legacy Recurring Donations only.
     * @return void
@@ -94,6 +110,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         if (isRD2Enabled) {
             return;
         }
+
         //if we reduced the number of forecast months, we need to trim opps
         if (originalForecastMonths > STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c){
             trimOpportunities();
@@ -103,30 +120,35 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
             STG_PanelRDBatch_CTRL rdbatch = new STG_PanelRDBatch_CTRL();
             rdbatch.runBatch();
         }
-        originalForecastMonths = (integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
 
+        originalForecastMonths = (Integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description Deletes future Opportunities that are beyond the number of forecast months
     * @return void
     */
     private void trimOpportunities(){
-        date limitDate = system.today().addMonths((integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
-        string openlabel = RD_Constants.OPEN_ENDED_STATUS_OPEN;
-        delete [select id from Opportunity
-               where CloseDate > :limitDate
-               and isClosed != true
-               and npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openLabel];
+        Date limitDate = System.today().addMonths((Integer)STG_Panel.stgService.stgRD.npe03__Opportunity_Forecast_Months__c);
+        String openlabel = RD_Constants.OPEN_ENDED_STATUS_OPEN;
+        delete [
+            SELECT Id 
+            FROM Opportunity
+            WHERE CloseDate > :limitDate
+            AND IsClosed != true
+            AND npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openLabel
+        ];
 
-        map<Id, npe03__Recurring_Donation__c> mapIdRD = new map<Id, npe03__Recurring_Donation__c>([select Id from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c = :openLabel]);
+        Map<Id, npe03__Recurring_Donation__c> mapIdRD = new map<Id, npe03__Recurring_Donation__c>([
+            SELECT Id FROM npe03__Recurring_Donation__c WHERE npe03__Open_Ended_Status__c = :openLabel
+        ]);
         RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(mapIdRD.keySet());
     }
 
-    /*********************************************************************************************************
+    /***
     * @description The SelectOption list of RD Close Options
     */
-    public list<SelectOption> listSORDCloseOptions {
+    public List<SelectOption> listSORDCloseOptions {
         get {
         	if (listSORDCloseOptions == null) {
 	            listSORDCloseOptions = getCloseOptions();
@@ -136,13 +158,13 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description Returns close options (actions) applicable to open Opportunities on a closed RD.
     * Options have different source depending if the enhanced Recurring Donations are enabled.
     * @return List<SelectOption>
     */
     private List<SelectOption> getCloseOptions() {
-        List<SelectOption> options = new list<SelectOption>();
+        List<SelectOption> options = new List<SelectOption>();
 
         if (isRD2Enabled) {
             for (RD2_Constants.CloseActions option : RD2_Constants.CloseActions.values()) {
@@ -158,10 +180,10 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
 
     }
 
-    /*********************************************************************************************************
+    /***
     * @description The RecordType Name to use for RD Opportunities
     */
-    static public string strRDOppRecordTypeLabel {
+    static public String strRDOppRecordTypeLabel {
         get {
             if (strRDOppRecordTypeLabel == null) {
                 try {
@@ -177,7 +199,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description Return a list of picklist value to be selected for Installment Auto-Creation Setting 
     */
     public List<SelectOption> installmentCreateOptions {
@@ -190,14 +212,14 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description The current setting being stored on the Installment Auto-Creation Setting
     */
     public String selectedInstallmentCreateOption {
         get {
             selectedInstallmentCreateOption = convertToInstallmentLabel(STG_Panel.stgService.stgRD.InstallmentOppAutoCreateOption__c);
 
-            selectedInstallmentCreateOption = (String.isBlank(selectedInstallmentCreateOption))
+            selectedInstallmentCreateOption = String.isBlank(selectedInstallmentCreateOption)
                 ? System.Label.stgInstallmentOppEnableAll
                 : selectedInstallmentCreateOption;
 
@@ -206,7 +228,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         private set;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description Generate a list of Auto-Creation option from the InstallmentCreateOptions enum list
     */
     private List<SelectOption> getCreationOptions() {
@@ -219,7 +241,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         return options;
     }
     
-    /*********************************************************************************************************
+    /***
     * @description Convert Installment Auto-Creation Setting API to respected custom label
     * @param installmentOption The API name that will be converted
     * @return Th converted custom label string
@@ -229,7 +251,7 @@ public with sharing class STG_PanelRD_CTRL extends STG_Panel {
         if (installmentOption == RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name()) {
             return System.Label.stgInstallmentOppEnableAll;
 
-        } else if(installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()) {
+        } else if (installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name()) {
             return System.Label.stgInstallmentOppDisableFirst;
 
         } else if (installmentOption == RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name()) {
