@@ -166,6 +166,20 @@ public with sharing class RD2_Settings {
     }
 
     /***
+    * @description Retrieves configuration determining if the fiscal year should be used
+    * for the current/next year value calculations
+    */
+    public Boolean useFiscalYear {
+        get {
+            if (useFiscalYear == null) {
+                useFiscalYear = settings.UseFiscalYearForRecurringDonationValue__c == true;
+            }
+            return useFiscalYear;
+        } 
+        private set;
+    }
+
+    /***
     * @description Saves latest Recurring Donation batch results
     */
     public void saveLatestBatchResults(Id jobId, Integer recordsProcessed, Integer recordsFailed) {
