@@ -150,8 +150,9 @@ public with sharing class RD_AddDonationsBTN_CTRL {
 
         } else if (!Schema.SObjectType.Opportunity.isCreateable()) {
             addMessageAndReturn(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied);
-        }
 
-        this.showContinueBtn = true;
+        } else {
+            this.showContinueBtn = true;
+        }
     }
 }
