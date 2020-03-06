@@ -155,6 +155,42 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Revises the schedules' EndDate of fixed length recurring donation
+    * to control how many future installments should be created
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation reviseFixedLengthScheduleEndDate(RD2_ScheduleService scheduleService) {
+        if (!isFixedLength()) {
+            return this;
+        }
+
+        List<RD2_OpportunityMatcher.Record> installments = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
+        .includeCurrentOrOpen(rd.npe03__Donations__r)
+        .match(scheduleService.getVisualizedInstallments(
+            rd.StartDate__c, getPlannedInstallments(), rd.RecurringDonationSchedules__r
+        )).getRecords();
+
+        Integer i = installments.size();
+
+        while (getPlannedInstallments() < installments.size() && i > 0) {
+            i--;
+            if (installments[i].isNew()) {
+                installments.remove(i);
+            }
+        }
+
+        Date scheduleEndDate = installments[installments.size() - 1].getCloseDate();
+
+        for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
+            if (schedule.EndDate__c == null) {
+                schedule.EndDate__c = scheduleEndDate;
+            }
+        }
+
+        return this;
+    }
+
+    /**
     * @description Indicates if the Recurring Donation is outdated and requiring an update
     * @return Boolean
     */
@@ -172,6 +208,42 @@ public inherited sharing class RD2_RecurringDonation {
             updatedRd.put(field, rd.get(field));
         }
         return updatedRd;
+    }
+
+    /**
+    * @description Return number of planned installments for the recurring donation, default to 0 when value is null
+    * @return Integer
+    */
+    public Integer getPlannedInstallments() {
+        return (rd.npe03__Installments__c != null)
+            ? rd.npe03__Installments__c.intValue()
+            : 0;
+    }
+
+    /**
+    * @description Return number of paid installments for the recurring donation, default to 0 when value is null
+    * @return Integer
+    */
+    public Integer getPaidInstallments() {
+        return (rd.npe03__Total_Paid_Installments__c != null)
+            ? rd.npe03__Total_Paid_Installments__c.intValue()
+            : 0;
+    }
+
+    /**
+    * @description Return open opportunities from the Recurring Donation
+    * @return List<Opportunity>
+    */
+    public List<Opportunity> getOpenOpportunities() {
+        List<Opportunity> opps = new List<Opportunity>();
+
+        for (Opportunity opp : rd.npe03__Donations__r) {
+            if (opp.IsClosed == false) {
+                opps.add(opp);
+            }
+        }
+
+        return opps;
     }
 
     /**
