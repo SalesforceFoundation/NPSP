@@ -1060,20 +1060,19 @@ public class ALLO_AllocationsUtil_TEST {
 
         List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, pmtIds, campaignIds, recurringDonationIds);
 
-        System.assertEquals (15, allocs.size(), '# of Allocations');
+        assertSObjectList(allocs, 15, 'Allocations');
 
         ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
 
         for (Allocation__c alloc : allocs) {
             recsForRev.addAllocationByType(alloc);
         }
-
-        System.assertEquals(2, recsForRev.oppsAllocations.get(oppIds[0]).size(), 'Opportunity 0 - # of Allocations');
-        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[3]).size(), 'Opportunity 3 - # of Allocations');
-        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[4]).size(), 'Opportunity 4 - # of Allocations');
-        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[5]).size(), 'Opportunity 5 - # of Allocations');
-        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[6]).size(), 'Opportunity 6 - # of Allocations');
-        System.assertEquals(1, recsForRev.oppsAllocations.get(oppIds[7]).size(), 'Opportunity 7 - # of Allocations');
+        assertSObjectList(recsForRev.oppsAllocations.get(oppIds[0]), 2, 'Opportunity 0 - Allocations');
+        assertSObjectList(recsForRev.oppsAllocations.get(oppIds[3]), 1, 'Opportunity 3 - Allocations');
+        assertSObjectList(recsForRev.oppsAllocations.get(oppIds[4]), 1, 'Opportunity 4 - Allocations');
+        assertSObjectList(recsForRev.oppsAllocations.get(oppIds[5]), 1, 'Opportunity 5 - Allocations');
+        assertSObjectList(recsForRev.oppsAllocations.get(oppIds[6]), 1, 'Opportunity 6 - Allocations');
+        assertSObjectList(recsForRev.oppsAllocations.get(oppIds[7]), 1, 'Opportunity 7 - Allocations');
 
         Allocation__c alloc = recsForRev.oppsAllocations.get(oppIds[7])[0];
         assertOpportunityAllocation(alloc, oppIds[7], 20, 100, 'GAU 2', 'Opportunity 7 - Allocation 0' );
@@ -1579,6 +1578,15 @@ public class ALLO_AllocationsUtil_TEST {
         }
         if (gauId != null) {
             System.assertEquals(gauId, alloc.General_Accounting_Unit__c, message + '- GAU (Id)');
+        }
+    }
+
+    private static void assertSObjectList(List<SObject> sObjs, Integer expectedCount, String message) {
+        if (expectedCount == null) {
+            System.assertEquals(null, sObjs, message, message + ' - List');
+        } else {
+            System.assertNotEquals(null, sObjs, message, message + ' - List');
+            System.assertEquals(expectedCount, sObjs.size(), message + ' - List size');
         }
     }
 
