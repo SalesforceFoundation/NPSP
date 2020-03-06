@@ -4556,7 +4556,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>These required fields must be completed: {0}</shortDescription>
+        <shortDescription>Page-level error message about missing required fields</shortDescription>
         <value>These required fields must be completed: {0}</value>
     </labels>
     <labels>
