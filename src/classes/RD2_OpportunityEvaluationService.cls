@@ -397,17 +397,24 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return false;
         }
 
+        Boolean isCandidate = false;
+
         if (isBatchContext) {
-            return !rdSettings.isDisableAllInstallments;
+            isCandidate = !rdSettings.isDisableAllInstallments;
 
         } else if (rd.isNew()) {
-            return rdSettings.isFirstInstallmentEnabled;
+            isCandidate = rdSettings.isFirstInstallmentEnabled;
 
         } else if (!rd.hasCurrentOpenOpportunity(currentDate)) {
-            return rdSettings.isNextInstallmentEnabled;
+            isCandidate = rdSettings.isNextInstallmentEnabled;
         }
 
-        return false;
+        if (rd.isFixedLength()) {
+            isCandidate = isCandidate &&
+                (rd.getPlannedInstallments() - rd.getPaidInstallments() - rd.getOpenOpportunities().size() > 0);
+        }
+
+        return isCandidate;
     }
 
     /**
