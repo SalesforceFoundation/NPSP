@@ -1768,8 +1768,8 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
-     * @description create a instance of opportunity naming settings
-     * @return opportunity naming settings
+    * @description create a instance of opportunity naming settings
+    * @return opportunity naming settings
     */
     private static Opportunity_Naming_Settings__c getOppNameSettings() {
         return
@@ -1795,8 +1795,8 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
-     * @description create a instance of custom installment settings
-     * @return custom installment settings
+    * @description create a instance of custom installment settings
+    * @return custom installment settings
     */
     private static npe03__Custom_Installment_Settings__c getCustomInstallmentSettings() {
         return
