@@ -816,13 +816,10 @@ private with sharing class STG_SettingsManager_TEST {
         panel.currentONSName = settings.Name;
 
         panel.delONS();
-        panel.listOppNameSettings = null;
-        panel.mapOppNameSettings = null;
 
         //verify if the settings are deleted
-        System.assert([select id, name from Opportunity_Naming_Settings__c].size() == 0 );
         System.assertEquals(0, Opportunity_Naming_Settings__c.getAll().size());
-        //System.assertEquals(0, panel.listOppNameSettings.size());
+        System.assertEquals(0, panel.listOppNameSettings.size());
 
         Test.stopTest();
     }

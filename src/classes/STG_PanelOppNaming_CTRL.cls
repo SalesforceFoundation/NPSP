@@ -118,6 +118,7 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
         }
 
         delete mapOppNameSettings.get(currentONSName);
+        UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;//reset the Opp naming settings
         mapOppNameSettings = UTIL_ListCustomSettingsFacade.getMapOppNamingSettings();
         return null;
     }
