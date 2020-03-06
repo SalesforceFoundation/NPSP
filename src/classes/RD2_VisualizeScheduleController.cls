@@ -72,13 +72,15 @@ public with sharing class RD2_VisualizeScheduleController {
 
         Integer counter = 1;
         List<Installment> installments = new List<Installment>();
-        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
-        if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+        RD2_RecurringDonation rd = new RD2_RecurringDonation(getRecurringDonation(recordId))
+            .reviseScheduleEndDateForFixedLength(scheduleService);
+
+        if (!rd.isClosed()) {
             for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
-                RD2_ScheduleService.currentDate, displayNum, rd.RecurringDonationSchedules__r
+                RD2_ScheduleService.currentDate, displayNum, rd.getSchedules()
             )) {
-                installments.add(new Installment(counter++, rd, installment));
+                installments.add(new Installment(counter++, rd.getRecord(), installment));
             }
         }
 
@@ -132,7 +134,10 @@ public with sharing class RD2_VisualizeScheduleController {
                 'PaymentMethod__c',
                 'npe03__Recurring_Donation_Campaign__r.Name',
                 'Day_of_Month__c',
-                'Status__c'
+                'Status__c',
+                'RecurringType__c',
+                'npe03__Installments__c',
+                'npe03__Total_Paid_Installments__c'
             };
             if (UserInfo.isMultiCurrencyOrganization()) {
                 queryFields.add('CurrencyIsoCode');
@@ -151,7 +156,17 @@ public with sharing class RD2_VisualizeScheduleController {
                 'StartDate__c, ' +
                 'EndDate__c ' +
                 'FROM RecurringDonationSchedules__r)';
+
+            String oppSubquery =
+                '(SELECT CloseDate, ' +
+                'IsClosed, IsWon ' +
+                'FROM npe03__Donations__r ' +
+                'WHERE IsClosed = false ' +
+                'OR CloseDate >= TODAY ' +
+                'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
+
             queryFields.add(scheduleSubquery);
+            queryFields.add(oppSubquery);            
                 
             String soql = new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)

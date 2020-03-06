@@ -247,6 +247,22 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Return schedules record of the Recurring donation
+    * @return List<RecurringDonationSchedule__c> 
+    */
+    public List<RecurringDonationSchedule__c> getSchedules() {
+        return rd.RecurringDonationSchedules__r;
+    }
+
+    /**
+    * @description Return the Recurring Donation record
+    * @return npe03__Recurring_Donation__c 
+    */
+    public npe03__Recurring_Donation__c getRecord() {
+        return rd;
+    }
+
+    /**
     * @description Indicates if the Recurring Donation is active
     * @return Boolean
     */
