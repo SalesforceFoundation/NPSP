@@ -769,6 +769,10 @@ private with sharing class STG_SettingsManager_TEST {
             'Installment Auto Creation Setting should be correctly converted to respected custom label');
     }
 
+    /**
+    * @description Should prevent read only user to delete opportunity naming settings
+    * as they do not have delete permission
+    */
     @isTest
     private static void shouldPreventDeleteOppNamingWhenUserDoesNotHaveDeletePermission() {
         Opportunity_Naming_Settings__c settings = getOppNameSettings();
@@ -794,6 +798,9 @@ private with sharing class STG_SettingsManager_TEST {
 
     }
 
+    /**
+    * @description Verify if admin users can delete opportunity naming settings
+    */
     @isTest
     private static void shouldVerifyDeleteOppNamingWhenUserHaveAdminPermission() {
         Opportunity_Naming_Settings__c settings = getOppNameSettings();
@@ -819,6 +826,10 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Should prevent read only user to delete custom field mapping setting
+    * as they do not have delete permission
+    */
     @isTest
     private static void shouldPreventDeleteForFieldMappingWhenUserDoesNotHaveDelPermission() {
         npe03__Custom_Field_Mapping__c cfm = getCustomFieldMapping();
@@ -844,6 +855,9 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verify if admin users can delete custom field mapping settings
+    */
     @isTest
     private static void shouldVerifyDeleteForFieldMappingWhenUserHaveAdminPermission() {
         npe03__Custom_Field_Mapping__c cfm = getCustomFieldMapping();
@@ -868,6 +882,10 @@ private with sharing class STG_SettingsManager_TEST {
 
     }
 
+    /**
+    * @description Should prevent read only user to delete custom installment setting
+    * as they do not have delete permission
+    */
     @isTest
     private static void shouldPreventDeleteForCustomInstallmtWhenUserDoesNotHaveDelPermission() {
         npe03__Custom_Installment_Settings__c cfm = getCustomInstallmentSettings();
@@ -895,6 +913,9 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verify if admin users can delete custom installment settings
+    */
     @isTest
     private static void shouldVerifyDeleteForCustomInstallmtWhenUserHaveAdminPermission() {
         npe03__Custom_Installment_Settings__c cfm = getCustomInstallmentSettings();
@@ -921,6 +942,10 @@ private with sharing class STG_SettingsManager_TEST {
 
     }
 
+    /**
+    * @description Should prevent read only user to delete payment field mapping setting
+    * as they do not have delete permission
+    */
     @isTest
     private static void shouldPreventDeleteForPaymentMapWhenUserDoesNotHaveDelPermission() {
         npe01__Payment_Field_Mapping_Settings__c cfm = getPaymentFieldMapSettings();
@@ -947,6 +972,9 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verify if admin users can delete payment field mapping settings
+    */
     @isTest
     private static void shouldVerifyDeleteForPaymentMapWhenUserHaveAdminPermission() {
         npe01__Payment_Field_Mapping_Settings__c cfm = getPaymentFieldMapSettings();
@@ -971,7 +999,10 @@ private with sharing class STG_SettingsManager_TEST {
 
     }
 
-
+    /**
+    * @description Should prevent read only user to delete relationship lookup setting
+    * as they do not have delete permission
+    */
     @isTest
     private static void shouldPreventDeleteForRelReciprocalWhenUserDoesNotHaveDelPermission() {
         npe4__Relationship_Lookup__c cfm = getRelationshipLookup();
@@ -1000,6 +1031,9 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verify if admin users can delete relationship lookup settings
+    */
     @isTest
     private static void shouldVerifyDeleteForRelReciprocalWhenUserHaveAdminPermission() {
         npe4__Relationship_Lookup__c cfm = getRelationshipLookup();
@@ -1025,6 +1059,10 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Should prevent read only user to delete relationship autocreate setting
+    * as they do not have delete permission
+    */
     @isTest
     private static void shouldPreventDeleteForRelAutoWhenUserDoesNotHaveDelPermission() {
         npe4__Relationship_Auto_Create__c cfm = getRelationshipAutoCreate();
@@ -1053,6 +1091,9 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verify if admin users can delete relationship auto create settings
+    */
     @isTest
     private static void shouldVerifyDeleteForRelAutoWhenUserHaveAdminPermission() {
         npe4__Relationship_Auto_Create__c cfm = getRelationshipAutoCreate();
@@ -1079,6 +1120,10 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Should prevent read only user to delete user roll up field setting
+    * as they do not have delete permission
+    */
     @isTest
     private static void shouldPreventDeleteForUserRollupWhenUserDoesNotHaveDelPermission() {
         npo02__User_Rollup_Field_Settings__c HHurfs = getUserRollupFieldSettings();
@@ -1108,6 +1153,9 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verify if admin users can delete user rollup field settings
+    */
     @isTest
     private static void shouldVerifyDeleteForUserRollupWhenUserHaveAdminPermission() {
         npo02__User_Rollup_Field_Settings__c HHurfs = getUserRollupFieldSettings();
