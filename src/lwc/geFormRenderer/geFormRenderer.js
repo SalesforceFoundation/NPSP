@@ -12,10 +12,21 @@ import {
     checkPermissionErrors
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { getQueryParameters, isEmpty, isNotEmpty, format, isUndefined, checkNestedProperty, arraysMatch, getValueFromDotNotationString } from 'c/utilCommon';
+import {
+    getQueryParameters,
+    isEmpty,
+    isNotEmpty,
+    format,
+    isUndefined,
+    checkNestedProperty,
+    arraysMatch,
+    getValueFromDotNotationString,
+    deepClone
+} from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import { getRecord } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
+import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
 
@@ -66,6 +77,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track mappingSet = '';
     @track version = '';
     @track formTemplateId;
+    _batchDefaults;
 
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
@@ -166,17 +178,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
         if (typeof formTemplate.layout !== 'undefined'
             && Array.isArray(formTemplate.layout.sections)) {
-
             // add record data to the template fields
+
             if (isNotEmpty(fieldMappings) && isNotEmpty(this.donorRecord)) {
-                let sectionsWithValues = setRecordValuesOnTemplate(formTemplate.layout.sections,
+                this.sections = setRecordValuesOnTemplate(formTemplate.layout.sections,
                     fieldMappings, this.donorRecord);
-                this.sections = sectionsWithValues;
             } else {
                 this.sections = formTemplate.layout.sections;
             }
 
             if (this.batchId) {
+                this.sections = this.setBatchDefaults(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
         }
@@ -192,11 +204,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @wire(getRecord, {
         recordId: '$batchId',
-        fields: FORM_TEMPLATE_FIELD
+        fields: [FORM_TEMPLATE_FIELD, BATCH_DEFAULTS_FIELD]
     })
     wiredBatch({data, error}) {
         if (data) {
             this.formTemplateId = data.fields[FORM_TEMPLATE_FIELD.fieldApiName].value;
+            this._batchDefaults = data.fields[BATCH_DEFAULTS_FIELD.fieldApiName].value;
             GeFormService.getFormTemplateById(this.formTemplateId)
                 .then(template => {
                     let errorObject = checkPermissionErrors(template);
@@ -876,5 +889,39 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const paymentImported = DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName;
         this.setFormFieldValue(donationImported, undefined, undefined);
         this.setFormFieldValue(paymentImported, undefined, undefined);
+    }
+
+    /**
+     * @description Function that sets batch defaults on the BGE Form
+     * @param templateSections
+     * @returns {sections}
+     */
+    setBatchDefaults(templateSections) {
+        let sections = deepClone(templateSections);
+        if (isNotEmpty(this._batchDefaults)) {
+            let batchDefaultsObject;
+            try {
+                batchDefaultsObject = JSON.parse(this._batchDefaults);
+                sections.forEach(section => {
+                    const elements = section.elements;
+                    elements.forEach(element => {
+                        for (let key in batchDefaultsObject) {
+                            if (batchDefaultsObject.hasOwnProperty(key)) {
+                                const batchDefault = batchDefaultsObject[key];
+                                if (batchDefault.objectApiName === element.objectApiName &&
+                                    batchDefault.fieldApiName === element.fieldApiName) {
+                                    if (!isUndefined(batchDefault.value)) {
+                                        element.defaultValue = batchDefault.value;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            } catch (err) {
+                handleError(err);
+            }
+        }
+        return sections;
     }
 }
