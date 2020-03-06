@@ -175,8 +175,8 @@ export default class utilInput extends LightningElement {
             objectApiName: this.uiObjectApiName,
             fieldApiName: this.fieldApiName,
             value: event.target.value
-        }
-
+        };
+        this.value = event.detail.value;
         dispatch(this, 'changevalue', detail);
     }
 
