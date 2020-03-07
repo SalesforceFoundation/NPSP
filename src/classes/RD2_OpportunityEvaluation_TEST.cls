@@ -807,7 +807,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
     /**
     *Verifies that no future installment will be created for fixed length RD 
-    * when number of opened installment and closed won installments equals number of planned installments
+    * when number of opened installment plus closed won installments equals number of planned installments
     */
     @isTest
     private static void shouldNotCreateNextInstallmentForFixedLengthRDWhenInstallmentsReachPlannedInstallmentsCount() {
@@ -858,7 +858,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
     /**
     * @description Verifies that the next installment should be created for fixed length RD
-    * when number of opened installment and closed won installments equals number of planned installments  
+    * when number of opened installment plus closed won installments is less than number of planned installments  
     */
     @isTest
     private static void shouldCreateNextInstallmentForFixedLengthRDWhenInstallmentsNotReachPlannedInstallmentsCount() {

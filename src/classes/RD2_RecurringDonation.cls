@@ -180,13 +180,14 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Get all future scheduled installments and opened opportunity for the given fixed length Recurring Donation
+    * @description Get matching records of all future scheduled installments and opened opportunities for the given fixed length Recurring Donation
     * @return List<RD2_OpportunityMatcher.Record>
     */
     private List<RD2_OpportunityMatcher.Record> getFutureInstallments(RD2_ScheduleService scheduleService) {
         if (!isFixedLength() || isFixedLengthComplete()) {
             return new List<RD2_OpportunityMatcher.Record>();
         }
+
         List<RD2_OpportunityMatcher.Record> installments = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
         .includeCurrentOrOpen(rd.npe03__Donations__r)
         .match(scheduleService.getVisualizedInstallments(
@@ -196,7 +197,7 @@ public inherited sharing class RD2_RecurringDonation {
         Integer i = installments.size();
         Integer currentInstallmentCount = installments.size() + getPaidInstallments();
 
-        while ((getPlannedInstallments() < currentInstallmentCount )) {
+        while (getPlannedInstallments() < currentInstallmentCount) {
             i--;
             if (installments[i].isNew()) {
                 installments.remove(i);
