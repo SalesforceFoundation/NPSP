@@ -175,7 +175,7 @@ public with sharing class RD2_Settings {
                 Decimal value = settings.NextDonationDateMatchRangeDays__c;
 
                 nextDonationDateMatchDays = value == null || value < 0
-                    ? 3//default 
+                    ? RD2_Constants.DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS
                     : Integer.valueOf(value);
             }
             return nextDonationDateMatchDays;

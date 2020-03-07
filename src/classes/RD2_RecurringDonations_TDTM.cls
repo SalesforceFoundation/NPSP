@@ -35,7 +35,6 @@
 *
 */
 public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
-    private static final Integer DEFAULT_INSTALLMENT_FREQUENCY = 1;
 
     /***
     * @description dml actions gathered during trigger execution
@@ -179,7 +178,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             if (rd.InstallmentFrequency__c == null) {
-                rd.InstallmentFrequency__c = DEFAULT_INSTALLMENT_FREQUENCY;
+                rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
             }
         }
     }

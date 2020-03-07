@@ -103,7 +103,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @param processor Used to calculate current and next year values
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseYearValues(RD2_OpportunityEvaluationService.YearValueProcessor processor) {
+    public RD2_RecurringDonation reviseYearValues(RD2_YearValueProcessor processor) {
         Decimal value = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
         if (value != rd.CurrentYearValue__c) {
             rd.CurrentYearValue__c = value;
