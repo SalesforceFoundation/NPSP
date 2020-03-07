@@ -53,17 +53,6 @@ public inherited sharing class RD2_RecurringDonation {
     */
     private Set<Schema.SObjectField> changedFields = new Set<Schema.SObjectField>();
 
-    public RD2_OpportunityMatcher currentOppMatcher {
-        get {
-            if (currentOppMatcher == null) {
-                currentOppMatcher = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)//TODO
-                    .includeCurrent(rd.npe03__Donations__r);
-            }
-            return currentOppMatcher;
-        }
-        private set;
-    }
-
     /**
     * @description Constructor
     * @param rd Recurring Donation record
@@ -107,14 +96,17 @@ public inherited sharing class RD2_RecurringDonation {
     * If so, the next installment Opp should not be created when the last open Opp on the fixed-length RD is closed.
     * @param scheduleService RD Schedule Service
     * @param rdSchedules Just built or existing Schedules on the Recurring Donation
+    * @param reviseFixedLength Indicated is fixed-length status is to be revised
     * @return RD2_RecurringDonation This record instance
     */
-    private RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules, Boolean reviseFixedLength) { 
+    private RD2_RecurringDonation reviseNextDonationDate(
+        RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules, Boolean reviseFixedLength
+    ) { 
         if (reviseFixedLength) {   
             reviseStatusForFixedLength();
         }
 
-        Date nextDonationDate = isClosed() ? null : getNextDonationDate(scheduleService, rdSchedules);
+        Date nextDonationDate = scheduleService.getNextDonationDate(rd, rdSchedules);
 
         if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
             rd.npe03__Next_Payment_Date__c = nextDonationDate;
@@ -122,24 +114,6 @@ public inherited sharing class RD2_RecurringDonation {
         }
 
         return this;
-    }
-
-    private Date getNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) {
-        
-        Integer numberOfInstallments = currentOppMatcher.size();
-        numberOfInstallments = numberOfInstallments == 0
-            ? 1 //return the next installment
-            : numberOfInstallments + 1; //return one installment more than number of Opps in the case all current Opps are closed
-        
-        currentOppMatcher.match(scheduleService.getVisualizedInstallments(
-            RD2_ScheduleService.currentDate, numberOfInstallments, rdSchedules
-        ));
-
-        RD2_ScheduleService.Installment openInstallment = currentOppMatcher.getNextOpenInstallment();
-
-        return openInstallment == null
-            ? null//TODO scheduleService.getNextDonationDate(rdSchedules)?
-            : openInstallment.nextDonationDate;
     }
 
     /**
@@ -220,7 +194,7 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Return the Recurring Donation record
+    * @description Returns the Recurring Donation record
     * @return npe03__Recurring_Donation__c 
     */
     public npe03__Recurring_Donation__c getSObject() {
@@ -325,7 +299,9 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean hasCurrentOpenOpportunity() {
-        return currentOppMatcher.hasOpenOpportunity();
+        return new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)//TODO
+            .includeCurrent(rd.npe03__Donations__r)
+            .hasOpenOpportunity();
     }
 
     /**

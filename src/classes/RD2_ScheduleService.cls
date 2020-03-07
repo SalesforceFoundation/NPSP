@@ -385,6 +385,47 @@ public without sharing class RD2_ScheduleService {
 
     /***
     * @description Calculates the date of the next donation
+    * @return Date
+    */
+    public Date getNextDonationDate(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {   
+        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(rd, rdSchedules);
+
+        return record == null
+            ? null//TODO getNextDonationDate(rdSchedules)?
+            : record.getInstallment().nextDonationDate;
+    }
+
+
+    /***
+    * @description Calculates the date of the next donation and returns the Opportunity matcher record
+    * that contains the next donation installment and might contain the matching open Opportunity.
+    * @param rd Recurring Donation record
+    * @param rdSchedules Schedules on the Recurring Donation record
+    * @return RD2_OpportunityMatcher.Record
+    */
+    public RD2_OpportunityMatcher.Record getNextDonationDateRecord(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
+        if (rdSchedules == null  || rdSchedules.isEmpty() || rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+            return null;
+        }
+        
+        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//cache current matcher by RD Id //TODO
+            .includeCurrent(rd.npe03__Donations__r);
+
+        Integer numberOfInstallments = matcher.size();
+        numberOfInstallments = numberOfInstallments == 0
+            ? 1 //return the next installment
+            : numberOfInstallments + 1; //return one installment more than number of Opps in the case all current Opps are closed
+        
+        matcher.match(getVisualizedInstallments(
+            currentDate, numberOfInstallments, rdSchedules
+        ));
+
+        return matcher.getNextDonationDateRecord();
+    }
+
+
+    /***
+    * @description Calculates the date of the next donation
     * @param rdSchedules Recurring Donation Schedule records
     * @return Date
     */
@@ -701,9 +742,9 @@ public without sharing class RD2_ScheduleService {
 
             if (isScheduleUpdateNeeded(rd, oldRd)) {
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
-                        rd.StartDate__c == null &&
-                        rd.Status__c != RD2_Constants.STATUS_CLOSED
-                        ) {
+                    rd.StartDate__c == null &&
+                    rd.Status__c != RD2_Constants.STATUS_CLOSED
+                ) {
                     rd.StartDate__c = currentDate;
                 }
                 filteredRecurringDonations.put(rd.Id, rd);

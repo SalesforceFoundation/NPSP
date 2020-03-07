@@ -277,7 +277,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return this;
         }
 
-        List<RD2_RecurringDonation> newOppRDs = new List<RD2_RecurringDonation>();
+        List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
 
@@ -297,7 +297,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             } else {
                 if (isNewOpportunityCandidate(rdRecord)) {
-                    newOppRDs.add(rdRecord);
+                    newOppRDs.add(rd);
                 }
 
                 if (hasOpenOpportunity(rdRecord)) {

@@ -592,16 +592,27 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        Opportunity opp = getOpportunityBuilder(rd)
             .withClosedLostStage()
             .withCloseDate(nextCloseDate)
             .build();
+        insert opp;
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
-        System.assertEquals(true, opps[0].isClosed && !opps[0].isWon, 'Existing Closed Lost Opp should stay closed');
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(), 
+            'New Opp should be created for the Next Donation Date offset by the closed Opp: ' + oppById.values());
+        
+        Opportunity actualOpp = oppById.remove(opp.Id);
+        System.assertEquals(true, actualOpp.IsClosed && !actualOpp.IsWon, 'Existing Closed Lost Opp should stay closed');
+
+        //verify the Next Donation Date is advanced and a new Opp is created
+        actualOpp = oppById.values()[0];
+        
+        System.assertEquals(false, actualOpp.IsClosed, 'New Opp should be open: ' + actualOpp);
+        System.assertEquals(nextCloseDate.addMonths(1), actualOpp.CloseDate, 
+            'New Opp Close Date should be the Next Donation Date after the closed Opp Close Date: ' + actualOpp);
     }
 
     /**

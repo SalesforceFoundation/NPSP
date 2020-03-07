@@ -321,21 +321,22 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /**
-    * @description Returns the first installment not matching an Opportunity
-    * or the first installment matching an open Opportunity, whichever is earlier
-    * @return RD2_ScheduleService.Installment
+    * @description Returns the first installment record not matching an Opportunity
+    * or the first installment record matching an open Opportunity, whichever is earlier
+    * @return Record
     */
-    public RD2_ScheduleService.Installment getNextOpenInstallment() {
+    public Record getNextDonationDateRecord() {
         //records are ordered by the date
         for (Record record : getRecords()) {
             if (record.hasInstallment()
                 && (record.isNew() || record.isOpen())//TODO Close Date >= currentDate?
             ) {
-                return record.getInstallment();
+                return record;
             }
         }
         return null;
     }
+
 
     /***
      * @description Wrapper for the extracted Opportunity based on the inclusion criteria
