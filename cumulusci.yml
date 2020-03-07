@@ -480,7 +480,7 @@ tasks:
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Name__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c__c']
+                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
                   xpath: //ns:fields/ns:help[../ns:name='Donation_Stage__c']
                 - path: src/objectTranslations/DataImport__c-**.objectTranslation
@@ -856,7 +856,7 @@ plans:
                         name: NPSP Reports & Dashboards
                         is_required: False
     rd2:
-        slug: npsp-rd2-pilot
+        slug: enhanced-recurring-donations
         title: Enhanced Recurring Donations Metadata Updates
         tier: additional
         is_listed: False

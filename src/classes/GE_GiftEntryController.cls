@@ -37,27 +37,6 @@
 */
 public with sharing class GE_GiftEntryController {
 
-    /**
-     * @description Wraps the UTIL_Namespace.alignClassNSWithEnvironment method in a
-     * try...catch statement to facilitate throwing an AuraHandledException when
-     * an Exception is encountered.
-     *
-     * @param name The class name that needs to be namespace aligned.
-     *
-     * @return The name of the class prepended with the appropriate namespace.
-     */
-    @AuraEnabled
-    public static String alignClassNSWithEnvironment(String name) {
-        try {
-            return UTIL_Namespace.alignClassNSWithEnvironment(name);
-        } catch (Exception e) {
-            throw new AuraHandledException(
-                    'A problem was encountered while aligning the namespace for ' + name + '.'
-                    + ' Error details: ' + JSON.serialize(e)
-            );
-        }
-    }
-
     /*******************************************************************************************************
     * @description Creates an AuraHandledException with the specified error message
     *

@@ -38,7 +38,7 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     @TestVisible
     private ApexPages.StandardController sc;
     
-    /*******************************************************************************************************
+    /***   
     * @description Class constructor
     * @param controller The StandardController to the Recurring Donation 
     */ 
@@ -46,44 +46,47 @@ public with sharing class RD_AddDonationsBTN_CTRL {
         this.sc = sc;
     }
     
-    /*******************************************************************************************************
-    * @description Action method to refresh the Recurring Donation with appropriate Opportunities
+    /*
+    * @description Action method to refresh the legacy Recurring Donation with appropriate Opportunities
     * @return PageReference to the calling page
     */ 
-    public PageReference buttonClick(){
+    public PageReference buttonClick() {
+        if (RD2_EnablementService.isRecurringDonations2Enabled) { 
+            return addMessageAndReturn(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationLimitedToLegacyMode);
+        }
 
         if (sc.getId() == null) { 
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationMissingId));
-            return null;
+            return addMessageAndReturn(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationMissingId);
         }
         
         if (!Schema.SObjectType.Opportunity.isCreateable()) { 
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied));
-            return null;
+            return addMessageAndReturn(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied);
         }
 
         Savepoint sp = Database.setSavepoint();
         try {
-            String qString = RD_RecurringDonations.strQueryRDNoWhere();
-            qString += ' where id = \'' + sc.getId() + '\'';
-            npe03__Recurring_Donation__c recurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
+            String soql = RD_RecurringDonations.strQueryRDNoWhere()
+                + ' WHERE Id = \'' + sc.getId() + '\'';
+
+            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) Database.query(soql);
+
             // This recalculates Rollups only in Legacy mode. 
-            RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{recurringDonation});
+            RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{ rd });
             //This recalculates Rollups only if Customizable Rollup is enabled.
             recalculateRollups(sc.getId());
+
             return redirectToRecurringDonationsPage();
         
-        } catch(Exception e) {
+        } catch (Exception e) {
             Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.PMT);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-            return null;
+            ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
+            return addMessageAndReturn(ApexPages.Severity.ERROR, e.getMessage());
         }
     }
     
-    /*******************************************************************************************************
-    * @description Action method to redirect to the Recurring Donation calling page. Redirects to 
-    * recurring donation list if the ID is missing.
+    /*
+    * @description Action method to redirect to the Recurring Donation calling page. 
+    * Redirects to recurring donation list if the ID is missing.
     * @return PageReference to the calling page
     */ 
     public PageReference redirectToRecurringDonationsPage() {
@@ -98,7 +101,7 @@ public with sharing class RD_AddDonationsBTN_CTRL {
         return pageRef;
     }
 
-    /*********************************************************************************************************
+    /***
     * @description Recalculates the Rollup for Recurring Donation.
     * @return void.
     */
@@ -111,6 +114,7 @@ public with sharing class RD_AddDonationsBTN_CTRL {
                     new List<Id>{ recordId }, 
                     null
                 );
+
             } else {
                 System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
             }
@@ -119,4 +123,19 @@ public with sharing class RD_AddDonationsBTN_CTRL {
             RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(new Set<Id>{ recordId });
         }
     }
+
+    /***
+    * @description Adds a message to the Visualforce page 
+    * and returns null to stay on the current page
+    * @param severity Message severity (info, error, warning)
+    * @param message Message to display
+    * @return PageReference
+    */
+    private PageReference addMessageAndReturn(ApexPages.Severity severity, String message) {
+        ApexPages.addMessage(
+            new ApexPages.Message(severity, message)
+        );
+
+        return null;
+    }    
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npe03__Refresh_Opportunities</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -46,6 +45,10 @@
                 <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%ClosedReason__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>npe03__Installments__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
@@ -61,11 +64,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>%%%NAMESPACE%%%InstallmentFrequency__c</field>
+                <field>npe03__Installment_Period__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npe03__Installment_Period__c</field>
+                <field>%%%NAMESPACE%%%InstallmentFrequency__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>

@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -69,7 +69,7 @@ private class CON_DeleteContactOverride_TEST {
         test.stopTest();
 
         list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
-        
+
         system.assertEquals(1,queryAcc.size(),'There should be one account.');
         system.assertEquals(false, queryacc[0].isDeleted,'Deleted flag should not be set.');
 
@@ -81,7 +81,7 @@ private class CON_DeleteContactOverride_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Deletes contact in the 1:1 account model. Verifies that contact is marked is in the 
+    * @description Deletes contact in the 1:1 account model. Verifies that contact is marked is in the
     * recycle bin and not hard deleted.
     */
     @isTest static void deleteOneToOne() {
@@ -92,7 +92,7 @@ private class CON_DeleteContactOverride_TEST {
         );
         Contact con = new Contact(LastName='foo');
         insert con;
-        
+
         list<Contact> queryCon = getContactList(con.Id);
         system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-created household.');
         system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
@@ -104,7 +104,7 @@ private class CON_DeleteContactOverride_TEST {
         test.stopTest();
 
         list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
-        
+
         system.assertEquals(1,queryAcc.size(),'There should be one deleted account.');
         system.assert(queryacc[0].isDeleted,'Deleted flag should be set.');
 
@@ -113,7 +113,7 @@ private class CON_DeleteContactOverride_TEST {
         system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
         system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
     }
-    
+
     /*******************************************************************************************************
     * @description Deletes contact in the household account model that is alone in their household
     * account. Verifies that contact is in the recycle bin and not hard deleted.
@@ -121,7 +121,7 @@ private class CON_DeleteContactOverride_TEST {
     @isTest static void deleteAloneInHousehold() {
         Contact con = new Contact(LastName='foo');
         insert con;
-        
+
         list<Contact> queryCon = getContactList(con.Id);
         system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-created household.');
         system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
@@ -133,7 +133,7 @@ private class CON_DeleteContactOverride_TEST {
         test.stopTest();
 
         list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
-        
+
         system.assertEquals(1,queryAcc.size(),'There should be one deleted account.');
         system.assert(queryacc[0].isDeleted,'Deleted flag should be set.');
 
@@ -145,19 +145,19 @@ private class CON_DeleteContactOverride_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Test Contact Delete page navigation parameters are set based on passed in Apex page parameters
     verify:
         The following properties are set:
         - Property to indicate if LEx or Classic is used,
         - Return URL
         - Fail (or Cancel) URL
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void testNavigationParametersAreSetInConstructor() {
         Contact con = new Contact(LastName = 'foo');
         insert con;
 
-        Test.setCurrentPage(Page.CON_DeleteContactOverride); 
+        Test.setCurrentPage(Page.CON_DeleteContactOverride);
 
         String retUrl = 'foo/o';
         ApexPages.currentPage().getParameters().put(PARAM_RETURL, retUrl);
@@ -169,110 +169,110 @@ private class CON_DeleteContactOverride_TEST {
         ApexPages.currentPage().getParameters().put(PARAM_RETURL_FAIL, failRetUrl);
 
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-        
+
         String expectedRetUrl = ctrl.sforceUser ? vfRetURLInSFX : retUrl;
         System.assertEquals(expectedRetUrl, ctrl.retUrl, 'Return URL should be set');
         System.assertEquals(failRetUrl, ctrl.failRetUrl, 'Cancel URL should be set');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Test RetURL is set to Contact Home page if it is not provided in the page params
     verify:
         Return URL property is set to Contact Home
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void testRetUrlIsContactHomeIfNotProvided() {
         Contact con = new Contact(LastName = 'foo');
         insert con;
-   
+
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-    
+
         Map<String, String> params = new Map<String, String>{
             PARAM_RETURL_FAIL => 'foo/o'
         };
         ctrl.setNavigationParams(params);
-        
+
         System.assertEquals(CONTACT_HOME, ctrl.retUrl, 'Return URL should be Contact Home page');
         System.assertEquals(params.get(PARAM_RETURL_FAIL), ctrl.failRetUrl, 'Cancel URL should be set');
     }
 
     /*********************************************************************************************************
-    @description 
-        Test RetURL 
+    @description
+        Test RetURL
     verify:
-        Controller retUrl is retURL page param for Classic. 
+        Controller retUrl is retURL page param for Classic.
         Controller retUrl is vfRetURLInSFX page param for LEx.
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void testRetUrlForClassicAndLex() {
         Contact con = new Contact(LastName = 'foo');
         insert con;
-   
+
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-    
+
         Map<String, String> params = new Map<String, String>{
             PARAM_RETURL => 'foo/o',
             PARAM_RETURL_LEX => 'bar/o'
         };
 
         ctrl.sforceUser = false;
-        ctrl.setNavigationParams(params);        
+        ctrl.setNavigationParams(params);
         System.assertEquals(params.get(PARAM_RETURL), ctrl.retUrl, 'Return URL should be retURL page param for Classic');
 
         ctrl.sforceUser = true;
-        ctrl.setNavigationParams(params);        
+        ctrl.setNavigationParams(params);
         System.assertEquals(params.get(PARAM_RETURL_LEX), ctrl.retUrl, 'Return URL should be vfRetURLInSFX page param for LEx');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Test onCancel navigation
     verify:
-        Cancel action navigates to failRetURL or retURL for Classic. 
+        Cancel action navigates to failRetURL or retURL for Classic.
         Cancel action sets sfoceNav to "back" when in LEx.
-    **********************************************************************************************************/ 
+    **********************************************************************************************************/
     private static testMethod void testOnCancel() {
         Contact con = new Contact(LastName = 'foo');
         insert con;
-   
+
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-    
+
         Map<String, String> params = new Map<String, String>{
             PARAM_RETURL => '006/o',
             PARAM_RETURL_FAIL => '001/o'
         };
 
         ctrl.sforceUser = false;
-        ctrl.setNavigationParams(params);     
-        PageReference cancelPage = ctrl.onCancel(); 
-        System.assertNotEquals(null, cancelPage, 'Cancel page should be returned for Classic');  
+        ctrl.setNavigationParams(params);
+        PageReference cancelPage = ctrl.onCancel();
+        System.assertNotEquals(null, cancelPage, 'Cancel page should be returned for Classic');
         System.assertEquals(params.get(PARAM_RETURL_FAIL), cancelPage.getUrl(), 'Cancel page should be navigate failRetURL for Classic');
         System.assertEquals(null, ctrl.sforceNav, 'Controller sforceNav should be null for Classic');
 
         params.remove(PARAM_RETURL_FAIL);
-        ctrl.setNavigationParams(params);     
-        cancelPage = ctrl.onCancel(); 
-        System.assertNotEquals(null, cancelPage, 'Cancel page should be returned for Classic');  
+        ctrl.setNavigationParams(params);
+        cancelPage = ctrl.onCancel();
+        System.assertNotEquals(null, cancelPage, 'Cancel page should be returned for Classic');
         System.assertEquals(params.get(PARAM_RETURL), cancelPage.getUrl(), 'Cancel page should be navigate retURL for Classic');
         System.assert(cancelPage.getRedirect(), 'The Cancel page should redirect');
 
         ctrl.sforceUser = true;
-        ctrl.setNavigationParams(params);  
-        cancelPage = ctrl.onCancel();         
+        ctrl.setNavigationParams(params);
+        cancelPage = ctrl.onCancel();
         System.assertEquals(null, cancelPage, 'Cancel page should be null for LEx');
         System.assertEquals(LEX_BACK, ctrl.sforceNav, 'Controller sforceNav should be "back" for LEx');
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Test Contact deletion and leaving empty Account
     verify:
         The Contact is deleted.
-        The Account is not deleted. 
-    **********************************************************************************************************/ 
+        The Account is not deleted.
+    **********************************************************************************************************/
     private static testMethod void testDeleteContactAndLeaveEmptyAccount() {
         Contact con = new Contact(LastName = 'foo');
         insert con;
-        
+
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
 
         con = getContactList(con.Id)[0];
@@ -282,13 +282,13 @@ private class CON_DeleteContactOverride_TEST {
             PARAM_RETURL_LEX => '/' + con.Id
         };
         ctrl.sforceUser = true;
-        ctrl.setNavigationParams(params);   
+        ctrl.setNavigationParams(params);
         System.assertEquals(null, ctrl.sforceNav, 'Controller sforceNav should be null before an action');
-  
+
         PageReference retPage = ctrl.deleteContactOnly();
         System.assertEquals(null, retPage, 'Return page should be null for LEx');
         System.assertEquals(LEX_HOME, ctrl.sforceNav, 'Controller sforceNav should be Contact home when retUrl contains Contact Id');
- 
+
         List<Account> accounts = getAccountListAllRows(con.AccountId);
         System.assertEquals(1, accounts.size(), 'The Account should be retrieved from DB.');
         System.assert(!accounts[0].isDeleted, 'The Account should not be deleted');
@@ -373,7 +373,7 @@ private class CON_DeleteContactOverride_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Attempts to delete contact with Recurring Donation, Opportunities and Relationships, 
+    * @description Attempts to delete contact with Recurring Donation, Opportunities and Relationships,
     * verifies Recurring Donation is deleted.
     */
     static testMethod void testContactDeleteWithOverride(){
@@ -425,7 +425,7 @@ private class CON_DeleteContactOverride_TEST {
         System.assertEquals(relationships.size() * 2, deletedRelationships.size(), 'Contact relationships should be deleted when the Contacts are deleted.');
         System.assertEquals(1, deletedRDOpportunities.size(), 'The Opportunities should be cascade deleted.');
     }
-        
+
     /*********************************************************************************************************
     * @description Attempts to delete Account with closed/won opp and case, verifies correct exception is thrown.
     */
@@ -438,11 +438,11 @@ private class CON_DeleteContactOverride_TEST {
         insert account;
 
         Contact contact1 = new Contact(
-            LastName = 'TESTCONTACT1', 
+            LastName = 'TESTCONTACT1',
             AccountId = account.Id
         );
         Contact contact2 = new Contact(
-            LastName = 'TESTCONTACT2', 
+            LastName = 'TESTCONTACT2',
             AccountId = account.Id
         );
         insert new List<Contact>{contact1, contact2};
@@ -483,7 +483,7 @@ private class CON_DeleteContactOverride_TEST {
 
         List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{contact1});
         insert relationships;
-        
+
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
         ApexPages.currentPage().getParameters().put('Id', contact1.Id);
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(contact1));
@@ -521,8 +521,8 @@ private class CON_DeleteContactOverride_TEST {
     **********************************************************************************************************/
     private static List<Contact> getContactList(Id contactId) {
         return [
-            SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c 
-            FROM Contact 
+            SELECT Id, AccountId, Account.npe01__SYSTEMIsIndividual__c
+            FROM Contact
             WHERE Id = :contactId
         ];
     }
@@ -534,8 +534,8 @@ private class CON_DeleteContactOverride_TEST {
     **********************************************************************************************************/
     private static List<Contact> getContactListAllRows(Id contactId) {
         return [
-            SELECT Id, isDeleted 
-            FROM Contact 
+            SELECT Id, isDeleted
+            FROM Contact
             WHERE Id = :contactId
             ALL ROWS
         ];
@@ -548,9 +548,9 @@ private class CON_DeleteContactOverride_TEST {
     **********************************************************************************************************/
     private static List<Account> getAccountListAllRows(Id accountId) {
         return [
-            SELECT Id, isDeleted 
-            FROM Account 
-            WHERE Id = :accountId 
+            SELECT Id, isDeleted
+            FROM Account
+            WHERE Id = :accountId
             ALL ROWS
         ];
     }
@@ -562,7 +562,7 @@ private class CON_DeleteContactOverride_TEST {
     private static TEST_RecurringDonationBuilder getRecurringDonationBuilder() {
         return new TEST_RecurringDonationBuilder()
             .withAmount(2)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriodYearly()
             .withDateEstablished()
             .withScheduleTypeMultiplyValue();
