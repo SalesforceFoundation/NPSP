@@ -156,7 +156,7 @@ public inherited sharing class RD2_RecurringDonation {
 
     /**
     * @description Revises the schedules' EndDate of fixed length recurring donation
-    * to control how many future installments should be created
+    * to control how many fixed length future installments should be created
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation reviseScheduleEndDateForFixedLength(RD2_ScheduleService scheduleService) {
@@ -164,22 +164,11 @@ public inherited sharing class RD2_RecurringDonation {
             return this;
         }
 
-        List<RD2_OpportunityMatcher.Record> installments = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
-        .includeCurrentOrOpen(rd.npe03__Donations__r)
-        .match(scheduleService.getVisualizedInstallments(
-            RD2_ScheduleService.currentDate, getPlannedInstallments() - getPaidInstallments(), rd.RecurringDonationSchedules__r
-        )).getRecords();
+        List<RD2_OpportunityMatcher.Record> futureInstallments = getFutureInstallments(scheduleService);
 
-        Integer i = installments.size();
-
-        while (getPlannedInstallments() < installments.size() && i > 0) {
-            i--;
-            if (installments[i].isNew()) {
-                installments.remove(i);
-            }
-        }
-
-        Date scheduleEndDate = installments[installments.size() - 1].getCloseDate();
+        Date scheduleEndDate = (futureInstallments.isEmpty())
+            ? RD2_ScheduleService.currentDate
+            : futureInstallments[futureInstallments.size() - 1].getCloseDate();
 
         for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
             if (schedule.EndDate__c == null) {
@@ -188,6 +177,35 @@ public inherited sharing class RD2_RecurringDonation {
         }
 
         return this;
+    }
+
+    /**
+    * @description Get all future scheduled installments and opened opportunity for the given fixed length Recurring Donation
+    * @return List<RD2_OpportunityMatcher.Record>
+    */
+    private List<RD2_OpportunityMatcher.Record> getFutureInstallments(RD2_ScheduleService scheduleService) {
+        if (!isFixedLength() || isFixedLengthComplete()) {
+            return new List<RD2_OpportunityMatcher.Record>();
+        }
+        List<RD2_OpportunityMatcher.Record> installments = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
+        .includeCurrentOrOpen(rd.npe03__Donations__r)
+        .match(scheduleService.getVisualizedInstallments(
+            RD2_ScheduleService.currentDate, getPlannedInstallments() - getPaidInstallments(), rd.RecurringDonationSchedules__r))
+        .getRecords();
+
+        Integer i = installments.size();
+        Integer currentInstallmentCount = installments.size() + getPaidInstallments();
+
+        while ((getPlannedInstallments() < currentInstallmentCount )) {
+            i--;
+            if (installments[i].isNew()) {
+                installments.remove(i);
+            }
+
+            currentInstallmentCount = installments.size() + getPaidInstallments();
+        }
+
+        return installments;
     }
 
     /**

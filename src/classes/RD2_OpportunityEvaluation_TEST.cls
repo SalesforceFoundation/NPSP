@@ -805,6 +805,110 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
 
+    /**
+    *Verifies that no future installment will be created for fixed length RD 
+    * when number of opened installment and closed won installments equals number of planned installments
+    */
+    @isTest
+    private static void shouldNotCreateNextInstallmentForFixedLengthRDWhenInstallmentsReachPlannedInstallmentsCount() {
+        final Integer plannedInstallments = 5;
+        final Date startDate = Date.newInstance(2020, 1, 1);
+        Date today = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_OpportunityEvaluationService.skipEvaluationService = true;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withPlannedInstallments(plannedInstallments)
+            .withRecurringTypeFixed()
+            .withStartDate(startDate)
+            .withDayOfMonth('1')
+            .build();
+
+        insert rd;
+
+        List<Opportunity> opps = new List<Opportunity>();
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withName();
+
+        opps.addAll(oppBuilder
+            .withClosedWonStage()
+            .withCloseDate(startDate)
+            .build(4)
+        );
+
+        opps.add(oppBuilder
+            .withCloseDate(today.addDays(1))
+            .withOpenStage()
+            .build()
+        );
+        
+        insert opps;
+
+        RD2_OpportunityEvaluationService.skipEvaluationService = false;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+        
+        List<Opportunity> queriedOpps = oppGateway.getRecords(rd);
+        
+        assertBatchJobIteration(1);
+        System.assertEquals(5, queriedOpps.size(), 'No new installment should be created when open installments and paid installments add up to be the planned installment');
+        System.assertEquals(UTIL_SObject.extractIds(opps), UTIL_SObject.extractIds(queriedOpps), 'No new installment should be created');
+    }
+
+    /**
+    * @description Verifies that the next installment should be created for fixed length RD
+    * when number of opened installment and closed won installments equals number of planned installments  
+    */
+    @isTest
+    private static void shouldCreateNextInstallmentForFixedLengthRDWhenInstallmentsNotReachPlannedInstallmentsCount() {
+        final Integer plannedInstallments = 5;
+        final Date startDate = Date.newInstance(2020, 1, 1);
+        Date today = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_OpportunityEvaluationService.skipEvaluationService = true;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withPlannedInstallments(plannedInstallments)
+            .withRecurringTypeFixed()
+            .withStartDate(startDate)
+            .withDayOfMonth('1')
+            .build();
+
+        insert rd;
+
+        List<Opportunity> opps = new List<Opportunity>();
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withName();
+
+        opps.addAll(oppBuilder
+            .withClosedWonStage()
+            .withCloseDate(startDate)
+            .build(4)
+        );
+
+        opps.add(oppBuilder
+            .withCloseDate(today.addDays(-1))
+            .withClosedLostStage()
+            .withCloseDate(startDate)
+            .build()
+        );
+        
+        insert opps;
+
+        RD2_OpportunityEvaluationService.skipEvaluationService = false;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+        
+        List<Opportunity> queriedOpps = oppGateway.getRecords(rd);
+        
+        assertBatchJobIteration(1);
+        System.assertEquals(6, queriedOpps.size(), 'The next installment should be created for the fixed length RD');
+        System.assert(queriedOpps[5].IsClosed == false, 'The newly created installment should be opened');
+        System.assertEquals(today, queriedOpps[5].CloseDate, 'The next scheduled installment should be have the closed date of batch running date');
+    }
+
     // Helpers
     //////////////
 

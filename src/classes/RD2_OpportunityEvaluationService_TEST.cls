@@ -1319,6 +1319,98 @@ private class RD2_OpportunityEvaluationService_TEST {
             'Next Year Value should match with projected installments');
     }
 
+    /**
+    * Verifies that for Fixed Length RD, current and next year value should be calculated correctly when there are closed/won installments 
+    */
+    @isTest
+    private static void yearValuesShouldMatchFixedLengthRDPlannedInstallments() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
+        //set current date override
+        final Date startDate = Date.newInstance(2019, 12, 1);
+        Date today = Date.newInstance(2020, 3, 2);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withStartDate(startDate)
+            .withDayOfMonth('1')
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(20)
+            .withPaidInstallments(4)
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Integer month = 0; month < 4; month++){
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(startDate.addMonths(month))
+                .build());
+        }
+        
+        insert opps;
+        
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .handleOutdatedRecurringDonations();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c, 'Current year value should matches the expected planned installment total amount');
+        System.assertEquals(RD_AMOUNT * 7, rd.NextYearValue__c, 'Next year value should matches the expected planned installment total amount');
+    }
+
+    /**
+    * Verifies that for Fixed Length RD, current and next year value should be calculated correctly when opened installments present
+    */
+    @isTest
+    private static void yearValuesShouldMatchFixedLengthRDPlannedInstallmentsAndOutOfCycleInstallment() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
+        //set current date override
+        final Date startDate = Date.newInstance(2019, 12, 1);
+        Date today = Date.newInstance(2020, 3, 2);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withStartDate(startDate)
+            .withDayOfMonth('1')
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(20)
+            .withPaidInstallments(4)
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Integer month = 0; month < 4; month++){
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(startDate.addMonths(month))
+                .build());
+        }
+
+        //Out of schedule installment
+        opps.add(oppBuilder
+            .withName()
+            .withCloseDate(today.addYears(1).addDays(15))
+            .withOpenStage()
+            .withAmount(5000)
+            .build()
+        );
+        
+        insert opps;
+        
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .handleOutdatedRecurringDonations();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c, 'Current year value should matches the expected planned installment total amount');
+        System.assertEquals(RD_AMOUNT * 6 + 5000, rd.NextYearValue__c, 'Next year value should matches the expected planned installment total amount');
+    }
 
 
     // Helpers
