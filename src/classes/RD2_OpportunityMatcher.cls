@@ -126,26 +126,6 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Includes Open Opportunities with Close Date greater or equal to the current date
-     * @param opps Recurring Donation Opportunities
-     * @return RD2_OpportunityMatcher This Opportunity matcher instance
-     */
-    public RD2_OpportunityMatcher includeCurrentAndOpen(List<Opportunity> opps) {
-        for (Opportunity opp : opps) {
-            if (opp.IsClosed == true) {
-                continue;
-            }
-            if (opp.CloseDate >= currentDate) {
-                recordByCloseDate.put(opp.CloseDate, new Record(opp));
-
-            } else if (opp.CloseDate >= cutoffDate) {
-                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
-            }
-        }
-        return this;
-    }
-
-    /***
      * @description Includes Opportunities with Close Date greater or equal to the current date.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
@@ -297,16 +277,6 @@ public inherited sharing class RD2_OpportunityMatcher {
 
         recordByCloseDate.put(opp.CloseDate, new Record(opp).attachInstallment(installment));
         boundaryRecordByCloseDate.remove(opp.CloseDate);
-
-        List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
-        closeDates.sort();
-
-        //rebuild records' container so records are sorted by dates
-        Map<Date, Record> recordByCloseDateClone = recordByCloseDate.clone(); 
-        recordByCloseDate = new Map<Date, Record>();
-        for (Date closeDate : closeDates) {
-            recordByCloseDate.put(closeDate, recordByCloseDateClone.get(closeDate));
-        }
     }
 
     /***
@@ -318,11 +288,53 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Returns matched records containting Opportunities and/or installments
+     * @description Returns sorted matched records containing Opportunities and/or installments
      * @return List<Record>
      */
     public List<Record> getRecords() {
-        return recordByCloseDate.values();
+        if (recordByCloseDate.isEmpty()) {
+            return recordByCloseDate.values();
+        }
+
+        List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
+        closeDates.sort();
+
+        List<Record> records = new List<Record>();
+        for (Date closeDate : closeDates) {
+            records.add(recordByCloseDate.get(closeDate));
+        }
+
+        return records;
+    }
+
+    /**
+    * @description Indicates if the Recurring Donation has an open Opportunity included in the matcher
+    * @return Boolean
+    */
+    public Boolean hasOpenOpportunity() {
+        for (Record record : recordByCloseDate.values()) {
+            if (!record.isNew() && record.isOpen()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+    * @description Returns the first installment not matching an Opportunity
+    * or the first installment matching an open Opportunity, whichever is earlier
+    * @return RD2_ScheduleService.Installment
+    */
+    public RD2_ScheduleService.Installment getNextOpenInstallment() {
+        //records are ordered by the date
+        for (Record record : getRecords()) {
+            if (record.hasInstallment()
+                && (record.isNew() || record.isOpen())//TODO Close Date >= currentDate?
+            ) {
+                return record.getInstallment();
+            }
+        }
+        return null;
     }
 
     /***

@@ -97,57 +97,6 @@ private class RD2_OpportunityMatcher_TEST {
     }
 
     /**
-     * @description Verifies Open Opps are returned
-     * when their Close Date is greater or equal to the current date (today).
-     */
-    @IsTest
-    private static void shouldIncludeOpenOppsWhenCloseDateIsGreaterOrEqualToCurrentDate() {
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
-        List<Opportunity> opps = new List<Opportunity>{
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addMonths(-1))
-                .withOpenStage()
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY)//match
-                .withOpenStage()
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addMonths(1))
-                .withClosedLostStage()
-                .withInstallmentNumberMigrationFlag()
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addMonths(2))
-                .withClosedWonStage()
-                .withInstallmentNumber(1)
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addMonths(3))//match
-                .withOpenStage()
-                .withInstallmentNumber(2)
-                .build()
-        };
-        TEST_OpportunityBuilder.setUneditableFields(opps);
-
-        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .includeCurrentAndOpen(opps)
-            .getRecords();
-
-        System.assertEquals(2, records.size(), 'Number of included Opportunities should match: ' + records);
-        for (RD2_OpportunityMatcher.Record record : records) {
-            System.assert(record.getOpportunity().CloseDate >= TODAY, 'Opportunity Close Date should be >= TODAY: ' + record);
-            System.assertNotEquals(opps[2].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
-            System.assertNotEquals(opps[3].Name, record.getOpportunity().Name, 'Closed Won Opportunity should be excluded');
-        }
-    }
-
-    /**
      * @description Verifies Open/Closed Lost/Closed Won Opps are returned
      * when their Close Date is greater or equal to the current date (today).
      * Opportunities Closed Lost in data migration are not returned.

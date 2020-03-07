@@ -180,6 +180,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         List<Opportunity> opps = new List<Opportunity>{
             getOpportunityBuilder(rdOld)
+                .withMockId()
                 .withAccount(rdOld.npe03__Organization__c)
                 .withOpenStage()
                 .withCloseDate(rdOld.npe03__Next_Payment_Date__c)

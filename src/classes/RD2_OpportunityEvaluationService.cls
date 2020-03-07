@@ -277,7 +277,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return this;
         }
 
-        List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
+        List<RD2_RecurringDonation> newOppRDs = new List<RD2_RecurringDonation>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
 
@@ -297,7 +297,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             } else {
                 if (isNewOpportunityCandidate(rdRecord)) {
-                    newOppRDs.add(rd);
+                    newOppRDs.add(rdRecord);
                 }
 
                 if (hasOpenOpportunity(rdRecord)) {
@@ -346,7 +346,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             if (rdRecord
-                .reviseStatusForFixedLength()
                 .reviseNextDonationDate(scheduleService)
                 .reviseYearValues(yearValueProcessor)
                 .isOutdated()
@@ -403,7 +402,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         } else if (rd.isNew()) {
             return rdSettings.isFirstInstallmentEnabled;
 
-        } else if (!rd.hasCurrentOpenOpportunity(currentDate)) {
+        } else if (!rd.hasCurrentOpenOpportunity()) {
             return rdSettings.isNextInstallmentEnabled;
         }
 
