@@ -117,6 +117,8 @@ public with sharing class UTIL_HtmlOutput_CTRL {
             }
         }
 
+        replacedHtml = sanitizeInlineJavaScript(replacedHtml);
+
         return replacedHtml;
     }
 
