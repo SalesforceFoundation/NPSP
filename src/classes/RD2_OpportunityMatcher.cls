@@ -320,24 +320,6 @@ public inherited sharing class RD2_OpportunityMatcher {
         return false;
     }
 
-    /**
-    * @description Returns the first installment record not matching an Opportunity
-    * or the first installment record matching an open Opportunity, whichever is earlier
-    * @return Record
-    */
-    public Record getNextDonationDateRecord() {
-        //records are ordered by the date
-        for (Record record : getRecords()) {
-            if (record.hasInstallment()
-                && (record.isNew() || record.isOpen())//TODO Close Date >= currentDate?
-            ) {
-                return record;
-            }
-        }
-        return null;
-    }
-
-
     /***
      * @description Wrapper for the extracted Opportunity based on the inclusion criteria
      * and/or matching installment. The record can have both Opportunity and installment

@@ -208,7 +208,7 @@ public without sharing class RD2_ScheduleService {
     * @param schedulesByRd RD Schedules by RD Id (if null, active schedules will be queried)
     * @return Map<Id, List<Installment>> Upcoming installments mapped by the Recurring Donation Id
     */
-    public Map<Id, List<Installment>> getVisualizedInstallments(
+    public Map<Id, List<Installment>> getVisualizedInstallments(//Currently only used in tests
         List<npe03__Recurring_Donation__c> rds,
         Date startDate,
         Integer numInstallments,
@@ -384,17 +384,27 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the date of the next donation
+    * @description Calculates the date of the next donation for a new Recurring Donation before the record insert
+    * @param rd Recurring Donation record
+    * @return Date
+    */
+    public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {   
+        return getNextDonationDate(rd, buildNewSchedules(rd));
+    }
+
+    /***
+    * @description Calculates the date of the next donation for an existing Recurring Donation
+    * @param rd Recurring Donation record
+    * @param rdSchedules Schedules on the Recurring Donation record
     * @return Date
     */
     public Date getNextDonationDate(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {   
         RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(rd, rdSchedules);
 
-        return record == null
-            ? null//TODO getNextDonationDate(rdSchedules)?
-            : record.getInstallment().nextDonationDate;
+        return record != null && record.getInstallment() != null
+            ? record.getInstallment().nextDonationDate
+            : null;
     }
-
 
     /***
     * @description Calculates the date of the next donation and returns the Opportunity matcher record
@@ -420,36 +430,25 @@ public without sharing class RD2_ScheduleService {
             currentDate, numberOfInstallments, rdSchedules
         ));
 
-        return matcher.getNextDonationDateRecord();
+        return getNextDonationDateRecord(matcher);
     }
 
-
-    /***
-    * @description Calculates the date of the next donation
-    * @param rdSchedules Recurring Donation Schedule records
-    * @return Date
+    /**
+    * @description Returns the first installment record not matching an Opportunity
+    * or the first installment record matching an open Opportunity, whichever is earlier
+    * @param matcher Opportunity and installment matcher
+    * @return RD2_OpportunityMatcher.Record
     */
-    public Date getNextDonationDate(List<RecurringDonationSchedule__c> rdSchedules) {
-        if (rdSchedules == null) {
-            return null;
-        }
-
-        Date nextDate;
-        Date previousDate;
-        for (RecurringDonationSchedule__c schedule : rdSchedules) {
-            if (!isActive(schedule, currentDate)) {
-                continue;
+    private RD2_OpportunityMatcher.Record getNextDonationDateRecord(RD2_OpportunityMatcher matcher) {
+        //records are ordered by the date
+        for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
+            if (record.hasInstallment()
+                && (record.isNew() || record.isOpen())//TODO Close Date >= currentDate?
+            ) {
+                return record;
             }
-
-            nextDate = getNextDonationDateGreaterThan(schedule, currentDate);
-
-            if (previousDate < nextDate) {
-                nextDate = previousDate;
-            }
-            previousDate = nextDate;
         }
-
-        return nextDate;
+        return null;
     }
 
     /***

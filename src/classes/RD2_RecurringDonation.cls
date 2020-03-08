@@ -62,31 +62,23 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Revises and modifies the Recurring Donation Next Donation Date.
-    * @param scheduleService RD Schedule Service
-    * @return RD2_RecurringDonation This record instance
-    */
-    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {  
-        return reviseNextDonationDate(scheduleService, rd.RecurringDonationSchedules__r, true);
-    }
-
-    /**
     * @description Revises and sets the Recurring Donation Next Donation Date on the record insert
     * @param scheduleService RD Schedule Service
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation reviseNextDonationDateBeforeInsert(RD2_ScheduleService scheduleService) {
-        return reviseNextDonationDate(scheduleService, scheduleService.buildNewSchedules(rd), false);
+        return setNextDonationDate(
+            scheduleService.getNextDonationDate(rd)
+        );
     }
 
     /**
     * @description Revises and modifies the Recurring Donation Next Donation Date.
     * @param scheduleService RD Schedule Service
-    * @param rdSchedules Existing Schedules on the Recurring Donation
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) { 
-        return reviseNextDonationDate(scheduleService, rdSchedules, true);
+    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {  
+        return reviseNextDonationDate(scheduleService, rd.RecurringDonationSchedules__r);
     }
 
     /**
@@ -95,19 +87,23 @@ public inherited sharing class RD2_RecurringDonation {
     * for a fixed-length RD in the case it should be closed. 
     * If so, the next installment Opp should not be created when the last open Opp on the fixed-length RD is closed.
     * @param scheduleService RD Schedule Service
-    * @param rdSchedules Just built or existing Schedules on the Recurring Donation
-    * @param reviseFixedLength Indicated is fixed-length status is to be revised
+    * @param rdSchedules Existing Schedules on the Recurring Donation
     * @return RD2_RecurringDonation This record instance
     */
-    private RD2_RecurringDonation reviseNextDonationDate(
-        RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules, Boolean reviseFixedLength
-    ) { 
-        if (reviseFixedLength) {   
-            reviseStatusForFixedLength();
-        }
+    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) { 
+        reviseStatusForFixedLength();
 
-        Date nextDonationDate = scheduleService.getNextDonationDate(rd, rdSchedules);
+        return setNextDonationDate(
+            scheduleService.getNextDonationDate(rd, rdSchedules)
+        );
+    }
 
+    /**
+    * @description Sets the Next Donation Date on the Recurring Donation if the value has changed
+    * @param nextDonationDate Calculated value of the next donation date
+    * @return RD2_RecurringDonation This record instance
+    */
+    private RD2_RecurringDonation setNextDonationDate(Date nextDonationDate) {
         if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
             rd.npe03__Next_Payment_Date__c = nextDonationDate;
             changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
