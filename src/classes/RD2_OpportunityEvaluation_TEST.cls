@@ -815,6 +815,102 @@ private class RD2_OpportunityEvaluation_TEST {
             'The Closed Reason should be set to ' + RD2_Constants.FIXED_TYPE_CLOSED_REASON);
     }
 
+    /**
+    * Verifies that no future installment will be created for a fixed length RD 
+    * when number of open Opps plus closed won Opps equals number of planned installments
+    */
+    @isTest
+    private static void shouldNotCreateNextOppWhenFixedLengthRDReachedPlannedInstallmentCount() {
+        final Integer plannedInstallments = 5;
+        final Integer paidInstallments = 4;
+
+        final Date startDate = Date.newInstance(2020, 1, 1);
+        Date today = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('1')
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(plannedInstallments)
+            .build();
+        insert rd;
+
+        List<Opportunity> opps = new List<Opportunity>();
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withName();
+
+        opps.addAll(oppBuilder
+            .withClosedWonStage()
+            .withCloseDate(startDate)
+            .build(paidInstallments)
+        );
+        opps.add(oppBuilder
+            .withCloseDate(today.addDays(1))
+            .withOpenStage()
+            .build()
+        );
+        insert opps;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        List<Opportunity> actualOpps = oppGateway.getRecords(rd);
+
+        assertBatchJobIteration(1);
+        System.assertEquals(plannedInstallments, actualOpps.size(), 
+            'No new installment Opp should be created when: open Opps + paid Opps = planned installments. ' + actualOpps);
+    }
+
+    /**
+    * @description Verifies that the next installment Opp should be created for a fixed length RD
+    * when number of open Opps plus closed won Opps is less than number of planned installments  
+    */
+    @isTest
+    private static void shouldCreateNextOppWhenFixedLengthRDHasNotReachedPlannedInstallmentCount() {
+        final Integer plannedInstallments = 5;
+        final Integer paidInstallments = 4;
+        
+        final Date startDate = Date.newInstance(2020, 1, 1);
+        Date today = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withStartDate(startDate)
+            .withDayOfMonth('1')
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(plannedInstallments)
+            .build();
+        insert rd;
+
+        List<Opportunity> opps = new List<Opportunity>();
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withName();
+
+        opps.addAll(oppBuilder
+            .withClosedWonStage()
+            .withCloseDate(startDate)
+            .build(paidInstallments)
+        );
+        opps.add(oppBuilder
+            .withCloseDate(today.addDays(-1))
+            .withClosedLostStage()
+            .withCloseDate(startDate)
+            .build()
+        );
+        insert opps;
+
+        runBatch(new RD2_OpportunityEvaluation_BATCH(today));
+
+        List<Opportunity> actualOpps = oppGateway.getRecords(rd);
+
+        assertBatchJobIteration(1);
+        System.assertEquals(6, actualOpps.size(), 'The next installment should be created for the fixed length RD');
+        System.assert(actualOpps[5].IsClosed == false, 'The newly created Opp should be open: ' + actualOpps[5]);
+        System.assertEquals(today, actualOpps[5].CloseDate, 'The newly created Opp Close Date should be the next donation date');
+    }
+
 
     // Helpers
     //////////////

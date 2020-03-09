@@ -200,6 +200,8 @@ public without sharing class RD2_ScheduleService {
         return isNeeded;
     }
 
+
+
     /***
     * @description Calculates the dates of the next N Installment Opportunities for specified Recurring Donations
     * @param rds Recurring Donation records
@@ -417,6 +419,8 @@ public without sharing class RD2_ScheduleService {
         if (rdSchedules == null  || rdSchedules.isEmpty() || rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return null;
         }
+
+        evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
         
         RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//cache current matcher by RD Id //TODO
             .includeCurrent(rd.npe03__Donations__r);
@@ -767,6 +771,62 @@ public without sharing class RD2_ScheduleService {
                 newSchedulesByRdId.put(rd.RecurringDonation__c, new List<RecurringDonationSchedule__c>());
             }
             newSchedulesByRdId.get(rd.RecurringDonation__c).add(rd);
+        }
+    }
+
+    /**
+    * @description Sets End Date on input rdScheduls.
+    * The end date is not set on a schedule for a fixed-length Recurring Donation.
+    * Thus, schedules should be dynamically evaluated for the End Date
+    * when the Next Donation Date record is being determined, ie the Next Donation Date calculated,
+    * or the Visualizer displays upcoming installments.
+    * @param rd Recurring Donation record
+    * @param rdSchedules Schedules on the Recurring Donation record
+    * @return void
+    */
+    public void evaluateScheduleEndDateForFixedLength(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+
+        if (rdSchedules == null || rdSchedules.isEmpty() 
+            || rdRecord.isClosed() 
+            || !rdRecord.isFixedLength() 
+            || rdRecord.isFixedLengthComplete()
+        ) {
+            return;
+        }
+
+        Integer numberOfOpenSlots = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments();
+
+        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
+            .includeCurrentOrOpen(rd.npe03__Donations__r)
+            .match(getVisualizedInstallments(
+                currentDate, numberOfOpenSlots, rdSchedules)
+            );
+        
+        Date scheduleEndDate = null;
+        for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
+            if (numberOfOpenSlots <= 0) {
+                break;
+            }
+
+            //take the slot if it is an installment without a matching Opp 
+            //or it is a record matching an open Opp w/o an installment
+            if (record.isNew() || record.isOpen()) {
+                numberOfOpenSlots--;
+                scheduleEndDate = record.hasInstallment() 
+                    ? record.getInstallment().nextDonationDate
+                    : scheduleEndDate > currentDate ? scheduleEndDate : record.getCloseDate();//a past Opp or an Opp not matching any installment, leave the date to be the previously set date?
+            }
+        }
+
+        if (scheduleEndDate == null) {
+            return;
+        }
+        
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            if (schedule.EndDate__c == null) {
+                schedule.EndDate__c = scheduleEndDate;
+            }
         }
     }
 }

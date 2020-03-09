@@ -236,6 +236,26 @@ public inherited sharing class RD2_RecurringDonation {
     public Boolean isFixedLengthComplete() {
         return rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c;
     }
+    
+    /**
+    * @description Return number of planned installments on the Recurring Donation, default to 0 when null
+    * @return Integer
+    */
+    public Integer getPlannedInstallments() {
+        return rd.npe03__Installments__c == null
+            ? 0
+            : rd.npe03__Installments__c.intValue();
+    }
+
+    /**
+    * @description Return number of paid installments on the Recurring Donation, default to 0 when null
+    * @return Integer
+    */
+    public Integer getPaidInstallments() {
+        return rd.npe03__Total_Paid_Installments__c == null
+            ? 0
+            : rd.npe03__Total_Paid_Installments__c.intValue();
+    }
 
     /**
     * @description Returns true if the RD record is in enhanced Recurring Donation format
