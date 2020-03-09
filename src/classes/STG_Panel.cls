@@ -91,7 +91,6 @@ public with sharing virtual class STG_Panel {
     * @description Verifies the user has Admin permissions for Opportunity naming settings.
     * @return true when the user has the appropriate access
     */
-    @TestVisible
     public Boolean isRunningUserIsAdmin {
         get {
             if (isRunningUserIsAdmin == null) {
