@@ -782,6 +782,7 @@ private with sharing class STG_SettingsManager_TEST {
         System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelOppNaming);
             STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
+
             panel.currentONS = settings;
             panel.currentONSName = settings.Name;
 
@@ -790,7 +791,7 @@ private with sharing class STG_SettingsManager_TEST {
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
             System.assertEquals(1, panel.listOppNameSettings.size());
             System.assertEquals(1, panel.mapOppNameSettings.size());
-            System.assert([select id, name from Opportunity_Naming_Settings__c].size() > 0);
+            System.assertEquals(1, Opportunity_Naming_Settings__c.getAll().size());
         }
 
         Test.stopTest();
@@ -801,14 +802,13 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verify if admin users can delete opportunity naming settings
     */
     @isTest
-    private static void shouldVerifyDeleteOppNamingWhenUserHaveAdminPermission() {
+    private static void shouldAllowDeleteOppNamingWhenUserHasAdminPermission() {
         Opportunity_Naming_Settings__c settings = setUpOppNamingSettings();
 
         Test.startTest();
 
         Test.setCurrentPage(Page.STG_PanelOppNaming);
         STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
-        system.assertEquals('idPanelOppNaming', panel.idPanel());
 
         panel.currentONS = settings;
         panel.currentONSName = settings.Name;
@@ -835,7 +835,7 @@ private with sharing class STG_SettingsManager_TEST {
         System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelRDCustomFieldMapping);
             STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
-            system.assertEquals('idPanelRDFieldMap', panel.idPanel());
+
             panel.fmNew.npe03__Recurring_Donation_Field__c = cfm.npe03__Recurring_Donation_Field__c;
             panel.fmNew.npe03__Opportunity_Field__c = cfm.npe03__Opportunity_Field__c;
 
@@ -843,7 +843,7 @@ private with sharing class STG_SettingsManager_TEST {
             panel.deleteFm();
 
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
-            System.assert([select id, name from npe03__Custom_Field_Mapping__c].size() > 0 );
+            System.assertEquals(1, npe03__Custom_Field_Mapping__c.getAll().size());
             System.assertEquals(1, panel.listRDCustomFieldMapping.size());
         }
 
@@ -854,14 +854,13 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verify if admin users can delete custom field mapping settings
     */
     @isTest
-    private static void shouldVerifyDeleteForFieldMappingWhenUserHaveAdminPermission() {
+    private static void shouldAllowDeleteForFieldMappingWhenUserHasAdminPermission() {
         npe03__Custom_Field_Mapping__c cfm = setUpCustomFieldMapping();
 
         Test.startTest();
 
         Test.setCurrentPage(Page.STG_PanelRDCustomFieldMapping);
         STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
-        system.assertEquals('idPanelRDFieldMap', panel.idPanel());
 
         panel.fmNew.npe03__Recurring_Donation_Field__c = cfm.npe03__Recurring_Donation_Field__c;
         panel.fmNew.npe03__Opportunity_Field__c = cfm.npe03__Opportunity_Field__c;
@@ -869,7 +868,7 @@ private with sharing class STG_SettingsManager_TEST {
         panel.deleteFm();
 
         //verify if the settings are deleted
-        System.assert([select id, name from npe03__Custom_Field_Mapping__c].size() == 0 );
+        System.assertEquals(0, npe03__Custom_Field_Mapping__c.getAll().size());
         system.assertEquals(0, panel.listRDCustomFieldMapping.size());
 
         Test.stopTest();
@@ -889,7 +888,6 @@ private with sharing class STG_SettingsManager_TEST {
         System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelRDCustomInstallment);
             STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
-            System.assertEquals('idPanelRDInstPd', panel.idPanel());
 
             panel.ciNew.Name = cfm.Name;
             panel.ciNew.npe03__Value__c = cfm.npe03__Value__c;
@@ -899,7 +897,7 @@ private with sharing class STG_SettingsManager_TEST {
             panel.deleteCi();
 
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
-            System.assert([select id, name from npe03__Custom_Installment_Settings__c].size() > 0 );
+            System.assertEquals(1, npe03__Custom_Installment_Settings__c.getAll().size());
             System.assertEquals(1, STG_Panel.stgService.listRDCustomInstallment.size());
         }
 
@@ -910,14 +908,13 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verify if admin users can delete custom installment settings
     */
     @isTest
-    private static void shouldVerifyDeleteForCustomInstallmtWhenUserHaveAdminPermission() {
+    private static void shouldAllowDeleteForCustomInstallmtWhenUserHasAdminPermission() {
         npe03__Custom_Installment_Settings__c cfm = setUpCustomInstallmentSettings();
 
         Test.startTest();
 
         Test.setCurrentPage(Page.STG_PanelRDCustomInstallment);
         STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
-        System.assertEquals('idPanelRDInstPd', panel.idPanel());
 
         panel.ciNew.Name = cfm.Name;
         panel.ciNew.npe03__Value__c = cfm.npe03__Value__c;
@@ -927,7 +924,7 @@ private with sharing class STG_SettingsManager_TEST {
         panel.deleteCi();
 
         //verify if the settings are deleted
-        System.assert([select id, name from npe03__Custom_Installment_Settings__c].size() == 0 );
+        System.assertEquals(0, npe03__Custom_Installment_Settings__c.getAll().size());
         system.assertEquals(0, STG_Panel.stgService.listRDCustomInstallment.size());
 
         Test.stopTest();
@@ -947,7 +944,6 @@ private with sharing class STG_SettingsManager_TEST {
         System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelPaymentMapping);
             STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
-            System.assertEquals('idPanelPaymentMapping', panel.idPanel());
 
             panel.pfmNew.npe01__Opportunity_Field__c = cfm.npe01__Opportunity_Field__c;
             panel.pfmNew.npe01__Payment_Field__c = cfm.npe01__Payment_Field__c;
@@ -956,7 +952,7 @@ private with sharing class STG_SettingsManager_TEST {
             panel.deletePfm();
 
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
-            System.assert([select id, name from npe01__Payment_Field_Mapping_Settings__c].size() > 0 );
+            System.assertEquals(1, npe01__Payment_Field_Mapping_Settings__c.getAll().size() );
             System.assertEquals(1, STG_Panel.stgService.listPMTFieldMapping.size());
         }
 
@@ -967,14 +963,13 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verify if admin users can delete payment field mapping settings
     */
     @isTest
-    private static void shouldVerifyDeleteForPaymentMapWhenUserHaveAdminPermission() {
+    private static void shouldAllowDeleteForPaymentMapWhenUserHasAdminPermission() {
         npe01__Payment_Field_Mapping_Settings__c cfm = setUpPaymentFieldMapSettings();
 
         Test.startTest();
 
         Test.setCurrentPage(Page.STG_PanelPaymentMapping);
         STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
-        System.assertEquals('idPanelPaymentMapping', panel.idPanel());
 
         panel.pfmNew.npe01__Opportunity_Field__c = cfm.npe01__Opportunity_Field__c;
         panel.pfmNew.npe01__Payment_Field__c = cfm.npe01__Payment_Field__c;
@@ -982,7 +977,7 @@ private with sharing class STG_SettingsManager_TEST {
         panel.pfmIdDelete = panel.listPMTFieldMapping[0].Id;
         panel.deletePfm();
         //verify if the settings are deleted
-        System.assert([select id, name from npe01__Payment_Field_Mapping_Settings__c].size() == 0 );
+        System.assertEquals(0, npe01__Payment_Field_Mapping_Settings__c.getAll().size());
         System.assertEquals(0, panel.listPMTFieldMapping.size());
 
         Test.stopTest();
@@ -1002,7 +997,6 @@ private with sharing class STG_SettingsManager_TEST {
         System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelRelReciprocal);
             STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
-            System.assertEquals('idPanelRelReciprocal', panel.idPanel());
 
             panel.rlNew.Name = cfm.Name;
             panel.rlNew.npe4__Male__c = cfm.npe4__Male__c;
@@ -1013,7 +1007,7 @@ private with sharing class STG_SettingsManager_TEST {
             panel.deleteRl();
 
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
-            System.assert([select id, name from npe4__Relationship_Lookup__c].size() > 0 );
+            System.assertEquals(1, npe4__Relationship_Lookup__c.getAll().size());
             System.assertEquals(1, panel.listRelLookup.size());
         }
 
@@ -1024,14 +1018,13 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verify if admin users can delete relationship lookup settings
     */
     @isTest
-    private static void shouldVerifyDeleteForRelReciprocalWhenUserHaveAdminPermission() {
+    private static void shouldAllowDeleteForRelReciprocalWhenUserHasAdminPermission() {
         npe4__Relationship_Lookup__c cfm = setUpRelationshipLookup();
 
         Test.startTest();
 
         Test.setCurrentPage(Page.STG_PanelRelReciprocal);
         STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
-        System.assertEquals('idPanelRelReciprocal', panel.idPanel());
 
         panel.rlNew.Name = cfm.Name;
         panel.rlNew.npe4__Male__c = cfm.npe4__Male__c;
@@ -1041,7 +1034,7 @@ private with sharing class STG_SettingsManager_TEST {
         panel.rlIdDelete = panel.listRelLookup[0].Id;
         panel.deleteRl();
 
-        System.assert([select id, name from npe4__Relationship_Lookup__c].size() == 0 );
+        System.assertEquals(0, npe4__Relationship_Lookup__c.getAll().size());
         System.assertEquals(0, panel.listRelLookup.size());
 
         Test.stopTest();
@@ -1060,7 +1053,6 @@ private with sharing class STG_SettingsManager_TEST {
         System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelRelAuto);
             STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
-            System.assertEquals('idPanelRelAuto', panel.idPanel());
 
             panel.acNew.npe4__Object__c = cfm.npe4__Object__c;
             panel.acNew.npe4__Field__c = cfm.npe4__Field__c;
@@ -1071,7 +1063,7 @@ private with sharing class STG_SettingsManager_TEST {
             panel.deleteAc();
 
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
-            System.assert([select id, name from npe4__Relationship_Auto_Create__c].size() > 0 );
+            System.assertEquals(1, npe4__Relationship_Auto_Create__c.getAll().size());
             System.assertEquals(1, panel.listRelAutoCreate.size());
         }
 
@@ -1082,14 +1074,13 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verify if admin users can delete relationship auto create settings
     */
     @isTest
-    private static void shouldVerifyDeleteForRelAutoWhenUserHaveAdminPermission() {
+    private static void shouldAllowDeleteForRelAutoWhenUserHasAdminPermission() {
         npe4__Relationship_Auto_Create__c cfm = setUpRelationshipAutoCreate();
 
         Test.startTest();
 
         Test.setCurrentPage(Page.STG_PanelRelAuto);
         STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
-        System.assertEquals('idPanelRelAuto', panel.idPanel());
 
         panel.acNew.npe4__Object__c = cfm.npe4__Object__c;
         panel.acNew.npe4__Field__c = cfm.npe4__Field__c;
@@ -1099,9 +1090,8 @@ private with sharing class STG_SettingsManager_TEST {
         panel.acIdDelete = panel.listRelAutoCreate[0].Id;
         panel.deleteAc();
 
-        System.assert([select id, name from npe4__Relationship_Auto_Create__c].size() == 0 );
+        System.assertEquals(0, npe4__Relationship_Auto_Create__c.getAll().size());
         System.assertEquals(0, panel.listRelAutoCreate.size());
-
 
         Test.stopTest();
     }
@@ -1119,7 +1109,6 @@ private with sharing class STG_SettingsManager_TEST {
         System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelUserRollup);
             STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
-            System.assertEquals('idPanelUserRollup', panel.idPanel());
             panel.startBuild();
 
             panel.activeUDR.SourceField = HHurfs.npo02__Source_Field__c;
@@ -1131,7 +1120,7 @@ private with sharing class STG_SettingsManager_TEST {
             panel.activeUDR.deleteMe();
 
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.stgDeletePermissionError);
-            System.assert([select id, name from npo02__User_Rollup_Field_Settings__c].size() > 0 );
+            System.assertEquals(1, npo02__User_Rollup_Field_Settings__c.getAll().size());
             System.assertEquals(1, panel.udrlist.size());
         }
 
@@ -1142,14 +1131,13 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verify if admin users can delete user rollup field settings
     */
     @isTest
-    private static void shouldVerifyDeleteForUserRollupWhenUserHaveAdminPermission() {
+    private static void shouldAllowDeleteForUserRollupWhenUserHasAdminPermission() {
         npo02__User_Rollup_Field_Settings__c HHurfs = setUpUserRollupFieldSettings();
 
         Test.startTest();
 
         Test.setCurrentPage(Page.STG_PanelUserRollup);
         STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
-        System.assertEquals('idPanelUserRollup', panel.idPanel());
 
         panel.startBuild();
 
@@ -1163,7 +1151,7 @@ private with sharing class STG_SettingsManager_TEST {
         panel.udrList = null;
         UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
 
-        System.assert([select id, name from npo02__User_Rollup_Field_Settings__c].size() == 0 );
+        System.assertEquals(0, npo02__User_Rollup_Field_Settings__c.getAll().size());
         System.assertEquals(0, panel.udrlist.size());
 
         Test.stopTest();
