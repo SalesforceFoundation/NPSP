@@ -5615,8 +5615,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>iFrame header for credit card information</shortDescription>
-        <value>Powered by Elevate</value>
+        <shortDescription>iFrame header for Payment Services information</shortDescription>
+        <value>Powered by Payment Services</value>
     </labels>
     <labels>
         <fullName>geHeaderEmptyFormSection</fullName>
