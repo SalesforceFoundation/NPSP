@@ -519,17 +519,18 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         * @return void
         */
         public void deleteMe(){
-            if (!isCurrentUserHasDeleteAccess()) {
+            if (!STG_Panel.runningUserIsAdmin()) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
+                return;
             }
-            else {
-                if (myUDR.id != null) {
-                    delete myUDR;
-                }
-                mydad.udrList = null;
-                mydad.activeUDR = null;
-                mydad.isEditMode = false;
+
+            if (myUDR.id != null) {
+                delete myUDR;
             }
+            mydad.udrList = null;
+            mydad.activeUDR = null;
+            mydad.isEditMode = false;
+
         }
 
         /*********************************************************************************************************
@@ -543,14 +544,6 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
                 return false;
         }
 
-        /***
-        * @description Verifies the user has Delete permissions for Opportunity naming settings.
-        * @return true when the user has the appropriate access
-        */
-        private Boolean isCurrentUserHasDeleteAccess() {
-            return Schema.SObjectType.npo02__User_Rollup_Field_Settings__c.isDeletable();
-
-        }
     }
 
 }

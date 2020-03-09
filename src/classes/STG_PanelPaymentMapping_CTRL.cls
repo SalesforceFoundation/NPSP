@@ -233,7 +233,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deletePfm() {
-        if (!isCurrentUserHasDeleteAccess()) {
+        if (!STG_Panel.runningUserIsAdmin()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
             return null;
         }
@@ -353,15 +353,6 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
             return listPMTFieldMapping;
         }
         private set;
-    }
-
-    /***
-    * @description Verifies the user has Delete permissions for Opportunity naming settings.
-    * @return true when the user has the appropriate access
-    */
-    private Boolean isCurrentUserHasDeleteAccess() {
-        return Schema.SObjectType.npe01__Payment_Field_Mapping_Settings__c.isDeletable();
-
     }
 
 }

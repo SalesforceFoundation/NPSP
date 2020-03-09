@@ -132,7 +132,7 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deleteFm() {
-        if (!isCurrentUserHasDeleteAccess()) {
+        if (!STG_Panel.runningUserIsAdmin()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
             return null;
         }
@@ -198,16 +198,6 @@ public with sharing class STG_PanelRDCustomFieldMapping_CTRL extends STG_Panel {
             return strField;
         }
     }
-
-    /***
-    * @description Verifies the user has Delete permissions for Opportunity naming settings.
-    * @return true when the user has the appropriate access
-    */
-    private Boolean isCurrentUserHasDeleteAccess() {
-        return Schema.SObjectType.npe03__Custom_Field_Mapping__c.isDeletable();
-
-    }
-
 
     /*********************************************************************************************************
     * @description Set of invalid fields for opp mappings

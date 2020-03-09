@@ -121,7 +121,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deleteAc() {
-        if (!isCurrentUserHasDeleteAccess()) {
+        if (!STG_Panel.runningUserIsAdmin()) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
             return null;
         }
@@ -261,12 +261,4 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
         }
     }
 
-    /***
-    * @description Verifies the user has Delete permissions for Opportunity naming settings.
-    * @return true when the user has the appropriate access
-    */
-    private Boolean isCurrentUserHasDeleteAccess() {
-        return Schema.SObjectType.npe4__Relationship_Auto_Create__c.isDeletable();
-
-    }
 }
