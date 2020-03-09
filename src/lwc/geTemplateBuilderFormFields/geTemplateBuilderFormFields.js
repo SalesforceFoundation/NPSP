@@ -36,9 +36,15 @@ const EXCLUDED_OBJECT_MAPPINGS = [
     'Opportunity_Contact_Role_2'
 ];
 
+const FIELD_BUNDLE_MASTER_NAMES = [
+    'Data Import',
+    'Field Bundles'
+];
+
 const ADVANCED_MAPPING_MASTER_NAMES = [
     'Account 2',
     'Contact 2',
+    'GAU Allocation 1',
     'GAU Allocation 2',
     'Household',
     'Opportunity Contact Role 1',
@@ -53,7 +59,13 @@ const OBJECT_MAPPING_HELP_TEXT = {
     'Contact 2': 'geHelpTextContact2Mapping',
     'GAU Allocation 1': 'geHelpTextAllocation1Mapping',
     'GAU Allocation 2': 'geHelpTextAllocation2Mapping',
-    'Allocations': 'geHelpTextAllocationBundle'
+    'Allocations': 'geHelpTextAllocationBundle',
+    'Household': 'geHelpTextHouseholdMapping'
+};
+
+const FIELD_MAPPING_HELP_TEXT = {
+    'Allocations': 'geHelpTextAllocationBundle',
+    [DONATION_DONOR_LABEL]: 'geHelpTextDonationDonor'
 };
 
 export default class geTemplateBuilderFormFields extends LightningElement {
@@ -543,17 +555,34 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     }
 
     /**
-     * For a given object mapping, check if help text exists for it and append it to the mapping javascript object.
+     * For a given object mapping, check if help text exists for it and its mapped fields.
+     * Append the help text to the mapping javascript object and its mapped fields.
+     *
      * @param {object} mapping to look up help text for
      * @return {{helpText: *}|*} mapping with help text appended to it
      */
     mapHelpText = (mapping) => {
         const labelName = OBJECT_MAPPING_HELP_TEXT[mapping.MasterLabel];
-        if (labelName) {
+        const Field_Mappings = mapping.Field_Mappings.map(this.mapFieldHelpText);
+        if(labelName) {
             const helpText = this.CUSTOM_LABELS[labelName];
-            return { ...mapping, helpText };
+            return { ...mapping, Field_Mappings, helpText };
         }
-        return mapping;
+        return { ...mapping, Field_Mappings };
+    };
+
+    /**
+     * Append help text to a field mapping, if it exists.
+     * @param fieldMapping
+     * @return {{helpText: *}|*}
+     */
+    mapFieldHelpText = (fieldMapping) => {
+        const labelName = FIELD_MAPPING_HELP_TEXT[fieldMapping.MasterLabel];
+        if(labelName) {
+            const helpText = this.CUSTOM_LABELS[labelName];
+            return { ...fieldMapping, helpText };
+        }
+        return fieldMapping;
     };
 
     /**
@@ -566,7 +595,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             return this.objectMappings
                 .filter(mapping =>
                     !ADVANCED_MAPPING_MASTER_NAMES.includes(mapping.MasterLabel) &&
-                    mapping.MasterLabel !== this.CUSTOM_LABELS.geHeaderFieldBundles)
+                    !FIELD_BUNDLE_MASTER_NAMES.includes(mapping.MasterLabel))
                 .map(this.mapHelpText);
         }
         return [];
@@ -604,7 +633,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     get fieldBundleMappings() {
         if (this.objectMappings) {
             return this.objectMappings
-                .filter(mapping => mapping.MasterLabel === this.CUSTOM_LABELS.geHeaderFieldBundles)
+                .filter(mapping => FIELD_BUNDLE_MASTER_NAMES.includes(mapping.MasterLabel))
                 .map(this.mapHelpText);
         }
         return [];

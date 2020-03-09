@@ -1623,6 +1623,7 @@
         <members>RD_ErrorLegacyBatchJobCannotBeRun</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
+        <members>RD_RefreshOppsContinueMessage</members>
         <members>REL_Create_New_Relationship</members>
         <members>REL_Former</members>
         <members>REL_No_Relationships</members>
@@ -1994,6 +1995,7 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geBodyAdvancedFieldMapping</members>
         <members>geBodyBatchDefaultValues</members>
         <members>geBodyBatchFieldBundleInfo</members>
         <members>geBodyBatchHeaderLeftCol</members>
@@ -2002,6 +2004,7 @@
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
         <members>geBodyFormFieldsLeftCol</members>
+        <members>geBodyFormFieldsDescLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
@@ -2056,6 +2059,7 @@
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
         <members>geErrorRequiredField</members>
+        <members>geGauAllocationsBundle</members>
         <members>geHeaderAdvancedFormFields</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchGiftEntry</members>
@@ -2088,11 +2092,12 @@
         <members>geHelpTextAllocation1Mapping</members>
         <members>geHelpTextAllocation2Mapping</members>
         <members>geHelpTextAllocationBundle</members>
+        <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextContact1Mapping</members>
         <members>geHelpTextContact2Mapping</members>
-        <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
+        <members>geHelpTextHouseholdMapping</members>
         <members>geLabelCustomTableSelectedFields</members>
         <members>geLabelCustomTableSourceFields</members>
         <members>geLabelSectionName</members>

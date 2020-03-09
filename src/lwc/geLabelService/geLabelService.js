@@ -45,13 +45,16 @@ import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
+import geBodyAdvancedFieldMapping from '@salesforce/label/c.geBodyAdvancedFieldMapping';
 import geBodyBatchDefaultValues from '@salesforce/label/c.geBodyBatchDefaultValues';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftCol';
 import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
 import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
+import geBodyFieldBundlesLeftCol from '@salesforce/label/c.geBodyFieldBundlesLeftCol';
 import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
+import geBodyFormFieldsDescLeftCol from '@salesforce/label/c.geBodyFormFieldsDescLeftCol';
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geBodyFormFieldsModalDeleteSection from '@salesforce/label/c.geBodyFormFieldsModalDeleteSection';
 import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
@@ -100,6 +103,7 @@ import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
+import geGauAllocationsBundle from '@salesforce/label/c.geGauAllocationsBundle';
 import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
@@ -137,6 +141,7 @@ import geHelpTextContact1Mapping from '@salesforce/label/c.geHelpTextContact1Map
 import geHelpTextContact2Mapping from '@salesforce/label/c.geHelpTextContact2Mapping';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
+import geHelpTextHouseholdMapping from '@salesforce/label/c.geHelpTextHouseholdMapping';
 import geLabelCustomTableSelectedFields from '@salesforce/label/c.geLabelCustomTableSelectedFields';
 import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTableSourceFields';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
@@ -213,12 +218,15 @@ class GeLabelService {
         geAssistiveSectionUp,
         geAssistiveShowMenu,
         geAssistiveSpinner,
+        geBodyAdvancedFieldMapping,
         geBodyBatchDefaultValues,
         geBodyBatchFieldBundleInfo,
         geBodyBatchHeaderLeftCol,
         geBodyBatchHeaderRightCol,
         geBodyBatchHeaderWarning,
         geBodyEmptyFormSection,
+        geBodyFieldBundlesLeftCol,
+        geBodyFormFieldsDescLeftCol,
         geBodyFormFieldsLeftCol,
         geBodyFormFieldsLeftColAdditional,
         geBodyFormFieldsModalDeleteSection,
@@ -268,6 +276,7 @@ class GeLabelService {
         geErrorPageLevelMissingRequiredFields,
         geErrorPageLevelMissingRequiredGroupFields,
         geErrorRequiredField,
+        geGauAllocationsBundle,
         geHeaderAdvancedFormFields,
         geHeaderBatchEnterInfo,
         geHeaderBatchGiftEntry,
@@ -305,6 +314,7 @@ class GeLabelService {
         geHelpTextContact2Mapping,
         geHelpTextFormFieldsFieldCustomLabel,
         geHelpTextFormFieldsFieldLabelLabel,
+        geHelpTextHouseholdMapping,
         geLabelCustomTableSelectedFields,
         geLabelCustomTableSourceFields,
         geLabelSectionName,

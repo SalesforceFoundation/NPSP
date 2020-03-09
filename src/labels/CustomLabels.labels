@@ -1802,8 +1802,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:&lt;br/&gt;
         &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to upgrade.&lt;/li&gt;
         &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles and remove the old Recurring Donations page layout.&lt;/li&gt;
-        &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;   
-        &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;    
+        &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;
+        &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;
         &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your profiles and permission sets.&lt;/li&gt;
         &lt;li&gt;Adjust Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
         &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;</value>
@@ -2121,6 +2121,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>The total Amount of all Closed Won Opps is not equal to the RD Amount.</shortDescription>
         <value>The combined Amount of all related Closed Won and Pledged Opportunities must match the Amount of a Fixed Length Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD_RefreshOppsContinueMessage</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirmation message displayed to user before the process runs</shortDescription>
+        <value>This process updates all future installment Opportunities to match the current data for this Recurring Donation. For some installments, NPSP may delete and recreate new installments.
+&lt;br/&gt;&lt;br/&gt;Click Continue to start the process or Cancel to return to the Recurring Donation page.</value>
     </labels>
     <labels>
         <fullName>REL_Create_New_Relationship</fullName>
@@ -5039,6 +5048,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geBodyAdvancedFieldMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Advanced Form Fields header</shortDescription>
+        <value>For more advanced gift entry options, select fields from the following Object Groups.</value>
+    </labels>
+    <labels>
         <fullName>geBodyBatchFieldBundleInfo</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5093,8 +5110,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Body below the Form Fields header</shortDescription>
-        <value>These fields are commonly included in gift entry forms. Custom Object Groups are also found in this section.</value>
+        <shortDescription>Body below the Field Bundles header</shortDescription>
+        <value>Each field bundle is a managed set of fields that allow users to perform different gift entry actions.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>
@@ -5103,6 +5120,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Form Fields sidebar text block</shortDescription>
         <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsDescLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Form Fields header</shortDescription>
+        <value>These fields are commonly included in gift entry forms. Custom Object Groups are also found in this section.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftColAdditional</fullName>
@@ -5563,6 +5588,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Required field</value>
     </labels>
     <labels>
+        <fullName>geGauAllocationsBundle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name of GAU Allocations field bundle</shortDescription>
+        <value>GAU Allocations</value>
+    </labels>
+    <labels>
         <fullName>geHeaderAdvancedFormFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5804,7 +5837,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for GAU Allocation 1 object group</shortDescription>
-        <value>Use this field bundle to allocate donations across multiple General Accounting Units.</value>
+        <value>This Object Group only allows you to enter a single GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
     </labels>
     <labels>
         <fullName>geHelpTextAllocation2Mapping</fullName>
@@ -5812,7 +5845,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for GAU Allocation 2 object group</shortDescription>
-        <value>This Object Group only allows you to enter a single GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
+        <value>This Object Group only allows you to enter a second GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
     </labels>
     <labels>
         <fullName>geHelpTextAllocationBundle</fullName>
@@ -5820,7 +5853,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text about GAU Allocation field bundle</shortDescription>
-        <value>This Object Group only allows you to enter a second GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
+        <value>Use this field bundle to allocate donations across multiple General Accounting Units.</value>
     </labels>
     <labels>
         <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>
@@ -5864,6 +5897,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Help text for Form Fields Field Label</shortDescription>
         <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextHouseholdMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Household Object Group</shortDescription>
+        <value>Additional information about Contact1's Household Account.</value>
     </labels>
     <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
