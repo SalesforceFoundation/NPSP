@@ -546,6 +546,8 @@
         <members>UTIL_FeatureManagement_TEST</members>
         <members>UTIL_Finder</members>
         <members>UTIL_Finder_TEST</members>
+        <members>UTIL_FiscalYearInfo</members>
+        <members>UTIL_FiscalYearInfo_TEST</members>
         <members>UTIL_HtmlOutput_CTRL</members>
         <members>UTIL_HtmlOutput_TEST</members>
         <members>UTIL_IScheduled</members>
@@ -845,6 +847,7 @@
         <members>Address__c.Congressional_District__c</members>
         <members>Address__c.County_Name__c</members>
         <members>Address__c.Default_Address__c</members>
+        <members>Address__c.Exclude_from_Updates__c</members>
         <members>Address__c.Formula_MailingAddress__c</members>
         <members>Address__c.Formula_MailingStreetAddress__c</members>
         <members>Address__c.Geolocation__c</members>
@@ -857,6 +860,8 @@
         <members>Address__c.MailingState__c</members>
         <members>Address__c.MailingStreet2__c</members>
         <members>Address__c.MailingStreet__c</members>
+        <members>Address__c.NCOA_Evaluation_Date__c</members>
+        <members>Address__c.NCOA_Result_Code__c</members>
         <members>Address__c.Pre_Verification_Address__c</members>
         <members>Address__c.Seasonal_End_Day__c</members>
         <members>Address__c.Seasonal_End_Month__c</members>
@@ -866,6 +871,7 @@
         <members>Address__c.State_Upper_District__c</members>
         <members>Address__c.Verification_Status__c</members>
         <members>Address__c.Verified__c</members>
+        <members>Address__c.Verified_Date__c</members>
         <members>Allocation__c.Amount__c</members>
         <members>Allocation__c.Campaign__c</members>
         <members>Allocation__c.General_Accounting_Unit__c</members>
@@ -1988,13 +1994,16 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geBodyAdvancedFieldMapping</members>
         <members>geBodyBatchDefaultValues</members>
         <members>geBodyBatchFieldBundleInfo</members>
         <members>geBodyBatchHeaderLeftCol</members>
         <members>geBodyBatchHeaderRightCol</members>
         <members>geBodyBatchHeaderWarning</members>
         <members>geBodyEmptyFormSection</members>
+        <members>geBodyFieldBundlesLeftCol</members>
         <members>geBodyFormFieldsLeftCol</members>
+        <members>geBodyFormFieldsDescLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
@@ -2049,6 +2058,8 @@
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
         <members>geErrorRequiredField</members>
+        <members>geGauAllocationsBundle</members>
+        <members>geHeaderAdvancedFormFields</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchGiftEntry</members>
         <members>geHeaderBatchHeaderLeftCol</members>
@@ -2074,9 +2085,18 @@
         <members>geHeaderPageLevelError</members>
         <members>geHeaderSingleGiftEntry</members>
         <members>geHeaderTemplateInfoLeftCol</members>
+        <members>geHelpTextAccount1Mapping</members>
+        <members>geHelpTextAccount2Mapping</members>
+        <members>geHelpTextAddressMapping</members>
+        <members>geHelpTextAllocation1Mapping</members>
+        <members>geHelpTextAllocation2Mapping</members>
+        <members>geHelpTextAllocationBundle</members>
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
+        <members>geHelpTextContact1Mapping</members>
+        <members>geHelpTextContact2Mapping</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
+        <members>geHelpTextHouseholdMapping</members>
         <members>geLabelCustomTableSelectedFields</members>
         <members>geLabelCustomTableSourceFields</members>
         <members>geLabelSectionName</members>
