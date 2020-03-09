@@ -5208,6 +5208,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>A template is a reusable layout of fields for data entry. Edit a template by clicking the template name. Alternatively, create a new template or click any template's dropdown menu for more options. Any templates that are in use can't be deleted.</value>
     </labels>
     <labels>
+        <fullName>geBodyWidgetFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field bundle body before list of fields</shortDescription>
+        <value>{0} field bundle includes the following fields: </value>
+    </labels>
+    <labels>
         <fullName>geButtonBuilderNavBackFormFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5832,6 +5840,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for the Template Name field</shortDescription>
         <value>Template Name</value>
+    </labels>
+    <labels>
+        <fullName>geLabelWidgetPaymentServices</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Payment Services</shortDescription>
+        <value>Payment Services</value>
     </labels>
     <labels>
         <fullName>geSearchPlaceholder</fullName>

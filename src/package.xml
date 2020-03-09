@@ -870,8 +870,8 @@
         <members>Address__c.State_Lower_District__c</members>
         <members>Address__c.State_Upper_District__c</members>
         <members>Address__c.Verification_Status__c</members>
-        <members>Address__c.Verified__c</members>
         <members>Address__c.Verified_Date__c</members>
+        <members>Address__c.Verified__c</members>
         <members>Allocation__c.Amount__c</members>
         <members>Allocation__c.Campaign__c</members>
         <members>Allocation__c.General_Accounting_Unit__c</members>
@@ -2013,6 +2013,7 @@
         <members>geBodyMatchingUpdatingDonation</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
+        <members>geBodyWidgetFields</members>
         <members>geButtonBuilderNavBackFormFields</members>
         <members>geButtonBuilderNavBackTemplateInfo</members>
         <members>geButtonBuilderNavBatchHeader</members>
@@ -2062,7 +2063,6 @@
         <members>geHeaderBatchSelectTemplate</members>
         <members>geHeaderBatchSetDefaultValues</members>
         <members>geHeaderCustomTableHeaders</members>
-        <members>geHeaderPaymentServices</members>
         <members>geHeaderEmptyFormSection</members>
         <members>geHeaderFieldBundles</members>
         <members>geHeaderFormFieldsDefaultSectionName</members>
@@ -2079,6 +2079,7 @@
         <members>geHeaderNewSection</members>
         <members>geHeaderNewTemplate</members>
         <members>geHeaderPageLevelError</members>
+        <members>geHeaderPaymentServices</members>
         <members>geHeaderSingleGiftEntry</members>
         <members>geHeaderTemplateInfoLeftCol</members>
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
@@ -2089,6 +2090,7 @@
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
+        <members>geLabelWidgetPaymentServices</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
@@ -3446,6 +3448,7 @@
         <members>geTemplateBuilderSectionModalBody</members>
         <members>geTemplateBuilderService</members>
         <members>geTemplateBuilderTemplateInfo</members>
+        <members>geTemplateBuilderWidget</members>
         <members>geTemplates</members>
         <members>geWidgetService</members>
         <members>libsMoment</members>

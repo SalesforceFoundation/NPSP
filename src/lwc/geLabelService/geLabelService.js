@@ -63,6 +63,7 @@ import geBodyMatchingSelectRecord from '@salesforce/label/c.geBodyMatchingSelect
 import geBodyMatchingUpdatingDonation from '@salesforce/label/c.geBodyMatchingUpdatingDonation';
 import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
 import geBodyTemplatesTabDescription from '@salesforce/label/c.geBodyTemplatesTabDescription';
+import geBodyWidgetFields from '@salesforce/label/c.geBodyWidgetFields';
 import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
 import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
@@ -107,7 +108,6 @@ import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeader
 import geHeaderBatchSelectTemplate from '@salesforce/label/c.geHeaderBatchSelectTemplate';
 import geHeaderBatchSetDefaultValues from '@salesforce/label/c.geHeaderBatchSetDefaultValues';
 import geHeaderCustomTableHeaders from '@salesforce/label/c.geHeaderCustomTableHeaders';
-import geHeaderPaymentServices from '@salesforce/label/c.geHeaderPaymentServices';
 import geHeaderEmptyFormSection from '@salesforce/label/c.geHeaderEmptyFormSection';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
@@ -123,6 +123,7 @@ import geHeaderMatchingReviewDonations from '@salesforce/label/c.geHeaderMatchin
 import geHeaderNewSection from '@salesforce/label/c.geHeaderNewSection';
 import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import geHeaderPageLevelError from '@salesforce/label/c.geHeaderPageLevelError';
+import geHeaderPaymentServices from '@salesforce/label/c.geHeaderPaymentServices';
 import geHeaderSingleGiftEntry from '@salesforce/label/c.geHeaderSingleGiftEntry';
 import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
@@ -133,6 +134,7 @@ import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTab
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
+import geLabelWidgetPaymentServices from '@salesforce/label/c.geLabelWidgetPaymentServices';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
@@ -222,6 +224,7 @@ class GeLabelService {
         geBodyMatchingUpdatingDonation,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,
+        geBodyWidgetFields,
         geButtonBuilderNavBackFormFields,
         geButtonBuilderNavBackTemplateInfo,
         geButtonBuilderNavBatchHeader,
@@ -266,7 +269,6 @@ class GeLabelService {
         geHeaderBatchSelectTemplate,
         geHeaderBatchSetDefaultValues,
         geHeaderCustomTableHeaders,
-        geHeaderPaymentServices,
         geHeaderEmptyFormSection,
         geHeaderFormFieldsDefaultSectionName,
         geHeaderFormFieldsLeftCol,
@@ -282,6 +284,7 @@ class GeLabelService {
         geHeaderNewSection,
         geHeaderNewTemplate,
         geHeaderPageLevelError,
+        geHeaderPaymentServices,
         geHeaderSingleGiftEntry,
         geHeaderTemplateInfoLeftCol,
         geHelpTextBatchHeaderFieldLabelLabel,
@@ -292,6 +295,7 @@ class GeLabelService {
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
+        geLabelWidgetPaymentServices,
         geSearchPlaceholder,
         geSelectPlaceholder,
         geTabBatchHeader,
