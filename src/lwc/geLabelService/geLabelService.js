@@ -107,7 +107,7 @@ import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeader
 import geHeaderBatchSelectTemplate from '@salesforce/label/c.geHeaderBatchSelectTemplate';
 import geHeaderBatchSetDefaultValues from '@salesforce/label/c.geHeaderBatchSetDefaultValues';
 import geHeaderCustomTableHeaders from '@salesforce/label/c.geHeaderCustomTableHeaders';
-import geHeaderElevate from '@salesforce/label/c.geHeaderElevate';
+import geHeaderPaymentServices from '@salesforce/label/c.geHeaderPaymentServices';
 import geHeaderEmptyFormSection from '@salesforce/label/c.geHeaderEmptyFormSection';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
@@ -266,7 +266,7 @@ class GeLabelService {
         geHeaderBatchSelectTemplate,
         geHeaderBatchSetDefaultValues,
         geHeaderCustomTableHeaders,
-        geHeaderElevate,
+        geHeaderPaymentServices,
         geHeaderEmptyFormSection,
         geHeaderFormFieldsDefaultSectionName,
         geHeaderFormFieldsLeftCol,
