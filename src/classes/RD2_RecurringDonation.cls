@@ -167,7 +167,7 @@ public inherited sharing class RD2_RecurringDonation {
         List<RD2_OpportunityMatcher.Record> futureInstallments = getFutureInstallments(scheduleService);
 
         Date scheduleEndDate = (futureInstallments.isEmpty())
-            ? RD2_ScheduleService.currentDate
+            ? RD2_ScheduleService.currentDate.addDays(-1)
             : futureInstallments[futureInstallments.size() - 1].getCloseDate();
 
         for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
@@ -184,11 +184,14 @@ public inherited sharing class RD2_RecurringDonation {
     * @return List<RD2_OpportunityMatcher.Record>
     */
     private List<RD2_OpportunityMatcher.Record> getFutureInstallments(RD2_ScheduleService scheduleService) {
-        if (!isFixedLength() || isFixedLengthComplete()) {
-            return new List<RD2_OpportunityMatcher.Record>();
+        List<RD2_OpportunityMatcher.Record> installments = new List<RD2_OpportunityMatcher.Record>();
+        Integer existingInstallmentsCount = getPaidInstallments() + getOpenOpportunities().size();
+
+        if (!isFixedLength() || isFixedLengthComplete() || (existingInstallmentsCount >= getPlannedInstallments())) {
+            return installments;
         }
 
-        List<RD2_OpportunityMatcher.Record> installments = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
+        installments = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
         .includeCurrentOrOpen(rd.npe03__Donations__r)
         .match(scheduleService.getVisualizedInstallments(
             RD2_ScheduleService.currentDate, getPlannedInstallments() - getPaidInstallments(), rd.RecurringDonationSchedules__r))
