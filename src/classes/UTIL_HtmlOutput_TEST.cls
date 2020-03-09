@@ -129,7 +129,7 @@ public with sharing class UTIL_HtmlOutput_TEST {
     @isTest
     private static void shouldStripJavaScriptFromUrl() {
         String html = '<a href="https://powerofus.force.com/NPSP_Documentation" onanyjavascriptevent="alert(\'gotcha\')">';
-        string cleanHtml = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
+        String cleanHtml = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
         UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
 
         controller.unsafeHtml = html;
