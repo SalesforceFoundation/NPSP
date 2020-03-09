@@ -814,8 +814,8 @@ public without sharing class RD2_ScheduleService {
 
             //Advance the Next Donation Date
             scheduleEndDate = record.hasInstallment() 
-                ? record.getInstallment().nextDonationDate//advance to the next installment
-                : scheduleEndDate;//leave the date as is since this might be a past extra Opp
+                ? record.getInstallment().nextDonationDate
+                : record.getCloseDate();
         }
 
         if (scheduleEndDate == null) {

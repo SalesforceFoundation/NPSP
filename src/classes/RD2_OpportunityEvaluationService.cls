@@ -402,7 +402,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         } else if (rd.isNew()) {
             return rdSettings.isFirstInstallmentEnabled;
 
-        } else if (!rd.hasCurrentOpenOpportunity()) {
+        } else if (!rd.hasCurrentOpenOpportunity(currentDate)) {
             return rdSettings.isNextInstallmentEnabled;
         }
 

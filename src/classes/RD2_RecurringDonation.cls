@@ -312,10 +312,11 @@ public inherited sharing class RD2_RecurringDonation {
 
     /**
     * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
+    * @param currentDate The current date
     * @return Boolean
     */
-    public Boolean hasCurrentOpenOpportunity() {
-        return new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
+    public Boolean hasCurrentOpenOpportunity(Date currentDate) {
+        return new RD2_OpportunityMatcher(currentDate)
             .includeCurrent(rd.npe03__Donations__r)
             .hasOpenOpportunity();
     }
