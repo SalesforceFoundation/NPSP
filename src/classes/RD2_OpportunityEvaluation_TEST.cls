@@ -821,8 +821,8 @@ private class RD2_OpportunityEvaluation_TEST {
     */
     @isTest
     private static void shouldNotCreateNextOppWhenFixedLengthRDReachedPlannedInstallmentCount() {
-        final Integer plannedInstallments = 5;
-        final Integer paidInstallments = 4;
+        final Integer plannedInstallments = 3;
+        final Integer paidInstallments = 2;
 
         final Date startDate = Date.newInstance(2020, 1, 1);
         Date today = Date.newInstance(2020, 3, 1);
@@ -835,19 +835,20 @@ private class RD2_OpportunityEvaluation_TEST {
             .withDayOfMonth('1')
             .withRecurringTypeFixed()
             .withPlannedInstallments(plannedInstallments)
+            .withPaidInstallments(paidInstallments)
             .build();
         insert rd;
 
         List<Opportunity> opps = new List<Opportunity>();
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withName();
-
-        opps.addAll(oppBuilder
-            .withClosedWonStage()
-            .withCloseDate(startDate)
-            .build(paidInstallments)
-        );
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        for (Integer month = 0; month < paidInstallments; month++){
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(startDate.addMonths(month))
+                .build());
+        }
         opps.add(oppBuilder
-            .withCloseDate(today.addDays(1))
+            .withCloseDate(today.addDays(-1))//An Open Opp matching the Next Donation Date installment
             .withOpenStage()
             .build()
         );
@@ -855,9 +856,10 @@ private class RD2_OpportunityEvaluation_TEST {
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
+        assertBatchJobIteration(1);
+
         List<Opportunity> actualOpps = oppGateway.getRecords(rd);
 
-        assertBatchJobIteration(1);
         System.assertEquals(plannedInstallments, actualOpps.size(), 
             'No new installment Opp should be created when: open Opps + paid Opps = planned installments. ' + actualOpps);
     }
@@ -868,8 +870,8 @@ private class RD2_OpportunityEvaluation_TEST {
     */
     @isTest
     private static void shouldCreateNextOppWhenFixedLengthRDHasNotReachedPlannedInstallmentCount() {
-        final Integer plannedInstallments = 5;
-        final Integer paidInstallments = 4;
+        final Integer plannedInstallments = 3;
+        final Integer paidInstallments = 2;
         
         final Date startDate = Date.newInstance(2020, 1, 1);
         Date today = Date.newInstance(2020, 3, 1);
@@ -882,33 +884,38 @@ private class RD2_OpportunityEvaluation_TEST {
             .withDayOfMonth('1')
             .withRecurringTypeFixed()
             .withPlannedInstallments(plannedInstallments)
+            .withPaidInstallments(paidInstallments)
             .build();
         insert rd;
-
+        
         List<Opportunity> opps = new List<Opportunity>();
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withName();
-
-        opps.addAll(oppBuilder
-            .withClosedWonStage()
-            .withCloseDate(startDate)
-            .build(paidInstallments)
-        );
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        for (Integer month = 0; month < paidInstallments; month++){
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(startDate.addMonths(month))
+                .build());
+        }
         opps.add(oppBuilder
-            .withCloseDate(today.addDays(-1))
             .withClosedLostStage()
-            .withCloseDate(startDate)
+            .withCloseDate(today.addDays(-1))//A Closed Lost Opp matching the Next Donation Date installment
             .build()
         );
         insert opps;
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
-        List<Opportunity> actualOpps = oppGateway.getRecords(rd);
-
         assertBatchJobIteration(1);
-        System.assertEquals(6, actualOpps.size(), 'The next installment should be created for the fixed length RD');
-        System.assert(actualOpps[5].IsClosed == false, 'The newly created Opp should be open: ' + actualOpps[5]);
-        System.assertEquals(today, actualOpps[5].CloseDate, 'The newly created Opp Close Date should be the next donation date');
+
+        List<Opportunity> actualOpps = oppGateway.getRecords(rd);
+        System.assertEquals(plannedInstallments + 1, actualOpps.size(), 
+            'The next installment Opp should be created since one Opp is Closed Lost: ' + opps);
+
+        Opportunity nextDonationDateOpp = actualOpps[actualOpps.size() - 1];
+        System.assertEquals(false, nextDonationDateOpp.IsClosed, 
+            'The newly created Opp should be open: ' + nextDonationDateOpp);
+        System.assertEquals(today.addMonths(1), nextDonationDateOpp.CloseDate, 
+            'The Next Donation Date should advance and the newly created Opp should match it');
     }
 
 

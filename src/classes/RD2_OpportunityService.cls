@@ -123,7 +123,10 @@ public with sharing class RD2_OpportunityService {
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(rd, rd.RecurringDonationSchedules__r);
 
-            if (nextDonationDateRecord == null || !nextDonationDateRecord.isNew()) {
+            if (nextDonationDateRecord == null 
+                || !nextDonationDateRecord.isNew() 
+                || nextDonationDateRecord.getInstallment().nextDonationDate < currentDate
+            ) {
                 continue;
             }
             
@@ -207,7 +210,7 @@ public with sharing class RD2_OpportunityService {
                 .includeCurrentOrOpen(rd.npe03__Donations__r);
             
             matcher.match(scheduleService.getVisualizedInstallments(
-                currentDate, matcher.size(), rd.RecurringDonationSchedules__r
+                currentDate, matcher.getNumberOfOpportunities(), rd.RecurringDonationSchedules__r
             ));
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {

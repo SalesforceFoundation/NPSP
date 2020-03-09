@@ -280,11 +280,22 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Returns number of matched records
+     * @description Returns the number of included records, even if they are in the boundary conditions
+     * and might not be matched with projected installments
      * @return Integer
      */
-    public Integer size() {
-        return recordByCloseDate.size();
+    public Integer getNumberOfOpportunities() {
+        Integer size = 0;
+        for (Record record : recordByCloseDate.values()) {
+            if (!record.isNew()) {
+                size++;
+            }
+        }
+
+        //the boundary record list has Opps only
+        size += boundaryRecordByCloseDate.size();
+
+        return size;
     }
 
     /***

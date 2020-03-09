@@ -81,10 +81,6 @@ public without sharing class RD2_ScheduleService {
         schedule.RecurringDonation__c = rd.Id;
         schedule.Campaign__c = rd.npe03__Recurring_Donation_Campaign__c;
 
-        /* TODO: For fixed length recurring donations we may need to calculate this
-        schedule.EndDate__c = ??
-         */
-
         schedule.InstallmentAmount__c = rd.npe03__Amount__c;
         schedule.InstallmentFrequency__c = rd.InstallmentFrequency__c;
         schedule.InstallmentPeriod__c = rd.npe03__Installment_Period__c;
@@ -419,20 +415,16 @@ public without sharing class RD2_ScheduleService {
         if (rdSchedules == null  || rdSchedules.isEmpty() || rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return null;
         }
-
         evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
         
         RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//cache current matcher by RD Id //TODO
             .includeCurrent(rd.npe03__Donations__r);
 
-        Integer numberOfInstallments = matcher.size();
-        numberOfInstallments = numberOfInstallments == 0
-            ? 1 //return the next installment
-            : numberOfInstallments + 1; //return one installment more than number of Opps in the case all current Opps are closed
-        
+        Integer numberOfInstallments = matcher.getNumberOfOpportunities() + 1;
         matcher.match(getVisualizedInstallments(
             currentDate, numberOfInstallments, rdSchedules
         ));
+
 
         return getNextDonationDateRecord(matcher);
     }
@@ -447,7 +439,7 @@ public without sharing class RD2_ScheduleService {
         //records are ordered by the date
         for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
             if (record.hasInstallment()
-                && (record.isNew() || record.isOpen())//TODO Close Date >= currentDate?
+                && (record.isNew() || record.isOpen())
             ) {
                 return record;
             }
@@ -798,10 +790,15 @@ public without sharing class RD2_ScheduleService {
         Integer numberOfOpenSlots = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments();
 
         RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-            .includeCurrentOrOpen(rd.npe03__Donations__r)
-            .match(getVisualizedInstallments(
-                currentDate, numberOfOpenSlots, rdSchedules)
-            );
+            .includeCurrentOrOpen(rd.npe03__Donations__r);
+
+        //If the current Next Donation Date Opp is closed lost
+        //and the number of open slots is 1, we need to get one more installment
+        //to get the Next Donation Date
+        Integer numberOfInstallments = matcher.getNumberOfOpportunities() + 1 + numberOfOpenSlots;
+        matcher.match(getVisualizedInstallments(
+            currentDate, numberOfInstallments, rdSchedules)
+        );
         
         Date scheduleEndDate = null;
         for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
@@ -813,10 +810,12 @@ public without sharing class RD2_ScheduleService {
             //or it is a record matching an open Opp w/o an installment
             if (record.isNew() || record.isOpen()) {
                 numberOfOpenSlots--;
-                scheduleEndDate = record.hasInstallment() 
-                    ? record.getInstallment().nextDonationDate
-                    : scheduleEndDate > currentDate ? scheduleEndDate : record.getCloseDate();//a past Opp or an Opp not matching any installment, leave the date to be the previously set date?
             }
+
+            //Advance the Next Donation Date
+            scheduleEndDate = record.hasInstallment() 
+                ? record.getInstallment().nextDonationDate//advance to the next installment
+                : scheduleEndDate;//leave the date as is since this might be a past extra Opp
         }
 
         if (scheduleEndDate == null) {

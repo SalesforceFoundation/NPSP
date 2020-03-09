@@ -1351,7 +1351,6 @@ private class RD2_OpportunityEvaluationService_TEST {
                 .withCloseDate(startDate.addMonths(month))
                 .build());
         }
-
         insert opps;
 
         Test.startTest();
@@ -1392,7 +1391,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
-        for (Integer month = 0; month < 4; month++){
+        for (Integer month = 0; month < paidInstallments; month++){
             opps.add(oppBuilder
                 .withName()
                 .withCloseDate(startDate.addMonths(month))

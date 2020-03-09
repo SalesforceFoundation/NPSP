@@ -315,7 +315,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Boolean
     */
     public Boolean hasCurrentOpenOpportunity() {
-        return new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)//TODO
+        return new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
             .includeCurrent(rd.npe03__Donations__r)
             .hasOpenOpportunity();
     }
