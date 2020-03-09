@@ -233,7 +233,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deletePfm() {
-        if (!STG_Panel.runningUserIsAdmin()) {
+        if (!isAdmin) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
             return null;
         }

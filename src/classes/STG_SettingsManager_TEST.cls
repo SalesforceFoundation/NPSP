@@ -775,12 +775,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldPreventDeleteOppNamingWhenUserDoesNotHaveDeletePermission() {
-        Opportunity_Naming_Settings__c settings = getOppNameSettings();
-        insert settings;
+        Opportunity_Naming_Settings__c settings = setUpOppNamingSettings();
 
         Test.startTest();
 
-        System.runAs(buildReadOnlyUser()) {
+        System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelOppNaming);
             STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
             panel.currentONS = settings;
@@ -803,8 +802,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldVerifyDeleteOppNamingWhenUserHaveAdminPermission() {
-        Opportunity_Naming_Settings__c settings = getOppNameSettings();
-        insert settings;
+        Opportunity_Naming_Settings__c settings = setUpOppNamingSettings();
 
         Test.startTest();
 
@@ -830,12 +828,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldPreventDeleteForFieldMappingWhenUserDoesNotHaveDelPermission() {
-        npe03__Custom_Field_Mapping__c cfm = getCustomFieldMapping();
-        insert cfm;
+        npe03__Custom_Field_Mapping__c cfm = setUpCustomFieldMapping();
 
         Test.startTest();
 
-        System.runAs(buildReadOnlyUser()) {
+        System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelRDCustomFieldMapping);
             STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
             system.assertEquals('idPanelRDFieldMap', panel.idPanel());
@@ -858,8 +855,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldVerifyDeleteForFieldMappingWhenUserHaveAdminPermission() {
-        npe03__Custom_Field_Mapping__c cfm = getCustomFieldMapping();
-        insert cfm;
+        npe03__Custom_Field_Mapping__c cfm = setUpCustomFieldMapping();
 
         Test.startTest();
 
@@ -886,12 +882,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldPreventDeleteForCustomInstallmtWhenUserDoesNotHaveDelPermission() {
-        npe03__Custom_Installment_Settings__c cfm = getCustomInstallmentSettings();
-        insert cfm;
+        npe03__Custom_Installment_Settings__c cfm = setUpCustomInstallmentSettings();
 
         Test.startTest();
 
-        System.runAs(buildReadOnlyUser()) {
+        System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelRDCustomInstallment);
             STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
             System.assertEquals('idPanelRDInstPd', panel.idPanel());
@@ -916,8 +911,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldVerifyDeleteForCustomInstallmtWhenUserHaveAdminPermission() {
-        npe03__Custom_Installment_Settings__c cfm = getCustomInstallmentSettings();
-        insert cfm;
+        npe03__Custom_Installment_Settings__c cfm = setUpCustomInstallmentSettings();
 
         Test.startTest();
 
@@ -946,12 +940,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldPreventDeleteForPaymentMapWhenUserDoesNotHaveDelPermission() {
-        npe01__Payment_Field_Mapping_Settings__c cfm = getPaymentFieldMapSettings();
-        insert cfm;
+        npe01__Payment_Field_Mapping_Settings__c cfm = setUpPaymentFieldMapSettings();
 
         Test.startTest();
 
-        System.runAs(buildReadOnlyUser()) {
+        System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelPaymentMapping);
             STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
             System.assertEquals('idPanelPaymentMapping', panel.idPanel());
@@ -975,8 +968,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldVerifyDeleteForPaymentMapWhenUserHaveAdminPermission() {
-        npe01__Payment_Field_Mapping_Settings__c cfm = getPaymentFieldMapSettings();
-        insert cfm;
+        npe01__Payment_Field_Mapping_Settings__c cfm = setUpPaymentFieldMapSettings();
 
         Test.startTest();
 
@@ -1003,12 +995,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldPreventDeleteForRelReciprocalWhenUserDoesNotHaveDelPermission() {
-        npe4__Relationship_Lookup__c cfm = getRelationshipLookup();
-        insert cfm;
+        npe4__Relationship_Lookup__c cfm = setUpRelationshipLookup();
 
         Test.startTest();
 
-        System.runAs(buildReadOnlyUser()) {
+        System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelRelReciprocal);
             STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
             System.assertEquals('idPanelRelReciprocal', panel.idPanel());
@@ -1034,8 +1025,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldVerifyDeleteForRelReciprocalWhenUserHaveAdminPermission() {
-        npe4__Relationship_Lookup__c cfm = getRelationshipLookup();
-        insert cfm;
+        npe4__Relationship_Lookup__c cfm = setUpRelationshipLookup();
 
         Test.startTest();
 
@@ -1063,12 +1053,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldPreventDeleteForRelAutoWhenUserDoesNotHaveDelPermission() {
-        npe4__Relationship_Auto_Create__c cfm = getRelationshipAutoCreate();
-        insert cfm;
+        npe4__Relationship_Auto_Create__c cfm = setUpRelationshipAutoCreate();
 
         Test.startTest();
 
-        System.runAs(buildReadOnlyUser()) {
+        System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelRelAuto);
             STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
             System.assertEquals('idPanelRelAuto', panel.idPanel());
@@ -1094,8 +1083,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldVerifyDeleteForRelAutoWhenUserHaveAdminPermission() {
-        npe4__Relationship_Auto_Create__c cfm = getRelationshipAutoCreate();
-        insert cfm;
+        npe4__Relationship_Auto_Create__c cfm = setUpRelationshipAutoCreate();
 
         Test.startTest();
 
@@ -1124,12 +1112,11 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldPreventDeleteForUserRollupWhenUserDoesNotHaveDelPermission() {
-        npo02__User_Rollup_Field_Settings__c HHurfs = getUserRollupFieldSettings();
-        insert HHurfs;
+        npo02__User_Rollup_Field_Settings__c HHurfs = setUpUserRollupFieldSettings();
 
         Test.startTest();
 
-        System.runAs(buildReadOnlyUser()) {
+        System.runAs(createReadOnlyUser()) {
             Test.setCurrentPage(Page.STG_PanelUserRollup);
             STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
             System.assertEquals('idPanelUserRollup', panel.idPanel());
@@ -1156,8 +1143,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldVerifyDeleteForUserRollupWhenUserHaveAdminPermission() {
-        npo02__User_Rollup_Field_Settings__c HHurfs = getUserRollupFieldSettings();
-        insert HHurfs;
+        npo02__User_Rollup_Field_Settings__c HHurfs = setUpUserRollupFieldSettings();
 
         Test.startTest();
 
@@ -1180,11 +1166,8 @@ private with sharing class STG_SettingsManager_TEST {
         System.assert([select id, name from npo02__User_Rollup_Field_Settings__c].size() == 0 );
         System.assertEquals(0, panel.udrlist.size());
 
-
         Test.stopTest();
     }
-
-
 
 
     /*********************************************************************************************************
@@ -1759,7 +1742,7 @@ private with sharing class STG_SettingsManager_TEST {
      * @description Builds a read only user with readonly profile
      * @return User
     */
-    private static User buildReadOnlyUser() {
+    private static User createReadOnlyUser() {
         User usr = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
         return usr;
     }
@@ -1768,12 +1751,10 @@ private with sharing class STG_SettingsManager_TEST {
     * @description create a instance of opportunity naming settings
     * @return opportunity naming settings
     */
-    private static Opportunity_Naming_Settings__c getOppNameSettings() {
-        return
-            new Opportunity_Naming_Settings__c(
-                Name = 'foo',
-                Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
-            );
+    private static Opportunity_Naming_Settings__c setUpOppNamingSettings() {
+        String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
+        OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+        return UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values()[0];
 
     }
 
@@ -1781,13 +1762,15 @@ private with sharing class STG_SettingsManager_TEST {
     * @description create a instance of custom field mapping settings
     * @return custom field mapping
     */
-    private static npe03__Custom_Field_Mapping__c getCustomFieldMapping() {
-        return
-            new npe03__Custom_Field_Mapping__c(
-                npe03__Recurring_Donation_Field__c = 'Name',
-                npe03__Opportunity_Field__c = 'Description',
-                Name = 'CFMName00001-Test'
+    private static npe03__Custom_Field_Mapping__c setUpCustomFieldMapping() {
+        npe03__Custom_Field_Mapping__c settings = new npe03__Custom_Field_Mapping__c(
+            npe03__Recurring_Donation_Field__c = 'Name',
+            npe03__Opportunity_Field__c = 'Description',
+            Name = 'CFMName00001-Test'
         );
+        insert settings;
+
+        return settings;
 
     }
 
@@ -1795,72 +1778,81 @@ private with sharing class STG_SettingsManager_TEST {
     * @description create a instance of custom installment settings
     * @return custom installment settings
     */
-    private static npe03__Custom_Installment_Settings__c getCustomInstallmentSettings() {
-        return
-            new npe03__Custom_Installment_Settings__c(
-                Name = 'TestInstallment',
-                npe03__Value__c = 10,
-                npe03__Increment__c = 'Days'
+    private static npe03__Custom_Installment_Settings__c setUpCustomInstallmentSettings() {
+        npe03__Custom_Installment_Settings__c settings = new npe03__Custom_Installment_Settings__c(
+            Name = 'TestInstallment',
+            npe03__Value__c = 10,
+            npe03__Increment__c = 'Days'
         );
+        insert settings;
+
+        return settings;
     }
 
     /**
     * @description create a instance of payment field mapping settings
     * @return payment field mapping settings
     */
-    private static npe01__Payment_Field_Mapping_Settings__c getPaymentFieldMapSettings() {
-        return
-            new npe01__Payment_Field_Mapping_Settings__c(
-                Name = 'TestMapping',
-                npe01__Opportunity_Field__c = 'Opportunity',
-                npe01__Payment_Field__c = 'npe01__OppPayment__c'
+    private static npe01__Payment_Field_Mapping_Settings__c setUpPaymentFieldMapSettings() {
+        npe01__Payment_Field_Mapping_Settings__c settings = new npe01__Payment_Field_Mapping_Settings__c(
+            Name = 'TestMapping',
+            npe01__Opportunity_Field__c = 'Opportunity',
+            npe01__Payment_Field__c = 'npe01__OppPayment__c'
+        );
+        insert settings;
 
-            );
+        return settings;
     }
 
     /**
     * @description create a instance of relationship lookup settings
     * @return relationship lookup settings
     */
-    private static npe4__Relationship_Lookup__c getRelationshipLookup() {
-        return
-            new npe4__Relationship_Lookup__c(
-                Name = 'TestMapping',
-                npe4__Male__c = 'bar',
-                npe4__Female__c = 'baz',
-                npe4__Neutral__c = 'byz'
+    private static npe4__Relationship_Lookup__c setUpRelationshipLookup() {
+        npe4__Relationship_Lookup__c settings = new npe4__Relationship_Lookup__c(
+            Name = 'TestMapping',
+            npe4__Male__c = 'bar',
+            npe4__Female__c = 'baz',
+            npe4__Neutral__c = 'byz'
 
-            );
+        );
+        insert settings;
+
+        return settings;
     }
 
     /**
     * @description create a instance of relationship auto create settings
     * @return relationship auto create settings
     */
-     private static npe4__Relationship_Auto_Create__c getRelationshipAutoCreate() {
-        return
-            new npe4__Relationship_Auto_Create__c(
-                Name = 'TestMapping',
-                npe4__Object__c = 'Contact',
-                npe4__Field__c = 'ReportsToId',
-                npe4__Relationship_Type__c = 'coworker'
+     private static npe4__Relationship_Auto_Create__c setUpRelationshipAutoCreate() {
+        npe4__Relationship_Auto_Create__c settings = new npe4__Relationship_Auto_Create__c(
+            Name = 'TestMapping',
+            npe4__Object__c = 'Contact',
+            npe4__Field__c = 'ReportsToId',
+            npe4__Relationship_Type__c = 'coworker'
 
-            );
+        );
+        insert settings;
+
+        return settings;
     }
 
     /**
     * @description create a instance of user roll up field settings
     * @return user roll up field settings
     */
-     private static npo02__User_Rollup_Field_Settings__c getUserRollupFieldSettings() {
-        return
-            new npo02__User_Rollup_Field_Settings__c(
-                Name = 'Household Test Rollup',
-                npo02__Target_Field__c = 'lastoppamount__c',
-                npo02__Source_Field__c = 'Amount',
-                npo02__Object_Name__c = 'npo02__Household__c',
-                npo02__Field_Action__c = 'MAX'
-            );
+     private static npo02__User_Rollup_Field_Settings__c setUpUserRollupFieldSettings() {
+        npo02__User_Rollup_Field_Settings__c settings = new npo02__User_Rollup_Field_Settings__c(
+            Name = 'Household Test Rollup',
+            npo02__Target_Field__c = 'lastoppamount__c',
+            npo02__Source_Field__c = 'Amount',
+            npo02__Object_Name__c = 'npo02__Household__c',
+            npo02__Field_Action__c = 'MAX'
+        );
+        insert settings;
+
+        return settings;
     }
 
 }

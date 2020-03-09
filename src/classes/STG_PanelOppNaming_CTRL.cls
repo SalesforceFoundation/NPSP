@@ -179,20 +179,6 @@ public with sharing class STG_PanelOppNaming_CTRL extends STG_Panel {
         }
     }
 
-    /***
-    * @description Verifies the user has Admin permissions for Opportunity naming settings.
-    * @return true when the user has the appropriate access
-    */
-    private Boolean isAdmin {
-        get {
-            if (isAdmin = null) {
-                isAdmin = STG_Panel.runningUserIsAdmin();
-            }
-            return isAdmin;
-        }
-        private set;
-    }
-
     /*********************************************************************************************************
     * @description The list of SelectOptions for the Date Format
     */

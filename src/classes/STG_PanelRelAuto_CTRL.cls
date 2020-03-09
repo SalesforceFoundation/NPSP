@@ -121,7 +121,7 @@ public with sharing class STG_PanelRelAuto_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deleteAc() {
-        if (!STG_Panel.runningUserIsAdmin()) {
+        if (!isAdmin) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
             return null;
         }
