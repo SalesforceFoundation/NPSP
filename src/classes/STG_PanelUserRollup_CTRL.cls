@@ -519,7 +519,7 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         * @return void
         */
         public void deleteMe(){
-            if (!STG_Panel.runningUserIsAdmin()) {
+            if (!mydad.isRunningUserIsAdmin) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
                 return;
             }

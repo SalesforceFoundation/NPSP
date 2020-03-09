@@ -108,6 +108,16 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     }
 
     /*******************************************************************************************************
+    * @description is the running user an admin
+    */
+    public Boolean isAdmin {
+        get {
+            return STG_Panel.runningUserIsAdmin();
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description Custom metadata deployment result
     */
     private Metadata.DeployResult deploymentResult { get; set; }

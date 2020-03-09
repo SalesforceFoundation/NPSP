@@ -110,7 +110,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deleteCi() {
-        if (!isAdmin) {
+        if (!isRunningUserIsAdmin) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
             return null;
         }

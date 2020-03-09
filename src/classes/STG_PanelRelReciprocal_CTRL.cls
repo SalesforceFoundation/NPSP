@@ -108,7 +108,7 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deleteRl() {
-        if (!isAdmin) {
+        if (!isRunningUserIsAdmin) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
             return null;
         }

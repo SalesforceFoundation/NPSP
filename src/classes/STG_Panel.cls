@@ -92,12 +92,12 @@ public with sharing virtual class STG_Panel {
     * @return true when the user has the appropriate access
     */
     @TestVisible
-    public Boolean isAdmin {
+    public Boolean isRunningUserIsAdmin {
         get {
-            if (isAdmin == null) {
-                isAdmin = runningUserIsAdmin();
+            if (isRunningUserIsAdmin == null) {
+                isRunningUserIsAdmin = runningUserIsAdmin();
             }
-            return isAdmin;
+            return isRunningUserIsAdmin;
         }
         private set;
     }
