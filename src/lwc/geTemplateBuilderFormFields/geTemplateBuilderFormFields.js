@@ -27,10 +27,46 @@ const REQUIRED_FORM_FIELDS = [
     CONTACT1_LASTNAME_INFO.fieldApiName
 ];
 
+const FIELD_BUNDLES_SECTION_ID = 'fieldBundles';
+const FORM_FIELDS_SECTION_ID = 'formFields';
+const ADVANCED_FIELDS_SECTION_ID = 'advancedFormFields';
+
 const EXCLUDED_OBJECT_MAPPINGS = [
     'Opportunity_Contact_Role_1',
     'Opportunity_Contact_Role_2'
-]
+];
+
+const FIELD_BUNDLE_MASTER_NAMES = [
+    'Data Import',
+    'Field Bundles'
+];
+
+const ADVANCED_MAPPING_MASTER_NAMES = [
+    'Account 2',
+    'Contact 2',
+    'GAU Allocation 1',
+    'GAU Allocation 2',
+    'Household',
+    'Opportunity Contact Role 1',
+    'Opportunity Contact Role 2'
+];
+
+const OBJECT_MAPPING_HELP_TEXT = {
+    'Account 1': 'geHelpTextAccount1Mapping',
+    'Account 2': 'geHelpTextAccount2Mapping',
+    'Address': 'geHelpTextAddressMapping',
+    'Contact 1': 'geHelpTextContact1Mapping',
+    'Contact 2': 'geHelpTextContact2Mapping',
+    'GAU Allocation 1': 'geHelpTextAllocation1Mapping',
+    'GAU Allocation 2': 'geHelpTextAllocation2Mapping',
+    'Allocations': 'geHelpTextAllocationBundle',
+    'Household': 'geHelpTextHouseholdMapping'
+};
+
+const FIELD_MAPPING_HELP_TEXT = {
+    'Allocations': 'geHelpTextAllocationBundle',
+    [DONATION_DONOR_LABEL]: 'geHelpTextDonationDonor'
+};
 
 export default class geTemplateBuilderFormFields extends LightningElement {
 
@@ -53,6 +89,12 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     @track hasErrors = false;
     @track errors;
 
+    // identifiers for use with querySelectors
+    LOCATORS = {
+        FIELD_BUNDLES_SECTION_ID,
+        FORM_FIELDS_SECTION_ID,
+        ADVANCED_FIELDS_SECTION_ID
+    };
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
         dataImportObjectInfo({ data, error }) {
@@ -113,6 +155,31 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         dispatch(this, 'togglemodal', event.detail);
     }
 
+    toggleExpandableSection(sectionId) {
+        const section = this.getSectionById(sectionId);
+        section.isCollapsed = !section.isCollapsed;
+        return section.isCollapsed;
+    }
+
+    expandSubSections(sectionId, objectMappings) {
+        const lightningAccordion = this.template.querySelector(`[data-section-id=${sectionId}] lightning-accordion`);
+        lightningAccordion.activeSectionName = objectMappings.map(mapping => mapping.DeveloperName);
+    }
+
+    collapseSubSections(sectionId) {
+        const lightningAccordion = this.template.querySelector(`[data-section-id=${sectionId}] lightning-accordion`);
+        lightningAccordion.activeSectionName = '';
+    }
+
+    isSectionCollapsed(sectionId) {
+        const section = this.getSectionById(sectionId);
+        return section && section.isCollapsed;
+    }
+
+    getSectionById(sectionId) {
+        return this.template.querySelector(`[data-section-id=${sectionId}]`);
+    }
+
     renderedCallback() {
         if (!this.isInitialized && this.isLoading === false && this.previousSaveAttempted) {
             this.isInitialized = true;
@@ -131,11 +198,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
     init = async () => {
         this.objectMappings = await this.buildObjectMappingsList();
-
         this.handleSortFieldMappings();
         this.toggleCheckboxForSelectedFieldMappings(this.objectMappings);
         this.isLoading = false;
-    }
+    };
 
     /*******************************************************************************
     * @description Intermediary async method for pulling the object and field mappings
@@ -168,14 +234,14 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 let objectMapping = {
                     ...TemplateBuilderService.objectMappingByDevName[objMappingDevName],
                     Field_Mappings: fieldMappings
-                }
+                };
 
                 objectMappings.push(objectMapping)
             }
         }
 
         return objectMappings;
-    }
+    };
 
     /*******************************************************************************
     * @description Sorts the field mappings within their respective object mappings
@@ -414,30 +480,38 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         }
     }
 
-    /*******************************************************************************
-    * @description Handles onclick event handler of lightning-button.
-    * Toggles all sections open and sets the isAllSectionsExpanded property.
-    *
-    * @param {object} event: Event object from lightning-button onclick
-    * event handler.
-    */
-    handleExpandAllSections() {
-        const lightningAccordion = this.template.querySelector('lightning-accordion');
-        lightningAccordion.activeSectionName = [...this.objectMappingNames];
-        this.isAllSectionsExpanded = true;
+    /**
+     * Expand/collapse the header and all sub-sections for advanced form fields
+     * @param event
+     */
+    handleToggleAdvancedSection(event) {
+        const collapsed = this.toggleExpandableSection(this.LOCATORS.ADVANCED_FIELDS_SECTION_ID);
+        if(collapsed) {
+            this.collapseSubSections(this.LOCATORS.ADVANCED_FIELDS_SECTION_ID);
+        } else {
+            this.expandSubSections(this.LOCATORS.ADVANCED_FIELDS_SECTION_ID, this.advancedObjectMappings);
+        }
     }
 
-    /*******************************************************************************
-    * @description Handles onclick event handler of lightning-button.
-    * Toggles all sections closed and sets the isAllSectionsExpanded property.
-    *
-    * @param {object} event: Event object from lightning-button onclick
-    * event handler.
-    */
-    handleCollapseAllSections() {
-        const lightningAccordion = this.template.querySelector('lightning-accordion');
-        lightningAccordion.activeSectionName = [];
-        this.isAllSectionsExpanded = false;
+    /**
+     * Expand/collapse the bundles section, no sub-sections currently present for this section
+     * @param event
+     */
+    handleToggleBundlesSection(event) {
+        this.toggleExpandableSection(this.LOCATORS.FIELD_BUNDLES_SECTION_ID);
+    }
+
+    /**
+     * Expand/collapse the header and all sub-section for basic form fields
+     * @param event
+     */
+    handleToggleBasicSection(event) {
+        const collapsed = this.toggleExpandableSection(this.LOCATORS.FORM_FIELDS_SECTION_ID);
+        if(collapsed) {
+            this.collapseSubSections(this.LOCATORS.FORM_FIELDS_SECTION_ID);
+        } else {
+            this.expandSubSections(this.LOCATORS.FORM_FIELDS_SECTION_ID, this.basicObjectMappings);
+        }
     }
 
     /*******************************************************************************
@@ -479,4 +553,90 @@ export default class geTemplateBuilderFormFields extends LightningElement {
             REQUIRED_FORM_FIELDS_MESSAGE += objectData.fields[REQUIRED_FORM_FIELDS[i]].label + character;
         }
     }
+
+    /**
+     * For a given object mapping, check if help text exists for it and its mapped fields.
+     * Append the help text to the mapping javascript object and its mapped fields.
+     *
+     * @param {object} mapping to look up help text for
+     * @return {{helpText: *}|*} mapping with help text appended to it
+     */
+    mapHelpText = (mapping) => {
+        const labelName = OBJECT_MAPPING_HELP_TEXT[mapping.MasterLabel];
+        const Field_Mappings = mapping.Field_Mappings.map(this.mapFieldHelpText);
+        if(labelName) {
+            const helpText = this.CUSTOM_LABELS[labelName];
+            return { ...mapping, Field_Mappings, helpText };
+        }
+        return { ...mapping, Field_Mappings };
+    };
+
+    /**
+     * Append help text to a field mapping, if it exists.
+     * @param fieldMapping
+     * @return {{helpText: *}|*}
+     */
+    mapFieldHelpText = (fieldMapping) => {
+        const labelName = FIELD_MAPPING_HELP_TEXT[fieldMapping.MasterLabel];
+        if(labelName) {
+            const helpText = this.CUSTOM_LABELS[labelName];
+            return { ...fieldMapping, helpText };
+        }
+        return fieldMapping;
+    };
+
+    /**
+     * Get basic object mappings by filtering the list of object mappings. These mappings are shown in the form
+     * template builder by default.
+     * @return {*[]|*}
+     */
+    get basicObjectMappings() {
+        if(this.objectMappings) {
+            return this.objectMappings
+                .filter(mapping =>
+                    !ADVANCED_MAPPING_MASTER_NAMES.includes(mapping.MasterLabel) &&
+                    !FIELD_BUNDLE_MASTER_NAMES.includes(mapping.MasterLabel))
+                .map(this.mapHelpText);
+        }
+        return [];
+    }
+
+    /**
+     * Get advanced object mappings for the sidebar. These mappings are hidden by default
+     * @return {*[]|*}
+     */
+    get advancedObjectMappings() {
+        if(this.objectMappings) {
+            return this.objectMappings
+                .filter(mapping => ADVANCED_MAPPING_MASTER_NAMES.includes(mapping.MasterLabel))
+                .map(this.mapHelpText);
+        }
+        return [];
+    }
+
+    get advancedSectionCollapsed() {
+        return this.isSectionCollapsed(this.LOCATORS.ADVANCED_FIELDS_SECTION_ID);
+    }
+
+    get basicSectionCollapsed() {
+        return this.isSectionCollapsed(this.LOCATORS.FORM_FIELDS_SECTION_ID);
+
+    }
+
+    get bundlesSectionCollapsed() {
+        return this.isSectionCollapsed(this.LOCATORS.FIELD_BUNDLES_SECTION_ID);
+    }
+
+    /**
+     * Get field bundle mappings for the sidebar.
+     */
+    get fieldBundleMappings() {
+        if(this.objectMappings) {
+            return this.objectMappings
+                .filter(mapping => FIELD_BUNDLE_MASTER_NAMES.includes(mapping.MasterLabel))
+                .map(this.mapHelpText);
+        }
+        return [];
+    }
+
 }
