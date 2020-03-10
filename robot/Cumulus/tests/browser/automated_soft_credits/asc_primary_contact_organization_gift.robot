@@ -24,7 +24,11 @@ Setup Test Data
  
 *** Test Cases ***    
 Create ASC for Primary Contact on Organization Gift
-    [tags]  unstable
+    [Documentation]            Create a contact, Org Account and Opportunity for acct with contact as primary via API.
+    ...                        Verify contact shows under contact role with Role as soft credit. 
+    ...                        After running donations batch job verify contact gets soft credits
+    [tags]                     feature:Automated Soft Credits        W-039819
+    
     Go To Page                              Details                              Opportunity                                
     ...                                     object_id=&{opportunity}[Id]
     Select Tab                              Related

@@ -162,7 +162,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def click_flexipage_dropdown(self, title,value):
         """Click the lightning dropdown to open it and select value"""
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
-#         self.selenium.set_focus_to_element(locator)
+        self.selenium.wait_until_page_contains_element(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('flexipage-popup')
         option=npsp_lex_locators['span'].format(value)
@@ -1411,7 +1411,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.click_button(btn)
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
-        time.sleep(2)
         self.click_flexipage_dropdown(field, value)    
     
     def edit_record_checkbox(self,field,status):

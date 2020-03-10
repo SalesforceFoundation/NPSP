@@ -28,28 +28,36 @@ Create ASC for Affiliated Contact
    
     [tags]                     feature:Automated Soft Credits        W-039819
     
+    #Create Affiliation
     Go To Page                              Details                              Contact                                
-    ...                                     object_id=&{contact}[Id]
+    ...                                     object_id=${data}[contact][Id]
     Select Tab                              Related
     Click Related List Button               Organization Affiliations            New
     Wait For Modal                          New                                  Affiliation
-    Populate Lookup Field                   Organization                         &{account}[Name]
+    Populate Lookup Field                   Organization                         ${data}[account][Name]
     Select Value From Dropdown              Related Opportunity Contact Role     Soft Credit
     Click Modal Button                      Save
     Wait Until Modal Is Closed
     
-    &{opportunity} =  API Create Opportunity    &{account}[Id]    Donation    Name=&{account}[Name] $500 donation    Amount=500    
+    #Create opportunity and verify contact role
+    &{opportunity} =                        API Create Opportunity    ${data}[account][Id]    Donation    
+    ...                                     Name=${data}[account][Name] $500 donation    
+    ...                                     Amount=500    
+    
     Go To Page                              Details                              Opportunity                                
     ...                                     object_id=&{opportunity}[Id]
     Select Tab                              Related
     Select Relatedlist                      Contact Roles
     Wait For Page Object                    Custom    OpportunityContactRole
     Verify Related List Field Values
-    ...                     &{contact}[FirstName] &{contact}[LastName]=Soft Credit
+    ...                                     &{contact}[FirstName] &{contact}[LastName]=Soft Credit
+    
     Go To Page                              Details                              Contact                                
     ...                                     object_id=&{contact}[Id]
     Select Tab                              Related
     Check Record Related Item               Opportunities    &{opportunity}[Name]
+    
+    #Run batch job and verify soft credits on contact
     Run Donations Batch Process
     Go To Page                              Details                              Contact                                
     ...                                     object_id=&{Contact}[Id]
