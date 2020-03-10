@@ -188,6 +188,14 @@ public inherited sharing class RD2_OpportunityMatcher {
         return this;
     }
 
+    public RD2_OpportunityMatcher include(List<Opportunity> opps) {
+        for (Opportunity opp : opps) {
+            recordByCloseDate.put(opp.CloseDate, new Record(opp));
+        }
+
+        return this;
+    }
+
     /***
      * @description Determines if the Opportunity is marked as Closed Lost in data migration
      * @param opp Recurring Donation Opportunity
@@ -411,6 +419,9 @@ public inherited sharing class RD2_OpportunityMatcher {
             return opp.IsClosed == true && opp.IsWon == false;
         }
 
+        public Boolean isClosed() {
+            return opp.IsClosed == true;
+        }
         /***
         * @description Returns the Opportunity part (if any) of the matched record
         * @return Opportunity

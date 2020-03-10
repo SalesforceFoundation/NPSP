@@ -729,4 +729,56 @@ public without sharing class RD2_ScheduleService {
             newSchedulesByRdId.get(rd.RecurringDonation__c).add(rd);
         }
     }
+
+    /**
+    * @description Sets End Date on input rdSchedules.
+    * The end date is not set on a schedule for a fixed-length Recurring Donation.
+    * Thus, schedules should be dynamically evaluated for the End Date
+    * when the Next Donation Date record is being determined, ie the Next Donation Date calculated,
+    * or the Visualizer displays upcoming installments.
+    * @param rd Recurring Donation record
+    * @param rdSchedules Schedules on the Recurring Donation record
+    * @return void
+    */
+    public void evaluateScheduleEndDateForFixedLength(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+
+        if (rdSchedules == null || rdSchedules.isEmpty() 
+            || rdRecord.isClosed() 
+            || !rdRecord.isFixedLength() 
+            || rdRecord.isFixedLengthComplete()
+        ) {
+            return;
+        }
+
+        Integer estimatedOpenSlots = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments() + rd.npe03__Donations__r.size();
+
+        List<RD2_OpportunityMatcher.Record> installments = new RD2_OpportunityMatcher(currentDate)
+        .include(rd.npe03__Donations__r)
+        .match(getVisualizedInstallments(
+            currentDate, estimatedOpenSlots, rdSchedules))
+        .getRecords();
+
+        //Remove all closed installments
+        for(Integer i = installments.size() - 1; i >= 0 ; i--) {
+            if (!installments[i].IsNew() && installments[i].isClosed()) {
+                installments.remove(i);
+            }
+        }
+
+        Integer lastIndex = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments() - 1;
+
+        Date scheduleEndDate = (installments.isEmpty())
+            ? currentDate.addDays(-1)
+            : installments[lastIndex].hasInstallment()
+                ? installments[lastIndex].getInstallment().nextDonationDate
+                : installments[lastIndex].getCloseDate(); 
+            
+
+        for (RecurringDonationSchedule__c schedule : rdSchedules) {
+            if (schedule.EndDate__c == null) {
+                schedule.EndDate__c = scheduleEndDate;
+            }
+        }
+    }
 }

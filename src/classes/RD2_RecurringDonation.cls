@@ -160,56 +160,8 @@ public inherited sharing class RD2_RecurringDonation {
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation reviseScheduleEndDateForFixedLength(RD2_ScheduleService scheduleService) {
-        if (!isFixedLength() || isFixedLengthComplete()) {
-            return this;
-        }
-
-        List<RD2_OpportunityMatcher.Record> futureInstallments = getFutureInstallments(scheduleService);
-
-        Date scheduleEndDate = (futureInstallments.isEmpty())
-            ? RD2_ScheduleService.currentDate.addDays(-1)
-            : futureInstallments[futureInstallments.size() - 1].getCloseDate();
-
-        for (RecurringDonationSchedule__c schedule : rd.RecurringDonationSchedules__r) {
-            if (schedule.EndDate__c == null) {
-                schedule.EndDate__c = scheduleEndDate;
-            }
-        }
-
-        return this;
-    }
-
-    /**
-    * @description Get matching records of all future scheduled installments and opened opportunities for the given fixed length Recurring Donation
-    * @return List<RD2_OpportunityMatcher.Record>
-    */
-    private List<RD2_OpportunityMatcher.Record> getFutureInstallments(RD2_ScheduleService scheduleService) {
-        List<RD2_OpportunityMatcher.Record> installments = new List<RD2_OpportunityMatcher.Record>();
-        Integer existingInstallmentsCount = getPaidInstallments() + getOpenOpportunities().size();
-
-        if (!isFixedLength() || isFixedLengthComplete() || (existingInstallmentsCount >= getPlannedInstallments())) {
-            return installments;
-        }
-
-        installments = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
-        .includeCurrentOrOpen(rd.npe03__Donations__r)
-        .match(scheduleService.getVisualizedInstallments(
-            RD2_ScheduleService.currentDate, getPlannedInstallments() - getPaidInstallments(), rd.RecurringDonationSchedules__r))
-        .getRecords();
-
-        Integer i = installments.size();
-        Integer currentInstallmentCount = installments.size() + getPaidInstallments();
-
-        while (getPlannedInstallments() < currentInstallmentCount) {
-            i--;
-            if (installments[i].isNew()) {
-                installments.remove(i);
-            }
-
-            currentInstallmentCount = installments.size() + getPaidInstallments();
-        }
-
-        return installments;
+       scheduleService.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
+       return this;
     }
 
     /**
@@ -261,6 +213,18 @@ public inherited sharing class RD2_RecurringDonation {
 
         for (Opportunity opp : rd.npe03__Donations__r) {
             if (opp.IsClosed == false) {
+                opps.add(opp);
+            }
+        }
+
+        return opps;
+    }
+
+    public List<Opportunity> getClosedOpportunities() {
+        List<Opportunity> opps = new List<Opportunity>();
+
+        for (Opportunity opp : rd.npe03__Donations__r) {
+            if (opp.IsClosed == true) {
                 opps.add(opp);
             }
         }
