@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import { isNotEmpty, isEmpty, isUndefined } from 'c/utilCommon';
+import { isNotEmpty, isEmpty } from 'c/utilCommon';
 
 const COMBO_BOX_CLASS = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
 const INPUT_CLASS = 'slds-input slds-combobox__input';
@@ -99,22 +99,6 @@ export default class GeAutocomplete extends LightningElement {
         this.valid = true;
     }
 
-    @api
-    reset(defaultValue) {
-        if (isUndefined(defaultValue)) {
-            this.displayValue = '';
-            this.value = null;
-        }
-
-        const payload = {
-            detail: {
-                value: this.value,
-                displayValue: this.displayValue
-            }
-        };
-        this.dispatchEvent(new CustomEvent('select', payload));
-    }
-
     /*******************************************
      Dynamic CSS/Id / Display Attributes below here
      *******************************************/
@@ -164,17 +148,15 @@ export default class GeAutocomplete extends LightningElement {
     }
 
     /**
-     * Sets data on a look-up field (mimics the action on a select event on a look-up option)
-     * @param lookupResult
+     * @description Sets value and displayValue for this component. This method should be
+     *              used when the field is being set to a known value and does not fire a
+     *              change event.
+     * @param data: an object with value and displayValue properties.
      */
     @api
-    setLookUpData (lookupResult) {
-        const payload = {
-            detail: {
-                value: lookupResult.value,
-                displayValue: lookupResult.displayValue
-            }
-        };
-        this.handleSelect(payload);
+    setValue(data) {
+        this.value = data.value;
+        this.displayValue = data.displayValue;
     }
+
 }
