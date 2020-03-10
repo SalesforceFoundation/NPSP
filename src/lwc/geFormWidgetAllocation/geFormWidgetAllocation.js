@@ -156,7 +156,12 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @api
     load(data) {
         const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
-        let dataImportRow = JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
+        let dataImportRow;
+        if (Object.keys(data).includes(DI_ADDITIONAL_OBJECT.fieldApiName)) {
+            dataImportRow =
+                JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName])
+                    .dynamicSourceByObjMappingDevName;
+        }
         if (!dataImportRow) {
             return;
         }
@@ -424,6 +429,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     get donationAmountCustomLabel() {
         return GeFormService.donationFieldTemplateLabel;
+    }
+
+    @api
+    get allFieldsByAPIName() {
+        return [DI_ADDITIONAL_OBJECT.fieldApiName];
     }
 
 }
