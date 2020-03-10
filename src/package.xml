@@ -2005,8 +2005,8 @@
         <members>geBodyBatchHeaderWarning</members>
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
-        <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsDescLeftCol</members>
+        <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>

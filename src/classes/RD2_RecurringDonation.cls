@@ -348,8 +348,8 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Boolean hasCurrentOpenOpportunity(Date currentDate) {
         return new RD2_OpportunityMatcher(currentDate)
-            .includeCurrentAndOpen(rd.npe03__Donations__r)
-            .size() > 0;
+        .includeCurrent(rd.npe03__Donations__r)
+        .hasOpenOpportunity();
     }
 
     /**
@@ -364,5 +364,4 @@ public inherited sharing class RD2_RecurringDonation {
         }
         return false;
     }
-
 }

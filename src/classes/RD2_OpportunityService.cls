@@ -215,7 +215,7 @@ public with sharing class RD2_OpportunityService {
                 .includeCurrentOrOpen(rd.npe03__Donations__r);
             
             matcher.match(scheduleService.getVisualizedInstallments(
-                currentDate, matcher.size(), rd.RecurringDonationSchedules__r
+                currentDate, matcher.getNumberOfOpportunities(), rd.RecurringDonationSchedules__r
             ));
 
             for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {

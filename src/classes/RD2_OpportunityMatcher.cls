@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2020 Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -100,6 +97,18 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
+    * @description Includes all Opportunites regardless of its' status
+    * @param opps Recurring Donation Opportunities 
+    */
+    public RD2_OpportunityMatcher include(List<Opportunity> opps) {
+        for (Opportunity opp : opps) {
+            recordByCloseDate.put(opp.CloseDate, new Record(opp));
+        }
+
+        return this;
+    }
+
+    /***
      * @description Includes Opportunities matching the provided fiscal or calendar year regardless if they are open or closed.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
@@ -119,26 +128,6 @@ public inherited sharing class RD2_OpportunityMatcher {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
 
             } else if (opp.CloseDate >= startDateRange && opp.CloseDate <= endDateRange) {
-                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
-            }
-        }
-        return this;
-    }
-
-    /***
-     * @description Includes Open Opportunities with Close Date greater or equal to the current date
-     * @param opps Recurring Donation Opportunities
-     * @return RD2_OpportunityMatcher This Opportunity matcher instance
-     */
-    public RD2_OpportunityMatcher includeCurrentAndOpen(List<Opportunity> opps) {
-        for (Opportunity opp : opps) {
-            if (opp.IsClosed == true) {
-                continue;
-            }
-            if (opp.CloseDate >= currentDate) {
-                recordByCloseDate.put(opp.CloseDate, new Record(opp));
-
-            } else if (opp.CloseDate >= cutoffDate) {
                 boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
@@ -185,14 +174,6 @@ public inherited sharing class RD2_OpportunityMatcher {
                 boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
-        return this;
-    }
-
-    public RD2_OpportunityMatcher include(List<Opportunity> opps) {
-        for (Opportunity opp : opps) {
-            recordByCloseDate.put(opp.CloseDate, new Record(opp));
-        }
-
         return this;
     }
 
@@ -305,32 +286,58 @@ public inherited sharing class RD2_OpportunityMatcher {
 
         recordByCloseDate.put(opp.CloseDate, new Record(opp).attachInstallment(installment));
         boundaryRecordByCloseDate.remove(opp.CloseDate);
-
-        List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
-        closeDates.sort();
-
-        //rebuild records' container so records are sorted by dates
-        Map<Date, Record> recordByCloseDateClone = recordByCloseDate.clone(); 
-        recordByCloseDate = new Map<Date, Record>();
-        for (Date closeDate : closeDates) {
-            recordByCloseDate.put(closeDate, recordByCloseDateClone.get(closeDate));
-        }
     }
 
     /***
-     * @description Returns number of matched records
+     * @description Returns the number of included records, even if they are in the boundary conditions
+     * and might not be matched with projected installments
      * @return Integer
      */
-    public Integer size() {
-        return recordByCloseDate.size();
+    public Integer getNumberOfOpportunities() {
+        Integer size = 0;
+        for (Record record : recordByCloseDate.values()) {
+            if (!record.isNew()) {
+                size++;
+            }
+        }
+
+        //the boundary record list has Opps only
+        size += boundaryRecordByCloseDate.size();
+
+        return size;
     }
 
     /***
-     * @description Returns matched records containting Opportunities and/or installments
+     * @description Returns sorted matched records containing Opportunities and/or installments
      * @return List<Record>
      */
     public List<Record> getRecords() {
-        return recordByCloseDate.values();
+        if (recordByCloseDate.isEmpty()) {
+            return recordByCloseDate.values();
+        }
+
+        List<Date> closeDates = new List<Date>(recordByCloseDate.keySet()); 
+        closeDates.sort();
+
+        List<Record> records = new List<Record>();
+        for (Date closeDate : closeDates) {
+            records.add(recordByCloseDate.get(closeDate));
+        }
+
+        return records;
+    }
+
+    /**
+    * @description Indicates if the Recurring Donation has an open Opportunity included in the matcher
+    * @return Boolean
+    */
+    public Boolean hasOpenOpportunity() {
+        for (Record record : recordByCloseDate.values()) {
+            if (!record.isNew() && record.isOpen()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /***
@@ -412,6 +419,14 @@ public inherited sharing class RD2_OpportunityMatcher {
         }
 
         /***
+        * @description Determines if the record is a Closed Opportunity
+        * @return Boolean
+        */
+        public Boolean isClosed() {
+            return opp.IsClosed;
+        }
+
+        /***
         * @description Determines if the record is a Closed Lost Opportunity
         * @return Boolean
         */
@@ -419,9 +434,6 @@ public inherited sharing class RD2_OpportunityMatcher {
             return opp.IsClosed == true && opp.IsWon == false;
         }
 
-        public Boolean isClosed() {
-            return opp.IsClosed == true;
-        }
         /***
         * @description Returns the Opportunity part (if any) of the matched record
         * @return Opportunity
