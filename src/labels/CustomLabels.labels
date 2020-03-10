@@ -1802,8 +1802,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:&lt;br/&gt;
         &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to upgrade.&lt;/li&gt;
         &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles and remove the old Recurring Donations page layout.&lt;/li&gt;
-        &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;   
-        &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;    
+        &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;
+        &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;
         &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your profiles and permission sets.&lt;/li&gt;
         &lt;li&gt;Adjust Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
         &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;</value>
@@ -2683,7 +2683,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>An error occurred associated with a specific Allocation.</shortDescription>
-        <value>Allocation Error occurred on the {obj_type} record named {parent_name} for Allocation named {alloc_name}. Reason: {error}</value>
+        <value>Allocation Error occurred on the {obj_type} record with Salesforce Id {parent_id} for Allocation named {alloc_name}. Reason: {error}</value>
     </labels>
     <labels>
         <fullName>alloPaymentAllocationBatchRecordError</fullName>
@@ -2691,7 +2691,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>An error occurred not associated with a specific Allocation.</shortDescription>
-        <value>Allocation Error occurred on the {obj_type} record named {parent_name}. Reason: {error}</value>
+        <value>Allocation Error occurred on the {obj_type} record with Salesforce Id {parent_id}. Reason: {error}</value>
     </labels>
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>

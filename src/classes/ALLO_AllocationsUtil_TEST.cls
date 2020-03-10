@@ -41,7 +41,7 @@ public class ALLO_AllocationsUtil_TEST {
     private static final String ALLO_VALIDATE_CONFIG_ACTION = 'ALLO.ValidatePmtAllocationConfig';
     private static final String ALLO_PROCESS_OPPS_PMTS_ACTION = 'ALLO.ProcessOppsAndPmts';
 
-
+    private static final Integer NUMBER_OF_CONTACTS_AND_OPPORTUNITIES = 13;
     /*******************************************************************************************************
      * RecordExclusions Inner Class Tests
      ********************************************************************************************************/
@@ -647,6 +647,8 @@ public class ALLO_AllocationsUtil_TEST {
      *         - Result - Allocation is resized/recalculated using the Opportunity Amount and the Allocation Percentage.  Default Allocation is resized to $10
      * - Opportunity 11 - Existing Fixed Amount Allocation and Default Allocation each for Amount $40, Opportunity Amount is $20
      *         - Result - Allocation cannot be resized and is larger than Opportunity Amount.  Error is generated
+     * - Opportunity 12 - Opportunity for Amount 0 with no Allocations
+     *         - Result - Default Allocation is Created for $0
      */
     @isTest private static void confirmProcessingOfOpportunitiesWhenDefaultAllocEnabled() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
@@ -691,23 +693,6 @@ public class ALLO_AllocationsUtil_TEST {
         // Process Opportunity Allocations
         ALLO_AllocationsUtil.AllocationResults allocResults = ALLO_AllocationsUtil.processOpportunityAllocations(oppsById, recsForRev.oppsAllocations, recsForRev.campaignAllocations, recsForRev.recurringDonationAllocations, recExcl);
 
-        System.debug(allocResults);
-        // Delete Allocation Results
-        System.debug('Delete Allocations:');
-        for (Allocation__c alloc : allocResults.allocationsForDelete) {
-            System.debug (alloc);
-        }
-
-        System.debug('Insert Allocations:');
-        for (Allocation__c alloc : allocResults.allocationsForInsert) {
-            System.debug (alloc);
-        }
-
-        System.debug('Update Allocations:');
-        for (Allocation__c alloc : allocResults.allocationsForUpdate) {
-            System.debug (alloc);
-        }
-
         Map<Id, List<Allocation__c>> deleteAllocsByOppId = buildMapOfAllocationsByOpportunityId(allocResults.allocationsForDelete);
         Map<Id, List<Allocation__c>> insertAllocsByOppId = buildMapOfAllocationsByOpportunityId(allocResults.allocationsForInsert);
         Map<Id, List<Allocation__c>> updateAllocsByOppId = buildMapOfAllocationsByOpportunityId(allocResults.allocationsForUpdate);
@@ -738,7 +723,7 @@ public class ALLO_AllocationsUtil_TEST {
         // Opportunity 5 Allocation(s) - Opportunity with Amount 0 and non zero Allocations
         System.assertEquals(true, updateAllocsByOppId.containsKey(oppIds[5]), 'Opportunity 5 should have allocations in the update list');
         System.assertEquals(1, updateAllocsByOppId.get(oppIds[5]).size(), 'Opportunity 5 - # of Allocations to Update');
-        assertOpportunityAllocation(updateAllocsByOppId.get(oppIds[5])[0], oppIds[5], 0, 100, alloSetupTest.getGAUs()[1].Id, 'Opportunity 5 - Allocation 0');
+        assertOpportunityAllocation(updateAllocsByOppId.get(oppIds[5])[0], oppIds[5], 0, 50, alloSetupTest.getGAUs()[1].Id, 'Opportunity 5 - Allocation 0');
 
         // Opportunity 6 will have no changes
         System.assertEquals(false, insertAllocsByOppId.containsKey(oppIds[6]), 'Opportunity 6 - Found in Insert Allocations List');
@@ -783,6 +768,135 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, insertAllocsByOppId.containsKey(oppIds[11]), 'Opportunity 11 - Found in Insert Allocations List');
         System.assertEquals(false, updateAllocsByOppId.containsKey(oppIds[11]), 'Opportunity 11 - Found in Update Allocations List');
         System.assertEquals(false, deleteAllocsByOppId.containsKey(oppIds[11]), 'Opportunity 11 - Found in Delete Allocations List');
+
+        // Opportunity 12 will have a default allocation for $0.
+        System.assertEquals(true, insertAllocsByOppId.containsKey(oppIds[12]), 'Opportunity 12 - Found in Insert Allocations List');
+        System.assertEquals(1, insertAllocsByOppId.get(oppIds[12]).size(), 'Opportunity 12 - # of Allocations to Insert');
+        assertOpportunityAllocation(insertAllocsByOppId.get(oppIds[12])[0], oppIds[12], 0, null, alloSetupTest.getDefaultGAU().Id, 'Opportunity 12 - Allocation 0');
+    }
+
+     /**
+     * @description Confirm determines necessary Allocations changes, as well as errors based
+     *              on records passed to processOpportunityAllocations
+     *              [ALLO_AllocationsUtil.processOpportunityAllocations]
+     *
+     *      * Scenarios Covered (Default Allocation Enabled):
+     * - Opportunity 0 - Opportunity with allocations and Recurring Donation Parent
+     *         - Result - No Changes
+     * - Opportunity 1- Opportunity without allocations and with Recurring Donation Parent
+     *         - Result - Recurring Donation Allocations propogated to Opportunity as inserts
+     * - Opportunity 2 - No Allocations, No Parent
+     *         - Result - Default Allocation created for Amount Of Opportunity
+     * - Opportunity 3 - Sum of Allocation Amounts < Opportunity Amount
+     *         - Result - Default Allocation is Created for Difference between Sum of Non Default Alloc Amounts & Opp Amount
+     * - Opportunity 4 - Allocation Present with Percent and No Amount
+     *         - Result - Update of Allocation to set Amount
+     * - Opportunity 5 - Opportunity with Amount 0 and non zero Allocations
+     *         - Result - Converts to Percent Allocation with 0 Amount.
+     * - Opportunity 6 - Opportunity Allocations up to date
+     *         - Result - No changes
+     * - Opportunity 7 - Opportunity Allocations up to date
+     *         - Result - No changes
+     * - Opportunity 8 - Opportunity with null Amount and non zero Default Allocation
+     *         - Result - Default Allocation is Deleted
+     * - Opportunity 9 - Opportunity has no allocations. Is part of a Campaign with Allocations
+     *         - Result - Campaign Allocations copied to Opportunity
+     * - Opportunity 10 - Existing Percentage Allocation for Amount $40, And Default Allocation, also for $40.  Opportunity Amount is $20
+     *         - Result - Allocation is resized/recalculated using the Opportunity Amount and the Allocation Percentage.  Default Allocation is resized to $10
+     * - Opportunity 11 - Existing Fixed Amount Allocation and Default Allocation each for Amount $40, Opportunity Amount is $20
+     *         - Result - Allocation cannot be resized and is larger than Opportunity Amount.  Error is generated
+     * - Opportunity 12 - Opportunity for Amount 0 with no Allocations
+     *         - Result - Default Allocation is Created for $0
+     */
+    @isTest private static void confirmProcessingOfPaymentAllocations() {
+        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+            .enableDefaultAllocations()
+            .enablePaymentAllocations()
+            .disableAllocationTriggers()
+            .applyConfiguration();
+
+        List<Id> oppIds = createTestDataAndReturnOppIds(alloSetupTest.getGAUs(), alloSetupTest.getDefaultGAU());
+
+        Set<Id> oppIdsAsSet = new Set<Id>();
+        oppIdsAsSet.addAll(oppIds);
+
+        Map<Id, Opportunity> oppsById = ALLO_AllocationsUtil.retrieveOpportunities(oppIdsAsSet);
+        Set<Id> campaignIds = new Set<Id>();
+        Set<Id> recurringDonationIds = new Set<Id>();
+        Set<Id> pmtIds = new Set<Id>();
+
+        for (Opportunity opp : oppsById.values()) {
+            if (opp.CampaignId != null) {
+                campaignIds.add(opp.CampaignId);
+            }
+            if (opp.npe03__Recurring_Donation__c != null) {
+                recurringDonationIds.add(opp.npe03__Recurring_Donation__c);
+            }
+            for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                pmtIds.add(pmt.Id);
+            }
+        }
+
+        List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, pmtIds, campaignIds, recurringDonationIds);
+
+        ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
+
+        for (Allocation__c alloc : allocs) {
+            recsForRev.addAllocationByType(alloc);
+        }
+
+         // Will track exclusions across processes
+         ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUtil.RecordExclusions();
+
+        // Process Opportunity Allocations
+        ALLO_AllocationsUtil.AllocationResults allocResults = ALLO_AllocationsUtil.processPaymentAllocations(oppsById, recsForRev.oppsAllocations, recsForRev.paymentAllocations, recExcl);
+
+        Map<Id, List<Allocation__c>> deleteAllocsByPmtId = buildMapOfAllocationsByPaymentId(allocResults.allocationsForDelete);
+        Map<Id, List<Allocation__c>> insertAllocsByPmtId = buildMapOfAllocationsByPaymentId(allocResults.allocationsForInsert);
+        Map<Id, List<Allocation__c>> updateAllocsByPmtId = buildMapOfAllocationsByPaymentId(allocResults.allocationsForUpdate);
+
+
+        List<npe01__OppPayment__c> opp6Pmts = [SELECT   Id,
+                                                        npe01__Opportunity__c,
+                                                        npe01__Scheduled_Date__c
+                                               FROM npe01__OppPayment__c
+                                               WHERE    npe01__Opportunity__c = :oppIds[6]
+                                               ORDER BY npe01__Scheduled_Date__c ASC];
+
+        // Opportunity 6 - Payment 0 [100% GAU1 Allocation Added for $10 (from Opportunity)
+        System.assertEquals(true, insertAllocsByPmtId.containsKey(opp6Pmts[0].Id), 'Opportunity 6 - Payment 0 - Allocations found in Insert list');
+        System.assertEquals(1, insertAllocsByPmtId.get(opp6Pmts[0].Id).size(), 'Opportunity 6 - Payment 0 - # of Allocations to Insert');
+        assertPaymentAllocation(insertAllocsByPmtId.get(opp6Pmts[0].Id)[0], opp6Pmts[0].Id, 10, 100, alloSetupTest.getGAUs()[1].Id, 'Opportunity 6 - Payment 0 - Insert List - Allocation 0');
+
+        // Opportunity 7- Payment 1 [$4 Default GAU, 50% GAU0 Amount 5, $1 GAU1]
+        System.assertEquals(true, updateAllocsByPmtId.containsKey(opp6Pmts[1].Id), 'Opportunity 6 - Payment 1 - Allocations found in Update list');
+        System.assertEquals(2, updateAllocsByPmtId.get(opp6Pmts[1].Id).size(), 'Opportunity 6 - Payment 1 - # of Allocations to Insert');
+
+        Allocation__c defAlloc = null;
+        Allocation__c gau0Alloc = null;
+        Allocation__c gau1Alloc = null;
+
+        for (Allocation__c alloc :updateAllocsByPmtId.get(opp6Pmts[1].Id)) {
+            if (alloc.General_Accounting_Unit__c == alloSetupTest.getDefaultGAU().Id) {
+                defAlloc = alloc;
+            } else if (alloc.General_Accounting_Unit__c == alloSetupTest.getGAUs()[0].Id) {
+                gau0Alloc = alloc;
+            } else if (alloc.General_Accounting_Unit__c == alloSetupTest.getGAUs()[1].Id) {
+                gau1Alloc = alloc;
+            }
+        }
+
+        assertPaymentAllocation(defAlloc, opp6Pmts[1].Id, 4, null, alloSetupTest.getDefaultGAU().Id, 'Opportunity 6 - Payment 1 - Update List - Default Allocation');
+        assertPaymentAllocation(gau0Alloc, opp6Pmts[1].Id, 5, 50, alloSetupTest.getGAUs()[0].Id, 'Opportunity 6 - Payment 1 - Update List - GAU 0 Allocation');
+        System.assertEquals(null, gau1Alloc, 'Opportunity 6 - Payment 1 - GAU 1 should not be present in Update List');
+
+        // Opportunity 7- Payment 2 [$1 GAU0]
+        System.assertEquals(true, insertAllocsByPmtId.containsKey(opp6Pmts[2].Id), 'Opportunity 6 - Payment 2 - Allocations found in Insert list');
+        System.assertEquals(1, insertAllocsByPmtId.get(opp6Pmts[2].Id).size(), 'Opportunity 6 - Payment 2 - # of Allocations to Insert');
+        assertPaymentAllocation(insertAllocsByPmtId.get(opp6Pmts[2].Id)[0], opp6Pmts[2].Id, 9, null, alloSetupTest.getDefaultGAU().Id, 'Opportunity 6 - Payment 2 - Insert List - Allocation 0');
+
+
+
     }
 
     /**
@@ -809,13 +923,15 @@ public class ALLO_AllocationsUtil_TEST {
      * - Opportunity 7 - Opportunity Allocations up to date
      *         - Result - No changes
      * - Opportunity 8 - Opportunity with null Amount and non zero Allocation
-     *         - Result - Updated using same approach as Opportunity 5
+     *         - Result - Should be deleted
      * - Opportunity 9 - Opportunity has no allocations. Is part of a Campaign with Allocations
      *         - Result - Campaign Allocations copied to Opportunity
      * - Opportunity 10 - Existing Percentage Allocation for Amount $40, Opportunity Amount is $20
      *         - Result - Allocation is resized/recalculated using the Opportunity Amount and the Allocation Percentage
      * - Opportunity 11 - Existing Fixed Amount Allocation for Amount $40, Opportunity Amount is $20
      *         - Result - Allocation cannot be resized and is larger than Opportunity Amount.  Error is generated
+     * - Opportunity 12 - Opportunity for Amount 0 with no Allocations
+     *         - Result - No changes
      */
     @isTest private static void confirmProcessingOfOpportunitiesWhenDefaultAllocNotEnabled() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
@@ -889,7 +1005,7 @@ public class ALLO_AllocationsUtil_TEST {
         // Opportunity 5 Allocation(s) - Opportunity with Amount 0 and non zero Allocations
         System.assertEquals(true, updateAllocsByOppId.containsKey(oppIds[5]), 'Opportunity 5 should have allocations in the update list');
         System.assertEquals(1, updateAllocsByOppId.get(oppIds[5]).size(), 'Opportunity 5 - # of Allocations to Update');
-        assertOpportunityAllocation(updateAllocsByOppId.get(oppIds[5])[0], oppIds[5], 0, 100, alloSetupTest.getGAUs()[1].Id, 'Opportunity 5 - Allocation 0');
+        assertOpportunityAllocation(updateAllocsByOppId.get(oppIds[5])[0], oppIds[5], 0, 50, alloSetupTest.getGAUs()[1].Id, 'Opportunity 5 - Allocation 0');
 
         // Opportunity 6 will have no changes
         System.assertEquals(false, insertAllocsByOppId.containsKey(oppIds[6]), 'Opportunity 6 - Found in Insert Allocations List');
@@ -901,9 +1017,9 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, updateAllocsByOppId.containsKey(oppIds[7]), 'Opportunity 7 - Found in Update Allocations List');
         System.assertEquals(false, deleteAllocsByOppId.containsKey(oppIds[7]), 'Opportunity 7 - Found in Delete Allocations List');
 
-        // Opportunity 8 will update allocation (since Default Allocations are not enabled)
-        System.assertEquals(true, updateAllocsByOppId.containsKey(oppIds[8]), 'Opportunity 8 - Found in Update Allocations List');
-        assertOpportunityAllocation(updateAllocsByOppId.get(oppIds[8])[0], oppIds[8], 0, 100, alloSetupTest.getGAUs()[2].Id, 'Opportunity 8 - Allocation 0');
+        // Opportunity 8 will delete allocation (since Opportunity Amount is null)
+        System.assertEquals(true, deleteAllocsByOppId.containsKey(oppIds[8]), 'Opportunity 8 - Found in Delete Allocations List');
+        assertOpportunityAllocation(deleteAllocsByOppId.get(oppIds[8])[0], oppIds[8], 20, 100, alloSetupTest.getGAUs()[2].Id, 'Opportunity 8 - Allocation 0');
 
         // Opportunity 9 will insert 1 allocation for $10 for GAU 1 from Campaign (Parent)
         System.assertEquals(true, insertAllocsByOppId.containsKey(oppIds[9]), 'Opportunity 9 - Found in Insert Allocations List');
@@ -921,18 +1037,15 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, insertAllocsByOppId.containsKey(oppIds[11]), 'Opportunity 11 - Found in Insert Allocations List');
         System.assertEquals(false, updateAllocsByOppId.containsKey(oppIds[11]), 'Opportunity 11 - Found in Update Allocations List');
         System.assertEquals(false, deleteAllocsByOppId.containsKey(oppIds[11]), 'Opportunity 11 - Found in Delete Allocations List');
+
+        // Opportunity 12 will have a default allocation for $0.
+        System.assertEquals(false, insertAllocsByOppId.containsKey(oppIds[12]), 'Opportunity 12 - Found in Insert Allocations List');
+        System.assertEquals(false, updateAllocsByOppId.containsKey(oppIds[12]), 'Opportunity 12 - Found in Update Allocations List');
+        System.assertEquals(false, deleteAllocsByOppId.containsKey(oppIds[12]), 'Opportunity 12 - Found in Delete Allocations List');
     }
 
-    // Identify Opportunities with no allocations, and allocate from the Default (No Parent)
-    // Identify Opportunities with no allocations, and allocate from Recurring Donations Allocations (Recurring Donation Parent)
-    // Identify Opportunities with no allocations, and allocate from Campaign Allocations (Campaign Allocation Parent)
-    // Identify Opportunites with existing allocations, resize if Opportunity Amount Changed (confirm Default Allocation recalculated)
-    // Identify Opportunities with existing allocations, calculate/recalculate Amounts for Percentage Allocations with no invalid Amounts (confirm Default Allocation recalculated)
+    // TODO: Add Multicurrency Tests to run conditionally
 
-    // TODO: Method: processPaymentAllocations
-    // Identify Payments with no allocations, and allocate from the Parent (confirm Default Allocation recalculated)
-    // Identify Payments with existing allocations, and resize if Payment Amount Changed (Confirm Default Allocation recalculated)
-    // Identify Payments with existing allocations, calculate/recalculate Amounts for Percentage Allocations with no invalid Amounts (confirm Default Allocations recalculated)
 
     // TODO: Method: processAllocationResults (also will cover processAllocationDeleteResults, processAllocationInsertResults, processAllocationUpdateResults, processFunctionalErrors)
     // Pass Allocation Records, To be Inserted, Updated, and Deletes, as well as functional errors to be added
@@ -1011,9 +1124,22 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(null, opp0.Type, 'Opportunity 0 - Type');
 
         Opportunity opp6 = oppsById.get(oppIds[6]);
-        System.assertEquals (1, opp6.npe01__OppPayment__r.size(), 'Opportunity 6 - # of Payments');
+        System.assertEquals (3, opp6.npe01__OppPayment__r.size(), 'Opportunity 6 - # of Payments');
 
-        npe01__OppPayment__c opp6pmt0 = opp6.npe01__OppPayment__r[0];
+        npe01__OppPayment__c opp6pmt0 = null;
+        npe01__OppPayment__c opp6pmt1 = null;
+        npe01__OppPayment__c opp6pmt2 = null;
+
+        for (npe01__OppPayment__c pmt : opp6.npe01__OppPayment__r) {
+            if (pmt.npe01__Scheduled_Date__c == System.today()) {
+                opp6pmt0 = pmt;
+            } else if (pmt.npe01__Scheduled_Date__c == System.today().addDays(1)) {
+                opp6pmt1 = pmt;
+            } else if (pmt.npe01__Scheduled_Date__c == System.today().addDays(2)){
+                opp6pmt2 = pmt;
+            }
+        }
+
         System.assertNotEquals(null, opp6pmt0.Name, 'Opportunity 6 - Payment 0 - Name');
         System.assertEquals(10, opp6pmt0.npe01__Payment_Amount__c, 'Opportunity 6 - Payment 0 - Payment Amount');
         System.assertEquals(null, opp6pmt0.npe01__Payment_Date__c, 'Opportunity 6 - Payment 0 - Payment Date');
@@ -1022,6 +1148,24 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, opp6pmt0.npe01__Paid__c, 'Opportunity 6 - Payment 0 - Paid');
         System.assertEquals(opp6.Id, opp6pmt0.npe01__Opportunity__c, 'Opportunity 6 - Payment 0 - Opportunity Id');
         System.assertNotEquals(null, opp6pmt0.LastModifiedDate, 'Opportunity 6 - Payment 0 - LastModifiedDate');
+
+        System.assertNotEquals(null, opp6pmt1.Name, 'Opportunity 6 - Payment 1 - Name');
+        System.assertEquals(10, opp6pmt1.npe01__Payment_Amount__c, 'Opportunity 6 - Payment 1 - Payment Amount');
+        System.assertEquals(null, opp6pmt1.npe01__Payment_Date__c, 'Opportunity 6 - Payment 1 - Payment Date');
+        System.assertEquals(System.today().addDays(1), opp6pmt1.npe01__Scheduled_Date__c, 'Opportunity 6 - Payment 1 - Scheduled Date');
+        System.assertEquals(false, opp6pmt1.npe01__Written_Off__c, 'Opportunity 6 - Payment 1 - Written Off');
+        System.assertEquals(false, opp6pmt1.npe01__Paid__c, 'Opportunity 6 - Payment 1 - Paid');
+        System.assertEquals(opp6.Id, opp6pmt1.npe01__Opportunity__c, 'Opportunity 6 - Payment 1 - Opportunity Id');
+        System.assertNotEquals(null, opp6pmt1.LastModifiedDate, 'Opportunity 6 - Payment 1 - LastModifiedDate');
+
+        System.assertNotEquals(null, opp6pmt2.Name, 'Opportunity 6 - Payment 2 - Name');
+        System.assertEquals(10, opp6pmt2.npe01__Payment_Amount__c, 'Opportunity 6 - Payment 2 - Payment Amount');
+        System.assertEquals(null, opp6pmt2.npe01__Payment_Date__c, 'Opportunity 6 - Payment 2 - Payment Date');
+        System.assertEquals(System.today().addDays(2), opp6pmt2.npe01__Scheduled_Date__c, 'Opportunity 6 - Payment 2 - Scheduled Date');
+        System.assertEquals(false, opp6pmt2.npe01__Written_Off__c, 'Opportunity 6 - Payment 2 - Written Off');
+        System.assertEquals(false, opp6pmt2.npe01__Paid__c, 'Opportunity 6 - Payment 2 - Paid');
+        System.assertEquals(opp6.Id, opp6pmt2.npe01__Opportunity__c, 'Opportunity 6 - Payment 2 - Opportunity Id');
+        System.assertNotEquals(null, opp6pmt2.LastModifiedDate, 'Opportunity 6 - Payment 2 - LastModifiedDate');
     }
 
     /**
@@ -1060,7 +1204,7 @@ public class ALLO_AllocationsUtil_TEST {
 
         List<Allocation__c> allocs = ALLO_AllocationsUtil.retrieveAllocations(oppIdsAsSet, pmtIds, campaignIds, recurringDonationIds);
 
-        assertSObjectList(allocs, 15, 'Allocations');
+        assertSObjectList(allocs, 19, 'Allocations');
 
         ALLO_AllocationsUtil.RecordsForReview recsForRev = new ALLO_AllocationsUtil.RecordsForReview();
 
@@ -1077,7 +1221,7 @@ public class ALLO_AllocationsUtil_TEST {
         Allocation__c alloc = recsForRev.oppsAllocations.get(oppIds[7])[0];
         assertOpportunityAllocation(alloc, oppIds[7], 20, 100, 'GAU 2', 'Opportunity 7 - Allocation 0' );
 
-        System.assertEquals(1, recsForRev.paymentAllocations.size(), 'Payment Allocations');
+        System.assertEquals(3, recsForRev.paymentAllocations.size(), 'Payment Allocations');
 
         Opportunity opp7 = oppsById.get(oppIds[7]);
 
@@ -1222,6 +1366,7 @@ public class ALLO_AllocationsUtil_TEST {
 
         List<npe01__OppPayment__c> pmtsProcess = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[0].Id];
         List<npe01__OppPayment__c> pmtsExclude = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[1].Id];
+        List<npe01__OppPayment__c> pmtsResizeDefault = [select Id from npe01__OppPayment__c where npe01__Opportunity__c = :opps[1].Id];
 
         List<Allocation__c> allosForInsert = new list<Allocation__c>();
 
@@ -1348,7 +1493,7 @@ public class ALLO_AllocationsUtil_TEST {
         Campaign cam = new Campaign(Name='Test Campaign: ' + UTIL_UnitTestData_TEST.getUniqueString(), IsActive=true);
         insert cam;
 
-        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(12);
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(NUMBER_OF_CONTACTS_AND_OPPORTUNITIES);
         insert ctcs;
 
         List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 20, null, null);
@@ -1357,6 +1502,7 @@ public class ALLO_AllocationsUtil_TEST {
         opps[5].Amount = 0;
         opps[8].Amount = null;
         opps[9].CampaignId = cam.Id;
+        opps[12].Amount = 0;
 
         for (Opportunity opp : opps) {
             opp.npe01__Do_Not_Automatically_Create_Payment__c = true;
@@ -1379,6 +1525,21 @@ public class ALLO_AllocationsUtil_TEST {
                 npe01__Scheduled_Date__c = System.today()
             )
         );
+        pmts.add(
+            new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = 10,
+                npe01__Opportunity__c = opps[6].Id,
+                npe01__Scheduled_Date__c = System.today().addDays(1)
+            )
+        );
+        pmts.add(
+            new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = 10,
+                npe01__Opportunity__c = opps[6].Id,
+                npe01__Scheduled_Date__c = System.today().addDays(2)
+            )
+        );
+
         insert pmts;
 
         List<Allocation__c> allosForInsert = new list<Allocation__c>();
@@ -1454,12 +1615,12 @@ public class ALLO_AllocationsUtil_TEST {
             new Allocation__c(
                 Opportunity__c=opps[5].Id,
                 Amount__c = 20,
-                Percent__c = null,
+                Percent__c = 50,
                 General_Accounting_Unit__c = gaus[1].Id
             )
         );
 
-        // Opportunity 6 Allocation(s) - Opportunity Allocated, Related Payment not Allocated
+        // Opportunity 6 Allocation(s) - Opportunity Allocated, Related Payment 0 not Allocated
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[6].Id,
@@ -1469,6 +1630,47 @@ public class ALLO_AllocationsUtil_TEST {
             )
         );
 
+        if (defaultGau != null) { // Only if defaults enabled...)
+            // Opportunity 6, Payment 1 - Payment Allocations, Default Allocation for $10 (Default), Percent Allocation for 50% (GAU0), Fixed for $1 (GAU1)
+            allosForInsert.add(
+                new Allocation__c(
+                    Payment__c = pmts[2].Id,
+                    Amount__c = 10,
+                    General_Accounting_Unit__c = defaultGau.Id
+                )
+            );
+
+
+            allosForInsert.add(
+                new Allocation__c(
+                    Payment__c = pmts[2].Id,
+                    Percent__c = 50,
+                    General_Accounting_Unit__c = gaus[0].Id
+                )
+            );
+            allosForInsert.add(
+                new Allocation__c(
+                    Payment__c = pmts[2].Id,
+                    Amount__c = 1,
+                    General_Accounting_Unit__c = gaus[1].Id
+                )
+            );
+
+            // Opportunity 6 - Payment 2 - Fixed Amount Allocation for $1, GAU0
+            allosForInsert.add(
+                new Allocation__c(
+                    Payment__c = pmts[3].Id,
+                    Amount__c = 1,
+                    General_Accounting_Unit__c = gaus[0].Id
+                )
+            );
+
+            // Add Test where Payment has $1 Fixed Alloc for GAU1 to confirm $9 Default Allocation is Added
+            // Add Test where Payment has 100% Allocation for GAU0 and Default Allocation for $10 to confirm Default Allocation is removed.
+            // Add Test where Payment is $0, with GAUs confirm behavior with percentage allocation
+            // Add test where Payment is null, with GAUs confirm behavior with percentage allocation
+
+        }
         // Opportunity 7 Allocation(s) - Opportunity Allocated, Related Payment Allocated
         allosForInsert.add(
             new Allocation__c(
@@ -1479,7 +1681,19 @@ public class ALLO_AllocationsUtil_TEST {
             )
         );
 
-        // Opportunity 8 Allocation(s) - Opportunity with null Amount and non zero Default Allocation
+        // Opportunity 7, Payment Allocation(s) - Payment Properly Allocated
+        allosForInsert.add(
+            new Allocation__c(
+                Payment__c = pmts[1].Id,
+                Amount__c = 10,
+                Percent__c = 100,
+                General_Accounting_Unit__c = gaus[1].Id
+            )
+        );
+
+        // Opportunity 8 Allocation(s) - Opportunity with null Amount
+        //      If Default Allocations Enabled, non zero fixed amount for Default Allocation
+        //      If Default Allocations Disabled non zero amount with percent value for gau 2
         allosForInsert.add(
             new Allocation__c(
                 Opportunity__c=opps[8].Id,
@@ -1522,16 +1736,6 @@ public class ALLO_AllocationsUtil_TEST {
             )
         );
 
-        // Opportunity 7, Payment Allocation(s) - Payment Properly Allocated
-        allosForInsert.add(
-            new Allocation__c(
-                Payment__c = pmts[1].Id,
-                Amount__c = 10,
-                Percent__c = 100,
-                General_Accounting_Unit__c = gaus[1].Id
-            )
-        );
-
 
         insert allosForInsert;
 
@@ -1555,6 +1759,10 @@ public class ALLO_AllocationsUtil_TEST {
 
     private static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Decimal percentage, String gauName, String message) {
         assertAllocation(alloc, null, paymentId, null, null, amount, percentage, gauName, null, message);
+    }
+
+    private static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Decimal percentage, Id gauId, String message) {
+        assertAllocation(alloc, null, paymentId, null, null, amount, percentage, null, gauId, message);
     }
 
     private static void assertRecurringDonationAllocation(Allocation__c alloc, Id recurringDonationId, Decimal amount, Decimal percentage, String gauName, String message) {
@@ -1583,9 +1791,9 @@ public class ALLO_AllocationsUtil_TEST {
 
     private static void assertSObjectList(List<SObject> sObjs, Integer expectedCount, String message) {
         if (expectedCount == null) {
-            System.assertEquals(null, sObjs, message, message + ' - List');
+            System.assertEquals(null, sObjs, message + ' - List');
         } else {
-            System.assertNotEquals(null, sObjs, message, message + ' - List');
+            System.assertNotEquals(null, sObjs, message + ' - List');
             System.assertEquals(expectedCount, sObjs.size(), message + ' - List size');
         }
     }
@@ -1601,6 +1809,19 @@ public class ALLO_AllocationsUtil_TEST {
 
         return allocsByOppId;
     }
+
+    private static Map<Id, List<Allocation__c>> buildMapOfAllocationsByPaymentId(List<Allocation__c> allocs) {
+        Map<Id, List<Allocation__c>> allocsByPmtId = new Map<Id, List<Allocation__c>>();
+
+        for (Allocation__c alloc : allocs) {
+            List<Allocation__c> allocs2 = allocsByPmtId.containsKey(alloc.Payment__c) ? allocsByPmtId.get(alloc.Payment__c) : new List<Allocation__c>();
+            allocs2.add(alloc);
+            allocsByPmtId.put(alloc.Payment__c, allocs2);
+        }
+
+        return allocsByPmtId;
+    }
+
 
         /*******************************************************************************************************
         * @description Inner class to facilitate applying different configuration/environmental options for

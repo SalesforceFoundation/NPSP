@@ -870,6 +870,9 @@ public class ALLO_AllocationsUtil {
                 proposedAllocations.add(makeDefaultAllocation(targetObj, remainder));
                 proposedAllocations.addAll((List<Allocation__c>)listAlloForInsert);
             //add objects to DML wrapper in all other cases (no remainder, or positive remainder without default allocations enabled)
+            } else if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && amount == 0 && remainder == 0 && listAlloForInsert.isEmpty()) {
+                // Adding Default Allocation for $0
+                proposedAllocations.add(makeDefaultAllocation(targetObj, 0));
             } else {
                 proposedAllocations.addAll((List<Allocation__c>)listAlloForInsert);
             }
@@ -990,14 +993,18 @@ public class ALLO_AllocationsUtil {
     *        added
     ********************************************************************************************************/
     @testVisible private static void clearAllocations(SObject parentObj, List<Allocation__c> allocations, AllocationResults allocResults) {
-        Decimal sumOfAllocations = 0;
         Decimal totalOfPercentages = 0;
         Decimal parentAmount = getAmountFor(parentObj);
+
+        Boolean isParentPaymentObj = parentObj instanceOf npe01__OppPayment__c;
 
         // Will only clear Allocations if Amount is null
         if (parentAmount != null && parentAmount != 0) {
             return;
         }
+
+        // Will treat as zero instead of null if Payment
+        parentAmount = (isParentPaymentObj && parentAmount == null) ? 0.00 : parentAmount;
 
         Boolean requiresUpdates = false;
 
@@ -1006,52 +1013,46 @@ public class ALLO_AllocationsUtil {
         List<Allocation__c> proposedAllocations = new List<Allocation__c>();
         List<Allocation__c> proposedAllocDeletes = new List<Allocation__c>();
         List<Allocation__c> defaultAllocations = new List<Allocation__c>();
+
+        if (parentAmount == null) { // Delete all Allocations if parentAmount is Null
+            allocResults.allocationsForDelete.addAll(allocations.deepClone(true, true, true));
+            return;
+        }
+
         Boolean errorsFound = false;
-        Integer countOfAllocationsWithoutPercentage = 0;
+
         // Sum Allocations
         for (Allocation__c allocation : allocations) {
-            sumOfAllocations += (allocation__c.Amount__c != null) ? allocation.Amount__c : 0;
-            if (allocation.Percent__c == null) {
-                countOfAllocationsWithoutPercentage++;
+            Boolean isDefaultAllocation = ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c;
+            // Fixed Allocation, Non Default, with non null, non zero amount
+            if (allocation.Percent__c == null && allocation.Amount__c != null && allocation.Amount__c != 0 && !isDefaultAllocation) {
+                String errorLabel = (isParentPaymentObj) ? Label.alloExceedsPmtAmount : Label.alloExceedsOppAmount;
+                allocResults.addError(getOpportunityIdFor(parentObj), assembleRecordError(parentObj, errorLabel));
+                // If any non zero, non percent based allocations other than the default are encountered, generate an error and return
+                return;
             }
         }
-       if (sumOfAllocations != 0) {
-            for (Allocation__c allocation : allocations.deepClone(true, true, true)) {
-                if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
-                    proposedAllocDeletes.add(allocation);
-                } else {
-                    String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
-                    Boolean updatesToAllocation = false;
 
-                    if (allocation.Percent__c != 0 && allocation.Percent__c != null) {
-                        totalOfPercentages += allocation.Percent__c;
-                        if ((allocation.Amount__c != null) && (allocation.Amount__c != 0)) {
-                            allocation.Amount__c = 0;
-                            proposedAllocations.add (allocation);
-                        }
-                    } else {
-                        if (allocation.Amount__c != null) {
-                            allocation.Percent__c = allocation.Amount__c / sumOfAllocations * 100;
-                            allocation.Amount__c = 0;
-                            totalOfPercentages += allocation.Percent__c;
-                            proposedAllocations.add (allocation);
-                        } else {
-                            errorsFound = true;
-                            //Decision: Will kill all allocations if an error occurs when attempting to zero them.
-                            allocResults.addError(getOpportunityIdFor(parentObj), assembleAllocationError(parentObj, allocation, Label.alloNegativeAmount));
-                        }
-                    }
+        for (Allocation__c allocation : allocations.deepClone(true, true, true)) {
+            if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
+                proposedAllocDeletes.add(allocation);
+            } else {
+                String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
+                if (allocation.Percent__c != null && allocation.Percent__c < 0) {
+                    allocResults.addError(getOpportunityIdFor(parentObj), assembleAllocationError(parentObj, allocation, Label.alloNegativePercent));
+                    errorsFound = true;
+                }
+                totalOfPercentages += (allocation.Percent__c != null) ? allocation.Percent__c : 0;
+                if ((allocation.Amount__c != null) && (allocation.Amount__c != 0)) {
+                    allocation.Amount__c = 0;
+                    proposedAllocations.add (allocation);
                 }
             }
-        } else if (countOfAllocationsWithoutPercentage > 0) {
-            // Got here with no sum to convert allocations without percentage to to percentage.  Delete all allocations with error
-            errorsFound = true;
-            allocResults.addError(getOpportunityIdFor(parentObj), assembleRecordError(parentObj, Label.alloNullZeroInvalidStateError));
         }
 
         if (totalOfPercentages > 100) {
             errorsFound = true;
-            allocResults.addError(getOpportunityIdFor(parentObj), assembleRecordError(parentObj, Label.alloNullZeroInvalidStateError));
+            allocResults.addError(getOpportunityIdFor(parentObj), assembleRecordError(parentObj, Label.alloPercentExceed100));
         }
 
         if (!errorsFound) {
@@ -1066,12 +1067,6 @@ public class ALLO_AllocationsUtil {
             }
             if (!proposedAllocDeletes.isEmpty()) {
                 allocResults.allocationsForDelete.addAll (proposedAllocDeletes);
-            }
-        } else {
-            allocResults.allocationsForDelete.addAll(allocations.deepClone(true, true, true));
-            if (parentAmount != null) {
-                // Process Default Allocations
-                processDefaultAllocations(parentObj, parentAmount, parentCurrencyIsoCode, sumOfAllocations, false, new List<Allocation__c>(), allocResults);
             }
         }
     }
@@ -1759,7 +1754,7 @@ public class ALLO_AllocationsUtil {
     ********************************************************************************************************/
     @testVisible private static String assembleAllocationError(SObject parentObj, Allocation__c alloc, String message) {
         return Label.alloPaymentAllocationBatchAllocationError.replace('{obj_type}', getLabelFor(parentObj))
-                                                              .replace('{parent_name}', (String) parentObj.get('Name'))
+                                                              .replace('{parent_Id}', (String) parentObj.Id)
                                                               .replace('{alloc_name}', alloc.Name)
                                                               .replace('{error}', message);
     }
@@ -1772,7 +1767,7 @@ public class ALLO_AllocationsUtil {
     ********************************************************************************************************/
     @testVisible private static String assembleRecordError(SObject sObj, String message) {
         return Label.alloPaymentAllocationBatchRecordError.replace('{obj_type}', getLabelFor(sObj))
-                                                          .replace('{parent_name}', (String) sObj.get('Name'))
+                                                          .replace('{parent_id}', (String) sObj.Id)
                                                           .replace('{error}', message);
     }
 
