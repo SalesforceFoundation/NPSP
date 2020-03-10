@@ -137,11 +137,12 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     @api
     upsertData(dataRow, idProperty) {
-        let existingRow = this.data.find(row =>
+        const existingRowIndex = this.data.findIndex(row =>
             row[idProperty] === dataRow[idProperty]
         );
-        if (existingRow) {
-            Object.assign(existingRow, dataRow);
+
+        if (existingRowIndex !== -1) {
+            this.data.splice(existingRowIndex, 1, dataRow);
             this.data = [...this.data];
         } else {
             this.data = [dataRow, ...this.data];

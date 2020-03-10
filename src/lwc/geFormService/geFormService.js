@@ -188,36 +188,35 @@ class GeFormService {
      * @param record        Existing account or contact record to attach to the data import record
      * @return {{widgetValues: {}, diRecord: {}}}
      */
-    getDataImportRecord(sectionList, record, dataImportRecord){
-        // Gather all the data from the input
+    getDataImportRecord(sectionList, record, dataImportRecord) {
         let fieldData = {};
         let widgetValues = {};
 
         sectionList.forEach(section => {
-            fieldData = { ...fieldData, ...(section.values)};
-            widgetValues = { ...widgetValues, ...(section.widgetValues)};
+            fieldData = {...fieldData, ...(section.values)};
+            widgetValues = {...widgetValues, ...(section.widgetValues)};
         });
 
         // Build the DI Record
-        let diRecord = {};  
+        let diRecord = {};
 
-        for (let key in fieldData) {
-            if (fieldData.hasOwnProperty(key)) {
-                let value = fieldData[key];
+        for (let [key, value] of Object.entries(fieldData)) {
+            let fieldWrapper = this.getFieldMappingWrapper(key);
+            diRecord[fieldWrapper.Source_Field_API_Name] = value;
+        }
 
-                // Get the field mapping wrapper with the CMT record name (this is the key variable).
-                let fieldWrapper = this.getFieldMappingWrapper(key);
-
-                if (value) {
-                    diRecord[fieldWrapper.Source_Field_API_Name] = value;
+        // Include any fields from a user selected donation, if
+        // those fields are not already on the diRecord
+        if (dataImportRecord) {
+            for (const [key, value] of Object.entries(dataImportRecord)) {
+                if (!diRecord.hasOwnProperty(key)) {
+                    diRecord[key] = value === null || value.value === null ?
+                        null : value.value || value;
                 }
             }
         }
 
-        // Include any fields from a user selected donation
-        diRecord = { ...diRecord, ...dataImportRecord };
-
-        return { diRecord, widgetValues };
+        return {diRecord, widgetValues};
     }
 
     saveAndDryRun(batchId, dataImport, widgetData) {
@@ -261,6 +260,19 @@ class GeFormService {
                     reject(err);
                 });
         });
+    }
+
+    get importedRecordFieldNames() {
+        return Object.values(this.objectMappings).map(
+            ({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name
+        );
+    }
+
+    getObjectMappingWrapperByImportedFieldName(importedFieldName) {
+        return Object.values(this.objectMappings)
+            .find(({Imported_Record_Field_Name}) =>
+                Imported_Record_Field_Name === importedFieldName);
     }
 
 }
