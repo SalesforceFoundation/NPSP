@@ -5967,7 +5967,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Temporary note about only being able to use Payment Services with single gifts</shortDescription>
-        <value>Note: This field bundle is only available for single gifts and will not show up when entering batches gifts.</value>
+        <value>Note: This field bundle is only available for single gifts and will not show up when entering batches of gifts.</value>
     </labels>
     <labels>
         <fullName>geHelpTextHouseholdMapping</fullName>
