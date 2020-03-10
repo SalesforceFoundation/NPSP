@@ -1,16 +1,19 @@
 import { LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
+import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getDomainUrl from '@salesforce/apex/GE_FormRendererService.getDomainUrl';
+// TODO: temporary makePurchaseCall import below. Remove later.
 import makePurchaseCall from '@salesforce/apex/GE_FormRendererService.makePurchaseCall';
+import { handleError } from 'c/utilTemplateBuilder';
 // TODO: maybe import data import token field reference?
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     
+    tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
     @track domain;
     @track visualforceOrigin;
-    @track tokenizeCardPageUrl;
     @track isLoading = true;
 
     get tokenizeCardHeader() {
@@ -22,12 +25,29 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     async connectedCallback() {
         let domainUrl = await getDomainUrl();
         this.domain = domainUrl.split('.')[0];
-        this.visualforceOrigin = `https://${this.domain}--npsp.visualforce.com`;
-        this.tokenizeCardPageUrl = `${this.visualforceOrigin}/apex/GE_TokenizeCard`;
+        this.visualforceOrigin = this.buildVisualforceOriginUrl(this.domain);
     }
 
     renderedCallback() {
         this.registerPostMessageListener();
+    }
+
+    /*******************************************************************************
+    * @description Builds the visualforce origin url that we need in order to
+    * make sure we're only listening for messages from the correct source in the
+    * registerPostMessageListener method.
+    */
+    buildVisualforceOriginUrl(domain) {
+        let url = `https://${domain}--c.visualforce.com`
+        if (TemplateBuilderService.namespaceWrapper) {
+            const currentNamespace = TemplateBuilderService.namespaceWrapper.currentNamespace;
+
+            if (currentNamespace) {
+                url = url.replace('--c', `--${currentNamespace}`);
+            }
+        }
+
+        return url;
     }
 
     /*******************************************************************************
@@ -55,16 +75,21 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     async handleMessage(message) {
         if (message.error) {
+            // Error with tokenization
             let error = JSON.stringify(message.error);
             console.log(error);
             alert(error);
         } else if (message.token) {
             // TODO: Start - Remove later
             // Make purchase call... for dev only
-            let purchaseCallResponse = await makePurchaseCall({ token: message.token });
-            this.purchaseResult = JSON.parse(purchaseCallResponse);
-            console.log(this.purchaseResult);
-            alert(this.purchaseResult)
+            try {
+                let purchaseCallResponse = await makePurchaseCall({ token: message.token });
+                this.purchaseResult = JSON.parse(purchaseCallResponse);
+                console.log(this.purchaseResult);
+                alert(this.purchaseResult)
+            } catch (error) {
+                handleError(error);
+            }
             // TODO: End - Remove later
 
             // TODO: Save token locally in widget until form requests it

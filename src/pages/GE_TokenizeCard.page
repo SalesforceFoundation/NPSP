@@ -10,14 +10,14 @@
         </form>
     </article>
 
-    <!-- TODO: Update src with production url or upload as static resource -->
+    <!-- TODO: Update src with production url and/or upload as static resource -->
     <script src="https://d2w37eyz6rciar.cloudfront.net/elevate.min.js"></script>
 
     <script>
         const hostname = window.location.hostname;
         const arr = hostname.split(".");
-        // TODO: Look into the way this url is being mutated... Better way?
-        const domain = arr[0].replace('--npsp', '');
+        let domain = arr[0].replace('--npsp', '');
+        domain = domain.replace('--c', '');
         const lightningOrigin = `https://${domain}.lightning.force.com`;
 
         const sfdo = new sfdoPaymentsJsSdk();
@@ -46,6 +46,9 @@
             postMessage(message);
         });
 
+        /*******************************************************************************
+        * @description Method listens for messages from geFormWidgetTokenizeCard
+        */
         window.onmessage = function (event) {
             if (event && event.origin !== lightningOrigin) {
                 // Reject any messages from an unexpected origin
@@ -55,6 +58,9 @@
             }
         }
 
+        /*******************************************************************************
+        * @description Creates a token and posts the response to geFormWidgetTokenizeCard
+        */
         function handleTokenCreation() {
             sfdo
                 .createToken({
@@ -75,6 +81,11 @@
                 });
         }
 
+        /*******************************************************************************
+        * @description Posts messages to geFormWidgetTokenizeCard
+        *
+        * @param {string} message: String to pass to geFormWidgetTokenizeCard
+        */
         function postMessage(message) {
             window.top.postMessage(message, lightningOrigin);
         }

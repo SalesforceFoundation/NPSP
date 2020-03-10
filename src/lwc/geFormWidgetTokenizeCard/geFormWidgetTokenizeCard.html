@@ -18,9 +18,9 @@
                                            padding='around-small'>
                         <div class='iframe-container'>
                             <template if:true={isLoading}>
-                                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+                                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
                             </template>
-                            <iframe title='Elevate Payments'
+                            <iframe title={CUSTOM_LABELS.commonPaymentServices}
                                     src={tokenizeCardPageUrl}>
                             </iframe>
                         </div>
@@ -37,6 +37,7 @@
                               onclick={requestToken}>
             </lightning-button>
         </lightning-layout-item>
+        <!-- TODO: END -->
 
     </lightning-layout>
 </template>
