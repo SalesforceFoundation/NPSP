@@ -38,7 +38,8 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
-                                          onclick={handleToggleBundlesSection}>
+                                          onclick={handleToggleBundlesSection}
+                                          data-qa-locator={qaLocatorExpandFieldBundles}>
                         </lightning-button>
                     </template>
                     <template if:false={bundlesSectionCollapsed}>
@@ -46,42 +47,40 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
-                                          onclick={handleToggleBundlesSection}>
+                                          onclick={handleToggleBundlesSection}
+                                          data-qa-locator={qaLocatorCollapseFieldBundles}>
                         </lightning-button>
                     </template>
                 </div>
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section
-                            label={CUSTOM_LABELS.geHeaderFieldBundles}
-                            data-section-id={LOCATORS.FIELD_BUNDLES_SECTION_ID}>
-                        <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
-                            {CUSTOM_LABELS.geBodyFieldBundlesLeftCol}
-                        </p>
-                        <div class="slds-p-horizontal--small slds-p-top--medium">
-                            <template for:each={fieldBundleMappings}
-                                      for:item="objectMapping">
-                                <template for:each={objectMapping.Field_Mappings}
-                                          for:item="fieldMapping">
-                                    <div key={fieldMapping.DeveloperName}>
-                                        <lightning-input type="checkbox"
-                                                         key={fieldMapping.DeveloperName}
-                                                         label={fieldMapping.Target_Field_Label}
-                                                         value={fieldMapping.DeveloperName}
-                                                         checked={fieldMapping.checked}
-                                                         onchange={handleToggleFieldMapping}
-                                                         class="slds-truncate slds-p-bottom_xxx-small"
-                                                         title={fieldMapping.DeveloperName}
-                                                         required={fieldMapping.Is_Required}
-                                                         field-level-help={fieldMapping.helpText}
-                                                         data-source-api-name={fieldMapping.Source_Field_API_Name}
-                                                         data-object-mapping-label={objectMapping.MasterLabel}
-                                                         data-field-mapping={fieldMapping.DeveloperName}
-                                                         data-object-mapping={objectMapping.DeveloperName}>
-                                        </lightning-input>
-                                    </div>
-                                </template>
+                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderFieldBundles}
+                                               data-section-id={LOCATORS.FIELD_BUNDLES_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionFieldBundles}>
+                        <template for:each={fieldBundleMappings}
+                                  for:item="objectMapping">
+                            <template for:each={objectMapping.Field_Mappings}
+                                      for:item="fieldMapping">
+                                <div key={fieldMapping.DeveloperName}
+                                     class="slds-p-horizontal--small slds-p-top--medium">
+                                    <lightning-input type="checkbox"
+                                                     key={fieldMapping.DeveloperName}
+                                                     label={fieldMapping.Target_Field_Label}
+                                                     value={fieldMapping.DeveloperName}
+                                                     checked={fieldMapping.checked}
+                                                     onchange={handleToggleFieldMapping}
+                                                     class="slds-truncate slds-p-bottom_xxx-small"
+                                                     title={fieldMapping.DeveloperName}
+                                                     required={fieldMapping.Is_Required}
+                                                     field-level-help={fieldMapping.helpText}
+                                                     data-source-api-name={fieldMapping.Source_Field_API_Name}
+                                                     data-object-mapping-label={objectMapping.MasterLabel}
+                                                     data-field-mapping={fieldMapping.DeveloperName}
+                                                     data-object-mapping={objectMapping.DeveloperName}
+                                                     data-qa-locator={fieldMapping.Target_Field_Label}>
+                                    </lightning-input>
+                                </div>
                             </template>
-                        </div>
+                        </template>
                     </c-util-expandable-section>
                 </div>
 
@@ -91,7 +90,8 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
-                                          onclick={handleToggleBasicSection}>
+                                          onclick={handleToggleBasicSection}
+                                          data-qa-locator={qaLocatorExpandFormFields}>
                         </lightning-button>
                     </template>
                     <template if:false={basicSectionCollapsed}>
@@ -99,15 +99,16 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
-                                          onclick={handleToggleBasicSection}>
+                                          onclick={handleToggleBasicSection}
+                                          data-qa-locator={qaLocatorCollapseFormFields}>
                         </lightning-button>
                     </template>
                 </div>
 
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section
-                            label={CUSTOM_LABELS.geTabFormFields}
-                            data-section-id={LOCATORS.FORM_FIELDS_SECTION_ID}>
+                    <c-util-expandable-section label={CUSTOM_LABELS.geTabFormFields}
+                                               data-section-id={LOCATORS.FORM_FIELDS_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionFormFields}>
                         <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
                             {CUSTOM_LABELS.geBodyFormFieldsDescLeftCol}
                         </p>
@@ -119,7 +120,8 @@
                                 <lightning-accordion-section key={objectMapping.DeveloperName}
                                                              name={objectMapping.DeveloperName}
                                                              label={objectMapping.MasterLabel}
-                                                             class="slds-truncate slds-accordion__section_extension">
+                                                             class="slds-truncate slds-accordion__section_extension"
+                                                             data-qa-locator={objectMapping.MasterLabel}>
                                     <lightning-helptext if:true={objectMapping.helpText}
                                                         slot="actions"
                                                         content={objectMapping.helpText}>
@@ -139,7 +141,8 @@
                                                              data-source-api-name={fieldMapping.Source_Field_API_Name}
                                                              data-object-mapping-label={objectMapping.MasterLabel}
                                                              data-field-mapping={fieldMapping.DeveloperName}
-                                                             data-object-mapping={objectMapping.DeveloperName}>
+                                                             data-object-mapping={objectMapping.DeveloperName}
+                                                             data-qa-locator={fieldMapping.Target_Field_Label}>
                                             </lightning-input>
                                         </div>
                                     </template>
@@ -155,7 +158,8 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsExpandAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsExpandAll}
-                                          onclick={handleToggleAdvancedSection}>
+                                          onclick={handleToggleAdvancedSection}
+                                          data-qa-locator={qaLocatorExpandAdvancedFormFields}>
                         </lightning-button>
                     </template>
                     <template if:false={advancedSectionCollapsed}>
@@ -163,16 +167,17 @@
                                           variant="base"
                                           label={CUSTOM_LABELS.geButtonFormFieldsCollapseAll}
                                           title={CUSTOM_LABELS.geAssistiveFormFieldsCollapseAll}
-                                          onclick={handleToggleAdvancedSection}>
+                                          onclick={handleToggleAdvancedSection}
+                                          data-qa-locator={qaLocatorCollapseAdvancedFormFields}>
                         </lightning-button>
                     </template>
                 </div>
 
                 <div class="slds-size_1-of-1">
-                    <c-util-expandable-section
-                            label={CUSTOM_LABELS.geHeaderAdvancedFormFields}
-                            is-collapsed="true"
-                            data-section-id={LOCATORS.ADVANCED_FIELDS_SECTION_ID}>
+                    <c-util-expandable-section label={CUSTOM_LABELS.geHeaderAdvancedFormFields}
+                                               is-collapsed="true"
+                                               data-section-id={LOCATORS.ADVANCED_FIELDS_SECTION_ID}
+                                               data-qa-locator={qaLocatorSectionAdvancedFormFields}>
                         <p class="slds-text-body_small slds-p-top_small slds-p-horizontal--small">
                             {CUSTOM_LABELS.geBodyAdvancedFieldMapping}
                         </p>
@@ -185,8 +190,8 @@
                                 <lightning-accordion-section key={objectMapping.DeveloperName}
                                                              name={objectMapping.DeveloperName}
                                                              label={objectMapping.MasterLabel}
-                                                             class="slds-truncate">
-                                    <div class="slds-accordion__section_extension">
+                                                             class="slds-truncate"
+                                                             data-qa-locator={objectMapping.MasterLabel}>
                                         <lightning-helptext if:true={objectMapping.helpText}
                                                             slot="actions"
                                                             content={objectMapping.helpText}>
@@ -205,11 +210,10 @@
                                                              data-source-api-name={fieldMapping.Source_Field_API_Name}
                                                              data-object-mapping-label={objectMapping.MasterLabel}
                                                              data-field-mapping={fieldMapping.DeveloperName}
-                                                             data-object-mapping={objectMapping.DeveloperName}>
+                                                             data-object-mapping={objectMapping.DeveloperName}
+                                                             data-qa-locator={fieldMapping.Target_Field_Label}>
                                             </lightning-input>
                                         </template>
-                                    </div>
-
                                 </lightning-accordion-section>
                             </template>
                         </lightning-accordion>
@@ -272,7 +276,8 @@
                     <button class="slds-button slds-button_neutral slds-button_stretch"
                             title={CUSTOM_LABELS.geButtonFormFieldsAddSection}
                             aria-label={CUSTOM_LABELS.geButtonFormFieldsAddSection}
-                            onclick={addSection}>
+                            onclick={addSection}
+                            data-qa-locator={qaLocatorAddSection}>
                         {CUSTOM_LABELS.geButtonFormFieldsAddSection}
                     </button>
                 </div>
