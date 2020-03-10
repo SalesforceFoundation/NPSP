@@ -22,6 +22,30 @@ export default class GeTemplateBuilderSectionModalBody extends LightningElement 
     }
 
     /*******************************************************************************
+    * Start getters for data-qa-locator attributes
+    */
+
+    get qaLocatorSectionName() {
+        return `input ${this.CUSTOM_LABELS.geHeaderFormFieldsModalSectionSettings} ${this.CUSTOM_LABELS.geLabelSectionName}`;
+    }
+
+    get qaLocatorDelete() {
+        return `button ${this.CUSTOM_LABELS.geHeaderFormFieldsModalSectionSettings} ${this.CUSTOM_LABELS.geButtonFormFieldsModalDeleteSectionAndFields}`;
+    }
+
+    get qaLocatorCancel() {
+        return `button ${this.CUSTOM_LABELS.geHeaderFormFieldsModalSectionSettings} ${this.CUSTOM_LABELS.commonCancel}`;
+    }
+
+    get qaLocatorSave() {
+        return `button ${this.CUSTOM_LABELS.geHeaderFormFieldsModalSectionSettings} ${this.CUSTOM_LABELS.commonSave}`;
+    }
+
+    /*******************************************************************************
+    * End getters for data-qa-locator attributes
+    */
+
+    /*******************************************************************************
     * @description Fires an event to utilDedicatedListener to notify parent aura
     * component GE_ModalProxy that the given section needs to be removed.
     */
