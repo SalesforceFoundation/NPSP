@@ -412,7 +412,12 @@ public without sharing class RD2_ScheduleService {
     * @return RD2_OpportunityMatcher.Record
     */
     public RD2_OpportunityMatcher.Record getNextDonationDateRecord(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
-        if (rdSchedules == null  || rdSchedules.isEmpty() || rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+
+        if (rdSchedules == null || rdSchedules.isEmpty() 
+            || rdRecord.isClosed() 
+            || rdRecord.isFixedLengthComplete()
+        ) {
             return null;
         }
 

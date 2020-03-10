@@ -388,7 +388,7 @@ public inherited sharing class RD2_OpportunityMatcher {
         * @return Date
         */
         public Date getCloseDate() {
-            return isNew()
+            return isNew() && hasInstallment()
                 ? installment.nextDonationDate
                 : opp.CloseDate;
         }
