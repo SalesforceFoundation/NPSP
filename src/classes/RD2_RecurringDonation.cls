@@ -205,6 +205,14 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Return opportunities from the Recurring Donation
+    * @return List<Opportunity>
+    */
+    public List<Opportunity> getOpportunities() {
+        return rd.npe03__Donations__r;
+    }
+
+    /**
     * @description Return open opportunities from the Recurring Donation
     * @return List<Opportunity>
     */

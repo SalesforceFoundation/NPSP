@@ -46,6 +46,20 @@ public with sharing class RD2_VisualizeScheduleController {
         } set;
     }
 
+    /***
+    * @description Recurring Donation custom settings
+    */
+    private static Date earliestMatchDate {
+        get {
+            if (earliestMatchDate == null) {
+                Integer matchDays = new RD2_Settings().nextDonationDateMatchDays;
+                earliestMatchDate = Date.today().addDays(-1 * matchDays);
+            }
+            return earliestMatchDate;
+        }
+        set;
+    }
+
     /**
      * @description This method was inserted to work around an anomaly with Salesforce deploy.
      *              Deploy consistently failed after renaming this method to getInstallments.
@@ -70,17 +84,34 @@ public with sharing class RD2_VisualizeScheduleController {
     public static List<Installment> getInstallments(Id recordId, Integer displayNum) {
         validate(recordId);
 
-        Integer counter = 1;
+        
         List<Installment> installments = new List<Installment>();
 
         RD2_RecurringDonation rd = new RD2_RecurringDonation(getRecurringDonation(recordId))
             .reviseScheduleEndDateForFixedLength(scheduleService);
 
         if (!rd.isClosed()) {
-            for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
-                RD2_ScheduleService.currentDate, displayNum, rd.getSchedules()
-            )) {
-                installments.add(new Installment(counter++, rd.getRecord(), installment));
+            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
+            .include(rd.getOpportunities())
+            .match(scheduleService.getVisualizedInstallments(
+                RD2_ScheduleService.currentDate, displayNum + rd.getOpportunities().size(), rd.getSchedules())
+            );
+
+            Integer counter = 1;
+            
+            for (RD2_OpportunityMatcher.Record installment : matcher.getRecords()) {
+                if (!installment.IsNew() && installment.isClosed()) {
+                    continue;
+                }
+
+                if (installment.hasInstallment()) {
+                    installments.add(new Installment(counter, rd.getRecord(), installment.getInstallment()));
+                }
+
+                if (counter == displayNum) {
+                    break;
+                }
+                counter++;
             }
         }
 
@@ -102,11 +133,11 @@ public with sharing class RD2_VisualizeScheduleController {
 
         Integer counter = 1;
         List<Schedule> activeSchedules = new List<Schedule>();
-        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+        RD2_RecurringDonation rd = new RD2_RecurringDonation(getRecurringDonation(recordId)).reviseScheduleEndDateForFixedLength(scheduleService);
 
-        if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-            for (RD2_ScheduleService.ActiveSchedule schedule : scheduleService.getVisualizedSchedules(rd)) {
-                activeSchedules.add(new Schedule(counter++, rd, schedule));
+        if (!rd.isClosed()) {
+            for (RD2_ScheduleService.ActiveSchedule schedule : scheduleService.getVisualizedSchedules(rd.getRecord())) {
+                activeSchedules.add(new Schedule(counter++, rd.getRecord(), schedule));
             }
         }
 
@@ -162,7 +193,7 @@ public with sharing class RD2_VisualizeScheduleController {
                 'IsClosed, IsWon ' +
                 'FROM npe03__Donations__r ' +
                 'WHERE IsClosed = false ' +
-                'OR CloseDate >= TODAY ' +
+                'OR CloseDate >=: earliestMatchDate ' +
                 'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
             queryFields.add(scheduleSubquery);
