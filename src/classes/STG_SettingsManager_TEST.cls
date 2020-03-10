@@ -1741,8 +1741,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     private static Opportunity_Naming_Settings__c setUpOppNamingSettings() {
         String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
-        OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
-        return UTIL_ListCustomSettingsFacade.getMapOppNamingSettings().values()[0];
+        return OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
     }
 

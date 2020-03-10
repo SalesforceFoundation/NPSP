@@ -316,7 +316,7 @@ public with sharing class OPP_OpportunityNaming_TEST
     @isTest
     private static void shouldGenerateOppNameWhenNonEnglishUserCreatesAnOpp() {
         String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Both.name();
-        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+        Opportunity_Naming_Settings__c oppNamingSettings = setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
         Contact contact = getContact();
 
@@ -340,7 +340,7 @@ public with sharing class OPP_OpportunityNaming_TEST
     @isTest
     private static void shouldGenerateOppNameWhenNonEnglishUserClicksRefreshName() {
         String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
-        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+        Opportunity_Naming_Settings__c oppNamingSettings = setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
         Contact contact = getContact();
         Opportunity opp;
@@ -388,7 +388,7 @@ public with sharing class OPP_OpportunityNaming_TEST
                 'The name should not be generated since naming is not configured in settings');
 
             String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
-            setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+            Opportunity_Naming_Settings__c oppNamingSettings = setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
             Test.startTest();
             STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
@@ -559,9 +559,9 @@ public with sharing class OPP_OpportunityNaming_TEST
     /***
      * @description Creates Opportunity naming settings
      * @param valueByField Other field values mapped by their field name
-     * @return void
+     * @return Opportunity Naming Settings
      */
-    public static void setUpOppNamingSettings(Map<String, Object> valueByField) {
+    public static Opportunity_Naming_Settings__c setUpOppNamingSettings(Map<String, Object> valueByField) {
         Opportunity_Naming_Settings__c settings = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
@@ -573,6 +573,8 @@ public with sharing class OPP_OpportunityNaming_TEST
         insert settings;
 
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
+
+        return settings;
     }
 
     /***

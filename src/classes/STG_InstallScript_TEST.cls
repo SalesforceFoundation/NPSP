@@ -460,7 +460,7 @@ public with sharing class STG_InstallScript_TEST {
     */
     @isTest
     public static void shouldUpdateOppNamingSettingsAttribution() {
-        OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{
+        Opportunity_Naming_Settings__c oppSettings = OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{
             'Attribution__c' => System.Label.oppNamingIndividual
         });
 
@@ -478,7 +478,7 @@ public with sharing class STG_InstallScript_TEST {
     */
     @isTest
     public static void shouldNotThrowExceptionWhenOppNamingSettingsAttributionIsEmpty() {
-        OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{
+        Opportunity_Naming_Settings__c oppSettings = OPP_OpportunityNaming_TEST.setUpOppNamingSettings(new Map<String, Object>{
             'Attribution__c' => null
         });
 
