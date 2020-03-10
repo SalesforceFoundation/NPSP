@@ -316,7 +316,7 @@ public with sharing class OPP_OpportunityNaming_TEST
     @isTest
     private static void shouldGenerateOppNameWhenNonEnglishUserCreatesAnOpp() {
         String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Both.name();
-        Opportunity_Naming_Settings__c oppNamingSettings = setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
         Contact contact = getContact();
 
@@ -340,7 +340,7 @@ public with sharing class OPP_OpportunityNaming_TEST
     @isTest
     private static void shouldGenerateOppNameWhenNonEnglishUserClicksRefreshName() {
         String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
-        Opportunity_Naming_Settings__c oppNamingSettings = setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+        setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
         Contact contact = getContact();
         Opportunity opp;
@@ -388,7 +388,7 @@ public with sharing class OPP_OpportunityNaming_TEST
                 'The name should not be generated since naming is not configured in settings');
 
             String optionName = STG_PanelOppNaming_CTRL.AttributionOptions.Contact_Donations.name();
-            Opportunity_Naming_Settings__c oppNamingSettings = setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
+            setUpOppNamingSettings(new Map<String, Object>{ 'Attribution__c' => optionName });
 
             Test.startTest();
             STG_PanelOppNamingBatch_CTRL ctrl = new STG_PanelOppNamingBatch_CTRL();
