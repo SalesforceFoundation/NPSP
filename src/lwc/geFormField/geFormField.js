@@ -6,6 +6,14 @@ import {getObjectInfo} from "lightning/uiObjectInfoApi";
 import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
+import {
+    DI_CONTACT1_LAST_NAME_INFO,
+    DI_ACCOUNT1_NAME_INFO,
+    DI_DONATION_DONOR_INFO,
+    CONTACT_NAME_INFO,
+    ACCOUNT_NAME_INFO
+} from "c/utilTemplateBuilder";
+
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
 const TEXT_AREA_TYPE = 'TEXTAREA';
@@ -72,6 +80,11 @@ export default class GeFormField extends LightningElement {
             // fire event for reactive widget component containing the Data Import field API name and Value
             // currently only used for the Donation Amount.
             fireEvent(null, 'widgetData', { donationAmount: this.value });
+        }
+
+        if(this.isElevateField){
+            const evt = new CustomEvent('creditcardvaluechange');
+            this.dispatchEvent(evt);
         }
     };
 
@@ -382,6 +395,15 @@ export default class GeFormField extends LightningElement {
         lookup.setSelected({value, displayValue});
 
     }
+
+    get isElevateField() {
+        return (this.element.fieldApiName === DI_ACCOUNT1_NAME_INFO ||
+            this.element.fieldApiName === DI_CONTACT1_LAST_NAME_INFO ||
+            this.element.fieldApiName === DI_DONATION_DONOR_INFO ||
+            this.element.fieldApiName === CONTACT_NAME_INFO ||
+            this.element.fieldApiName === ACCOUNT_NAME_INFO);
+    }
+
 
 
     @api

@@ -4,6 +4,12 @@ export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
     @track collapsed = false;
+    @api hasElevateCreditCardWidget = false;
+
+
+    renderedCallback() {
+        this.checkForElevateWidget();
+    }
 
     /**
      * Get the alternative text that represents the section expand/collapse button
@@ -150,5 +156,35 @@ export default class GeFormSection extends LightningElement {
             'changepicklist',
             { detail: event.detail });
         this.dispatchEvent(changePicklistEvent);
+    }
+
+
+    checkForElevateWidget() {
+        const widgets = this.template.querySelectorAll('c-ge-form-widget');
+        if (widgets !== null && typeof widgets !== 'undefined') {
+            widgets.forEach(widget => {
+                if (widget.isElevateTokenizeCard) {
+                    this.hasElevateCreditCardWidget = true;
+                }
+            });
+        }
+    }
+
+    handleChangeElevateField(){
+        const changeElevateFieldEvent = new CustomEvent(
+            'changeelevatefield');
+        this.dispatchEvent(changeElevateFieldEvent);
+    }
+
+    @api
+    setCardHolderName(value){
+        const widgets = this.template.querySelectorAll('c-ge-form-widget');
+        if (widgets !== null && typeof widgets !== 'undefined') {
+            widgets.forEach(widget => {
+                if (widget.isElevateTokenizeCard) {
+                   widget.element = {nameOnCard: value};
+                }
+            });
+        }
     }
 }

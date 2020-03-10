@@ -49,6 +49,7 @@ export default class GeFormWidget extends LightningElement {
         return this.element.componentName === PAYMENT_WIDGET;
     }
 
+    @api
     get isElevateTokenizeCard() {
         return this.element.componentName === TOKENIZECARD_WIDGET;
     }    

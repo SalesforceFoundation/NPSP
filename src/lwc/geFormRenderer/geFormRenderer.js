@@ -924,4 +924,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
         return sections;
     }
+
+
+    handleElevateFieldsChange() {
+        this.sections.forEach(section => {
+            if (section.hasElevateCreditCardWidget) {
+                section.elements.forEach(element => {
+                    if (this.isValidElevateField(element)) {
+                        section.setCardHolderName(element.value);
+                    }
+                });
+            }
+        });
+    }
+
+    isValidElevateField (element) {
+       return ((this.selectedDonorType === 'Contact1' &&
+           element.fieldApiName === CONTACT_NAME_FIELD &&
+           !isUndefined(element.value)) ||
+           (this.selectedDonorType === 'Account1' &&
+               element.fieldApiName === ACCOUNT_NAME_FIELD &&
+               !isUndefined(element.value)));
+    }
 }
