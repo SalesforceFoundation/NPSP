@@ -40,7 +40,7 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
         }
     }
 
-    @wire(getRecord, { recordId: '$opportunity.Id', fields: FIELDS })
+    @wire(getRecord, { recordId: '$opportunityId', fields: FIELDS })
     wiredOpportunity(response) {
         if (response.data) {
             this.wiredOpportunityRecord = response.data;
@@ -57,6 +57,10 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
 
     get opportunity() {
         return this.opportunityWrapper.opportunity;
+    }
+
+    get opportunityId() {
+        return this.opportunity.Id;
     }
 
     get opportunityComputedName() {
