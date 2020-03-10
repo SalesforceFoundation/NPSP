@@ -13,7 +13,8 @@
                     <lightning-input type="text"
                                      value={sectionBeingEdited.label}
                                      label={CUSTOM_LABELS.geLabelSectionName}
-                                     data-name="customLabel">
+                                     data-name="customLabel"
+                                     data-qa-locator={qaLocatorSectionName}>
                     </lightning-input>
                 </div>
             </div>
@@ -41,7 +42,8 @@
                     <lightning-button label={CUSTOM_LABELS.geButtonFormFieldsModalDeleteSectionAndFields}
                                       title={CUSTOM_LABELS.geButtonFormFieldsModalDeleteSectionAndFields}
                                       variant="neutral"
-                                      onclick={handleDelete}>
+                                      onclick={handleDelete}
+                                      data-qa-locator={qaLocatorDelete}>
                     </lightning-button>
                 </div>
             </div>
@@ -55,12 +57,14 @@
                               aria-label={CUSTOM_LABELS.geAssistiveModalCancelAndDiscard}
                               variant="neutral"
                               class="slds-m-right_small"
-                              onclick={handleCancel}>
+                              onclick={handleCancel}
+                              data-qa-locator={qaLocatorCancel}>
             </lightning-button>
             <lightning-button label={CUSTOM_LABELS.commonSave}
                               title={CUSTOM_LABELS.commonSave}
                               variant="brand"
-                              onclick={handleSave}>
+                              onclick={handleSave}
+                              data-qa-locator={qaLocatorSave}>
             </lightning-button>
         </div>
     </footer>
