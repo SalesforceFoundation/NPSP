@@ -14,6 +14,13 @@
         }
     </style>
 
+    <!-- Only allow these 4 fields to be edited if the User has permissions to ALL 4 of the fields -->
+    <apex:variable var="Editable"
+                   value="{!AND($ObjectType.Level__c.fields.Level_Field__c.updateable,
+                           $ObjectType.Level__c.fields.Previous_Level_Field__c.updateable,
+                           $ObjectType.Level__c.fields.Source_Field__c.updateable,
+                           $ObjectType.Level__c.Fields.Target__c.updateable)}" />
+
     <apex:form >
         <div class="slds-scope">
 
@@ -49,7 +56,10 @@
                                     <apex:outputLabel for="fldTarget" styleClass="slds-form-element__label uiLabel-left form-element__label uiLabel" >
                                         <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Target__c.Label}
                                     </apex:outputLabel>
-                                    <apex:inputField id="fldTarget" required="false" value="{!Level__c.Target__c}" label="" styleClass="slds-select" >
+                                    <apex:inputField id="fldTargetView" required="false" value="{!Level__c.Target__c}" label=""
+                                                     styleClass="slds-select" rendered="{!NOT(Editable)}" html-disabled="true" />
+                                    <apex:inputField id="fldTarget" required="false" value="{!Level__c.Target__c}" label=""
+                                                     styleClass="slds-select" rendered="{!Editable}" >
                                         <apex:actionSupport status="statusRefill" event="onchange" rerender="fldSourceField,fldLevel,fldPreviousLevel"
                                                             immediate="false" action="{!targetChanged}" />
                                         <apex:actionStatus id="statusRefill"
@@ -78,8 +88,7 @@
                                         <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Source_Field__c.Label}
                                     </apex:outputLabel>
                                     <apex:selectList id="fldSourceField" value="{!Level__c.Source_Field__c}"
-                                                     required="false" size="1" styleClass="slds-select"
-                                                     disabled="{!NOT($ObjectType.Level__c.fields.Source_Field__c.updateable)}">
+                                                     required="false" size="1" styleClass="slds-select" disabled="{!NOT(Editable)}">
                                         <apex:selectOptions value="{!listSOSourceFields}"  />
                                     </apex:selectList>
                                 </div>
@@ -95,8 +104,7 @@
                                         <span class="required slds-required">*</span>{!$ObjectType.Level__c.Fields.Level_Field__c.Label}
                                     </apex:outputLabel>
                                     <apex:selectList id="fldLevel" value="{!Level__c.Level_Field__c}" required="false"
-                                                     size="1" styleClass="slds-select"
-                                                     disabled="{!NOT($ObjectType.Level__c.fields.Level_Field__c.updateable)}">
+                                                     size="1" styleClass="slds-select" disabled="{!NOT(Editable)}">
                                         <apex:selectOptions value="{!listSOLevelFields}"  />
                                     </apex:selectList>
                                 </div>
@@ -112,8 +120,7 @@
                                         {!$ObjectType.Level__c.Fields.Previous_Level_Field__c.Label}
                                     </apex:outputLabel>
                                     <apex:selectList id="fldPreviousLevel" value="{!Level__c.Previous_Level_Field__c}"
-                                                     required="false" size="1" styleClass="slds-select"
-                                                     disabled="{!NOT($ObjectType.Level__c.fields.Previous_Level_Field__c.updateable)}">
+                                                     required="false" size="1" styleClass="slds-select" disabled="{!NOT(Editable)}">
                                         <apex:selectOptions value="{!listSOLevelFields}"  />
                                     </apex:selectList>
                                 </div>
