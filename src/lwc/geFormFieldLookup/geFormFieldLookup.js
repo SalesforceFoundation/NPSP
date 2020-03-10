@@ -1,8 +1,9 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getRecord } from 'lightning/uiRecordApi';
 import doSearch from '@salesforce/apex/GE_LookupController.doSearch';
 import { isNotEmpty } from 'c/utilCommon';
+import { handleError } from 'c/utilTemplateBuilder';
 
 const DELAY = 300;
 
@@ -10,7 +11,8 @@ export default class GeFormFieldLookup extends LightningElement {
     @api fieldApiName;
     @api objectApiName;
     @api displayValue = '';
-    @api defaultValue;
+    @api defaultValue = null;
+    _defaultDisplayValue = '';
     @api label;
     @api required;
     @api id; // unique identifier for this field, used mainly for accessibility
@@ -23,6 +25,17 @@ export default class GeFormFieldLookup extends LightningElement {
     @track targetObjectApiName;
     @track queryFields;
     @track valid = true;
+    @track _getRecordId = null;
+
+    connectedCallback() {
+        if (this.defaultValue === undefined) {
+            this.defaultValue = null;
+        }
+        this.value = this.defaultValue;
+        if (this.value) {
+            this._getRecordId = this.value;
+        }
+    }
 
     /**
      * Retrieve information about the object the lookup points to.
@@ -35,13 +48,17 @@ export default class GeFormFieldLookup extends LightningElement {
         }
     }
 
-    @wire(getRecord, { recordId: '$defaultValue', fields: '$queryFields'})
+    @wire(getRecord, {recordId: '$_getRecordId', fields: '$queryFields'})
     wiredGetRecord({error, data}) {
-        if(data) {
-            if(typeof this.value === 'undefined') {
-                this.value = this.defaultValue;
-                this.displayValue = data.fields.Name.value;
+        if (data) {
+            this.displayValue = data.fields.Name.value;
+            if (data.fields.Id.value === this.defaultValue) {
+                this._defaultDisplayValue = this.displayValue;
             }
+            let autocomplete = this.template.querySelector('c-ge-autocomplete');
+            autocomplete.setValue({value: this.value, displayValue: this.displayValue});
+        } else if (error) {
+            handleError(error);
         }
     }
 
@@ -103,7 +120,14 @@ export default class GeFormFieldLookup extends LightningElement {
     handleSelect(event) {
         this.displayValue = event.detail.displayValue;
         this.value = event.detail.value;
-        this.dispatchEvent(new CustomEvent('change', { detail: event.detail }));
+
+        this.dispatchEvent(new CustomEvent('change', {
+            detail: {
+                value: event.detail.value,
+                displayValue: event.detail.displayValue,
+                fieldApiName: this.fieldApiName
+            }
+        }));
     }
 
     @api
@@ -165,14 +189,30 @@ export default class GeFormFieldLookup extends LightningElement {
 
     @api
     setSelected(lookupResult) {
-        const lookup = this.template.querySelector('c-ge-autocomplete');
-        lookup.setLookUpData(lookupResult);
+        if (lookupResult.value === null) {
+            this.reset();
+        } else {
+            this.value = lookupResult.value || null;
+            this.displayValue = lookupResult.displayValue || null;
+
+            let autocomplete = this.template.querySelector('c-ge-autocomplete');
+            autocomplete.setValue({value: this.value, displayValue: this.displayValue});
+        }
+
+        if (this.value && !this.displayValue) {
+            // Use getRecord to get the displayValue
+            this._getRecordId = this.value;
+            this.queryFields = this.getQueryFields().splice(0);
+        }
     }
 
     @api
     reset() {
+        this.value = this.defaultValue;
+        this.displayValue = this._defaultDisplayValue;
+
         let autocomplete = this.template.querySelector('c-ge-autocomplete');
-        autocomplete.reset(this.defaultValue);
+        autocomplete.setValue({value: this.value, displayValue: this.displayValue});
     }
 
 }
