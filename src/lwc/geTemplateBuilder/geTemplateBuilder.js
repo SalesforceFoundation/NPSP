@@ -25,10 +25,8 @@ import {
     sort
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
-import FIELD_MAPPING_METHOD_FIELD_INFO from '@salesforce/schema/Data_Import_Settings__c.Field_Mapping_Method__c';
 
 const FORMAT_VERSION = '1.0';
-const ADVANCED_MAPPING = 'Data Import Field Mapping';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
 const GIFT_ENTRY = 'Gift_Entry';
 const SORTED_BY = 'required';
@@ -107,7 +105,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 this.needToInit = true;
             }
         } else if (error) {
-            handleError(this, error);
+            handleError(error);
         }
     }
 
@@ -134,6 +132,38 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     get namespace() {
         return this.currentNamespace ? `${this.currentNamespace}__` : '';
     }
+
+    /*******************************************************************************
+    * Start getters for data-qa-locator attributes
+    */
+
+    get qaLocatorNextFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonBuilderNavFormFields}`;
+    }
+
+    get qaLocatorNextBatchHeaderFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonBuilderNavBatchHeader}`;
+    }
+
+    get qaLocatorSaveAndClose() {
+        return `button ${this.CUSTOM_LABELS.commonSaveAndClose}`;
+    }
+
+    get qaLocatorBackTemplateInfo() {
+        return `button ${this.CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}`;
+    }
+
+    get qaLocatorBackFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonBuilderNavBackFormFields}`;
+    }
+
+    get qaLocatorCancel() {
+        return `button ${this.CUSTOM_LABELS.commonCancel}`;
+    }
+
+    /*******************************************************************************
+    * End getters for data-qa-locator attributes
+    */
 
     connectedCallback() {
         this.connected = true;
