@@ -3,6 +3,7 @@ import {
     ALLOCATION_WIDGET_DEVELOPER_NAME_STUBS,
     TOKENIZE_CARD_WIDGET_NAME_STUBS
 } from './widgetStubs';
+import GeLabelService from 'c/geLabelService';
 
 class GeWidgetService {
     objectMappingByDevName = null;
@@ -25,9 +26,9 @@ class GeWidgetService {
         return {
             geFormWidgetAllocation: {
                 DeveloperName: 'geFormWidgetAllocation',
-                MasterLabel: 'Allocations',
+                MasterLabel: GeLabelService.CUSTOM_LABELS.commonGauAllocations,
                 Target_Object_Mapping_Dev_Name: 'Widgets',
-                Target_Field_Label: 'Allocations',
+                Target_Field_Label: GeLabelService.CUSTOM_LABELS.commonGauAllocations,
                 Required: 'No',
                 Element_Type: 'widget',
                 ...this.getMappingDeveloperNames(
@@ -36,9 +37,9 @@ class GeWidgetService {
             },
             geFormWidgetTokenizeCard: {
                 DeveloperName: 'geFormWidgetTokenizeCard',
-                MasterLabel: 'Credit Card',
+                MasterLabel: GeLabelService.CUSTOM_LABELS.commonPaymentServices,
                 Target_Object_Mapping_Dev_Name: 'Widgets',
-                Target_Field_Label: 'Credit Card',
+                Target_Field_Label: GeLabelService.CUSTOM_LABELS.commonPaymentServices,
                 Required: 'No',
                 Element_Type: 'widget',
                 ...this.getMappingDeveloperNames(

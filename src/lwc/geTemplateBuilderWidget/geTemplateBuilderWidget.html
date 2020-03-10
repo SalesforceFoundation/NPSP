@@ -1,0 +1,20 @@
+<template>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-size_1-of-1 slds-p-bottom_xx-small">
+            <label class="slds-text-body_regular widget-label">{uiTitle}</label>
+        </div>
+        <div class="slds-size_1-of-1 slds-p-left_small">
+            <template if:true={isAllocations}>
+                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonGeneralAccountUnit}</p>
+                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonAmount}</p>
+                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonPercent}</p>
+            </template>
+
+            <template if:true={isTokenizeCard}>
+                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonCreditNumber}</p>
+                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonCardType}</p>
+                <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonMMYY}</p>
+            </template>
+        </div>
+    </div>
+</template>

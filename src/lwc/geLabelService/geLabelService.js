@@ -2,6 +2,7 @@
 import { format } from 'c/utilCommon';
 
 // Import custom labels
+import commonAmount from '@salesforce/label/c.commonAmount';
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
 import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
@@ -9,16 +10,23 @@ import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonBack from '@salesforce/label/c.commonBack';
 import commonBatches from '@salesforce/label/c.commonBatches';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import commonCardType from '@salesforce/label/c.commonCardType';
 import commonClone from '@salesforce/label/c.commonClone';
+import commonCreditNumber from '@salesforce/label/c.commonCreditNumber';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonGauAllocations from '@salesforce/label/c.commonGauAllocations';
+import commonGeneralAccountUnit from '@salesforce/label/c.commonGeneralAccountUnit';
+import commonMMYY from '@salesforce/label/c.commonMMYY';
 import commonNewGift from '@salesforce/label/c.commonNewGift';
 import commonNext from '@salesforce/label/c.commonNext';
 import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
+import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
+import commonPercent from '@salesforce/label/c.commonPercent';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonSave from '@salesforce/label/c.commonSave';
@@ -45,13 +53,16 @@ import geAssistiveSectionDown from '@salesforce/label/c.geAssistiveSectionDown';
 import geAssistiveSectionUp from '@salesforce/label/c.geAssistiveSectionUp';
 import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
+import geBodyAdvancedFieldMapping from '@salesforce/label/c.geBodyAdvancedFieldMapping';
 import geBodyBatchDefaultValues from '@salesforce/label/c.geBodyBatchDefaultValues';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 import geBodyBatchHeaderLeftCol from '@salesforce/label/c.geBodyBatchHeaderLeftCol';
 import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRightCol';
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
 import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
+import geBodyFieldBundlesLeftCol from '@salesforce/label/c.geBodyFieldBundlesLeftCol';
 import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
+import geBodyFormFieldsDescLeftCol from '@salesforce/label/c.geBodyFormFieldsDescLeftCol';
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geBodyFormFieldsModalDeleteSection from '@salesforce/label/c.geBodyFormFieldsModalDeleteSection';
 import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
@@ -63,6 +74,7 @@ import geBodyMatchingSelectRecord from '@salesforce/label/c.geBodyMatchingSelect
 import geBodyMatchingUpdatingDonation from '@salesforce/label/c.geBodyMatchingUpdatingDonation';
 import geBodyTemplateInfoLeftCol from '@salesforce/label/c.geBodyTemplateInfoLeftCol';
 import geBodyTemplatesTabDescription from '@salesforce/label/c.geBodyTemplatesTabDescription';
+import geBodyWidgetFields from '@salesforce/label/c.geBodyWidgetFields';
 import geButtonBuilderNavBackFormFields from '@salesforce/label/c.geButtonBuilderNavBackFormFields';
 import geButtonBuilderNavBackTemplateInfo from '@salesforce/label/c.geButtonBuilderNavBackTemplateInfo';
 import geButtonBuilderNavBatchHeader from '@salesforce/label/c.geButtonBuilderNavBatchHeader';
@@ -100,6 +112,7 @@ import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
+import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
 import geHeaderBatchGiftEntry from '@salesforce/label/c.geHeaderBatchGiftEntry';
 import geHeaderBatchHeaderLeftCol from '@salesforce/label/c.geHeaderBatchHeaderLeftCol';
@@ -107,8 +120,8 @@ import geHeaderBatchHeaderRightCol from '@salesforce/label/c.geHeaderBatchHeader
 import geHeaderBatchSelectTemplate from '@salesforce/label/c.geHeaderBatchSelectTemplate';
 import geHeaderBatchSetDefaultValues from '@salesforce/label/c.geHeaderBatchSetDefaultValues';
 import geHeaderCustomTableHeaders from '@salesforce/label/c.geHeaderCustomTableHeaders';
-import geHeaderElevate from '@salesforce/label/c.geHeaderElevate';
 import geHeaderEmptyFormSection from '@salesforce/label/c.geHeaderEmptyFormSection';
+import geHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
 import geHeaderFormFieldsDefaultSectionName from '@salesforce/label/c.geHeaderFormFieldsDefaultSectionName';
 import geHeaderFormFieldsLeftCol from '@salesforce/label/c.geHeaderFormFieldsLeftCol';
 import geHeaderFormFieldsModalDeleteSection from '@salesforce/label/c.geHeaderFormFieldsModalDeleteSection';
@@ -123,11 +136,22 @@ import geHeaderMatchingReviewDonations from '@salesforce/label/c.geHeaderMatchin
 import geHeaderNewSection from '@salesforce/label/c.geHeaderNewSection';
 import geHeaderNewTemplate from '@salesforce/label/c.geHeaderNewTemplate';
 import geHeaderPageLevelError from '@salesforce/label/c.geHeaderPageLevelError';
+import geHeaderPaymentServices from '@salesforce/label/c.geHeaderPaymentServices';
 import geHeaderSingleGiftEntry from '@salesforce/label/c.geHeaderSingleGiftEntry';
 import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInfoLeftCol';
+import geHelpTextAccount1Mapping from '@salesforce/label/c.geHelpTextAccount1Mapping';
+import geHelpTextAccount2Mapping from '@salesforce/label/c.geHelpTextAccount2Mapping';
+import geHelpTextAddressMapping from '@salesforce/label/c.geHelpTextAddressMapping';
+import geHelpTextAllocation1Mapping from '@salesforce/label/c.geHelpTextAllocation1Mapping';
+import geHelpTextAllocation2Mapping from '@salesforce/label/c.geHelpTextAllocation2Mapping';
+import geHelpTextAllocationBundle from '@salesforce/label/c.geHelpTextAllocationBundle';
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
+import geHelpTextContact1Mapping from '@salesforce/label/c.geHelpTextContact1Mapping';
+import geHelpTextContact2Mapping from '@salesforce/label/c.geHelpTextContact2Mapping';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
+import geHelpTextHouseholdMapping from '@salesforce/label/c.geHelpTextHouseholdMapping';
+import geHelpTextPaymentServices from '@salesforce/label/c.geHelpTextPaymentServices';
 import geLabelCustomTableSelectedFields from '@salesforce/label/c.geLabelCustomTableSelectedFields';
 import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTableSourceFields';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
@@ -161,6 +185,7 @@ class GeLabelService {
     * utility method is provided.
     */
     CUSTOM_LABELS = Object.freeze({
+        commonAmount,
         commonAssistiveError,
         commonAssistiveInfo,
         commonAssistiveSuccess,
@@ -168,16 +193,23 @@ class GeLabelService {
         commonBack,
         commonBatches,
         commonCancel,
+        commonCardType,
         commonClone,
+        commonCreditNumber,
         commonDefaultValue,
         commonDelete,
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonGauAllocations,
+        commonGeneralAccountUnit,
+        commonMMYY,
         commonNewGift,
         commonNext,
         commonNo,
         commonNoItems,
+        commonPaymentServices,
+        commonPercent,
         commonReadMore,
         commonRequired,
         commonSave,
@@ -204,12 +236,15 @@ class GeLabelService {
         geAssistiveSectionUp,
         geAssistiveShowMenu,
         geAssistiveSpinner,
+        geBodyAdvancedFieldMapping,
         geBodyBatchDefaultValues,
         geBodyBatchFieldBundleInfo,
         geBodyBatchHeaderLeftCol,
         geBodyBatchHeaderRightCol,
         geBodyBatchHeaderWarning,
         geBodyEmptyFormSection,
+        geBodyFieldBundlesLeftCol,
+        geBodyFormFieldsDescLeftCol,
         geBodyFormFieldsLeftCol,
         geBodyFormFieldsLeftColAdditional,
         geBodyFormFieldsModalDeleteSection,
@@ -222,6 +257,7 @@ class GeLabelService {
         geBodyMatchingUpdatingDonation,
         geBodyTemplateInfoLeftCol,
         geBodyTemplatesTabDescription,
+        geBodyWidgetFields,
         geButtonBuilderNavBackFormFields,
         geButtonBuilderNavBackTemplateInfo,
         geButtonBuilderNavBatchHeader,
@@ -259,6 +295,7 @@ class GeLabelService {
         geErrorPageLevelMissingRequiredFields,
         geErrorPageLevelMissingRequiredGroupFields,
         geErrorRequiredField,
+        geHeaderAdvancedFormFields,
         geHeaderBatchEnterInfo,
         geHeaderBatchGiftEntry,
         geHeaderBatchHeaderLeftCol,
@@ -266,8 +303,8 @@ class GeLabelService {
         geHeaderBatchSelectTemplate,
         geHeaderBatchSetDefaultValues,
         geHeaderCustomTableHeaders,
-        geHeaderElevate,
         geHeaderEmptyFormSection,
+        geHeaderFieldBundles,
         geHeaderFormFieldsDefaultSectionName,
         geHeaderFormFieldsLeftCol,
         geHeaderFormFieldsModalDeleteSection,
@@ -282,11 +319,22 @@ class GeLabelService {
         geHeaderNewSection,
         geHeaderNewTemplate,
         geHeaderPageLevelError,
+        geHeaderPaymentServices,
         geHeaderSingleGiftEntry,
         geHeaderTemplateInfoLeftCol,
+        geHelpTextAccount1Mapping,
+        geHelpTextAccount2Mapping,
+        geHelpTextAddressMapping,
+        geHelpTextAllocation1Mapping,
+        geHelpTextAllocation2Mapping,
+        geHelpTextAllocationBundle,
         geHelpTextBatchHeaderFieldLabelLabel,
+        geHelpTextContact1Mapping,
+        geHelpTextContact2Mapping,
         geHelpTextFormFieldsFieldCustomLabel,
         geHelpTextFormFieldsFieldLabelLabel,
+        geHelpTextHouseholdMapping,
+        geHelpTextPaymentServices,
         geLabelCustomTableSelectedFields,
         geLabelCustomTableSourceFields,
         geLabelSectionName,

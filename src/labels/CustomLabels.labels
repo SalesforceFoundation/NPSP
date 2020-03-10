@@ -4448,6 +4448,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>commonAmount</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Amount</shortDescription>
+        <value>Amount</value>
+    </labels>
+    <labels>
         <fullName>commonAssistiveError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4504,12 +4512,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Cancel</value>
     </labels>
     <labels>
+        <fullName>commonCardType</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for credit card type</shortDescription>
+        <value>Card Type</value>
+    </labels>
+    <labels>
         <fullName>commonClone</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Clone</shortDescription>
         <value>Clone</value>
+    </labels>
+    <labels>
+        <fullName>commonCreditNumber</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for credit card number</shortDescription>
+        <value>Credit Number</value>
     </labels>
     <labels>
         <fullName>commonDefaultValue</fullName>
@@ -4552,6 +4576,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Field Label</value>
     </labels>
     <labels>
+        <fullName>commonGeneralAccountUnit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for General Accounting Unit</shortDescription>
+        <value>General Account Unit</value>
+    </labels>
+    <labels>
+        <fullName>commonMMYY</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for expiration date (MM/YY)</shortDescription>
+        <value>MM/YY</value>
+    </labels>
+    <labels>
         <fullName>commonNewGift</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4590,6 +4630,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Open</shortDescription>
         <value>Open</value>
+    </labels>
+    <labels>
+        <fullName>commonPaymentServices</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for Payment Services</shortDescription>
+        <value>Payment Services</value>
+    </labels>
+    <labels>
+        <fullName>commonPercent</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Percent</shortDescription>
+        <value>Percent</value>
     </labels>
     <labels>
         <fullName>commonReadMore</fullName>
@@ -5039,6 +5095,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geBodyAdvancedFieldMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Advanced Form Fields header</shortDescription>
+        <value>For more advanced gift entry options, select fields from the following Object Groups.</value>
+    </labels>
+    <labels>
         <fullName>geBodyBatchFieldBundleInfo</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5089,12 +5153,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Select fields to add to this section.</value>
     </labels>
     <labels>
+        <fullName>geBodyFieldBundlesLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Field Bundles header</shortDescription>
+        <value>Each field bundle is a managed set of fields that allow users to perform different gift entry actions.</value>
+    </labels>
+    <labels>
         <fullName>geBodyFormFieldsLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Form Fields sidebar text block</shortDescription>
         <value>Choose fields to include in your form. Before adding fields, click the section in the main screen where you want the fields to go. In the sidebar, select the checkbox to add a field, and deselect it to remove the field from the form. If the object or field you want to use isn't listed, make sure you've set up the field with Advanced Mapping.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyFormFieldsDescLeftCol</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body below the Form Fields header</shortDescription>
+        <value>These fields are commonly included in gift entry forms. Custom Object Groups are also found in this section.</value>
     </labels>
     <labels>
         <fullName>geBodyFormFieldsLeftColAdditional</fullName>
@@ -5206,6 +5286,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Template landing screen text block</shortDescription>
         <value>A template is a reusable layout of fields for data entry. Edit a template by clicking the template name. Alternatively, create a new template or click any template's dropdown menu for more options. Any templates that are in use can't be deleted.</value>
+    </labels>
+    <labels>
+        <fullName>geBodyWidgetFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field bundle body before list of fields</shortDescription>
+        <value>{0} field bundle includes the following fields: </value>
     </labels>
     <labels>
         <fullName>geButtonBuilderNavBackFormFields</fullName>
@@ -5555,6 +5643,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Required field</value>
     </labels>
     <labels>
+        <fullName>commonGauAllocations</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for GAU Allocations</shortDescription>
+        <value>GAU Allocations</value>
+    </labels>
+    <labels>
+        <fullName>geHeaderAdvancedFormFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for advanced form fields</shortDescription>
+        <value>Advanced Form Fields</value>
+    </labels>
+    <labels>
         <fullName>geHeaderBatchEnterInfo</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5611,12 +5715,12 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Select Fields to Display</value>
     </labels>
     <labels>
-        <fullName>geHeaderElevate</fullName>
+        <fullName>geHeaderPaymentServices</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>iFrame header for credit card information</shortDescription>
-        <value>Powered by Elevate</value>
+        <shortDescription>iFrame header for Payment Services information</shortDescription>
+        <value>Powered by Payment Services</value>
     </labels>
     <labels>
         <fullName>geHeaderEmptyFormSection</fullName>
@@ -5767,12 +5871,76 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Gift Entry Template Information</value>
     </labels>
     <labels>
+        <fullName>geHelpTextAccount1Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Account1 Object Group</shortDescription>
+        <value>The fields in this section are only for Organization Accounts. This organization can be the donor or have an Affiliation with Contact1.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAccount2Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Account2 Object Group</shortDescription>
+        <value>The fields in this section are only for Organization Accounts. This organization can have an Affiliation with Contact2.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAddressMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Address Object Group</shortDescription>
+        <value>The Address record that's associated with Contact1's Household Account. NPSP automation may also populate this address to Contact1's household and all contacts within the same household. If you're using the EDA Address object, you should create a new Object Group for the object and use its fields on your template.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAllocation1Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for GAU Allocation 1 object group</shortDescription>
+        <value>This Object Group only allows you to enter a single GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAllocation2Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for GAU Allocation 2 object group</shortDescription>
+        <value>This Object Group only allows you to enter a second GAU Allocation. Use these fields only if mapping custom fields on GAU Allocations. If not, use the GAU Allocations Field Bundle.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextAllocationBundle</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text about GAU Allocation field bundle</shortDescription>
+        <value>Use this field bundle to allocate donations across multiple General Accounting Units.</value>
+    </labels>
+    <labels>
         <fullName>geHelpTextBatchHeaderFieldLabelLabel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for Batch Header Field Label</shortDescription>
         <value>You can rename the user-facing field labels.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextContact1Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Contact1 Object Group</shortDescription>
+        <value>The primary Contact in a Household Account. This Contact can be the donor or have an Affiliation with the organization in Account1.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextContact2Mapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Contact2 Object Group</shortDescription>
+        <value>The secondary Contact in Contact1's Household Account. This Contact could also have an Affiliation with the organization in Account2.</value>
     </labels>
     <labels>
         <fullName>geHelpTextFormFieldsFieldCustomLabel</fullName>
@@ -5792,6 +5960,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Help text for Form Fields Field Label</shortDescription>
         <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextPaymentServices</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Temporary note about only being able to use Payment Services with single gifts</shortDescription>
+        <value>Note: This field bundle is only available for single gifts and will not show up when entering batches gifts.</value>
+    </labels>
+    <labels>
+        <fullName>geHelpTextHouseholdMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Household Object Group</shortDescription>
+        <value>Additional information about Contact1's Household Account.</value>
     </labels>
     <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
