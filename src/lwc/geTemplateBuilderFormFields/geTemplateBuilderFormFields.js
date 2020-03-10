@@ -97,14 +97,14 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     };
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT_INFO })
-        dataImportObjectInfo({ data, error }) {
-            if (data) {
-                this.buildRequiredFieldsMessage(data);
-            }
-            if (error) {
-                handleError(error);
-            }
+    dataImportObjectInfo({ data, error }) {
+        if (data) {
+            this.buildRequiredFieldsMessage(data);
         }
+        if (error) {
+            handleError(error);
+        }
+    }
 
     @api
     validate() {
@@ -116,7 +116,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
         elements.forEach(el => {
             if (REQUIRED_FORM_FIELDS.includes(el.getAttribute('data-source-api-name')) && el.checked) {
-              countOfConditionallyRequiredFormFields++;
+                countOfConditionallyRequiredFormFields++;
             }
             if (el.required && !el.checked) {
                 objectMappingsWithMissingRequiredFields.add(el.getAttribute('data-object-mapping'));
@@ -225,7 +225,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                 this.objectMappingNames = [...this.objectMappingNames, objMappingDevName];
 
                 let fieldMappings = TemplateBuilderService.fieldMappingsByObjMappingDevName[objMappingDevName];
-                fieldMappings.forEach (fieldMapping => {
+                fieldMappings.forEach(fieldMapping => {
                     if (fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL) {
                         //Forcing the requiredness of the Donation Donor field mapping
                         fieldMapping.Is_Required = true;
@@ -541,13 +541,13 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      *
      * @param {object} objectData: Returned Object Schema
      */
-    buildRequiredFieldsMessage(objectData){
+    buildRequiredFieldsMessage(objectData) {
         REQUIRED_FORM_FIELDS_MESSAGE = ''; // Clear out required fields placeholder
-        for (let i= 0; i< REQUIRED_FORM_FIELDS.length; i++) {
+        for (let i = 0; i < REQUIRED_FORM_FIELDS.length; i++) {
             let character;
             if (i < REQUIRED_FORM_FIELDS.length - 1) {
                 character = COMMA_CHARACTER;
-            } else if ( i === REQUIRED_FORM_FIELDS.length - 1) {
+            } else if (i === REQUIRED_FORM_FIELDS.length - 1) {
                 character = PERIOD_CHARACTER;
             }
             REQUIRED_FORM_FIELDS_MESSAGE += objectData.fields[REQUIRED_FORM_FIELDS[i]].label + character;
@@ -591,7 +591,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      * @return {*[]|*}
      */
     get basicObjectMappings() {
-        if(this.objectMappings) {
+        if (this.objectMappings) {
             return this.objectMappings
                 .filter(mapping =>
                     !ADVANCED_MAPPING_MASTER_NAMES.includes(mapping.MasterLabel) &&
@@ -606,7 +606,7 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      * @return {*[]|*}
      */
     get advancedObjectMappings() {
-        if(this.objectMappings) {
+        if (this.objectMappings) {
             return this.objectMappings
                 .filter(mapping => ADVANCED_MAPPING_MASTER_NAMES.includes(mapping.MasterLabel))
                 .map(this.mapHelpText);
@@ -631,12 +631,60 @@ export default class geTemplateBuilderFormFields extends LightningElement {
      * Get field bundle mappings for the sidebar.
      */
     get fieldBundleMappings() {
-        if(this.objectMappings) {
+        if (this.objectMappings) {
             return this.objectMappings
                 .filter(mapping => FIELD_BUNDLE_MASTER_NAMES.includes(mapping.MasterLabel))
                 .map(this.mapHelpText);
         }
         return [];
     }
+
+    /*******************************************************************************
+    * Start getters for data-qa-locator attributes
+    */
+
+    get qaLocatorSectionFieldBundles() {
+        return `section ${this.CUSTOM_LABELS.geHeaderFieldBundles}`;
+    }
+
+    get qaLocatorExpandFieldBundles() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsExpandAll} ${this.CUSTOM_LABELS.geHeaderFieldBundles}`;
+    }
+
+    get qaLocatorCollapseFieldBundles() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsCollapseAll} ${this.CUSTOM_LABELS.geHeaderFieldBundles}`;
+    }
+
+    get qaLocatorSectionFormFields() {
+        return `section ${this.CUSTOM_LABELS.geTabFormFields}`;
+    }
+
+    get qaLocatorExpandFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsExpandAll} ${this.CUSTOM_LABELS.geTabFormFields}`;
+    }
+
+    get qaLocatorCollapseFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsCollapseAll} ${this.CUSTOM_LABELS.geTabFormFields}`;
+    }
+
+    get qaLocatorSectionAdvancedFormFields() {
+        return `section ${this.CUSTOM_LABELS.geHeaderAdvancedFormFields}`;
+    }
+
+    get qaLocatorExpandAdvancedFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsExpandAll} ${this.CUSTOM_LABELS.geHeaderAdvancedFormFields}`;
+    }
+
+    get qaLocatorCollapseAdvancedFormFields() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsCollapseAll} ${this.CUSTOM_LABELS.geHeaderAdvancedFormFields}`;
+    }
+
+    get qaLocatorAddSection() {
+        return `button ${this.CUSTOM_LABELS.geButtonFormFieldsAddSection}`;
+    }
+
+    /*******************************************************************************
+    * End getters for data-qa-locator attributes
+    */
 
 }
