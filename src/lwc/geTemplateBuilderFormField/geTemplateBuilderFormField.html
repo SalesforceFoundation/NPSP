@@ -1,5 +1,5 @@
 <template>
-    <article class="slds-card slds-card_extension slds-m-vertical_small">
+    <article class={cssClassCard}>
         <div class="slds-card__body slds-card__body_inner">
             <div class="slds-grid slds-grid_vertical-align-end">
 
@@ -28,6 +28,7 @@
                                   value={field.value}
                                   variant="label-hidden"
                                   onchangevalue={handleOnChange}
+                                  widget-name={name}
                                   data-qa-locator={qaLocatorInputDefaultValue}>
                     </c-util-input>
                 </div>
@@ -51,7 +52,7 @@
                     </template>
                 </div>
 
-                <div class="slds-size_1-of-12 slds-p-bottom_x-small">
+                <div class={cssClassActionsContainer}>
                     <div class="slds-float_right">
                         <lightning-button-icon class="slds-m-right_xxx-small "
                                                icon-name="utility:delete"
