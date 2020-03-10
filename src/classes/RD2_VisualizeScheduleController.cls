@@ -84,35 +84,17 @@ public with sharing class RD2_VisualizeScheduleController {
     public static List<Installment> getInstallments(Id recordId, Integer displayNum) {
         validate(recordId);
 
-        
+        Integer counter = 1;
         List<Installment> installments = new List<Installment>();
+        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
-        RD2_RecurringDonation rd = new RD2_RecurringDonation(getRecurringDonation(recordId))
-            .reviseScheduleEndDateForFixedLength(scheduleService);
+        scheduleService.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
 
-        if (!rd.isClosed()) {
-            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(RD2_ScheduleService.currentDate)
-            .include(rd.getOpportunities())
-            .match(scheduleService.getVisualizedInstallments(
-                RD2_ScheduleService.currentDate, displayNum + rd.getOpportunities().size(), rd.getSchedules())
-            );
-
-            Integer counter = 1;
-            
-            for (RD2_OpportunityMatcher.Record installment : matcher.getRecords()) {
-                if (counter > displayNum) {
-                    break;
-                }
-
-                if (!installment.IsNew() && installment.isClosed()) {
-                    continue;
-                }
-
-                if (installment.hasInstallment()) {
-                    installments.add(new Installment(counter, rd.getRecord(), installment.getInstallment()));
-                }
-
-                counter++;
+        if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+            for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
+                RD2_ScheduleService.currentDate, displayNum, rd.RecurringDonationSchedules__r
+            )) {
+                installments.add(new Installment(counter++, rd, installment));
             }
         }
 
@@ -134,11 +116,11 @@ public with sharing class RD2_VisualizeScheduleController {
 
         Integer counter = 1;
         List<Schedule> activeSchedules = new List<Schedule>();
-        RD2_RecurringDonation rd = new RD2_RecurringDonation(getRecurringDonation(recordId)).reviseScheduleEndDateForFixedLength(scheduleService);
+        npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
 
-        if (!rd.isClosed()) {
-            for (RD2_ScheduleService.ActiveSchedule schedule : scheduleService.getVisualizedSchedules(rd.getRecord())) {
-                activeSchedules.add(new Schedule(counter++, rd.getRecord(), schedule));
+        if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+            for (RD2_ScheduleService.ActiveSchedule schedule : scheduleService.getVisualizedSchedules(rd)) {
+                activeSchedules.add(new Schedule(counter++, rd, schedule));
             }
         }
 
