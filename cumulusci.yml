@@ -757,6 +757,27 @@ flows:
                     sql_path: datasets/rd2_pilot/data.sql
                     database_url: ""
 
+    create_testing_user:
+        description: Creates a testing User assigned a new NPSP_Standard_User profile with access to all NPSP objects & fields. Perfect for testing security with a non-system admin type User.
+        steps:
+            1:
+                task: deploy
+                options:
+                    namespace_inject: $project_config.project__package__namespace
+                    path: unpackaged/config/npsp_standard_user_profile
+            2:
+                task: update_admin_profile
+                options:
+                    namespace_inject: $project_config.project__package__namespace
+                    profile_name: NPSP_Standard_User
+                    package_xml: lib/npsp_standard_user_profile.xml
+            3:
+                task: execute_anon
+                options:
+                    path: scripts/New_Testing_User.cls
+                    apex: createTestingUser();
+
+
 orgs:
     scratch:
         dev_multicurrency:

@@ -85,6 +85,18 @@ export default class GeTemplates extends NavigationMixin(LightningElement) {
     }
 
     /*******************************************************************************
+    * Start getters for data-qa-locator attributes
+    */
+
+    get qaLocatorCreateTemplate() {
+        return `button ${this.CUSTOM_LABELS.geButtonTemplatesTabCreateTemplate}`;
+    }
+
+    /*******************************************************************************
+    * End getters for data-qa-locator attributes
+    */
+
+    /*******************************************************************************
     * @description Public method for receiving modal related events from geListView.
     *
     * @param {object} modalData: Event object containing the action and modal payload.
