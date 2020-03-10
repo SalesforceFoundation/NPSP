@@ -23,10 +23,12 @@
                     </slot>
                     <lightning-button-menu variant="border-filled"
                                            icon-name="utility:settings"
-                                           menu-alignment="auto">
+                                           menu-alignment="auto"
+                                           data-qa-locator={qaLocatorSettings}>
                         <lightning-menu-item value="selectFieldsToDisplay"
                                              label={CUSTOM_LABELS.geHeaderCustomTableHeaders}
-                                             onclick={toggleModal}>
+                                             onclick={toggleModal}
+                                             data-qa-locator={qaLocatorSettingsSelectFields}>
                         </lightning-menu-item>
                     </lightning-button-menu>
                 </div>
@@ -59,7 +61,8 @@
                              onrowaction={handleRowAction}
                              sorted-by={sortedBy}
                              sorted-direction={sortedDirection}
-                             onsort={handleColumnSorting}>
+                             onsort={handleColumnSorting}
+                             data-qa-locator={qaLocatorDatatable}>
         </lightning-datatable>
     </template>
 
@@ -78,7 +81,8 @@
         <footer class="slds-card__footer slds-m-top_none">
             <template if:true={hasRecords}>
                 <a class="slds-card__footer-action"
-                   onclick={handleViewMore}>
+                   onclick={handleViewMore}
+                   data-qa-locator={qaLocatorViewMore}>
                     {CUSTOM_LABELS.commonViewMore}
                 </a>
             </template>
