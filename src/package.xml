@@ -1921,6 +1921,7 @@
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>
+        <members>commonAmount</members>
         <members>commonAssistiveError</members>
         <members>commonAssistiveInfo</members>
         <members>commonAssistiveSuccess</members>
@@ -1928,17 +1929,23 @@
         <members>commonBack</members>
         <members>commonBatches</members>
         <members>commonCancel</members>
+        <members>commonCardType</members>
         <members>commonClone</members>
+        <members>commonCreditNumber</members>
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonGeneralAccountUnit</members>
+        <members>commonMMYY</members>
         <members>commonNewGift</members>
         <members>commonNext</members>
         <members>commonNo</members>
         <members>commonNoItems</members>
         <members>commonOpen</members>
+        <members>commonPaymentServices</members>
+        <members>commonPercent</members>
         <members>commonReadMore</members>
         <members>commonRequired</members>
         <members>commonSave</members>
@@ -2085,12 +2092,12 @@
         <members>geHelpTextBatchHeaderFieldLabelLabel</members>
         <members>geHelpTextFormFieldsFieldCustomLabel</members>
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
+        <members>geHelpTextPaymentServices</members>
         <members>geLabelCustomTableSelectedFields</members>
         <members>geLabelCustomTableSourceFields</members>
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
-        <members>geLabelWidgetPaymentServices</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>

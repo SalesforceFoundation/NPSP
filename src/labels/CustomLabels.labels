@@ -4448,6 +4448,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
+        <fullName>commonAmount</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Amount</shortDescription>
+        <value>Amount</value>
+    </labels>
+    <labels>
         <fullName>commonAssistiveError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4504,12 +4512,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Cancel</value>
     </labels>
     <labels>
+        <fullName>commonCardType</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for credit card type</shortDescription>
+        <value>Card Type</value>
+    </labels>
+    <labels>
         <fullName>commonClone</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Clone</shortDescription>
         <value>Clone</value>
+    </labels>
+    <labels>
+        <fullName>commonCreditNumber</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for credit card number</shortDescription>
+        <value>Credit Number</value>
     </labels>
     <labels>
         <fullName>commonDefaultValue</fullName>
@@ -4552,6 +4576,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Field Label</value>
     </labels>
     <labels>
+        <fullName>commonGeneralAccountUnit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for General Accounting Unit</shortDescription>
+        <value>General Account Unit</value>
+    </labels>
+    <labels>
+        <fullName>commonMMYY</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for expiration date (MM/YY)</shortDescription>
+        <value>MM/YY</value>
+    </labels>
+    <labels>
         <fullName>commonNewGift</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -4590,6 +4630,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Open</shortDescription>
         <value>Open</value>
+    </labels>
+    <labels>
+        <fullName>commonPaymentServices</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for Payment Services</shortDescription>
+        <value>Payment Services</value>
+    </labels>
+    <labels>
+        <fullName>commonPercent</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Percent</shortDescription>
+        <value>Percent</value>
     </labels>
     <labels>
         <fullName>commonReadMore</fullName>
@@ -5802,6 +5858,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
     </labels>
     <labels>
+        <fullName>geHelpTextPaymentServices</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Temporary note about only being able to use Payment Services with single gifts</shortDescription>
+        <value>Note: This field bundle is only available for single gifts and will not show up when entering batches gifts.</value>
+    </labels>
+    <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5840,14 +5904,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for the Template Name field</shortDescription>
         <value>Template Name</value>
-    </labels>
-    <labels>
-        <fullName>geLabelWidgetPaymentServices</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for Payment Services</shortDescription>
-        <value>Payment Services</value>
     </labels>
     <labels>
         <fullName>geSearchPlaceholder</fullName>

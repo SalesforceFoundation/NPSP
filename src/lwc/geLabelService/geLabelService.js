@@ -2,6 +2,7 @@
 import { format } from 'c/utilCommon';
 
 // Import custom labels
+import commonAmount from '@salesforce/label/c.commonAmount';
 import commonAssistiveError from '@salesforce/label/c.commonAssistiveError';
 import commonAssistiveInfo from '@salesforce/label/c.commonAssistiveInfo';
 import commonAssistiveSuccess from '@salesforce/label/c.commonAssistiveSuccess';
@@ -9,16 +10,22 @@ import commonAssistiveWarning from '@salesforce/label/c.commonAssistiveWarning';
 import commonBack from '@salesforce/label/c.commonBack';
 import commonBatches from '@salesforce/label/c.commonBatches';
 import commonCancel from '@salesforce/label/c.commonCancel';
+import commonCardType from '@salesforce/label/c.commonCardType';
 import commonClone from '@salesforce/label/c.commonClone';
+import commonCreditNumber from '@salesforce/label/c.commonCreditNumber';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonGeneralAccountUnit from '@salesforce/label/c.commonGeneralAccountUnit';
+import commonMMYY from '@salesforce/label/c.commonMMYY';
 import commonNewGift from '@salesforce/label/c.commonNewGift';
 import commonNext from '@salesforce/label/c.commonNext';
 import commonNo from '@salesforce/label/c.commonNo';
 import commonNoItems from '@salesforce/label/c.commonNoItems';
+import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
+import commonPercent from '@salesforce/label/c.commonPercent';
 import commonReadMore from '@salesforce/label/c.commonReadMore';
 import commonRequired from '@salesforce/label/c.commonRequired';
 import commonSave from '@salesforce/label/c.commonSave';
@@ -129,12 +136,12 @@ import geHeaderTemplateInfoLeftCol from '@salesforce/label/c.geHeaderTemplateInf
 import geHelpTextBatchHeaderFieldLabelLabel from '@salesforce/label/c.geHelpTextBatchHeaderFieldLabelLabel';
 import geHelpTextFormFieldsFieldCustomLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldCustomLabel';
 import geHelpTextFormFieldsFieldLabelLabel from '@salesforce/label/c.geHelpTextFormFieldsFieldLabelLabel';
+import geHelpTextPaymentServices from '@salesforce/label/c.geHelpTextPaymentServices';
 import geLabelCustomTableSelectedFields from '@salesforce/label/c.geLabelCustomTableSelectedFields';
 import geLabelCustomTableSourceFields from '@salesforce/label/c.geLabelCustomTableSourceFields';
 import geLabelSectionName from '@salesforce/label/c.geLabelSectionName';
 import geLabelTemplateInfoDescriptionField from '@salesforce/label/c.geLabelTemplateInfoDescriptionField';
 import geLabelTemplateInfoNameField from '@salesforce/label/c.geLabelTemplateInfoNameField';
-import geLabelWidgetPaymentServices from '@salesforce/label/c.geLabelWidgetPaymentServices';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
@@ -163,6 +170,7 @@ class GeLabelService {
     * utility method is provided.
     */
     CUSTOM_LABELS = Object.freeze({
+        commonAmount,
         commonAssistiveError,
         commonAssistiveInfo,
         commonAssistiveSuccess,
@@ -170,16 +178,22 @@ class GeLabelService {
         commonBack,
         commonBatches,
         commonCancel,
+        commonCardType,
         commonClone,
+        commonCreditNumber,
         commonDefaultValue,
         commonDelete,
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonGeneralAccountUnit,
+        commonMMYY,
         commonNewGift,
         commonNext,
         commonNo,
         commonNoItems,
+        commonPaymentServices,
+        commonPercent,
         commonReadMore,
         commonRequired,
         commonSave,
@@ -290,12 +304,12 @@ class GeLabelService {
         geHelpTextBatchHeaderFieldLabelLabel,
         geHelpTextFormFieldsFieldCustomLabel,
         geHelpTextFormFieldsFieldLabelLabel,
+        geHelpTextPaymentServices,
         geLabelCustomTableSelectedFields,
         geLabelCustomTableSourceFields,
         geLabelSectionName,
         geLabelTemplateInfoDescriptionField,
         geLabelTemplateInfoNameField,
-        geLabelWidgetPaymentServices,
         geSearchPlaceholder,
         geSelectPlaceholder,
         geTabBatchHeader,

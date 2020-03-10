@@ -37,9 +37,9 @@ class GeWidgetService {
             },
             geFormWidgetTokenizeCard: {
                 DeveloperName: 'geFormWidgetTokenizeCard',
-                MasterLabel: GeLabelService.CUSTOM_LABELS.geLabelWidgetPaymentServices,
+                MasterLabel: GeLabelService.CUSTOM_LABELS.commonPaymentServices,
                 Target_Object_Mapping_Dev_Name: 'Widgets',
-                Target_Field_Label: GeLabelService.CUSTOM_LABELS.geLabelWidgetPaymentServices,
+                Target_Field_Label: GeLabelService.CUSTOM_LABELS.commonPaymentServices,
                 Required: 'No',
                 Element_Type: 'widget',
                 ...this.getMappingDeveloperNames(
