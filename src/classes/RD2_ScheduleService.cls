@@ -792,41 +792,30 @@ public without sharing class RD2_ScheduleService {
             return;
         }
 
-        Integer numberOfOpenSlots = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments();
+        Integer estimatedOpenSlots = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments() + rd.npe03__Donations__r.size();
 
-        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-            .includeCurrentOrOpen(rd.npe03__Donations__r);
+        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(currentDate)
+            .include(rd.npe03__Donations__r)
+            .match(
+                getVisualizedInstallments(currentDate, estimatedOpenSlots, rdSchedules)
+            )
+            .getRecords();
 
-        //If the current Next Donation Date Opp is closed lost
-        //and the number of open slots is 1, we need to get one more installment
-        //to get the Next Donation Date
-        Integer numberOfInstallments = matcher.getNumberOfOpportunities() + 1 + numberOfOpenSlots;
-        matcher.match(getVisualizedInstallments(
-            currentDate, numberOfInstallments, rdSchedules)
-        );
-        
-        Date scheduleEndDate = null;
-        for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
-            if (numberOfOpenSlots <= 0) {
-                break;
+        //Remove all closed installments
+        for (Integer i = records.size() - 1; i >= 0 ; i--) {
+            if (!records[i].IsNew() && records[i].getOpportunity().isClosed) {
+                records.remove(i);
             }
-
-            //take the slot if it is an installment without a matching Opp 
-            //or it is a record matching an open Opp w/o an installment
-            if (record.isNew() || record.isOpen()) {
-                numberOfOpenSlots--;
-            }
-
-            //Advance the Next Donation Date
-            scheduleEndDate = record.hasInstallment() 
-                ? record.getInstallment().nextDonationDate
-                : record.getCloseDate();
         }
 
-        if (scheduleEndDate == null) {
-            return;
-        }
-        
+        Integer lastIndex = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments() - 1;
+
+        Date scheduleEndDate = records.isEmpty()
+            ? currentDate.addDays(-1)
+            : records[lastIndex].hasInstallment()
+                ? records[lastIndex].getInstallment().nextDonationDate
+                : records[lastIndex].getCloseDate(); 
+
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
             if (schedule.EndDate__c == null) {
                 schedule.EndDate__c = scheduleEndDate;

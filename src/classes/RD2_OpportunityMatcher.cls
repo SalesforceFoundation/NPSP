@@ -169,6 +169,19 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
+    * @description Includes all Opportunites regardless of their status
+    * @param opps Recurring Donation Opportunities 
+    * @return RD2_OpportunityMatcher This Opportunity matcher instance
+    */
+    public RD2_OpportunityMatcher include(List<Opportunity> opps) {
+        for (Opportunity opp : opps) {
+            recordByCloseDate.put(opp.CloseDate, new Record(opp));
+        }
+
+        return this;
+    }
+
+    /***
      * @description Determines if the Opportunity is marked as Closed Lost in data migration
      * @param opp Recurring Donation Opportunity
      * @return Boolean
