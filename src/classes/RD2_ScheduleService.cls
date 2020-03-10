@@ -414,54 +414,6 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the date of the next donation and returns the Opportunity matcher record
-    * that contains the next donation installment and might contain the matching open Opportunity.
-    * @param rd Recurring Donation record
-    * @param rdSchedules Schedules on the Recurring Donation record
-    * @return RD2_OpportunityMatcher.Record
-    */
-    public RD2_OpportunityMatcher.Record getNextDonationDateRecord(npe03__Recurring_Donation__c rd, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
-
-        if (rdSchedules == null || rdSchedules.isEmpty() 
-            || rdRecord.isClosed() 
-            || rdRecord.isFixedLengthComplete()
-        ) {
-            return null;
-        }
-
-        evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
-        
-        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//cache current matcher by RD Id //TODO
-            .includeCurrent(rd.npe03__Donations__r);
-
-        Integer numberOfInstallments = matcher.getNumberOfOpportunities() + 1;
-        matcher.match(getVisualizedInstallments(
-            currentDate, numberOfInstallments, rdSchedules
-        ));
-
-        return getNextDonationDateRecord(matcher);
-    }
-
-    /**
-    * @description Returns the first installment record not matching an Opportunity
-    * or the first installment record matching an open Opportunity, whichever is earlier
-    * @param matcher Opportunity and installment matcher
-    * @return RD2_OpportunityMatcher.Record
-    */
-    private RD2_OpportunityMatcher.Record getNextDonationDateRecord(RD2_OpportunityMatcher matcher) {
-        //records are ordered by the date
-        for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
-            if (record.hasInstallment()
-                && (record.isNew() || record.isOpen())
-            ) {
-                return record;
-            }
-        }
-        return null;
-    }
-
-    /***
     * @description Calculates the next donation date >= referenced date
     * @param schedule Recurring Donation Schedule record
     * @param referenceDate Reference date used to calculate next donation date. It can be today or a future projected date.
