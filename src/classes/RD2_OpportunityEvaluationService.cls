@@ -290,6 +290,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             rdRecord
                 .setIsNew(newRDIds.contains(rd.Id))
+                .reviseStatusForFixedLength()
                 .reviseNextDonationDate(scheduleService);
 
             if (rdRecord.isClosed()) {
@@ -346,6 +347,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
 
             if (rdRecord
+                .reviseStatusForFixedLength()
                 .reviseNextDonationDate(scheduleService)
                 .reviseYearValues(yearValueProcessor)
                 .isOutdated()

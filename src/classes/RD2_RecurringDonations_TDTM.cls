@@ -160,6 +160,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 rdRecord
+                    .reviseStatusForFixedLength()
                     .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
             }
         }

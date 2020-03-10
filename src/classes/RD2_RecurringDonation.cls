@@ -91,8 +91,6 @@ public inherited sharing class RD2_RecurringDonation {
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) { 
-        reviseStatusForFixedLength();
-
         return setNextDonationDate(
             scheduleService.getNextDonationDate(rd, rdSchedules)
         );
