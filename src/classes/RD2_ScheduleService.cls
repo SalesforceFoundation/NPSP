@@ -415,6 +415,7 @@ public without sharing class RD2_ScheduleService {
         if (rdSchedules == null  || rdSchedules.isEmpty() || rd.Status__c == RD2_Constants.STATUS_CLOSED) {
             return null;
         }
+
         evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
         
         RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//cache current matcher by RD Id //TODO
@@ -424,7 +425,6 @@ public without sharing class RD2_ScheduleService {
         matcher.match(getVisualizedInstallments(
             currentDate, numberOfInstallments, rdSchedules
         ));
-
 
         return getNextDonationDateRecord(matcher);
     }
