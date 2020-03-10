@@ -41,4 +41,4 @@ Check Recurring Donation Autoname
 
     #Turn off Autonaming to Reset Setting
     Salesforce Update            npe03__Recurring_Donations_Settings__c     ${recurringsettings}[0][Id]
-    ...                          ${ns}EnableAutomaticNaming__c=false
+    ...                          ${ns}EnableAutomaticNaming__c=false 
