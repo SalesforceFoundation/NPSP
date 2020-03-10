@@ -195,7 +195,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         insert c;
 
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withInstallments(0)
+            .withPlannedInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -623,7 +623,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withAccount(acc.Id)
             .withAmount(100)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriodYearly()
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
             .withNextPaymentDate(TODAY)
@@ -636,60 +636,6 @@ private with sharing class RD_RecurringDonations_TEST2 {
         String query = batch.start(null).getQuery();
 
         return Database.query(query);
-    }
-
-    @isTest
-    private static void testBTN() {
-        Account a = new Account(Name = 'TestA');
-        insert a;
-        npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationWeeklyInstallment(null);
-        rd.npe03__Organization__c = a.Id;
-        rd.npe03__Open_Ended_Status__c = RD_Constants.OPEN_ENDED_STATUS_OPEN;
-        rd.npe03__Next_Payment_Date__c = TODAY;
-        insert rd;
-
-        delete[select id from npe03__Custom_Field_Mapping__c];
-        insert new npe03__Custom_Field_Mapping__c(
-            Name = 'CFM-' + system.now(),
-            npe03__Opportunity_Field__c = 'closedate',
-            npe03__Recurring_Donation_Field__c = 'Name'
-        );
-
-        Test.startTest();
-
-        ApexPages.StandardController scc = new ApexPages.StandardController(rd);
-        RD_AddDonationsBTN_CTRL addDonationsBtn = new RD_AddDonationsBTN_CTRL(scc);
-        System.assertEquals(rd.id, addDonationsBtn.sc.getId());
-        addDonationsBtn.buttonClick();
-
-        Test.stopTest();
-    }
-
-    /*******************************************************************************************************
-    * @description Ensures proper message is displayed when navigating to Visualforce page without an ID
-    */
-    @isTest
-    public static void errorMessageDisplayedWhenMissingId() {
-        npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationWeeklyInstallment(null);
-        rd.npe03__Organization__c = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
-
-        Test.startTest();
-
-        ApexPages.StandardController controller = new ApexPages.StandardController(rd);
-        RD_AddDonationsBTN_CTRL addDonationsBtn = new RD_AddDonationsBTN_CTRL(controller);
-
-        //No redirect should occur
-        System.assertEquals(null, addDonationsBtn.buttonClick());
-
-        //Correct info message is returned
-        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationMissingId, ApexPages.Severity.ERROR);
-
-        //Cancel button redirects back to list recurring donation list view
-        Schema.DescribeSObjectResult describeResult = npe03__Recurring_Donation__c.SObjectType.getDescribe();
-        PageReference listViewPage = new PageReference('/' + describeResult.getKeyPrefix());
-        System.assertNotEquals(listViewPage, addDonationsBtn.redirectToRecurringDonationsPage());
-
-        Test.stopTest();
     }
 
     /*******************************************************************************************************
@@ -1233,7 +1179,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         rdList.add(TEST_RecurringDonationBuilder.constructLegacyBuilder()
             .withContact(con.Id)
             .withAmount(100)
-            .withInstallments(2)
+            .withPlannedInstallments(2)
             .withInstallmentPeriodMonthly()
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
             .withScheduleTypeMultiplyValue()
@@ -1275,7 +1221,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //--------------------------------
         // Setup the Recurring Donation
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withInstallments(0)
+            .withPlannedInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -1347,7 +1293,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //--------------------------------
         // Setup the First Recurring Donation
         TEST_RecurringDonationBuilder rdBuilder = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withInstallments(0)
+            .withPlannedInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -1419,7 +1365,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //--------------------------------
         // Setup the First Recurring Donation
         npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
-            .withInstallments(0)
+            .withPlannedInstallments(0)
             .withContact(c.Id)
             .withAmount(100)
             .withDateEstablished(DEFAULT_ESTABLISHED_DATE)
@@ -1571,7 +1517,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             .withAlwaysUseLastDayOfMonth(true)
             .withOpenEndedStatusOpen()
             .withOwnerId()
-            .withInstallments(null)
+            .withPlannedInstallments(null)
             .build();
         rd.npe03__Installments__c = null;   // force this to null because the default is 1
         Test.startTest();

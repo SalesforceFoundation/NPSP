@@ -36,6 +36,12 @@
 public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
     /***
+    * @description Indicates how many days dry validation is valid after completion
+    */
+    @TestVisible
+    private static final Integer DRY_RUN_VALID_DAYS = 7;
+
+    /***
     * @description Enablement service
     */
     @TestVisible
@@ -45,6 +51,20 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 service = new RD2_EnablementService();
             }
             return service;
+        }
+        set;
+    }
+
+    /***
+    * @description The batch job service
+    */
+    @TestVisible
+    private static UTIL_BatchJobService batchJobService {
+        get {
+            if (batchJobService == null) {
+                batchJobService = new UTIL_BatchJobService();
+            }
+            return batchJobService;
         }
         set;
     }
@@ -81,7 +101,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @description An empty method called from actionFunction to reRender panels when it completes
     */
     public void refreshPanels() {
-        
+
     }
 
 
@@ -91,7 +111,13 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled(cacheable=false)
     public static String loadState() {
-        return JSON.serialize(getEnablementState());
+        EnablementState state = getEnablementState();
+
+        if (!state.isEnabled && state.isConfirmed && isDryRunOutdated(state)) {
+            state.isConfirmed = false;
+        }
+
+        return JSON.serialize(state);
     }
 
     /***
@@ -109,6 +135,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 state = (EnablementState) JSON.deserialize(jsonState, EnablementState.class);
             }
 
+            //do not use the enablement values from the settings but refresh them based on the configuration
             state.isReady = service.isRecurringDonations2Ready();
             state.isEnabled = service.isRecurringDonations2Enabled();
 
@@ -119,7 +146,9 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             } else {
                 state.isMetaLaunched = state.isMetaLaunched && state.isEnabled;
                 state.isMetaConfirmed = state.isMetaConfirmed && state.isMetaLaunched && hasMetaDeployCompleted();
-            }
+            }   
+            
+            state.dryRunLimit = getDryRunLimit(state);
 
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
@@ -129,14 +158,47 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Determines if the dry run is outdated
+    * @param state Enablement state
+    * @return Boolean
+    */
+    private static Boolean isDryRunOutdated(EnablementState state) {
+        return batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
+    }
+
+    /***
+    * @description Retrieves number of days that dry run is valid after completion
+    * @param state Enablement state
+    * @return Integer
+    */
+    private static Integer getDryRunLimit(EnablementState state) {
+        Integer dryRunLimit = DRY_RUN_VALID_DAYS;//default
+
+        //if this is a scratch org, enable override for testing purposes
+        if (UTIL_Namespace.isScratchOrg()) {
+            try {
+                if (state.dryRunLimit != null && state.dryRunLimit > 0) {
+                    dryRunLimit = state.dryRunLimit;
+                }
+            } catch (Exception e) {}
+        }
+
+        return dryRunLimit;
+    }
+
+    /***
     * @description Tracks the enablement confirmation user action
     * @return void
     */
     @AuraEnabled
     public static void confirmEnablement() {
         EnablementState state = getEnablementState();
-        state.isConfirmed = true;
 
+        if (isDryRunOutdated(state)) {
+            throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
+        }
+
+        state.isConfirmed = true;
         saveEnablementState(state);
     }
 
@@ -146,6 +208,12 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled
     public static void enableEnhancement() {
+        EnablementState state = getEnablementState();
+
+        if (isDryRunOutdated(state)) {
+            throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
+        }
+
         try {
             STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
 
@@ -153,6 +221,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
                 upsert STG_Panel.stgService.stgRD;
                 UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
             }
+
             System.enqueueJob(new EnablementQueueable(QueueableMode.ScheduleJobs));
 
         } catch (Exception e) {
@@ -166,7 +235,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     @AuraEnabled(cacheable=false)
     public static String getMetaDeployURL() {
-        String urlFormat = 'https://install.salesforce.org/products/npsp/{0}npsp-rd2-pilot';
+        String urlFormat = 'https://install.salesforce.org/products/npsp/{0}enhanced-recurring-donations';
         String version;
 
         if (UTIL_Namespace.isCustomerOrg()) {
@@ -268,13 +337,23 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     @AuraEnabled
     public static Id runDryRun() {
         Id jobId;
-        
+
         try {
+            Boolean isStateUpdate = false;
             EnablementState state = getEnablementState();
+
             if (state.isMetaConfirmed) {
                 state.isDryRun2 = true;
+                isStateUpdate = true;
+
+            } else if (!state.isEnabled && state.isConfirmed) {
+                state.isConfirmed = false;
+                isStateUpdate = true;
+            }
+
+            if (isStateUpdate) {
                 saveEnablementState(state);
-            } 
+            }
 
             RD2_DataMigrationDryRun_BATCH batch = new RD2_DataMigrationDryRun_BATCH();
             jobId = Database.executeBatch(batch, batch.batchSize);
@@ -282,7 +361,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         } catch (Exception e) {
             throwAuraHandledException(e.getMessage());
         }
-        
+
         return jobId;
     }
 
@@ -311,10 +390,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     */
     private static void saveEnablementState(EnablementState state) {
         try {
-            //do not save variables obsolete in the saved enablement state
-            state.isReady = null;
-            state.isEnabled = null;
-
             //save the state
             STG_Panel.stgService.stgRD.RecurringDonations2EnablementState__c = JSON.serialize(state);
 
@@ -336,7 +411,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             return;
         }
 
-        try {            
+        try {
             System.abortJob(batchId);
 
         } catch (Exception e) {
@@ -368,6 +443,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         public Boolean isMetaConfirmed = false;
         public Boolean isDryRun2 = false;
         public Boolean isMigrationEnabled = false;
+        public Integer dryRunLimit = DRY_RUN_VALID_DAYS;
     }
 
     /**
@@ -453,6 +529,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         }
     }
 
-    
+
 
 }
