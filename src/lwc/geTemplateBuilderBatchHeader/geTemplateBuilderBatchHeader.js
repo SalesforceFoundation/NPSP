@@ -47,7 +47,7 @@ export default class geTemplateBuilderBatchHeader extends LightningElement {
             this.validate();
             this.isLoading = false;
         } catch (error) {
-            handleError(this, error);
+            handleError(error);
             this.isLoading = false;
         }
     }
