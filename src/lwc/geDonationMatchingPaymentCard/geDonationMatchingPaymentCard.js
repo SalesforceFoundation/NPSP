@@ -40,7 +40,11 @@ export default class geDonationMatchingPaymentCard extends LightningElement {
         }
     }
 
-    @wire(getRecord, { recordId: '$payment.Id', fields: FIELDS })
+    get paymentId() {
+        return this.payment.Id;
+    }
+
+    @wire(getRecord, { recordId: '$paymentId', fields: FIELDS })
     wiredPayment(response) {
         if (response.data) {
             this.wiredPaymentRecord = response.data;
