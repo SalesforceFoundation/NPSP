@@ -1802,8 +1802,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         &lt;br/&gt;Before your organization starts using Enhanced Recurring Donations:&lt;br/&gt;
         &lt;ul&gt;&lt;li&gt;Turn on workflows, processes, validation rules and triggers that you disabled prior to upgrade.&lt;/li&gt;
         &lt;li&gt;Assign the Enhanced Recurring Donations page layout to all user profiles and remove the old Recurring Donations page layout.&lt;/li&gt;
-        &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;   
-        &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;    
+        &lt;li&gt;Assign the NPSP Recurring Donation Lightning record page as the Org Default.&lt;/li&gt;
+        &lt;li&gt;Assign the RD2_VisualizeScheduleController Apex class to your custom profiles.&lt;/li&gt;
         &lt;li&gt;Adjust field-level security for Recurring Donations fields as necessary for your profiles and permission sets.&lt;/li&gt;
         &lt;li&gt;Adjust Recurring Donations reports to work with Enhanced Recurring Donations.&lt;/li&gt;
         &lt;li&gt;Educate your staff about Enhanced Recurring Donations.&lt;/li&gt;</value>
@@ -2121,6 +2121,15 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>The total Amount of all Closed Won Opps is not equal to the RD Amount.</shortDescription>
         <value>The combined Amount of all related Closed Won and Pledged Opportunities must match the Amount of a Fixed Length Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD_RefreshOppsContinueMessage</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirmation message displayed to user before the process runs</shortDescription>
+        <value>This process updates all future installment Opportunities to match the current data for this Recurring Donation. For some installments, NPSP may delete and recreate new installments.
+&lt;br/&gt;&lt;br/&gt;Click Continue to start the process or Cancel to return to the Recurring Donation page.</value>
     </labels>
     <labels>
         <fullName>REL_Create_New_Relationship</fullName>

@@ -46,7 +46,7 @@
     <apex:attribute name="saveLabel" type="String"
         description="Label for save button. When blank will display stgBtnSave label."/>
     <apex:attribute name="saveImmediate" type="Boolean" default="false"
-        description="Whether the save action should be immediate, defaults to true."/>
+        description="Whether the save action should be immediate, defaults to false."/>
     <apex:attribute name="saveDisabled" type="Boolean" default="false"
         description="Whether the save button should be disabled, defaults to false."/>
     <apex:attribute name="saveReRender" type="String"
@@ -59,9 +59,21 @@
     <apex:attribute name="saveAndNewLabel" type="String"
         description="Label for save and new button."/>
     <apex:attribute name="saveAndNewImmediate" type="Boolean" default="false"
-        description="Whether the save and new action should be immediate, defaults to true."/>
+        description="Whether the save and new action should be immediate, defaults to false."/>
     <apex:attribute name="saveAndNewDisabled" type="Boolean" default="false"
         description="Whether the save and new button should be disabled, defaults to false."/>
+
+    <!-- Continue attributes -->
+    <apex:attribute name="showcontinueBtn" type="Boolean" default="false"
+                    description="Set to false to hide continue button, default is false"/>
+    <apex:attribute name="continueAction" type="ApexPages.Action" default=""
+                    description="Action for continue button."/>
+    <apex:attribute name="continueLabel" type="String"
+                    description="Label for continue button. When blank will display btnContinue label."/>
+    <apex:attribute name="continueImmediate" type="Boolean" default="false"
+                    description="Whether the continue action should be immediate, defaults to false."/>
+    <apex:attribute name="continueDisabled" type="Boolean" default="false"
+                    description="Whether the continue button should be disabled, defaults to false."/>
 
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -102,8 +114,8 @@
                         <p>{!header}</p>
                     </apex:outputPanel>
                 </div>
-
             </div>
+
             <div class="slds-col slds-no-flex slds-align-middle">
                 <div class="slds-button-group" role="group" id="grpBTN">
                     <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancelAction}"
@@ -115,8 +127,12 @@
                     <apex:commandButton id="saveAndNewBTN" styleClass="slds-button slds-button_neutral" action="{!saveAndNewAction}"
                         value="{!BLANKVALUE(saveAndNewLabel,$Label.lvlBtnSaveAndNew)}" immediate="{!saveAndNewImmediate}"
                         disabled="{!saveAndNewDisabled}" rendered="{!showSaveAndNewBtn}"/>
+                    <apex:commandButton id="continueBTN" styleClass="slds-button slds-button_brand" action="{!continueAction}"
+                        value="{!BLANKVALUE(continueLabel,$Label.btnContinue)}" immediate="{!continueImmediate}"
+                        disabled="{!continueDisabled}" rendered="{!showContinueBtn}"/>
                 </div>
             </div>
+
         </div>
     </header>
     </html>

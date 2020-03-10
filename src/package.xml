@@ -1626,6 +1626,7 @@
         <members>RD_ErrorLegacyBatchJobCannotBeRun</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
+        <members>RD_RefreshOppsContinueMessage</members>
         <members>REL_Create_New_Relationship</members>
         <members>REL_Former</members>
         <members>REL_No_Relationships</members>
