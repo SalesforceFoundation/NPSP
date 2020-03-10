@@ -61,8 +61,8 @@ import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRigh
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
 import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
 import geBodyFieldBundlesLeftCol from '@salesforce/label/c.geBodyFieldBundlesLeftCol';
-import geBodyFormFieldsDescLeftCol from '@salesforce/label/c.geBodyFormFieldsDescLeftCol';
 import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
+import geBodyFormFieldsDescLeftCol from '@salesforce/label/c.geBodyFormFieldsDescLeftCol';
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geBodyFormFieldsModalDeleteSection from '@salesforce/label/c.geBodyFormFieldsModalDeleteSection';
 import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
