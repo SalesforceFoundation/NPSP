@@ -369,11 +369,32 @@ const getValueFromDotNotationString = (obj, dotNotationString) => {
     return dotNotationString.split('.').reduce((accumulator, currentValue) => accumulator[currentValue], obj);
 }
 
+/*******************************************************************************
+ * @description Returns an object that contains a subset of the source object's
+ *              properties.  Return includes related object data when present on the
+ *              source object.
+ */
+const getSubsetObject = (sourceObj, propertyNames) => {
+    const subsetObject = {};
+    propertyNames.forEach(propertyName => {
+        if (Object.keys(sourceObj).includes(propertyName)) {
+            subsetObject[propertyName] = sourceObj[propertyName];
+
+            if (Object.keys(sourceObj).includes(propertyName.replace('__c', '__r'))) {
+                subsetObject[propertyName.replace('__c', '__r')] =
+                    sourceObj[propertyName.replace('__c', '__r')];
+            }
+        }
+    });
+    return subsetObject;
+}
+
 export {
     debouncify,
     deepClone,
     findIndexByProperty,
     getQueryParameters,
+    getSubsetObject,
     isEmpty,
     isNotEmpty,
     isNumeric,
