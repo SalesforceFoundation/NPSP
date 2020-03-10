@@ -1411,6 +1411,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.click_button(btn)
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
+        time.sleep(2)
         self.click_flexipage_dropdown(field, value)    
     
     def edit_record_checkbox(self,field,status):
