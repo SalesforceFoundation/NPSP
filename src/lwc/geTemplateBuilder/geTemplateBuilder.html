@@ -16,13 +16,15 @@
                                   title={CUSTOM_LABELS.commonCancel}
                                   variant="neutral"
                                   class="slds-float_right slds-m-right_small"
-                                  onclick={navigateToLandingPage}>
+                                  onclick={navigateToLandingPage}
+                                  data-qa-locator={qaLocatorCancel}>
                 </lightning-button>
                 <lightning-button label={CUSTOM_LABELS.commonSaveAndClose}
                                   title={CUSTOM_LABELS.commonSaveAndClose}
                                   variant="brand"
                                   class="slds-float_right"
-                                  onclick={handleFormTemplateSave}>
+                                  onclick={handleFormTemplateSave}
+                                  data-qa-locator={qaLocatorSaveAndClose}>
                 </lightning-button>
             </div>
         </c-util-page-header>
@@ -101,7 +103,8 @@
                                               title={CUSTOM_LABELS.geButtonBuilderNavBackTemplateInfo}
                                               onclick={handleGoToTab}
                                               variant="outline-brand"
-                                              data-tab-value={TabEnums.INFO_TAB}>
+                                              data-tab-value={TabEnums.INFO_TAB}
+                                              data-qa-locator={qaLocatorBackTemplateInfo}>
                             </lightning-button>
                         </template>
                         <template if:true={inBatchHeaderTab}>
@@ -110,7 +113,8 @@
                                               onclick={handleGoToTab}
                                               variant="outline-brand"
                                               class="slds-m-right_small"
-                                              data-tab-value={TabEnums.FORM_FIELDS_TAB}>
+                                              data-tab-value={TabEnums.FORM_FIELDS_TAB}
+                                              data-qa-locator={qaLocatorBackFormFields}>
                             </lightning-button>
                         </template>
                     </div>
@@ -139,7 +143,8 @@
                                               variant="brand"
                                               class="slds-float_right"
                                               onclick={handleGoToTab}
-                                              data-tab-value={TabEnums.FORM_FIELDS_TAB}>
+                                              data-tab-value={TabEnums.FORM_FIELDS_TAB}
+                                              data-qa-locator={qaLocatorNextFormFields}>
                             </lightning-button>
                         </template>
                         <template if:true={inSelectFieldsTab}>
@@ -148,7 +153,8 @@
                                               class="slds-float_right"
                                               onclick={handleGoToTab}
                                               variant="brand"
-                                              data-tab-value={TabEnums.BATCH_HEADER_TAB}>
+                                              data-tab-value={TabEnums.BATCH_HEADER_TAB}
+                                              data-qa-locator={qaLocatorNextBatchHeaderFields}>
                             </lightning-button>
                         </template>
                         <template if:true={inBatchHeaderTab}>
@@ -156,7 +162,8 @@
                                               title={CUSTOM_LABELS.commonSaveAndClose}
                                               class="slds-float_right"
                                               onclick={handleFormTemplateSave}
-                                              variant="brand">
+                                              variant="brand"
+                                              data-qa-locator={qaLocatorSaveAndClose}>
                             </lightning-button>
                         </template>
                     </div>

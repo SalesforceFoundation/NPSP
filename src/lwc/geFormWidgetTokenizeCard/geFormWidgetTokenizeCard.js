@@ -13,6 +13,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track tokenizeCardPageUrl;
     @track isLoading = true;
 
+    get tokenizeCardHeader() {
+        return GeLabelService.format(
+            this.CUSTOM_LABELS.geHeaderPaymentServices,
+            [this.CUSTOM_LABELS.commonPaymentServices]);
+    }
+
     async connectedCallback() {
         let domainUrl = await getDomainUrl();
         this.domain = domainUrl.split('.')[0];
