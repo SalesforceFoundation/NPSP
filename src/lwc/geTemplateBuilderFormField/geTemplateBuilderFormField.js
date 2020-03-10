@@ -35,6 +35,21 @@ export default class geTemplateBuilderFormField extends LightningElement {
         }
     }
 
+    get cssClassCard() {
+        if (this.field.elementType === WIDGET) {
+            return 'slds-card slds-card_extension slds-card_extension-widget slds-m-vertical_small';
+        } else {
+            return 'slds-card slds-card_extension slds-m-vertical_small';
+        }
+    }
+    get cssClassActionsContainer() {
+        if (this.field.elementType === WIDGET) {
+            return 'slds-size_1-of-12 vertical-align-center'
+        } else {
+            return 'slds-size_1-of-12 slds-p-bottom_x-small';
+        }
+    }
+
     get name() {
         if (this.field.elementType === WIDGET) {
             return this.field.componentName;

@@ -1,0 +1,11 @@
+.credit-card-container {
+    border: 1px solid #0170D2;
+    border-radius: 0.25rem;
+    min-height: 5rem;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.credit-card-header {
+    background-color: #0170D2;
+    color: #FFFFFF;
+}

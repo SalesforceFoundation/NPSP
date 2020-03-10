@@ -39,6 +39,7 @@ export default class utilInput extends LightningElement {
     @api objectApiName;
     @api tabIndex;
     @api variant = 'label-stacked';
+    @api widgetName;
 
     @api value;
 
