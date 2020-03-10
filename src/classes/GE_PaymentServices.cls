@@ -42,11 +42,11 @@ public with sharing class GE_PaymentServices {
         this.paymentMethodToken = token;
     }
 
-    public String makePurchaseCall() {
+    public HttpResponse makePurchaseCall() {
         return makePurchaseCall(this.paymentMethodToken);
     }
 
-    public String makePurchaseCall(String token) {
+    public HttpResponse makePurchaseCall(String token) {
         // Create http request...
         Http http = new Http();
         HttpRequest request = new HttpRequest();
@@ -70,15 +70,7 @@ public with sharing class GE_PaymentServices {
 
         HttpResponse response = http.send(request);
 
-        // Parse the JSON response...
-        if (response.getStatusCode() != 201) {
-            System.debug('The status code returned was not expected: ' +
-                response.getStatusCode() + ' ' + response.getStatus());
-            return JSON.serialize(response.getStatus());
-        } else {
-            System.debug(response.getBody());
-            return JSON.serialize(response.getBody());
-        }
+        return response;
     }
 
     private enum ElevateEndpoints { PURCHASE }

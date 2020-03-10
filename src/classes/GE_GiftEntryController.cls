@@ -37,7 +37,7 @@
 */
 public with sharing class GE_GiftEntryController {
 
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static String getOrgDomain() {
         String url = System.URL.getOrgDomainUrl().getHost();
         String[] urlParts = url.split('\\.');
@@ -45,11 +45,21 @@ public with sharing class GE_GiftEntryController {
         return urlParts[0];
     }
 
-    // TODO: Temporary location for purchase call with hardcoded headers and body
     @AuraEnabled
-    public static string makePurchaseCall(String token) {
+    public static String makePurchaseCall(String token) {
         GE_PaymentServices paymentServices = new GE_PaymentServices(token);
-        return paymentServices.makePurchaseCall();
+        HttpResponse response = paymentServices.makePurchaseCall();
+
+        // Parse the JSON response...
+        if (response.getStatusCode() != 201) {
+            System.debug('The status code returned was not expected: ' +
+                response.getStatusCode() + ' ' + response.getStatus());
+            System.debug(response.getBody());
+            return JSON.serialize(response.getStatus());
+        } else {
+            System.debug(response.getBody());
+            return JSON.serialize(response.getBody());
+        }
     }
 
     /*******************************************************************************************************

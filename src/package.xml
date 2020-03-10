@@ -283,6 +283,8 @@
         <members>GE_GiftEntry_UTIL</members>
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
+        <members>GE_PaymentServices</members>
+        <members>GE_PaymentServices_TEST</members>
         <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
