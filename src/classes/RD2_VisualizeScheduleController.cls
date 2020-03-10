@@ -49,13 +49,13 @@ public with sharing class RD2_VisualizeScheduleController {
     /***
     * @description Recurring Donation custom settings
     */
-    private static Date earliestMatchDate {
+    private static Date startDate {
         get {
-            if (earliestMatchDate == null) {
+            if (startDate == null) {
                 Integer matchDays = new RD2_Settings().nextDonationDateMatchDays;
-                earliestMatchDate = RD2_ScheduleService.currentDate.addDays(-matchDays);
+                startDate = RD2_ScheduleService.currentDate.addDays(-matchDays);
             }
-            return earliestMatchDate;
+            return startDate;
         }
         set;
     }
@@ -176,7 +176,7 @@ public with sharing class RD2_VisualizeScheduleController {
                 'IsClosed, IsWon ' +
                 'FROM npe03__Donations__r ' +
                 'WHERE IsClosed = false ' +
-                'OR CloseDate >=: earliestMatchDate ' +
+                'OR CloseDate >=: startDate ' +
                 'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
             queryFields.add(scheduleSubquery);

@@ -155,16 +155,6 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Revises the schedules' EndDate of fixed length recurring donation
-    * to control how many fixed length future installments should be created
-    * @return RD2_RecurringDonation This record instance
-    */
-    public RD2_RecurringDonation reviseScheduleEndDateForFixedLength(RD2_ScheduleService scheduleService) {
-       scheduleService.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
-       return this;
-    }
-
-    /**
     * @description Indicates if the Recurring Donation is outdated and requiring an update
     * @return Boolean
     */
