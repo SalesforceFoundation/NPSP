@@ -1937,6 +1937,7 @@
         <members>commonEdit</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
         <members>commonMMYY</members>
         <members>commonNewGift</members>
@@ -2066,7 +2067,6 @@
         <members>geErrorPageLevelMissingRequiredFields</members>
         <members>geErrorPageLevelMissingRequiredGroupFields</members>
         <members>geErrorRequiredField</members>
-        <members>geGauAllocationsBundle</members>
         <members>geHeaderAdvancedFormFields</members>
         <members>geHeaderBatchEnterInfo</members>
         <members>geHeaderBatchGiftEntry</members>

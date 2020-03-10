@@ -5643,11 +5643,11 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Required field</value>
     </labels>
     <labels>
-        <fullName>geGauAllocationsBundle</fullName>
+        <fullName>commonGauAllocations</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Name of GAU Allocations field bundle</shortDescription>
+        <shortDescription>Common label for GAU Allocations</shortDescription>
         <value>GAU Allocations</value>
     </labels>
     <labels>

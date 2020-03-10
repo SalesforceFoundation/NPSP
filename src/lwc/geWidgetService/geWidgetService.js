@@ -26,9 +26,9 @@ class GeWidgetService {
         return {
             geFormWidgetAllocation: {
                 DeveloperName: 'geFormWidgetAllocation',
-                MasterLabel: 'Allocations',
+                MasterLabel: GeLabelService.CUSTOM_LABELS.commonGauAllocations,
                 Target_Object_Mapping_Dev_Name: 'Widgets',
-                Target_Field_Label: 'Allocations',
+                Target_Field_Label: GeLabelService.CUSTOM_LABELS.commonGauAllocations,
                 Required: 'No',
                 Element_Type: 'widget',
                 ...this.getMappingDeveloperNames(

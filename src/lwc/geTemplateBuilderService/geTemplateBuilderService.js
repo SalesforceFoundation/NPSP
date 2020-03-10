@@ -4,7 +4,6 @@ import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
 import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
-import geGauAllocationsBundle from '@salesforce/label/c.geGauAllocationsBundle';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
