@@ -87,7 +87,7 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) {
 
-        Date nextDonationDate = isClosed() ? null : scheduleService.getNextDonationDate(rdSchedules);
+        Date nextDonationDate = isClosed() ? null : scheduleService.getNextDonationDate(rd, rdSchedules);
 
         if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
             rd.npe03__Next_Payment_Date__c = nextDonationDate;
@@ -205,54 +205,10 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Return opportunities from the Recurring Donation
-    * @return List<Opportunity>
-    */
-    public List<Opportunity> getOpportunities() {
-        return rd.npe03__Donations__r;
-    }
-
-    /**
-    * @description Return open opportunities from the Recurring Donation
-    * @return List<Opportunity>
-    */
-    public List<Opportunity> getOpenOpportunities() {
-        List<Opportunity> opps = new List<Opportunity>();
-
-        for (Opportunity opp : rd.npe03__Donations__r) {
-            if (opp.IsClosed == false) {
-                opps.add(opp);
-            }
-        }
-
-        return opps;
-    }
-
-    public List<Opportunity> getClosedOpportunities() {
-        List<Opportunity> opps = new List<Opportunity>();
-
-        for (Opportunity opp : rd.npe03__Donations__r) {
-            if (opp.IsClosed == true) {
-                opps.add(opp);
-            }
-        }
-
-        return opps;
-    }
-
-    /**
-    * @description Return schedules record of the Recurring donation
-    * @return List<RecurringDonationSchedule__c> 
-    */
-    public List<RecurringDonationSchedule__c> getSchedules() {
-        return rd.RecurringDonationSchedules__r;
-    }
-
-    /**
     * @description Return the Recurring Donation record
     * @return npe03__Recurring_Donation__c 
     */
-    public npe03__Recurring_Donation__c getRecord() {
+    public npe03__Recurring_Donation__c getSObject() {
         return rd;
     }
 
@@ -351,7 +307,7 @@ public inherited sharing class RD2_RecurringDonation {
 
     /**
     * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
-    * @param currentDate Current Date to compare the Close Date to
+    * @param currentDate The current date
     * @return Boolean
     */
     public Boolean hasCurrentOpenOpportunity(Date currentDate) {

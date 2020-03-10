@@ -53,7 +53,7 @@ public with sharing class RD2_VisualizeScheduleController {
         get {
             if (earliestMatchDate == null) {
                 Integer matchDays = new RD2_Settings().nextDonationDateMatchDays;
-                earliestMatchDate = RD2_ScheduleService.currentDate.addDays(-1 * matchDays);
+                earliestMatchDate = RD2_ScheduleService.currentDate.addDays(-matchDays);
             }
             return earliestMatchDate;
         }

@@ -290,7 +290,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             rdRecord
                 .setIsNew(newRDIds.contains(rd.Id))
-                .reviseScheduleEndDateForFixedLength(scheduleService)
+                .reviseStatusForFixedLength()
                 .reviseNextDonationDate(scheduleService);
 
             if (rdRecord.isClosed()) {
@@ -348,7 +348,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
             if (rdRecord
                 .reviseStatusForFixedLength()
-                .reviseScheduleEndDateForFixedLength(scheduleService)
                 .reviseNextDonationDate(scheduleService)
                 .reviseYearValues(yearValueProcessor)
                 .isOutdated()
@@ -399,24 +398,17 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return false;
         }
 
-        Boolean isCandidate = false;
-
         if (isBatchContext) {
-            isCandidate = !rdSettings.isDisableAllInstallments;
+            return !rdSettings.isDisableAllInstallments;
 
         } else if (rd.isNew()) {
-            isCandidate = rdSettings.isFirstInstallmentEnabled;
+            return rdSettings.isFirstInstallmentEnabled;
 
         } else if (!rd.hasCurrentOpenOpportunity(currentDate)) {
-            isCandidate = rdSettings.isNextInstallmentEnabled;
+            return rdSettings.isNextInstallmentEnabled;
         }
 
-        if (rd.isFixedLength()) {
-            isCandidate = isCandidate &&
-                (rd.getPlannedInstallments() - rd.getPaidInstallments() - rd.getOpenOpportunities().size() > 0);
-        }
-
-        return isCandidate;
+        return false;
     }
 
     /**
