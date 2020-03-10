@@ -53,7 +53,7 @@ public with sharing class RD2_VisualizeScheduleController {
         get {
             if (earliestMatchDate == null) {
                 Integer matchDays = new RD2_Settings().nextDonationDateMatchDays;
-                earliestMatchDate = Date.today().addDays(-1 * matchDays);
+                earliestMatchDate = RD2_ScheduleService.currentDate.addDays(-1 * matchDays);
             }
             return earliestMatchDate;
         }
@@ -100,6 +100,10 @@ public with sharing class RD2_VisualizeScheduleController {
             Integer counter = 1;
             
             for (RD2_OpportunityMatcher.Record installment : matcher.getRecords()) {
+                if (counter > displayNum) {
+                    break;
+                }
+
                 if (!installment.IsNew() && installment.isClosed()) {
                     continue;
                 }
@@ -108,9 +112,6 @@ public with sharing class RD2_VisualizeScheduleController {
                     installments.add(new Installment(counter, rd.getRecord(), installment.getInstallment()));
                 }
 
-                if (counter == displayNum) {
-                    break;
-                }
                 counter++;
             }
         }

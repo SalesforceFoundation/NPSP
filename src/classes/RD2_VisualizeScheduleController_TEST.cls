@@ -451,7 +451,62 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             'Should only return set amount of future installments for fixed length RD (Planned - Paid - All out of cycle installments)');
     }
 
+    /***
+    * @description Validates that visulaizer should consider closed opportunities and return correct amount of installments
+    */
+    @IsTest
+    private static void shouldDisplayCorrectNumberOfFutureInstallmentsWhenClosedOppsMatchesInstallmentWhenRDisFixedLength() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        Date startDate = Date.newInstance(2018, 1, 1);
+        Date today = Date.newInstance(2018, 3, 1);
+        String dayOfMonth = '1';
+
+        Integer maxInstallments = 100;
+        Integer plannedInstallments = 5;
+        Integer paidInstallments = 2;
+
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(plannedInstallments)
+            .withPaidInstallments(paidInstallments)
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .build();
+        insert rd;
+
+        List<Opportunity> opps = new List<Opportunity>();
+        TEST_OpportunityBuilder builder = new TEST_OpportunityBuilder().withRecurringDonation(rd.Id);
+
+        for (Integer month = 0; month < paidInstallments; month++) {
+            opps.add(builder
+                .withClosedWonStage()
+                .withCloseDate(startDate.addMonths(month))
+                .build()
+            );
+        }
+
+        //match 3/1 scheudled installment
+        opps.add(builder
+            .withClosedLostStage()
+            .withCloseDate(today.addDays(-1))
+            .build()    
+        );
+
+        insert opps;
+        
+        Test.startTest();
+        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, maxInstallments);
+        Test.stopTest();
+
+        System.assertEquals(plannedInstallments - paidInstallments , installments.size(),
+            'Should only return set amount of future installments for fixed length RD (Planned - Paid - All out of cycle installments)');
+
+        System.assertEquals(today.addMonths(1), installments[0].donationDate,
+            'The first future installment should be on April 1st because March 1st is closed lost');
+    }
 
     //// Helpers
 
