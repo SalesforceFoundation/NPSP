@@ -8,6 +8,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     
     @track token = 'token_placeholder';
 
+    get tokenizeCardHeader() {
+        return GeLabelService.format(
+            this.CUSTOM_LABELS.geHeaderPaymentServices,
+            [this.CUSTOM_LABELS.commonPaymentServices]);
+    }
     // TODO: public method for returning widget data
     // TODO: method for calling tokenize method in iframe and retrieving the token
 }
