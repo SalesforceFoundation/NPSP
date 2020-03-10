@@ -1156,6 +1156,62 @@ private with sharing class RD2_ScheduleService_TEST {
         System.assertEquals(startDate, rdsNeedUpdate.get(updatedRds[0].Id).StartDate__c, 'Start date should be 12 years from today\'s date');
     }
 
+    /***
+    * @Verifies that fixed length Schedule End Date calculation will properly evaluate matching opportunities 
+    */
+    @IsTest
+    private static void shouldCalculateFixedLengthScheduleEndDateAccordingToExistingOpportunities() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        Integer plannedInstallments = 3;
+        Integer paidInstallments = 2;
+
+        Date startDate = Date.newInstance(2020, 1, 1);
+        Date today = Date.newInstance(2020, 3, 1);
+
+        getScheduleServiceForCurrentDate(today);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(plannedInstallments)
+            .withPaidInstallments(paidInstallments)
+            .withInstallmentFrequency(1)
+            .withStartDate(startDate)
+            .build();
+
+        insert rd;
+
+        List<Opportunity> opps = new List<Opportunity>();
+        TEST_OpportunityBuilder builder = new TEST_OpportunityBuilder().withRecurringDonation(rd.Id);
+
+        for (Integer month = 0; month < paidInstallments; month++) {
+            opps.add(builder
+                .withClosedWonStage()
+                .withCloseDate(startDate.addMonths(month))
+                .build()
+            );
+        }
+
+        //match 3/1 scheudled installment
+        opps.add(builder
+            .withClosedLostStage()
+            .withCloseDate(today.addDays(1))
+            .build()    
+        );
+
+        insert opps;
+
+        rd = new RD2_OpportunityEvaluationService()
+        .getRecurringDonations(new Set<Id>{ rd.Id })[0];
+
+        RD2_ScheduleService service = new RD2_ScheduleService();
+
+        Test.startTest();
+        service.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
+        Test.stopTest();
+
+        System.assertEquals(today.addMonths(1), rd.RecurringDonationSchedules__r[0].EndDate__c,
+            'The schedule EndDate should be set to April 1st when March 1st installment is matched to closed lost');
+    }
 
     //// Helpers
 
