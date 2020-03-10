@@ -37,6 +37,21 @@
 */
 public with sharing class GE_GiftEntryController {
 
+    @AuraEnabled
+    public static String getOrgDomain() {
+        String url = System.URL.getOrgDomainUrl().getHost();
+        String[] urlParts = url.split('\\.');
+
+        return urlParts[0];
+    }
+
+    // TODO: Temporary location for purchase call with hardcoded headers and body
+    @AuraEnabled
+    public static string makePurchaseCall(String token) {
+        GE_PaymentServices paymentServices = new GE_PaymentServices(token);
+        return paymentServices.makePurchaseCall();
+    }
+
     /*******************************************************************************************************
     * @description Creates an AuraHandledException with the specified error message
     *

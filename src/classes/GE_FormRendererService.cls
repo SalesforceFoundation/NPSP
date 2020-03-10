@@ -36,41 +36,6 @@
 */
 public with sharing class GE_FormRendererService {
 
-    // TODO: Maybe create a domain util class? Find a better place for this?
-    @AuraEnabled
-    public static String getDomainUrl() {
-        return System.URL.getOrgDomainUrl().getHost();
-    }
-
-    // TODO: Temporary location for purchase call with hardcoded headers and body
-    @AuraEnabled
-    public static string makePurchaseCall(String token) {
-        // Create http request...
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        request.setEndpoint('https://7jpea5zk79.execute-api.us-west-2.amazonaws.com/v1/payments/verified/purchase');
-        request.setMethod('POST');
-        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader('jwttoken', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBcGlLZXlNYW5hZ2VyIiwiaWF0IjoxNTgzMTk2MTAxLCJleHAiOjE2MTQ3MzIxMTAsImF1ZCI6Ind3dy5leGFtcGxlLmNvbSIsInN1YiI6ImNiYXh0ZXIiLCJzZmRvLmlkIjoiMDBENmcwMDAwMDAwMDAwRUFBIiwic2Zkby5wcm9kdWN0IjoiQ1JNIiwic2Zkby5yb2xlcyI6IlBheW1lbnRzLlB1cmNoYXNlIn0.Fk2kH8occu-tEabrYALiAN16XlIUj4vpptWGs0x8eZs');
-        request.setHeader('sfdo.merchantids', '47b70ca4-0f6e-4c52-819f-667ae804f9d2');
-        request.setHeader('sfdo.username', 'cbaxter');
-
-        // Set the body as a JSON object...
-        request.setBody('{"amount": 25, "currencyCode": "USD", "paymentMethodToken": "' + token + '", "merchantId": "47b70ca4-0f6e-4c52-819f-667ae804f9d2", "gatewayId": "f23da98a-c7aa-4637-962a-8c852e765e38", "email": "bart.simpson@example.com", "firstName": "Bart", "lastName": "Simpson", "metadata": { "campaignCode": "fake-campaign-code" }}');
-
-        HttpResponse response = http.send(request);
-
-        // Parse the JSON response...
-        if (response.getStatusCode() != 201) {
-            System.debug('The status code returned was not expected: ' +
-                response.getStatusCode() + ' ' + response.getStatus());
-            return JSON.serialize(response.getStatus());
-        } else {
-            System.debug(response.getBody());
-            return JSON.serialize(response.getBody());
-        }
-    }
-
     @AuraEnabled
     public static FORM_RenderWrapper getRenderWrapperById(Id templateId) {
         FORM_Service formService = new FORM_Service();

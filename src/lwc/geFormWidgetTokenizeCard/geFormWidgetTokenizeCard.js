@@ -1,9 +1,9 @@
 import { LightningElement, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
-import getDomainUrl from '@salesforce/apex/GE_FormRendererService.getDomainUrl';
+import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 // TODO: temporary makePurchaseCall import below. Remove later.
-import makePurchaseCall from '@salesforce/apex/GE_FormRendererService.makePurchaseCall';
+import makePurchaseCall from '@salesforce/apex/GE_GiftEntryController.makePurchaseCall';
 import { handleError } from 'c/utilTemplateBuilder';
 // TODO: maybe import data import token field reference?
 
@@ -23,8 +23,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     async connectedCallback() {
-        let domainUrl = await getDomainUrl();
-        this.domain = domainUrl.split('.')[0];
+        this.domain = await getOrgDomain();
         this.visualforceOrigin = this.buildVisualforceOriginUrl(this.domain);
     }
 
