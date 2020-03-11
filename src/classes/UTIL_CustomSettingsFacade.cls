@@ -638,6 +638,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;
+            settings.UseFiscalYearForRecurringDonationValue__c = false;
 
             List<RecordType> oppRecordTypes = [select id from RecordType where SObjectType = 'Opportunity' and IsActive = true];
             if (oppRecordTypes.size() > 0) {
@@ -891,11 +892,12 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
-        recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
         recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
+        recurringDonationsSettings.UseFiscalYearForRecurringDonationValue__c = settings.UseFiscalYearForRecurringDonationValue__c;
+        recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
+        recurringDonationsSettings.InstallmentOppAutoCreateOption__c = settings.InstallmentOppAutoCreateOption__c;
         recurringDonationsSettings.DisableRollupsWhenCreatingInstallments__c = settings.DisableRollupsWhenCreatingInstallments__c;
         recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
-        recurringDonationsSettings.InstallmentOppAutoCreateOption__c = settings.InstallmentOppAutoCreateOption__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
