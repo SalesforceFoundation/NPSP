@@ -3,17 +3,23 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import { isNumeric, isNotEmpty } from 'c/utilCommon';
+import { handleError } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 
-import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
-import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
+import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
+import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.DonationImported__c';
+
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
 const GENERAL_ACCOUNT_UNIT = GENERAL_ACCOUNTING_UNIT_FIELD.fieldApiName;
 
+import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import ALLOC_DEFAULT_FIELD from '@salesforce/schema/Allocations_Settings__c.Default__c';
 import ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD from '@salesforce/schema/Allocations_Settings__c.Default_Allocations_Enabled__c';
+
+import getDonationAllocations from '@salesforce/apex/GE_FormRendererService.getDonationAllocations';
+
 const ALLOC_SETTINGS_DEFAULT = ALLOC_DEFAULT_FIELD.fieldApiName;
 const ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED = ALLOC_DEFAULT_ALLOCATIONS_ENABLED_FIELD.fieldApiName;
 
@@ -24,6 +30,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
+    @track selectedDonationId;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     
@@ -155,40 +162,97 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     @api
     load(data) {
-        const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
-        let dataImportRow;
-        if (Object.keys(data).includes(DI_ADDITIONAL_OBJECT.fieldApiName)) {
-            dataImportRow =
-                JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName])
-                    .dynamicSourceByObjMappingDevName;
+        let records = [];
+        if(this.hasAdditionalObjectJSON(data)) {
+            records = this.formatAdditionalObjectJSON(data);
+        } else if(this.hasDonationImported(data)) {
+            this.selectedDonationId = data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName].value;
         }
+        this.addRows(records);
+    }
+
+    @wire(getDonationAllocations, { donationId: '$selectedDonationId' })
+    wiredDonationAllocations({ error, data }) {
+        if(data) {
+            let donations = {};
+
+            this.fieldList.forEach(field => {
+
+            });
+
+        }
+
+        if(error) {
+            handleError(error);
+        }
+    }
+
+    /**
+     * @description This method takes the full data import source format and converts
+     *              it to a target source format that can be used by widgets.
+     * @returns An array of objects in the target format
+     */
+    formatAdditionalObjectJSON(data) {
+        const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
+
+        let targetRecords = [];
+        let dataImportRow = JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
         if (!dataImportRow) {
             return;
         }
-        let rowList = new Array();
+
         let fieldMappings = GeFormService.fieldMappings;
         let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
             return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
         });
+
         Object.keys(dataImportRow).forEach(diKey => {
-            let properties = {};
+            let record = {};
 
             gauMappingKeys.forEach(fieldMappingKey => {
+                let diSourceField;
+                let targetField;
                 let sourceField = fieldMappings[fieldMappingKey].Source_Field_API_Name;
                 let sourceObj = dataImportRow[diKey].sourceObj;
 
-                if(Object.keys(sourceObj).includes(sourceField)) {
-                    let targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
-                    let diSourceField = dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
-                    
-                    properties[targetField] = diSourceField;
+                if (Object.keys(sourceObj).includes(sourceField)) {
+                    targetField = [fieldMappings[fieldMappingKey].Target_Field_API_Name];
+                    diSourceField =
+                        dataImportRow[diKey].sourceObj[fieldMappings[fieldMappingKey].Source_Field_API_Name];
+
+                    record[targetField] = diSourceField;
 
                 }
             });
-            rowList.push(properties);
+            targetRecords.push(record);
         });
-        
-        this.addRows(rowList);
+        return targetRecords;
+    }
+
+    /**
+     * @description This method takes an imported donation and converts
+     *              it to a target record format that can be used by the widget.
+     * @returns Boolean
+     */
+    formatDonationImport(data) {
+
+    }
+
+    /**
+     * @description This method determines if the data object loaded into the widget was loaded from a data import
+     *              row.
+     * @returns Boolean
+     */
+    hasDonationImported(data) {
+        return data.hasOwnProperty(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName);
+    }
+
+    /**
+     * @description This method determines if the data object loaded into the widget is in the target object format.
+     * @returns Boolean
+     */
+    hasAdditionalObjectJSON(data) {
+        return Object.keys(data).includes(DI_ADDITIONAL_OBJECT.fieldApiName);
     }
 
     /**
@@ -433,7 +497,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     @api
     get allFieldsByAPIName() {
-        return [DI_ADDITIONAL_OBJECT.fieldApiName];
+        return [DI_ADDITIONAL_OBJECT.fieldApiName,
+                DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName];
     }
 
 }

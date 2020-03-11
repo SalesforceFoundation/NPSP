@@ -218,12 +218,26 @@ public with sharing class GE_FormRendererService {
         return null;
     }
 
+    @AuraEnabled(Cacheable=true)
+    public static List<Allocation__c> getDonationAllocations(Id donationId) {
+        if(donationId == null) {
+            return null;
+        }
+
+        return [SELECT
+                    Amount__c,
+                    Percent__c,
+                    General_Accounting_Unit__c
+                FROM Allocation__c
+                WHERE Opportunity__c = :donationId];
+    }
+
     /*******************************************************************************************************
     * @description Retrieves all open Opportunities, and Opportunities with unpaid Payments, for the
     * selected Donor (Account or Contact)
     * @return JSON stringified Map<String, List<SObject>> of all openOpportunities for the given donor
     */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled(Cacheable=true)
     public static String getOpenDonations(Id donorId, String donorType) {
         if (donorId == null) {
             return null;
@@ -274,7 +288,7 @@ public with sharing class GE_FormRendererService {
                     'npe01__Written_Off__c ' +
                     'FROM npe01__OppPayment__r ' +
                     'WHERE npe01__Written_Off__c = false ' +
-                    'AND npe01__Paid__c = false)' +
+                    'AND npe01__Paid__c = false) ' +
                 'FROM Opportunity ' +
                 'WHERE ' + relationshipField + ' = :donorId ' +
                 'AND IsClosed = false ' +
