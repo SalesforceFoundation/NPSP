@@ -1217,7 +1217,66 @@ private class RD2_OpportunityEvaluationService_TEST {
             'Next Year Value should be calculated when RD is created');
     }
 
+    /**
+     * @description Verifies field values from Recurring Donation 
+     * are copied into mapped fields on Opportunity record when RD is created
+     */
+    @IsTest
+    private static void shouldPopulateOppFieldsOnRDInsertWhenCustomFieldMappingIsDefined() {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        createCustomFieldMapping('Name', 'Description');
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'The number of returned Opps should match');
+        System.assertEquals(rd.Name, opps[0].Description, 
+            'The RD Name should be copied into the Opportunity record Description field');
+    }
+
+    /**
+     * @description Verifies field values from Recurring Donation 
+     * are copied into mapped fields on Opportunity record when RD is updated
+    */
+    @IsTest
+    private static void shouldPopulateOppFieldsOnRDUpdateWhenCustomFieldMappingIsDefined() {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        createCustomFieldMapping('Name', 'Description');
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withName()
+            .withCloseDate(START_DATE.addMonths(1))
+            .withOpenStage()
+            .build();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assert(String.isBlank(opps[0].Description), 'Description should not be specified');        
+       
+        Test.startTest();
+        rd.npe03__Amount__c = 2000; 
+        update rd;
+        Test.stopTest();
+
+        opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'The number of returned Opps should match');
+        System.assertEquals(rd.Name, opps[0].Description, 
+            'The RD Name should be copied into the Opportunity record Description field');
+    }
 
 
 
@@ -1323,6 +1382,36 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void setUpUseFiscalYear(Boolean isEnabled) {
         RD2_Settings_TEST.setUpConfiguration(
             new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => isEnabled }
+        );
+    }
+
+    /***
+    * @description Removes current Custom Field Mappings and create a new one
+    * in order to avoid reaching debug log size limit
+    * @param rdFieldName Source field on Recurring Donation
+    * @param oppFieldName Destination field on Opportunity
+    * @return void
+    */
+    private static void createCustomFieldMapping(String rdFieldName, String oppFieldName) {
+        delete [SELECT Id FROM npe03__Custom_Field_Mapping__c];
+
+        insert buildCustomFieldMapping(rdFieldName, oppFieldName);
+    }
+
+    /***
+    * @description Builds custom field mapping setting record to map
+    * from a Recurring Donation field to the Opportunity field
+    * @param rdFieldName Source field on Recurring Donation
+    * @param oppFieldName Destination field on Opportunity
+    * @return void
+    */
+    private static npe03__Custom_Field_Mapping__c buildCustomFieldMapping(String rdFieldName, String oppFieldName) {
+        String name = System.now() + rdFieldName;
+
+        return new npe03__Custom_Field_Mapping__c(
+            Name = name.left(30),
+            npe03__Recurring_Donation_Field__c = rdFieldName,
+            npe03__Opportunity_Field__c = oppFieldName
         );
     }
 }

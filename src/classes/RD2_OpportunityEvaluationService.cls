@@ -448,9 +448,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
         final String parentAccountField = 'npe03__Contact__r.AccountId';
 
-        Map<String, Schema.DescribeFieldResult> allRdFields =
-            UTIL_Describe.getAllFieldsDescribe(npe03__Recurring_Donation__c.SObjectType.getDescribe().name);
+        Map<String, Schema.DescribeFieldResult> allRdFields = UTIL_Describe.getAllFieldsDescribe(
+            npe03__Recurring_Donation__c.SObjectType.getDescribe().name
+        );
 
+        //Query all fields on the Recurring Donation SObject except CLOB fields.
+        //Thus, there is no need to include fields from the custom field mapping since
+        //they should be already included.
         Set<String> queryFields = new Set<String>();
         for (String fld : allRdFields.keySet()) {
             DescribeFieldResult fldResult = allRdFields.get(fld);
@@ -461,26 +465,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
             queryFields.add(fld);
         }
-
-        //Return Recurring Donations'
-        //open Opps regardless of the Close Date
-        //and Opps with Close Date >= current date regardless if closed or open
-        //and all Opps with Close Date in this current year
-        String oppSubquery =
-            '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
-            'npe03__Recurring_Donation__c, ' +
-            'Amount, CloseDate, ' +
-            'StageName, IsClosed, IsWon, ' +
-            'CampaignId, Recurring_Donation_Installment_Number__c ';
-
-        if (isMultiCurrencyEnabled) {
-            oppSubquery += ', ' + CURRENCY_ISO_CODE_FIELD + ' ';
-        }
-
-        oppSubquery += 'FROM npe03__Donations__r ' +
-            'WHERE IsClosed = false ' +
-            'OR CloseDate >= :startDate ' +
-            'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
         //Return all schedules for the RD Schedule visualization.
         //The RD Schedule will filter them out if not applicable within the time period.
@@ -497,7 +481,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'FROM RecurringDonationSchedules__r)';
 
         queryFields.add(parentAccountField);
-        queryFields.add(oppSubquery);
+        queryFields.add(getOpportunitySubQuery());
         queryFields.add(scheduleSubquery);
 
         String soql = new UTIL_Query()
@@ -507,6 +491,42 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             .build();
 
         return Database.query(soql);
+    }
+
+    /**
+     * @description Returns query on Opportunity required to verify, create or update the Opportunity record
+     * @return String Opportunity subquery used in the Recurring Donation SOQL
+     */
+    private String getOpportunitySubQuery() {
+        //Return Recurring Donations'
+        //open Opps regardless of the Close Date
+        //and Opps with Close Date >= current date regardless if closed or open
+        //and all Opps with Close Date in this current year
+        Set<String> oppSubqueryFields = new Set<String>{
+            'Id', 'Name', 'AccountId', 'Primary_Contact__c',
+            'npe03__Recurring_Donation__c',
+            'Amount', 'CloseDate',
+            'StageName', 'IsClosed', 'IsWon',
+            'CampaignId', 'Recurring_Donation_Installment_Number__c'
+        };
+
+        if (isMultiCurrencyEnabled) {
+            oppSubqueryFields.add(CURRENCY_ISO_CODE_FIELD);
+        }
+
+        oppSubqueryFields.addAll(customFieldMapper.getOpportunityFieldNames());
+
+        String oppSubquery = new UTIL_Query()
+            .withSelectFields(oppSubqueryFields)
+            .withFrom('npe03__Donations__r')
+            .withWhere(
+                'IsClosed = false ' +
+                'OR CloseDate >= :startDate '
+            )
+            .withOrderBy('npe03__Recurring_Donation__c, CloseDate ASC')
+            .build();       
+            
+        return '(' + oppSubquery + ')';
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019 Salesforce.org
+    Copyright (c) 2020 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2019
+* @date 2020
 * @group Recurring Donations
 * @description Unit tests for the RD -> Opportunity custom field mapper
 *
@@ -38,7 +38,6 @@
 private class RD2_CustomFieldMapper_TEST {
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
-    private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
     private static final String PAYMENT_CHECK = 'Check';
     private static final Decimal RD_AMOUNT = 100;
 
@@ -201,6 +200,34 @@ private class RD2_CustomFieldMapper_TEST {
             'The sync should indicate the Opportunity record has not been changed');
     }
 
+    /***
+     * @description Verifies variables containing Recurring Donation and Opportunity field names
+     * are populated based on the custom field mapping settings
+     */
+    @IsTest
+    private static void shouldPopulateRDandOppFieldNamesWhenCustomMappingIsDefined() {
+        delete [SELECT Id FROM npe03__Custom_Field_Mapping__c];
+
+        insert new List<npe03__Custom_Field_Mapping__c>{
+            buildCustomFieldMapping('npe03__Amount__c', 'Amount'),
+            buildCustomFieldMapping('Name', 'Description')
+        };
+
+        Set<String> expectedRDFieldNames = new Set<String>{
+            'npe03__Amount__c', 'Name'
+        };
+        Set<String> expectedOppFieldNames = new Set<String>{
+            'Amount', 'Description'
+        };
+
+        RD2_CustomFieldMapper fieldMapper = new RD2_CustomFieldMapper();
+
+        System.assertEquals(expectedRDFieldNames, fieldMapper.rdFieldNames,
+            'The mapped field names on Recurring Donation SObject should match');
+        System.assertEquals(expectedOppFieldNames, fieldMapper.oppFieldNames,
+            'The mapped field names on Opportunity SObject should match');
+    }
+
 
     // Helpers
     ////////////////////
@@ -240,8 +267,21 @@ private class RD2_CustomFieldMapper_TEST {
     private static void createCustomFieldMapping(String rdFieldName, String oppFieldName) {
         delete [SELECT Id FROM npe03__Custom_Field_Mapping__c];
 
-        insert new npe03__Custom_Field_Mapping__c(
-            Name = 'CFM-' + System.now(),
+        insert buildCustomFieldMapping(rdFieldName, oppFieldName);
+    }
+
+    /***
+    * @description Builds custom field mapping setting record to map
+    * from a Recurring Donation field to the Opportunity field
+    * @param rdFieldName Source field on Recurring Donation
+    * @param oppFieldName Destination field on Opportunity
+    * @return void
+    */
+    private static npe03__Custom_Field_Mapping__c buildCustomFieldMapping(String rdFieldName, String oppFieldName) {
+        String name = System.now() + rdFieldName;
+
+        return new npe03__Custom_Field_Mapping__c(
+            Name = name.left(30),
             npe03__Recurring_Donation_Field__c = rdFieldName,
             npe03__Opportunity_Field__c = oppFieldName
         );

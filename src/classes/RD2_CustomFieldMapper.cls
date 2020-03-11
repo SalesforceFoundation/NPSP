@@ -50,6 +50,57 @@ public inherited sharing class RD2_CustomFieldMapper {
         set;
     }
 
+    /***
+    * @description Contains mapped field names on the Recurring Donation SObject
+    */
+    @TestVisible
+    private Set<String> rdFieldNames {
+        get {
+            if (rdFieldNames == null) {
+                extractFieldNames();
+            }
+            return rdFieldNames;
+        }
+        set;
+    }
+
+    /***
+    * @description Contains mapped field names on the Opportunity SObject
+    */
+    @TestVisible
+    private Set<String> oppFieldNames {
+        get {
+            if (oppFieldNames == null) {
+                extractFieldNames();
+            }
+            return oppFieldNames;
+        }
+        set;
+    }
+
+    /**
+     * @description Extracts field names on Recurring Donation SObject and
+     * mapped field names on Opportunity SObject and store them in their respective variables
+     * @return void
+     */
+    private void extractFieldNames() {
+        rdFieldNames = new Set<String>();
+        oppFieldNames = new Set<String>();
+
+        for (npe03__Custom_Field_Mapping__c mapping : settings.values()) {
+            rdFieldNames.add(mapping.npe03__Recurring_Donation_Field__c);
+            oppFieldNames.add(mapping.npe03__Opportunity_Field__c);
+        }
+    }
+
+    /**
+     * @description Returns mapped field names on Opportunity SObject
+     * @return Set<String>
+     */
+    public Set<String> getOpportunityFieldNames() {
+        return oppFieldNames;
+    }
+
     /**
      * @description Returns true if any of the key fields on Recurring Donation 
      * used to create or manage installment Opportunities have been changed.
@@ -92,8 +143,8 @@ public inherited sharing class RD2_CustomFieldMapper {
         Boolean isChanged = false;
 
         for (npe03__Custom_Field_Mapping__c mapping : settings.values()) {
-            String oppFieldName = mapping.npe03__Opportunity_Field__c;
             String rdFieldName = mapping.npe03__Recurring_Donation_Field__c;
+            String oppFieldName = mapping.npe03__Opportunity_Field__c;
 
             if (opp.get(oppFieldName) != rd.get(rdFieldName)) {
                 opp.put(oppFieldName, rd.get(rdFieldName));
@@ -103,4 +154,5 @@ public inherited sharing class RD2_CustomFieldMapper {
 
         return isChanged;
     }
+
 }
