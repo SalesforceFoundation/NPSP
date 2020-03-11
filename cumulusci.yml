@@ -600,21 +600,44 @@ flows:
                 task: update_admin_profile
 
     deploy_rd2_testing:
-        description: 'Configure everything for enhanced recurring donations testing in a scratch org'
+        description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (unmanaged code only)'
         steps:
             1:
-                task: enable_customizable_rollups
-            2:
                 task: enable_pilot_in_scratch_org
-            3:
+                # Remove the "enable pilot" task after RD2 goes GA
+            2:
                 task: execute_anon
+                # Enables RD2 in Custom Settings
                 options:
                     apex: >
                         npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
                         rdSettings.%%%NAMESPACE%%%isRecurringDonations2Enabled__c = true;
                         upsert rdSettings;
+            3:
+                task: enable_customizable_rollups
+                # Enable customizable rollups after enabling RD2 so the npe03__Next_Payment_Date__c rollup is not created
             4:
                 task: deploy_rd2_config
+                # Deploys the unpackaged config needed for RD2
+            5:
+                task: execute_anon
+                # Execute the data migration job in case there is any RD test data in the org
+                options:
+                    apex: >
+                        %%%NAMESPACE%%%RD2_DataMigration_BATCH rdMigrationBatch = new %%%NAMESPACE%%%RD2_DataMigration_BATCH();
+                        Database.executeBatch(rdMigrationBatch, rdMigrationBatch.batchSize);
+            6:
+                task: batch_apex_wait
+                # Wait until after the data migration job has completed
+                options:
+                    class_name: RD2_DataMigration_BATCH
+            7:
+                task: execute_anon
+                # Execute the nightly job to update the RD records as needed
+                options:
+                    apex: >
+                        %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH rdBatchJob = new %%%NAMESPACE%%%RD2_OpportunityEvaluation_BATCH();
+                        Database.executeBatch(rdBatchJob, rdBatchJob.batchSize);
 
     config_managed:
         steps:
