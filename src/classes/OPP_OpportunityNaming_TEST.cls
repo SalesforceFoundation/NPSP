@@ -559,9 +559,9 @@ public with sharing class OPP_OpportunityNaming_TEST
     /***
      * @description Creates Opportunity naming settings
      * @param valueByField Other field values mapped by their field name
-     * @return void
+     * @return Opportunity Naming Settings
      */
-    public static void setUpOppNamingSettings(Map<String, Object> valueByField) {
+    public static Opportunity_Naming_Settings__c setUpOppNamingSettings(Map<String, Object> valueByField) {
         Opportunity_Naming_Settings__c settings = new Opportunity_Naming_Settings__c(
             Name = 'foo',
             Opportunity_Name_Format__c = '{!Contact.Name} {!Amount} {!CloseDate} '
@@ -573,6 +573,8 @@ public with sharing class OPP_OpportunityNaming_TEST
         insert settings;
 
         UTIL_ListCustomSettingsFacade.mapOppNamingSettings = null;
+
+        return settings;
     }
 
     /***
