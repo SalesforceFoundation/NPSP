@@ -9,7 +9,7 @@ import {
     handleError,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
-    checkPermissionErrors
+    checkPermissionErrors, CONTACT_FIRST_NAME_INFO, CONTACT_LAST_NAME_INFO, CONTACT_INFO
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 import {
@@ -926,24 +926,64 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
 
-    handleElevateFieldsChange() {
-        this.sections.forEach(section => {
-            if (section.hasElevateCreditCardWidget) {
-                section.elements.forEach(element => {
-                    if (this.isValidElevateField(element)) {
-                        section.setCardHolderName(element.value);
-                    }
-                });
+    handleNameOnCardFieldChange() {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        let fieldList = {};
+        if (!isUndefined(sectionsList)) {
+            fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
+            for (let i = 0; i < sectionsList.length ; i++) {
+                if (sectionsList[i].isCreditCardWidgetAvailable) {
+                    sectionsList[i].setCardHolderName(this.fabricateCardHolderName(fieldList));
+                }
             }
-        });
+        }
     }
 
-    isValidElevateField (element) {
-       return ((this.selectedDonorType === 'Contact1' &&
-           element.fieldApiName === CONTACT_NAME_FIELD &&
-           !isUndefined(element.value)) ||
-           (this.selectedDonorType === 'Account1' &&
-               element.fieldApiName === ACCOUNT_NAME_FIELD &&
-               !isUndefined(element.value)));
+
+    fabricateCardHolderName(fieldList){
+        this.selectedDonorType = this.getCurrentlySelectedDonorType();
+        let nameOnCard = '';
+        let fullName;
+        let accountName;
+        let firstName;
+        for (let field in fieldList) {
+             if (fieldList.hasOwnProperty(field)) {
+                let value = fieldList[field].value;
+                let fieldApiName = fieldList[field].apiName;
+                if (fieldApiName === CONTACT_FIRST_NAME_INFO.fieldApiName) {
+                    firstName = fieldList[field].value;
+                }
+
+                if (fieldApiName === CONTACT_LAST_NAME_INFO.fieldApiName) {
+                    if(isNotEmpty(firstName)){
+                        fullName = firstName + ' ' + value;
+                    }else if(isNotEmpty(value)){
+                        fullName = value;
+                    }
+                }
+
+                if (fieldApiName === ACCOUNT_NAME_FIELD.fieldApiName) {
+                    accountName = value ? value : null;
+                }
+
+                if (this.selectedDonorType === CONTACT_INFO.objectApiName) {
+                    nameOnCard = fullName;
+                } else {
+                    nameOnCard = accountName;
+                }
+                if (!isUndefined(nameOnCard)) {
+                    return nameOnCard;
+                }
+            }
+        }
+    }
+
+    getDisplayedFieldsMappedByFieldAPIName(sectionsList) {
+        let allFields = {};
+        sectionsList.forEach(section => {
+            const fields = section.getAllFieldsByFieldAPIName();
+            allFields = Object.assign(allFields, fields);
+        });
+        return allFields;
     }
 }

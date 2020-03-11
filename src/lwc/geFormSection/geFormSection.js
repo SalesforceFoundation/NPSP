@@ -1,14 +1,17 @@
 import {LightningElement, api, track} from 'lwc';
+import {isUndefined, isNotEmpty} from "c/utilCommon";
+
 
 export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
     @track collapsed = false;
-    @api hasElevateCreditCardWidget = false;
+    @track hasCreditCardWidget = false;
 
 
     renderedCallback() {
-        this.checkForElevateWidget();
+        this.registerCreditCardWidget();
+        this.handleChangeNameOnCardField();
     }
 
     /**
@@ -159,32 +162,50 @@ export default class GeFormSection extends LightningElement {
     }
 
 
-    checkForElevateWidget() {
-        const widgets = this.template.querySelectorAll('c-ge-form-widget');
-        if (widgets !== null && typeof widgets !== 'undefined') {
-            widgets.forEach(widget => {
-                if (widget.isElevateTokenizeCard) {
-                    this.hasElevateCreditCardWidget = true;
+    registerCreditCardWidget() {
+        if(!isUndefined(this.section)){
+            this.section.elements.forEach(element => {
+                if(element.componentName === 'geFormWidgetTokenizeCard'){
+                    this.hasCreditCardWidget = true;
                 }
-            });
+            })
         }
     }
 
-    handleChangeElevateField(){
-        const changeElevateFieldEvent = new CustomEvent(
-            'changeelevatefield');
-        this.dispatchEvent(changeElevateFieldEvent);
+    handleChangeNameOnCardField(){
+        const changeNameOnCardFieldEvent = new CustomEvent(
+            'changenameoncardfield'
+        );
+        this.dispatchEvent(changeNameOnCardFieldEvent);
     }
 
     @api
-    setCardHolderName(value){
-        const widgets = this.template.querySelectorAll('c-ge-form-widget');
-        if (widgets !== null && typeof widgets !== 'undefined') {
-            widgets.forEach(widget => {
-                if (widget.isElevateTokenizeCard) {
-                   widget.element = {nameOnCard: value};
-                }
+    setCardHolderName(value) {
+        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
+        widgetList.forEach(widget =>{
+            if(widget.isElevateTokenizeCard){
+                widget.setCardHolderName(value)
+            }
+        });
+    }
+
+    @api
+    get isCreditCardWidgetAvailable() {
+        return this.hasCreditCardWidget;
+    }
+
+    @api
+    getAllFieldsByFieldAPIName() {
+        const fields = this.template.querySelectorAll('c-ge-form-field');
+        let fieldData = {};
+        if (isNotEmpty(fields)) {
+            fields.forEach(field => {
+                fieldData = { ...fieldData, ...(field.fieldValueAndFieldApiName) };
             });
         }
+        return fieldData;
     }
+
+
+
 }

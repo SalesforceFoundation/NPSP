@@ -7,10 +7,9 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
 import {
-    DI_CONTACT1_LAST_NAME_INFO,
-    DI_ACCOUNT1_NAME_INFO,
     DI_DONATION_DONOR_INFO,
-    CONTACT_NAME_INFO,
+    CONTACT_FIRST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO,
     ACCOUNT_NAME_INFO
 } from "c/utilTemplateBuilder";
 
@@ -82,7 +81,8 @@ export default class GeFormField extends LightningElement {
             fireEvent(null, 'widgetData', { donationAmount: this.value });
         }
 
-        if(this.isElevateField){
+
+        if (this.isValidNameOnCardField) {
             const evt = new CustomEvent('creditcardvaluechange');
             this.dispatchEvent(evt);
         }
@@ -289,6 +289,7 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    @api
     get fieldApiName() {
         return this.fieldInfo.Target_Field_API_Name;
     }
@@ -312,6 +313,24 @@ export default class GeFormField extends LightningElement {
 
         return returnMap;
 
+    }
+
+    get isValidNameOnCardField() {
+        return (
+            this.element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName ||
+            this.element.fieldApiName === CONTACT_FIRST_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === CONTACT_LAST_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === ACCOUNT_NAME_INFO.fieldApiName
+        );
+    }
+
+    @api
+    get fieldValueAndFieldApiName() {
+        let fieldWrapper = { value: this.value, apiName: this.fieldApiName };
+        let returnMap = {};
+        returnMap[ this.fieldApiName ] = fieldWrapper;
+
+        return returnMap;
     }
 
     @api
@@ -395,16 +414,6 @@ export default class GeFormField extends LightningElement {
         lookup.setSelected({value, displayValue});
 
     }
-
-    get isElevateField() {
-        return (this.element.fieldApiName === DI_ACCOUNT1_NAME_INFO ||
-            this.element.fieldApiName === DI_CONTACT1_LAST_NAME_INFO ||
-            this.element.fieldApiName === DI_DONATION_DONOR_INFO ||
-            this.element.fieldApiName === CONTACT_NAME_INFO ||
-            this.element.fieldApiName === ACCOUNT_NAME_INFO);
-    }
-
-
 
     @api
     reset() {

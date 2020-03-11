@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { checkNestedProperty } from 'c/utilCommon';
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
@@ -9,7 +9,7 @@ const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, TOKENIZE_CARD_
 export default class GeFormWidget extends LightningElement {
     @api element;
     @api widgetData;
-
+    @track cardHolderName;
     @api
     reset() {
         this.widgetComponent.reset();
@@ -64,5 +64,10 @@ export default class GeFormWidget extends LightningElement {
 
     get totalAmount() {
         return checkNestedProperty(this.widgetData, 'donationAmount') ? this.widgetData.donationAmount : 0;
+    }
+
+    @api
+    setCardHolderName(value){
+        this.cardHolderName = value;
     }
 }
