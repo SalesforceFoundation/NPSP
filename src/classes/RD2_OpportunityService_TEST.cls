@@ -924,6 +924,120 @@ private with sharing class RD2_OpportunityService_TEST {
         assertPaymentIsMatchingOpp(oppById);
     }
 
+    /***
+    * @description Verifies if Account is not getting removed in opportunity
+    * when recurring donation record with only contact is updated.
+    */
+    @isTest
+    private static void shouldNotRemoveAccountInOppWhenRDWithNoAccountIsModified() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        //create opp from rd with contact only
+        Opportunity opp = getOpportunityBuilderWithNoAccount(rd)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert opp;
+
+
+        //Verify if accountid is populated in opp when only contact is provided in RD
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
+        System.assert(opps[0].AccountId != null);
+
+        //update rd amount
+        Test.startTest();
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        //Verify if accountid is not nulled out when rd record is modified
+        List<Opportunity> oppUpdated = oppGateway.getRecords(rd);
+        System.assertEquals(RD_NEW_AMOUNT, oppUpdated[0].Amount, 'Amount should be updated');
+        System.assert(oppUpdated[0].AccountId != null);
+
+    }
+
+    /***
+    * @description Verifies if Account is not getting removed in opportunity
+    * when recurring donation record with account is modified.
+    */
+    private static void shouldNotRemoveAccountInOppWhenRDWithAccountIsModified() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert acc;
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(acc);
+
+        //create opp from rd with account
+        Opportunity opp = getOpportunityBuilder(rd)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert opp;
+
+        //update rd amount
+        Test.startTest();
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        //Verify if accountid is not changed or nulled out when rd record is modified
+        List<Opportunity> oppUpdated = oppGateway.getRecords(rd);
+        npe03__Recurring_Donation__c recurDonation = rdGateway.getRecord(rd.id);
+
+        System.assertEquals(RD_NEW_AMOUNT, oppUpdated[0].Amount, 'Amount should be updated');
+        System.assert(oppUpdated[0].AccountId != null);
+        System.assertEquals(recurDonation.npe03__Organization__c, oppUpdated[0].AccountId);
+    }
+
+    /***
+    * @description Verifies if Account is getting updated in opportunity
+    * when recurring donation's account is modified to another account
+    */
+    private static void shouldUpdateAccountInOppWhenRDAccountIsModified() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert acc;
+
+        Account accAnother = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert accAnother;
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(acc);
+
+        //create opp from rd with account
+        Opportunity opp = getOpportunityBuilder(rd)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert opp;
+
+        //update rd to different account
+        Test.startTest();
+        rd.npe03__Organization__c = accAnother.Id;
+        update rd;
+        Test.stopTest();
+
+        //Verify if accountid is changed in opportunity when rd's account is modified
+        List<Opportunity> oppUpdated = oppGateway.getRecords(rd);
+        npe03__Recurring_Donation__c recurDonation = rdGateway.getRecord(rd.id);
+
+        System.assert(oppUpdated[0].AccountId != null);
+        System.assertEquals(recurDonation.npe03__Organization__c, accAnother.id);
+        System.assertEquals(recurDonation.npe03__Organization__c, oppUpdated[0].AccountId);
+
+    }
 
     // Helper Methods
     //////////////////
@@ -1083,6 +1197,19 @@ private with sharing class RD2_OpportunityService_TEST {
             .withInstallmentNumber(1);
     }
 
+     /**
+     * @description Instantiate an Opportunity builder for the specified Recurring Donation with no account
+     * @param rd Recurring Donation
+     * @return TEST_OpportunityBuilder New Opportunity builder
+     */
+    private static TEST_OpportunityBuilder getOpportunityBuilderWithNoAccount(npe03__Recurring_Donation__c rd) {
+        return new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1);
+    }
+
     /***
     * @description Queries OCRs for specified Opportunities
     * @param oppIds Opportunity Ids
@@ -1119,7 +1246,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertNotEquals(null, actualException, 'An Exception should be generated');
         System.assert(actualException.getMessage().contains(System.Label.RD2_CurrencyChangeIsRestrictedOnRD),
             'Exception message should match, actual message: ' + actualException.getMessage());
-            
+
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         for (Opportunity opp : oppById.values()) {
             System.assertEquals(CURRENCY_CAD, (String) opp.get(CURRENCY_ISO_CODE_FIELD),
@@ -1143,11 +1270,11 @@ private with sharing class RD2_OpportunityService_TEST {
         for (npe01__OppPayment__c payment : payments) {
             Opportunity opp = oppById.get(payment.npe01__Opportunity__c);
 
-            System.assertEquals(opp.Amount, payment.npe01__Payment_Amount__c, 
+            System.assertEquals(opp.Amount, payment.npe01__Payment_Amount__c,
                 'Payment Amount should match Opportunity Amount');
 
             if (isMultiCurrencyEnabled) {
-                System.assertEquals((String) opp.get(CURRENCY_ISO_CODE_FIELD), (String) payment.get(CURRENCY_ISO_CODE_FIELD), 
+                System.assertEquals((String) opp.get(CURRENCY_ISO_CODE_FIELD), (String) payment.get(CURRENCY_ISO_CODE_FIELD),
                     'Payment currency should match Opportunity currency');
             }
         }
