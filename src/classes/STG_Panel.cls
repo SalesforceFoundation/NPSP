@@ -87,6 +87,20 @@ public with sharing virtual class STG_Panel {
 		} private set;
 	}
 
+    /***
+    * @description Verifies the user has Admin permissions for Opportunity naming settings.
+    * @return true when the user has the appropriate access
+    */
+    public Boolean isRunningUserIsAdmin {
+        get {
+            if (isRunningUserIsAdmin == null) {
+                isRunningUserIsAdmin = runningUserIsAdmin();
+            }
+            return isRunningUserIsAdmin;
+        }
+        private set;
+    }
+
     /*********************************************************************************************************
     * @description Checks if Enhanced Recurring Donations are enabled
     */

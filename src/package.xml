@@ -2476,6 +2476,7 @@
         <members>stgCreatedBy</members>
         <members>stgDIFMNonAdminError</members>
         <members>stgDefaultValue</members>
+        <members>stgDeletePermissionError</members>
         <members>stgDeploymentCustomMetadataMappingEnabled</members>
         <members>stgDeploymentHasInvalidHelpTextMappings</members>
         <members>stgDeploymentHelpTextMappingEnabled</members>
@@ -2484,6 +2485,7 @@
         <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
+        <members>stgEditPermissionError</members>
         <members>stgErrorINaming</members>
         <members>stgErrorInvalidClass</members>
         <members>stgErrorInvalidNameFormat</members>
