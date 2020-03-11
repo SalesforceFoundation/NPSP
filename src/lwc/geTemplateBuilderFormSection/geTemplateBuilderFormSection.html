@@ -2,7 +2,8 @@
     <article key={formSection.id}
              class={sectionClass}
              onclick={handleSelectActiveSection}
-             data-section-id={formSection.id}>
+             data-section-id={formSection.id}
+             data-qa-locator={qaLocatorSection}>
 
         <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
             <div class="slds-media__body">
@@ -15,21 +16,24 @@
                 <lightning-button-icon icon-name="utility:settings"
                                        alternative-text={labelGeAssistiveFormFieldsSectionEdit}
                                        onclick={handleEditFormSection}
-                                       class="slds-m-left_xxx-small">
+                                       class="slds-m-left_xxx-small"
+                                       data-qa-locator={qaLocatorSectionSettings}>
                 </lightning-button-icon>
                 <lightning-button-icon icon-name="utility:chevronup"
                                        alternative-text={labelGeBuilderAssistiveSectionUp}
                                        onclick={handleFormSectionUp}
                                        data-section-id={formSection.id}
                                        class="slds-m-left_xxx-small"
-                                       disabled={isFirst}>
+                                       disabled={isFirst}
+                                       data-qa-locator={qaLocatorSectionUp}>
                 </lightning-button-icon>
                 <lightning-button-icon icon-name="utility:chevrondown"
                                        alternative-text={labelGeBuilderAssistiveSectionDown}
                                        onclick={handleFormSectionDown}
                                        data-section-id={formSection.id}
                                        class="slds-m-left_xxx-small"
-                                       disabled={isLast}>
+                                       disabled={isLast}
+                                       data-qa-locator={qaLocatorSectionDown}>
                 </lightning-button-icon>
             </div>
 
