@@ -8981,6 +8981,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Default Value</value>
     </labels>
     <labels>
+        <fullName>stgDeletePermissionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The user do not have delete permission to delete custom setting.</shortDescription>
+        <value>You don&apos;t have the required system permissions to delete this setting. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>stgDIFMNonAdminError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -9060,6 +9068,14 @@ To view these Jobs, search for Scheduled Jobs in Salesforce Setup.
 &lt;br/&gt;
 &lt;br/&gt;
 Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</value>
+    </labels>
+    <labels>
+        <fullName>stgEditPermissionError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The user do not have edit permission to edit custom setting.</shortDescription>
+        <value>You don&apos;t have the required system permissions to edit this setting. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>stgErrorINaming</fullName>
