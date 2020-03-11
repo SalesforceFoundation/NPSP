@@ -52,12 +52,8 @@ public with sharing class GE_GiftEntryController {
 
         // Parse the JSON response...
         if (response.getStatusCode() != 201) {
-            System.debug('The status code returned was not expected: ' +
-                response.getStatusCode() + ' ' + response.getStatus());
-            System.debug(response.getBody());
             return JSON.serialize(response.getStatus());
         } else {
-            System.debug(response.getBody());
             return JSON.serialize(response.getBody());
         }
     }

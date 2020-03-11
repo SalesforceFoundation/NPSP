@@ -76,16 +76,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         if (message.error) {
             // Error with tokenization
             let error = JSON.stringify(message.error);
-            console.log(error);
-            alert(error);
+            handleError(error);
         } else if (message.token) {
             // TODO: Start - Remove later
             // Make purchase call... for dev only
             try {
                 let purchaseCallResponse = await makePurchaseCall({ token: message.token });
                 this.purchaseResult = JSON.parse(purchaseCallResponse);
-                console.log(this.purchaseResult);
-                alert(this.purchaseResult)
             } catch (error) {
                 handleError(error);
             }
