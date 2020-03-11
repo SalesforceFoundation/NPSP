@@ -129,11 +129,8 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         System.assertEquals(true, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'Custom Settings field should be set');
 
-        List<AsyncApexJob> asyncJobs = [SELECT Id
-            FROM AsyncApexJob
-            WHERE ApexClass.Name = 'RD2_EnablementDelegate_CTRL'
-            LIMIT 1];
-        System.assert(!asyncJobs.isEmpty(), 'Expected to find a Queueable job after enabling Enhanced Recurring Donations');
+        AsyncApexJob job = jobGateway.getRecord('RD2_EnablementDelegate_CTRL');
+        System.assertNotEquals(null, job, 'Expected to find a Queueable job after enabling Enhanced Recurring Donations');
     }
 
     /****
@@ -147,7 +144,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
         String url = RD2_EnablementDelegate_CTRL.getMetaDeployURL();
 
-        String expectedUrl = 'https://install.salesforce.org/products/npsp/npsp-rd2-pilot';
+        String expectedUrl = 'https://install.salesforce.org/products/npsp/enhanced-recurring-donations';
 
         System.assertEquals(expectedURL, url, 'URL should match');
     }
@@ -186,7 +183,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isConfirmed = true;
         expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
-        
+
         stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
@@ -211,7 +208,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isConfirmed = true;
         expectedState.isMetaLaunched = true;
         setEnablementState(JSON.serialize(expectedState));
-        
+
         stubRD2ReadyAndEnabled();
 
         //mock value that does not exist but is expected
@@ -251,7 +248,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         Test.startTest();
         Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
         Test.stopTest();
-        
+
         AsyncApexJob job = jobGateway.getRecord('RD2_DataMigrationDryRun_BATCH');
         System.assertEquals(1, job.JobItemsProcessed,
             'The batch should have run with one child batch processed'
@@ -261,7 +258,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /**
-     * @description Verifies Enhanced Recurring Donations dry run migration batch job sets "isDryRun2" 
+     * @description Verifies Enhanced Recurring Donations dry run migration batch job sets "isDryRun2"
      * if metadata deployment has been confirmed
      */
     @IsTest
@@ -280,7 +277,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isEnabled = true;
         expectedState.isMetaLaunched = true;
         expectedState.isMetaConfirmed = true;
-        setEnablementState(JSON.serialize(expectedState));        
+        setEnablementState(JSON.serialize(expectedState));
 
         Test.startTest();
         Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
@@ -302,7 +299,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isReady = true;
         expectedState.isEnabled = true;
         setEnablementState(JSON.serialize(expectedState));
-        
+
         stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.skipDryRun();
@@ -312,7 +309,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /****
-    * @description Verifies migration enabled flag is unchecked when user skips migration 
+    * @description Verifies migration enabled flag is unchecked when user skips migration
     * and goes back to the validation
     */
     @isTest
@@ -321,7 +318,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isReady = true;
         expectedState.isEnabled = true;
         setEnablementState(JSON.serialize(expectedState));
-        
+
         stubRD2ReadyAndEnabled();
 
         RD2_EnablementDelegate_CTRL.skipMigration();
@@ -349,6 +346,163 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(1, job.JobItemsProcessed,
             'The batch should have run with one child batch processed'
         );
+    }
+
+    /****
+    * @description Verifies enablement confirmation stays checked when state is loaded
+    * and the data migration validation has completed 7 or less days ago
+    */
+    @isTest
+    private static void shouldLeaveConfirmEnablementOnLoadStateWhenDryRunIsValid() {
+        RD2_EnablementDelegate_CTRL.EnablementState existingState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        existingState.isConfirmed = true;
+        setEnablementState(JSON.serialize(existingState));
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, new RD2_EnablementService_TEST.Stub().withRecurringDonations2Ready()
+        );
+
+        setLatestDryRunAsValid();
+
+        RD2_EnablementDelegate_CTRL.EnablementState loadState = (RD2_EnablementDelegate_CTRL.EnablementState) JSON.deserialize(
+            RD2_EnablementDelegate_CTRL.loadState(), RD2_EnablementDelegate_CTRL.EnablementState.class
+        );
+
+        System.assertEquals(true, loadState.isConfirmed,
+            'Enablement confirmation should remain checked when dry run validation is valid');
+    }
+
+
+    /****
+    * @description Verifies enablement confirmation is unchecked when state is loaded
+    * and the data migration validation has completed longer than 7 days ago
+    */
+    @isTest
+    private static void shouldUncheckConfirmEnablementOnLoadStateWhenDryRunIsOutdated() {
+        RD2_EnablementDelegate_CTRL.EnablementState existingState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        existingState.isConfirmed = true;
+        setEnablementState(JSON.serialize(existingState));
+
+        RD2_EnablementDelegate_CTRL.service = (RD2_EnablementService) Test.createStub(
+            RD2_EnablementService.class, new RD2_EnablementService_TEST.Stub().withRecurringDonations2Ready()
+        );
+
+        setLatestDryRunAsOutdated();
+
+        RD2_EnablementDelegate_CTRL.EnablementState loadState = (RD2_EnablementDelegate_CTRL.EnablementState) JSON.deserialize(
+            RD2_EnablementDelegate_CTRL.loadState(), RD2_EnablementDelegate_CTRL.EnablementState.class
+        );
+
+        System.assertEquals(false, loadState.isConfirmed,
+            'Enablement confirmation should be unchecked when dry run validation is outdated');
+    }
+
+    /**
+     * @description Verifies enablement confirmation is unchecked when dry run is executed
+     * and the data migration validation has completed longer than 7 days ago
+     * and RD2 is not enabled
+     */
+    @IsTest
+    private static void shouldUncheckConfirmEnablementOnStep1DryRunWhenDryRunIsOutdated() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementDelegate_CTRL.EnablementState existingState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        existingState.isConfirmed = true;
+        setEnablementState(JSON.serialize(existingState));
+
+        setLatestDryRunAsOutdated();
+
+        Test.startTest();
+        Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
+        Test.stopTest();
+
+        AsyncApexJob job = jobGateway.getRecord('RD2_DataMigrationDryRun_BATCH');
+        System.assertEquals(1, job.JobItemsProcessed,
+            'The batch should have run with one child batch processed'
+        );
+
+        System.assertEquals(false, RD2_EnablementDelegate_CTRL.getEnablementState().isConfirmed,
+            'Enablement confirmation should be unchecked when dry run validation is outdated');
+    }
+
+    /**
+     * @description Verifies enablement confirmation stays checked when step 4 dry run is executed
+     * and the data migration validation has completed longer than 7 days ago
+     * and RD2 is enabled
+     */
+    @IsTest
+    private static void shouldLeaveConfirmEnablementOnStep4DryRunWhenDryRunIsOutdated() {
+        setRDSettings();
+
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        RD2_EnablementDelegate_CTRL.dayOfMonthPicklistValue = '1';
+        stubRD2ReadyAndEnabled();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isConfirmed = true;
+        expectedState.isEnabled = true;
+        expectedState.isMetaLaunched = true;
+        expectedState.isMetaConfirmed = true;
+        setEnablementState(JSON.serialize(expectedState));
+
+        setLatestDryRunAsOutdated();
+
+        Test.startTest();
+        Id jobId = RD2_EnablementDelegate_CTRL.runDryRun();
+        Test.stopTest();
+
+        expectedState.isDryRun2 = true;
+        assertEnablementState(expectedState, RD2_EnablementDelegate_CTRL.getEnablementState());
+    }
+
+    /****
+    * @description Verifies an exception is thrown when user clicks on enablement confirmation
+    * but the data migration validation has completed longer than 7 days ago
+    */
+    @isTest
+    private static void shouldThrowExceptionOnConfirmEnablementWhenDryRunIsOutdated() {
+        setLatestDryRunAsOutdated();
+
+        Exception actualException;
+        try {
+            RD2_EnablementDelegate_CTRL.confirmEnablement();
+        } catch (AuraHandledException e) {
+            actualException = e;
+        }
+
+        System.assertNotEquals(null, actualException, 'The exception should be thrown');
+        System.assertEquals(System.Label.RD2_EnablementDryRunOutdatedError,
+            actualException.getMessage(), 'The exception message should match');
+    }
+
+    /****
+    * @description Verifies an exception is thrown when user clicks on enablement toggle
+    * but the data migration validation has completed longer than 7 days ago
+    */
+    @isTest
+    private static void shouldThrowExceptionOnEnableRD2WhenDryRunIsOutdated() {
+        setLatestDryRunAsOutdated();
+
+        Exception actualException;
+        try {
+            RD2_EnablementDelegate_CTRL.enableEnhancement();
+        } catch (AuraHandledException e) {
+            actualException = e;
+        }
+
+        System.assertNotEquals(null, actualException, 'The exception should be thrown');
+        System.assertEquals(System.Label.RD2_EnablementDryRunOutdatedError,
+            actualException.getMessage(), 'The exception message should match');
+
+        System.assertEquals(false, STG_Panel.stgService.stgRD.isRecurringDonations2Enabled__c, 'IsRecurringDonations2Enabled field should not be checked');
+
+        AsyncApexJob job = jobGateway.getRecord('RD2_EnablementDelegate_CTRL');
+        System.assertEquals(null, job, 'A Queueable job after error on Enhanced Recurring Donations should not be running');
     }
 
 
@@ -395,6 +549,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(expectedState.isEnabled, state.isEnabled, 'isEnabled should match: ' + state);
         System.assertEquals(expectedState.isMetaLaunched, state.isMetaLaunched, 'isMetaLaunched should match: ' + state);
         System.assertEquals(expectedState.isMetaConfirmed, state.isMetaConfirmed, 'isMetaConfirmed should match: ' + state);
+        System.assertEquals(RD2_EnablementDelegate_CTRL.DRY_RUN_VALID_DAYS, state.dryRunLimit, 'dryRunLimit should match default: ' + state);
     }
 
     /****
@@ -407,6 +562,36 @@ public with sharing class RD2_EnablementDelegate_TEST {
             new RD2_EnablementService_TEST.Stub()
                 .withRecurringDonations2Ready()
                 .withRecurringDonations2Enabled()
+        );
+    }
+
+    /****
+    * @description Sets latest dry run validation as valid,
+    * ie today - Completed Date <= dry run valid days
+    * @return void
+    */
+    private static void setLatestDryRunAsValid() {
+        setLatestDryRunDaysBetween(RD2_EnablementDelegate_CTRL.DRY_RUN_VALID_DAYS);
+    }
+
+    /****
+    * @description Sets latest dry run validation as outdated,
+    * ie today - Completed Date > dry run valid days
+    * @return void
+    */
+    private static void setLatestDryRunAsOutdated() {
+        setLatestDryRunDaysBetween(RD2_EnablementDelegate_CTRL.DRY_RUN_VALID_DAYS + 1);
+    }
+
+
+    /****
+    * @description Sets latest dry run validation days between
+    * @param daysBetween Days between today and dry run batch Completed Date
+    * @return void
+    */
+    private static void setLatestDryRunDaysBetween(Integer daysBetween) {
+        RD2_EnablementDelegate_CTRL.batchJobService = (UTIL_BatchJobService) Test.createStub(
+            UTIL_BatchJobService.class, new UTIL_BatchJobService_TEST.Stub().withCompletedDaysBetween(daysBetween)
         );
     }
 
@@ -425,7 +610,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /**
-     * @description Sets RD Settings 
+     * @description Sets RD Settings
      * @return void
      */
     private static void setRDSettings() {

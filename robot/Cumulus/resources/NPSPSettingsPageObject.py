@@ -1,5 +1,5 @@
 import time
-
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from BaseObjects import BaseNPSPPage
@@ -27,7 +27,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                                                error=f"{title} link was not found on the page")  
         self.npsp.click_link_with_text(title)
         
-   
+    @capture_screenshot_on_error
     def click_toggle_button(self, page_name):
         """ specify the partial id of submenu under which the checkbox exists """
         locator = npsp_lex_locators["npsp_settings"]["checkbox"].format(page_name)
@@ -45,13 +45,13 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                     self.selenium.page_should_contain(message)
                     break
                 except Exception:
-                    time.sleep(5)
+                    time.sleep(10)
                     i += 1
             else:
                 raise AssertionError(
                     f"Timed out waiting for {message} to display"
                 )
-                
+            
     def click_configure_advanced_mapping(self):
         """clicks on Configure Advanced Mapping and waits for Manage Advanced Mapping page to load 
            and loads the page object for that page"""

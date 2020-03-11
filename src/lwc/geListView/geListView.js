@@ -160,6 +160,30 @@ export default class geListView extends LightningElement {
         return this.recordsToDisplay && this.recordsToDisplay.length > 0 ? true : false;
     }
 
+    /*******************************************************************************
+    * Start getters for data-qa-locator attributes
+    */
+
+    get qaLocatorDatatable() {
+        return `datatable ${this.title}`;
+    }
+
+    get qaLocatorViewMore() {
+        return `link ${this.CUSTOM_LABELS.commonViewMore} ${this.title}`;
+    }
+
+    get qaLocatorSettings() {
+        return `button Settings ${this.title}`;
+    }
+
+    get qaLocatorSettingsSelectFields() {
+        return `button ${this.CUSTOM_LABELS.geHeaderCustomTableHeaders} ${this.title}`;
+    }
+
+    /*******************************************************************************
+    * End getters for data-qa-locator attributes
+    */
+
     @api
     setProperty(property, value) {
         this[property] = value;

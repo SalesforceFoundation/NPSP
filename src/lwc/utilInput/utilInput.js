@@ -193,8 +193,8 @@ export default class utilInput extends LightningElement {
             objectApiName: this.uiObjectApiName,
             fieldApiName: this.fieldApiName,
             value: event.target.value
-        }
-
+        };
+        this.value = event.detail.value;
         this.dispatchEvent(new CustomEvent('changevalue', { detail: detail }));
     }
 
