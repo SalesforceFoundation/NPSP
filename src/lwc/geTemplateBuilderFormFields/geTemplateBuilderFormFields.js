@@ -14,6 +14,7 @@ import CONTACT1_IMPORTED_INFO from '@salesforce/schema/DataImport__c.Contact1Imp
 import CONTACT1_LASTNAME_INFO from '@salesforce/schema/DataImport__c.Contact1_Lastname__c';
 import ACCOUNT1_NAME_INFO from '@salesforce/schema/DataImport__c.Account1_Name__c';
 
+const BOOLEAN_TYPE = 'BOOLEAN';
 const DONATION_DONOR_LABEL = 'Donation Donor';
 const COMMA_CHARACTER = ', ';
 const PERIOD_CHARACTER = '.';
@@ -229,6 +230,11 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                     if (fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL) {
                         //Forcing the requiredness of the Donation Donor field mapping
                         fieldMapping.Is_Required = true;
+                    }
+
+                    if(fieldMapping.Source_Field_Data_Type === BOOLEAN_TYPE) {
+                        // force checkboxes to not be required on the template builder
+                        fieldMapping.Is_Required = false;
                     }
                 });
                 let objectMapping = {
