@@ -299,7 +299,7 @@ tasks:
     enable_customizable_rollups:
         description: Enable the NPSP Customizable Rollups feature (unmanaged deploys only)
         class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
-        options:
+        options: 
             apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
 
     enable_incremental_rollups:
