@@ -13,21 +13,22 @@ Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 Setup Test Data
-    &{account} =          API Create Organization Account 
-    Set suite variable    &{account}  
-    &{contact1} =         API Create Contact                   Email=test@example.com 
-    Store Session Record  Account                              &{contact1}[AccountId]
-    Set suite variable    &{contact1}
-    &{contact2} =         API Create Contact                   Email=test@example.com
-    Store Session Record  Account                              &{contact2}[AccountId]
-    Set suite variable    &{contact2}
-    ${ns} =               Get NPSP Namespace Prefix
-    &{affiliation1} =     API Create Secondary Affiliation    &{account}[Id]    &{contact1}[Id]    ${ns}Related_Opportunity_Contact_Role__c=Soft Credit
-    &{affiliation2} =     API Create Secondary Affiliation    &{account}[Id]    &{contact2}[Id]    ${ns}Related_Opportunity_Contact_Role__c=Solicitor
-    &{opportunity} =      API Create Opportunity              &{account}[Id]    Donation           Name=&{account}[Name] $50 donation    
-    ...                   Amount=50                           ${ns}Primary_Contact__c=&{contact1}[Id]
-    Set suite variable    &{opportunity}
+    Setupdata           account      None    None    ${account_fields}
+    Setupdata           contact1     ${contact1_fields}
+    Setupdata           contact2     ${contact2_fields}
 
+    ${ns} =             Get NPSP Namespace Prefix
+    API Create Secondary Affiliation    ${data}[account][Id]    ${data}[contact1][Id]    ${ns}Related_Opportunity_Contact_Role__c=Soft Credit
+    API Create Secondary Affiliation    ${data}[account][Id]    ${data}[contact2][Id]    ${ns}Related_Opportunity_Contact_Role__c=Solicitor
+    &{opportunity} =    API Create Opportunity              ${data}[account][Id]    Donation           Name=${data}[account][Name] $50 donation    
+    ...                 Amount=50                           ${ns}Primary_Contact__c=${data}[contact1][Id]
+    Set suite variable  &{opportunity}
+
+*** Variables ***
+
+&{contact1_fields}  Email=test1@example.com
+&{contact2_fields}  Email=test2@example.com
+&{account_fields}  Type=Organization
  
 *** Test Cases ***    
 Create ASC Test for Primary and Affiliations
@@ -44,27 +45,27 @@ Create ASC Test for Primary and Affiliations
     Select Relatedlist                      Contact Roles
     Wait For Page Object                    Custom                               OpportunityContactRole
     Verify Related List Field Values
-    ...                                     &{contact1}[FirstName] &{contact1}[LastName]=Soft Credit
-    ...                                     &{contact2}[FirstName] &{contact2}[LastName]=Solicitor
+    ...                                     ${data}[contact1][FirstName] ${data}[contact1][LastName]=Soft Credit
+    ...                                     ${data}[contact2][FirstName] ${data}[contact2][LastName]=Solicitor
     
     #verify opportunity exists on both contacts
     Go To Page                              Details                              Contact                                
-    ...                                     object_id=&{contact1}[Id]
+    ...                                     object_id=${data}[contact1][Id]
     Select Tab                              Related
     Check Record Related Item               Opportunities                        &{opportunity}[Name]
     
     Go To Page                              Details                              Contact                                
-    ...                                     object_id=&{contact2}[Id]
+    ...                                     object_id=${data}[contact2][Id]
     Select Tab                              Related
     Check Record Related Item               Opportunities                        &{opportunity}[Name]
     
     #Run batch job and verify soft credits on contacts
     Run Donations Batch Process
     Go To Page                              Details                              Contact                                
-    ...                                     object_id=&{Contact1}[Id]
+    ...                                     object_id=${data}[contact1][Id]
     Navigate To And Validate Field Value    Soft Credit This Year                contains    $50.00    section=Soft Credit Total
     Navigate To And Validate Field Value    Soft Credit Total                    contains    $50.00    section=Soft Credit Total
     Go To Page                              Details                              Contact                                
-    ...                                     object_id=&{Contact2}[Id]
+    ...                                     object_id=${data}[contact2][Id]
     Navigate To And Validate Field Value    Soft Credit This Year                contains    $0.00     section=Soft Credit Total
     Navigate To And Validate Field Value    Soft Credit Total                    contains    $0.00     section=Soft Credit Total
