@@ -1,7 +1,7 @@
 import {LightningElement, api} from 'lwc';
 import {fireEvent} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
-import {isEmpty, isNotEmpty, isNumeric} from 'c/utilCommon';
+import {isEmpty, isNotEmpty, isNumeric, getLocalFieldName} from 'c/utilCommon';
 import ALLOCATION_OBJECT from '@salesforce/schema/Allocation__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
 import PERCENT_FIELD from '@salesforce/schema/Allocation__c.Percent__c';
@@ -29,7 +29,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
                 const { fieldAndValue } = field;
                 // convert full field names to local field names for processing
                 Object.entries(fieldAndValue).forEach(([fieldName,fieldValue]) => {
-                    const localFieldName = this.getLocalFieldName(fieldName);
+                    const localFieldName = getLocalFieldName(fieldName);
                     if(isNotEmpty(fieldValue)) {
                         // no need to populate fields with values that are blank / empty
                         widgetFieldAndValues = {...widgetFieldAndValues, ...{[localFieldName]: fieldValue}};
@@ -188,21 +188,9 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
      * @param fullFieldName e.g. Allocation__c.General_Accounting_Unit__c
      */
     getDefaultForField(fullFieldName) {
-        const localFieldName = this.getLocalFieldName(fullFieldName);
+        const localFieldName = getLocalFieldName(fullFieldName);
         if (localFieldName) {
             return this.rowRecord[localFieldName];
-        }
-    }
-
-    /**
-     * Extract the local field name from a full field name
-     * @param fullFieldName example: 'Allocation__c.General_Accounting_Unit__c'
-     * @return {*|string}   example: 'General_Accounting_Unit__c'
-     */
-    getLocalFieldName(fullFieldName) {
-        const parts = fullFieldName.split('.');
-        if(parts && parts.length === 2) {
-            return parts[1];
         }
     }
 

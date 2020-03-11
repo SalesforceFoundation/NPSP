@@ -244,7 +244,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * @returns Boolean
      */
     hasDonationImported(data) {
-        return data.hasOwnProperty(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName);
+        return data.hasOwnProperty(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName) &&
+               isNotEmpty(data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName]);
     }
 
     /**

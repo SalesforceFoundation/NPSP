@@ -231,6 +231,18 @@ const deepClone = (src) => {
     return clone;
 }
 
+/**
+ * Extract the local field name from a full field name
+ * @param fullFieldName example: 'Allocation__c.General_Accounting_Unit__c'
+ * @return {*|string}   example: 'General_Accounting_Unit__c'
+ */
+const getLocalFieldName = (fullFieldName) => {
+    const parts = fullFieldName.split('.');
+    if(parts && parts.length === 2) {
+        return parts[1];
+    }
+}
+
 /*******************************************************************************
  * @description Sorts the given list by field name and direction
  *
@@ -412,5 +424,6 @@ export {
     getNestedProperty,
     getLikeMatchByKey,
     arraysMatch,
-    getValueFromDotNotationString
+    getValueFromDotNotationString,
+    getLocalFieldName
 };
