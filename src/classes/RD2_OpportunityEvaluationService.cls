@@ -111,7 +111,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private RD2_OpportunityService oppService {
         get {
             if (oppService == null) {
-                oppService = new RD2_OpportunityService(currentDate, dbService);
+                oppService = new RD2_OpportunityService(currentDate, dbService, customFieldMapper);
             }
             return oppService;
         }
@@ -154,6 +154,20 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
             return yearValueProcessor;
         }
+        set;
+    }
+
+    /***
+    * @description Contains the current custom field mappings used to copy specified fields
+    * on Recurring Donation to mapped fields onto the Opportunity record
+    */
+    private RD2_CustomFieldMapper customFieldMapper {
+        get {
+            if (customFieldMapper == null) {
+                customFieldMapper = new RD2_CustomFieldMapper();
+            }
+            return customFieldMapper;
+        } 
         set;
     }
 
@@ -258,6 +272,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         if (!isChanged && isMultiCurrencyEnabled) {
             isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);
+        }
+
+        if (!isChanged) {
+            isChanged = customFieldMapper.hasKeyFieldChanged(rd, oldRd);
         }
 
         return isChanged;

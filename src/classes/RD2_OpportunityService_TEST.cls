@@ -670,8 +670,9 @@ private with sharing class RD2_OpportunityService_TEST {
         Exception actualException;
         try {
             rd.npe03__Amount__c = RD_NEW_AMOUNT;
-            new RD2_OpportunityService(TODAY, new  RD2_OpportunityEvaluationService.DatabaseService())
-                .updateOpportunities(rds);
+            new RD2_OpportunityService(
+                TODAY, new  RD2_OpportunityEvaluationService.DatabaseService(), new RD2_CustomFieldMapper()
+            ).updateOpportunities(rds);
 
         } catch (Exception e) {
             actualException = e;
