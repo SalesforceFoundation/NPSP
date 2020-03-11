@@ -233,6 +233,9 @@ npsp_lex_locators={
     'object_manager':{
         'button':'//input[@title="{}"]',
         },
+    'schedule_payment':{
+        'field_input':'//input[@value= "{}"]',
+       },
     'custom_settings':{
         'subtree':'//a/mark[text()="{}"]',
         'link':"//table[@class='list']/tbody/tr[./th/a[text()='{}']]/td/a[text()='{}']",

@@ -629,8 +629,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def add_gau_allocation(self,field, value):
         locator = npsp_lex_locators["gaus"]["input_field"].format(field)
         self.salesforce._populate_field(locator,value)
-            
-        
+
     def click_save(self, page):
         if  page== "GAU":
             id="j_id0:theForm:j_id9:j_id10:saveBTN"
@@ -650,13 +649,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             time.sleep(2)
 
     def verify_payment_split(self, amount, no_payments):
-        loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
+        #loc = "//input[@value= '{}']"
+        input_loc = npsp_lex_locators['schedule_payment']['field_input']
         values = int(amount)/int(no_payments)
-        #global self.val
         values_1 = "{:0.2f}".format(values)
         self.val = str(values_1)
-        locator =  loc.format(self.val)
-        list_payments = self.selenium.get_webelements(locator)
+        input_field =  input_loc.format(self.val)
+        list_payments = self.selenium.get_webelements(input_field)
         self.t_loc=len(list_payments)
         if  self.t_loc == int(no_payments):
             for i in list_payments:
@@ -680,8 +679,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             mm = mm + int(interval)
             dates = list(map(str, date_list))
             #if new_date not in t_dates:
-            locator1 = npsp_lex_locators['payments']['date_loc'].format(new_date)
-            t_dates = self.selenium.get_webelement(locator1)
+            date_locator = npsp_lex_locators['payments']['date_loc'].format(new_date)
+            t_dates = self.selenium.get_webelement(date_locator)
             self.selenium.page_should_contain_element(t_dates)
         elif mm > 12:
             yyyy = yyyy + 1

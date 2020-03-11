@@ -21,23 +21,22 @@ Setup Test Data
 *** Test Cases ***
 
 Create Matching Donation
-       Go To Page                             Listing
-        ...                                   Opportunity
+       [Documentation]                      Create a Matching Gift Donation
 
-       Click Object Button                    New
-       Wait For Modal                         New                       Opportunity
+       Go To Page                            Listing
+        ...                                  Opportunity
 
+       Click Object Button                   New
+       Wait For Modal                        New                       Opportunity
        Select Record Type                    Matching Gift
        Populate Modal Form
-
        ...                                   Opportunity Name= Robot $100 matching donation
        ...                                   Amount=100
        ...                                   Account Name=${data}[contact][LastName] Household
        ...                                   Do Not Automatically Create Payment=checked
-       Select Value From Dropdown            Stage    Closed Won
+       Select Value From Dropdown            Stage                     Closed Won
        Open Date Picker                      Close Date
        Pick Date                             Today
-
        Click Modal Button                    Save
        Wait Until Modal Is Closed
        ${grant_name}                         Get Main Header

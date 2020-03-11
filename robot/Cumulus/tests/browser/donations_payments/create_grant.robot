@@ -17,14 +17,15 @@ Setup Test Data
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
+
 *** Test Cases ***
 Create Grant
+    [Documentation]                      Create a Grant from the UI
+
     Go To Page                             Listing
      ...                                   Opportunity
-
     Click Object Button                    New
     Wait For Modal                         New                       Opportunity
-
     Select Record Type                     Grant
     Populate Modal Form
     ...                                   Stage=Awarded
@@ -35,7 +36,6 @@ Create Grant
     Select Value From Dropdown            Stage    Awarded
     Open Date Picker                      Close Date
     Pick Date                             Today
-
     Click Modal Button                    Save
     Wait Until Modal Is Closed
     ${grant_name}                         Get Main Header

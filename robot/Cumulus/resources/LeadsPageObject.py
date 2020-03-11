@@ -13,11 +13,10 @@ class CovertLeadPage(BaseNPSPPage, BasePage):
         """
         Waits for the Leads iframe to load
         """
-        locator = '//iframe[contains(@name,"vfFrameId")]'
-        self.selenium.wait_until_element_is_visible(locator, timeout=60)
-        frame = self.selenium.driver.find_element_by_xpath(locator)
+        LeadFrame = '//iframe[contains(@name,"vfFrameId")]'
+        self.selenium.wait_until_element_is_visible(LeadFrame, timeout=60)
+        frame = self.selenium.driver.find_element_by_xpath(LeadFrame)
         self.selenium.driver.switch_to.frame(frame);
-
 
     def click_lead_convert_button(self):
         self.npsp.page_scroll_to_locator('button', 'Convert')
@@ -28,15 +27,10 @@ class CovertLeadPage(BaseNPSPPage, BasePage):
 class LeadListingPage(BaseNPSPPage, ListingPage):
     object_name = "Lead"
 
-    def click_delete_account_button(self):
-        """Clicks on Delete Account button inside the iframe"""
-        self.selenium.wait_until_location_contains("/list", message="Lead Listing page did not load in 30 seconds")
-
 
 @pageobject("Details", "Lead")
 class LeadDetailPage(BaseNPSPPage, DetailPage):
     object_name = "Lead"
-
     def _is_current_page(self):
         """ Verify we are on the Lead detail page
             by verifying that the url contains '/view'

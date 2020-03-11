@@ -58,32 +58,32 @@ Verify values in Create one or more Payments for this Opportunity page
     Current Page Should Be               Details         Opportunity
     Click ViewAll Related List           Payments
     Verify Details
-        ...    Unpaid=3
-        ...    Written Off=1
+        ...                              Unpaid=3
+        ...                              Written Off=1
 
 
 Verify values in Writeoff Remaining Balance Page
 
-    Go To Page                          Details   Opportunity    object_id=${data}[contact_opportunity][Id]
+    Go To Page                          Details          Opportunity    object_id=${data}[contact_opportunity][Id]
     Select Tab                          Related
-    Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
+    Click First Matching Related Item Popup Link         Payments       Unpaid    Edit
     Wait Until Modal Is Open
-    Set Checkbutton To                 Written Off    checked
-    Populate Field                     Payment Amount    200
-    Click Modal Button                 Save
+    Set Checkbutton To                  Written Off      checked
+    Populate Field                      Payment Amount   200
+    Click Modal Button                  Save
     Wait Until Modal Is Closed
 
     Navigate To Writeoff Payments Page
     Verify Field Values
-    ...                               Payment Writeoff Amount=$450.00
-    ...                               Remaining Balance=$550.00
-    Page Should Contain               You are preparing to write off 2 Payment(s) totaling $550.00
-    Choose Frame                      Write Off Remaining Balance
-    Click Button                      Cancel
-    Current Page Should Be            Details    Opportunity
-    Select Tab                        Related
-    Load Related List                 Payments
-    Click ViewAll Related List        Payments
+    ...                                Payment Writeoff Amount=$450.00
+    ...                                Remaining Balance=$550.00
+    Page Should Contain                You are preparing to write off 2 Payment(s) totaling $550.00
+    Choose Frame                       Write Off Remaining Balance
+    Click Button                       Cancel
+    Current Page Should Be             Details           Opportunity
+    Select Tab                         Related
+    Load Related List                  Payments
+    Click ViewAll Related List         Payments
     Verify Details
-    ...                               Unpaid=2
-    ...                               Written Off=2
+    ...                                Unpaid=2
+    ...                                Written Off=2
