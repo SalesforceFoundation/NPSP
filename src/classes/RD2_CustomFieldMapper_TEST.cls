@@ -35,7 +35,7 @@
 *
 */
 @IsTest(IsParallel=true)
-private class RD2_CustomFieldMapper_TEST {
+public class RD2_CustomFieldMapper_TEST {
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final String PAYMENT_CHECK = 'Check';
@@ -264,7 +264,7 @@ private class RD2_CustomFieldMapper_TEST {
     * @param oppFieldName Destination field on Opportunity
     * @return void
     */
-    private static void createCustomFieldMapping(String rdFieldName, String oppFieldName) {
+    public static void createCustomFieldMapping(String rdFieldName, String oppFieldName) {
         delete [SELECT Id FROM npe03__Custom_Field_Mapping__c];
 
         insert buildCustomFieldMapping(rdFieldName, oppFieldName);
@@ -277,7 +277,7 @@ private class RD2_CustomFieldMapper_TEST {
     * @param oppFieldName Destination field on Opportunity
     * @return void
     */
-    private static npe03__Custom_Field_Mapping__c buildCustomFieldMapping(String rdFieldName, String oppFieldName) {
+    public static npe03__Custom_Field_Mapping__c buildCustomFieldMapping(String rdFieldName, String oppFieldName) {
         String name = System.now() + rdFieldName;
 
         return new npe03__Custom_Field_Mapping__c(

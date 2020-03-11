@@ -1227,7 +1227,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_ScheduleService.currentDate = today;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        createCustomFieldMapping('Name', 'Description');
+        RD2_CustomFieldMapper_TEST.createCustomFieldMapping('Name', 'Description');
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
 
@@ -1253,7 +1253,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         RD2_ScheduleService.currentDate = today;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        createCustomFieldMapping('Name', 'Description');
+        RD2_CustomFieldMapper_TEST.createCustomFieldMapping('Name', 'Description');
         
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
         insert rd;
@@ -1382,36 +1382,6 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void setUpUseFiscalYear(Boolean isEnabled) {
         RD2_Settings_TEST.setUpConfiguration(
             new Map<String, Object>{ 'UseFiscalYearForRecurringDonationValue__c' => isEnabled }
-        );
-    }
-
-    /***
-    * @description Removes current Custom Field Mappings and create a new one
-    * in order to avoid reaching debug log size limit
-    * @param rdFieldName Source field on Recurring Donation
-    * @param oppFieldName Destination field on Opportunity
-    * @return void
-    */
-    private static void createCustomFieldMapping(String rdFieldName, String oppFieldName) {
-        delete [SELECT Id FROM npe03__Custom_Field_Mapping__c];
-
-        insert buildCustomFieldMapping(rdFieldName, oppFieldName);
-    }
-
-    /***
-    * @description Builds custom field mapping setting record to map
-    * from a Recurring Donation field to the Opportunity field
-    * @param rdFieldName Source field on Recurring Donation
-    * @param oppFieldName Destination field on Opportunity
-    * @return void
-    */
-    private static npe03__Custom_Field_Mapping__c buildCustomFieldMapping(String rdFieldName, String oppFieldName) {
-        String name = System.now() + rdFieldName;
-
-        return new npe03__Custom_Field_Mapping__c(
-            Name = name.left(30),
-            npe03__Recurring_Donation_Field__c = rdFieldName,
-            npe03__Opportunity_Field__c = oppFieldName
         );
     }
 }
