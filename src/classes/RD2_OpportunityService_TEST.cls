@@ -925,49 +925,50 @@ private with sharing class RD2_OpportunityService_TEST {
     }
 
     /***
-    * @description Verifies if Account is not getting removed in opportunity
-    * when recurring donation record with only contact is updated.
+    * @description Verifies the Account on Opportunity is not nulled
+    * when Recurring Donation having Contact specified only is updated
     */
     @isTest
-    private static void shouldNotRemoveAccountInOppWhenRDWithNoAccountIsModified() {
+    private static void shouldNotRemoveAccountOnOppWhenRDWithoutAccountIsModified() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
-
 
         npe03__Recurring_Donation__c rd = createRecurringDonation();
 
-        //create opp from rd with contact only
-        Opportunity opp = getOpportunityBuilderWithNoAccount(rd)
+        //create a related Opp where Contact is specified only
+        Opportunity opp = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
         insert opp;
 
-
-        //Verify if accountid is populated in opp when only contact is provided in RD
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'One Installment Opp should be created on RD insert: ' + opps);
-        System.assert(opps[0].AccountId != null);
+        System.assertNotEquals(null, opps[0].AccountId,
+            'Opp Account should be populated on the Opp insert');
 
-        //update rd amount
         Test.startTest();
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         update rd;
         Test.stopTest();
 
-        //Verify if accountid is not nulled out when rd record is modified
-        List<Opportunity> oppUpdated = oppGateway.getRecords(rd);
-        System.assertEquals(RD_NEW_AMOUNT, oppUpdated[0].Amount, 'Amount should be updated');
-        System.assert(oppUpdated[0].AccountId != null);
+        rd = rdGateway.getRecord(rd.Id);
+        opps = oppGateway.getRecords(rd);
 
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+        System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Opp Amount should be updated');
+        System.assertEquals(getContact().AccountId, opps[0].AccountId,
+            'Opp Account should be the same as the Contact household Account');
     }
 
     /***
-    * @description Verifies if Account is not getting removed in opportunity
-    * when recurring donation record with account is modified.
+    * @description Verifies the Account on Opportunity is not nulled
+    * when Recurring Donation having Organization specified is updated
     */
-    private static void shouldNotRemoveAccountInOppWhenRDWithAccountIsModified() {
+    private static void shouldNotRemoveAccountOnOppWhenRDWithAccountIsModified() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
@@ -977,66 +978,65 @@ private with sharing class RD2_OpportunityService_TEST {
 
         npe03__Recurring_Donation__c rd = createRecurringDonation(acc);
 
-        //create opp from rd with account
         Opportunity opp = getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
         insert opp;
 
-        //update rd amount
         Test.startTest();
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         update rd;
         Test.stopTest();
 
-        //Verify if accountid is not changed or nulled out when rd record is modified
-        List<Opportunity> oppUpdated = oppGateway.getRecords(rd);
-        npe03__Recurring_Donation__c recurDonation = rdGateway.getRecord(rd.id);
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
 
-        System.assertEquals(RD_NEW_AMOUNT, oppUpdated[0].Amount, 'Amount should be updated');
-        System.assert(oppUpdated[0].AccountId != null);
-        System.assertEquals(recurDonation.npe03__Organization__c, oppUpdated[0].AccountId);
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+        System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Opp Amount should be updated');
+
+        System.assertNotEquals(null, opps[0].AccountId,
+            'Opp Account should be specified when RD is updated');
+        System.assertEquals(rd.npe03__Organization__c, opps[0].AccountId,
+            'Opp Account should be the same as the RD Account');
     }
 
     /***
-    * @description Verifies if Account is getting updated in opportunity
-    * when recurring donation's account is modified to another account
+    * @description Verifies the Account on Opportunity is matching the
+    * Account on the Recurring Donation when the RD Account is changed
     */
-    private static void shouldUpdateAccountInOppWhenRDAccountIsModified() {
+    private static void shouldUpdateAccountOnOppWhenRDAccountIsChanged() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         setUpConfiguration();
 
-        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
-        insert acc;
+        List<Account> organizations = new List<Account>{
+            UTIL_UnitTestData_TEST.buildOrganizationAccount(),
+            UTIL_UnitTestData_TEST.buildOrganizationAccount()
+        };
+        insert organizations;
 
-        Account accAnother = UTIL_UnitTestData_TEST.buildOrganizationAccount();
-        insert accAnother;
+        npe03__Recurring_Donation__c rd = createRecurringDonation(organizations[0]);
 
-        npe03__Recurring_Donation__c rd = createRecurringDonation(acc);
-
-        //create opp from rd with account
         Opportunity opp = getOpportunityBuilder(rd)
             .withCloseDate(CLOSE_DATE)
             .withOpenStage()
             .build();
         insert opp;
 
-        //update rd to different account
         Test.startTest();
-        rd.npe03__Organization__c = accAnother.Id;
+        rd.npe03__Organization__c = organizations[1].Id;
         update rd;
         Test.stopTest();
 
-        //Verify if accountid is changed in opportunity when rd's account is modified
-        List<Opportunity> oppUpdated = oppGateway.getRecords(rd);
-        npe03__Recurring_Donation__c recurDonation = rdGateway.getRecord(rd.id);
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
 
-        System.assert(oppUpdated[0].AccountId != null);
-        System.assertEquals(recurDonation.npe03__Organization__c, accAnother.id);
-        System.assertEquals(recurDonation.npe03__Organization__c, oppUpdated[0].AccountId);
-
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+        System.assertEquals(rd.npe03__Organization__c, organizations[1].Id,
+            'RD Account should be updated to the new organization');
+        System.assertEquals(rd.npe03__Organization__c, opps[0].AccountId,
+            'Opp Account should be the same as the RD Account');
     }
 
     // Helper Methods
@@ -1193,19 +1193,6 @@ private with sharing class RD2_OpportunityService_TEST {
             .withContact(rd.npe03__Contact__c)
             .withRecurringDonation(rd.Id)
             .withAccount(rd.npe03__Organization__c)
-            .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1);
-    }
-
-     /**
-     * @description Instantiate an Opportunity builder for the specified Recurring Donation with no account
-     * @param rd Recurring Donation
-     * @return TEST_OpportunityBuilder New Opportunity builder
-     */
-    private static TEST_OpportunityBuilder getOpportunityBuilderWithNoAccount(npe03__Recurring_Donation__c rd) {
-        return new TEST_OpportunityBuilder()
-            .withContact(rd.npe03__Contact__c)
-            .withRecurringDonation(rd.Id)
             .withAmount(rd.npe03__Amount__c)
             .withInstallmentNumber(1);
     }
