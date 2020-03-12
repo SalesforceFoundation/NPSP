@@ -3,7 +3,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import {isNumeric, isNotEmpty, getLocalFieldName, isEmpty} from 'c/utilCommon';
-import { handleError } from 'c/utilTemplateBuilder';
+import { handleError, generateId } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 
 import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
@@ -321,7 +321,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     getRow(isDefaultGAU, properties) {
         let element = {};
-        element.key = this.rowList.length;
         const record = { apiName: ALLOCATION_OBJECT.objectApiName, ...properties};
         let row = {};
         if(isDefaultGAU === true) {
@@ -330,6 +329,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
             row.isDefaultGAU = true;
             record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
             // this.rowList.push(row);
+        } else {
+            element.key = generateId();
         }
         row = {
             ...row,
