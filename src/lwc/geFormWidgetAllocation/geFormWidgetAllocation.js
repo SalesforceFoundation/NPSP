@@ -2,7 +2,7 @@ import {LightningElement, api, track, wire} from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-import { isNumeric, isNotEmpty } from 'c/utilCommon';
+import {isNumeric, isNotEmpty, getLocalFieldName, isEmpty} from 'c/utilCommon';
 import { handleError } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 
@@ -30,7 +30,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
-    @track selectedDonationId;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     
@@ -80,7 +79,9 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.allocationSettings = await GeFormService.getAllocationSettings();
         }
         if(this.hasDefaultGAU) {
-            this.addRow(true);
+            this.addRows(
+                [this.getRow(true)]
+            );
         }
     };
 
@@ -160,45 +161,81 @@ export default class GeFormWidgetAllocation extends LightningElement {
         this.init();
     }
 
+    /**
+     * @description Contains the load behavior for the widget. The load behavior depends on the format of the data
+     *              loaded into the widget.
+     */
     @api
     load(data) {
-        let records = [];
         if(this.hasAdditionalObjectJSON(data)) {
-            records = this.formatAdditionalObjectJSON(data);
+
+            this.addAdditionalObjectRows(data);
         } else if(this.hasDonationImported(data)) {
-            this.selectedDonationId = data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName].value;
-        }
-        this.addRows(records);
-    }
+            let importedDonationId = data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName].value;
 
-    @wire(getDonationAllocations, { donationId: '$selectedDonationId' })
-    wiredDonationAllocations({ error, data }) {
-        if(data) {
-            let donations = {};
-
-            this.fieldList.forEach(field => {
-
-            });
-
-        }
-
-        if(error) {
-            handleError(error);
+            this.addImportedDonationRows(importedDonationId);
         }
     }
 
     /**
      * @description This method takes the full data import source format and converts
      *              it to a target source format that can be used by widgets.
-     * @returns An array of objects in the target format
      */
-    formatAdditionalObjectJSON(data) {
+    addImportedDonationRows(importedDonationId) {
+        this.getAllocations(importedDonationId)
+            .then(response => {
+                let allocationRows = [];
+
+                // Map donation value to each donation GAU field present in the widget
+                response.forEach(allocation => {
+                    let row = {};
+                    let allocationKeys = Object.keys(allocation);
+                    let gauId = allocation[GENERAL_ACCOUNT_UNIT];
+                    let defaultGAUId = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
+
+                    this.fieldList.forEach(field => {
+                        let elementFieldName = getLocalFieldName(field.mappedField);
+
+                        if(allocationKeys.includes(elementFieldName)) {
+                            row[elementFieldName] = allocation[elementFieldName];
+                        }
+                    });
+
+                    if(gauId !== defaultGAUId) {
+                        allocationRows.push(row);
+                    }
+                });
+                this.addRows(allocationRows);
+            });
+    }
+
+    /**
+     * @description Retrieves an array of allocations for the specified donation id
+     * @returns Promise containing an array of allocation records
+     */
+    getAllocations(donationId) {
+        return new Promise((resolve) => {
+            getDonationAllocations( {donationId: donationId} )
+                .then((result) => {
+                    resolve(result);
+                })
+                .catch(error => {
+                    handleError(error);
+                });
+        });
+    }
+
+    /**
+     * @description This method takes the full data import source format and converts
+     *              it to a target source format that can be used by widgets and adds those rows to the widget.
+     */
+    addAdditionalObjectRows(data) {
         const GAU_ALLOCATION_1_KEY = 'gau_allocation_1';
 
         let targetRecords = [];
         let dataImportRow = JSON.parse(data[DI_ADDITIONAL_OBJECT.fieldApiName]).dynamicSourceByObjMappingDevName;
         if (!dataImportRow) {
-            return;
+            return [];
         }
 
         let fieldMappings = GeFormService.fieldMappings;
@@ -226,16 +263,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             });
             targetRecords.push(record);
         });
-        return targetRecords;
-    }
-
-    /**
-     * @description This method takes an imported donation and converts
-     *              it to a target record format that can be used by the widget.
-     * @returns Boolean
-     */
-    formatDonationImport(data) {
-
+        this.addRows(targetRecords);
     }
 
     /**
@@ -264,16 +292,24 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     addRows(records) {
+        let rows = [];
         records.forEach(record => {
-            this.addRow(false, record);      
+            if(record.isDefaultGAU) {
+                rows.push(record);
+            } else {
+                rows.push(this.getRow(false, record));
+            }
         });
+        this.rowList = this.rowList.concat(rows);
+        // Reallocate the default GAU
+        this.allocateDefaultGAU();
     }
 
     /**
      * Add a new record to the list
      * @param isDefaultGAU {boolean} When initializing the first row, this should be true.
      */
-    addRow(isDefaultGAU, properties) {
+    getRow(isDefaultGAU, properties) {
         let element = {};
         element.key = this.rowList.length;
         const record = { apiName: ALLOCATION_OBJECT.objectApiName, ...properties};
@@ -283,14 +319,14 @@ export default class GeFormWidgetAllocation extends LightningElement {
             element.disabled = true;
             row.isDefaultGAU = true;
             record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
+            // this.rowList.push(row);
         }
-
         row = {
             ...row,
             record,
             element
         };
-        this.rowList.push(row);
+        return row;
     }
 
     /**
