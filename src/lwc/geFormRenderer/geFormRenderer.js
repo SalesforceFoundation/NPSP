@@ -1211,43 +1211,44 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 ].value === DONATION_DONOR.isContact1 ?
                 CONTACT_FIRST_NAME_INFO.objectApiName : ACCOUNT_NAME_FIELD.objectApiName;
 
-            for (let i = 0; i < sectionsList.length ; i++) {
-                if (sectionsList[i].isCreditCardWidgetAvailable) {
-                    sectionsList[i].setCardHolderName(this.fabricateCardHolderName(fieldList));
+            sectionsList.forEach(section => {
+                if(section.isCreditCardWidgetAvailable){
+                    section.setCardHolderName(this.fabricateCardHolderName(fieldList));
                 }
-            }
+            });
         }
     }
 
 
     fabricateCardHolderName(fieldList){
-        let nameOnCard = '';
+        let nameOnCard;
         let fullName;
-        let accountName;
-        let firstName;
+        let accountName = '';
+        let firstName = '';
+        let lastName = '';
+        let index = 0;
+
         for (let field in fieldList) {
+            index++;
             if (fieldList.hasOwnProperty(field)) {
-                let value = fieldList[field].value;
+                let value = fieldList[field].value ? fieldList[field].value : '';
                 let fieldApiName = fieldList[field].apiName;
-                if (fieldApiName === CONTACT_FIRST_NAME_INFO.fieldApiName) {
-                    firstName = fieldList[field].value;
+
+                switch (fieldApiName) {
+                    case CONTACT_FIRST_NAME_INFO.fieldApiName :
+                        firstName = value;
+                        break;
+                    case CONTACT_LAST_NAME_INFO.fieldApiName :
+                        lastName = value;
+                        break;
+                    case ACCOUNT_NAME_FIELD.fieldApiName :
+                        accountName = value;
+                        break;
                 }
 
-                if (fieldApiName === CONTACT_LAST_NAME_INFO.fieldApiName) {
-                    if (isNotEmpty(firstName)) {
-                        fullName = firstName + ' ' + value;
-                    }else {
-                        fullName = isNotEmpty(value) ? value : '';
-                    }
-                }
-
-                if (fieldApiName === ACCOUNT_NAME_FIELD.fieldApiName) {
-                    accountName = value ? value : '';
-                }
-
-                nameOnCard = this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName ? fullName : accountName;
-
-                if (!isUndefined(nameOnCard)) {
+                if (index === Object.keys(fieldList).length) {
+                    fullName = firstName + ' ' + lastName;
+                    nameOnCard = this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName ? fullName : accountName;
                     return nameOnCard;
                 }
             }
