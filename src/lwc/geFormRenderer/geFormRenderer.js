@@ -1212,7 +1212,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 CONTACT_FIRST_NAME_INFO.objectApiName : ACCOUNT_NAME_FIELD.objectApiName;
 
             sectionsList.forEach(section => {
-                if(section.isCreditCardWidgetAvailable){
+                if (section.isCreditCardWidgetAvailable) {
                     section.setCardHolderName(this.fabricateCardHolderName(fieldList));
                 }
             });
@@ -1220,6 +1220,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
 
+    /**
+     * Function that fabricates the cardholder name for the credit card widget
+     * @param fieldList (List of fields displayed on the form)
+     * @returns {string} card holder name
+     */
     fabricateCardHolderName(fieldList){
         let nameOnCard;
         let fullName;
