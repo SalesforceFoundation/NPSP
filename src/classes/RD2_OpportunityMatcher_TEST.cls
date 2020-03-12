@@ -38,7 +38,6 @@
 private class RD2_OpportunityMatcher_TEST {
 
     private static final Date TODAY = Date.newInstance(2019, 9, 21);
-    private static final Integer CURRENT_YEAR = TODAY.year();
     private static final ID RD_ID = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.SObjectType);
     private static final Decimal RD_AMOUNT = 200;
 
@@ -87,12 +86,12 @@ private class RD2_OpportunityMatcher_TEST {
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
-            .includeByYear(opps, CURRENT_YEAR)
+            .includeByYear(opps, Date.newInstance(2019, 1, 1), Date.newInstance(2019, 12, 31))
             .getRecords();
 
         System.assertEquals(3, records.size(), 'Number of included Opportunities should match: ' + records);
         for (RD2_OpportunityMatcher.Record record : records) {
-            System.assertEquals(CURRENT_YEAR, record.getOpportunity().CloseDate.year(), 'Opportunity Close Date Year should match');
+            System.assertEquals(2019, record.getOpportunity().CloseDate.year(), 'Opportunity Close Date Year should match');
             System.assertNotEquals(opps[4].Name, record.getOpportunity().Name, 'Opportunity Closed Lost in data migration should be excluded');
         }
     }
@@ -205,14 +204,9 @@ private class RD2_OpportunityMatcher_TEST {
      * is applied by matching Close Date.
      */
     @IsTest
-    private static void shouldMatchCurrentOppWithInstallmentByTheCloseDate() {
+    private static void shouldMatchCurrentOppWithInstallmentWhenMatchingCloseDateExactly() {
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
         List<Opportunity> opps = new List<Opportunity>{
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addMonths(-2))
-                .withClosedWonStage()
-                .build(),
             oppBuilder
                 .withName()
                 .withCloseDate(TODAY.addMonths(-1))
@@ -236,7 +230,7 @@ private class RD2_OpportunityMatcher_TEST {
         };
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
-        Integer firstMatchedOppIndex = 2;
+        Integer firstMatchedOppIndex = 1;
         Integer numInstallments = 6;
         List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
             TODAY, numInstallments, new List<RecurringDonationSchedule__c>{ getSchedule() }
@@ -248,14 +242,14 @@ private class RD2_OpportunityMatcher_TEST {
             .getRecords();
 
         System.assertEquals(numInstallments, records.size(),
-            'Only current and future matched records should be returned: ' + records);
+            'Only current and future records should be returned: ' + records);
 
         for (Integer i = 0; i < numInstallments; i++) {
             Opportunity opp = records[i].getOpportunity();
             RD2_ScheduleService.Installment installment = records[i].getInstallment();
 
             if (i < 3) {
-                System.assertEquals(opps[firstMatchedOppIndex + i].Name, opp.Name, 'The Opp should be assigned to the matched record');
+                System.assertEquals(opps[firstMatchedOppIndex + i].Name, opp.Name, 'The Opp should be assigned to the record');
                 System.assertEquals(opps[firstMatchedOppIndex + i].CloseDate, installment.nextDonationDate, 'The Opp should match installment with the same Close Date');
             } else {
                 System.assertEquals(true, records[i].isNew(), 'The installment should not have matching Opp');
@@ -266,18 +260,13 @@ private class RD2_OpportunityMatcher_TEST {
 
     /**
      * @description Verifies matching of Opportunities and projected installments
-     * is applied by matching order of the installment Close Date from the current date
-     * when existing included Opp cannot be matched by the Close Date.
+     * is done by matching the existing Opp with Close Date within +/- match day range
+     * of the installment Close Date.
      */
     @IsTest
-    private static void shouldMatchCurrentOppWithInstallmentOrderIfCannotMatchByTheCloseDate() {
+    private static void shouldMatchCurrentOppWithInstallmentWhenCloseDateIsWithinMatchRange() {
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
         List<Opportunity> opps = new List<Opportunity>{
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addMonths(-2))
-                .withClosedWonStage()
-                .build(),
             oppBuilder
                 .withName()
                 .withCloseDate(TODAY.addMonths(-1))
@@ -285,7 +274,7 @@ private class RD2_OpportunityMatcher_TEST {
                 .build(),
             oppBuilder
                 .withName()
-                .withCloseDate(TODAY)//match
+                .withCloseDate(TODAY.addDays(-1))//match
                 .withOpenStage()
                 .build(),
             oppBuilder
@@ -301,7 +290,7 @@ private class RD2_OpportunityMatcher_TEST {
         };
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
-        Integer firstMatchedOppIndex = 2;
+        Integer firstMatchedOppIndex = 1;
         Integer numInstallments = 6;
         List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
             TODAY, numInstallments, new List<RecurringDonationSchedule__c>{ getSchedule() }
@@ -315,14 +304,123 @@ private class RD2_OpportunityMatcher_TEST {
         System.assertEquals(numInstallments, records.size(),
             'The current matched Opps and future unmatched installments should be returned: ' + records);
 
-        System.assertEquals(opps[firstMatchedOppIndex].CloseDate, records[0].getInstallment().nextDonationDate, 'The first current Opp should be matched with the first installment');
-        System.assertEquals(opps[firstMatchedOppIndex + 1].CloseDate, records[1].getOpportunity().CloseDate, 'The second current Opp should be the second matched record');
-        System.assertEquals(TODAY.addMonths(1), records[1].getInstallment().nextDonationDate, 'The second current Opp should be matched with the second installment');
-        System.assertEquals(opps[firstMatchedOppIndex + 2].CloseDate, records[2].getInstallment().nextDonationDate, 'The third current Opp should be matched with the third installment');
+        System.assertEquals(opps[firstMatchedOppIndex].CloseDate, records[0].getOpportunity().CloseDate, 'The first Opp should be the first record');
+        System.assertEquals(TODAY, records[0].getInstallment().nextDonationDate, 'The first Opp should be matched with the first installment');
+
+        System.assertEquals(opps[firstMatchedOppIndex + 1].CloseDate, records[1].getOpportunity().CloseDate, 'The second Opp should be the second record');
+        System.assertEquals(TODAY.addMonths(1), records[1].getInstallment().nextDonationDate, 'The second Opp should be matched with the second installment');
+
+        System.assertEquals(opps[firstMatchedOppIndex + 2].CloseDate, records[2].getOpportunity().CloseDate, 'The third Opp should be the third record');
+        System.assertEquals(opps[firstMatchedOppIndex + 2].CloseDate, records[2].getInstallment().nextDonationDate, 'The third Opp should be matched with the third installment');
 
         for (Integer i = 3; i < numInstallments; i++) {
             System.assertEquals(true, records[i].isNew(), 'The installment should not have a matching Opp');
-            System.assertEquals(installments[i].nextDonationDate, records[i].getInstallment().nextDonationDate, 'The expected installment Close Date should match');
+            System.assertEquals(installments[i].nextDonationDate, records[i].getInstallment().nextDonationDate, 
+                'The expected installment Next Donation Date should match');
+        }
+    }
+
+    /**
+     * @description Verifies a projected installment is not matched with an extra Opp 
+     * having Close Date outside Next Donation Date +/- match day range
+     */
+    @IsTest
+    private static void shouldNotMatchExtraOppWithInstallmentWhenCloseDateIsOutsideMatchRange() {
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)//match
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1).addDays(1))//match
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1).addDays(4))//extra Opp: no match with any installment
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(2))//match
+                .withOpenStage()
+                .build()
+        };
+        TEST_OpportunityBuilder.setUneditableFields(opps);
+        
+        testAndAssertExtraOppIsNotMatched(opps);
+    }
+
+    /**
+     * @description Verifies a projected installment is matching only one Opp
+     * when more than one Opp is matching the Next Donation Date +/- match day range
+     */
+    @IsTest
+    private static void shouldMatchOneOppOnlyWithInstallmentWhenMoreThanOneOppWithinMatchRange() {
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder();
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY)//match
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1).addDays(1))//match
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(1).addDays(2))//extra Opp: no match with any installment
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(TODAY.addMonths(2))//match
+                .withOpenStage()
+                .build()
+        };
+        TEST_OpportunityBuilder.setUneditableFields(opps);
+
+        testAndAssertExtraOppIsNotMatched(opps);
+    }
+
+    /**
+     * @description Verifies an extra Opp is not matched with an installment
+     */
+    private static void testAndAssertExtraOppIsNotMatched(List<Opportunity> opps) {
+        Integer numInstallments = 6;
+        List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
+            TODAY, numInstallments, new List<RecurringDonationSchedule__c>{ getSchedule() }
+        );
+
+        List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(TODAY)
+            .includeCurrent(opps)
+            .match(installments)
+            .getRecords();
+
+        System.assertEquals(numInstallments + 1, records.size(),
+            'The current matched Opps and future unmatched installments should be returned: ' + records);
+
+        System.assertEquals(opps[0].CloseDate, records[0].getOpportunity().CloseDate, 'The first Opp should be the first record');
+        System.assertEquals(opps[0].CloseDate, records[0].getInstallment().nextDonationDate, 'The first Opp should be matched with the first installment');
+
+        System.assertEquals(opps[1].CloseDate, records[1].getOpportunity().CloseDate, 'The second Opp should be the second record');
+        System.assertEquals(TODAY.addMonths(1), records[1].getInstallment().nextDonationDate, 'The second Opp should be matched with the second installment');
+
+        System.assertEquals(opps[2].CloseDate, records[2].getOpportunity().CloseDate, 'The third Opp should be the third record');
+        System.assertEquals(null, records[2].getInstallment(), 'The third Opp should not be matched with any installment');
+
+        System.assertEquals(opps[3].CloseDate, records[3].getOpportunity().CloseDate, 'The fourth Opp should be the fourth record');
+        System.assertEquals(opps[3].CloseDate, records[3].getInstallment().nextDonationDate, 'The fourth Opp should be matched with the third installment');
+
+        for (Integer i = 4; i < numInstallments + 1; i++) {
+            System.assertEquals(true, records[i].isNew(), 'The installment should not have a matching Opp');
+            System.assertEquals(installments[i - 1].nextDonationDate, records[i].getInstallment().nextDonationDate, 
+                'The installment Next Donation Date should match');
         }
     }
 
@@ -336,12 +434,7 @@ private class RD2_OpportunityMatcher_TEST {
         List<Opportunity> opps = new List<Opportunity>{
             oppBuilder
                 .withName()
-                .withCloseDate(TODAY.addMonths(-2))
-                .withClosedWonStage()
-                .build(),
-            oppBuilder
-                .withName()
-                .withCloseDate(TODAY.addMonths(-1))//match the filter but not installment
+                .withCloseDate(TODAY.addMonths(-1))//not a match
                 .withOpenStage()
                 .build(),
             oppBuilder
@@ -351,7 +444,7 @@ private class RD2_OpportunityMatcher_TEST {
                 .build(),
             oppBuilder
                 .withName()
-                .withCloseDate(TODAY.addMonths(1).addDays(1))//match w installment
+                .withCloseDate(TODAY.addMonths(1))//match w installment
                 .withClosedLostStage()
                 .build(),
             oppBuilder
@@ -362,8 +455,8 @@ private class RD2_OpportunityMatcher_TEST {
         };
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
-        Integer pastOpenOppIndex = 1;
-        Integer firstMatchedOppIndex = 2;
+        Integer pastOpenOppIndex = 0;
+        Integer firstMatchedOppIndex = 1;
         Integer numInstallments = 6;
         List<RD2_ScheduleService.Installment> installments = new RD2_ScheduleService().getVisualizedInstallments(
             TODAY, numInstallments, new List<RecurringDonationSchedule__c>{ getSchedule() }
@@ -377,17 +470,15 @@ private class RD2_OpportunityMatcher_TEST {
         System.assertEquals(numInstallments + 1, records.size(),
             'The past open Opp, current matched Opps and future unmatched installments should be returned: ' + records);
         
-        System.assertEquals(opps[pastOpenOppIndex].CloseDate, records[0].getOpportunity().CloseDate, 'The past open Opp should be the first matched record');
+        System.assertEquals(opps[pastOpenOppIndex].CloseDate, records[0].getOpportunity().CloseDate, 'The past open Opp should be the first record');
         System.assertEquals(null, records[0].getInstallment(), 'The past open Opp should not be matched with an installment');
-        System.assertEquals(opps[firstMatchedOppIndex].CloseDate, records[1].getInstallment().nextDonationDate, 'The first current Opp should be matched with the first installment');
-        System.assertEquals(opps[firstMatchedOppIndex + 1].CloseDate, records[2].getOpportunity().CloseDate, 'The second current Opp should be returned');
-        System.assertEquals(TODAY.addMonths(1), records[2].getInstallment().nextDonationDate, 'The second current Opp should be matched with the second installment');
-        System.assertEquals(opps[firstMatchedOppIndex + 2].CloseDate, records[3].getInstallment().nextDonationDate, 'The third current Opp should be matched with the third installment');
 
-        for (Integer i = 4; i < records.size(); i++) {
-            System.assertEquals(true, records[i].isNew(), 'The installment should not have a matching Opp');
-            System.assertEquals(installments[i - 1].nextDonationDate, records[i].getInstallment().nextDonationDate, 'The expected installment Close Date should match');
+        for (Integer i = firstMatchedOppIndex, installment = 1; i <= firstMatchedOppIndex + 2; i++) {
+            System.assertEquals(opps[i].CloseDate, records[installment++].getInstallment().nextDonationDate, 'The Opp should be matched with the installment');
         }
+
+        System.assertEquals(true, records[4].isNew(), 'The installment should not have a matching Opp');
+        System.assertEquals(installments[3].nextDonationDate, records[4].getInstallment().nextDonationDate, 'The expected installment Close Date should match');
     }
 
 
@@ -401,6 +492,7 @@ private class RD2_OpportunityMatcher_TEST {
      */
     private static TEST_OpportunityBuilder getOpportunityBuilder() {
         return new TEST_OpportunityBuilder()
+            .withMockId()
             .withContact(UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
             .withRecurringDonation(RD_ID)
             .withAmount(RD_AMOUNT)

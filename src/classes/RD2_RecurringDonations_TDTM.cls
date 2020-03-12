@@ -130,9 +130,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
     /***
     * @description Data Transformation Actions for Before Insert and Update Trigger Actions:
-    * - If RecurringType is Open and NumOfPlannedInstallments = 1, set NumOfPlannedInstallments to null
-    * - If RecurringType is Fixed and NumberOfPaidInstallments is >= NumOfPlannedInstallments Close RD
-    * - Update the NextDonationDate for both Before Insert and Update
+    * - If RecurringType is Open and number of plannned installments = 1, set number of plannned installments to null
+    * - If RecurringType is Fixed and number of paid installments is >= number of plannned installments, then close RD
+    * - Update the Next Donation Date on both Before Insert and Update trigger actions
     * @param rds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, BeforeUpdate, etc.
@@ -142,7 +142,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     ) {
         if (triggerAction != TDTM_Runnable.Action.BeforeInsert
             && triggerAction != TDTM_Runnable.Action.BeforeUpdate
-            ) {
+        ) {
             return;
         }
 
@@ -151,19 +151,16 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             : new Map<Id, List<RecurringDonationSchedule__c>>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            RD2_OpportunityEvaluationService.RecurringDonation rdRecord = new RD2_OpportunityEvaluationService.RecurringDonation(rd);
-
-            if (rdRecord.isOpenEnded() && rd.npe03__Installments__c == 1) {
-                rd.npe03__Installments__c = null;
-            }
+            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
+                .revisePlannedInstallments();
 
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
+                rdRecord.reviseNextDonationDateBeforeInsert(scheduleService);
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-                rdRecord.reviseStatusForFixedLength();
-
-                rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(schedulesByRdId.get(rd.Id));
+                rdRecord
+                    .reviseStatusForFixedLength()
+                    .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
             }
         }
     }
@@ -181,7 +178,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             if (rd.InstallmentFrequency__c == null) {
-                rd.InstallmentFrequency__c = 1;
+                rd.InstallmentFrequency__c = RD2_Constants.DEFAULT_INSTALLMENT_FREQUENCY;
             }
         }
     }
@@ -283,7 +280,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     private void buildNewSchedules(List<npe03__Recurring_Donation__c> rds) {
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            dmlActions.objectsToInsert.addAll(scheduleService.getNewSchedules(rd));
+            dmlActions.objectsToInsert.addAll(scheduleService.buildNewSchedules(rd));
         }
     }
 
