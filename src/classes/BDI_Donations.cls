@@ -345,6 +345,11 @@ public class BDI_Donations {
             return true;
         }
 
+        // Since we have a hard time constraining the length of translated labels, truncate here
+        if(errorMessage.length() > 255) {
+            errorMessage = errorMessage.substring(0,255);
+        }
+               
         // clear the match so it won't be used (but only if we think the user didn't put it in themselves!)
         if (errorMessage != System.Label.bdiErrorDonationLookupMatch) {
     
