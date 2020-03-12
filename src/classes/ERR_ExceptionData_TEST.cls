@@ -55,7 +55,7 @@ public with sharing class ERR_ExceptionData_TEST {
             System.assertEquals(null, deserializedWrapper.errorMessage);
             System.assertEquals(1, deserializedWrapper.DMLErrorFieldNameMapping.size());
             System.assertEquals(1, deserializedWrapper.DMLErrorMessageMapping.size());
-            System.assertEquals('Required fields are missing: [Name]', deserializedWrapper.DMLErrorMessageMapping.values()[0]);
+            System.assertEquals(Label.exceptionRequiredField + ' [Name]', deserializedWrapper.DMLErrorMessageMapping.values()[0]);
             System.assertEquals('Name', deserializedWrapper.DMLErrorFieldNameMapping.values()[0][0]);
 
         }
