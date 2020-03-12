@@ -187,7 +187,9 @@ export default class GeFormSection extends LightningElement {
 
         this.template.querySelectorAll('c-ge-form-widget')
             .forEach(widgetCmp => {
-                fields.push(...widgetCmp.allFieldsByAPIName);
+                if(isNotEmpty(widgetCmp.allFieldsByAPIName)){
+                    fields.push(...widgetCmp.allFieldsByAPIName);
+                }
             });
 
         return fields;

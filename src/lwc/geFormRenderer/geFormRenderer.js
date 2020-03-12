@@ -10,7 +10,9 @@ import {
     handleError,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
-    checkPermissionErrors, CONTACT_FIRST_NAME_INFO, CONTACT_LAST_NAME_INFO, CONTACT_INFO
+    checkPermissionErrors,
+    CONTACT_FIRST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO, DI_CONTACT1_IMPORTED_INFO,
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 import {
@@ -683,6 +685,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     dataImport,
                     section.sourceFields));
         });
+        this.handleNameOnCardFieldChange();
     }
 
     setStoredDonationDonorProperties(dataImport) {
@@ -1203,9 +1206,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         let fieldList = {};
         if (!isUndefined(sectionsList)) {
             fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
+            this.selectedDonorType = fieldList[
+                DONATION_DONOR_FIELDS.donationDonorField
+                ].value === DONATION_DONOR.isContact1 ?
+                CONTACT_FIRST_NAME_INFO.objectApiName : ACCOUNT_NAME_FIELD.objectApiName;
+
             for (let i = 0; i < sectionsList.length ; i++) {
                 if (sectionsList[i].isCreditCardWidgetAvailable) {
-                    sectionsList[i].setCardHolderName(this.fabricateCardHolderName(fieldList));
+                    let cardHolderName = this.fabricateCardHolderName(fieldList);
+                    sectionsList[i].setCardHolderName(cardHolderName);
                 }
             }
         }
@@ -1213,7 +1222,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
 
     fabricateCardHolderName(fieldList){
-        this.selectedDonorType = this.getCurrentlySelectedDonorType();
         let nameOnCard = '';
         let fullName;
         let accountName;
@@ -1238,11 +1246,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     accountName = value ? value : null;
                 }
 
-                if (this.selectedDonorType === CONTACT_INFO.objectApiName) {
-                    nameOnCard = fullName;
-                } else {
-                    nameOnCard = accountName;
+                if(isEmpty(fullName) && fieldApiName === DI_CONTACT1_IMPORTED_INFO && isNotEmpty(value)) {
+
                 }
+
+                nameOnCard = this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName ? fullName : accountName;
+
                 if (!isUndefined(nameOnCard)) {
                     return nameOnCard;
                 }
@@ -1258,5 +1267,4 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         });
         return allFields;
     }
-
 }
