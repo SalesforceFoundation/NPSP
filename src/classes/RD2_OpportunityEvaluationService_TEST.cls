@@ -127,7 +127,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
-        rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.getNewSchedules(rd1));
+        rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.buildNewSchedules(rd1));
 
         // Recurring Donation with no Schedule records
         npe03__Recurring_Donation__c rd2 = getRecurringDonationBuilder()
@@ -145,7 +145,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withCalculateNextDonationDate()
             .build();
         rd3.npe03__Next_Payment_Date__c = null;
-        rd3 = mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.getNewSchedules(rd3));
+        rd3 = mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.buildNewSchedules(rd3));
 
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
@@ -169,7 +169,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
-        rdNew = mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.getNewSchedules(rdNew));
+        rdNew = mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.buildNewSchedules(rdNew));
 
         // Old Opportunity (has related Opps) - Not New RD
         npe03__Recurring_Donation__c rdOld = getRecurringDonationBuilder()
@@ -185,7 +185,7 @@ private class RD2_OpportunityEvaluationService_TEST {
                 .withCloseDate(rdOld.npe03__Next_Payment_Date__c)
                 .build()
         };
-        rdOld = mockRecurringDonationFullQueryResult(rdOld, opps, scheduleService.getNewSchedules(rdOld));
+        rdOld = mockRecurringDonationFullQueryResult(rdOld, opps, scheduleService.buildNewSchedules(rdOld));
 
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
@@ -576,6 +576,43 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(1, opps.size(), 'An Installment Opp should exist: ' + opps);
         System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Amount should be updated');
         System.assertEquals(nextCloseDate, opps[0].CloseDate, 'Close Date should be updated');
+
+        List<Error__c> errors = errorGateway.getRecords();
+        System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
+    }
+
+    /**
+     * @description Verifies past open Opp matching future projected installment
+     * is not updated when an active RD is updated
+     */
+    @IsTest
+    private static void shouldNotUpdatePastOpenOppMatchingFutureInstallmentWhenRDIsUpdated() {
+        //set current date override
+        final Date today = START_DATE.addDays(1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withCalculateNextDonationDate()
+            .build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withCloseDate(START_DATE)
+            .withOpenStage()
+            .build();
+
+        Test.startTest();
+        rd.Day_Of_Month__c = String.valueOf(today.addDays(1).day());
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
+        System.assertEquals(RD_AMOUNT, opps[0].Amount, 'Amount should not be updated on a past open Opp');
+        System.assertEquals(START_DATE, opps[0].CloseDate, 'Close Date should not be updated on a past open Opp');
 
         List<Error__c> errors = errorGateway.getRecords();
         System.assertEquals(0, errors.size(), 'No error should be created: ' + errors);
@@ -1163,7 +1200,7 @@ private class RD2_OpportunityEvaluationService_TEST {
      * should be calculated when custom settings Use Fiscal Year is unchecked
      */
     @IsTest
-    private static void calendarYearValuesShouldBeCalculatedWhenFiscalYearNotConfigured() {
+    private static void calendarYearValuesShouldBeCalculatedWhenFiscalYearIsNotConfigured() {
         final Date today = START_DATE;
         RD2_ScheduleService.currentDate = today;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -1184,8 +1221,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
             'Next Year Value should be calculated when RD is created');
     }
-
-
+    
     /**
      * @description Verifies the calendar year Current and Next Year Values
      * should be calculated when custom settings Use Fiscal Year is checked
@@ -1217,8 +1253,71 @@ private class RD2_OpportunityEvaluationService_TEST {
             'Next Year Value should be calculated when RD is created');
     }
 
+    /**
+     * @description Verifies the fiscal/calendar year Current and Next Year Values
+     * should be calculated based on the Opp Close Date even though it matches a
+     * projected installment in the next year
+     */
+    @IsTest
+    private static void yearValuesShouldMatchByActualDateWhenOppIsMatchedWithInstallmentOutsideOfTheYear() {
+        //set current date override
+        final Date startDate = Date.newInstance(2020, 1, 1);
+        Date today = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
 
+        setUpUseFiscalYear(true);
+        UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(4, true);
 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withStartDate(startDate)
+            .withDateEstablished(startDate)
+            .withDayOfMonth('1')
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Integer month = 1; month <= 3; month++) {
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(Date.newInstance(2020, month, 1))
+                .build()
+            );
+        }
+        //add an Opp with Close Date March 31 instead of the April 1
+        opps.add(oppBuilder
+            .withName()
+            .withCloseDate(Date.newInstance(2020, 3, 31))
+            .withOpenStage()
+            .build()
+        );
+        insert opps;
+
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .handleOutdatedRecurringDonations();
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD_AMOUNT * 4, rd.CurrentYearValue__c,
+            'Current Year Value should include actual Opps with Close Date <= March 31, 2020');
+        System.assertEquals(RD_AMOUNT * 11, rd.NextYearValue__c,
+            'Next Year Value should exclude April 1 Opp since it is already included in the Current Year Value');
+
+        today = Date.newInstance(2020, 4, 1);//the next fiscal year is starting today
+        RD2_ScheduleService.currentDate = today;
+
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .handleOutdatedRecurringDonations();
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD_AMOUNT * 11, rd.CurrentYearValue__c,
+            'Current Year Value should exclude April 1 Opp since it was included in the past Year Value');
+        System.assertEquals(RD_AMOUNT * 12, rd.NextYearValue__c,
+            'Next Year Value should match with projected installments');
+    }
 
 
 
