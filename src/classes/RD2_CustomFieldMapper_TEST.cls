@@ -86,8 +86,6 @@ public class RD2_CustomFieldMapper_TEST {
      */
     @IsTest
     private static void shouldNotChangeOpportunityWhenCustomMappingIsEmpty() {
-        delete [SELECT Id FROM npe03__Custom_Field_Mapping__c];
-
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
@@ -206,8 +204,6 @@ public class RD2_CustomFieldMapper_TEST {
      */
     @IsTest
     private static void shouldPopulateRDandOppFieldNamesWhenCustomMappingIsDefined() {
-        delete [SELECT Id FROM npe03__Custom_Field_Mapping__c];
-
         insert new List<npe03__Custom_Field_Mapping__c>{
             buildCustomFieldMapping('npe03__Amount__c', 'Amount'),
             buildCustomFieldMapping('Name', 'Description')
@@ -265,8 +261,6 @@ public class RD2_CustomFieldMapper_TEST {
     * @return void
     */
     public static void createCustomFieldMapping(String rdFieldName, String oppFieldName) {
-        delete [SELECT Id FROM npe03__Custom_Field_Mapping__c];
-
         insert buildCustomFieldMapping(rdFieldName, oppFieldName);
     }
 
