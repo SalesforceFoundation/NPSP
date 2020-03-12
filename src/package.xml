@@ -870,8 +870,8 @@
         <members>Address__c.State_Lower_District__c</members>
         <members>Address__c.State_Upper_District__c</members>
         <members>Address__c.Verification_Status__c</members>
-        <members>Address__c.Verified__c</members>
         <members>Address__c.Verified_Date__c</members>
+        <members>Address__c.Verified__c</members>
         <members>Allocation__c.Amount__c</members>
         <members>Allocation__c.Campaign__c</members>
         <members>Allocation__c.General_Accounting_Unit__c</members>
@@ -2004,8 +2004,8 @@
         <members>geBodyBatchHeaderWarning</members>
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
-        <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsDescLeftCol</members>
+        <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>

@@ -272,8 +272,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     */
     validateBatchHeaderFields() {
         this.resetValidations();
-        this.hasInvalidBatchFields = false;
-        this.missingBatchHeaderFieldLabels = [];
 
         let inputComponents = this.template.querySelectorAll('c-util-input[data-id="batchHeaderField"]');
         for (let i = 0; i < inputComponents.length; i++) {
