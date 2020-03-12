@@ -390,6 +390,7 @@
         <members>RD2_OpportunityService</members>
         <members>RD2_OpportunityService_TEST</members>
         <members>RD2_QueueableService</members>
+        <members>RD2_RecurringDonation</members>
         <members>RD2_RecurringDonationsOpp_TDTM</members>
         <members>RD2_RecurringDonationsOpp_TEST</members>
         <members>RD2_RecurringDonations_TDTM</members>
@@ -402,6 +403,7 @@
         <members>RD2_ValidationService_TEST</members>
         <members>RD2_VisualizeScheduleController</members>
         <members>RD2_VisualizeScheduleController_TEST</members>
+        <members>RD2_YearValueProcessor</members>
         <members>RD_AddDonationsBTN_CTRL</members>
         <members>RD_AddDonationsBTN_TEST</members>
         <members>RD_BulkTests_TEST</members>
@@ -873,8 +875,8 @@
         <members>Address__c.State_Lower_District__c</members>
         <members>Address__c.State_Upper_District__c</members>
         <members>Address__c.Verification_Status__c</members>
-        <members>Address__c.Verified__c</members>
         <members>Address__c.Verified_Date__c</members>
+        <members>Address__c.Verified__c</members>
         <members>Allocation__c.Amount__c</members>
         <members>Allocation__c.Campaign__c</members>
         <members>Allocation__c.General_Accounting_Unit__c</members>
