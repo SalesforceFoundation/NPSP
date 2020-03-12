@@ -1,0 +1,281 @@
+public with sharing class DRS_ContactMerge_CTRL {
+      
+    /*******************************************************************************************************
+    * @description To decide whether to show Dupliacate Record Set record list on the page or not
+    */ 
+    
+    public Boolean showDRS { get;set; }
+    
+    /*******************************************************************************************************
+    * @description Duplicate Record Sets to be displayed on page
+    */ 
+    public List<DuplicateRecordSet> listDuplicateRecordSets { get; set; }
+    
+    /*******************************************************************************************************
+    * @description Standard set controller variables
+    */ 
+    public ApexPages.StandardSetController stdSetCon {
+       get {
+           if(stdSetCon == null){ 
+               stdSetCon = new ApexPages.StandardSetController(Database.getQueryLocator(constructSOQL())); 
+               stdSetCon.setPageSize(pageSize);    
+           }
+           return stdSetCon;
+       }
+       set;
+    }
+    
+    /*******************************************************************************************************
+    * @description The list of Duplicate Record Set field names that are used in search and displayed in Found Duplicate
+    * Record Sets.
+    */
+    private List<String> drsFieldNames {
+        get {
+            if (drsFieldNames == null) {
+                drsFieldNames = UTIL_Describe.listStrFromFieldSet
+                                      ('DuplicateRecordSet', 
+                                      UTIL_Namespace.StrTokenNSPrefix('ContactMergeDRS'));
+                Set<String> setStr = new set<string>(drsfieldNames);
+                // now add additional fields we know we need
+                setStr.add('Id');
+                setStr.add('Name');
+                setStr.add('DuplicateRuleId');
+                setStr.add('RecordCount');
+                setStr.add('LastModifiedDate');
+                drsFieldNames.clear();
+                drsFieldNames.addAll(setStr);
+            }
+            return drsFieldNames;
+        }
+        set;
+    }
+    
+    /*******************************************************************************************************
+    * @description The list of Duplicate Record Item field name to be displayed in Found Duplicate Record Sets.
+    */
+    private List<String> driFieldNames {
+        get {
+            if (driFieldNames == null) {
+                driFieldNames = new List<String>();
+                driFieldNames.add('Name');
+                driFieldNames.add('RecordId');
+            }
+            return driFieldNames;
+        }
+        set;
+    }
+    
+    /*******************************************************************************************************
+    * @description To decide whether to continue with Contact merge page depending on permissions for contact object
+    */
+    
+    public Boolean canContinueWithMerge { get; set; }
+    
+    /*******************************************************************************************************
+    * @description Check whether user has delete permission on Contact
+    *@return Boolean Whether user has contact delete permission
+    */
+
+    public Boolean hasContactObjectDeletePermission() {
+        return UTIL_Describe.getObjectDescribe('Contact').isDeletable();
+    }
+    
+    
+    /*******************************************************************************************************
+    * @description To decide whether to continue with DRS display page depending on permissions for 
+    * Duplicate Reccord Set object
+    */
+    public Boolean canContinueWithDRSDisplay { get; set; }
+    
+    /*******************************************************************************************************
+    * @description Check whether user has read permission on Duplicate Record Sets
+    *@return Boolean Whether user has Duplicate Record Sets read permission
+    */
+    
+    public Boolean hasDRSObjectReadPermission() {
+        return UTIL_Describe.getObjectDescribe('DuplicateRecordSet').isAccessible();
+    }
+    
+    /*******************************************************************************************************
+    * @description Duplicate Record Set diplay page size.
+    */
+    private Integer pageSize = 10;
+    
+    /*******************************************************************************************************
+    * @description Total number of pages in pagination implemented on Duplicate Record Set diplay page.
+    */
+    public Integer totalPages { get; set; }
+    
+    /***************************************************************************************************
+    * @description Checks whether there are more records to display on next page in pagination implemented 
+    * on Duplicate Record Set diplay page.
+    */
+    
+    public Boolean hasNext {
+        get {
+            return stdSetCon.getHasNext();
+        }
+        set;
+    }
+    
+    /***************************************************************************************************
+    * @description Checks whether there are records prior to the records dislayed on the current page to be 
+    * display on the previous page in pagination implemented on Duplicate Record Set diplay page.
+    */
+    
+    public Boolean hasPrevious {
+        get {
+            return stdSetCon.getHasPrevious();
+        }
+        set;
+    }
+    
+    /***************************************************************************************************
+    * @description Page number of the current page
+    */
+    
+    public Integer pageNumber {
+        get {
+            return stdSetCon.getPageNumber();
+            }
+        set;
+    } 
+      
+    /*******************************************************************************************************
+    * @description Constructor for StandardSetController to allow invocation from list views.
+    * @param controller The default list controller for Duplicate Record Sets. It allows us to do pagination on the page.
+    */
+    public DRS_ContactMerge_CTRL (ApexPages.StandardSetController controller) {
+        showDRS = false;
+        totalPages  = 0;
+        canContinueWithMerge = true;
+        canContinueWithDRSDisplay = true;
+        listDuplicateRecordSets = new List<DuplicateRecordSet>();
+        
+        // Check if user has delete permission on Contact
+        if (!hasContactObjectDeletePermission()) {
+            canContinueWithMerge = false;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.conMergeErrorNoDeleteObjPermission));
+            return;
+        }
+        
+    }
+
+    
+    /*******************************************************************************************************
+    * @description Redirects to the NPSP Contact Merge page
+    * @return PageReference The page that it redirects to CON_ContactMerge page.
+    */
+    public PageReference searchByContact() {
+        try {
+            PageReference pageRef = new PageReference('/apex/CON_ContactMerge');
+            pageRef.getParameters().put('showContactSearch','true');
+            pageRef.setRedirect(true);
+            return pageRef;
+                  
+        } catch (exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
+        }
+        return null;
+    }
+    
+    /******************************************************************************************************
+     * @description Fetches the list of Duplicate Record Sets from standard set controller for pagination
+     * @return List<DuplicateRecordSet> Returns the current list of Duplicate Record Sets
+     */
+    public List<DuplicateRecordSet> getDuplicateRecordSets() {
+        return (List<DuplicateRecordSet>)stdSetCon.getRecords();
+    }
+
+    /*******************************************************************************************************
+    * @description Shows list of Duplicate Record Set records related to contact dupliacte rules
+    */
+    public void showDuplicateRecordSets() {
+        showDRS = true;
+        listDuplicateRecordSets = getDuplicateRecordSets();
+        if(listDuplicateRecordSets.size() == 0) {
+            canContinueWithDRSDisplay = false;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.conMergeErrorNoDRSFound));
+        }
+        totalPages = getTotalPages(); 
+    }
+    
+    /*******************************************************************************************************
+    * @description Shows list of Contact records related to selected Duplicate Record Set
+    */
+    public void showContactRelatedToDRS() {
+        //logic to display contacts related to selected DRS
+    }
+    
+    /*******************************************************************************************************
+    * @description Construct SOQL query to fetch all the contact related Duplicate Record Sets
+    * @return String Returns the query to fetch Duplicate Record Sets
+    */
+    public String constructSOQL() {
+        //build SOQL subquery on Duplicate Record Items
+        String subQueryOrderBy = 'CreatedDate DESC';
+        String subQuery =  new UTIL_Query()
+                                  .withFrom('DuplicateRecordItems')
+                                  .withSelectFields(driFieldNames)
+                                  .withOrderBy(subQueryOrderBy)
+                                  .withLimit(1)
+                                  .build();
+        String subQueryStr = '('+subQuery+')';
+        drsFieldNames.add(subQueryStr);
+        String setOrderBy = 'LastModifiedDate DESC ';
+        String setWhereClause = 'RecordCount > 1 AND DuplicateRule.SObjectType = \'Contact\'';
+        
+        //build the SOQL query and execute
+        String queryStr =  new UTIL_Query()
+                               .withFrom(DuplicateRecordSet.sObjectType)
+                               .withSelectFields(drsFieldNames)
+                               .withWhere(setWhereClause)
+                               .withOrderBy(setOrderBy)
+                               .build();
+        return queryStr;
+    }
+    
+    /***************************************************************************************************
+    * @description Calculates total number of pages of Duplicate Record Sets
+    */
+    public Integer getTotalPages() {
+        return (Integer)Math.ceil(Decimal.valueOf(stdSetCon.getResultSize())/pageSize);
+    }
+
+    /***************************************************************************************************
+    * @description Fetches the records to be displayed on first page of Duplicate Record Sets
+    */    
+    public void firstPage() {
+        stdSetCon.first();
+        listDuplicateRecordSets = getDuplicateRecordSets();
+    }
+    
+    /***************************************************************************************************
+    * @description Fetches the records to be displayed on previous page of Duplicate Record Sets
+    */ 
+    
+    public void previousPage() {
+        stdSetCon.previous();
+        listDuplicateRecordSets = getDuplicateRecordSets();
+    }   
+        
+    /***************************************************************************************************
+    * @description Fetches the records to be displayed on next page of Duplicate Record Sets
+    */
+    
+    public void nextPage() {
+        stdSetCon.next();
+        listDuplicateRecordSets = getDuplicateRecordSets();
+    }
+    
+    /***************************************************************************************************
+    * @description Fetches the records to be displayed on last pages of Duplicate Record Sets
+    */ 
+    
+    public void lastPage() {
+        stdSetCon.last();
+        listDuplicateRecordSets = getDuplicateRecordSets();
+    }
+    
+
+}
