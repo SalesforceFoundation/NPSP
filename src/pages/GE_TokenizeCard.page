@@ -23,6 +23,8 @@
         const sfdo = new sfdoPaymentsJsSdk();
         sfdo.mount({
             id: 'payments',
+            // TODO: Replace clientId value below with the orgId ({!$Organization.Id})
+            // Currently hardcoded to a specific orgId as needed by payment services.
             clientId: '00D6g0000000000EAA',
             designSystem: 'Lightning',
             styles: '' +
