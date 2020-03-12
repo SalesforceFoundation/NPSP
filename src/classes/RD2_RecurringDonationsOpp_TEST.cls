@@ -56,33 +56,31 @@ private class RD2_RecurringDonationsOpp_TEST {
     */
     @TestSetup
     private static void setUp() {
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-
         RD2_ScheduleService.currentDate = TODAY;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = UTIL_UnitTestData_TEST.getContact();
+        insert contact;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(contact.Id)
             .withCurrencyIsoCode(CURRENCY_CAD)
             .build();
         insert rd;
 
-        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
-        List<Opportunity> opps = new List<Opportunity>{
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd)
+            .withCurrencyIsoCode(CURRENCY_CAD);
+        insert new List<Opportunity>{
             oppBuilder
                 .withName()
-                .withCurrencyIsoCode(CURRENCY_CAD)
                 .withCloseDate(START_DATE)
                 .withClosedWonStage()
                 .build(),
             oppBuilder
                 .withName()
-                .withCurrencyIsoCode(CURRENCY_CAD)
                 .withCloseDate(START_DATE.addMonths(1))
                 .withOpenStage()
                 .build()
         };
-        insert opps;
     }
 
     /**
@@ -335,11 +333,76 @@ private class RD2_RecurringDonationsOpp_TEST {
         System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
     }
 
+    /**
+     * @description Verifies the Next Donation Date (NDD) Opportunity is not created
+     * when an open Opp Close Date is updated to a past date not matching the future NDD
+     * but it is still within the NDD +/- match days range
+     */
+    @IsTest
+    private static void shouldNotCreateNextOppWhenExistingPastOppCloseDateIsUpdatedWithinMatchRange() {
+        final Date nextDonationDate = START_DATE.addMonths(1);
+        final Date today = nextDonationDate.addDays(-1);
+
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Opportunity opp = getOpenOpportunity(rd);
+        System.assertEquals(opp.CloseDate, nextDonationDate, 'Opp Close Date should match');
+
+        Test.startTest();
+        opp.CloseDate = nextDonationDate.addDays(-2);//The new Close Date < today < RD Next Donation Date
+        update opp;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END, rd.CurrentYearValue__c,
+            'Current Year Value should be unchanged');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be unchanged');
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(2, opps.size(), 'No new Opportunity should be created: ' + opps);
+    }
+
+    /**
+     * @description Verifies the Next Donation Date (NDD) Opportunity is not created
+     * when an open Opp Close Date is updated to a future date not matching the future NDD
+     * but it is still within the NDD +/- match days range
+     */
+    @IsTest
+    private static void shouldNotCreateNextOppWhenExistingFutureOppCloseDateIsUpdatedWithinMatchRange() {
+        final Date nextDonationDate = START_DATE.addMonths(1);
+        final Date today = nextDonationDate.addDays(-3);
+
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+        Opportunity opp = getOpenOpportunity(rd);
+        System.assertEquals(opp.CloseDate, nextDonationDate, 'Opp Close Date should match');
+
+        Test.startTest();
+        opp.CloseDate = today;
+        opp.Amount = RD_AMOUNT + 30;
+        opp.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update opp;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(rd.npe03__Amount__c * MONTHS_TO_YEAR_END + 30, rd.CurrentYearValue__c,
+            'Current Year Value should account the changed Opp Amount');
+        System.assertEquals(rd.npe03__Amount__c * 12, rd.NextYearValue__c,
+            'Next Year Value should be unchanged');
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertEquals(2, opps.size(), 'No new Opportunity should be created: ' + opps);
+    }
 
 
 
     // Helpers
-    ///////////////////
+    /////////////////////////////////////
 
     /****
     * @description Returns contact record
