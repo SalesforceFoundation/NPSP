@@ -309,7 +309,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             }
         });
         this.rowList = this.rowList.concat(rows);
-        // Fore the default GAU to reallocate to accommodate for unpredictable rendering behaviors
+        // Force the default GAU to reallocate to accommodate for unpredictable rendering behaviors
         this.allocateDefaultGAU();
     }
 
