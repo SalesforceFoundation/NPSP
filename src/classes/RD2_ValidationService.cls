@@ -174,9 +174,7 @@ public with sharing class RD2_ValidationService {
      * @param rd Recurring Donation record to validate
      */
     private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd) {
-        if (rd.InstallmentFrequency__c == null
-            || rd.InstallmentFrequency__c < 1
-            || rd.InstallmentFrequency__c > 20) {
+        if (!(new RD2_RecurringDonation(rd)).isValidInstallmentFrequency()) {
             rd.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
         }
     }

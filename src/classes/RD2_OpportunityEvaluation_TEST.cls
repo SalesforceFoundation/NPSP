@@ -185,6 +185,56 @@ private class RD2_OpportunityEvaluation_TEST {
     }
 
     /**
+     * @description Verifies the Next Donation Date (NDD) Opportunity is not created
+     * when a user created Opp Close Date is within the next NDD +/- match days range
+     */
+    @IsTest
+    private static void shouldNotCreateDuplicateOppWhenNextOppAlreadyExistsWithinMatchRange() {
+        final Date prevCloseDate = START_DATE.addMonths(1);
+        final Date nextDonationDate = START_DATE.addMonths(2);
+        final Date nextCloseDate = nextDonationDate.addDays(-3);//the Opp is still within the next NDD range
+
+        Date today = prevCloseDate.addDays(-1);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE)
+                .withClosedWonStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(prevCloseDate)
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(nextCloseDate)
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        today = prevCloseDate.addDays(1);
+
+        RD2_OpportunityEvaluation_BATCH batch = executeAndFinishBatch(rd.Id, today);
+
+        assertRecordsFailed(batch, 0);
+
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(opps.size(), oppById.size(), 
+            'No new Opp should be created: ' + oppById.values());
+        System.assertEquals(nextCloseDate, oppById.get(opps[2].Id).CloseDate, 
+            'Close Date should be unchanged for the future Opp');
+    }
+
+    /**
      * @description Verifies an Opp with Close Date equal to today is created if it already does not exist
      */
     @IsTest
@@ -918,7 +968,7 @@ private class RD2_OpportunityEvaluation_TEST {
         TDTM_TriggerHandler.disableTDTM = false;
 
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-        Database.insert(scheduleService.getNewSchedules(rd));
+        Database.insert(scheduleService.buildNewSchedules(rd));
 
         System.assertEquals(0, [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id],
             'There should be no installment Opportunities created for this RD');

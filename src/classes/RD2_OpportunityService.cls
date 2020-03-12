@@ -325,7 +325,7 @@ public with sharing class RD2_OpportunityService {
     * @return Boolean Indicates if the currency on the Opportunity has been changed
     */
     private Boolean syncOppCurrency(Opportunity opp, npe03__Recurring_Donation__c rd) {
-        if (!isMultiCurrencyEnabled) {
+        if (!isMultiCurrencyEnabled || opp.IsClosed) {
             return false;
         }
 
