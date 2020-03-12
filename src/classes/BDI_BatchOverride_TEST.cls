@@ -112,7 +112,9 @@ public with sharing class BDI_BatchOverride_TEST {
 
         System.assert(ctrl.redirect, 'The page should save successfully and set redirect to true.');
         System.assertEquals(2, [select count() from DataImportBatch__c]);
-        System.assertEquals(1, [select count() from DataImportBatch__c where Name = 'testBatch - Cloned']);
+
+        String clonedBatchName = 'testBatch - ' + Label.lblCloned;
+        System.assertEquals(1, [SELECT count() FROM DataImportBatch__c WHERE Name =: clonedBatchName]);
     }
 
     /*********************************************************************************************************
