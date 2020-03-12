@@ -1594,6 +1594,10 @@ private class RD2_DataMigration_TEST {
         Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
+        if (isDayOfMonthRestrictedPicklistError(errors)) {
+            return;//the org does not have the Last Day picklist added, so return from the test
+        }
+
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
         rd = getRecords()[0];
@@ -1634,6 +1638,10 @@ private class RD2_DataMigration_TEST {
         Id jobId = runDataMigration();
 
         List<Error__c> errors = errorGateway.getRecords();
+        if (isDayOfMonthRestrictedPicklistError(errors)) {
+            return;//the org does not have the Last Day picklist added, so return from the test
+        }
+
         System.assertEquals(0, errors.size(), 'No error should be logged: ' + errors);
 
         rd = getRecords()[0];
@@ -1779,7 +1787,6 @@ private class RD2_DataMigration_TEST {
                 actualException = e;
             }
         }
-
         System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
 
         Id jobId = executeAndFinishDryRun();
@@ -2246,7 +2253,19 @@ private class RD2_DataMigration_TEST {
         } else {
             System.assertEquals(getLogContextMigration(jobId), errors[0].Context_Type__c, 'Error Context Type should match');
         }
+    }
 
+    /****
+    * @description Checks if the logged error is generated on a day > 28 in the month
+    * and the RD2 metadata has not been deployed
+    * @param List<Error__c> Errors (if any)
+    * @return Boolean
+    */
+    private static Boolean isDayOfMonthRestrictedPicklistError(List<Error__c> errors) {
+        return !errors.isEmpty() 
+            && errors[0].Full_Message__c.contains(
+                Schema.npe03__Recurring_Donation__c.Day_of_Month__c.getDescribe().getLabel()
+            );
     }
 
     /***
