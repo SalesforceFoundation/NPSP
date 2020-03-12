@@ -245,6 +245,52 @@ public with sharing class RD2_Settings_TEST {
     }
 
     /**
+     * @description Verifies configured installment Next Donation Date match day range is returned
+     */
+    @IsTest
+    private static void shouldReturnConfiguredNextDonationDateMatchRangeDays() {
+        final Integer nextDonationDateMatchDays = 5;
+
+        setUpConfiguration(
+            new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => nextDonationDateMatchDays }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(nextDonationDateMatchDays, settings.nextDonationDateMatchDays, 
+            'Installment Next Donation Date Match Range Days should match');
+    }
+
+    /**
+     * @description Verifies default installment Next Donation Date match day range is returned
+     * when the field value is not specified
+     */
+    @IsTest
+    private static void shouldReturnDefaultNextDonationDateMatchRangeDaysWhenNull() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => null }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(3, settings.nextDonationDateMatchDays, 
+            'Installment Next Donation Date Match Range Days default should be returned');
+    }
+
+    /**
+     * @description Verifies default installment Next Donation Date match day range is returned
+     * when the field value is not valid
+     */
+    @IsTest
+    private static void shouldReturnDefaultNextDonationDateMatchRangeDaysWhenInvalid() {
+        setUpConfiguration(
+            new Map<String, Object>{ 'NextDonationDateMatchRangeDays__c' => -1 }
+        );
+
+        RD2_Settings settings = new RD2_Settings();
+        System.assertEquals(3, settings.nextDonationDateMatchDays, 
+            'Installment Next Donation Date Match Range Days default should be returned');
+    }
+
+    /**
      * @description Verifies configured fiscal year usage is returned
      */
     @IsTest
