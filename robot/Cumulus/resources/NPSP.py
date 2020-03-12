@@ -511,6 +511,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            
         
     def check_record_related_item(self,title,value):
+        """Verifies that the given value is displayed under the related list identified by title on a record view page"""
         self.salesforce.load_related_list(title)
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
         self.selenium.wait_until_page_contains_element(locator)
