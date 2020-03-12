@@ -1237,17 +1237,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 if (fieldApiName === CONTACT_LAST_NAME_INFO.fieldApiName) {
                     if(isNotEmpty(firstName)){
                         fullName = firstName + ' ' + value;
-                    }else if(isNotEmpty(value)){
+                    }else if (isNotEmpty(value)) {
                         fullName = value;
                     }
                 }
 
                 if (fieldApiName === ACCOUNT_NAME_FIELD.fieldApiName) {
                     accountName = value ? value : null;
-                }
-
-                if(isEmpty(fullName) && fieldApiName === DI_CONTACT1_IMPORTED_INFO && isNotEmpty(value)) {
-
                 }
 
                 nameOnCard = this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName ? fullName : accountName;
