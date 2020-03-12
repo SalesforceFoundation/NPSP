@@ -28,6 +28,8 @@ ${frequency}        Month
 
 *** Test Cases ***
 Verify values in Create one or more Payments for this Opportunity page
+    [Documentation]                      Create four payment installations for the opportunity
+    ...                                  Writeoff couple of payments
 
     Go To Page                           Details
     ...                                  Opportunity
@@ -63,6 +65,7 @@ Verify values in Create one or more Payments for this Opportunity page
 
 
 Verify values in Writeoff Remaining Balance Page
+    [Documentation]                      Verify the remaining balance after the writeoffs are done
 
     Go To Page                          Details          Opportunity    object_id=${data}[contact_opportunity][Id]
     Select Tab                          Related

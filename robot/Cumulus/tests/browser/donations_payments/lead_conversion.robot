@@ -17,7 +17,7 @@ Convert Lead To Account
     ${company} =              Generate Random String
     Go To Page                       Listing                 Lead
     Click Object Button              New
-    populate modal form
+    Populate Modal Form
     ...                              First Name=${first_name}
     ...                              Last Name=${last_name}
     ...                              Company=${company}

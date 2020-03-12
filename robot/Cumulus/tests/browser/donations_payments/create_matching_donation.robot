@@ -39,8 +39,8 @@ Create Matching Donation
        Pick Date                             Today
        Click Modal Button                    Save
        Wait Until Modal Is Closed
-       ${grant_name}                         Get Main Header
+       ${matching_gift}                      Get Main Header
        Go To Page                            Listing
        ...                                   Opportunity
-       Click Link                            link=${grant_name}
+       Click Link                            link=${matching_gift}
 
