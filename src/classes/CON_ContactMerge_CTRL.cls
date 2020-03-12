@@ -61,6 +61,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /*******************************************************************************************************
     * @description Max number of Contacts returned by a query.
     */
+    
     private final Integer SOSL_LIMIT = 100;
 
     /*******************************************************************************************************
@@ -73,6 +74,24 @@ public with sharing class CON_ContactMerge_CTRL {
     public Boolean hasContactObjectDeletePermission() {
         return UTIL_Describe.getObjectDescribe('Contact').isDeletable();
     }
+
+    /*******************************************************************************************************
+    * @description Check read permission on Duplicate Record Sets
+    */
+    public Boolean hasDSRObjectReadPermission() {
+        return UTIL_Describe.getObjectDescribe('DuplicateRecordSet').isAccessible();
+    }
+
+    /*******************************************************************************************************
+    * @description To decide whether to show Search by Contact page or not
+    */ 
+    
+    public Boolean showContactSearch { get; set; }
+    
+    /*******************************************************************************************************
+    * @description To decide whether to show the Show Duplicate Record Set button
+    */
+    public Boolean showDRSButton { get; set; }
 
     /*******************************************************************************************************
     * @description Wraps a contact together with a checkbox, to allow contact selection.
@@ -184,14 +203,21 @@ public with sharing class CON_ContactMerge_CTRL {
     * @param controller The default list controller for contact. It allows us to do pagination on the page.
     */
     public CON_ContactMerge_CTRL(ApexPages.StandardSetController controller){
+        System.debug('Contact Merge page contructor first line----->');
         searchText='';
         searchResults = new List<ContactWrapper>();
         selectedRecords = new Map<String, Contact>();
         step = 1;
         fieldRows = new List<FieldRow>();
         canContinueWithMerge = true;
-
         set<Id> mergeIds = new set<Id>();
+        showContactSearch = false;
+        showDRSButton = true;
+        String showContactSearchParameter = System.currentPagereference().getParameters().get('showContactSearch');
+        if (showContactSearchParameter == 'true') {
+            showContactSearch = true;
+        }
+        
 
         if (!hasContactObjectDeletePermission()) {
             canContinueWithMerge = false;
@@ -795,4 +821,38 @@ public with sharing class CON_ContactMerge_CTRL {
 
         return null;
     }
+    
+    /******************************************************************************************************
+     * @description Redirect to Show Duplicate Record Set list page of Contact Merge
+     * @return PageReference redirect to DRS_ContactMerge page.
+     */
+    public PageReference redirectToShowDRSList() {
+        try {
+            showContactSearch = false;
+            if (!hasDSRObjectReadPermission()) {
+                showDRSButton = false;
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.conMergeErrorNoDRSFound));
+                return null;
+            }
+            PageReference pageRef = new PageReference('/apex/DRS_ContactMerge');
+            pageRef.setRedirect(true);
+            return pageRef;
+                  
+        } catch (exception ex) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
+        }
+        return null;
+    }
+
+    /******************************************************************************************************
+     * @description Displays the Search by Contact page of Contact Merge
+     * 
+     */
+    public void showContactSearchPage() {
+        step = 1;
+        searchText='';
+        showContactSearch = true; 
+        showDRSButton = true;              
+    }
+
 }
