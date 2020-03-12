@@ -263,7 +263,7 @@ private class BDI_AdditionalObjectService_TEST {
         }
 
         System.assertEquals(null,testDataImportAResult.FailureInformation__c);
-        System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportAResult.Status__c);
         System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportAResult.Account2Imported__c);
@@ -288,7 +288,7 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
 
         System.assertEquals(null,testDataImportBResult.FailureInformation__c);
-        System.assertEquals(System.label.bdiImported,testDataImportBResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportBResult.Status__c);
         System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportBResult.Account2Imported__c);
@@ -471,7 +471,7 @@ private class BDI_AdditionalObjectService_TEST {
 
         }
 
-        System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportAResult.Status__c);
         System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportAResult.Account2Imported__c);
@@ -495,7 +495,7 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
 
-        System.assertEquals(System.label.bdiFailed,testDataImportBResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiFailed,testDataImportBResult.Status__c);
         System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportBResult.Account2Imported__c);
@@ -576,7 +576,7 @@ private class BDI_AdditionalObjectService_TEST {
 
         }
 
-        System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportAResult.Status__c);
         System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportAResult.Account2Imported__c);
@@ -600,7 +600,7 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
 
-        System.assertEquals(System.label.bdiImported,testDataImportBResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportBResult.Status__c);
         System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportBResult.Account2Imported__c);
@@ -895,7 +895,7 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertEquals(honoreeContA.Id,opptA.Honoree_Contact__c);
         System.assertEquals(honoreeContB.Id,opptB.Honoree_Contact__c);
     
-        System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportAResult.Status__c);
         System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportAResult.Account2Imported__c);
@@ -918,7 +918,7 @@ private class BDI_AdditionalObjectService_TEST {
         System.assertNotEquals(null,testDataImportAResult.Opportunity_Contact_Role_2_Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Opportunity_Contact_Role_2_ImportStatus__c);
 
-        System.assertEquals(System.label.bdiImported,testDataImportBResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportBResult.Status__c);
         System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportBResult.Account2Imported__c);
@@ -1087,7 +1087,7 @@ private class BDI_AdditionalObjectService_TEST {
                 WHERE Id = :dataImport.Id
         ];
 
-        System.assertEquals(System.Label.bdiImported, dataImport.Status__c,
+        System.assertEquals(BDI_DataImport_API.bdiImported, dataImport.Status__c,
                 'The Data Import should have been successfully re-processed and have an ' +
                         '\"imported\" status.');
         System.assertEquals(null, dataImport.FailureInformation__c,
@@ -1185,7 +1185,7 @@ private class BDI_AdditionalObjectService_TEST {
                 WHERE Id = :dataImport.Id
         ];
 
-        System.assertEquals(System.Label.bdiImported, processedDataImport.Status__c,
+        System.assertEquals(BDI_DataImport_API.bdiImported, processedDataImport.Status__c,
                 'The Data Import should have been successfully re-processed and have an ' +
                         '\"imported\" status.');
         System.assertEquals(null, processedDataImport.FailureInformation__c,
@@ -1696,7 +1696,7 @@ private class BDI_AdditionalObjectService_TEST {
         System.debug('DI A failure info: ' + testDataImportAResult.FailureInformation__c);
         System.debug('DI B failure info: ' + testDataImportBResult.FailureInformation__c);
         System.assertEquals(null,testDataImportAResult.FailureInformation__c);
-        System.assertEquals(System.label.bdiImported,testDataImportAResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDataImportAResult.Status__c);
         System.assertNotEquals(null,testDataImportAResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportAResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportAResult.Account2Imported__c);
@@ -1726,7 +1726,7 @@ private class BDI_AdditionalObjectService_TEST {
                                                             'Error: record not created, missing required fields:'));
         System.assert(testDataImportBResult.FailureInformation__c.contains(
                                                             'GAU_Allocation_1_GAU__c'));
-        System.assertEquals(System.label.bdiFailed,testDataImportBResult.Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiFailed,testDataImportBResult.Status__c);
         System.assertNotEquals(null,testDataImportBResult.Account1Imported__c);
         System.assertEquals(System.label.bdiCreated,testDataImportBResult.Account1ImportStatus__c);
         System.assertNotEquals(null,testDataImportBResult.Account2Imported__c);
