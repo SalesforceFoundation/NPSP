@@ -87,6 +87,23 @@
                     </apex:outputPanel>
                 </div>
             </div>
+            <div class="slds-form-element" style="{!IF(isRD2Enabled, 'display:block', 'display:none')}">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.NextDonationDateMatchRangeDays__c.Label}"
+                    for="nddMatchRangeDays" styleClass="slds-form-element__label" />
+
+                <div class="slds-form-element__control">
+                    <apex:inputField value="{!stgService.stgRD.NextDonationDateMatchRangeDays__c}" type="number" rendered="{!isEditMode}" id="nddMatchRangeDays"
+                        html-aria-describedby="{!$Component.nddMatchRangeDaysHelp}" styleClass="slds-input" />
+
+                    <apex:outputField value="{!stgService.stgRD.NextDonationDateMatchRangeDays__c}" rendered="{!isReadOnlyMode}" 
+                        id="nddMatchRangeDaysReadOnly" html-aria-describedby="{!$Component.nddMatchRangeDaysHelp}" styleClass="slds-form-element__static" />
+                        
+                    <apex:outputPanel id="nddMatchRangeDaysHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" 
+                            value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.NextDonationDateMatchRangeDays__c.InlineHelpText}" />
+                    </apex:outputPanel>
+                </div>
+            </div>
             <div class="slds-form-element" style="{!IF(and(isRD2Enabled, not(isCustomFiscalYearEnabled)), 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.UseFiscalYearForRecurringDonationValue__c.Label}"
                     for="useFiscalYear" styleClass="slds-form-element__label" />

@@ -106,4 +106,14 @@ public inherited sharing class RD2_Constants {
         set;
     }
 
+    /**
+    * @description Contains default value for the Installment Frequency
+    */
+    public static final Integer DEFAULT_INSTALLMENT_FREQUENCY = 1;
+
+    /**
+    * @description Contains default value for the Next Donation Date Match Range Days field
+    */
+    public static final Integer DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS = 3;
+
 }
