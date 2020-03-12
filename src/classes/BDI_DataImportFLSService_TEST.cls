@@ -145,7 +145,7 @@ private class BDI_DataImportFLSService_TEST {
         System.assertEquals(dataImportService.statusDIFailed(),
                 processedDataImports[0].Status__c);
         System.assert(processedDataImports[0].FailureInformation__c.contains(
-                'You do not have permissions to modify Contact.LastName.'
+                System.Label.flsError.replace('{0}', 'Contact.LastName')
         ), 'The utilPermissionsMockInstance should have reported ' +
                 'the Contact.LastName field as not updateable.');
 
