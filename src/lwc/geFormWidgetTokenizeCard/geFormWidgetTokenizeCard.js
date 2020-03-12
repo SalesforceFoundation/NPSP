@@ -8,6 +8,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     
     @track token = 'token_placeholder';
     @api element;
+    @api cardHolderName;
 
     get tokenizeCardHeader() {
         return GeLabelService.format(
@@ -18,7 +19,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     // TODO: method for calling tokenize method in iframe and retrieving the token
 
     @api
-    load(){
+    load() {}
 
+    @api
+    reset() {}
+
+    @api
+    setNameOnCard(cardHolderName) {
+        this.cardHolderName = cardHolderName;
     }
 }

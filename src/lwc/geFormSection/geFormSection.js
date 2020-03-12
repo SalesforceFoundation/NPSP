@@ -216,9 +216,9 @@ export default class GeFormSection extends LightningElement {
     @api
     setCardHolderName(value) {
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
-        widgetList.forEach(widget =>{
-            if(widget.isElevateTokenizeCard){
-                widget.setCardHolderName(value)
+        widgetList.forEach(widget => {
+            if (widget.isElevateTokenizeCard) {
+                widget.setCardHolderName(value);
             }
         });
     }

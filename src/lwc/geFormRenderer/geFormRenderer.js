@@ -685,6 +685,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     dataImport,
                     section.sourceFields));
         });
+
         this.handleNameOnCardFieldChange();
     }
 
@@ -872,7 +873,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // Reset all fields related to this lookup field's object mapping
             this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
         }
-
         const account1Imported = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
         const contact1Imported = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
@@ -1213,8 +1213,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             for (let i = 0; i < sectionsList.length ; i++) {
                 if (sectionsList[i].isCreditCardWidgetAvailable) {
-                    let cardHolderName = this.fabricateCardHolderName(fieldList);
-                    sectionsList[i].setCardHolderName(cardHolderName);
+                    sectionsList[i].setCardHolderName(this.fabricateCardHolderName(fieldList));
                 }
             }
         }
@@ -1235,15 +1234,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
 
                 if (fieldApiName === CONTACT_LAST_NAME_INFO.fieldApiName) {
-                    if(isNotEmpty(firstName)){
+                    if (isNotEmpty(firstName)) {
                         fullName = firstName + ' ' + value;
-                    }else if (isNotEmpty(value)) {
-                        fullName = value;
+                    }else {
+                        fullName = isNotEmpty(value) ? value : '';
                     }
                 }
 
                 if (fieldApiName === ACCOUNT_NAME_FIELD.fieldApiName) {
-                    accountName = value ? value : null;
+                    accountName = value ? value : '';
                 }
 
                 nameOnCard = this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName ? fullName : accountName;

@@ -70,7 +70,6 @@ export default class GeFormField extends LightningElement {
             fireEvent(null, 'widgetData', { donationAmount: this.value });
         }
 
-
         if (this.isValidNameOnCardField) {
             const evt = new CustomEvent('creditcardvaluechange');
             this.dispatchEvent(evt);
@@ -319,7 +318,9 @@ export default class GeFormField extends LightningElement {
             this.element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName ||
             this.element.fieldApiName === CONTACT_FIRST_NAME_INFO.fieldApiName ||
             this.element.fieldApiName === CONTACT_LAST_NAME_INFO.fieldApiName ||
-            this.element.fieldApiName === ACCOUNT_NAME_INFO.fieldApiName
+            this.element.fieldApiName === ACCOUNT_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName ||
+            this.element.fieldApiName === DI_ACCOUNT1_IMPORTED_INFO.fieldApiName
         );
     }
 
