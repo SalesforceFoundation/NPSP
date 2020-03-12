@@ -70,7 +70,7 @@ public without sharing class RD2_ScheduleService {
     * @param rd Recurring donation record
     * @return List<RecurringDonationSchedule__c>
     */
-    public List<RecurringDonationSchedule__c> getNewSchedules(npe03__Recurring_Donation__c rd) {
+    public List<RecurringDonationSchedule__c> buildNewSchedules(npe03__Recurring_Donation__c rd) {
         List<RecurringDonationSchedule__c> newSchedules = new List<RecurringDonationSchedule__c>();
 
         if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
@@ -144,7 +144,7 @@ public without sharing class RD2_ScheduleService {
             }
         }
 
-        List<RecurringDonationSchedule__c> newSchedules = getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> newSchedules = buildNewSchedules(rd);
         for (RecurringDonationSchedule__c newSchedule : newSchedules) {
             newSchedule.StartDate__c = newStartDate;
         }
@@ -173,7 +173,7 @@ public without sharing class RD2_ScheduleService {
             isNeeded = true;
 
         // Invalid Installment Frequency should never result in a schedule update. This is a fail safe measure only
-        } else if (newRd.InstallmentFrequency__c == null || newRd.InstallmentFrequency__c < 1 || newRd.InstallmentFrequency__c > 20) {
+        } else if (!(new RD2_RecurringDonation(newRd)).isValidInstallmentFrequency()) {
             isNeeded = false;
 
         // These two special conditions should never result in a schedule update.
@@ -303,35 +303,43 @@ public without sharing class RD2_ScheduleService {
         Boolean isActive = schedule.EndDate__c == null 
             || (schedule.EndDate__c >= referenceDate && (schedule.StartDate__c <= schedule.EndDate__c));
 
-        Boolean isInstallmentFrequencyValid = schedule.InstallmentFrequency__c != null
+        return isActive && isValidInstallmentFrequency(schedule);
+    }
+
+    /***
+    * @description Determines if the Installment Frequency is in the range
+    * @param schedule Recurring Donation schedule
+    * @return Boolean
+    */
+    private Boolean isValidInstallmentFrequency(RecurringDonationSchedule__c schedule) {
+        return schedule.InstallmentFrequency__c != null
             && schedule.InstallmentFrequency__c >= 1
             && schedule.InstallmentFrequency__c <= 20;
-
-        return isActive && isInstallmentFrequencyValid;
     }
 
     /***
     * @description Wrapper class for Recurring Donation Installment data
     */
     public class Installment {
-
         public Id       campaignId {get; set;}
         public String   campaignName {get; set;}
+        public Date     startDate {get; set;}
         public Date     endDate {get; set;}
-        public Decimal  installmentAmount {get; set;}
         public Date     nextDonationDate {get; set;}
+        public String   installmentPeriod {get; set;}
+        public Decimal  installmentAmount {get; set;}
         public String   paymentMethod {get; set;}
         public Id       scheduleId {get; set;}
-        public Date     startDate {get; set;}
 
         Installment(RecurringDonationSchedule__c rdSchedule) {
             campaignId =            rdSchedule.Campaign__c;
             campaignName =          rdSchedule.Campaign__r.Name;
+            startDate =             rdSchedule.StartDate__c;
             endDate =               rdSchedule.EndDate__c;
+            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
             installmentAmount =     rdSchedule.InstallmentAmount__c;
             paymentMethod =         rdSchedule.PaymentMethod__c;
             scheduleId =            rdSchedule.Id;
-            startDate =             rdSchedule.StartDate__c;
         }
     }
 
@@ -373,19 +381,6 @@ public without sharing class RD2_ScheduleService {
         }
 
         return nextInstallment;
-    }
-
-    /***
-    * @description Calculates the date of the next donation
-    * @param rd Recurring Donation record
-    * @return Date
-    */
-    public Date getNextDonationDate(npe03__Recurring_Donation__c rd) {
-        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
-            return null;
-        }
-
-        return getNextDonationDate(getNewSchedules(rd));
     }
 
     /***
