@@ -288,9 +288,17 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * Handle Add Row being clicked
      */
     handleAddRow() {
-        this.addRow(false);
+        this.addRows(
+            [this.getRow(false)]
+        );
     }
 
+    /**
+     * Add a new record to the list
+     * @description Adds a collection of widget row objects to the row list in order to re-render the widget and
+     * display the new rows
+     * @param isDefaultGAU {boolean} When initializing the first row, this should be true.
+     */
     addRows(records) {
         let rows = [];
         records.forEach(record => {
@@ -301,13 +309,15 @@ export default class GeFormWidgetAllocation extends LightningElement {
             }
         });
         this.rowList = this.rowList.concat(rows);
-        // Reallocate the default GAU
+        // Fore the default GAU to reallocate to accommodate for unpredictable rendering behaviors
         this.allocateDefaultGAU();
     }
 
     /**
-     * Add a new record to the list
+     * @description Build a new row object using both record and element properties
      * @param isDefaultGAU {boolean} When initializing the first row, this should be true.
+     * @param properties {array} Array of record properties to add to the record object
+     * @return Object representing a widget row
      */
     getRow(isDefaultGAU, properties) {
         let element = {};
