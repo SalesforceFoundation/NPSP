@@ -343,19 +343,20 @@ export default class geTemplateBuilderFormFields extends LightningElement {
         const objectMapping =
             TemplateBuilderService.objectMappingByDevName[fieldMapping.Target_Object_Mapping_Dev_Name];
 
+        fieldMapping.Is_Required = fieldMapping.Source_Field_Data_Type === BOOLEAN_TYPE ? false :
+            (fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL ? true : fieldMapping.Is_Required);
+
+        if (fieldMapping.Is_Required ||
+            REQUIRED_FORM_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
+            this.validate();
+        }
+
         dispatch(this, 'togglefieldmapping', {
             clickEvent: event,
             fieldMappingDeveloperName: fieldMappingDeveloperName,
             fieldMapping: fieldMapping,
             objectMapping: objectMapping
-        });
-
-        fieldMapping.Is_Required = fieldMapping.Source_Field_Data_Type === BOOLEAN_TYPE ? false :
-            (fieldMapping.Target_Field_Label === DONATION_DONOR_LABEL ? true : fieldMapping.Is_Required);
-        if (fieldMapping.Is_Required ||
-            REQUIRED_FORM_FIELDS.includes(fieldMapping.Source_Field_API_Name)) {
-            this.validate();
-        }
+        });   
     }
 
     /*******************************************************************************
