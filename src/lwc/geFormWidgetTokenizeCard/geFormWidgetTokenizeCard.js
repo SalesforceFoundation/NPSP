@@ -100,7 +100,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * registerPostMessageListener.
     */
     requestToken() {
-        const iframe = this.template.querySelector('iframe');
+        const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
 
         if (iframe) {
             iframe.contentWindow.postMessage(
