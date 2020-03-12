@@ -63,7 +63,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .withDayOfMonth(dayOfMonth)
             .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
 
         System.assertEquals(1, schedules.size(), 'One schedule should exist for a new monthly RD');
         System.assertEquals(rd.npe03__Amount__c, schedules[0].InstallmentAmount__c, 'Installment Amount should match RD Amount');
@@ -88,7 +88,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .withInstallmentFrequency(2)
             .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
 
         System.assertEquals(2, schedules.size(), 'Two schedules should exist for Installment Period 1st and 15th');        
         for (RecurringDonationSchedule__c schedule : schedules) {
@@ -117,7 +117,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .withInstallmentFrequency(installmentFrequency)
             .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
         System.assertEquals(1, schedules.size(), 'One schedule should exist for a new yearly RD');
         RecurringDonationSchedule__c schedule = schedules[0];
 
@@ -144,7 +144,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .withInstallmentFrequency(installmentFrequency)
             .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
         System.assertEquals(1, schedules.size(), 'One schedule should exist for a new weekly RD');
         RecurringDonationSchedule__c schedule = schedules[0];
 
@@ -166,7 +166,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .withStatusClosed()
             .build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
 
         System.assertEquals(0, schedules.size(), 'No schedule should be returned for a Closed RD');
     }
@@ -183,7 +183,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         RD2_ScheduleService service = new RD2_ScheduleService();
-        List<RecurringDonationSchedule__c> schedules = service.getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
 
         System.assertEquals(1, schedules.size(), '1 new schedule should be created.');
         System.assertEquals(startDate, schedules[0].StartDate__c, 'Start date on new schedule should match');
@@ -196,7 +196,7 @@ private with sharing class RD2_ScheduleService_TEST {
     private static void shouldCreateOneCurrentAndOneFutureSchedule() {
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
 
-        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = new RD2_ScheduleService().buildNewSchedules(rd);
 
         schedules.add(schedules[0].clone());
         schedules[1].StartDate__c = Date.today().addMonths(1);
@@ -237,7 +237,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .withStatusClosed()
             .build();
 
-        System.assertEquals(null, service.getNextDonationDate(rd), 'Next Donation Date should be null');
+        System.assertEquals(null, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should be null');
     }
 
     /***
@@ -255,7 +255,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -274,7 +274,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -293,7 +293,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -311,7 +311,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -328,7 +328,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -343,7 +343,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(startDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(startDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -358,7 +358,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        System.assertEquals(startDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(startDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -377,7 +377,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -396,7 +396,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -416,7 +416,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -435,7 +435,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -454,7 +454,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next Donation Date should match');
     }
 
     /***
@@ -469,7 +469,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         RD2_ScheduleService service = new RD2_ScheduleService();
-        System.assertEquals(Date.today(), service.getNextDonationDate(rd), 'Next donation date should equal today.');
+        System.assertEquals(Date.today(), service.getNextDonationDate(service.buildNewSchedules(rd)), 'Next donation date should equal today.');
     }
 
     /***
@@ -651,7 +651,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         RD2_ScheduleService service = new RD2_ScheduleService();
-        List<RecurringDonationSchedule__c> schedules = service.getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
 
         //RD update
         String dayOfMonth = '21';
@@ -669,7 +669,7 @@ private with sharing class RD2_ScheduleService_TEST {
     private static void shouldInactivateCurrentScheduleWhenRDIsClosed() {
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
         RD2_ScheduleService service = new RD2_ScheduleService();
-        List<RecurringDonationSchedule__c> schedules = service.getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
 
         //RD update
         rd.Status__c = RD2_Constants.STATUS_CLOSED;
@@ -692,7 +692,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .build();
 
         RD2_ScheduleService service = new RD2_ScheduleService();
-        List<RecurringDonationSchedule__c> schedules = service.getNewSchedules(rd);
+        List<RecurringDonationSchedule__c> schedules = service.buildNewSchedules(rd);
 
         //RD update
         rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;

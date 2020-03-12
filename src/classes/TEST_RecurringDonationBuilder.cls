@@ -524,8 +524,8 @@ public without sharing class TEST_RecurringDonationBuilder {
         }
 
         if (calculateNextDonationDate) {
-            RD2_ScheduleService scheduleService = new RD2_ScheduleService();
-             rd.npe03__Next_Payment_Date__c = scheduleService.getNextDonationDate(rd);
+            new RD2_RecurringDonation(rd)
+                .reviseNextDonationDateBeforeInsert(new RD2_ScheduleService());
         }
 
         return rd;

@@ -166,6 +166,24 @@ public with sharing class RD2_Settings {
     }
 
     /***
+    * @description Specifies number of days before and after the installment Close Date
+    * so it can be matched with an existing Opportunity
+    */
+    public Integer nextDonationDateMatchDays {
+        get {
+            if (nextDonationDateMatchDays == null) {
+                Decimal value = settings.NextDonationDateMatchRangeDays__c;
+
+                nextDonationDateMatchDays = value == null || value < 0
+                    ? RD2_Constants.DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS
+                    : Integer.valueOf(value);
+            }
+            return nextDonationDateMatchDays;
+        }
+        private set;
+    }
+
+    /***
     * @description Retrieves configuration determining if the fiscal year should be used
     * for the current/next year value calculations
     */

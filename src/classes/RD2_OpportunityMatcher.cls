@@ -50,34 +50,46 @@ public inherited sharing class RD2_OpportunityMatcher {
     */
     private Date currentDate;
 
+    /**
+     * @description The earliest Close Date on an Opportunity in order to be considered for matching
+     * as the current Opportunity (not past)
+    */
+    private Date cutoffDate {
+        get {
+            if (cutoffDate == null) {
+                cutoffDate = currentDate.addDays(-nextDonationDateMatchDays);
+            }
+
+            return cutoffDate;
+        }
+        private set;
+    }
+
     /***
-    * @description Contains all included Opportunities and/or projected installments mapped by their Close Date
+    * @description Recurring Donation custom settings
+    */
+    private Integer nextDonationDateMatchDays {
+        get {
+            if (nextDonationDateMatchDays == null) {
+                nextDonationDateMatchDays = new RD2_Settings().nextDonationDateMatchDays;
+            }
+            return nextDonationDateMatchDays;
+        }
+        set;
+    }
+
+    /***
+    * @description Contains all included Opportunities and/or projected installments 
+    * mapped and sorted by their Close Date
     */
     private Map<Date, Record> recordByCloseDate = new Map<Date, Record>();
 
     /***
-    * @description Contains Opportunities with Close Date >= current date
-    * and projected installments ordered by their Close Date
+    * @description Contains Opportunities with Close Date >= cutoffDate but < currentDate
+    * so they are considered when if they are in a projected installment Next Donation Date +/- match days range
     */
-    private Map<Integer, Record> currentRecordByOrder {
-        get {
-            if (currentRecordByOrder == null) {
-                currentRecordByOrder = new Map<Integer, Record>();
+    private Map<Date, Record> boundaryRecordByCloseDate = new Map<Date, Record>();
 
-                List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());
-                closeDates.sort();
-
-                Integer i = 0;
-                for (Date closeDate : closeDates) {
-                    if (closeDate >= currentDate) {
-                        currentRecordByOrder.put(i++, recordByCloseDate.get(closeDate));
-                    }
-                }
-            }
-            return currentRecordByOrder;
-        }
-        set;
-    }
 
     /***
      * @description Constructor
@@ -88,33 +100,26 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Includes Opportunities matching the provided calendar year regardless if they are open or closed.
+     * @description Includes Opportunities matching the provided fiscal or calendar year regardless if they are open or closed.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
-     * @param year Year criteria
+     * @param startDate Fiscal/calendar year start date
+     * @param endDate Fiscal/calendar year end date
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
-    public RD2_OpportunityMatcher includeByYear(List<Opportunity> opps, Integer year) {
-        for (Opportunity opp : opps) {
-            if (opp.CloseDate.year() == year && !isClosedLostInMigration(opp)) {
-                recordByCloseDate.put(opp.CloseDate, new Record(opp));
-            }
-        }
-        return this;
-    }
+    public RD2_OpportunityMatcher includeByYear(List<Opportunity> opps, Date startDate, Date endDate) {
+        Date startDateRange = startDate.addDays(-nextDonationDateMatchDays);
+        Date endDateRange = endDate.addDays(nextDonationDateMatchDays);
 
-    /***
-     * @description Includes Opportunities matching the provided fiscal year regardless if they are open or closed.
-     * Opportunities marked as Closed Lost in data migration are ignored.
-     * @param opps Recurring Donation Opportunities
-     * @param startDate Fiscal year start date
-     * @param endDate Fiscal year end date
-     * @return RD2_OpportunityMatcher This Opportunity matcher instance
-     */
-    public RD2_OpportunityMatcher includeByFiscalYear(List<Opportunity> opps, Date startDate, Date endDate) {
         for (Opportunity opp : opps) {
-            if (!isClosedLostInMigration(opp) && opp.CloseDate >= startDate && opp.CloseDate <= endDate) {
+            if (isClosedLostInMigration(opp)) {
+                continue;
+            }
+            if (opp.CloseDate >= startDate && opp.CloseDate <= endDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
+
+            } else if (opp.CloseDate >= startDateRange && opp.CloseDate <= endDateRange) {
+                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
         return this;
@@ -127,8 +132,14 @@ public inherited sharing class RD2_OpportunityMatcher {
      */
     public RD2_OpportunityMatcher includeCurrentAndOpen(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
-            if (opp.IsClosed == false && opp.CloseDate >= currentDate) {
+            if (opp.IsClosed == true) {
+                continue;
+            }
+            if (opp.CloseDate >= currentDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
+
+            } else if (opp.CloseDate >= cutoffDate) {
+                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
         return this;
@@ -142,8 +153,14 @@ public inherited sharing class RD2_OpportunityMatcher {
      */
     public RD2_OpportunityMatcher includeCurrent(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
-            if (opp.CloseDate >= currentDate && !isClosedLostInMigration(opp)) {
+            if (isClosedLostInMigration(opp)) {
+                continue;
+            }
+            if (opp.CloseDate >= currentDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
+
+            } else if (opp.CloseDate >= cutoffDate) {
+                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
         return this;
@@ -158,8 +175,14 @@ public inherited sharing class RD2_OpportunityMatcher {
      */
     public RD2_OpportunityMatcher includeCurrentOrOpen(List<Opportunity> opps) {
         for (Opportunity opp : opps) {
-            if (opp.isClosed == false || (opp.CloseDate >= currentDate && !isClosedLostInMigration(opp))) {
+            if (isClosedLostInMigration(opp)) {
+                continue;
+            }
+            if (opp.isClosed == false || opp.CloseDate >= currentDate) {
                 recordByCloseDate.put(opp.CloseDate, new Record(opp));
+
+            } else if (opp.CloseDate >= cutoffDate) {
+                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
         return this;
@@ -171,7 +194,7 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @return Boolean
      */
     private Boolean isClosedLostInMigration(Opportunity opp) {
-        return opp.isClosed
+        return opp.IsClosed
             && !opp.IsWon
             && opp.Recurring_Donation_Installment_Number__c == MIGRATION_INSTALLMENT_NUMBER_FLAG;
     }
@@ -183,35 +206,107 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @return RD2_OpportunityMatcher This Opportunity matcher instance
      */
     public RD2_OpportunityMatcher match(List<RD2_ScheduleService.Installment> installments) {
-        for (Integer order = 0, size = installments.size(); order < size; order++) {
-            RD2_ScheduleService.Installment installment = installments[order];
-
-            Record matched = getMatchFor(installment.nextDonationDate, order);
-            if (matched == null) {
-                recordByCloseDate.put(installment.nextDonationDate, new Record(installment));
-            } else {
-                matched.attachInstallment(installment);
-            }
+        for (RD2_ScheduleService.Installment installment : installments) {
+            match(installment);
         }
-
         return this;
     }
 
     /***
-     * @description Determines if the Opportunity matches a projected installment
-     * based on the installment Close Date and/or the installment Close Date order after the current date.
-     * @param closeDate Installment Close Date
-     * @param order Order of the installment starting from the current date
-     * @return Record Matched record
+     * @description Matches today's or future projected installment with an existing Opp.
+     * If the matching Opp is found, adds installment to the record.
+     * Otherwise, creates a record containing the installment only,
+     * @param installment Today's or future projected installment
+     * @return void
      */
-    private Record getMatchFor(Date closeDate, Integer order) {
-        Record matched = recordByCloseDate.get(closeDate);
+    private void match(RD2_ScheduleService.Installment installment) {
+        Record matched = recordByCloseDate.get(installment.nextDonationDate);
 
-        if (matched != null) {
-            return matched;
+        if (matched != null) {//matches the Opp Close Date exactly
+            matched.attachInstallment(installment);
+            return;
+        }
+        
+        //if the Installment period is not monthly, do not attempt to match by +/- match days range
+        //and add the installment without matching Opp
+        if (installment.installmentPeriod != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+            recordByCloseDate.put(installment.nextDonationDate, new Record(installment));
+            return;
         }
 
-        return currentRecordByOrder.get(order);
+        //find a matching Opp with Close Date within the installment Next Donation Date +/- match days range
+        Date startDate = installment.nextDonationDate.addDays(-nextDonationDateMatchDays);
+        Date endDate = installment.nextDonationDate.addDays(nextDonationDateMatchDays);
+
+        //check if there is any match with an Opp with Close Date < current date
+        matched = getFuzzyMatch(boundaryRecordByCloseDate, startDate, endDate);
+        if (matched != null) {
+            addMatchedBoundaryOpp(matched.getOpportunity(), installment);
+            return;
+        }
+
+        //check if there is any match with an Opp with Close Date >= current date
+        matched = getFuzzyMatch(recordByCloseDate, startDate, endDate);
+        if (matched != null) {
+            matched.attachInstallment(installment);
+            return;
+        }
+
+        //if the match is not found, add installment as a record without matching Opportunity
+        recordByCloseDate.put(installment.nextDonationDate, new Record(installment));
+    }
+
+    /***
+     * @description Determines if an Opportunity matches a projected installment.
+     * Matching is done by the exact Close Date match or when 
+     * the Close Date is within the installment Next Donation Date +/- match days range.
+     * @param recordByCloseDate Record by Close Date map
+     * @param startDate Installment range start date 
+     * @param endDate Installment range end date 
+     * @return record Matched record
+     */
+    private Record getFuzzyMatch(Map<Date, Record> recordByCloseDate, Date startDate, Date endDate) {
+
+        for (Record record : recordByCloseDate.values()) {  
+            if (record.isNew() //the record does not contain an Opp to match the installment with
+                || record.getInstallment() != null //the record has a matching installment already
+            ) {
+                continue;
+            }   
+
+            Date closeDate = record.getCloseDate();            
+            if (closeDate >= startDate && closeDate <= endDate) {
+                return record;
+            }
+        }
+
+        return null;
+    }
+
+    /***
+     * @description Matches a future projected installment a past Opportunity 
+     * having Close Date < currentDate but >= cutoffDate.
+     * The record is added to the matched but it is sorted by the Opp Close Date so
+     * returned records are ordered by the Close Date when matched or Next Donation Date when unmatched
+     * 
+     * @param opp Opportunity
+     * @param installment Installment
+     * @return void
+     */
+    private void addMatchedBoundaryOpp(Opportunity opp, RD2_ScheduleService.Installment installment) {
+
+        recordByCloseDate.put(opp.CloseDate, new Record(opp).attachInstallment(installment));
+        boundaryRecordByCloseDate.remove(opp.CloseDate);
+
+        List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
+        closeDates.sort();
+
+        //rebuild records' container so records are sorted by dates
+        Map<Date, Record> recordByCloseDateClone = recordByCloseDate.clone(); 
+        recordByCloseDate = new Map<Date, Record>();
+        for (Date closeDate : closeDates) {
+            recordByCloseDate.put(closeDate, recordByCloseDateClone.get(closeDate));
+        }
     }
 
     /***
@@ -282,6 +377,17 @@ public inherited sharing class RD2_OpportunityMatcher {
         }
 
         /***
+        * @description Returns Close Date as the Next Donation Date if the installment is not matched
+        * with an Opportunity or if matched, the Opportunity Close Date since it has prcedence of the installment values.
+        * @return Date
+        */
+        public Date getCloseDate() {
+            return isNew()
+                ? installment.nextDonationDate
+                : opp.CloseDate;
+        }
+
+        /***
         * @description Determines if the record already exists
         * @return Boolean
         */
@@ -294,7 +400,7 @@ public inherited sharing class RD2_OpportunityMatcher {
         * @return Boolean
         */
         public Boolean isOpen() {
-            return opp.isClosed == false;
+            return opp.IsClosed == false;
         }
 
         /***
@@ -302,7 +408,7 @@ public inherited sharing class RD2_OpportunityMatcher {
         * @return Boolean
         */
         public Boolean isClosedLost() {
-            return opp.isClosed == true && opp.isWon == false;
+            return opp.IsClosed == true && opp.IsWon == false;
         }
 
         /***
@@ -314,11 +420,12 @@ public inherited sharing class RD2_OpportunityMatcher {
         }
 
         /***
-        * @description Attaches the projected installment to the already existing future Opportunity
-        * @return void
+        * @description Attaches the future projected installment to an existing Opportunity
+        * @return Record This record instance
         */
-        public void attachInstallment(RD2_ScheduleService.Installment installment) {
+        public Record attachInstallment(RD2_ScheduleService.Installment installment) {
             this.installment = installment;
+            return this;
         }
 
         /***
