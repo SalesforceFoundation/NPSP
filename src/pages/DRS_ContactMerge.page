@@ -1,0 +1,129 @@
+<apex:page standardController="DuplicateRecordSet"
+    extensions="DRS_ContactMerge_CTRL"
+    title="{!$Label.conMergePageTitle}"
+    tabStyle="Contact_Merge__tab"
+    id="DSR_contactMergePage"
+    showHeader="true"
+    recordSetVar="dupRecSet"
+    sidebar="false"
+    docType="html-5.0"
+    standardStylesheets="true"
+    action="{!showDuplicateRecordSets}">
+
+    <apex:slds />
+
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
+
+    <div class="slds-scope">
+        <apex:variable var="hasResults" value="{!listDuplicateRecordSets.size > 0}"/>
+        <apex:variable var="cardClass" value="{!IF(hasResults, '', 'slds-card_empty')}"/>
+        <!-- PAGE HEADER -->
+        <apex:form id="pgHeader">
+            <c:UTIL_PageHeader headerLabel="{!$Label.conMergePageTitle}"
+                               header="{!$Label.conMergePageTitleDetail}"
+                               icon="contact" iconCategory="standard"
+                               showSaveBtn="false" showCancelBtn="false"/>
+                                
+            <apex:outputPanel id="mergePanel" rendered="{!canContinueWithMerge}">
+                <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">
+                    <apex:commandButton id="srchByConBtn"
+                                        action="{!searchByContact}" 
+                                        value="{!$Label.conMergeSearchByContact}" 
+                                        styleClass="slds-button slds-button_neutral"/>
+                </div>
+            </apex:outputPanel>
+            <c:UTIL_PageMessages html-class="slds-grid slds-grid_align-center slds-m-bottom_small"/>
+            <apex:outputPanel id="panelData" rendered="{!showDRS}">
+            <div class="slds-card slds-m-horizontal_large {!cardClass}">
+                <div class="slds-card__header slds-grid slds-grid_align-spread">
+                    <h2 class="slds-text-heading_small slds-truncate slds-align-middle">
+                        {!$Label.conMergeFoundDRS}
+                    </h2>
+                </div>
+                <div class="slds-card__body">
+                    <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                        <thead>
+                            <tr>
+                                <th class="slds-text-heading_label" scope="col">Duplicate Record Set Name</th>
+                                <th class="slds-text-heading_label" scope="col">Last Modified Date</th>
+                                <th class="slds-text-heading_label" scope="col">Duplicate Rule</th>
+                                <th class="slds-text-heading_label" scope="col">Record Count</th>
+                                <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}" var="field">
+                                    <th class="slds-text-heading_label" scope="col">
+                                        <apex:outputText value="{!field.label}"/>
+                                    </th>
+                                </apex:repeat>
+                                <th class="slds-text-heading_label" scope="col">First Contact Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!listDuplicateRecordSets}" var="drs">
+                                <tr>
+                                    <td>
+                                        <a href="{!URLFOR($Action.DuplicateRecordSet.View, drs.Id)}" class="slds-truncate">
+                                            <apex:outputText value="{!drs.Name}"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="slds-truncate">
+                                            <apex:outputField value="{!drs.LastModifiedDate}"/>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="slds-truncate">
+                                            <apex:outputField value="{!drs.DuplicateRuleId}"/>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="slds-truncate">
+                                            <apex:outputField value="{!drs.RecordCount}"/>
+                                        </span>
+                                    </td>
+                                    <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}" var="field">
+                                        <td>
+                                            <span class="slds-truncate">
+                                                <apex:outputField value="{!drs[field]}"/>
+                                            </span>
+                                        </td>
+                                    </apex:repeat>
+                                    <td>
+                                        <span class="slds-truncate">
+                                            <apex:outputField value="{!drs.DuplicateRecordItems[0].RecordId}"/>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <apex:commandButton action="{!showContactRelatedToDRS}" value="{!$Label.conMergeDRSPickBtnLabel}" 
+                                                            styleClass="slds-button slds-button_brand"/>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+                <div  class="slds-card__footer">
+                    <apex:commandButton action="{!firstPage}" value="{!$Label.labelListViewFirst}" 
+                                        styleClass="slds-button slds-button_brand"
+                                        reRender="panelData"
+                                        disabled="{!(!hasPrevious)}"/> 
+                    <apex:commandButton action="{!previousPage}" value="{!$Label.labelListViewPrevious}" 
+                                        styleClass="slds-button slds-button_brand"
+                                        reRender="panelData"
+                                        disabled="{!(!hasPrevious)}"/>
+                    <apex:outputLabel styleClass="slds-p-left_x-small slds-p-right_x-small" value=" Page {!pageNumber} of {!totalPages} " />
+                    <apex:commandButton action="{!nextPage}" value="{!$Label.labelListViewNext}" 
+                                        styleClass="slds-button slds-button_brand"
+                                        reRender="panelData"
+                                        disabled="{!(!hasNext)}"/>
+                    <apex:commandButton action="{!lastPage}" value="{!$Label.labelListViewLast}" 
+                                        styleClass="slds-button slds-button_brand"
+                                        reRender="panelData"
+                                        disabled="{!(!hasNext)}"/>  
+                </div>
+            </div>
+            </apex:outputPanel>
+        </apex:form>
+        
+    </div>
+</apex:page>
