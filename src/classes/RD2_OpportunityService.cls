@@ -235,7 +235,7 @@ public with sharing class RD2_OpportunityService {
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
                 .includeCurrentOrOpen(rd.npe03__Donations__r);
-            
+
             matcher.match(scheduleService.getVisualizedInstallments(
                 currentDate, matcher.size(), rd.RecurringDonationSchedules__r
             ));
@@ -330,7 +330,10 @@ public with sharing class RD2_OpportunityService {
         Boolean isChanged = false;
 
         if (opp.AccountId != rd.npe03__Organization__c) {
-            opp.AccountId = rd.npe03__Organization__c;
+            opp.AccountId = rd.npe03__Organization__c == null
+                ? rd.npe03__Contact__c != null ? rd.npe03__Contact__r.AccountId : null
+                : rd.npe03__Organization__c;
+
             isChanged = true;
         }
 
@@ -338,12 +341,12 @@ public with sharing class RD2_OpportunityService {
             opp.Primary_Contact__c = rd.npe03__Contact__c;
             isChanged = true;
         }
-        
+
         return isChanged;
     }
 
     /***
-    * @description Updates Opportunity CurrencyIsoCode if it differs from the related Recurring Donation 
+    * @description Updates Opportunity CurrencyIsoCode if it differs from the related Recurring Donation
     * @param opp Opportunity
     * @param rd Recurring Donation
     * @return Boolean Indicates if the currency on the Opportunity has been changed
@@ -430,7 +433,7 @@ public with sharing class RD2_OpportunityService {
 
             dbService.updateRecords(oppsToUpdate);
         }
-        
+
         return this;
     }
 }
