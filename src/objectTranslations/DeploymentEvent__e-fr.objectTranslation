@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>CompletedDate__c</name>
-    <label>Date de réalisation</label>
-  </fields>
-  <fields>
-    <name>DeploymentId__c</name>
-    <label>ID de déploiement</label>
-  </fields>
-  <fields>
-    <name>Status__c</name>
-    <label>Statut</label>
-  </fields>
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Deployment Event --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Deployment Event --></value>
+    </caseValues>
+    <fields>
+        <label>Date de réalisation</label>
+        <name>CompletedDate__c</name>
+    </fields>
+    <fields>
+        <label>ID de déploiement</label>
+        <name>DeploymentId__c</name>
+    </fields>
+    <fields>
+        <label>Statut</label>
+        <name>Status__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+    <startsWith><!-- Consonant --></startsWith>
 </CustomObjectTranslation>

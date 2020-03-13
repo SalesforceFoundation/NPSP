@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Data_Import_Object_Mapping_Set__c</name>
-    <help>De objectgroep voor gegevensimport die deze veldtoewijzingsset bevat.</help>
-    <relationshipLabel>Veldtoewijzingssets voor gegevensimport</relationshipLabel>
-    <label>Objecttoewijzingsset voor gegevensimport</label>
-  </fields>
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Data Import Field Mapping Set --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Data Import Field Mapping Set --></value>
+    </caseValues>
+    <fields>
+        <help>De objectgroep voor gegevensimport die deze veldtoewijzingsset bevat.</help>
+        <label>Objecttoewijzingsset voor gegevensimport</label>
+        <name>Data_Import_Object_Mapping_Set__c</name>
+        <relationshipLabel>Veldtoewijzingssets voor gegevensimport</relationshipLabel>
+    </fields>
+    <gender><!-- Neuter --></gender>
 </CustomObjectTranslation>
