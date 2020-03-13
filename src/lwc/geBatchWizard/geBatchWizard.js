@@ -10,8 +10,8 @@ import {
     generateRecordInputForCreate
 } from 'lightning/uiRecordApi';
 import { fireEvent } from 'c/pubsubNoPageRef';
-import { handleError } from 'c/utilTemplateBuilder';
-import { checkNestedProperty, getNestedProperty } from 'c/utilCommon';
+import { handleError, addKeyToCollectionItems } from 'c/utilTemplateBuilder';
+import { getNestedProperty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 
 import getAllFormTemplates from '@salesforce/apex/FORM_ServiceGiftEntry.getAllFormTemplates';
@@ -40,10 +40,14 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     @track step = 0;
     @track templates;
+    @track selectedBatchHeaderFields = [];
     @track formSections = [];
     @track selectedTemplateId;
     @track isLoading = true;
     @track donationMatchingBehaviors;
+    @track hasInvalidBatchFields = false;
+    @track missingBatchHeaderFieldLabels = [];
+    @track missingRequiredFieldsMessage;
 
     dataImportBatchFieldInfos;
     dataImportBatchInfo;
@@ -82,12 +86,6 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
             return false;
         }
         return false;
-    }
-
-    get selectedBatchHeaderFields() {
-        return checkNestedProperty(this.selectedTemplate, 'batchHeaderFields') ?
-            this.selectedTemplate.batchHeaderFields :
-            [];
     }
 
     get header() {
@@ -235,6 +233,14 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
     }
 
     handleNext() {
+        if (this.step === 1) {
+            this.validateBatchHeaderFields();
+
+            if (this.hasInvalidBatchFields) {
+                return;
+            }
+        }
+
         if (this.step < MAX_STEPS) {
             this.step += 1;
         }
@@ -248,10 +254,40 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
 
     handleTemplateChange(event) {
         this.selectedTemplateId = event.detail.value;
+        this.selectedBatchHeaderFields = [];
+
+        this.selectedBatchHeaderFields = addKeyToCollectionItems(this.selectedTemplate.batchHeaderFields);
         this.formSections = this.selectedTemplate.layout.sections;
 
         if (this.recordId && this.dataImportBatchRecord && this.dataImportBatchRecord.fields) {
             this.setValuesForSelectedBatchHeaderFields(this.dataImportBatchRecord.fields);
+        }
+
+        this.resetValidations();
+    }
+
+    /*******************************************************************************
+    * @description Method collects all batch header fields and checks for their
+    * validity.
+    */
+    validateBatchHeaderFields() {
+        this.resetValidations();
+
+        let inputComponents = this.template.querySelectorAll('c-util-input[data-id="batchHeaderField"]');
+        for (let i = 0; i < inputComponents.length; i++) {
+            if (!inputComponents[i].isValid()) {
+                this.hasInvalidBatchFields = true;
+                this.missingBatchHeaderFieldLabels =
+                    [...this.missingBatchHeaderFieldLabels, inputComponents[i].uiLabel];
+            }
+        }
+
+        if (this.hasInvalidBatchFields &&
+            (this.missingBatchHeaderFieldLabels && this.missingBatchHeaderFieldLabels.length > 0)) {
+
+            this.missingRequiredFieldsMessage = GeLabelService.format(
+                this.CUSTOM_LABELS.commonMissingRequiredFields,
+                [this.missingBatchHeaderFieldLabels.join(', ')]);
         }
     }
 
@@ -353,5 +389,10 @@ export default class geBatchWizard extends NavigationMixin(LightningElement) {
                 actionName: 'view'
             }
         });
+    }
+
+    resetValidations() {
+        this.hasInvalidBatchFields = false;
+        this.missingBatchHeaderFieldLabels = [];
     }
 }
