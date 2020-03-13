@@ -72,4 +72,9 @@ export default class GeFormFieldPicklist extends LightningElement {
         this.setCustomValidity('');
     }
 
+    @api
+    reset() {
+        this.recordTypeId = this._defaultRecordTypeId;
+    }
+
 }
