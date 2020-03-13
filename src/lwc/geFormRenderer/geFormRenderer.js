@@ -12,7 +12,7 @@ import {
     setRecordValuesOnTemplate,
     checkPermissionErrors,
     CONTACT_FIRST_NAME_INFO,
-    CONTACT_LAST_NAME_INFO, DI_CONTACT1_IMPORTED_INFO,
+    CONTACT_LAST_NAME_INFO,
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 import {
@@ -23,7 +23,6 @@ import {
     isUndefined,
     checkNestedProperty,
     arraysMatch,
-    getValueFromDotNotationString,
     deepClone,
     getSubsetObject
 } from 'c/utilCommon';
