@@ -15,6 +15,7 @@ import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
 import commonError from '@salesforce/label/c.commonError';
 import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
+import commonMissingRequiredFields from '@salesforce/label/c.commonMissingRequiredFields';
 import commonNewGift from '@salesforce/label/c.commonNewGift';
 import commonNext from '@salesforce/label/c.commonNext';
 import commonNo from '@salesforce/label/c.commonNo';
@@ -188,6 +189,7 @@ class GeLabelService {
         commonEdit,
         commonError,
         commonFieldLabel,
+        commonMissingRequiredFields,
         commonNewGift,
         commonNext,
         commonNo,
