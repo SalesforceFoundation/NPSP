@@ -80,7 +80,6 @@ public with sharing class RD2_OpportunityService {
         } set;
     }
 
-
     /***
     * @description Applies DML operations on records and keeps track of errors
     */
@@ -94,6 +93,19 @@ public with sharing class RD2_OpportunityService {
         private set;
     }
 
+    /***
+    * @description Contains custom field mapping from Recurring Donation into related Opportunity records
+    */
+    private RD2_CustomFieldMapper customFieldMapper{
+        get {
+            if (customFieldMapper == null) {
+                customFieldMapper = new RD2_CustomFieldMapper();
+            }
+            return customFieldMapper;
+        }
+        private set;
+    }
+
     /**
     * @description Current date used as a cut off date to filter out and evaluate Opportunities
      * with projected RD schedule installments as of the current date.
@@ -102,12 +114,20 @@ public with sharing class RD2_OpportunityService {
     */
     private Date currentDate;
 
+
     /***
     * @description Constructor
+    * @param currentDate Current Date (that can be overwritten for testing purposes)
+    * @param dbService Database service used to create, update and delete Opportunities, Payments, etc.
+    * @param customFieldMapper Custom field mapper containing RD -> Opportunity field mapping
     */
-    public RD2_OpportunityService(Date currentDate, RD2_OpportunityEvaluationService.DatabaseService dbService) {
+    public RD2_OpportunityService(Date currentDate, 
+        RD2_OpportunityEvaluationService.DatabaseService dbService,
+        RD2_CustomFieldMapper customFieldMapper
+    ) {
         this.currentDate = currentDate;
         this.dbService = dbService;
+        this.customFieldMapper = customFieldMapper;
     }
 
     /***
@@ -183,6 +203,8 @@ public with sharing class RD2_OpportunityService {
 
         syncOppCurrency(opp, rd);
 
+        customFieldMapper.populateOpportunityFields(opp, rd);
+
         opp.Name = buildOpportunityName(rd.npe03__Donor_Name__c, opp);
 
         return opp;
@@ -213,7 +235,7 @@ public with sharing class RD2_OpportunityService {
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
                 .includeCurrentOrOpen(rd.npe03__Donations__r);
-            
+
             matcher.match(scheduleService.getVisualizedInstallments(
                 currentDate, matcher.size(), rd.RecurringDonationSchedules__r
             ));
@@ -250,11 +272,13 @@ public with sharing class RD2_OpportunityService {
     * @return Boolean Indicates if the Opportunity has been changed
     */
     private Boolean syncOppWithRecurringDonation(Opportunity opp, npe03__Recurring_Donation__c rd) {
-        Boolean isChanged = syncOppDonorInfo(opp, rd);
+        Boolean isDonorChanged = syncOppDonorInfo(opp, rd);
         
-        //ensure the Opportunity and RD Currency sync is done first 
-        //so the Opp is updated in the case there is a discrepancy
-        return syncOppCurrency(opp, rd) || isChanged;
+        Boolean isCurrencyChanged = syncOppCurrency(opp, rd);
+
+        Boolean isCustomFieldChanged = customFieldMapper.syncOpportunityFields(opp, rd);
+
+        return isDonorChanged || isCurrencyChanged || isCustomFieldChanged;
     }
 
     /***
@@ -306,7 +330,10 @@ public with sharing class RD2_OpportunityService {
         Boolean isChanged = false;
 
         if (opp.AccountId != rd.npe03__Organization__c) {
-            opp.AccountId = rd.npe03__Organization__c;
+            opp.AccountId = rd.npe03__Organization__c == null
+                ? rd.npe03__Contact__c != null ? rd.npe03__Contact__r.AccountId : null
+                : rd.npe03__Organization__c;
+
             isChanged = true;
         }
 
@@ -314,18 +341,18 @@ public with sharing class RD2_OpportunityService {
             opp.Primary_Contact__c = rd.npe03__Contact__c;
             isChanged = true;
         }
-        
+
         return isChanged;
     }
 
     /***
-    * @description Updates Opportunity CurrencyIsoCode if it differs from the related Recurring Donation 
+    * @description Updates Opportunity CurrencyIsoCode if it differs from the related Recurring Donation
     * @param opp Opportunity
     * @param rd Recurring Donation
     * @return Boolean Indicates if the currency on the Opportunity has been changed
     */
     private Boolean syncOppCurrency(Opportunity opp, npe03__Recurring_Donation__c rd) {
-        if (!isMultiCurrencyEnabled) {
+        if (!isMultiCurrencyEnabled || opp.IsClosed) {
             return false;
         }
 
@@ -406,7 +433,7 @@ public with sharing class RD2_OpportunityService {
 
             dbService.updateRecords(oppsToUpdate);
         }
-        
+
         return this;
     }
 }

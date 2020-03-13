@@ -635,12 +635,13 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
             settings.InstallmentOppAutoCreateOption__c = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
             settings.DisableRollupsWhenCreatingInstallments__c = false;
+            settings.NextDonationDateMatchRangeDays__c = RD2_Constants.DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS;
 
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;
             settings.UseFiscalYearForRecurringDonationValue__c = false;
 
-            List<RecordType> oppRecordTypes = [select id from RecordType where SObjectType = 'Opportunity' and IsActive = true];
+            List<RecordType> oppRecordTypes = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND IsActive = true];
             if (oppRecordTypes.size() > 0) {
                 settings.npe03__Record_Type__c = oppRecordTypes[0].id;
             }
@@ -898,6 +899,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.InstallmentOppAutoCreateOption__c = settings.InstallmentOppAutoCreateOption__c;
         recurringDonationsSettings.DisableRollupsWhenCreatingInstallments__c = settings.DisableRollupsWhenCreatingInstallments__c;
         recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
+        recurringDonationsSettings.NextDonationDateMatchRangeDays__c = settings.NextDonationDateMatchRangeDays__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 

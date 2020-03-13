@@ -97,11 +97,15 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Beginning of the current calendar or fiscal year, whichever is earlier.
+     * @description Beggining of the current calendar or fiscal year, whichever is earlier.
+     * The start date is offset by the Next Donation Date match days before the year start date
+     * so past Opportunities matching future projected installments are returned.
     */
     private Date startDate {
         get {
-            return yearValueProcessor.getStartDate();
+            return yearValueProcessor
+                .getStartDate()
+                .addDays(-rdSettings.nextDonationDateMatchDays);
         } set;
     }
 
@@ -111,7 +115,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private RD2_OpportunityService oppService {
         get {
             if (oppService == null) {
-                oppService = new RD2_OpportunityService(currentDate, dbService);
+                oppService = new RD2_OpportunityService(currentDate, dbService, customFieldMapper);
             }
             return oppService;
         }
@@ -147,13 +151,27 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     * @description Calculates Current and Next Year Values for a Recurring Donation
     */
     @TestVisible
-    private YearValueProcessor yearValueProcessor {
+    private RD2_YearValueProcessor yearValueProcessor {
         get {
             if (yearValueProcessor == null) {
-                yearValueProcessor = new YearValueProcessor(currentDate, scheduleService);
+                yearValueProcessor = new RD2_YearValueProcessor(currentDate, scheduleService);
             }
             return yearValueProcessor;
         }
+        set;
+    }
+
+    /***
+    * @description Contains the current custom field mappings used to copy specified fields
+    * on Recurring Donation to mapped fields onto the Opportunity record
+    */
+    private RD2_CustomFieldMapper customFieldMapper {
+        get {
+            if (customFieldMapper == null) {
+                customFieldMapper = new RD2_CustomFieldMapper();
+            }
+            return customFieldMapper;
+        } 
         set;
     }
 
@@ -260,6 +278,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);
         }
 
+        if (!isChanged) {
+            isChanged = customFieldMapper.hasKeyFieldChanged(rd, oldRd);
+        }
+
         return isChanged;
     }
 
@@ -278,7 +300,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
-            RecurringDonation rdRecord = new RecurringDonation(rd);
+            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
             if (!rdRecord.isEnhancedFormat()) {
                 continue;
@@ -335,7 +357,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         List<npe03__Recurring_Donation__c> outdatedRDs = new List<npe03__Recurring_Donation__c>();
         for (npe03__Recurring_Donation__c rd : rds) {
-            RecurringDonation rdRecord = new RecurringDonation(rd);
+            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
 
             if (!rdRecord.isEnhancedFormat()) {
                 continue;
@@ -375,7 +397,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     @TestVisible
     private Boolean isNewOpportunityCandidate(npe03__Recurring_Donation__c rd) {
-        return isNewOpportunityCandidate(new RecurringDonation(rd));
+        return isNewOpportunityCandidate(new RD2_RecurringDonation(rd));
     }
 
     /**
@@ -384,7 +406,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation record
      * @return Boolean
      */
-    private Boolean isNewOpportunityCandidate(RecurringDonation rd) {
+    private Boolean isNewOpportunityCandidate(RD2_RecurringDonation rd) {
         Boolean hasMandatoryConditions = rd.isActive()
             && rd.hasNextDonationDate()
             && rd.hasSchedule();
@@ -411,7 +433,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rd Recurring Donation record
      * @return Boolean
      */
-    private Boolean hasOpenOpportunity(RecurringDonation rd) {
+    private Boolean hasOpenOpportunity(RD2_RecurringDonation rd) {
         return !isBatchContext
             && rd.isActive()
             && rd.hasSchedule()
@@ -430,9 +452,13 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
         final String parentAccountField = 'npe03__Contact__r.AccountId';
 
-        Map<String, Schema.DescribeFieldResult> allRdFields =
-            UTIL_Describe.getAllFieldsDescribe(npe03__Recurring_Donation__c.SObjectType.getDescribe().name);
+        Map<String, Schema.DescribeFieldResult> allRdFields = UTIL_Describe.getAllFieldsDescribe(
+            npe03__Recurring_Donation__c.SObjectType.getDescribe().name
+        );
 
+        //Query all fields on the Recurring Donation SObject except CLOB fields.
+        //Thus, there is no need to include fields from the custom field mapping since
+        //they should be already included.
         Set<String> queryFields = new Set<String>();
         for (String fld : allRdFields.keySet()) {
             DescribeFieldResult fldResult = allRdFields.get(fld);
@@ -443,26 +469,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             }
             queryFields.add(fld);
         }
-
-        //Return Recurring Donations'
-        //open Opps regardless of the Close Date
-        //and Opps with Close Date >= current date regardless if closed or open
-        //and all Opps with Close Date in this current year
-        String oppSubquery =
-            '(SELECT Id, Name, AccountId, Primary_Contact__c, ' +
-            'npe03__Recurring_Donation__c, ' +
-            'Amount, CloseDate, ' +
-            'StageName, IsClosed, IsWon, ' +
-            'CampaignId, Recurring_Donation_Installment_Number__c ';
-
-        if (isMultiCurrencyEnabled) {
-            oppSubquery += ', ' + CURRENCY_ISO_CODE_FIELD + ' ';
-        }
-
-        oppSubquery += 'FROM npe03__Donations__r ' +
-            'WHERE IsClosed = false ' +
-            'OR CloseDate >= :startDate ' +
-            'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
 
         //Return all schedules for the RD Schedule visualization.
         //The RD Schedule will filter them out if not applicable within the time period.
@@ -479,7 +485,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             'FROM RecurringDonationSchedules__r)';
 
         queryFields.add(parentAccountField);
-        queryFields.add(oppSubquery);
+        queryFields.add(getOpportunitySubQuery());
         queryFields.add(scheduleSubquery);
 
         String soql = new UTIL_Query()
@@ -489,6 +495,42 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             .build();
 
         return Database.query(soql);
+    }
+
+    /**
+     * @description Returns query on Opportunity required to verify, create or update the Opportunity record
+     * @return String Opportunity subquery used in the Recurring Donation SOQL
+     */
+    private String getOpportunitySubQuery() {
+        //Return Recurring Donations'
+        //open Opps regardless of the Close Date
+        //and Opps with Close Date >= current date regardless if closed or open
+        //and all Opps with Close Date in this current year
+        Set<String> oppSubqueryFields = new Set<String>{
+            'Id', 'Name', 'AccountId', 'Primary_Contact__c',
+            'npe03__Recurring_Donation__c',
+            'Amount', 'CloseDate',
+            'StageName', 'IsClosed', 'IsWon',
+            'CampaignId', 'Recurring_Donation_Installment_Number__c'
+        };
+
+        if (isMultiCurrencyEnabled) {
+            oppSubqueryFields.add(CURRENCY_ISO_CODE_FIELD);
+        }
+
+        oppSubqueryFields.addAll(customFieldMapper.getOpportunityFieldNames());
+
+        String oppSubquery = new UTIL_Query()
+            .withSelectFields(oppSubqueryFields)
+            .withFrom('npe03__Donations__r')
+            .withWhere(
+                'IsClosed = false ' +
+                'OR CloseDate >= :startDate '
+            )
+            .withOrderBy('npe03__Recurring_Donation__c, CloseDate ASC')
+            .build();       
+            
+        return '(' + oppSubquery + ')';
     }
 
     /**
@@ -517,367 +559,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         return newRDIds;
     }
 
-    /**
-     * @description Recurring Donation SObject wrapper
-     */
-    public class RecurringDonation {
-
-        /**
-        * @description Recurring Donation record
-        */
-        npe03__Recurring_Donation__c rd;
-
-        /**
-        * @description Indicates if the Recurring Donation is a new record
-        */
-        private Boolean isNew;
-
-        /**
-        * @description A list of the fields that have been changed by one of the revise methods.
-        */
-        private Set<Schema.SObjectField> changedFields = new Set<Schema.SObjectField>();
-
-        /**
-        * @description Constructor
-        * @param rd Recurring Donation record
-        */
-        public RecurringDonation(npe03__Recurring_Donation__c rd) {
-            this.rd = rd;
-        }
-
-        /**
-        * @description Revises and modifies the Recurring Donation Next Donation Date
-        * @param scheduleService RD Schedule Service
-        * @return RecurringDonation This record instance
-        */
-        public RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
-            if (isClosed()) {
-                return this;
-            }
-
-            Date nextDonationDate = scheduleService.getNextDonationDate(rd.RecurringDonationSchedules__r);
-            if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
-                rd.npe03__Next_Payment_Date__c = nextDonationDate;
-                changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
-            }
-
-            return this;
-        }
-
-        /**
-        * @description Revises and modifies the Recurring Donation
-        * Current Year Value and Next Year Value fields
-        * @param processor Used to calculate current and next year values
-        * @return RecurringDonation This record instance
-        */
-        public RecurringDonation reviseYearValues(YearValueProcessor processor) {
-            Decimal value = processor.calcCurrentYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
-            if (value != rd.CurrentYearValue__c) {
-                rd.CurrentYearValue__c = value;
-                changedFields.add(npe03__Recurring_Donation__c.CurrentYearValue__c);
-            }
-
-            value = processor.calcNextYearValue(rd.npe03__Donations__r, rd.RecurringDonationSchedules__r);
-            if (value != rd.NextYearValue__c) {
-                rd.NextYearValue__c = value;
-                changedFields.add(npe03__Recurring_Donation__c.NextYearValue__c);
-            }
-
-            return this;
-        }
-
-        /**
-        * @description Revises and modifies the Recurring Donation if it is Fixed Length and is now fully completed
-        * based on the Number of Planned Installments as compared to the Number of Paid Installments.
-        * @return RecurringDonation This record instance
-        */
-        public RecurringDonation reviseStatusForFixedLength() {
-            if (isActive()
-                && isFixedLength()
-                && isFixedLengthComplete()
-            ) {
-                rd.Status__c = RD2_Constants.STATUS_CLOSED;
-                rd.ClosedReason__c = RD2_Constants.FIXED_TYPE_CLOSED_REASON;
-                rd.npe03__Next_Payment_Date__c = null;
-                changedFields.add(npe03__Recurring_Donation__c.Status__c);
-                changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
-                changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
-            }
-            return this;
-        }
-
-
-        /**
-        * @description Indicates if the Recurring Donation is outdated and requiring an update
-        * @return Boolean
-        */
-        public Boolean isOutdated() {
-            return !changedFields.isEmpty();
-        }
-
-        /**
-        * @description Returns Recurring Donation fields that potentially can be modified
-        * @return npe03__Recurring_Donation__c
-        */
-        public npe03__Recurring_Donation__c getUpdate() {
-            npe03__Recurring_Donation__c updatedRd = new npe03__Recurring_Donation__c(Id = rd.Id);
-            for (SObjectField field : changedFields) {
-                updatedRd.put(field, rd.get(field));
-            }
-            return updatedRd;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation is active
-        * @return Boolean
-        */
-        public Boolean isActive() {
-            return rd.Status__c == RD2_Constants.STATUS_ACTIVE;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation is closed
-        * @return Boolean
-        */
-        public Boolean isClosed() {
-            return rd.Status__c == RD2_Constants.STATUS_CLOSED;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation is open ended
-        * @return Boolean
-        */
-        public Boolean isOpenEnded() {
-            return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_OPEN;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation is fixed length
-        * @return Boolean
-        */
-        public Boolean isFixedLength() {
-            return rd.RecurringType__c == RD2_Constants.RECURRING_TYPE_FIXED;
-        }
-
-        /**
-         * @description Indicates if the number of paid installments is equal to or greater than number of planned installments
-         * @return Boolean
-         */
-        public Boolean isFixedLengthComplete() {
-            return rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c;
-        }
-
-        /**
-        * @description Returns true if the RD record is in enhanced Recurring Donation format
-        */
-        public Boolean isEnhancedFormat() {
-            return String.isNotBlank(rd.Status__c) && rd.InstallmentFrequency__c != null;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation Next Donation Date is determined
-        * @return Boolean
-        */
-        public Boolean hasNextDonationDate() {
-            return rd.npe03__Next_Payment_Date__c != null;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation has a Schedule
-        * @return Boolean
-        */
-        public Boolean hasSchedule() {
-            return !rd.RecurringDonationSchedules__r.isEmpty();
-        }
-
-        /**
-        * @description Sets property indicating the Recurring Donation is a new record
-        * @param isNew Indicates if the record is new
-        * @return Boolean
-        */
-        public RecurringDonation setIsNew(Boolean isNew) {
-            this.isNew = isNew;
-            return this;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation is new, ie the RD has no installment Opp
-        * @return Boolean
-        */
-        public Boolean isNew() {
-            return isNew == null
-                ? rd.npe03__Donations__r.isEmpty()
-                : isNew;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
-        * @param currentDate Current Date to compare the Close Date to
-        * @return Boolean
-        */
-        public Boolean hasCurrentOpenOpportunity(Date currentDate) {
-            return new RD2_OpportunityMatcher(currentDate)
-                .includeCurrentAndOpen(rd.npe03__Donations__r)
-                .size() > 0;
-        }
-
-        /**
-        * @description Indicates if the Recurring Donation has any open Opportunity
-        * @return Boolean
-        */
-        public Boolean hasOpenOpportunity() {
-            for (Opportunity opp : rd.npe03__Donations__r) {
-                if (opp.IsClosed == false) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    /**
-    * @description Recurring Donation processor calculating Current Year Value and Next Year Value
-    * NOTE: values are calculated based on the calendar year currently.
-    */
-    public class YearValueProcessor {
-        /**
-        * @description Recurring Donation Schedule Service
-        */
-        private RD2_ScheduleService scheduleService;
-
-        /**
-        * @description Date representing current date.
-        * It can be back-dated or future-dated during testing, but it defaults to today
-        * in the batch scheduler or if not provided in testing.
-        * Date is populated from the Opp eval service.
-        */
-        private Date currentDate;
-
-        /**
-        * @description Contains year info and configuration.
-        * Fiscal year will be used if the configuration indicates it should be used.
-        */
-        @TestVisible
-        private UTIL_FiscalYearInfo fiscalYearInfo {
-            get {
-                if (fiscalYearInfo == null) {
-                    fiscalYearInfo = UTIL_FiscalYearInfo.getInstance()
-                        .withUseFiscalYear(new RD2_Settings().useFiscalYear);
-                }
-                return fiscalYearInfo;
-            }
-            set;
-        }
-
-        /**
-        * @description Contains the current fiscal/calendar year start and end dates
-        */
-        private UTIL_FiscalYearInfo.YearInfo currentYearInfo {
-            get {
-                if (currentYearInfo == null) {
-                    currentYearInfo = fiscalYearInfo.getYearInfo(currentDate);
-                }
-                return currentYearInfo;
-            }
-            set;
-        }
-        /**
-        * @description Contains the next fiscal/calendar year start and end dates
-        */
-        private UTIL_FiscalYearInfo.YearInfo nextYearInfo {
-            get {
-                if (nextYearInfo == null) {
-                    nextYearInfo = fiscalYearInfo.getYearInfo(currentDate.addYears(1));
-                }
-                return nextYearInfo;
-            }
-            set;
-        }
-
-        /**
-        * @description Constructor
-        * @param currentDate Current Date
-        * @param scheduleService RD Schedule Service
-        */
-        public YearValueProcessor(Date currentDate, RD2_ScheduleService scheduleService) {
-            this.currentDate = currentDate;
-            this.scheduleService = scheduleService;
-        }
-
-        /**
-        * @description Returns the earliest date to filter open/closed Opportunities based on their Close Date.
-        * If the current year is a calendar year, the current year start date is earlier than the current date.
-        * If the current year is a fiscal year, the current year start date is also earlier than the current date.
-        * So regardless if we calculate calendar or fiscal year values, we can use the current year start date
-        * as the cut off date to get existing Opportunities in the Opp eval service .
-        */
-        public Date getStartDate() {
-            return currentYearInfo.startDate;
-        }
-
-        /**
-        * @description Calculates the Current Year Value
-        * NOTE: the value is calculated based on the calendar year currently.
-        *
-        * @param opps Opportunities on a Recurring Donation
-        * @param schedules Schedules on a Recurring Donation
-        * @return Decimal
-        */
-        public Decimal calcCurrentYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            return calcYearValue(opps, schedules, currentDate, currentYearInfo);
-        }
-
-        /**
-        * @description Calculates the Next Year Value
-        * NOTE: the value is calculated based on the calendar year currently.
-        *
-        * @param opps Opportunities on a Recurring Donation
-        * @param schedules Schedules on a Recurring Donation
-        * @return Decimal
-        */
-        public Decimal calcNextYearValue(List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-            return calcYearValue(opps, schedules, nextYearInfo.startDate, nextYearInfo);
-        }
-
-        /**
-        * @description Calculates calendar/fiscal Current or Next Year Value.
-        * @param opps Opportunities on a Recurring Donation
-        * @param schedules Schedules on a Recurring Donation
-        * @param asOfCurrentDate This is the current date for the current year calculations
-        * or the next year start date for the next year value calculations.
-        * It is used as a start cutoff date for existing Opps in order to 
-        * determine their matching projected installments.
-        * Installments are built for the current/future donation dates.
-        * @param yearInfo The current or next year info object containing the year start and end dates
-        * @return Decimal
-        */
-        public Decimal calcYearValue(
-            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules, 
-            Date asOfCurrentDate, UTIL_FiscalYearInfo.YearInfo yearInfo
-        ) {
-            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(asOfCurrentDate);
-
-            if (fiscalYearInfo.useFiscalYear) {
-                matcher.includeByFiscalYear(opps, yearInfo.startDate, yearInfo.endDate);
-
-            } else {
-                matcher.includeByYear(opps, yearInfo.startDate.year());
-            }
-
-            matcher.match(
-                scheduleService.getVisualizedInstallments(asOfCurrentDate, yearInfo.endDate, schedules)
-            );
-
-            Decimal value = 0;
-            for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
-                if (!record.isClosedLost()) {
-                    value += record.getAmount();
-                }
-            }
-
-            return value;
-        }
-    }
 
     /**
      * @description Database DML service to insert/update/delete records and keep track of failed RD Ids
