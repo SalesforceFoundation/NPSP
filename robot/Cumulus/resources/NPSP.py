@@ -1242,9 +1242,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
 
-    def scroll_button_into_view_and_click_using_js(self, type, value):
+    def scroll_button_into_view_and_click_using_js(self, value):
         """Scrolls the button element into view and clicksthe button using JS """
-        xpath = self.get_npsp_locator(type,value)
+        xpath = npsp_lex_locators['button'].format(value)
         javascript = (
             "window.document.evaluate("
             f"    '{xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null"

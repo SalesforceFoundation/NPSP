@@ -43,7 +43,7 @@ Create Donation from a Contact
 
     Enter Text Field Value               ${date}
     Enter Payment Schedule               ${No_of_payments}      ${intervel}    ${frequency}
-    scroll button into view and click using js   button         Calculate Payments
+    scroll button into view and click using js       Calculate Payments
     ${value}                             Verify Payment Split   1000           ${No_of_payments}
     Should be equal as strings           ${value}    ${No_of_payments}
     Verify Date Split                    ${date}     ${No_of_payments}         ${intervel}
