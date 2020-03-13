@@ -924,6 +924,212 @@ private with sharing class RD2_OpportunityService_TEST {
         assertPaymentIsMatchingOpp(oppById);
     }
 
+    /***
+    * @description Verifies the Account on Opportunity is not nulled
+    * when Recurring Donation having Contact specified only is updated
+    */
+    @isTest
+    private static void shouldNotRemoveAccountOnOppWhenRDWithoutAccountIsModified() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+
+        //create a related Opp where Contact is specified only
+        Opportunity opp = new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withAmount(rd.npe03__Amount__c)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert opp;
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assertNotEquals(null, opps[0].AccountId,
+            'Opp Account should be populated on the Opp insert');
+
+        Test.startTest();
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+        System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Opp Amount should be updated');
+        System.assertEquals(getContact().AccountId, opps[0].AccountId,
+            'Opp Account should be the same as the Contact household Account');
+    }
+
+    /***
+    * @description Verifies the Account on Opportunity is not nulled
+    * when Recurring Donation having Organization specified is updated
+    */
+    private static void shouldNotRemoveAccountOnOppWhenRDWithAccountIsModified() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert acc;
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(acc);
+
+        Opportunity opp = getOpportunityBuilder(rd)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert opp;
+
+        Test.startTest();
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+        System.assertEquals(RD_NEW_AMOUNT, opps[0].Amount, 'Opp Amount should be updated');
+
+        System.assertNotEquals(null, opps[0].AccountId,
+            'Opp Account should be specified when RD is updated');
+        System.assertEquals(rd.npe03__Organization__c, opps[0].AccountId,
+            'Opp Account should be the same as the RD Account');
+    }
+
+    /***
+    * @description Verifies the Account on Opportunity is matching the
+    * Account on the Recurring Donation when the RD Account is changed
+    */
+    private static void shouldUpdateAccountOnOppWhenRDAccountIsChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        List<Account> organizations = new List<Account>{
+            UTIL_UnitTestData_TEST.buildOrganizationAccount(),
+            UTIL_UnitTestData_TEST.buildOrganizationAccount()
+        };
+        insert organizations;
+
+        npe03__Recurring_Donation__c rd = createRecurringDonation(organizations[0]);
+
+        Opportunity opp = getOpportunityBuilder(rd)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert opp;
+
+        Test.startTest();
+        rd.npe03__Organization__c = organizations[1].Id;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+        System.assertEquals(rd.npe03__Organization__c, organizations[1].Id,
+            'RD Account should be updated to the new organization');
+        System.assertEquals(rd.npe03__Organization__c, opps[0].AccountId,
+            'Opp Account should be the same as the RD Account');
+    }
+
+    /***
+    * @description Verifies the Account on Opportunity is the Contact household Account
+    * when Recurring Donation has Organization removed
+    */
+    private static void shouldUpdateAccountOnOppWhenRDHasOrganizationRemoved() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        Account organization = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert organization;
+
+        Contact contact = getContact();
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation()
+            .withAccount(organization.Id)
+            .withContact(contact.Id)
+            .build();
+        insert rd;
+
+        Opportunity opp = getOpportunityBuilder(rd)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert opp;
+
+        Test.startTest();
+        rd.npe03__Organization__c = null;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+
+        System.assertNotEquals(null, opps[0].AccountId,
+            'Opp Account should be specified when RD has organization removed');
+        System.assertEquals(contact.AccountId, opps[0].AccountId,
+            'Opp Account should be the same as the Contact household Account');
+        System.assertEquals(contact.Id, opps[0].Primary_Contact__c,
+            'Opp Primary Contact should be the same as the RD Contact');
+    }
+
+    /***
+    * @description Verifies the Account on Opportunity is the Contact household Account
+    * when Recurring Donation has Organization removed and the Contact replaced
+    */
+    private static void shouldUpdateAccountOnOppWhenRDHasOrganizationRemovedAndContactReplaced() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        setUpConfiguration();
+
+        Account organization = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert organization;
+
+        Contact contact = getContact();
+        Contact newHouseholdContact = UTIL_UnitTestData_TEST.getContact();
+        insert newHouseholdContact;
+        newHouseholdContact = [SELECT AccountId FROM Contact WHERE Id = :newHouseholdContact.Id];
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation()
+            .withAccount(organization.Id)
+            .withContact(contact.Id)
+            .build();
+        insert rd;
+
+        Opportunity opp = getOpportunityBuilder(rd)
+            .withCloseDate(CLOSE_DATE)
+            .withOpenStage()
+            .build();
+        insert opp;
+
+        Test.startTest();
+        rd.npe03__Organization__c = null;
+        rd.npe03__Contact__c = newHouseholdContact.Id;
+        update rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'One Opp should exist: ' + opps);
+
+        System.assertNotEquals(null, opps[0].AccountId,
+            'Opp Account should be specified when RD has organization removed');
+        System.assertEquals(newHouseholdContact.AccountId, opps[0].AccountId,
+            'Opp Account should be the same as the new Contact household Account');
+        System.assertEquals(newHouseholdContact.Id, opps[0].Primary_Contact__c,
+            'Opp Primary Contact should be the same as the RD Contact');
+    }
 
     // Helper Methods
     //////////////////
@@ -1119,7 +1325,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertNotEquals(null, actualException, 'An Exception should be generated');
         System.assert(actualException.getMessage().contains(System.Label.RD2_CurrencyChangeIsRestrictedOnRD),
             'Exception message should match, actual message: ' + actualException.getMessage());
-            
+
         Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
         for (Opportunity opp : oppById.values()) {
             System.assertEquals(CURRENCY_CAD, (String) opp.get(CURRENCY_ISO_CODE_FIELD),
@@ -1143,11 +1349,11 @@ private with sharing class RD2_OpportunityService_TEST {
         for (npe01__OppPayment__c payment : payments) {
             Opportunity opp = oppById.get(payment.npe01__Opportunity__c);
 
-            System.assertEquals(opp.Amount, payment.npe01__Payment_Amount__c, 
+            System.assertEquals(opp.Amount, payment.npe01__Payment_Amount__c,
                 'Payment Amount should match Opportunity Amount');
 
             if (isMultiCurrencyEnabled) {
-                System.assertEquals((String) opp.get(CURRENCY_ISO_CODE_FIELD), (String) payment.get(CURRENCY_ISO_CODE_FIELD), 
+                System.assertEquals((String) opp.get(CURRENCY_ISO_CODE_FIELD), (String) payment.get(CURRENCY_ISO_CODE_FIELD),
                     'Payment currency should match Opportunity currency');
             }
         }
