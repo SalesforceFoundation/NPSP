@@ -214,11 +214,18 @@ export default class utilInput extends LightningElement {
             this.value = event.target.value;
         }
 
+        let isValid = true;
+        if (this.isLightningRichText) {
+            isValid = this.checkRichTextValidity();
+        } else {
+            isValid = this.isValid();
+        }
+
         let detail = {
             objectApiName: this.uiObjectApiName,
             fieldApiName: this.fieldApiName,
             value: this.fieldValue,
-            isValid: this.isValid()
+            isValid: isValid
         }
 
         this.dispatchEvent(new CustomEvent('changevalue', { detail: detail }));

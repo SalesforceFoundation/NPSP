@@ -16,7 +16,7 @@
                                        label-visible={showRichTextLabel}
                                        label={uiLabel}
                                        message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
-                                       onblur={handleValueChange}
+                                       onfocusout={handleValueChange}
                                        onclick={stopPropagation}
                                        tab-index={tabIndex}
                                        valid={isRichTextValid}
@@ -31,7 +31,7 @@
                                 required={isRequired}
                                 class="slds-m-around_none"
                                 data-name="defaultValue"
-                                onblur={handleValueChange}
+                                onfocusout={handleValueChange}
                                 onclick={stopPropagation}
                                 value={fieldValue}
                                 variant={variant}
@@ -106,7 +106,7 @@
                              required={isRequired}
                              class="slds-m-around_none"
                              data-name="defaultValue"
-                             onblur={handleValueChange}
+                             onfocusout={handleValueChange}
                              onclick={stopPropagation}
                              type={lightningInputType}
                              formatter={formatter}
