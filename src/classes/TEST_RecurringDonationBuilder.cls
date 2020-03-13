@@ -625,4 +625,36 @@ public without sharing class TEST_RecurringDonationBuilder {
 
         return (npe03__Recurring_Donation__c)JSON.deserialize(rdRecord, npe03__Recurring_Donation__c.class);
     }
+
+    /**
+     * @description Builds a fully mocked RecurringDonation record with subqueries on Opportunities and Schedules. This is
+     * used to support mocked tests against the RD2_OpportunityEvaluationService without having to insert any records.
+     * @param rd Mocked Recurring Donation using TEST_RecurringDonationBuilder
+     * @param opps Mocked Related Opportunties (or an empty collection)
+     * @param schedules Mockked RecurringDonationSchedule records (can be built using the RD2_ScheduleService)
+     * @return RecurringDonation with the Subqueries fully populated.
+     */
+    public static npe03__Recurring_Donation__c mockRecurringDonationFullQueryResult(npe03__Recurring_Donation__c rd,
+            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
+
+        if (opps == null) {
+            opps = new List<Opportunity>();
+        }
+
+        if (schedules == null) {
+            schedules = new List<RecurringDonationSchedule__c>();
+        }
+
+        Contact contact = new Contact(
+            Id = rd.npe03__Contact__c,
+            AccountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
+            LastName = UTIL_UnitTestData_TEST.getUniqueString()
+        );
+
+        rd = addForeignKey(rd, 'npe03__Contact__r', contact);
+        rd = addRelatedList(rd, 'npe03__Donations__r', opps);
+        rd = addRelatedList(rd, UTIL_Namespace.StrTokenNSPrefix('RecurringDonationSchedules__r'), schedules);
+
+        return rd;
+    }
 }
