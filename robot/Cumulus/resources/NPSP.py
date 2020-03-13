@@ -632,6 +632,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators["gaus"]["input_field"].format(field)
         self.salesforce._populate_field(locator,value)
 
+
     def click_save(self, page):
         if  page== "GAU":
             id="j_id0:theForm:j_id9:j_id10:saveBTN"
@@ -1256,7 +1257,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.execute_javascript(javascript)
         self.npsp.click_button_with_value(value)
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None, payment_data=None, account_data=None, engagement_data=None, task_data=None):
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None):
         """ Creates an Account if account setup data is passed
             Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
