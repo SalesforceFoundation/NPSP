@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2019 Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -127,7 +124,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
-        rd1 = mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.buildNewSchedules(rd1));
+        rd1 = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd1, new List<Opportunity>(), scheduleService.buildNewSchedules(rd1));
 
         // Recurring Donation with no Schedule records
         npe03__Recurring_Donation__c rd2 = getRecurringDonationBuilder()
@@ -135,7 +132,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withInstallmentFrequency(3)
             .withCalculateNextDonationDate()
             .build();
-        rd2 = mockRecurringDonationFullQueryResult(rd2, new List<Opportunity>(), new List<RecurringDonationSchedule__c>());
+        rd2 = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd2, new List<Opportunity>(), new List<RecurringDonationSchedule__c>());
 
         // Recurring Donation with an empty NextDonationDate
         npe03__Recurring_Donation__c rd3 = getRecurringDonationBuilder()
@@ -145,7 +142,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withCalculateNextDonationDate()
             .build();
         rd3.npe03__Next_Payment_Date__c = null;
-        rd3 = mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.buildNewSchedules(rd3));
+        rd3 = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd3, new List<Opportunity>(), scheduleService.buildNewSchedules(rd3));
 
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rd1, rd2, rd3 };
@@ -169,7 +166,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
-        rdNew = mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.buildNewSchedules(rdNew));
+        rdNew = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rdNew, new List<Opportunity>(), scheduleService.buildNewSchedules(rdNew));
 
         // Old Opportunity (has related Opps) - Not New RD
         npe03__Recurring_Donation__c rdOld = getRecurringDonationBuilder()
@@ -180,12 +177,13 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         List<Opportunity> opps = new List<Opportunity>{
             getOpportunityBuilder(rdOld)
+                .withMockId()
                 .withAccount(rdOld.npe03__Organization__c)
                 .withOpenStage()
                 .withCloseDate(rdOld.npe03__Next_Payment_Date__c)
                 .build()
         };
-        rdOld = mockRecurringDonationFullQueryResult(rdOld, opps, scheduleService.buildNewSchedules(rdOld));
+        rdOld = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rdOld, opps, scheduleService.buildNewSchedules(rdOld));
 
         RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
         evalService.rds = new List<npe03__Recurring_Donation__c>{ rdNew, rdOld };
@@ -302,7 +300,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         update rd;
         Test.stopTest();
 
-        rd = mockRecurringDonationFullQueryResult(rd, oppById.values(), null);
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, oppById.values(), null);
         return rd;
     }
 
@@ -1379,7 +1377,106 @@ private class RD2_OpportunityEvaluationService_TEST {
             'The RD Name should be copied into the Opportunity record Description field');
     }
 
+    /**
+    * Verifies the Current and Next Year Values are calculated based on on planned and paid installments
+    * when there are Closed Won Opportunities for a fixed-length Recurring Donation
+    */
+    @isTest
+    private static void yearValuesShouldMatchFixedLengthRDPlannedInstallments() {
+        final Integer paidInstallments = 4;
+        //set current date override
+        final Date startDate = Date.newInstance(2019, 12, 1);
+        Date today = Date.newInstance(2020, 3, 2);
+        RD2_ScheduleService.currentDate = today;
 
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withStartDate(startDate)
+            .withDayOfMonth('1')
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(20)
+            .withPaidInstallments(paidInstallments)
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Integer month = 0; month < paidInstallments; month++){
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(startDate.addMonths(month))
+                .build());
+        }
+        insert opps;
+
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .handleOutdatedRecurringDonations();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c, 
+            'Current Year Value should include actual and planned installment amounts');
+        System.assertEquals(RD_AMOUNT * 7, rd.NextYearValue__c, 
+            'Next Year Value should match the expected planned installment amount');
+    }
+
+    /**
+    * Verifies the Current and Next Year Values are calculated based on on planned and paid installments
+    * when there is an open Opportunity for a fixed-length Recurring Donation
+    */
+    @isTest
+    private static void yearValuesShouldCountOpenFutureOppWhenRDIsFixedLength() {
+        final Integer paidInstallments = 4;
+        //set current date override
+        final Date startDate = Date.newInstance(2019, 12, 1);
+        Date today = Date.newInstance(2020, 3, 2);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled(); 
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withStartDate(startDate)
+            .withDayOfMonth('1')
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(20)
+            .withPaidInstallments(paidInstallments)
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Integer month = 0; month < paidInstallments; month++){
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(startDate.addMonths(month))
+                .build());
+        }
+
+        //Create an Opp not matching the schedule installment in the next year
+        opps.add(oppBuilder
+            .withName()
+            .withCloseDate(today.addYears(1).addDays(15))
+            .withOpenStage()
+            .withAmount(5000)
+            .build()
+        );
+        insert opps;
+
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .handleOutdatedRecurringDonations();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c, 
+            'Current Year Value should include actual and planned installment amounts');
+        System.assertEquals(RD_AMOUNT * 6 + 5000, rd.NextYearValue__c, 
+            'Next Year Value should match the expected planned installment and the future open Opp amounts');
+    }
 
     // Helpers
     ///////////////////
@@ -1440,38 +1537,6 @@ private class RD2_OpportunityEvaluationService_TEST {
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)
             .withCalculateNextDonationDate();
-    }
-
-    /**
-     * @description Builds a fully mocked RecurringDonation record with subqueries on Opportunities and Schedules. This is
-     * used to support mocked tests against the RD2_EvaluationService without having to insert any records.
-     * @param rd Mocked Recurring Donation using TEST_RecurringDonationBuilder
-     * @param opps Mocked Related Opportunties (or an empty collection)
-     * @param schedules Mockked RecurringDonationSchedule records (can be built using the RD2_ScheduleService)
-     * @return RecurringDonation with the Subqueries fully populated.
-     */
-    private static npe03__Recurring_Donation__c mockRecurringDonationFullQueryResult(npe03__Recurring_Donation__c rd,
-            List<Opportunity> opps, List<RecurringDonationSchedule__c> schedules) {
-
-        if (opps == null) {
-            opps = new List<Opportunity>();
-        }
-
-        if (schedules == null) {
-            schedules = new List<RecurringDonationSchedule__c>();
-        }
-
-        Contact contact = new Contact(
-            Id = rd.npe03__Contact__c,
-            AccountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
-            LastName = UTIL_UnitTestData_TEST.getUniqueString()
-        );
-
-        rd = TEST_RecurringDonationBuilder.addForeignKey(rd, 'npe03__Contact__r', contact);
-        rd = TEST_RecurringDonationBuilder.addRelatedList(rd, 'npe03__Donations__r', opps);
-        rd = TEST_RecurringDonationBuilder.addRelatedList(rd, UTIL_Namespace.StrTokenNSPrefix('RecurringDonationSchedules__r'), schedules);
-
-        return rd;
     }
 
     /**

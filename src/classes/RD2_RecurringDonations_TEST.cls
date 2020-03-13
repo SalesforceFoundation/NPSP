@@ -613,7 +613,6 @@ private with sharing class RD2_RecurringDonations_TEST {
             'Installment Frequency should default to 1 when not specified on RD insert');
     }
 
-
     // Helpers
     ///////////////////
 
