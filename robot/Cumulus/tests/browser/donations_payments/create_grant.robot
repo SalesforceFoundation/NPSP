@@ -28,7 +28,6 @@ Create Grant
     Wait For Modal                         New                       Opportunity
     Select Record Type                     Grant
     Populate Modal Form
-    ...                                   Stage=Awarded
     ...                                   Opportunity Name=Robot $100 grant
     ...                                   Amount=100
     ...                                   Account Name=${data}[contact][LastName] Household

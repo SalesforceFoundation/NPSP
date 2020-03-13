@@ -13,10 +13,8 @@ class CovertLeadPage(BaseNPSPPage, BasePage):
         """
         Waits for the Leads iframe to load
         """
-        LeadFrame = '//iframe[contains(@name,"vfFrameId")]'
-        self.selenium.wait_until_element_is_visible(LeadFrame, timeout=60)
-        frame = self.selenium.driver.find_element_by_xpath(LeadFrame)
-        self.selenium.driver.switch_to.frame(frame);
+        self.npsp.wait_for_locator('frame_new','vfFrameId','vfFrameId')
+        self.npsp.choose_frame('vfFrameId')
 
     def click_lead_convert_button(self):
         self.npsp.page_scroll_to_locator('button', 'Convert')

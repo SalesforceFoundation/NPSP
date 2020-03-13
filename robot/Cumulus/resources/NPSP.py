@@ -650,7 +650,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def verify_payment_split(self, amount, no_payments):
         #loc = "//input[@value= '{}']"
-        input_loc = npsp_lex_locators['schedule_payment']['field_input']
+        input_loc = npsp_lex_locators['button']
         values = int(amount)/int(no_payments)
         values_1 = "{:0.2f}".format(values)
         self.val = str(values_1)
