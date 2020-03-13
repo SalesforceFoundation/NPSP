@@ -409,7 +409,47 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(null, schedules[1].dayOfMonth, 'Second schedule Day of Month should be undefined');
     }
 
+    /***
+    * @description Validates that only expected amount of future installments should be return for fixed length RD
+    */
+    @IsTest
+    private static void shouldDisplayCorrectNumberOfFutureInstallmentsWhenRDisFixedLength() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        Date startDate = Date.newInstance(2018, 2, 1);
+        Date today = Date.newInstance(2018, 3, 1);
+        String dayOfMonth = '12';
+
+        Integer maxInstallments = 100;
+        Integer plannedInstallments = 10;
+        Integer paidInstallments = 3;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(plannedInstallments)
+            .withPaidInstallments(paidInstallments)
+            .withStartDate(startDate)
+            .withDayOfMonth(dayOfMonth)
+            .build();
+        insert rd;
+
+        insert new TEST_OpportunityBuilder()
+            .withContact(rd.npe03__Contact__c)
+            .withRecurringDonation(rd.Id)
+            .withOpenStage()
+            .withAmount(rd.npe03__Amount__c)
+            .withInstallmentNumber(1)
+            .withCloseDate(startDate)
+            .build();
+
+
+        Test.startTest();
+        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, maxInstallments);
+        Test.stopTest();
+
+        System.assertEquals(10 - 3 - 1, installments.size(),
+            'Should only return set amount of future installments for fixed length RD (Planned - Paid - All out of cycle installments)');
+    }
 
     //// Helpers
 
