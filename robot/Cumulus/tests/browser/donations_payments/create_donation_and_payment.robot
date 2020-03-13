@@ -47,7 +47,7 @@ Create Donation from a Contact
     ${value}                             Verify Payment Split   1000           ${No_of_payments}
     Should be equal as strings           ${value}    ${No_of_payments}
     Verify Date Split                    ${date}     ${No_of_payments}         ${intervel}
-    scroll button into view and click using js       button                    Create Payments
+    scroll button into view and click using js       Create Payments
     Wait until page contains             ${opp_name}
     Go To Page                           Details
         ...                              Opportunity
