@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2020 Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -126,26 +123,6 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Includes Open Opportunities with Close Date greater or equal to the current date
-     * @param opps Recurring Donation Opportunities
-     * @return RD2_OpportunityMatcher This Opportunity matcher instance
-     */
-    public RD2_OpportunityMatcher includeCurrentAndOpen(List<Opportunity> opps) {
-        for (Opportunity opp : opps) {
-            if (opp.IsClosed == true) {
-                continue;
-            }
-            if (opp.CloseDate >= currentDate) {
-                recordByCloseDate.put(opp.CloseDate, new Record(opp));
-
-            } else if (opp.CloseDate >= cutoffDate) {
-                boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
-            }
-        }
-        return this;
-    }
-
-    /***
      * @description Includes Opportunities with Close Date greater or equal to the current date.
      * Opportunities marked as Closed Lost in data migration are ignored.
      * @param opps Recurring Donation Opportunities
@@ -185,6 +162,19 @@ public inherited sharing class RD2_OpportunityMatcher {
                 boundaryRecordByCloseDate.put(opp.CloseDate, new Record(opp));
             }
         }
+        return this;
+    }
+
+    /***
+    * @description Includes all Opportunites regardless of their status
+    * @param opps Recurring Donation Opportunities 
+    * @return RD2_OpportunityMatcher This Opportunity matcher instance
+    */
+    public RD2_OpportunityMatcher include(List<Opportunity> opps) {
+        for (Opportunity opp : opps) {
+            recordByCloseDate.put(opp.CloseDate, new Record(opp));
+        }
+
         return this;
     }
 
@@ -297,32 +287,58 @@ public inherited sharing class RD2_OpportunityMatcher {
 
         recordByCloseDate.put(opp.CloseDate, new Record(opp).attachInstallment(installment));
         boundaryRecordByCloseDate.remove(opp.CloseDate);
+    }
+
+    /***
+     * @description Returns the number of included records, even if they are in the boundary conditions
+     * and might not be matched with projected installments
+     * @return Integer
+     */
+    public Integer getNumberOfOpportunities() {
+        Integer size = 0;
+        for (Record record : recordByCloseDate.values()) {
+            if (!record.isNew()) {
+                size++;
+            }
+        }
+
+        //the boundary record list has Opps only
+        size += boundaryRecordByCloseDate.size();
+
+        return size;
+    }
+
+    /***
+     * @description Returns sorted matched records containing Opportunities and/or installments
+     * @return List<Record>
+     */
+    public List<Record> getRecords() {
+        if (recordByCloseDate.isEmpty()) {
+            return recordByCloseDate.values();
+        }
 
         List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
         closeDates.sort();
 
-        //rebuild records' container so records are sorted by dates
-        Map<Date, Record> recordByCloseDateClone = recordByCloseDate.clone(); 
-        recordByCloseDate = new Map<Date, Record>();
+        List<Record> records = new List<Record>();
         for (Date closeDate : closeDates) {
-            recordByCloseDate.put(closeDate, recordByCloseDateClone.get(closeDate));
+            records.add(recordByCloseDate.get(closeDate));
         }
+
+        return records;
     }
 
-    /***
-     * @description Returns number of matched records
-     * @return Integer
-     */
-    public Integer size() {
-        return recordByCloseDate.size();
-    }
-
-    /***
-     * @description Returns matched records containting Opportunities and/or installments
-     * @return List<Record>
-     */
-    public List<Record> getRecords() {
-        return recordByCloseDate.values();
+    /**
+    * @description Indicates if the Recurring Donation has an open Opportunity included in the matcher
+    * @return Boolean
+    */
+    public Boolean hasOpenOpportunity() {
+        for (Record record : recordByCloseDate.values()) {
+            if (!record.isNew() && record.isOpen()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /***
@@ -382,7 +398,7 @@ public inherited sharing class RD2_OpportunityMatcher {
         * @return Date
         */
         public Date getCloseDate() {
-            return isNew()
+            return isNew() && hasInstallment()
                 ? installment.nextDonationDate
                 : opp.CloseDate;
         }
