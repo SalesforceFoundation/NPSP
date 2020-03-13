@@ -209,13 +209,10 @@
                                         style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
                                         {!$Label.stgNavRDInstallmentPeriods}</a>
                                 </li>
-                                <li role="treeitem" aria-level="2" id="idPanelRDFieldMapNav"
-                                    class="{!IF(!isRD2Enabled, 'slds-tree__item', 'hide')}"
-                                    style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
+                                <li role="treeitem" aria-level="2" id="idPanelRDFieldMapNav" class="slds-tree__item">
 
                                     <a href="#" onclick="ShowPanel('idPanelRDFieldMap');return false;"
-                                        class="slds-grow slds-m-left_large"
-                                        style="{!IF(!isRD2Enabled, 'display: block', 'display: none')}">
+                                        class="slds-grow slds-m-left_large">
                                         {!$Label.stgNavRDFieldMap}</a>
                                 </li>
                             </ul>
