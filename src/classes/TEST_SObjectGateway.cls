@@ -176,6 +176,7 @@ public class TEST_SObjectGateway {
     public class OpportunityGateway {
         private Set<String> fields = new Set<String>{
             'Name',
+            'Description',
             'AccountId',
             'RecordTypeId',
             'Amount',
