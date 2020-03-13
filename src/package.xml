@@ -366,6 +366,8 @@
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
         <members>RD2_Constants</members>
+        <members>RD2_CustomFieldMapper</members>
+        <members>RD2_CustomFieldMapper_TEST</members>
         <members>RD2_DataMigrationBase_BATCH</members>
         <members>RD2_DataMigrationDryRun_BATCH</members>
         <members>RD2_DataMigrationEnablement</members>
@@ -2009,8 +2011,8 @@
         <members>geBodyBatchHeaderWarning</members>
         <members>geBodyEmptyFormSection</members>
         <members>geBodyFieldBundlesLeftCol</members>
-        <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsDescLeftCol</members>
+        <members>geBodyFormFieldsLeftCol</members>
         <members>geBodyFormFieldsLeftColAdditional</members>
         <members>geBodyFormFieldsModalDeleteSection</members>
         <members>geBodyFormFieldsRightCol</members>
