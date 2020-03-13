@@ -158,11 +158,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.driver.execute_script('arguments[0].click()', element)
            
         
-        
+    @capture_screenshot_on_error    
     def click_flexipage_dropdown(self, title,value):
         """Click the lightning dropdown to open it and select value"""
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
-        self.selenium.set_focus_to_element(locator)
+        self.selenium.wait_until_page_contains_element(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('flexipage-popup')
         option=npsp_lex_locators['span'].format(value)
@@ -511,6 +511,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
            
         
     def check_record_related_item(self,title,value):
+        """Verifies that the given value is displayed under the related list identified by title on a record view page"""
+        self.salesforce.load_related_list(title)
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
         self.selenium.wait_until_page_contains_element(locator)
         actual_value=self.selenium.get_webelement(locator).text
@@ -1257,9 +1259,9 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         if account_data is not None:
             # create the account based on the user input specified account type
-            name = self.randomString(10);
+            acctname = self.randomString(10);
             rt_id = self.salesforce.get_record_type_id("Account",account_data["Type"])
-            account_data.update( {'Name' : name,'RecordTypeId' : rt_id})
+            account_data.update( {'Name' : acctname,'RecordTypeId' : rt_id})
             account_id = self.salesforce.salesforce_insert("Account", **account_data)
             account = self.salesforce.salesforce_get("Account",account_id)
             # save the account object to data dictionary
@@ -1397,6 +1399,21 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         footer=npsp_lex_locators["record"]["footer"]
         self.selenium.wait_until_page_contains_element(footer)
         self.salesforce.populate_lookup_field(field,value)
+        
+    def edit_record_dropdown_value(self,field,value):
+        """Scrolls just a little below the field
+           Clicks on Edit icon next to field and enters a value into the field"""
+        scroll_loc=npsp_lex_locators["span_button"].format(field)
+        # To make sure the field we want to edit has rendered
+        # and is not obscured by the footer, scroll down a little below the element
+        self.selenium.scroll_element_into_view(scroll_loc)
+        self.selenium.execute_javascript("window.scrollBy(0,50)")
+        btn="Edit "+field
+        self.selenium.click_button(btn)
+        footer=npsp_lex_locators["record"]["footer"]
+        self.selenium.wait_until_page_contains_element(footer)
+        time.sleep(2)
+        self.click_flexipage_dropdown(field, value)    
     
     def edit_record_checkbox(self,field,status):
         """Scrolls just a little below the field
