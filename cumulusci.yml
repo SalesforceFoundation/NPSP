@@ -781,7 +781,7 @@ flows:
                     database_url: ""
 
     create_testing_user:
-        description: Creates a testing User assigned a new NPSP_Standard_User profile with access to all NPSP objects & fields. Perfect for testing security with a non-system admin type User.
+        description: Creates a testing User assigned a new NPSP_Standard_User profile with access to all NPSP objects & fields. Perfect for testing security with a non-system admin type User. Use with the "qa_org" flow.
         steps:
             1:
                 task: deploy
