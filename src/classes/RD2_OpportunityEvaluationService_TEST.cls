@@ -1318,6 +1318,66 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(RD_AMOUNT * 12, rd.NextYearValue__c,
             'Next Year Value should match with projected installments');
     }
+    /**
+     * @description Verifies field values from Recurring Donation 
+     * are copied into mapped fields on Opportunity record when RD is created
+     */
+    @IsTest
+    private static void shouldPopulateOppFieldsOnRDInsertWhenCustomFieldMappingIsDefined() {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_CustomFieldMapper_TEST.createCustomFieldMapping('Name', 'Description');
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'The number of returned Opps should match');
+        System.assertEquals(rd.Name, opps[0].Description, 
+            'The RD Name should be copied into the Opportunity record Description field');
+    }
+
+    /**
+     * @description Verifies field values from Recurring Donation 
+     * are copied into mapped fields on Opportunity record when RD is updated
+    */
+    @IsTest
+    private static void shouldPopulateOppFieldsOnRDUpdateWhenCustomFieldMappingIsDefined() {
+        final Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_CustomFieldMapper_TEST.createCustomFieldMapping('Name', 'Description');
+        
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact()).build();
+        insert rd;
+
+        insert getOpportunityBuilder(rd)
+            .withName()
+            .withCloseDate(START_DATE.addMonths(1))
+            .withOpenStage()
+            .build();
+
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+        System.assert(String.isBlank(opps[0].Description), 'Description should not be specified');        
+       
+        Test.startTest();
+        rd.npe03__Amount__c = 2000; 
+        update rd;
+        Test.stopTest();
+
+        opps = oppGateway.getRecords(rd);
+        System.assertEquals(1, opps.size(), 'The number of returned Opps should match');
+        System.assertEquals(rd.Name, opps[0].Description, 
+            'The RD Name should be copied into the Opportunity record Description field');
+    }
 
 
 
