@@ -1942,6 +1942,7 @@
         <members>commonEdit</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
+        <members>commonMissingRequiredFields</members>
         <members>commonNewGift</members>
         <members>commonNext</members>
         <members>commonNo</members>
