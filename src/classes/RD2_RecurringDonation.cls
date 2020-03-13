@@ -188,7 +188,7 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Returns the Recurring Donation record
+    * @description Return the Recurring Donation record
     * @return npe03__Recurring_Donation__c 
     */
     public npe03__Recurring_Donation__c getSObject() {
@@ -331,5 +331,4 @@ public inherited sharing class RD2_RecurringDonation {
         }
         return false;
     }
-
 }

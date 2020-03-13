@@ -547,7 +547,7 @@ private with sharing class RD2_OpportunityService_TEST {
         System.assertEquals(RD_AMOUNT, oppById.get(opp.Id).Amount, 'Opp Amount should be unchanged');
     }
 
-     /***
+    /***
     * @description Verify Opportunity's campaign is not updated when there start date on the RD
     * is greater than close date on the opportunity
     */

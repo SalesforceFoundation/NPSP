@@ -772,7 +772,7 @@ public without sharing class RD2_ScheduleService {
     }
 
     /**
-    * @description Sets End Date on input rdScheduls.
+    * @description Sets End Date on the Recurring Donation schedules.
     * The end date is not set on a schedule for a fixed-length Recurring Donation.
     * Thus, schedules should be dynamically evaluated for the End Date
     * when the Next Donation Date record is being determined, ie the Next Donation Date calculated,

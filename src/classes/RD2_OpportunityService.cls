@@ -140,6 +140,7 @@ public with sharing class RD2_OpportunityService {
         List<Opportunity> oppsToCreate = new List<Opportunity>();
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = new Map<Id, List<RD2_ScheduleService.Installment>>();
 
+        Integer numberOfInstallments = 1;
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(rd, rd.RecurringDonationSchedules__r);
 
@@ -157,6 +158,7 @@ public with sharing class RD2_OpportunityService {
         Set<Id> createdOppIds = dbService.insertRecords(oppsToCreate);
 
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
+
         for (Opportunity opp : oppsToCreate) {
             if (createdOppIds.contains(opp.Id) 
                 && installmentsByRDId.containsKey(opp.npe03__Recurring_Donation__c)
