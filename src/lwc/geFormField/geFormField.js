@@ -388,7 +388,6 @@ export default class GeFormField extends LightningElement {
 
     }
 
-
     @api
     reset() {
         this.value = this._defaultValue;
@@ -396,6 +395,11 @@ export default class GeFormField extends LightningElement {
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             lookup.reset();
+        }
+
+        if (this.isPicklist) {
+            this.template.querySelector('c-ge-form-field-picklist').reset();
+            this.handlePicklistChange();
         }
     }
 
