@@ -1,27 +1,43 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
-Suite Setup     Open Test Browser
+Library         cumulusci.robotframework.PageObjects
+
+...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/NPSP.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
+***Keywords***
+# Sets test data contact and an opportunity for the contact
+Setup Test Data
+    Setupdata   contact   ${contact1_fields}
+
+*** Variables ***
+&{contact1_fields}       Email=test@example.com
 
 *** Test Cases ***
-
 Create Grant
-    &{contact} =  API Create Contact    Email=skristem@robot.com
-    Go To Object Home         Opportunity
-    Click Object Button       New
-    Select Record Type        Grant
-    Populate Form
-    ...                       Opportunity Name= Robot $100 grant
-    ...                       Amount=100
-    Select Value From Dropdown    Stage    Awarded
-    Populate Lookup Field    Account Name    &{Contact}[LastName] Household
-    Open Date Picker    Close Date
-    Pick Date    Today
-    Set Checkbutton To    Do Not Automatically Create Payment    checked
-    Click Modal Button        Save
+    [Documentation]                      Create a Grant from the UI
+
+    Go To Page                             Listing
+     ...                                   Opportunity
+    Click Object Button                    New
+    Wait For Modal                         New                       Opportunity
+    Select Record Type                     Grant
+    Populate Modal Form
+    ...                                   Opportunity Name=Robot $100 grant
+    ...                                   Amount=100
+    ...                                   Account Name=${data}[contact][LastName] Household
+    ...                                   Do Not Automatically Create Payment=checked
+    Select Value From Dropdown            Stage    Awarded
+    Open Date Picker                      Close Date
+    Pick Date                             Today
+    Click Modal Button                    Save
     Wait Until Modal Is Closed
-    ${grant_name}    Get Main Header
-    Go To Object Home         Opportunity
-    Click Link    link=${grant_name} 
+    ${grant_name}                         Get Main Header
+    Go To Page                            Listing
+    ...                                   Opportunity
+    Click Link                            link=${grant_name}
