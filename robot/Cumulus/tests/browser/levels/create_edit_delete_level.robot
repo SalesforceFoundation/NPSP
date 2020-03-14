@@ -4,6 +4,7 @@ Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/ContactPageObject.py
 ...             robot/Cumulus/resources/LevelsPageObject.py
+...             robot/Cumulus/resources/CreateLevelPageObject.py
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
@@ -25,12 +26,10 @@ Create and edit level to verify fields
     [Documentation]                      Create a level and verify the fields on the created level details page
     ...                                  Edit the level details and update the fields. Verify the updated fields
     ...                                  are persisted on the details page.
-    [tags]                               W-038641                 feature:Levels    unstable
+    [tags]                               W-038641                 feature:Levels
 
-    Go To Page                                          Listing                            Level__c
-    Click Special Object Button                         New
-    Wait Until Loading Is Complete
-    Current Page Should Be                              Home                               Level__c
+    Go To Page                                       Listing                            Level__c
+    Navigate To Level Page                           create
 
     Enter Level Values
     ...                                                 Level Name=AutomationLevel
@@ -52,11 +51,8 @@ Create and edit level to verify fields
     Wait Until Loading Is Complete
     Navigate To And Validate Field Value                Minimum Amount (>\=)    contains    ${min_amount}
     Navigate To And Validate Field Value                Maximum Amount (<)      contains    ${max_amount}
-
-    Click Show More Actions Button                      Edit
-    Current Page Should Be                              Custom                             Level__c
-
-
+    Go To Page                                          Listing                            Level__c
+    Navigate To Level Page                              edit
     Enter Level Values
     ...                                                 Minimum Amount=${minamount_to_edit}
     ...                                                 Maximum Amount=${maxamount_to_edit}
@@ -82,7 +78,7 @@ Create and edit level to verify fields
     ...                                  Edit the smallestAmount value to a value greater than the limit threshold
     ...                                  Run the batch job and verify the correct levels are applied.
 
-    [tags]                                  W-038641                 feature:Level    unstable
+    [tags]                                  W-038641                 feature:Level
     # --------------------------------
     # update the SmallestGift field value to allow the level to be applied
     # --------------------------------
@@ -136,7 +132,7 @@ Create and edit level to verify fields
 
 3. Delete a Level
     [Documentation]                      Delete the Level from the levels listing page
-    [tags]                                  W-038641                 feature:Level    unstable
+    [tags]                                  W-038641                 feature:Level
 
     Go To Page                              Details
     ...                                     Level__c
