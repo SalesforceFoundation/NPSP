@@ -1,7 +1,7 @@
+from cumulusci.robotframework.pageobjects import HomePage
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
-from cumulusci.robotframework.pageobjects import HomePage
 from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
@@ -19,27 +19,25 @@ class LevelListPage(BaseNPSPPage, ListingPage):
         self.selenium.wait_until_location_contains("/list",timeout=60, message="Records list view did not load in 1 min")
         self.selenium.location_should_contain("Level__c",message="Current page is not Level List view")
 
-
-@pageobject("Details", "Level__c")
-class LevelDetailPage(BaseNPSPPage, DetailPage): 
-
-    def _is_current_page(self):
-        """ Verify we are on the Level detail page
-            by verifying that the url contains '/view'
+    def navigate_to_level_page(self,mode):
         """
-        self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail view did not open in 1 min")
-        self.selenium.location_should_contain("/lightning/r/",message="Current page is not Level record detail view")
-
-
-@pageobject("Home", "Level_c")
-class CreateLevelPage(BaseNPSPPage, HomePage):
-
-    def _is_current_page(self):
+        Navigate to create level or edit level mode from the list page based on the mode specified
+        Then wait for the iframe to load.
         """
-        Waits for the Levels iframe to load in the edit mode
-        """
+        if mode.lower() == "create":
+            self.npsp.click_special_object_button("New")
+
+        if mode.lower() == "edit":
+            drop_down = npsp_lex_locators['opportunities_dropdown'].format(1)
+            self.selenium.set_focus_to_element(drop_down)
+            self.selenium.wait_until_element_is_visible(drop_down)
+            self.selenium.click_element(drop_down)
+            self.selenium.wait_until_page_contains("Edit")
+            self.selenium.click_link("Edit")
+
         self.npsp.wait_for_locator('frame','Levels')
         self.npsp.choose_frame('Levels')
+
 
     @capture_screenshot_on_error
     def enter_level_values(self, **kwargs):
@@ -91,7 +89,14 @@ class CreateLevelPage(BaseNPSPPage, HomePage):
                 self.selenium.set_focus_to_element(locator)
                 self.selenium.select_from_list_by_label(loc,value)
                 self.selenium.wait_until_element_is_not_visible(spinner)
-    
-        
-        
-    
+
+@pageobject("Details", "Level__c")
+class LevelDetailPage(BaseNPSPPage, DetailPage): 
+
+    def _is_current_page(self):
+        """ Verify we are on the Level detail page
+            by verifying that the url contains '/view'
+        """
+        self.selenium.wait_until_location_contains("/view", timeout=60, message="Detail view did not open in 1 min")
+        self.selenium.location_should_contain("/lightning/r/",message="Current page is not Level record detail view")
+
