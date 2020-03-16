@@ -371,7 +371,6 @@ public class ALLO_AllocationsUtil {
             }
 
             recsForReview.oppsAllocations.put(opp.Id, new List<Allocation__c>());
-
             if (opp.npe03__Recurring_Donation__c != null) {
                 recurringDonationIds.add(opp.npe03__Recurring_Donation__c);
                 rdIdsByOppIds.put(opp.Id, opp.npe03__Recurring_Donation__c);
@@ -400,7 +399,7 @@ public class ALLO_AllocationsUtil {
             }
         }
 
-        List<Allocation__c> allocs = retrieveAllocations(oppIds, paymentsIds, recurringDonationIds, campaignIds);
+        List<Allocation__c> allocs = retrieveAllocations(oppIds, paymentsIds, campaignIds, recurringDonationIds);
         for (Allocation__c alloc : allocs) {
             recsForReview.addAllocationByType(alloc);
         }
@@ -524,14 +523,13 @@ public class ALLO_AllocationsUtil {
                 if (recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC)) {
                     continue;
                 }
-                List<Allocation__c> oppAllocations = oppsAllocations.get(opp.Id);
+                // Retrieve existing Payment Allocations, if present
                 List<Allocation__c> pmtAllocations = pmtsAllocations.get(payment.Id);
-                Decimal sourceAmount = getAmountFor(opp);
 
                 if (pmtAllocations == null || pmtAllocations.isEmpty()) {
                     // New Allocations to be copied from parent, or defaulted (part of #2, #3)
                     if (!recExclusions.hasExclusion(opp.Id, PROCESS_DEF.PMT_ALLOC_INITIALIZE)) {
-                        copyAllocationsToTarget(payment, sourceAmount, oppAllocations, allocResults, true, true);
+                        copyAllocationsToTarget(payment, getAmountFor(opp), oppsAllocations.get(opp.Id), allocResults, true, true);
                     }
                 } else {
                     // Existing Allocations and are to be resized, or cleared as necessary (#1, part of #2, #4)
@@ -781,11 +779,15 @@ public class ALLO_AllocationsUtil {
     public static void copyAllocationsToTarget(SObject targetObj, Decimal sourceAmount, List<Allocation__c> sourceAllocations, AllocationResults allocResults, Boolean copyInactiveAllocations, Boolean convertToPercentages) {
         Decimal amount = getAmountFor(targetObj);
 
+        Boolean isParentPayment = targetObj instanceOf npe01__OppPayment__c;
+
         // Allocations should not be copied to the target if the target object's amount is null
-        if (amount == null) {
+        if (amount == null && !isParentPayment) {
             return;
         }
 
+        // Convert Amount to 0.  Will only get here with null amount if Parent is a Payment
+        amount = (amount != null) ? amount : 0;
         List<Allocation__c> proposedAllocations = new List<Allocation__c>();
 
         if (sourceAllocations != null && sourceAllocations.size() > 0) {
@@ -1032,11 +1034,14 @@ public class ALLO_AllocationsUtil {
                 return;
             }
         }
+        Boolean nonDefaultAllocationsPresent = false;
 
         for (Allocation__c allocation : allocations.deepClone(true, true, true)) {
-            if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c) {
-                proposedAllocDeletes.add(allocation);
+            Boolean isDefaultAllocation = ALLOCATION_SETTINGS.Default_Allocations_Enabled__c && allocation.General_Accounting_Unit__c == ALLOCATION_SETTINGS.Default__c;
+            if (isDefaultAllocation) { // Default Allocations will be handled elsewhere
+                defaultAllocations.add(allocation);
             } else {
+                nonDefaultAllocationsPresent = true;
                 String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) allocation.get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
                 if (allocation.Percent__c != null && allocation.Percent__c < 0) {
                     allocResults.addError(getOpportunityIdFor(parentObj), assembleAllocationError(parentObj, allocation, Label.alloNegativePercent));
@@ -1068,7 +1073,11 @@ public class ALLO_AllocationsUtil {
             if (!proposedAllocDeletes.isEmpty()) {
                 allocResults.allocationsForDelete.addAll (proposedAllocDeletes);
             }
+            // Process Default Allocations
+            processDefaultAllocations(parentObj, parentAmount, parentCurrencyIsoCode, 0, nonDefaultAllocationsPresent, defaultAllocations, allocResults);
         }
+
+
     }
 
     /*******************************************************************************************************
@@ -1096,10 +1105,10 @@ public class ALLO_AllocationsUtil {
 
         Decimal defaultAllocationAmount = parentAmount - allocationTotalAmount;
 
-        if (defaultAllocationAmount == 0 && parentAmount == 0 && nonDefaultAllocationsPresent) {
+        if (nonDefaultAllocationsPresent && (defaultAllocationAmount == 0 || parentAmount == 0)) {
             // No default allocations should be present.  Parent is fully allocated.  Any existing defaults should be deleted.
             allocResults.allocationsForDelete.addAll(defaultAllocations);
-        } else if ((parentAmount > 0 && defaultAllocationAmount > 0) || (parentAmount < 0 && defaultAllocationAmount < 0)) {
+        } else if ((parentAmount >= 0 && defaultAllocationAmount >= 0) || (parentAmount < 0 && defaultAllocationAmount < 0)) {
             if (!defaultAllocations.isEmpty()) {
                 String allocCurrencyIsoCode = (IS_MULTICURRENCY_ORG) ? (String) defaultAllocations[0].get(UTIL_Query.CURRENCYISOCODE_FIELD) : null;
                 if (defaultAllocationAmount != defaultAllocations[0].Amount__c || parentCurrencyIsoCode != allocCurrencyIsoCode || defaultAllocations[0].Percent__c != null) {
@@ -1504,7 +1513,7 @@ public class ALLO_AllocationsUtil {
 
         if (ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) { // Only if Default Allocations are Enabled
             //  Check for a non null amount with no allocations.
-            if (amount != null && (allocations == null || allocations.size() == 0)) {
+            if ((amount != null || (amount == null && forPayment)) && (allocations == null || allocations.size() == 0)) {
                 return true;
             }
         }
@@ -1584,7 +1593,7 @@ public class ALLO_AllocationsUtil {
         // Clear out allocations by parent id, if they are not associated with at least one Opportunity tagged for review
         for (Id parentId :parentIdToOppIds.keySet()) {
             Set<Id> oppIds = parentIdToOppIds.get(parentId);
-            Set<Id> oppsForReviewIds = oppsById.keySet();
+
             if (!set1ContainsAnyInSet2(oppsById.keySet(), oppIds)) {
                 allocationsByParentId.remove(parentId);
             }
@@ -1754,7 +1763,7 @@ public class ALLO_AllocationsUtil {
     ********************************************************************************************************/
     @testVisible private static String assembleAllocationError(SObject parentObj, Allocation__c alloc, String message) {
         return Label.alloPaymentAllocationBatchAllocationError.replace('{obj_type}', getLabelFor(parentObj))
-                                                              .replace('{parent_Id}', (String) parentObj.Id)
+                                                              .replace('{parent_id}', (String) parentObj.Id)
                                                               .replace('{alloc_name}', alloc.Name)
                                                               .replace('{error}', message);
     }
