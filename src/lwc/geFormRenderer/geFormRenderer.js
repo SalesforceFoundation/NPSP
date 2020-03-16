@@ -1225,8 +1225,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @returns {string} card holder name
      */
     fabricateCardHolderName(fieldList){
-        let nameOnCard;
-        let fullName;
         let accountName = '';
         let firstName = '';
         let lastName = '';
@@ -1251,11 +1249,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
 
                 if (index === Object.keys(fieldList).length) {
-                    fullName = `${firstName}` + ' ' + `${lastName}`;
-                    nameOnCard = this.selectedDonorType ===
+                    return this.selectedDonorType ===
                     CONTACT_LAST_NAME_INFO.objectApiName ?
-                        fullName : accountName;
-                    return nameOnCard;
+                        `${firstName}` + ' ' + `${lastName}` : accountName;
                 }
             }
         }
