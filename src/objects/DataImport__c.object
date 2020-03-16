@@ -1275,6 +1275,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Payment_Declined_Reason__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Provides detail about why a transaction was declined.</inlineHelpText>
+        <label>Payment Declined Reason</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Payment_Method__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Payment.npe01__Payment_Method__c</inlineHelpText>
@@ -1291,6 +1302,17 @@
         <externalId>false</externalId>
         <inlineHelpText>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</inlineHelpText>
         <label>Payment Possible Matches</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Status__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The status of the transaction from Elevate. </inlineHelpText>
+        <label>Payment Status</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

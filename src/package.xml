@@ -1073,8 +1073,10 @@
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
+        <members>DataImport__c.Payment_Declined_Reason__c</members>
         <members>DataImport__c.Payment_Method__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
+        <members>DataImport__c.Payment_Status__c</members>
         <members>DataImport__c.Status__c</members>
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
