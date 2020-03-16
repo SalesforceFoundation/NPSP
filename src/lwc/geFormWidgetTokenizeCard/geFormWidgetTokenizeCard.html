@@ -18,9 +18,11 @@
                                            padding='around-small'>
                         <div class='iframe-container'>
                             <template if:true={isLoading}>
-                                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+                                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+                                </lightning-spinner>
                             </template>
-                            <iframe title={CUSTOM_LABELS.commonPaymentServices}
+                            <iframe class='payment-services-iframe'
+                                    title={CUSTOM_LABELS.commonPaymentServices}
                                     src={tokenizeCardPageUrl}
                                     data-id={CUSTOM_LABELS.commonPaymentServices}>
                             </iframe>
