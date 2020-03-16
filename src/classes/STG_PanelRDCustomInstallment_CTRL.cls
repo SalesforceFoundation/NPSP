@@ -110,6 +110,11 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
     * @return null
     */
     public PageReference deleteCi() {
+        if (!isRunningUserIsAdmin) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.stgDeletePermissionError));
+            return null;
+        }
+
         Savepoint sp = Database.setSavepoint();
         try {
             STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
@@ -145,4 +150,5 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         }
         private set;
     }
+
 }
