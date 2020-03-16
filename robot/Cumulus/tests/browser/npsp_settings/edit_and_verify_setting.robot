@@ -8,12 +8,15 @@ Suite Teardown  Delete Records and Close Browser
 
 Make Changes to Settings and Verify Changes
     [tags]  unstable
-    Select App Launcher Tab  NPSP Settings
-    #Sleep    3
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Choose Frame    Nonprofit Success Pack Settings
-    Click Link    link=People
-    Click Link    link=Account Model
+    Go To Page                                Custom          NPSP_Settings
+    Open Main Menu                            People
+    Click Link With Text                      Account Model
+    # Select App Launcher Tab  NPSP Settings
+    # #Sleep    3
+    # Wait For Locator    frame    Nonprofit Success Pack Settings
+    # Choose Frame    Nonprofit Success Pack Settings
+    # Click Link    link=People
+    # Click Link    link=Account Model
     Click Settings Button    idPanelCon    Edit
     Wait For Locator    npsp_settings.batch-button    idPanelCon    Save
     Select Value From List     Household Account Record Type       Organization
