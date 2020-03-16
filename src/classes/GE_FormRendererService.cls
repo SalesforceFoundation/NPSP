@@ -222,7 +222,7 @@ public with sharing class GE_FormRendererService {
         return null;
     }
 
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled(cacheable=true)
     public static List<Allocation__c> getDonationAllocations(Id donationId) {
         if(donationId == null) {
             return new List<Allocation__c>();
@@ -241,7 +241,7 @@ public with sharing class GE_FormRendererService {
     * selected Donor (Account or Contact)
     * @return JSON stringified Map<String, List<SObject>> of all openOpportunities for the given donor
     */
-    @AuraEnabled(Cacheable=true)
+    @AuraEnabled(cacheable=true)
     public static String getOpenDonations(Id donorId, String donorType) {
         if (donorId == null) {
             return null;
