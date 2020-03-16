@@ -853,7 +853,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
      
     @capture_screenshot_on_error                
     def wait_for_batch_to_process(self, batch,status):
-        """Checks every 30 secs for upto 7mins for batch with given status
+        """Checks every 30 secs for upto 9mins for batch with given status
         """
         i = 0
         sec=0
@@ -861,7 +861,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         error = npsp_lex_locators['batch_status'].format(batch,"Errors")
         while True:
             i += 1
-            if i > 14:
+            if i > 18:
                 self.selenium.capture_page_screenshot()
                 raise AssertionError("Timed out waiting for batch {} with status {} to load.".format(batch,status))
             elif self.check_if_element_exists(error):
@@ -1257,7 +1257,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.execute_javascript(javascript)
         self.npsp.click_button_with_value(value)
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None):
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None, recurringdonation_data=None):
         """ Creates an Account if account setup data is passed
             Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
@@ -1312,6 +1312,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 data[f"{name}_engagement"] = engagement
             else:
                 data[name] = engagement
+
+        if recurringdonation_data is not None:
+            recurringdonation_data.update( {'npe03__Contact__c' : data[name]["Id"] } )
+            rd_id = self.salesforce.salesforce_insert("npe03__Recurring_Donation__c", **recurringdonation_data)
+            recurringdonation = self.salesforce.salesforce_get("npe03__Recurring_Donation__c",rd_id)
+            data[f"{name}_rd"] = recurringdonation
 
         if opportunity_data is not None:
             # create opportunity
