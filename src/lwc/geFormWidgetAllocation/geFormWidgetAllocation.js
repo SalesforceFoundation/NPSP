@@ -80,7 +80,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }
         if(this.hasDefaultGAU) {
             this.addRows(
-                [this.getRow(true)]
+                [this.buildRow(true)]
             );
         }
     };
@@ -289,7 +289,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      */
     handleAddRow() {
         this.addRows(
-            [this.getRow(false)]
+            [this.buildRow(false)]
         );
     }
 
@@ -305,7 +305,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             if(record.isDefaultGAU) {
                 rows.push(record);
             } else {
-                rows.push(this.getRow(false, record));
+                rows.push(this.buildRow(false, record));
             }
         });
         this.rowList = this.rowList.concat(rows);
@@ -319,7 +319,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * @param properties {array} Array of record properties to add to the record object
      * @return Object representing a widget row
      */
-    getRow(isDefaultGAU, properties) {
+    buildRow(isDefaultGAU, properties) {
         let element = {};
         const record = { apiName: ALLOCATION_OBJECT.objectApiName, ...properties};
         let row = {};
