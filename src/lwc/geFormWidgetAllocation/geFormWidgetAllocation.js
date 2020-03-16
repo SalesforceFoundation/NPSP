@@ -328,7 +328,6 @@ export default class GeFormWidgetAllocation extends LightningElement {
             element.disabled = true;
             row.isDefaultGAU = true;
             record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
-            // this.rowList.push(row);
         } else {
             element.key = generateId();
         }
