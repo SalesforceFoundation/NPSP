@@ -1251,8 +1251,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
 
                 if (index === Object.keys(fieldList).length) {
-                    fullName = firstName + ' ' + lastName;
-                    nameOnCard = this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName ? fullName : accountName;
+                    fullName = `${firstName}` + ' ' + `${lastName}`;
+                    nameOnCard = this.selectedDonorType ===
+                    CONTACT_LAST_NAME_INFO.objectApiName ?
+                        fullName : accountName;
                     return nameOnCard;
                 }
             }

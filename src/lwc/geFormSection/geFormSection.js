@@ -197,16 +197,16 @@ export default class GeFormSection extends LightningElement {
 
 
     registerCreditCardWidget() {
-        if(!isUndefined(this.section)){
+        if (!isUndefined(this.section)) {
             this.section.elements.forEach(element => {
-                if(element.componentName === 'geFormWidgetTokenizeCard'){
+                if (element.componentName === 'geFormWidgetTokenizeCard') {
                     this.hasCreditCardWidget = true;
                 }
             })
         }
     }
 
-    handleChangeNameOnCardField(){
+    handleChangeNameOnCardField() {
         const changeNameOnCardFieldEvent = new CustomEvent(
             'changenameoncardfield'
         );
