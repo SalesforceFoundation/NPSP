@@ -37,6 +37,27 @@
 */
 public with sharing class GE_GiftEntryController {
 
+    @AuraEnabled(cacheable=true)
+    public static String getOrgDomain() {
+        String url = System.URL.getOrgDomainUrl().getHost();
+        String[] urlParts = url.split('\\.');
+
+        return urlParts[0];
+    }
+
+    @AuraEnabled
+    public static String makePurchaseCall(String token) {
+        GE_PaymentServices paymentServices = new GE_PaymentServices(token);
+        HttpResponse response = paymentServices.makePurchaseCall();
+
+        // Parse the JSON response...
+        if (response.getStatusCode() != 201) {
+            return JSON.serialize(response.getStatus());
+        } else {
+            return JSON.serialize(response.getBody());
+        }
+    }
+
     /*******************************************************************************************************
     * @description Creates an AuraHandledException with the specified error message
     *

@@ -283,6 +283,8 @@
         <members>GE_GiftEntry_UTIL</members>
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
+        <members>GE_PaymentServices</members>
+        <members>GE_PaymentServices_TEST</members>
         <members>GE_TemplateBuilderCtrl</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -646,6 +648,7 @@
         <members>CRLP_RollupRD_BTN</members>
         <members>CRLP_RollupSetup</members>
         <members>EP_ManageEPTemplate</members>
+        <members>GE_TokenizeCard</members>
         <members>HH_CampaignDedupeBTN</members>
         <members>HH_ManageHH</members>
         <members>HH_ManageHHAccount</members>

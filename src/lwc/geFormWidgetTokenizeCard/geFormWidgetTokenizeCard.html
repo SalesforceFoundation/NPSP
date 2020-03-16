@@ -1,21 +1,44 @@
 <template>
-    <lightning-layout vertical-align='center'>
+    <lightning-layout vertical-align='center'
+                      multiple-rows='true'>
+
         <lightning-layout-item size='12'
                                padding='horizontal-small'>
             <article class='credit-card-container slds-m-top_small'>
                 <lightning-layout vertical-align='center'
-                                  multiple-rows="true">
+                                  multiple-rows='true'>
+
                     <lightning-layout-item size='12'>
                         <div class='credit-card-header slds-p-vertical_small slds-p-horizontal_x-small'>
                             <h1 class="slds-text-body_regular">{tokenizeCardHeader}</h1>
                         </div>
                     </lightning-layout-item>
+
                     <lightning-layout-item size='12'
                                            padding='around-small'>
-                        <p>iFrame Placeholder</p>
+                        <div class='iframe-container'>
+                            <template if:true={isLoading}>
+                                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+                            </template>
+                            <iframe title={CUSTOM_LABELS.commonPaymentServices}
+                                    src={tokenizeCardPageUrl}
+                                    data-id={CUSTOM_LABELS.commonPaymentServices}>
+                            </iframe>
+                        </div>
                     </lightning-layout-item>
+
                 </lightning-layout>
             </article>
         </lightning-layout-item>
+
+        <!-- TODO: Remove lightning-layout-item later for dev only -->
+        <lightning-layout-item size='12'
+                               padding='around-small'>
+            <lightning-button label='Tokenize and Purchase, this can take up to 20 seconds'
+                              onclick={requestToken}>
+            </lightning-button>
+        </lightning-layout-item>
+        <!-- TODO: END -->
+
     </lightning-layout>
 </template>
