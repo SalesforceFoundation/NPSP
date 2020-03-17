@@ -32,17 +32,19 @@
 * @date 2020
 * @group HGE
 * @group-content ../../ApexDocContent/GiftEntry.htm
-* @description Provides a public interface to the Payment Services Integration Package
+* @description Test class for the PS_IntegrationService class
 */
-global class PS_IntegrationServices {
+
+@isTest
+private class PS_IntegrationService_TEST {
     
     /*******************************************************************************************************
-    * @description Provides an endpoint for the Payment Services Integrations package
-    * to call when a Customer registers, and pass parameters containing the secrets
-    * needed for calls to Payment Services endpoints(Tokenize, Purchase) and creating JWTs
-    * @param secrets contains secrets, such as the api key for creating a JWT
-    */
-    global static void setSecrets(Map<String, List<Map<String, String>>> secrets) {
-
+     * @description tests storing of the secrets we receive from the Payment Services
+     * Integrations package
+     */
+    @isTest
+    private static void setConfigurationTest() {
+        // TODO This method can be implemented after the setConfiguration method is implemented
+         
     }
 }
