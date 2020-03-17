@@ -1369,8 +1369,6 @@ public class ALLO_AllocationsUtil_TEST {
         return null;
     }
 
-    // TODO: Add Multicurrency Tests to run conditionally
-
     // TODO: Method: processAllocationResults (also will cover processAllocationDeleteResults, processAllocationInsertResults, processAllocationUpdateResults, processFunctionalErrors)
     // Pass Allocation Records, To be Inserted, Updated, and Deletes, as well as functional errors to be added
     // Must have a populated RecordsForReview object with the records that will be updated
@@ -1638,6 +1636,56 @@ public class ALLO_AllocationsUtil_TEST {
     // Validate that Only Allocations Associated with a Payment can be negative
     // Validate that Allocation cannot have a negative percent
 
+    @isTest private static void confirmInvalidAllocationReturnErrors() {
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert ctcs;
+
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 20, null, null);
+
+        insert opps;
+
+        List<npe01__OppPayment__c> pmts = [SELECT   Id,
+                                                    npe01__Opportunity__c
+                                           FROM npe01__OppPayment__c];
+
+        Id oppId = opps[0].Id;
+        Id pmtId = pmts[0].Id;
+
+        List<Allocation__c> testAllos = new List<Allocation__c> {
+            new Allocation__c (Opportunity__c = oppId, Percent__c = 50),
+            new Allocation__c (Payment__c = pmtId, Amount__c = -100),
+            new Allocation__c (Payment__c = pmtId, Opportunity__c = oppId, Amount__c = 100 ),
+            new Allocation__c (Opportunity__c = oppId),
+            new Allocation__c (Opportunity__c = oppId, Amount__c = -100),
+            new Allocation__c (Opportunity__c = oppId, Amount__c = 100, Percent__c = -100)
+        };
+
+        List<Integer> testResults = new List<Integer> {
+            0,
+            0,
+            1,
+            1,
+            1,
+            1
+        };
+
+        List<SObject> testParentSobjs = new List<SObject> {
+            opps[0],
+            pmts[0],
+            pmts[0],
+            opps[0],
+            opps[0],
+            opps[0]
+        };
+
+        for (Integer i = 0; i < testAllos.size(); i++) {
+            SObject parentObj = testParentSObjs[i];
+            List<String> errors = ALLO_AllocationsUtil.validateAllocation(parentObj,testAllos[i]);
+            System.assertEquals(testResults[i], errors.size(), 'Validation Test # ' + (i + 1));
+        }
+
+    }
+
     /***************************
      * Helper Methods - Error Tests
      ***************************/
@@ -1652,19 +1700,58 @@ public class ALLO_AllocationsUtil_TEST {
      * Helper Methods - General Tests
      ***************************/
 
-    // TODO: Method: getOpportunityIdFor
-    // Confirm it returns the Record Id if it is passed an Opportunity Id or the value in the field npe01__Opportunity__c if passed a payment
+    /**
+     * @description Confirm it returns the Opportunity Id for the Object Passed to It
+     *              [ALLO_AllocationsUtil.getOpportunityIdFor]
+     */
+    @isTest private static void confirmGetOpportunityIdForReturnsTheOpportunityIdAssociatedWiththeTheObject() {
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert ctcs;
 
-    // TODO: Method: getAmountFor
-    // Confirm it returns the value in the Amount field if passed an Opportunity, and the value in npe01__Payment_Amount__c if passed a Payment
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 20, null, null);
 
-    // TODO: Method: getLabelFor, getOpportunityLabel, getPaymentLabel
-    // Confirm it returns the Opportunity Label if passed an Opportunity Record, and the Payment Label if Passed a Payment object
-    // Note: Describe call is only done once
+        insert opps;
 
-    // TODO: Method: getAllocationLabel
-    // Confirm it returns the Allocation Object Label
-    // Note: Describe call is only done once
+        List<npe01__OppPayment__c> pmts = [SELECT   Id,
+                                                    npe01__Opportunity__c
+                                           FROM npe01__OppPayment__c];
+
+        System.assertEquals(opps[0].Id, ALLO_AllocationsUtil.getOpportunityIdFor(opps[0]), 'Opportunity Id for Opportunity');
+        System.assertEquals(opps[0].Id, ALLO_AllocationsUtil.getOpportunityIdFor(pmts[0]), 'Opportunity Id associated with Payment');
+        System.assertEquals(null, ALLO_AllocationsUtil.getOpportunityIdFor(ctcs[0]), 'Other Objects will return null');
+    }
+
+    /**
+     * @description Confirm it returns the right Amount depending on whether the Opportunity or the Payment is passed.
+     *              [ALLO_AllocationsUtil.getAmountFor]
+     */
+    @isTest private static void confirmGetAmountForReturnsTheCorrectAmountDependingOnTheObject() {
+        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert ctcs;
+
+        Opportunity testOpportunity = new Opportunity(
+            Amount = 1000
+        );
+
+        npe01__OppPayment__c testPayment = new npe01__OppPayment__c(
+            npe01__Payment_Amount__c = 200
+        );
+
+
+        System.assertEquals(testPayment.npe01__Payment_Amount__c, ALLO_AllocationsUtil.getAmountFor(testPayment), 'Confirm getAmountFor with Payment');
+        System.assertEquals(testOpportunity.Amount, ALLO_AllocationsUtil.getAmountFor(testOpportunity), 'Confirm getAmountFor with Opportunity');
+        System.assertEquals(null, ALLO_AllocationsUtil.getAmountFor(ctcs[0]), 'Confirm getAmountFor With Unsupported Object');
+    }
+
+    /**
+     * @description Confirm it returns the right Label for each of the supported objects
+     *              [ALLO_AllocationsUtil.getLabelFor]
+     */
+    @isTest private static void confirmGetLabelForReturnsTheCorrectLabelDependingOnTheObject() {
+        System.assertEquals(UTIL_Describe.getObjectLabel('Allocation__c'), ALLO_AllocationsUtil.getLabelFor(new Allocation__c()), 'Allocation Label');
+        System.assertEquals(UTIL_Describe.getObjectLabel('Opportunity'), ALLO_AllocationsUtil.getLabelFor(new Opportunity()), 'Opportunity Label');
+        System.assertEquals(UTIL_Describe.getObjectLabel('npe01__OppPayment__c'), ALLO_AllocationsUtil.getLabelFor(new npe01__OppPayment__c()), 'Payment Label');
+    }
 
     /***************************
      * Helper Methods - Callable Support
@@ -2182,7 +2269,6 @@ public class ALLO_AllocationsUtil_TEST {
             )
         );
 
-
         // Opportunity 8 Allocation(s) - Opportunity with null Amount
         //      If Default Allocations Enabled, non zero fixed amount for Default Allocation
         //      If Default Allocations Disabled non zero amount with percent value for gau 2
@@ -2251,7 +2337,6 @@ public class ALLO_AllocationsUtil_TEST {
     private static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Decimal percentage, Id gauId, String message) {
         assertAllocation(alloc, opportunityId, null, null, null, amount, percentage, null, gauId, message);
     }
-
 
     /*******************************************************************************************************
     * @description Asserts the various expected field values of an Opportunity Allocation__c record
@@ -2495,11 +2580,11 @@ public class ALLO_AllocationsUtil_TEST {
         return errsByRecordId;
     }
 
-        /*******************************************************************************************************
-        * @description Inner class to facilitate applying different configuration/environmental options for
-        *              Test execution
-        ********************************************************************************************************/
-        public class AllocationSetupTest {
+    /*******************************************************************************************************
+    * @description Inner class to facilitate applying different configuration/environmental options for
+    *              Test execution
+    ********************************************************************************************************/
+    public class AllocationSetupTest {
 
         private List<General_Accounting_Unit__c> gaus = null;
         private General_Accounting_Unit__c defaultGAU = null;
