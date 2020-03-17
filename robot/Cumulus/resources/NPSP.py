@@ -890,6 +890,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def click_settings_button (self,panel_id,btn_value):  
         """clicks on the buttons on npsp settings object using panel id and button value"""      
         locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
+        self.selenium.wait_until_element_is_visible(locator, timeout=60)
         self.selenium.click_element(locator)   
 
     def verify_payment_details(self):
