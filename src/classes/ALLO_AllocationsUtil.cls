@@ -378,7 +378,6 @@ public class ALLO_AllocationsUtil {
      *        it to the caller.
      ********************************************************************************************************/
     public static Set<Id> processRecords(String processName, Set<Id> oppIds, ERR_RecordError recErrs, Datetime boundary, Boolean disableAllocationTriggers, Boolean commitAndClearRecordErrors) {
-
         ALLO_AllocationsUtil.RecordsForReview recs = ALLO_AllocationsUtil.determineRecordsRequiringReview(processName, oppIds, boundary, recErrs);
 
         if (disableAllocationTriggers) {
@@ -511,7 +510,6 @@ public class ALLO_AllocationsUtil {
         }
 
         recsForReview.initializeErrors(processName, recErrs);
-
         recsForReview.recErrs.retrieveExistingErrorsFor(sObjs);
 
         return recsForReview;
@@ -636,7 +634,6 @@ public class ALLO_AllocationsUtil {
      * @param RecordExclusions recExclusions Map of records to any exclusions they might have
      ********************************************************************************************************/
     public static void processAllocationResults(PROCESS_DEF process, AllocationResults allocResults, RecordsForReview recs, RecordExclusions recExclusions) {
-
         // These are shells to pass to the ERR_RecordError addDML Errors method, so it can set the Object Type
         SObject oppObjType = new Opportunity();
         SObject paymentObjType = new npe01__OppPayment__c();
@@ -984,7 +981,6 @@ public class ALLO_AllocationsUtil {
      *        added
      ********************************************************************************************************/
     public static void resizeAllocationsAsNeeded(SObject parentObj, List<Allocation__c> allocations, AllocationResults allocResults) {
-
         Decimal sumOfAllocations = 0;
         Decimal totalOfPercentages = 0;
         Decimal parentAmount = getAmountFor(parentObj);
@@ -1179,7 +1175,6 @@ public class ALLO_AllocationsUtil {
      *        added
      ********************************************************************************************************/
     @testVisible private static void processDefaultAllocations(SObject parentObj, Decimal parentAmount, String parentCurrencyIsoCode, Decimal allocationTotalAmount, Boolean nonDefaultAllocationsPresent, List<Allocation__c> defaultAllocations, AllocationResults allocResults) {
-
         // Skip all processing of Default Allocations if they are not enabled
         if (!ALLOCATION_SETTINGS.Default_Allocations_Enabled__c) {
             return;
@@ -1219,7 +1214,6 @@ public class ALLO_AllocationsUtil {
      * @return Allocation__c A Default Allocation for the amount specified
      ********************************************************************************************************/
     public static Allocation__c makeDefaultAllocation(SObject parentSObj, Decimal amount) {
-
         Id opportunityId = (parentSObj instanceOf Opportunity) ? parentSObj.Id : null;
         Id paymentId = (parentSObj instanceOf npe01__OppPayment__c) ? parentSObj.Id : null;
 
@@ -1847,5 +1841,4 @@ public class ALLO_AllocationsUtil {
     @testVisible private static String getLabelFor(SObject sObj) {
         return (sObj instanceOf Opportunity) ? OPP_OBJ_LABEL : ((sObj instanceOf npe01__OppPayment__c) ? PMT_OBJ_LABEL : ((sObj instanceOf Allocation__c) ? ALLOC_OBJ_LABEL : ''));
     }
-
 }

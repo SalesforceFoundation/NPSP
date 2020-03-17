@@ -41,14 +41,19 @@ public class ALLO_AllocationsUtil_TEST {
     private static final String ALLO_VALIDATE_CONFIG_ACTION = 'ALLO.ValidatePmtAllocationConfig';
     private static final String ALLO_PROCESS_OPPS_PMTS_ACTION = 'ALLO.ProcessOppsAndPmts';
 
+    // Number of Contacts and Opportunities to Create In the Main Create Test Data Method
     private static final Integer NUMBER_OF_CONTACTS_AND_OPPORTUNITIES = 14;
+
     /*******************************************************************************************************
      * RecordExclusions Inner Class Tests
      ********************************************************************************************************/
 
-    /* @description Test 1 - Add Exclusion (Add and Confirm Individal Exlusions
-                    [ALLO_AllocationsUtil.RecordExclusions.addExclusion] */
-    @isTest private static void addIndividualRecordExclusions() {
+    /**
+     * @description Test 1 - Add Exclusion (Add and Confirm Individal Exlusions
+     *              [ALLO_AllocationsUtil.RecordExclusions.addExclusion]
+     */
+    @isTest
+    private static void addIndividualRecordExclusions() {
         ALLO_AllocationsUTIL.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
@@ -76,11 +81,12 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(2, excls.size(), '# of Exclusions Present after adding same exclusion again');
     }
 
-
-    /* @description Test 2 - Add Set of Exclusions) (Add Set of Exclusions and Confirm)
-                    [ALLO_AllocationsUtil.RecordExclusions.addExclusions] */
-    @isTest private static void addSetOfRecordExclusions() {
-
+    /**
+     * @description Test 2 - Add Set of Exclusions) (Add Set of Exclusions and Confirm)
+     *              [ALLO_AllocationsUtil.RecordExclusions.addExclusions]
+     */
+    @isTest
+    private static void addSetOfRecordExclusions() {
         ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
@@ -103,10 +109,12 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE + ' should be present');
     }
 
-     /* @description Test 3 - Verify Exclusion via "Has Exclusion"
-                     [ALLO_AllocationsUtil.RecordExclusions.hasExclusion] */
-    @isTest private static void addExclusionsAndConfirmHasExclusions() {
-
+     /**
+      * @description Test 3 - Verify Exclusion via "Has Exclusion"
+      *              [ALLO_AllocationsUtil.RecordExclusions.hasExclusion]
+      */
+    @isTest
+    private static void addExclusionsAndConfirmHasExclusions() {
         ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
@@ -117,10 +125,12 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.ALL), 'Exclusion should not be present for' + ALLO_AllocationsUtil.PROCESS_DEF.ALL);
     }
 
-    /* @description Test 4 - Verify Has No Exclusions is true when no exclusions are present. call
-                    [ALLO_AllocationsUtil.RecordExclusions.hasNoExclusions] */
-    @isTest private static void confirmHasNoExclusionsIsTrueWhenExclusionsAreNotPresentAndIsFalseWhenPresent() {
-
+    /**
+     * @description Test 4 - Verify Has No Exclusions is true when no exclusions are present. call
+     *               [ALLO_AllocationsUtil.RecordExclusions.hasNoExclusions]
+     */
+    @isTest
+    private static void confirmHasNoExclusionsIsTrueWhenExclusionsAreNotPresentAndIsFalseWhenPresent() {
         ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
@@ -135,10 +145,13 @@ public class ALLO_AllocationsUtil_TEST {
     /*******************************************************************************************************
      * AllocationResults Inner Class Tests
      ********************************************************************************************************/
-    /* @description Test 1 - Test Add an Error
-                    [ALLO_AllocationsUtil.AllocationResults.addError] */
-    @isTest private static void addErrorsIndividuallyToTheAllocationsResultsAndConfirmResult() {
 
+     /**
+      * @description Test 1 - Test Add an Error
+      *              [ALLO_AllocationsUtil.AllocationResults.addError]
+      */
+    @isTest
+    private static void addErrorsIndividuallyToTheAllocationsResultsAndConfirmResult() {
         ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
@@ -154,10 +167,12 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals (false, allocResults.errorsByRecordId.containsKey(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
     }
 
-    /* @description Test 2 - Test Add Errors
-                    [ALLO_AllocationsUtil.AllocationResults.addAllErrors] */
-    @isTest private static void addMultipleErrorsToTheAllocationsResultsAndConfirmResult() {
-
+    /**
+     * @description Test 2 - Test Add Errors
+     *              [ALLO_AllocationsUtil.AllocationResults.addAllErrors]
+     */
+    @isTest
+    private static void addMultipleErrorsToTheAllocationsResultsAndConfirmResult() {
         ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
@@ -177,10 +192,12 @@ public class ALLO_AllocationsUtil_TEST {
      * RecordsForReview Inner Class Tests
      ********************************************************************************************************/
 
-    /* @description Test 1 - Test adding different types of Allocations
-                    [ALLO_AllocationsUtil.RecordsForReview.addAllocationByType] */
-    @isTest private static void addAllocationByTypeToRecordsForReviewAndConfirmAddedToCorrectList() {
-
+    /**
+     * @description Test 1 - Test adding different types of Allocations
+     *               [ALLO_AllocationsUtil.RecordsForReview.addAllocationByType]
+     */
+    @isTest
+    private static void addAllocationByTypeToRecordsForReviewAndConfirmAddedToCorrectList() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
         .enableDefaultAllocations()
         .enablePaymentAllocations()
@@ -286,31 +303,14 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(2, recsForRev.campaignAllocations.get(cam.Id).size(), 'Campaign Allocation List Size after Second Add');
         System.assertEquals (allosForInsert[6].Id, recsForRev.campaignAllocations.get(cam.Id)[0].Id, 'Campaign Allocation 0');
         System.assertEquals (allosForInsert[7].Id, recsForRev.campaignAllocations.get(cam.Id)[1].Id, 'Campaign Allocation 1');
-
     }
 
-    /*******************************************************************************************************
-    * @description Asserts the list sizes for each of the allocations list in the RecordsForReview
-    *              class
-    * @param recsForRev A populated Record For Review Structure
-    * @param addtlMsg Text that will be displayed in addition to the list type if an assert fails
-    * @param oppsAllocSize The exepected size of the Opportunity Allocations Map
-    * @param pmtAllocSize The expected size of the Payment Allocations Map
-    * @param rdAllocSize The expected size of the Recurring Donations Allocations Map
-    * @param campAllocSize The expected size of the Campaign Allocations Map
-    ********************************************************************************************************/
-    private static void assertRecsForReviewAllocations(ALLO_AllocationsUtil.RecordsForReview recsForRev, String addtlMsg, Integer oppsAllocSize, Integer pmtAllocSize, Integer rdAllocSize, Integer campAllocSize) {
-        System.assertEquals (oppsAllocSize, recsForRev.oppsAllocations.size(), addtlMsg + ': Opportunity Allocations Map Size');
-        System.assertEquals (pmtAllocSize, recsForRev.paymentAllocations.size(), addtlMsg + ': Payment Allocations Map Size');
-        System.assertEquals (rdAllocSize, recsForRev.recurringDonationAllocations.size(), addtlMsg + ': Recurring Donation Allocations Map Size');
-        System.assertEquals (campAllocSize, recsForRev.campaignAllocations.size(), addtlMsg + ': Campaign Allocations Map Size');
-
-    }
-
-   /* @Description Test 2 - Test method to identify Opportunities require Review
-                   [ALLO_AllocationsUtil.RecordsForReview.isOpportunityRequiresReview] */
-    @isTest private static void confirmReturnsTrueWhenOpportunityRequiresReviewAndFalseOtherwise() {
-
+   /**
+    * @Description Test 2 - Test method to identify Opportunities require Review
+    *              [ALLO_AllocationsUtil.RecordsForReview.isOpportunityRequiresReview]
+    */
+    @isTest
+    private static void confirmReturnsTrueWhenOpportunityRequiresReviewAndFalseOtherwise() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
         .enableDefaultAllocations()
         .enablePaymentAllocations()
@@ -336,7 +336,6 @@ public class ALLO_AllocationsUtil_TEST {
 
         Campaign cam = new Campaign(Name='Test Campaign: ' + UTIL_UnitTestData_TEST.getUniqueString(), IsActive=true);
         insert cam;
-
 
         List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
         insert ctcs;
@@ -370,14 +369,15 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals (false, recsForRev.isOpportunityWithParentAndNoAllocations(opps[0]), '1st Opportunity should have parent and Amount and allocations');
         System.assertEquals (true, recsForRev.isOpportunityWithParentAndNoAllocations(opps[1]), '2nd Opportunity should have parent and Amount and no allocations');
         System.assertEquals (false, recsForRev.isOpportunityWithParentAndNoAllocations(opps[2]), '3rd Opportunity should have no parent And Amount and no allocations');
-
     }
 
-    /* @description Test 3 - Test initialize Errors [ALLO_AllocationsUtil.RecordsForReview.initializeErrors]
-        // Should test both passing in an existing ERR_RecordErrors instance, and initializing from the Opportunities
-        // in the RecordsForReview variable oppsById */
-    @isTest private static void initializeErrorsStructureSuccessfully() {
-
+    /**
+     * @description Test 3 - Test initialize Errors [ALLO_AllocationsUtil.RecordsForReview.initializeErrors]
+     *              Should test both passing in an existing ERR_RecordErrors instance, and initializing from the Opportunities
+     *              in the RecordsForReview variable oppsById
+     */
+    @isTest
+    private static void initializeErrorsStructureSuccessfully() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
@@ -414,21 +414,22 @@ public class ALLO_AllocationsUtil_TEST {
         recsForRev2.initializeErrors('Test', null);
 
         System.assertNotEquals(null, recsForRev2.recErrs.get(opps[0].Id), 'Error For First Opportunity should be present (retrieved from Error__c object)');
-
     }
 
     /*******************************************************************************************************
      * Main Class Tests [Critical Path is covering as many as possible in this section]
      ********************************************************************************************************/
+
     //TODO: Method: determineRecordsRequiringReview, isRequiresReview, isExcluded, getExcludedOpportunityRecordtypes, getExcludedOpportunityTypes
+
     /**
      * @description Test 1 - Confirm  that isExcluded returns true for Opportunites that should be excluded based on type and
      *              false for ones that should not be excluded.
      *              [ALLO_AllocationsUtil.isExcluded, ALLO_AllocationsUtil.getExcludedOpportunityRecordTypes,
      *               ALLO_AllocationsUtil.getExcludedOpportunityTypes]
      */
-    @isTest private static void excludeOpportunitiesForTypeAndRecordtype() {
-
+    @isTest
+    private static void excludeOpportunitiesForTypeAndRecordtype() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
@@ -468,7 +469,6 @@ public class ALLO_AllocationsUtil_TEST {
         for (Integer i = 0; i < oppsToTest.size(); i++) {
             System.assertEquals(expectedResults[i], ALLO_AllocationsUtil.isExcluded(oppsToTest[i]), 'Opportunity with Type value of \'' + oppsToTest[i].Type + '\' and RecordtypeId value of ' + oppsToTest[i].RecordtypeId + ' should be ' + (expectedResults[i] ? 'excluded' : 'included'));
         }
-
     }
 
     /**
@@ -488,8 +488,8 @@ public class ALLO_AllocationsUtil_TEST {
      *                           Allocations are not flagged for review
      *              [ALLO_AllocationsUtil.isRequiresReview]
      */
-    @isTest private static void confirmOnlyOppsNeedingReviewAreFlaggedWhenDefaultAllocEnabled() {
-
+    @isTest
+    private static void confirmOnlyOppsNeedingReviewAreFlaggedWhenDefaultAllocEnabled() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
@@ -556,7 +556,6 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp6pmt0, recsForRev.paymentAllocations.get(opp6pmt0.Id), System.now().addDays(1)), 'Opportunity 6 - Payment 0, boundary date of tomorrow');
         // Confirm Opportunity with Payments with non null/zero Amount and valid Allocations are not flagged for review
         System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp7.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp7.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 7 - Payment 0, boundary date of tomorrow');
-
     }
 
     /**
@@ -577,8 +576,8 @@ public class ALLO_AllocationsUtil_TEST {
 
      *              [ALLO_AllocationsUtil.isRequiresReview]
      */
-    @isTest private static void confirmOnlyOppsNeedingReviewAreFlaggedWhenDefaultAllocNotEnabled() {
-
+    @isTest
+    private static void confirmOnlyOppsNeedingReviewAreFlaggedWhenDefaultAllocNotEnabled() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .disableAllocationTriggers()
             .applyConfiguration();
@@ -634,11 +633,10 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp6.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp6.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 6 - Payment 0, boundary date of tomorrow');
         // Confirm Opportunity with Payments with non null/zero Amount and valid Allocations are not flagged for review
         System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp7.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp7.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 7 - Payment 0, boundary date of tomorrow');
-
     }
 
     // [DEFERRED] isRequiresReview: Confirm that Opportunities with Allocations Modified Since Boundary are flagged for review
-        // (TODO: Determine viable approach...Difficult to make work with limitations of setting LastModified versus boundary date in tests distinct for Allocations versus Opportunity)
+    // TODO: Determine viable approach...Difficult to make work with limitations of setting LastModified versus boundary date in tests distinct for Allocations versus Opportunity
 
     /**
      * @description Executes various Opportunity and Payment Allocation Scenarios when
@@ -893,14 +891,12 @@ public class ALLO_AllocationsUtil_TEST {
         if (alloSetupTest.isPaymentAllocationsEnabled()) {
             assertPaymentAllocationsAfterProcessing(allocsByPmtId, oppIds, gaus, defaultGAU);
         }
-
     }
 
     /**
      * @description Executes various Opportunity and Payment Allocation Scenarios when
      *              Payment and Default Allocations are not
      *              [ALLO_AllocationsUtil.processOpportunityAllocations]
-     *
      */
     @isTest
     private static void confirmProcessRecordsUpdatesAllocationsCorrectlyWhenDefaultAllocationsAreNotEnabled() {
@@ -1135,7 +1131,15 @@ public class ALLO_AllocationsUtil_TEST {
         assertCampaignAllocation(findByGAU(campAllocs, gaus[1]), campaignId, 10, null, gaus[1].Id, message + ' - Allocation 0');
     }
 
-
+     /**
+     * @description Asserts that the Payment Allocations are correct before processing (called
+     *              from confirmProcessRecordsUpdatesAllocationsCorrectlyWhenPaymentAllocationsAreEnabled)
+     *              This is so that we can make sure nothing else is modifying them on insertion
+     * @param allocsByPmtId A map of a list of Payment Allocations, organized by Payment Id
+     * @param oppIds The Opportunity Ids used in the test, in insertion order
+     * @param gaus The list of test gaus in insertion order
+     * @param defaultGAU The default GAU
+     */
     private static void assertPaymentAllocationsBeforeProcessing(Map<Id, List<Allocation__c>> allocsByPmtId, List<Id> oppIds, List<General_Accounting_Unit__c> gaus, General_Accounting_Unit__c defaultGAU) {
         Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>([SELECT    Id,
                                                                             (SELECT     Id
@@ -1242,7 +1246,14 @@ public class ALLO_AllocationsUtil_TEST {
         assertPaymentAllocation(findByGAU(allocs, gaus[1]), pmts[0].Id, 10, 100, gaus[1].Id, message + ' - Allocation 0');
     }
 
-
+     /**
+     * @description Asserts that the Payment Allocations are correct after processing (called
+     *              from confirmProcessRecordsUpdatesAllocationsCorrectlyWhenPaymentAllocationsAreEnabled)
+     * @param allocsByPmtId A map of a list of Payment Allocations, organized by Payment Id
+     * @param oppIds The Opportunity Ids used in the test, in insertion order
+     * @param gaus The list of test gaus in insertion order
+     * @param defaultGAU The default GAU
+     */
     private static void assertPaymentAllocationsAfterProcessing(Map<Id, List<Allocation__c>> allocsByPmtId, List<Id> oppIds, List<General_Accounting_Unit__c> gaus, General_Accounting_Unit__c defaultGAU) {
         Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>([SELECT    Id,
                                                                             (SELECT     Id
@@ -1420,8 +1431,8 @@ public class ALLO_AllocationsUtil_TEST {
      * @description Confirm retrieves Opportunity and Payment Data for the the Opportunity Ids specified
      *              [ALLO_AllocationsUtil.retrieveOpportunities]
      */
-    @isTest private static void confirmOpportunitiesInSetAreRetrievedSuccessfully() {
-
+    @isTest
+    private static void confirmOpportunitiesInSetAreRetrievedSuccessfully() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .disableAllocationTriggers()
@@ -1496,8 +1507,8 @@ public class ALLO_AllocationsUtil_TEST {
      *              Campaigns specified (via Ids)
      *              [ALLO_AllocationsUtil.retrieveAllocations]
      */
-    @isTest private static void confirmAllocationsAreRetrievedSuccessfully() {
-
+    @isTest
+    private static void confirmAllocationsAreRetrievedSuccessfully() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
@@ -1636,7 +1647,12 @@ public class ALLO_AllocationsUtil_TEST {
     // Validate that Only Allocations Associated with a Payment can be negative
     // Validate that Allocation cannot have a negative percent
 
-    @isTest private static void confirmInvalidAllocationReturnErrors() {
+    /**
+     * @description Confirms that the Validate Allocation Method returns the errors for the scenarios that should error, and
+     *              an empty list if no validation errors are present
+     */
+    @isTest
+    private static void confirmInvalidAllocationReturnErrors() {
         List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert ctcs;
 
@@ -1683,12 +1699,11 @@ public class ALLO_AllocationsUtil_TEST {
             List<String> errors = ALLO_AllocationsUtil.validateAllocation(parentObj,testAllos[i]);
             System.assertEquals(testResults[i], errors.size(), 'Validation Test # ' + (i + 1));
         }
-
     }
 
-    /***************************
+    /******************************************************
      * Helper Methods - Error Tests
-     ***************************/
+     ******************************************************/
 
     // TODO: Method: assembleAllocationError
     // Confirm it builds a properly formatted error message (associated with a parent and allocation)
@@ -1696,15 +1711,16 @@ public class ALLO_AllocationsUtil_TEST {
     // TODO: Method: assembleRecordError
     // Confirm it builds a properly formatted error message (associated with a parent)
 
-    /***************************
+    /******************************************************
      * Helper Methods - General Tests
-     ***************************/
+     ******************************************************/
 
     /**
      * @description Confirm it returns the Opportunity Id for the Object Passed to It
      *              [ALLO_AllocationsUtil.getOpportunityIdFor]
      */
-    @isTest private static void confirmGetOpportunityIdForReturnsTheOpportunityIdAssociatedWiththeTheObject() {
+    @isTest
+    private static void confirmGetOpportunityIdForReturnsTheOpportunityIdAssociatedWiththeTheObject() {
         List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert ctcs;
 
@@ -1725,7 +1741,8 @@ public class ALLO_AllocationsUtil_TEST {
      * @description Confirm it returns the right Amount depending on whether the Opportunity or the Payment is passed.
      *              [ALLO_AllocationsUtil.getAmountFor]
      */
-    @isTest private static void confirmGetAmountForReturnsTheCorrectAmountDependingOnTheObject() {
+    @isTest
+    private static void confirmGetAmountForReturnsTheCorrectAmountDependingOnTheObject() {
         List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert ctcs;
 
@@ -1737,7 +1754,6 @@ public class ALLO_AllocationsUtil_TEST {
             npe01__Payment_Amount__c = 200
         );
 
-
         System.assertEquals(testPayment.npe01__Payment_Amount__c, ALLO_AllocationsUtil.getAmountFor(testPayment), 'Confirm getAmountFor with Payment');
         System.assertEquals(testOpportunity.Amount, ALLO_AllocationsUtil.getAmountFor(testOpportunity), 'Confirm getAmountFor with Opportunity');
         System.assertEquals(null, ALLO_AllocationsUtil.getAmountFor(ctcs[0]), 'Confirm getAmountFor With Unsupported Object');
@@ -1747,23 +1763,24 @@ public class ALLO_AllocationsUtil_TEST {
      * @description Confirm it returns the right Label for each of the supported objects
      *              [ALLO_AllocationsUtil.getLabelFor]
      */
-    @isTest private static void confirmGetLabelForReturnsTheCorrectLabelDependingOnTheObject() {
+    @isTest
+    private static void confirmGetLabelForReturnsTheCorrectLabelDependingOnTheObject() {
         System.assertEquals(UTIL_Describe.getObjectLabel('Allocation__c'), ALLO_AllocationsUtil.getLabelFor(new Allocation__c()), 'Allocation Label');
         System.assertEquals(UTIL_Describe.getObjectLabel('Opportunity'), ALLO_AllocationsUtil.getLabelFor(new Opportunity()), 'Opportunity Label');
         System.assertEquals(UTIL_Describe.getObjectLabel('npe01__OppPayment__c'), ALLO_AllocationsUtil.getLabelFor(new npe01__OppPayment__c()), 'Payment Label');
     }
 
-    /***************************
+    /******************************************************
      * Helper Methods - Callable Support
-     ***************************/
+     ******************************************************/
 
     /*******************************************************************************************************
-    * @description - Test calling ALLO_UpdPaymentAllocations_BATCH via the Callable_Api class. Assert that
-    * an opportunity is processed when meeting the criteria and excluded when the criteria are not met. Also
-    * ensure that a default allocation is created for any unallocated amount.
-    ********************************************************************************************************/
-    @isTest private static void processOppsAndPaymentAllocationsViaCallableApi() {
-
+     * @description - Test calling ALLO_UpdPaymentAllocations_BATCH via the Callable_Api class. Assert that
+     * an opportunity is processed when meeting the criteria and excluded when the criteria are not met. Also
+     * ensure that a default allocation is created for any unallocated amount.
+     ********************************************************************************************************/
+    @isTest
+    private static void processOppsAndPaymentAllocationsViaCallableApi() {
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
@@ -1842,10 +1859,11 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings
-    * are configured properly.
-    ********************************************************************************************************/
-    @isTest private static void validatePaymentAllocationConfigurationViaCallableApiNoErrors() {
+     * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings
+     * are configured properly.
+     ********************************************************************************************************/
+    @isTest
+    private static void validatePaymentAllocationConfigurationViaCallableApiNoErrors() {
         Test.startTest();
 
         AllocationSetupTest alloSetupTest = new AllocationSetupTest()
@@ -1863,10 +1881,11 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings
-    * are not configured properly.
-    ********************************************************************************************************/
-    @isTest private static void validatePaymentAllocationConfigurationViaCallableApiWithErrors() {
+     * @description Test validating the Payment Allocation Configuration via Callable_Api when the settings
+     * are not configured properly.
+     ********************************************************************************************************/
+    @isTest
+    private static void validatePaymentAllocationConfigurationViaCallableApiWithErrors() {
         Test.startTest();
 
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
@@ -1878,16 +1897,16 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, configProblems.isEmpty(), 'Payment Allocation configuration validated - Errors were expected');
     }
 
-    /***************************
+    /******************************************************
      * Helper Methods - Test Data
-     ***************************/
+     ******************************************************/
 
-    /**
+    /*******************************************************************************************************
      * @description Supports certain tests, creating Opportunities and Related Information
      * @param paymentAllocationsEnabled Boolean if true, Payment Allocations will be enabled
      * @param defaultAllocationsEnabled Boolean if true, Default Allocations will be enabled
      * @return List<Id> List of Opportunities Ids, in the order they were inserted
-     */
+     ********************************************************************************************************/
     private static List<Id> createTestDataAndReturnOppIds(AllocationSetupTest alloSetupTest) {
         List<General_Accounting_Unit__c> gaus = alloSetupTest.getGAUs();
         General_Accounting_Unit__c defaultGAU = (alloSetupTest.isDefaultAllocationsEnabled()) ? alloSetupTest.getDefaultGAU() : null;
@@ -2326,122 +2345,140 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of an Opportunity Allocation__c record
-    * @param alloc The allocation to assert
-    * @param opportunityId Expected Opportunity__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauId Will assert value against General_Accounting_Unit__c
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the list sizes for each of the allocations list in the RecordsForReview
+     *              class
+     *              [ALLO_AllocationsUtil.RecordsForReview]
+     * @param recsForRev A populated Record For Review Structure
+     * @param addtlMsg Text that will be displayed in addition to the list type if an assert fails
+     * @param oppsAllocSize The exepected size of the Opportunity Allocations Map
+     * @param pmtAllocSize The expected size of the Payment Allocations Map
+     * @param rdAllocSize The expected size of the Recurring Donations Allocations Map
+     * @param campAllocSize The expected size of the Campaign Allocations Map
+     ********************************************************************************************************/
+    private static void assertRecsForReviewAllocations(ALLO_AllocationsUtil.RecordsForReview recsForRev, String addtlMsg, Integer oppsAllocSize, Integer pmtAllocSize, Integer rdAllocSize, Integer campAllocSize) {
+        System.assertEquals (oppsAllocSize, recsForRev.oppsAllocations.size(), addtlMsg + ': Opportunity Allocations Map Size');
+        System.assertEquals (pmtAllocSize, recsForRev.paymentAllocations.size(), addtlMsg + ': Payment Allocations Map Size');
+        System.assertEquals (rdAllocSize, recsForRev.recurringDonationAllocations.size(), addtlMsg + ': Recurring Donation Allocations Map Size');
+        System.assertEquals (campAllocSize, recsForRev.campaignAllocations.size(), addtlMsg + ': Campaign Allocations Map Size');
+    }
+
+    /*******************************************************************************************************
+     * @description Asserts the various expected field values of an Opportunity Allocation__c record
+     * @param alloc The allocation to assert
+     * @param opportunityId Expected Opportunity__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauId Will assert value against General_Accounting_Unit__c
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Decimal percentage, Id gauId, String message) {
         assertAllocation(alloc, opportunityId, null, null, null, amount, percentage, null, gauId, message);
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of an Opportunity Allocation__c record
-    * @param alloc The allocation to assert
-    * @param opportunityId Expected Opportunity__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauName Will assert value against General_Accounting_Unit__r.Name
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the various expected field values of an Opportunity Allocation__c record
+     * @param alloc The allocation to assert
+     * @param opportunityId Expected Opportunity__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauName Will assert value against General_Accounting_Unit__r.Name
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Decimal percentage, String gauName, String message) {
         assertAllocation(alloc, opportunityId, null, null, null, amount, percentage, gauName, null, message);
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of a Payment Allocation__c record
-    * @param alloc The allocation to assert
-    * @param paymentId Expected Payment__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauName Will assert value against General_Accounting_Unit__r.Name
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the various expected field values of a Payment Allocation__c record
+     * @param alloc The allocation to assert
+     * @param paymentId Expected Payment__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauName Will assert value against General_Accounting_Unit__r.Name
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Decimal percentage, String gauName, String message) {
         assertAllocation(alloc, null, paymentId, null, null, amount, percentage, gauName, null, message);
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of a Payment Allocation__c record
-    * @param alloc The allocation to assert
-    * @param paymentId Expected Payment__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauId Will assert value against General_Accounting_Unit__c
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the various expected field values of a Payment Allocation__c record
+     * @param alloc The allocation to assert
+     * @param paymentId Expected Payment__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauId Will assert value against General_Accounting_Unit__c
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Decimal percentage, Id gauId, String message) {
         assertAllocation(alloc, null, paymentId, null, null, amount, percentage, null, gauId, message);
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of a Recurring Donation Allocation__c record
-    * @param alloc The allocation to assert
-    * @param recurringDonationId Expected Recurring_Donation__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauName Will assert value against General_Accounting_Unit__r.Name
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the various expected field values of a Recurring Donation Allocation__c record
+     * @param alloc The allocation to assert
+     * @param recurringDonationId Expected Recurring_Donation__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauName Will assert value against General_Accounting_Unit__r.Name
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertRecurringDonationAllocation(Allocation__c alloc, Id recurringDonationId, Decimal amount, Decimal percentage, String gauName, String message) {
         assertAllocation(alloc, null, null, recurringDonationId, null, amount, percentage, gauName, null, message);
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of a Recurring Donations Allocation__c record
-    * @param alloc The allocation to assert
-    * @param recurringDonationId Expected Recurring_Donation__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauId Will assert value against General_Accounting_Unit__c
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the various expected field values of a Recurring Donations Allocation__c record
+     * @param alloc The allocation to assert
+     * @param recurringDonationId Expected Recurring_Donation__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauId Will assert value against General_Accounting_Unit__c
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertRecurringDonationAllocation(Allocation__c alloc, Id recurringDonationId, Decimal amount, Decimal percentage, Id gauId, String message) {
         assertAllocation(alloc, null, null, recurringDonationId, null, amount, percentage, null, gauId, message);
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of a Campaign Allocation__c record
-    * @param alloc The allocation to assert
-    * @param campaignId Expected Campaign__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauName Will assert value against General_Accounting_Unit__r.Name
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the various expected field values of a Campaign Allocation__c record
+     * @param alloc The allocation to assert
+     * @param campaignId Expected Campaign__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauName Will assert value against General_Accounting_Unit__r.Name
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertCampaignAllocation(Allocation__c alloc, Id campaignId, Decimal amount, Decimal percentage, String gauName, String message) {
         assertAllocation(alloc, null, null, null, campaignId, amount, percentage, gauName, null, message);
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of a Campaign Allocation__c record
-    * @param alloc The allocation to assert
-    * @param campaignId Expected Campaign__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauId Will assert value against General_Accounting_Unit__c
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the various expected field values of a Campaign Allocation__c record
+     * @param alloc The allocation to assert
+     * @param campaignId Expected Campaign__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauId Will assert value against General_Accounting_Unit__c
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertCampaignAllocation(Allocation__c alloc, Id campaignId, Decimal amount, Decimal percentage, Id gauId, String message) {
         assertAllocation(alloc, null, null, null, campaignId, amount, percentage, null, gauId, message);
     }
 
     /*******************************************************************************************************
-    * @description Asserts the various expected field values of an Allocation__c record
-    * @param alloc The allocation to assert
-    * @param opportunityId Expected Opportunity__c value
-    * @param paymentId Expected Payment__c value
-    * @param recurringDonationId Expected Recurring_Donation__c value
-    * @param campaignId Expected Campaign__c value
-    * @param amount Expected Amount__c
-    * @param percentage Expected Percent__c value
-    * @param gauName If not null, will assert value against General_Accounting_Unit__r.Name
-    * @param gauId If not null, will assert value against General_Accounting_Unit__c
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts the various expected field values of an Allocation__c record
+     * @param alloc The allocation to assert
+     * @param opportunityId Expected Opportunity__c value
+     * @param paymentId Expected Payment__c value
+     * @param recurringDonationId Expected Recurring_Donation__c value
+     * @param campaignId Expected Campaign__c value
+     * @param amount Expected Amount__c
+     * @param percentage Expected Percent__c value
+     * @param gauName If not null, will assert value against General_Accounting_Unit__r.Name
+     * @param gauId If not null, will assert value against General_Accounting_Unit__c
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertAllocation(Allocation__c alloc, Id opportunityId, Id paymentId, Id recurringDonationId, Id campaignId, Decimal amount, Decimal percentage, String gauName, Id gauId, String message) {
         System.assertNotEquals(null, alloc, message + ' - Not Null');
         System.assertEquals(opportunityId, alloc.Opportunity__c, message + ' - Opportunity' );
@@ -2459,12 +2496,12 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Asserts basic characteristics of a List of SObjects, including whether or not it is
-    *              null, and the size
-    * @param sObjs The List of SObjects to assert
-    * @param expectedCount The number of expected records, or null, if the list should be null
-    * @param message The text to put on the front on the assertion message text
-    ********************************************************************************************************/
+     * @description Asserts basic characteristics of a List of SObjects, including whether or not it is
+     *              null, and the size
+     * @param sObjs The List of SObjects to assert
+     * @param expectedCount The number of expected records, or null, if the list should be null
+     * @param message The text to put on the front on the assertion message text
+     ********************************************************************************************************/
     private static void assertSObjectList(List<SObject> sObjs, Integer expectedCount, String message) {
         if (expectedCount == null) {
             System.assertEquals(null, sObjs, message + ' - List');
@@ -2475,12 +2512,12 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Builds a map of a List of Recurring Donation Allocation__c records, keyed by
-    *              Recurring Donation Id
-    * @param allocs The list of allocs to process into a Map of a List of Recurring Donation Allocations,
-    *        By Recurring Donation Id
-    * @return Map of a List of Recurring Donations Allocations By Recurring Donations Id
-    ********************************************************************************************************/
+     * @description Builds a map of a List of Recurring Donation Allocation__c records, keyed by
+     *              Recurring Donation Id
+     * @param allocs The list of allocs to process into a Map of a List of Recurring Donation Allocations,
+     *        By Recurring Donation Id
+     * @return Map of a List of Recurring Donations Allocations By Recurring Donations Id
+     ********************************************************************************************************/
     private static Map<Id, List<Allocation__c>> buildMapOfAllocationsByRecurringDonationId(List<Allocation__c> allocs) {
         Map<Id, List<Allocation__c>> allocsByRDId = new Map<Id, List<Allocation__c>>();
 
@@ -2496,11 +2533,11 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Builds a map of a List of Campaign Allocation__c records, keyed by Campaign Id
-    * @param allocs The list of allocs to process into a Map of a List of Campaign Allocations,
-    *        By Campaign Id
-    * @return Map of a List of Campaign Allocations By Campaign Id
-    ********************************************************************************************************/
+     * @description Builds a map of a List of Campaign Allocation__c records, keyed by Campaign Id
+     * @param allocs The list of allocs to process into a Map of a List of Campaign Allocations,
+     *        By Campaign Id
+     * @return Map of a List of Campaign Allocations By Campaign Id
+     ********************************************************************************************************/
     private static Map<Id, List<Allocation__c>> buildMapOfAllocationsByCampaignId(List<Allocation__c> allocs) {
         Map<Id, List<Allocation__c>> allocsByCampaignId = new Map<Id, List<Allocation__c>>();
 
@@ -2516,11 +2553,11 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Builds a map of a List of Opportunity Allocation__c records, keyed by Opportunity Id
-    * @param allocs The list of allocs to process into a Map of a List of Opportunity Allocations,
-    *        By Opportunity Id
-    * @return Map of a List of Opportunity Allocations By Opportunity Id
-    ********************************************************************************************************/
+     * @description Builds a map of a List of Opportunity Allocation__c records, keyed by Opportunity Id
+     * @param allocs The list of allocs to process into a Map of a List of Opportunity Allocations,
+     *        By Opportunity Id
+     * @return Map of a List of Opportunity Allocations By Opportunity Id
+     ********************************************************************************************************/
     private static Map<Id, List<Allocation__c>> buildMapOfAllocationsByOpportunityId(List<Allocation__c> allocs) {
         Map<Id, List<Allocation__c>> allocsByOppId = new Map<Id, List<Allocation__c>>();
 
@@ -2536,11 +2573,11 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Builds a map of a List of Payment Allocation__c records, keyed by Payment Id
-    * @param allocs The list of allocs to process into a Map of a List of Payment Allocations,
-    *        By Payment Id
-    * @return Map of a List of Payment Allocations By Payment Id
-    ********************************************************************************************************/
+     * @description Builds a map of a List of Payment Allocation__c records, keyed by Payment Id
+     * @param allocs The list of allocs to process into a Map of a List of Payment Allocations,
+     *        By Payment Id
+     * @return Map of a List of Payment Allocations By Payment Id
+     ********************************************************************************************************/
     private static Map<Id, List<Allocation__c>> buildMapOfAllocationsByPaymentId(List<Allocation__c> allocs) {
         Map<Id, List<Allocation__c>> allocsByPmtId = new Map<Id, List<Allocation__c>>();
 
@@ -2581,9 +2618,9 @@ public class ALLO_AllocationsUtil_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Inner class to facilitate applying different configuration/environmental options for
-    *              Test execution
-    ********************************************************************************************************/
+     * @description Inner class to facilitate applying different configuration/environmental options for
+     *              Test execution
+     ********************************************************************************************************/
     public class AllocationSetupTest {
 
         private List<General_Accounting_Unit__c> gaus = null;
@@ -2598,35 +2635,35 @@ public class ALLO_AllocationsUtil_TEST {
         private String nonDefaultIsoCode = null;
 
         /*******************************************************************************************************
-        * @description Default constructor for AllocationSetupTest class
-        ********************************************************************************************************/
+         * @description Default constructor for AllocationSetupTest class
+         ********************************************************************************************************/
         public AllocationSetupTest() {
 
         }
 
         /*******************************************************************************************************
-        * @description Pass in existing allocation settings for use in configuration
-        * @param allocationSettings An instance of Allocation_Settings__c
-        * @return class instance
-        ********************************************************************************************************/
+         * @description Pass in existing allocation settings for use in configuration
+         * @param allocationSettings An instance of Allocation_Settings__c
+         * @return class instance
+         ********************************************************************************************************/
         public AllocationSetupTest withAllocationSettings(Allocations_Settings__c allocationSettings) {
             this.allocationSettings = allocationSettings;
             return this;
         }
 
         /*******************************************************************************************************
-        * @description Sets Disable Allocations Triggers Configuration to true
-        * @return class instance
-        ********************************************************************************************************/
+         * @description Sets Disable Allocations Triggers Configuration to true
+         * @return class instance
+         ********************************************************************************************************/
         public AllocationSetupTest disableAllocationTriggers() {
             this.disableAllocationTriggers = true;
             return this;
         }
 
         /*******************************************************************************************************
-        * @description Sets Payment Allocations Configuration and Default Allocations Configuration to true
-        * @return class instance
-        ********************************************************************************************************/
+         * @description Sets Payment Allocations Configuration and Default Allocations Configuration to true
+         * @return class instance
+         ********************************************************************************************************/
         public AllocationSetupTest enablePaymentAllocations() {
             this.paymentAllocations = true;
             this.defaultAllocations = true;
@@ -2634,18 +2671,18 @@ public class ALLO_AllocationsUtil_TEST {
         }
 
         /*******************************************************************************************************
-        * @description Sets Default Allocations Configuration to true
-        * @return class instance
-        ********************************************************************************************************/
+         * @description Sets Default Allocations Configuration to true
+         * @return class instance
+         ********************************************************************************************************/
         public AllocationSetupTest enableDefaultAllocations() {
             this.defaultAllocations = true;
             return this;
         }
 
         /*******************************************************************************************************
-        * @description Apply setup for test from configuration of member variables
-        * @return class instance
-        ********************************************************************************************************/
+         * @description Apply setup for test from configuration of member variables
+         * @return class instance
+         ********************************************************************************************************/
         public AllocationSetupTest applyConfiguration() {
             setupGAUs();
 
@@ -2670,8 +2707,8 @@ public class ALLO_AllocationsUtil_TEST {
         }
 
         /*******************************************************************************************************
-        * @description Configures some additional local variables if in a MultiCurrency Enabled Org
-        ********************************************************************************************************/
+         * @description Configures some additional local variables if in a MultiCurrency Enabled Org
+         ********************************************************************************************************/
         private void configureForMultiCurrencyIfPossible() {
             if (UserInfo.isMultiCurrencyOrganization()) {
 
@@ -2685,8 +2722,8 @@ public class ALLO_AllocationsUtil_TEST {
         }
 
         /*******************************************************************************************************
-        * @description Setup of GAUs for testing
-        ********************************************************************************************************/
+         * @description Setup of GAUs for testing
+         ********************************************************************************************************/
         private void setupGAUs() {
             if (this.gaus == null) {
                 this.gaus = UTIL_UnitTestData_TEST.createGAUs(3);
@@ -2712,10 +2749,10 @@ public class ALLO_AllocationsUtil_TEST {
         }
 
         /*******************************************************************************************************
-        * @description Setup of allocations settings.
-        * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
-        * parameter uses default settings.
-        ********************************************************************************************************/
+         * @description Setup of allocations settings.
+         * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
+         * parameter uses default settings.
+         ********************************************************************************************************/
         private void setupSettings (Allocations_Settings__c alloset) {
             //set running user to avoid dml issue
             System.runAs(new User(id = UserInfo.getUserId())){
@@ -2728,62 +2765,62 @@ public class ALLO_AllocationsUtil_TEST {
         }
 
         /*******************************************************************************************************
-        * @description Returns the list of General_Accounting_Unit__c records created during configuration for
-        *              use in the tests
-        * @return List of General_Accounting_Unit__c records created while applying the AllocationSetupTest
-        ********************************************************************************************************/
+         * @description Returns the list of General_Accounting_Unit__c records created during configuration for
+         *              use in the tests
+         * @return List of General_Accounting_Unit__c records created while applying the AllocationSetupTest
+         ********************************************************************************************************/
         public List<General_Accounting_Unit__c> getGAUs() {
             return this.gaus;
         }
 
         /*******************************************************************************************************
-        * @description Returns the General_Accounting_Unit__C record assigned to be the "Default GAU", if
-        *              Default Allocations were enabled
-        * @return Default General_Accounting_Unit__c record, if default allocations are enabled and one was
-        *         assigned
-        ********************************************************************************************************/
+         * @description Returns the General_Accounting_Unit__C record assigned to be the "Default GAU", if
+         *              Default Allocations were enabled
+         * @return Default General_Accounting_Unit__c record, if default allocations are enabled and one was
+         *         assigned
+         ********************************************************************************************************/
         public General_Accounting_Unit__c getDefaultGAU() {
             return this.defaultGAU;
         }
 
         /*******************************************************************************************************
-        * @description Returns whether Default Allocations were enabled
-        * @return true if enabled
-        ********************************************************************************************************/
+         * @description Returns whether Default Allocations were enabled
+         * @return true if enabled
+         ********************************************************************************************************/
         public Boolean isDefaultAllocationsEnabled() {
             return this.defaultAllocations == true;
         }
 
         /*******************************************************************************************************
-        * @description Returns whether Payment Allocations were enabled
-        * @return true if enabled
-        ********************************************************************************************************/
+         * @description Returns whether Payment Allocations were enabled
+         * @return true if enabled
+         ********************************************************************************************************/
         public Boolean isPaymentAllocationsEnabled() {
             return this.paymentAllocations == true;
         }
 
         /*******************************************************************************************************
-        * @description Returns whether MultiCurrency Tests can be executed or not
-        * @return true if MultiCurrency is Enabled in the Org with a Corporate Currency and at least one other
-        *         Currency enabled
-        ********************************************************************************************************/
+         * @description Returns whether MultiCurrency Tests can be executed or not
+         * @return true if MultiCurrency is Enabled in the Org with a Corporate Currency and at least one other
+         *         Currency enabled
+         ********************************************************************************************************/
         public Boolean isMultiCurrencyConfiguredForTesting() {
             return this.multiCurrencyEnabled;
         }
 
         /*******************************************************************************************************
-        * @description Returns the Corporate (Default) Currency ISO Code (if possible)
-        * @return String either null or the ISO Code associated with the Corporate Currency
-        ********************************************************************************************************/
+         * @description Returns the Corporate (Default) Currency ISO Code (if possible)
+         * @return String either null or the ISO Code associated with the Corporate Currency
+         ********************************************************************************************************/
         public String getDefaultIsoCode() {
             return this.defaultIsoCode;
         }
 
         /*******************************************************************************************************
-        * @description Returns the Non Default (Not Corporate) Currency ISO Code (if possible)
-        * @return String either null or the ISO Code associated with an enabled Currency other than the
-        *         Corporate (Default) Currency
-        ********************************************************************************************************/
+         * @description Returns the Non Default (Not Corporate) Currency ISO Code (if possible)
+         * @return String either null or the ISO Code associated with an enabled Currency other than the
+         *         Corporate (Default) Currency
+         ********************************************************************************************************/
         public String getNonDefaultIsoCode() {
             return this.nonDefaultIsoCode;
         }
