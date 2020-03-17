@@ -132,6 +132,31 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
+    * @description Get field accessibility for Recurring Donation
+    * @return Map<String, Boolean>
+    */
+    private static Map<String, Boolean> getFieldReadablePermissionMap() {
+        List<String> fieldsToProcess = new List<String> {
+            'StartDate__c',
+            'InstallmentFrequency__c',
+            'PaymentMethod__c',
+            'Day_of_Month__c',
+            'Status__c',
+            'npe03__Installment_Period__c',
+            'npe03__Amount__c',
+            'npe03__Recurring_Donation_Campaign__c'
+        };
+
+        Map<String, Boolean> fieldApiToReadableMap = new Map<String, Boolean>();
+
+        for (String fieldApi : fieldsToProcess) {
+            fieldApiToReadableMap.put(fieldApi, UTIL_Permissions.canRead('npe03__Recurring_Donation__c', fieldApi, false));
+        }
+
+        return fieldApiToReadableMap;
+    }
+
+    /**
      * @description Retrieve the full Recurring Donation record
      * @param recordId Recurring Donations Id
      * @return npe03__Recurring_Donation__c
