@@ -787,7 +787,6 @@ public without sharing class RD2_ScheduleService {
         if (rdSchedules == null || rdSchedules.isEmpty() 
             || rdRecord.isClosed() 
             || !rdRecord.isFixedLength() 
-            || rdRecord.isFixedLengthComplete()
         ) {
             return;
         }
@@ -803,12 +802,13 @@ public without sharing class RD2_ScheduleService {
 
         //Remove all closed installments
         for (Integer i = records.size() - 1; i >= 0 ; i--) {
-            if (!records[i].IsNew() && records[i].getOpportunity().isClosed) {
+            if (!records[i].isNew() && records[i].getOpportunity().isClosed) {
                 records.remove(i);
             }
         }
 
         Integer lastIndex = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments() - 1;
+        lastIndex = lastIndex < 0 ? 0 : lastIndex;
 
         Date scheduleEndDate = records.isEmpty()
             ? currentDate.addDays(-1)

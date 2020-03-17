@@ -449,8 +449,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @param rdIds Recurring Donation Ids
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
-    @TestVisible
-    private List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
+    public List<npe03__Recurring_Donation__c> getRecurringDonations(Set<Id> rdIds) {
         final String parentAccountField = 'npe03__Contact__r.AccountId';
 
         Map<String, Schema.DescribeFieldResult> allRdFields = UTIL_Describe.getAllFieldsDescribe(
@@ -471,23 +470,9 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             queryFields.add(fld);
         }
 
-        //Return all schedules for the RD Schedule visualization.
-        //The RD Schedule will filter them out if not applicable within the time period.
-        String scheduleSubquery =
-            '(SELECT Id, InstallmentAmount__c, ' +
-            'Campaign__c, ' +
-            'Campaign__r.Name, ' +
-            'InstallmentFrequency__c, ' +
-            'InstallmentPeriod__c, ' +
-            'DayOfMonth__c, ' +
-            'PaymentMethod__c, ' +
-            'StartDate__c, ' +
-            'EndDate__c ' +
-            'FROM RecurringDonationSchedules__r)';
-
         queryFields.add(parentAccountField);
         queryFields.add(getOpportunitySubQuery());
-        queryFields.add(scheduleSubquery);
+        queryFields.add(getScheduleSubQuery());
 
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
@@ -499,10 +484,29 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Returns query on Recurring Donation Schedule 
+     * Return all schedules for the RD Schedule visualization.
+     * The Schedule Service will filter them out if not applicable within the time period.
+     * @return String RD Schedule subquery used in the Recurring Donation SOQL
+     */
+    public String getScheduleSubQuery() {
+        return '(SELECT Id, InstallmentAmount__c, ' +
+            'Campaign__c, ' +
+            'Campaign__r.Name, ' +
+            'InstallmentFrequency__c, ' +
+            'InstallmentPeriod__c, ' +
+            'DayOfMonth__c, ' +
+            'PaymentMethod__c, ' +
+            'StartDate__c, ' +
+            'EndDate__c ' +
+            'FROM RecurringDonationSchedules__r)';
+    }
+
+    /**
      * @description Returns query on Opportunity required to verify, create or update the Opportunity record
      * @return String Opportunity subquery used in the Recurring Donation SOQL
      */
-    private String getOpportunitySubQuery() {
+    public String getOpportunitySubQuery() {
         //Return Recurring Donations'
         //open Opps regardless of the Close Date
         //and Opps with Close Date >= current date regardless if closed or open
