@@ -8,6 +8,7 @@ import { registerListener } from 'c/pubsubNoPageRef';
 
 import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.DonationImported__c';
+import DATA_IMPORT_PAYMENT_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.PaymentImported__c';
 
 import GENERAL_ACCOUNTING_UNIT_FIELD from '@salesforce/schema/Allocation__c.General_Accounting_Unit__c';
 import AMOUNT_FIELD from '@salesforce/schema/Allocation__c.Amount__c';
@@ -545,7 +546,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @api
     get allFieldsByAPIName() {
         return [DI_ADDITIONAL_OBJECT.fieldApiName,
-                DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName];
+                DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName,
+                DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName];
     }
 
 }

@@ -331,6 +331,9 @@ export default class GeFormField extends LightningElement {
         let value;
         if (data.hasOwnProperty(this.sourceFieldAPIName)) {
             value = data[this.sourceFieldAPIName];
+            if(isUndefined(value)) {
+                return;
+            }
             if (value === null || value.value === null) {
                 this.reset();
             } else {
