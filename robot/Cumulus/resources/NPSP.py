@@ -893,7 +893,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.wait_until_element_is_visible(locator, timeout=60)
         self.selenium.click_element(locator)   
 
-    def verify_payment_details(self):
+    def verify_payment_details(self, numpayments):
+        """Gets the payment details from the UI and compares with the expected number of payments"""
         locator = "//tbody/tr/td[2]/span/span"
         locs1 = self.selenium.get_webelements(locator)
         locator2 = "//tbody/tr/td[3]/span/span"
@@ -905,7 +906,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 pass
             else:
                 return "fail"
-        return len(locs1)
+        self.builtin.should_be_equal_as_strings(len(locs1), numpayments)
 
     # def verify_opportunities(self, len_value):
     #     locator = "//tbody/tr[12]/th"

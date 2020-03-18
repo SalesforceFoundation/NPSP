@@ -22,6 +22,7 @@ Setup Test Data
 
 Create Open Recurring Donation With Monthly Installment
     [Documentation]              This test verifies that a Recurring Donation can be created through the UI.
+    [tags]                               W-039820                            feature:Recurring Donations
 
     Go To Page                           Details
     ...                                  Contact
@@ -40,5 +41,4 @@ Create Open Recurring Donation With Monthly Installment
     Check Related List Values            Recurring Donations    Robot Recurring Donation
     Load Related List                    Opportunities
     Click ViewAll Related List           Opportunities
-    ${return_value}                      Verify Payment Details
-    Should be equal as strings           ${return_value}        12
+    Verify Payment Details               12
