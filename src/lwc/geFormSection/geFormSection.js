@@ -161,7 +161,10 @@ export default class GeFormSection extends LightningElement {
     handleLookupRecordSelect(event) {
         const selectEvent = new CustomEvent(
             'lookuprecordselect',
-            { detail: event.detail });
+            {
+                detail: event.detail,
+                objectMappingDevName: event.objectMappingDevName
+            });
         this.dispatchEvent(selectEvent);
     }
 
