@@ -480,6 +480,18 @@ const getPageAccess = async () => {
     return isAdvancedMappingOn && isGiftEntryEnabled;
 };
 
+/*******************************************************************************
+* @description Method adds a unique key to every item in a given collection.
+*
+* @param list: Some collection
+*/
+const addKeyToCollectionItems = (list) => {
+    return list.map(item => {
+        item.key = generateId();
+        return item;
+    });
+}
+
 export {
     DEFAULT_FORM_FIELDS,
     ADDITIONAL_REQUIRED_BATCH_HEADER_FIELDS,
@@ -511,4 +523,5 @@ export {
     getRecordFieldNames,
     setRecordValuesOnTemplate,
     getPageAccess,
+    addKeyToCollectionItems
 }

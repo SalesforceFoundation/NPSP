@@ -4600,6 +4600,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Common label for expiration date (MM/YY)</shortDescription>
         <value>MM/YY</value>
     </labels>
+    <labels>        
+        <fullName>commonMissingRequiredFields</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error message about missing required fields</shortDescription>
+        <value>These required fields must be completed: {0}</value>
+    </labels>
     <labels>
         <fullName>commonNewGift</fullName>
         <categories>Gift Entry</categories>

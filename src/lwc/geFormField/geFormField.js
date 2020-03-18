@@ -214,7 +214,8 @@ export default class GeFormField extends LightningElement {
     }
 
     get required() {
-        return (this.fieldInfo && this.fieldInfo.Is_Required) || (this.element && this.element.required);
+        return (this.fieldInfo && this.fieldInfo.Is_Required && this.fieldType !== BOOLEAN_TYPE) || 
+            (this.element && this.element.required);
     }
 
     get disabled() {

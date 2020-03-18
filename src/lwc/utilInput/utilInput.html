@@ -9,26 +9,29 @@
     <template if:false={isWidget}>
         <template if:true={isLightningRichText}>
             <lightning-input-rich-text aria-label="default value"
-                                       label={uiLabel}
-                                       formats={richTextFormats}
-                                       required={isRequired}
-                                       class="slds-m-around_none"
+                                       class="slds-p-horizontal_xx-small"
+                                       data-id='inputComponent'
                                        data-name="defaultValue"
+                                       formats={richTextFormats}
+                                       label-visible={showRichTextLabel}
+                                       label={uiLabel}
+                                       message-when-bad-input={CUSTOM_LABELS.geErrorCompleteThisField}
+                                       onfocusout={handleValueChange}
                                        onclick={stopPropagation}
-                                       value={fieldValue}
-                                       variant={variant}
                                        tab-index={tabIndex}
-                                       onblur={handleValueChange}>
+                                       valid={isRichTextValid}
+                                       value={fieldValue}>
             </lightning-input-rich-text>
         </template>
 
         <template if:true={isLightningTextarea}>
             <lightning-textarea aria-label="default value"
+                                data-id='inputComponent'
                                 label={uiLabel}
                                 required={isRequired}
                                 class="slds-m-around_none"
                                 data-name="defaultValue"
-                                onblur={handleValueChange}
+                                onfocusout={handleValueChange}
                                 onclick={stopPropagation}
                                 value={fieldValue}
                                 variant={variant}
@@ -38,6 +41,7 @@
 
         <template if:true={isLightningCombobox}>
             <c-ge-form-field-picklist class-name="slds-m-around_none"
+                                      data-id='inputComponent'
                                       label={uiLabel}
                                       required={isRequired}
                                       field-name={fieldApiName}
@@ -52,6 +56,7 @@
 
         <template if:true={isLightningCheckbox}>
             <lightning-input aria-label="default value"
+                             data-id='inputComponent'
                              label={uiLabel}
                              required={isRequired}
                              checked={fieldValue}
@@ -59,6 +64,7 @@
                              data-name="defaultValue"
                              onchange={handleValueChange}
                              onclick={stopPropagation}
+                             variant={variant}
                              type="checkbox">
             </lightning-input>
         </template>
@@ -79,6 +85,7 @@
 
         <template if:true={isLightningDateOrDatetime}>
             <lightning-input aria-label="default value"
+                             data-id='inputComponent'
                              label={uiLabel}
                              required={isRequired}
                              class="slds-m-around_none"
@@ -94,11 +101,12 @@
 
         <template if:true={isBaseLightningInput}>
             <lightning-input aria-label="default value"
+                             data-id='inputComponent'
                              label={uiLabel}
                              required={isRequired}
                              class="slds-m-around_none"
                              data-name="defaultValue"
-                             onblur={handleValueChange}
+                             onfocusout={handleValueChange}
                              onclick={stopPropagation}
                              type={lightningInputType}
                              formatter={formatter}
