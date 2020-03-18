@@ -44,9 +44,14 @@ export default class GeFormField extends LightningElement {
         this.dispatchEvent(evt);
 
         if (this.isLookup) {
+            const detail = {
+                ...event.detail,
+                objectMappingDevName: this.objectMappingDevName
+            }
+
             const selectRecordEvent = new CustomEvent(
                 'lookuprecordselect',
-                { detail: event.detail });
+                { detail: detail });
             this.dispatchEvent(selectRecordEvent);
         }
 

@@ -858,11 +858,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const fieldApiName = event.detail.fieldApiName;
 
         if(!fieldApiName ||
-            !GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
-            return false;
+            fieldApiName !== 'RecordTypeId') {
+            if (!GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
+                return false;
+            }
         }
 
-        if (event.detail.hasOwnProperty('value') && event.detail.value !== null) {
+        if (fieldApiName === 'RecordTypeId') {
+            this.setRecordTypeOnFields(event.detail.objectMappingDevName, recordId);
+        } else if (event.detail.hasOwnProperty('value') && recordId !== null) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         } else {
             // Reset all fields related to this lookup field's object mapping
