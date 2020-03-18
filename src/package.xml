@@ -1948,6 +1948,7 @@
         <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
         <members>commonMMYY</members>
+        <members>commonMissingRequiredFields</members>
         <members>commonNewGift</members>
         <members>commonNext</members>
         <members>commonNo</members>

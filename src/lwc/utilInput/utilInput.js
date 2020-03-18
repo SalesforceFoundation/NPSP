@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
-import { inputTypeByDescribeType, dispatch } from 'c/utilTemplateBuilder';
+import { inputTypeByDescribeType } from 'c/utilTemplateBuilder';
 import { isNotEmpty } from 'c/utilCommon';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
 
@@ -9,7 +9,6 @@ const WIDGET = 'widget';
 const TEXTAREA = 'textarea';
 const COMBOBOX = 'combobox';
 const SEARCH = 'search';
-const RICHTEXT = 'richtext';
 const CHECKBOX = 'checkbox';
 const DATE = 'date';
 const DATETIME = 'datetime-local';
@@ -39,9 +38,10 @@ export default class utilInput extends LightningElement {
     @api objectApiName;
     @api tabIndex;
     @api variant = 'label-stacked';
+    @api value;
     @api widgetName;
 
-    @api value;
+    @track isRichTextValid = true;
 
     @api
     reportValue() {
@@ -56,7 +56,17 @@ export default class utilInput extends LightningElement {
         if (this.isLightningCheckbox) {
             return isNotEmpty(this.value) ? this.value : this.checkboxDefaultValue;
         }
-        return this.value !== undefined ? this.value : this.defaultValue;
+        if (this.value !== undefined) {
+            return this.value;
+        }
+        if (this.defaultValue !== undefined) {
+            return this.defaultValue;
+        }
+        // Workaround to empty a rich text input if an explicit value or default value isn't provided
+        if (this.isLightningRichText) {
+            return '';
+        }
+        return undefined;
     }
 
     get checkboxDefaultValue() {
@@ -68,7 +78,7 @@ export default class utilInput extends LightningElement {
     }
 
     get isLightningTextarea() {
-        return this.lightningInputType === TEXTAREA ? true : false;
+        return this.lightningInputType === TEXTAREA && !this.isLightningRichText ? true : false;
     }
 
     get isLightningCombobox() {
@@ -80,7 +90,11 @@ export default class utilInput extends LightningElement {
     }
 
     get isLightningRichText() {
-        return this.lightningInputType === RICHTEXT ? true : false;
+        if ((this.fieldDescribe && this.fieldDescribe.htmlFormatted) &&
+            this.lightningInputType === TEXTAREA) {
+            return this.fieldDescribe.htmlFormatted;
+        }
+        return false;
     }
 
     get isLightningCheckbox() {
@@ -94,7 +108,6 @@ export default class utilInput extends LightningElement {
     get isBaseLightningInput() {
         if (this.lightningInputType !== TEXTAREA &&
             this.lightningInputType !== COMBOBOX &&
-            this.lightningInputType !== RICHTEXT &&
             this.lightningInputType !== SEARCH &&
             this.lightningInputType !== CHECKBOX &&
             this.lightningInputType !== DATE &&
@@ -142,6 +155,7 @@ export default class utilInput extends LightningElement {
         }
     }
 
+    @api
     get uiLabel() {
         if (this.label) {
             return this.label;
@@ -153,6 +167,10 @@ export default class utilInput extends LightningElement {
 
     get uiObjectApiName() {
         return this.objectInfo && this.objectInfo.apiName ? this.objectInfo.apiName : this.objectApiName;
+    }
+
+    get showRichTextLabel() {
+        return this.isLightningRichText && this.variant !== 'label-hidden' ? true : false;
     }
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
@@ -178,7 +196,7 @@ export default class utilInput extends LightningElement {
             value: event.target.value
         };
         this.value = event.detail.value;
-        dispatch(this, 'changevalue', detail);
+        this.dispatchEvent(new CustomEvent('changevalue', { detail: detail }));
     }
 
     /*******************************************************************************
@@ -197,13 +215,74 @@ export default class utilInput extends LightningElement {
             this.value = event.target.value;
         }
 
+        let isValid = true;
+        if (this.isLightningRichText) {
+            isValid = this.checkRichTextValidity();
+        } else {
+            isValid = this.isValid();
+        }
+
         let detail = {
             objectApiName: this.uiObjectApiName,
             fieldApiName: this.fieldApiName,
-            value: this.fieldValue
+            value: this.fieldValue,
+            isValid: isValid
         }
 
-        dispatch(this, 'changevalue', detail);
+        this.dispatchEvent(new CustomEvent('changevalue', { detail: detail }));
+    }
+
+    /*******************************************************************************
+    * @description Public method used to check the current input's validity by
+    * calling checkFieldValidity.
+    *
+    * @return {boolean}: TRUE when a field is required and filled in correctly,
+    * or not required at all.
+    */
+    @api
+    isValid() {
+        // We need to check for invalid values, regardless if the field is required
+        let fieldIsValid = this.checkFieldValidity();
+        if (this.fieldDescribe !== null && this.isRequired) {
+            return isNotEmpty(this.fieldValue) && fieldIsValid;
+        }
+
+        return fieldIsValid;
+    }
+
+    /*******************************************************************************
+    * @description Method calls lightning-input methods reportValidity and
+    * checkValidity on the current input.
+    *
+    * @return {boolean}: TRUE when a field is filled in, and is the correct format.
+    */
+    checkFieldValidity() {
+        const inputField = this.template.querySelector('[data-id="inputComponent"]');
+        if (typeof inputField !== 'undefined'
+            && inputField !== null
+            && typeof inputField.reportValidity === 'function'
+            && typeof inputField.checkValidity === 'function') {
+            inputField.reportValidity();
+            return inputField.checkValidity();
+        } else if (this.isLightningRichText) {
+            this.checkRichTextValidity();
+            if (!this.isRichTextValid) {
+                // workaround, field will not display as invalid if it is untouched
+                inputField.focus();
+                inputField.blur();
+            }
+            return this.isRichTextValid;
+        }
+        return true;
+    }
+
+    checkRichTextValidity() {
+        if (this.isRequired) {
+            const isValid = isNotEmpty(this.fieldValue) && this.fieldValue.length > 0;
+            this.isRichTextValid = isValid;
+            return isValid;
+        }
+        return true;
     }
 
     stopPropagation(event) {

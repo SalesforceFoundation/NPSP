@@ -21,6 +21,7 @@ import commonFieldLabel from '@salesforce/label/c.commonFieldLabel';
 import commonGauAllocations from '@salesforce/label/c.commonGauAllocations';
 import commonGeneralAccountUnit from '@salesforce/label/c.commonGeneralAccountUnit';
 import commonMMYY from '@salesforce/label/c.commonMMYY';
+import commonMissingRequiredFields from '@salesforce/label/c.commonMissingRequiredFields';
 import commonNewGift from '@salesforce/label/c.commonNewGift';
 import commonNext from '@salesforce/label/c.commonNext';
 import commonNo from '@salesforce/label/c.commonNo';
@@ -204,6 +205,7 @@ class GeLabelService {
         commonGauAllocations,
         commonGeneralAccountUnit,
         commonMMYY,
+        commonMissingRequiredFields,
         commonNewGift,
         commonNext,
         commonNo,
