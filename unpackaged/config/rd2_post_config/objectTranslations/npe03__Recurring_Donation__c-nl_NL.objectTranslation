@@ -18,12 +18,12 @@
     <fields>
         <help>Kies Open voor een doorlopende Terugkerende donatie (een Terugkerende donatie voor onbepaalde duur). Kies Geen voor een Terugkerende donatie met een vaste duur. Kies Gesloten om de Terugkerende donatie te sluiten.</help>
         <label>Verouderd:Status voor onbepaalde duur</label>
-        <name>Open_Ended_Status__c</name>
+        <name>npe03__Open_Ended_Status__c</name>
     </fields>
     <fields>
         <help>Meldt aan Salesforce de manier waarop het bedrag voor elke onderliggende opportunity moet worden berekend op basis van wat u hebt opgegeven in het veld. Alleen Terugkerende donaties met vaste duur.</help>
         <label>Verouderd:Planningstype</label>
-        <name>Schedule_Type__c</name>
+        <name>npe03__Schedule_Type__c</name>
     </fields>
     <fields>
         <label>Verouderd:Termijnbedrag</label>

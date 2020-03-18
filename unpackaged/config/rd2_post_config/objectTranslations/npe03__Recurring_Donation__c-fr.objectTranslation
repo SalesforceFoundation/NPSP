@@ -7,7 +7,7 @@
     </fields>
     <fields>
         <label>Déprécié:Montant du versement</label>
-        <name>Installment_Amount__c</name>
+        <name>npe03__Installment_Amount__c</name>
     </fields>
     <fields>
         <help>Choisissez Ouvert pour les dons récurrents sans date de fin. Choisissez Aucun pour un don récurrent avec une date de fin. Choisissez Fermé pour fermer un don récurrent.</help>
