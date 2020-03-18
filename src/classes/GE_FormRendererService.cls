@@ -225,7 +225,7 @@ public with sharing class GE_FormRendererService {
     @AuraEnabled(cacheable=true)
     public static List<Allocation__c> getDonationAllocations(Id donationId) {
         if(donationId == null) {
-            return null;
+            return new List<Allocation__c>();
         }
 
         return [SELECT
