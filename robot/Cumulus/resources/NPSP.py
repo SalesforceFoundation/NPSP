@@ -1142,7 +1142,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def checkbox_status(self,cbx_name,status):
         """verifies if the specified checkbox is with expected status in readonly mode"""
         locator=npsp_lex_locators["custom_settings"]["cbx_status"].format(cbx_name,status)
-        self.selenium.page_should_contain_element(locator)
+        self.selenium.page_should_contain_element(locator, message='{cbx_name} checkbox is supposed to be {status}')
                 
     def go_to_setup_page(self,page):
         """ Navigates to the specified page in Salesforce Setup """
