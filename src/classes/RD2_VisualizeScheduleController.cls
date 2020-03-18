@@ -132,31 +132,6 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
-    * @description Get field accessibility for Recurring Donation
-    * @return Map<String, Boolean>
-    */
-    private static Map<String, Boolean> getFieldReadablePermissionMap() {
-        List<String> fieldsToProcess = new List<String> {
-            'StartDate__c',
-            'InstallmentFrequency__c',
-            'PaymentMethod__c',
-            'Day_of_Month__c',
-            'Status__c',
-            'npe03__Installment_Period__c',
-            'npe03__Amount__c',
-            'npe03__Recurring_Donation_Campaign__c'
-        };
-
-        Map<String, Boolean> fieldApiToReadableMap = new Map<String, Boolean>();
-
-        for (String fieldApi : fieldsToProcess) {
-            fieldApiToReadableMap.put(fieldApi, UTIL_Permissions.canRead('npe03__Recurring_Donation__c', fieldApi, false));
-        }
-
-        return fieldApiToReadableMap;
-    }
-
-    /**
      * @description Retrieve the full Recurring Donation record
      * @param recordId Recurring Donations Id
      * @return npe03__Recurring_Donation__c
@@ -286,17 +261,44 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public String currencyIsoCode;
 
         public Schedule(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.ActiveSchedule schedule) {
+            Map<String, Boolean> permission = getFieldReadablePermissionMap();
             this.scheduleNumber = num;
             this.isCurrent = schedule.isCurrent;
-            this.amount = schedule.installmentAmount;
-            this.paymentMethod = schedule.paymentMethod;
-            this.campaign = schedule.campaignName;
-            this.startDate = schedule.startDate;
-            this.endDate = schedule.endDate;
-            this.period = schedule.installmentPeriod;
-            this.frequency = schedule.installmentFrequency;
-            this.dayOfMonth = schedule.dayOfMonth;
+            this.amount = permission.get('npe03__Amount__c') ? schedule.installmentAmount : null;
+            this.paymentMethod = permission.get('PaymentMethod__c') ? schedule.paymentMethod : null;
+            this.campaign = permission.get('npe03__Recurring_Donation_Campaign__c') ? schedule.campaignName : null;
+            this.startDate = permission.get('StartDate__c') ? schedule.startDate : null;
+            this.period = permission.get('npe03__Installment_Period__c') ? schedule.installmentPeriod : null;
+            this.frequency = permission.get('InstallmentFrequency__c') ? schedule.installmentFrequency : null;
+            this.dayOfMonth = permission.get('Day_of_Month__c') ? schedule.dayOfMonth : null;
+            this.endDate = UTIL_Permissions.canRead('RecurringDonationSchedule__c', 'EndDate__c', false) ? schedule.endDate : null;
             this.currencyIsoCode = getCurrencyCode(rd);
         }
     }
+
+    /**
+    * @description Get field accessibility for Recurring Donation
+    * @return Map<String, Boolean>
+    */
+    private static Map<String, Boolean> getFieldReadablePermissionMap() {
+        List<String> fieldsToProcess = new List<String> {
+            'StartDate__c',
+            'InstallmentFrequency__c',
+            'PaymentMethod__c',
+            'Day_of_Month__c',
+            'Status__c',
+            'npe03__Installment_Period__c',
+            'npe03__Amount__c',
+            'npe03__Recurring_Donation_Campaign__c'
+        };
+
+        Map<String, Boolean> fieldApiToReadableMap = new Map<String, Boolean>();
+
+        for (String fieldApi : fieldsToProcess) {
+            fieldApiToReadableMap.put(fieldApi, UTIL_Permissions.canRead('npe03__Recurring_Donation__c', fieldApi, false));
+        }
+
+        return fieldApiToReadableMap;
+    }
+
 }

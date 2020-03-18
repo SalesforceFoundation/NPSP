@@ -32,7 +32,7 @@ export default class RdActiveSchedule extends LightningElement {
 
     @track labels = {};
 
-        /*******************************************************************************
+    /*******************************************************************************
      * @description Whenever the related RD record is updated, this is called to force
      * a refresh of the table and component.
      */
@@ -72,20 +72,24 @@ export default class RdActiveSchedule extends LightningElement {
     @wire(getObjectInfo, { objectApiName: SOBJECT_RECURRING_DONATION })
     wireGetRDObjectInfo({error, data}) {
         if (data) {
+            let fieldApis = data.fields;
+
             this.labels['lblScheduleTitle'] = lblScheduleTitle;
             this.labels['lblCurrentSchedule'] = lblCurrentSchedule;
             this.labels['lblFutureSchedule'] = lblFutureSchedule;
             this.labels['lblEndDate'] = lblEndDate;
-            this.labels['lblAmount'] = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
-            this.labels['lblPmtMethod'] = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
-            this.labels['lblCampaign'] = data.fields[FIELD_RD_CAMPAIGN.fieldApiName].label;
-            this.labels['lblStartDate'] = data.fields[FIELD_RD_STARTDATE.fieldApiName].label;
-            this.labels['lblPeriod'] = data.fields[FIELD_RD_PERIOD.fieldApiName].label;
-            this.labels['lblFrequency'] = data.fields[FIELD_RD_FREQUENCY.fieldApiName].label;
-            this.labels['lblDayOfMonth'] = data.fields[FIELD_RD_DAYOFMONTH.fieldApiName].label;
+            this.labels['lblAmount'] = (fieldApis[FIELD_RD_AMOUNT.fieldApiName]) ? fieldApis[FIELD_RD_AMOUNT.fieldApiName].label : null;
+            this.labels['lblPmtMethod'] = (fieldApis[FIELD_RD_PAYMENT_METHOD.fieldApiName]) ? fieldApis[FIELD_RD_PAYMENT_METHOD.fieldApiName].label : null;
+            this.labels['lblCampaign'] = (fieldApis[FIELD_RD_CAMPAIGN.fieldApiName]) ? fieldApis[FIELD_RD_CAMPAIGN.fieldApiName].label : null;
+            this.labels['lblStartDate'] = (fieldApis[FIELD_RD_STARTDATE.fieldApiName]) ? fieldApis[FIELD_RD_STARTDATE.fieldApiName].label : null;
+            this.labels['lblPeriod'] = (fieldApis[FIELD_RD_PERIOD.fieldApiName]) ? fieldApis[FIELD_RD_PERIOD.fieldApiName].label : null;
+            this.labels['lblFrequency'] = (fieldApis[FIELD_RD_FREQUENCY.fieldApiName]) ? fieldApis[FIELD_RD_FREQUENCY.fieldApiName].label : null;
+            this.labels['lblDayOfMonth'] = (fieldApis[FIELD_RD_DAYOFMONTH.fieldApiName]) ? fieldApis[FIELD_RD_DAYOFMONTH.fieldApiName].label : null;
             this.labels['lblNone'] = lblNone;
             this.labels['lblRecordIcon'] = lblRecordIcon;
         }
+
+        this.objectInfos = data;
     }
 
     /*******************************************************************************
