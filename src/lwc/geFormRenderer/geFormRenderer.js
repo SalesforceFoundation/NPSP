@@ -1102,6 +1102,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         } else if (data) {
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             this.load(dataImport, false);
+            for (const [key, value] of
+                Object.entries(this.selectedRecordIdByObjectMappingDevName)) {
+                if (value === data.id) {
+                    this.setRecordTypeOnFields(key, data.recordTypeId);
+                }
+            }
 
             if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
                 data.id === this.selectedDonation.Id) {
@@ -1195,6 +1201,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         if (!isUndefined(this.donorId)) {
             this.setReviewDonationsDonorProperties(this.donorId);
         }
+    }
+
+    setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
+        this.template.querySelectorAll('c-ge-form-section')
+            .forEach(section => {
+                section.setRecordTypeOnFields(objectMappingDevName, recordTypeId);
+            });
     }
 
 }

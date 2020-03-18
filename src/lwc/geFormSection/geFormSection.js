@@ -121,6 +121,10 @@ export default class GeFormSection extends LightningElement {
                         data,
                         [fieldCmp.sourceFieldAPIName]));
             }
+
+            if (data.recordTypeId || data.recordTypeId === null) {
+                fieldCmp.recordTypeId = data.recordTypeId;
+            }
         });
 
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
@@ -185,4 +189,15 @@ export default class GeFormSection extends LightningElement {
 
         return fields;
     }
+
+    @api
+    setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
+        this.template.querySelectorAll('c-ge-form-field')
+            .forEach(field => {
+                if (field.objectMappingDevName === objectMappingDevName) {
+                    field.recordTypeId = recordTypeId;
+                }
+            });
+    }
+
 }
