@@ -1,26 +1,23 @@
 *** Settings ***
 
 Resource        robot/Cumulus/resources/NPSP.robot
+Library         cumulusci.robotframework.PageObjects
+...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
 Make Changes to Settings and Verify Changes
-    [tags]  unstable
-    Select App Launcher Tab  NPSP Settings
-    #Sleep    3
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Choose Frame    Nonprofit Success Pack Settings
-    Click Link    link=People
-    Click Link    link=Account Model
-    Click Settings Button    idPanelCon    Edit
-    Wait For Locator    npsp_settings.batch-button    idPanelCon    Save
-    Select Value From List     Household Account Record Type       Organization
-    Click Settings Button   idPanelCon    Save
-    Wait For Locator     npsp_settings.list_val       Household Account Record Type    Organization
-    Click Settings Button    idPanelCon    Edit
-    Wait For Locator    npsp_settings.batch-button    idPanelCon    Save
-    Select Value From List     Household Account Record Type    Household Account
-    Click Settings Button    idPanelCon    Save
-    Wait For Locator    npsp_settings.list_val    Household Account Record Type    Household Account
+    [Documentation]            Go to NPSP Settings>People>Account Model. Edit Household Account Record Type seeing to Organization and Save.
+    ...                        Verify that the change is saved and revert the change and Save again. Verify change reverted.
+    [tags]                     feature:NPSP Settings           W-039822
+    Open NPSP Settings         People                          Account Model             
+    Click Settings Button      idPanelCon                      Edit
+    Edit Selection             Household Account Record Type   Organization
+    Click Settings Button      idPanelCon                      Save
+    Verify Selection           Household Account Record Type   Organization
+    Click Settings Button      idPanelCon                      Edit
+    Edit Selection             Household Account Record Type   Household Account
+    Click Settings Button      idPanelCon                      Save
+    Verify Selection           Household Account Record Type   Household Account
