@@ -87,7 +87,7 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) {
 
-        Date nextDonationDate = isClosed() ? null : scheduleService.getNextDonationDate(rdSchedules);
+        Date nextDonationDate = isClosed() ? null : scheduleService.getNextDonationDate(rd, rdSchedules);
 
         if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
             rd.npe03__Next_Payment_Date__c = nextDonationDate;
@@ -172,6 +172,34 @@ public inherited sharing class RD2_RecurringDonation {
             updatedRd.put(field, rd.get(field));
         }
         return updatedRd;
+    }
+
+    /**
+    * @description Return number of planned installments for the recurring donation, default to 0 when value is null
+    * @return Integer
+    */
+    public Integer getPlannedInstallments() {
+        return (rd.npe03__Installments__c != null)
+            ? rd.npe03__Installments__c.intValue()
+            : 0;
+    }
+
+    /**
+    * @description Return number of paid installments for the recurring donation, default to 0 when value is null
+    * @return Integer
+    */
+    public Integer getPaidInstallments() {
+        return (rd.npe03__Total_Paid_Installments__c != null)
+            ? rd.npe03__Total_Paid_Installments__c.intValue()
+            : 0;
+    }
+
+    /**
+    * @description Return the Recurring Donation record
+    * @return npe03__Recurring_Donation__c 
+    */
+    public npe03__Recurring_Donation__c getSObject() {
+        return rd;
     }
 
     /**
@@ -269,13 +297,13 @@ public inherited sharing class RD2_RecurringDonation {
 
     /**
     * @description Indicates if the Recurring Donation has an open Opportunity with Close Date >= current date
-    * @param currentDate Current Date to compare the Close Date to
+    * @param currentDate The current date
     * @return Boolean
     */
     public Boolean hasCurrentOpenOpportunity(Date currentDate) {
         return new RD2_OpportunityMatcher(currentDate)
-            .includeCurrentAndOpen(rd.npe03__Donations__r)
-            .size() > 0;
+        .includeCurrent(rd.npe03__Donations__r)
+        .hasOpenOpportunity();
     }
 
     /**
@@ -290,5 +318,4 @@ public inherited sharing class RD2_RecurringDonation {
         }
         return false;
     }
-
 }

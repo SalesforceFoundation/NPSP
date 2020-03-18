@@ -34,9 +34,16 @@
                         </lightning-combobox>
                     </div>
                     <div class={cssClassStep1}>
+                        <template if:true={hasInvalidBatchFields}>
+                            <c-util-page-level-message title={CUSTOM_LABELS.commonError}
+                                                        subtitle={missingRequiredFieldsMessage}
+                                                        variant='error'>
+                            </c-util-page-level-message>
+                        </template>
                         <template for:each={selectedBatchHeaderFields}
                                   for:item='batchField'>
-                            <c-util-input key={batchField.apiName}
+                            <c-util-input key={batchField.key}
+                                          data-id='batchHeaderField'
                                           type={batchField.dataType}
                                           field-api-name={batchField.apiName}
                                           label={batchField.customLabel}
@@ -73,8 +80,7 @@
                                                     </div>
                                                     <div class="slds-small-size_1-of-1 slds-medium-size_1-of-3 slds-large-size_1-of-3"></div>
                                                 </template>
-                                                <div
-                                                     class="slds-small-size_1-of-1 slds-medium-size_2-of-3 slds-large-size_2-of-3">
+                                                <div class="slds-small-size_1-of-1 slds-medium-size_2-of-3 slds-large-size_2-of-3">
                                                     <c-util-input key={it.value.apiName}
                                                                   type={it.value.dataType}
                                                                   form-field-type={it.value.elementType}
