@@ -28,6 +28,7 @@ export default class GeFormField extends LightningElement {
     @api element;
     @api targetFieldName;
     _defaultValue = null;
+    @api recordTypeId;
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -76,7 +77,7 @@ export default class GeFormField extends LightningElement {
     }
 
     /**
-     * Retrieve field metadata. Used to configure how fields are displayed on the form.
+     * Retrieve object metadata. Used to configure how fields are displayed on the form.
      */
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
     wiredObjectInfo(response) {
@@ -266,6 +267,7 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    @api
     get objectMappingDevName() {
         return this.fieldInfo.Target_Object_Mapping_Dev_Name;
     }
