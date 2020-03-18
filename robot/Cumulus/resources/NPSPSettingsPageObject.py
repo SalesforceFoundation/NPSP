@@ -31,7 +31,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                                                error=f"click on {title} link was not successful even after 30 seconds")
         
     def open_sub_link(self,title):  
-        """clicks on the button on the payments page"""  
+        """Waits for the link to load and clicks to make a part of page active"""  
         self.selenium.wait_until_page_contains(title, 
                                                error=f"{title} link was not found on the page")  
         self.npsp.click_link_with_text(title)    

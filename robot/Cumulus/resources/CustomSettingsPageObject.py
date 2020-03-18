@@ -29,7 +29,7 @@ class CustomSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.unselect_frame()
         self.salesforce.wait_until_loading_is_complete()
            
-    def verify_current_page(self,page_name):
+    def verify_page_and_select_frame(self,page_name):
         """verify page contains page_name and select frame identified with page_name"""
         self.selenium.page_should_contain(page_name)
         self.npsp.choose_frame(page_name)
