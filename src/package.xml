@@ -1705,6 +1705,7 @@
         <members>alloPaidPmtsExceedsOpp</members>
         <members>alloPaymentAllocationBatchAllocationError</members>
         <members>alloPaymentAllocationBatchRecordError</members>
+        <members>alloPaymentAllocationBatchRetriesExceeded</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPaymentOverallocatedError</members>
         <members>alloPercentExceed100</members>

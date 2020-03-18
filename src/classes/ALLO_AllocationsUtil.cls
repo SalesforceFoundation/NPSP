@@ -35,6 +35,9 @@
 * @description Utility class to support shared functionality for Allocations
 */
 public class ALLO_AllocationsUtil {
+    /** @description The number of times it will retry the set of Database operations, after first removing any with errors. */
+      private static final Integer NUM_DATABASE_RETRIES = 1;
+
     /** @description Used as a way to identify parts of Allocation Sync that may or may not be allowed to
       *execute depending on earlier execution statuses */
     public enum PROCESS_DEF {
@@ -392,13 +395,13 @@ public class ALLO_AllocationsUtil {
         ALLO_AllocationsUtil.AllocationResults allocResults = ALLO_AllocationsUtil.processOpportunityAllocations(recs.oppsById, recs.oppsAllocations, recs.campaignAllocations, recs.recurringDonationAllocations, recExcl);
 
         // Process Opportunity Allocation Results
-        ALLO_AllocationsUtil.processAllocationResults(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD, allocResults, recs, recExcl);
+        ALLO_AllocationsUtil.processAllocationResults(oppIds, ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD, allocResults, recs, recExcl);
 
         // Process Payment Allocations
         allocResults = ALLO_AllocationsUtil.processPaymentAllocations(recs.oppsById, recs.oppsAllocations, recs.paymentAllocations, recExcl);
 
         // Process Payment Allocations Results
-        ALLO_AllocationsUtil.processAllocationResults(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC, allocResults, recs, recExcl);
+        ALLO_AllocationsUtil.processAllocationResults(oppIds, ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC, allocResults, recs, recExcl);
 
         // Determine successfully processed errors
         Set<Id> successfullyProcessed = ALLO_AllocationsUtil.determineSucessfullyProcessedRecords(oppIds, recExcl);
@@ -628,28 +631,103 @@ public class ALLO_AllocationsUtil {
     /*******************************************************************************************************
      * @description Processes the DML for the Allocation Results and updates the "Records For Review" and
      *              "Record Exclusions", recordding errors as needed.
+     * @param oppIds The Set of Opportunity Ids associated with this processing
      * @param AllocationResults allocResults The DML to process, along with any errors identified
      * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review
      *        and additional/processing
      * @param RecordExclusions recExclusions Map of records to any exclusions they might have
      ********************************************************************************************************/
-    public static void processAllocationResults(PROCESS_DEF process, AllocationResults allocResults, RecordsForReview recs, RecordExclusions recExclusions) {
+    public static void processAllocationResults(Set<Id> oppIds, PROCESS_DEF process, AllocationResults allocResults, RecordsForReview recs, RecordExclusions recExclusions) {
         // These are shells to pass to the ERR_RecordError addDML Errors method, so it can set the Object Type
         SObject oppObjType = new Opportunity();
         SObject paymentObjType = new npe01__OppPayment__c();
         Set<PROCESS_DEF> processExclusions = getProcessExclusionsFor(process);
 
-        // Process Deletes
-        processAllocationDeleteResults(allocResults.allocationsForDelete, recs, recExclusions, processExclusions, oppObjType, paymentObjType);
+        Boolean dmlErrors = false;
+        Integer dmlIteration = 0;
+        Map<Id, List<Allocation__c>> backupOppsAllocations;
+        Map<Id, List<Allocation__c>> backupPaymentAllocations;
 
-        // Process Inserts
-        processAllocationInsertResults(allocResults.allocationsForInsert, recs, recExclusions, processExclusions, oppObjType, paymentObjType);
+        Savepoint sp = Database.setSavepoint();
 
-        // Process Updates
-        processAllocationUpdateResults(allocResults.allocationsForUpdate, recs, recExclusions, processExclusions, oppObjType, paymentObjType);
+        do {
+            // Clone existing allocation lists in case they need to be restored when rolling back
+            backupOppsAllocations = recs.oppsAllocations.clone();
+            backupPaymentAllocations = recs.paymentAllocations.clone();
 
-        // Process any functional errors
+            dmlIteration++;
+            dmlErrors = false;
+
+            // Process Deletes
+            dmlErrors = (dmlErrors || processAllocationDeleteResults(allocResults.allocationsForDelete, recs, recExclusions, processExclusions, oppObjType, paymentObjType));
+
+            // Process Inserts
+            dmlErrors = (dmlErrors || processAllocationInsertResults(allocResults.allocationsForInsert, recs, recExclusions, processExclusions, oppObjType, paymentObjType));
+
+            // Process Updates
+            dmlErrors = (dmlErrors || processAllocationUpdateResults(allocResults.allocationsForUpdate, recs, recExclusions, processExclusions, oppObjType, paymentObjType));
+
+            if (dmlErrors) {
+                // Rollback to a consistent state && clean the allocationResults for the next try of the loop
+                // Removing any not in the successfulOppIds set
+                // Errors will remain to be logged for that Opportunity
+                Database.rollback(sp);
+
+                // Revert Maps of existing Allocations to versions prior to DML Operation
+                recs.oppsAllocations = backupOppsAllocations;
+                recs.paymentAllocations = backupPaymentAllocations;
+
+                Set<Id> successfulOppIds = ALLO_AllocationsUtil.determineSucessfullyProcessedRecords(oppIds, recExclusions);
+
+                removeIfNotInOpportunityIdsSet(successfulOppIds, recs, allocResults);
+            }
+
+        } while (dmlIteration <= NUM_DATABASE_RETRIES && dmlErrors);
+
+        if (dmlErrors) { // Need to log errors for all Opportunities that don't already have errors since retries exhausted
+            for (Id oppId :oppIds) {
+                if (!allocResults.errorsByRecordId.containsKey(oppId)) {
+                    //add general retries exceeded error
+                    allocResults.errorsByRecordId.put(oppId, assembleRecordError(new Opportunity(Id = oppId), Label.alloPaymentAllocationBatchRetriesExceeded));
+                }
+            }
+        }
+
+        // Convert any errors that were not explicitly DML errors here
         processFunctionalErrors(recs, recExclusions, processExclusions, allocResults.errorsByRecordId, oppObjType);
+    }
+
+    /*******************************************************************************************************
+     * @description Removes from the allocResults lists any entries that were associated with an
+     *              unsuccessful Opportunity.
+     * @param successfulOppIds The Set of Opportunity Ids that did not error
+     * @param RecordsForReview recs the Opportunity records and associated Allocations requiring review
+     *        and additional/processing
+     * @param AllocationResults allocResults The DML to process, along with any errors identified
+     ********************************************************************************************************/
+    private static void removeIfNotInOpportunityIdsSet(Set<Id> successfulOppIds, RecordsForReview recs, AllocationResults allocResults) {
+        List<List<Allocation__c>> listsOfAllocs = new List<List<Allocation__c>>();
+        listsOfAllocs.add(allocResults.allocationsForDelete);
+        listsOfAllocs.add(allocResults.allocationsForInsert);
+        listsOfAllocs.add(allocResults.allocationsForUpdate);
+        for (List<Allocation__c> allocs : listsOfAllocs) {
+            Integer idx = 0;
+            while (idx < allocs.size()) {
+                Allocation__c alloc = allocs[idx];
+                Id allocOppId = null;
+
+                if (alloc.Opportunity__c != null) {
+                    allocOppId = alloc.Opportunity__c;
+                } else if (alloc.Payment__c != null) {
+                    allocOppId = recs.paymentIdsToOppIds.get(alloc.Payment__c);
+                }
+                if (allocOppId != null && !successfulOppIds.contains(allocOppId)) { // If it is not in the successfully processed list, remove from the DML list
+                    allocs.remove(idx);
+                } else {
+                    idx++;
+                }
+            }
+        }
     }
 
     /*******************************************************************************************************
@@ -665,9 +743,11 @@ public class ALLO_AllocationsUtil {
      *        Errors so it can store the Object as "Opportunity"
      * @param SObject paymentObjType - (Payment SObject) Used when adding an error to the list of Record
      *        Errors so it can store the Object as "npe01__OppPayment__c"
+     * @return Boolean, true if there were any DML errors
      ********************************************************************************************************/
-    @testVisible private static void processAllocationDeleteResults(List<Allocation__c> allocationsForDelete, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+    @testVisible private static Boolean processAllocationDeleteResults(List<Allocation__c> allocationsForDelete, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
         List<Database.DeleteResult> deletes = null;
+        boolean dmlErrorsPresent = false;
 
         // Process Deletions
         if (allocationsForDelete != null && allocationsForDelete.size() > 0) {
@@ -684,6 +764,7 @@ public class ALLO_AllocationsUtil {
                         // Removes the successfully deleted Opportunity Allocation from the Opportunity Allocations List, indexed by Opportunity Id
                         remove(recs.oppsAllocations, deletedAlloc.Opportunity__c, deletedAlloc);
                     } else {
+                        dmlErrorsPresent = true;
                         recs.recErrs.addError(deletedAlloc.Opportunity__c, delResult, oppObjType);
                         recExclusions.addExclusions(deletedAlloc.Opportunity__c, processExclusions);
                     }
@@ -693,12 +774,15 @@ public class ALLO_AllocationsUtil {
                         // Removes the successfully deleted Payment Allocation from the Payment Allocations List, indexed by Payment Id
                         remove(recs.paymentAllocations, deletedAlloc.Payment__c, deletedAlloc);
                     } else {
+                        dmlErrorsPresent = true;
                         recs.recErrs.addError(deletedAlloc.Payment__c, delResult, paymentObjType);
                         recExclusions.addExclusions(recs.paymentIdsToOppIds.get(deletedAlloc.Payment__c), processExclusions);
                     }
                 }
             }
         }
+
+        return dmlErrorsPresent;
     }
 
     /*******************************************************************************************************
@@ -714,9 +798,11 @@ public class ALLO_AllocationsUtil {
      *        Errors so it can store the Object as "Opportunity"
      * @param SObject paymentObjType - (Payment SObject) Used when adding an error to the list of Record
      *        Errors so it can store the Object as "npe01__OppPayment__c"
+     * @return Boolean true, if there were any dml errors
      ********************************************************************************************************/
-    @testVisible private static void processAllocationInsertResults(List<Allocation__c> allocationsForInsert, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+    @testVisible private static Boolean processAllocationInsertResults(List<Allocation__c> allocationsForInsert, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
         List<Database.SaveResult> inserts = null;
+        Boolean dmlErrorsPresent = false;
 
         // Process Inserts
         if (allocationsForInsert != null && allocationsForInsert.size() > 0) {
@@ -733,6 +819,7 @@ public class ALLO_AllocationsUtil {
                         // add the successfully inserted Allocation to the Opportunity Allocations List, indexed by the Opportunity Id
                         add(recs.oppsAllocations, insertedAlloc.Opportunity__c, insertedAlloc);
                     } else {
+                        dmlErrorsPresent = true;
                         recs.recErrs.addError(insertedAlloc.Opportunity__c, insResult, oppObjType);
                         recExclusions.addExclusions(insertedAlloc.Opportunity__c, processExclusions);
                     }
@@ -741,12 +828,15 @@ public class ALLO_AllocationsUtil {
                         // add the successfully inserted Allocation to the Payment Allocations List, indexed by the Payment Id
                         add(recs.paymentAllocations, insertedAlloc.Payment__c, insertedAlloc);
                     } else {
+                        dmlErrorsPresent = true;
                         recs.recErrs.addError(insertedAlloc.Payment__c, insResult, paymentObjType);
                         recExclusions.addExclusions(recs.paymentIdsToOppIds.get(insertedAlloc.Payment__c), processExclusions);
                     }
                 }
             }
         }
+
+        return dmlErrorsPresent;
     }
 
     /*******************************************************************************************************
@@ -762,9 +852,11 @@ public class ALLO_AllocationsUtil {
      *        Errors so it can store the Object as "Opportunity"
      * @param SObject paymentObjType - (Payment SObject) Used when adding an error to the list of Record
      *        Errors so it can store the Object as "npe01__OppPayment__c"
+     * @return Boolean true, if there were any dml errors
      ********************************************************************************************************/
-    @testVisible private static void processAllocationUpdateResults(List<Allocation__c> allocationsForUpdate, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
+    @testVisible private static Boolean processAllocationUpdateResults(List<Allocation__c> allocationsForUpdate, RecordsForReview recs, RecordExclusions recExclusions, Set<PROCESS_DEF> processExclusions, SObject oppObjType, SObject paymentObjType) {
         List<Database.SaveResult> updates = null;
+        Boolean dmlErrorsPresent = false;
 
         // Process Updates
         if (allocationsForUpdate != null && allocationsForUpdate.size() > 0) {
@@ -779,8 +871,9 @@ public class ALLO_AllocationsUtil {
                 if (updatedAlloc.Opportunity__c != null) {
                     if (updResult.isSuccess()) {
                         // Replaces the Updated Allocation in the Opportunity Allocations List, indexed by Opportunity Id
-                        replace(recs.oppSAllocations, updatedAlloc.Opportunity__c, updatedAlloc);
+                        replace(recs.oppsAllocations, updatedAlloc.Opportunity__c, updatedAlloc);
                     } else {
+                        dmlErrorsPresent = true;
                         recs.recErrs.addError(updatedAlloc.Opportunity__c, updResult, oppObjType);
                         recExclusions.addExclusions(updatedAlloc.Opportunity__c, processExclusions);
                     }
@@ -789,12 +882,14 @@ public class ALLO_AllocationsUtil {
                         // Replaces the Updated Allocation in the Payment Allocations List, indexed by Payment Id
                         replace(recs.paymentAllocations, updatedAlloc.Payment__c, updatedAlloc);
                     } else {
+                        dmlErrorsPresent = true;
                         recs.recErrs.addError(updatedAlloc.Payment__c, updResult, paymentObjType);
                         recExclusions.addExclusions(recs.paymentIdsToOppIds.get(updatedAlloc.Payment__c), processExclusions);
                     }
                 }
             }
         }
+        return dmlErrorsPresent;
     }
 
     /*******************************************************************************************************

@@ -2703,6 +2703,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Allocation Error occurred on the {obj_type} record with Salesforce Id {parent_id}. Reason: {error}</value>
     </labels>
     <labels>
+        <fullName>alloPaymentAllocationBatchRetriesExceeded</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when retry phase fails during Allocations processing</shortDescription>
+        <value>Error occurred while processing records that didn&apos;t error on first attempt. No data was saved.</value>
+    </labels>
+    <labels>
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
