@@ -93,7 +93,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
 
-    @track dataImport; // Row being updated when in update mode
+    @track dataImport = {}; // Row being updated when in update mode
     @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
 
@@ -141,7 +141,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.donorRecord = data;
             this.initializeForm(this.formTemplate, this.fieldMappings);
         } else if (error) {
-            console.error(JSON.stringify(error));
+            
         }
     }
 
@@ -271,16 +271,26 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         GeFormService.handleSave(
             sectionsList,
             this.donorRecord,
-            this.selectedDonationDataImportFieldValues)
-            .then(opportunityId => {
-                this.navigateToRecordPage(opportunityId);
+            this.selectedDonationDataImportFieldValues,
+            this.dataImport.Id)
+            .then(saveResponse => {
+                this.handleSingleGiftSaveResponse(saveResponse);
             })
             .catch(error => {
+                handleCatchError(error);
+            })
+            .finally(() => {
                 enableSave();
                 toggle();
-                handleCatchError(error);
-            });
+            })
+    }
 
+    handleSingleGiftSaveResponse(saveResponse) {
+        if (saveResponse.opportunityId) {
+            this.navigateToRecordPage(saveResponse.opportunityId);
+        } else if (saveResponse.dataImportId) {
+            this.dataImport.Id = saveResponse.dataImportId;
+        }
     }
 
     handleSaveBatchGiftEntry(sectionsList,enableSave,toggle) {
@@ -321,7 +331,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     handleCatchOnSave( error ) {
-
+        
+        
         // var inits
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         const exceptionWrapper = JSON.parse(error.body.message);
@@ -704,6 +715,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     @api
     reset(objectMappingDeveloperName = null) {
+        
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
 
         let fieldMappingDevNames = null;

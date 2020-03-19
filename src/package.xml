@@ -563,6 +563,7 @@
         <members>UTIL_IntegrationGateway_TEST</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
+        <members>UTIL_Jwt</members>
         <members>UTIL_LightningComponentSupport</members>
         <members>UTIL_ListCustomSettingsFacade</members>
         <members>UTIL_MasterSchedulable</members>

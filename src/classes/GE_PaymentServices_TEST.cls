@@ -48,14 +48,11 @@ public class GE_PaymentServices_TEST {
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
 
         GE_PaymentServices paymentServices = new GE_PaymentServices(GOOD_TOKEN);
-        HttpResponse response = paymentServices.makePurchaseCall();
+        GE_PaymentServices.ResponseWrapper response = paymentServices.makePurchaseCall();
 
-        String contentType = response.getHeader('Content-Type');
-        System.assert(contentType == 'application/json');
-
-        String actualValue = response.getBody();
+        String actualValue = response.body;
         String expectedValue = SUCCESS_RESPONSE_BODY;
-        System.assertEquals(201, response.getStatusCode());
+        System.assertEquals(201, response.statusCode);
         System.assertEquals(actualValue, expectedValue);
     }
 
@@ -64,14 +61,11 @@ public class GE_PaymentServices_TEST {
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
 
         GE_PaymentServices paymentServices = new GE_PaymentServices(BAD_TOKEN);
-        HttpResponse response = paymentServices.makePurchaseCall();
+        GE_PaymentServices.ResponseWrapper response = paymentServices.makePurchaseCall();
 
-        String contentType = response.getHeader('Content-Type');
-        System.assert(contentType == 'application/json');
-
-        String actualValue = response.getBody();
+        String actualValue = response.body;
         String expectedValue = FAILED_RESPONSE_BODY;
-        System.assertEquals(403, response.getStatusCode());
+        System.assertEquals(403, response.statusCode);
         System.assertEquals(actualValue, expectedValue);
     }
 

@@ -46,16 +46,18 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static String makePurchaseCall(String token) {
-        GE_PaymentServices paymentServices = new GE_PaymentServices(token);
-        HttpResponse response = paymentServices.makePurchaseCall();
+    public static String makePurchaseCall(DataImport__c dataImportRecord) {
+        GE_PaymentServices paymentServices = new GE_PaymentServices(dataImportRecord);
+        GE_PaymentServices.ResponseWrapper response = paymentServices.makePurchaseCall();
 
-        // Parse the JSON response...
-        if (response.getStatusCode() != 201) {
-            return JSON.serialize(response.getStatus());
-        } else {
-            return JSON.serialize(response.getBody());
-        }
+        return JSON.serialize(response);
+    }
+
+    // TODO: Remove placeholder tokenize call later
+    @AuraEnabled
+    public static String makeTokenizeCall() {
+        GE_PaymentServices paymentServices = new GE_PaymentServices();
+        return paymentServices.placeholderTokenize();
     }
 
     /*******************************************************************************************************
@@ -131,6 +133,37 @@ public with sharing class GE_GiftEntryController {
 
         return oppId;
     }
+
+    // START POC METHODS
+    @AuraEnabled
+    public static DataImport__c insertDataImport(DataImport__c diRecord, String widgetData) {
+        // Check for widget data and convert it to the correct format for processing
+        String additionalObjectJSON = GE_FormRendererService.convertWidgetDataToObjectJSON(widgetData);
+        diRecord.Additional_Object_JSON__c = additionalObjectJSON;
+
+        // Save the Data Import record to the Database
+        diRecord = saveDataImport(diRecord);
+        //String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString('Something went wrong with insert');
+        //throw returnAuraException(JSONExceptionData);
+        return diRecord;
+    }
+
+    @AuraEnabled
+    public static DataImport__c updateDataImport(DataImport__c diRecord) {
+        update diRecord;
+        return diRecord;
+    }
+
+    @AuraEnabled
+    public static String processDataImport(DataImport__c diRecord, Boolean updateGift) {
+        // Run the BDI process on this new Data Import
+        processDataImport(diRecord, false, updateGift);
+        // Get the ID of the created Opportunity so we can return it
+        String oppId = getOpportunityIdFromImport(diRecord.Id);
+        return oppId;
+        //return 'Attempted to process';
+    }
+    // END POC METHODS
 
     /*******************************************************************************************************
     * @description Set DataImport Settings that are important to Gift Entry matching

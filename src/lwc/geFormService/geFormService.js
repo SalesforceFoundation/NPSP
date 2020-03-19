@@ -1,7 +1,7 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
 import saveAndProcessDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndProcessDataImport';
-import { handleError } from 'c/utilTemplateBuilder';
+import { handleError, showToast } from 'c/utilTemplateBuilder';
 import saveAndDryRunDataImport
     from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import {api} from "lwc";
@@ -10,6 +10,19 @@ import getFormRenderWrapper
     from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
 import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
+import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
+
+import insertDataImport from '@salesforce/apex/GE_GiftEntryController.insertDataImport';
+import makePurchaseCall from '@salesforce/apex/GE_GiftEntryController.makePurchaseCall';
+import updateDataImport from '@salesforce/apex/GE_GiftEntryController.updateDataImport';
+import processDataImport from '@salesforce/apex/GE_GiftEntryController.processDataImport';
+
+// TODO: Remove placeholder tokenize call later
+import makeTokenizeCall from '@salesforce/apex/GE_GiftEntryController.makeTokenizeCall';
+
+const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
+const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -144,42 +157,99 @@ class GeFormService {
     }
 
     /**
-     * Takes a Data Import record and additional object data, processes it, and returns the new Opportunity created from it.
-     * @param createdDIRecord
-     * @param widgetValues
-     * @returns {Promise<Id>}
-     */
-    saveAndProcessDataImport(createdDIRecord, widgetValues, hasUserSelectedDonation = false) {
-        const widgetDataString = JSON.stringify(widgetValues);
-        return new Promise((resolve, reject) => {
-            saveAndProcessDataImport({
-                    diRecord: createdDIRecord,
-                    widgetData: widgetDataString,
-                    updateGift: hasUserSelectedDonation
-                })
-                .then((result) => {
-                    resolve(result);
-                })
-                .catch(error => {
-                    console.error(JSON.stringify(error));
-                    reject(error);
-                });
-        });
-    }
-
-    /**
      * Takes a list of sections, reads the fields and values, creates a di record, and creates an opportunity from the di record
      * @param sectionList
      * @returns opportunityId
      */
-    handleSave(sectionList, record, dataImportRecord) {
-        const { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record, dataImportRecord);
-
+    async handleSave(sectionList, record, dataImportRecord, dataImportRecordId) {
+        let { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record, dataImportRecord);
         const hasUserSelectedDonation = isNotEmpty(dataImportRecord);
 
-        const opportunityID = this.saveAndProcessDataImport(diRecord, widgetValues, hasUserSelectedDonation);
+        showToast('Retrieving token...', '', 'success');
+        const hasPaymentToProcess = await this.retrieveToken(diRecord);
+        const isPaymentProcessReattempt = hasPaymentToProcess && dataImportRecordId;
 
-        return opportunityID;
+        if (isPaymentProcessReattempt) {
+            showToast('Is a payment process reattempt...', '', 'success');
+            diRecord.Id = dataImportRecordId;
+        }
+
+        const saveResponse = hasPaymentToProcess ?
+            await this.handlePaymentProcessing(diRecord, widgetValues, hasUserSelectedDonation) :
+            await this.handleSaveAndProcess(diRecord, widgetValues, hasUserSelectedDonation);
+
+        return saveResponse;
+    }
+
+    retrieveToken = async (dataImportRecord) => {
+        // TODO: Temporary way of retrieving the token, replace with actual call later
+        // Query for the widget component?
+        dataImportRecord.token = await makeTokenizeCall();
+        return dataImportRecord.token ? true : false;
+    }
+
+    handlePaymentProcessing = async (dataImportRecord, widgetValues, hasUserSelectedDonation) => {
+        const purchaseCallResponse = await this.handlePurchaseCall(dataImportRecord);
+        if (purchaseCallResponse) {
+            this.setPaymentStatusAndReason(dataImportRecord, purchaseCallResponse);
+
+            const isSuccessfulPurchase = purchaseCallResponse.statusCode === 201;
+            const saveResponse = isSuccessfulPurchase ?
+                await this.handleSaveAndProcess(dataImportRecord, widgetValues, hasUserSelectedDonation) :
+                await this.handleFailedPurchaseCall(dataImportRecord, purchaseCallResponse, widgetValues);
+
+            return saveResponse;
+        }
+    }
+
+    handlePurchaseCall = async (dataImportRecord) => {
+        showToast('Making purchase call...', '', 'success');
+
+        let purchaseCallResponseString = await makePurchaseCall({ dataImportRecord: dataImportRecord });
+        let response = JSON.parse(purchaseCallResponseString);
+        response.body = JSON.parse(response.body);
+
+        return response;
+    }
+
+    setPaymentStatusAndReason = (dataImportRecord, response) => {
+        dataImportRecord[PAYMENT_STATUS__C] = response.body.status || response.status;
+
+        const isSuccessfulPurchase = response.statusCode === 201;
+        if (isSuccessfulPurchase) {
+            dataImportRecord[PAYMENT_DECLINED_REASON__C] = null;
+        } else {
+            dataImportRecord[PAYMENT_DECLINED_REASON__C] = JSON.stringify(response.body);
+        }
+    }
+
+    handleFailedPurchaseCall = async (dataImportRecord, response, widgetValues) => {
+        const widgetJson = JSON.stringify(widgetValues);
+        const insertResponse =
+            await insertDataImport({ diRecord: dataImportRecord, widgetData: widgetJson });
+
+        // TODO: Temporary toast for purchase call errors, remove later
+        let errors = response.body.errors.map(error => error.message);
+        showToast(
+            `Purchase Call Error: ${response.statusCode} ${response.status}`,
+            `${errors}`,
+            'error',
+            'sticky');
+
+        return { dataImportId: insertResponse.Id, purchaseResponse: response };
+    }
+
+    handleSaveAndProcess = async (dataImportRecord, widgetValues, hasUserSelectedDonation) => {
+        showToast('Saving and processing data import...', '', 'success');
+
+        const widgetJson = JSON.stringify(widgetValues);
+        const opportunityId = await saveAndProcessDataImport({
+            diRecord: dataImportRecord,
+            widgetData: widgetJson,
+            updateGift: hasUserSelectedDonation
+        });
+
+        return { opportunityId: opportunityId };
     }
 
     /**
