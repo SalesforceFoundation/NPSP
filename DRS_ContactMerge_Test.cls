@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.org
+    Copyright (c) 2020, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,12 @@
 */
 /**
 * @author Salesforce.org
-* @date 2011 (2.x)
-* @description Tests for CON_ContactMerge_CTRL
+* @date 2020 (2.x)
+* @description Tests for DRS_ContactMerge_CTRL
 * @group ContactMerge
 * @group-content ../../ApexDocContent/ContactMerge.htm
 */
-@isTest
+@isTest(isParallel=true)
 public with sharing class DRS_ContactMerge_Test {
     //This is test on initail load of the Contact Merge Page
     static testMethod void testInitailLoadOfPage() {
