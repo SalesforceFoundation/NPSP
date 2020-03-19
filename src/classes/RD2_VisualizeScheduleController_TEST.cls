@@ -463,7 +463,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         System.assertEquals(plannedInstallments - paidInstallments, installments.size(),
-            'Should only return definite number of future installments for fixed length RD: ' + installments[installments.size() - 1]);
+            'Should only return definite number of future installments for fixed length RD: ' + installments);
     }
 
 
