@@ -634,6 +634,13 @@
         <value>Account Model Conversion Progress</value>
     </labels>
     <labels>
+        <fullName>CONV_ConversionAccessDenied</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error displayed when user does not have permissions for the conversion process</shortDescription>
+        <value>You don&apos;t have the required system permissions to convert. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>CONV_Fundamental_Changes</fullName>
         <language>en_US</language>
         <protected>false</protected>
