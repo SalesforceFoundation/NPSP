@@ -786,16 +786,19 @@ private class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
-            .withClosedWonStage()
-            .withCloseDate(START_DATE)
-            .build();
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+
+        for (Integer month = 0; month < plannedInstallments; month++){
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(month))
+                .build());
+        }
+        insert opps;
 
         // Disable the trigger to ensure the change happens in the batch job vs. the trigger.
         TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
-
-        rd.npe03__Total_Paid_Installments__c = plannedInstallments;
-        update rd;
 
         // Make sure the RD is still Active
         rd = rdGateway.getRecord(rd.Id);
@@ -807,6 +810,8 @@ private class RD2_OpportunityEvaluation_TEST {
         assertBatchJobIteration(1);
 
         rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(plannedInstallments, rd.npe03__Total_Paid_Installments__c,
+            'The Number of Paid Installments should be the same as the Number of Planned Installments');
         System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c,
             'The Recurring Donation should be Closed');
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c,

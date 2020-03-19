@@ -145,6 +145,7 @@ public inherited sharing class RD2_RecurringDonation {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
             rd.ClosedReason__c = RD2_Constants.FIXED_TYPE_CLOSED_REASON;
             rd.npe03__Next_Payment_Date__c = null;
+
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
             changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
@@ -153,8 +154,8 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Revises and modifies the Number of Planned Installments when
-    * RecurringType is Open and Number of Planned Installments = 1, set Number of Planned Installments to null
+    * @description Sets the Number of Planned Installments to null when RecurringType is Open 
+    * and Number of Planned Installments = 1 (default)
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation revisePlannedInstallments() {
@@ -162,6 +163,26 @@ public inherited sharing class RD2_RecurringDonation {
         if (isOpenEnded() && rd.npe03__Installments__c == 1) {
             rd.npe03__Installments__c = null;
             changedFields.add(npe03__Recurring_Donation__c.npe03__Installments__c);
+        }
+
+        return this;
+    }
+
+    /**
+    * @description Revises and modifies the Number of Paid Installments for a fixed-length RD
+    * @param paidInstallments Number of Paid Installments
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation revisePaidInstallments(Integer paidInstallments) {
+        //do not check if the Number of Paid Installments is up to date for an open RD,
+        //the CRLP can update the number asynchronously
+        if (!isFixedLength() || paidInstallments == null) {
+            return this;
+        }
+
+        if (paidInstallments != rd.npe03__Total_Paid_Installments__c) {
+            rd.npe03__Total_Paid_Installments__c = paidInstallments;
+            changedFields.add(npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c);
         }
 
         return this;

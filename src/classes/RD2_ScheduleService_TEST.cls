@@ -1221,7 +1221,7 @@ private with sharing class RD2_ScheduleService_TEST {
             .withClosedWonStage();
 
         List<Opportunity> opps = new List<Opportunity>();
-        for (Integer month = 0; month < paidInstallments; month++){
+        for (Integer month = 0; month < paidInstallments; month++) {
             opps.add(oppBuilder
                 .withName()
                 .withCloseDate(startDate.addMonths(month))
@@ -1315,7 +1315,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         final Date startDate = Date.newInstance(2020, 1, 1);
         final Date scheduleEndDate = Date.newInstance(2020, 3, 1);
-        final Date today = Date.newInstance(2020, 3, 2);
+        final Date today = Date.newInstance(2020, 3, 1);
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
@@ -1332,25 +1332,33 @@ private with sharing class RD2_ScheduleService_TEST {
             .withClosedWonStage();
 
         List<Opportunity> opps = new List<Opportunity>();
-        for (Integer month = 0; month < paidInstallments; month++){
+        //create all planned Opportunites and set them to Closed Won stage
+        for (Integer month = 0; month < plannedInstallments; month++) {
             opps.add(oppBuilder
                 .withName()
                 .withCloseDate(startDate.addMonths(month))
-                .build());
+                .build()
+            );
         }
+        //add one extra user created open Opp after the last Next Donation Date
+        opps.add(oppBuilder
+            .withName()
+            .withCloseDate(scheduleEndDate.addMonths(1))
+            .withOpenStage()
+            .build()
+        );
         TEST_OpportunityBuilder.setUneditableFields(opps);
 
         List<RecurringDonationSchedule__c> rdSchedules = service.buildNewSchedules(rd);
         System.assertEquals(1, rdSchedules.size(), 'There should be one schedule');
 
-        //simulate RD being closed when all planned installments are paid
-        rd.Status__c = RD2_Constants.STATUS_CLOSED;
-        rdSchedules[0].EndDate__c = scheduleEndDate;
-
         rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, opps, rdSchedules);
         service.evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
 
-        System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 'The End Date should be unchanged');
+        System.assertEquals(scheduleEndDate, opps[plannedInstallments - 1].CloseDate, 
+            'The last planned Opp Close Date should match');
+        System.assertEquals(scheduleEndDate, rdSchedules[0].EndDate__c, 
+            'The End Date should be the last planned Opp Close Date');
 
         Date nextDonationDate = service.getNextDonationDate(rd, rdSchedules);
         System.assertEquals(null, nextDonationDate, 

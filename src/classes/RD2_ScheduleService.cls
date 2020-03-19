@@ -772,11 +772,9 @@ public without sharing class RD2_ScheduleService {
     }
 
     /**
-    * @description Sets End Date on the Recurring Donation schedules.
-    * The end date is not set on a schedule for a fixed-length Recurring Donation.
-    * Thus, schedules should be dynamically evaluated for the End Date
-    * when the Next Donation Date record is being determined, ie the Next Donation Date calculated,
-    * or the Visualizer displays upcoming installments.
+    * @description Sets End Date on the Recurring Donation schedule for a fixed-length RD.
+    * Schedules are dynamically evaluated for the End Date
+    * when the Next Donation Date record is calculated, or when the Visualizer displays upcoming installments.
     * @param rd Recurring Donation record
     * @param rdSchedules Schedules on the Recurring Donation record
     * @return void
@@ -791,7 +789,9 @@ public without sharing class RD2_ScheduleService {
             return;
         }
 
-        Integer estimatedOpenSlots = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments() + rd.npe03__Donations__r.size();
+        Integer plannedInstallments = rdRecord.getPlannedInstallments();
+        Integer paidInstallments = rdRecord.getPaidInstallments();
+        Integer estimatedOpenSlots = plannedInstallments - paidInstallments + rd.npe03__Donations__r.size();
 
         List<RD2_OpportunityMatcher.Record> records = new RD2_OpportunityMatcher(currentDate)
             .include(rd.npe03__Donations__r)
@@ -799,27 +799,55 @@ public without sharing class RD2_ScheduleService {
                 getVisualizedInstallments(currentDate, estimatedOpenSlots, rdSchedules)
             )
             .getRecords();
-
-        //Remove all closed installments
-        for (Integer i = records.size() - 1; i >= 0 ; i--) {
-            if (!records[i].isNew() && records[i].getOpportunity().isClosed) {
-                records.remove(i);
-            }
-        }
-
-        Integer lastIndex = rdRecord.getPlannedInstallments() - rdRecord.getPaidInstallments() - 1;
-        lastIndex = lastIndex < 0 ? 0 : lastIndex;
-
-        Date scheduleEndDate = records.isEmpty()
-            ? currentDate.addDays(-1)
-            : records[lastIndex].hasInstallment()
-                ? records[lastIndex].getInstallment().nextDonationDate
-                : records[lastIndex].getCloseDate(); 
+        
+        Date scheduleEndDate = getScheduleEndDateForFixedLength(records, plannedInstallments, paidInstallments);
 
         for (RecurringDonationSchedule__c schedule : rdSchedules) {
             if (schedule.EndDate__c == null) {
                 schedule.EndDate__c = scheduleEndDate;
             }
         }
+    }
+
+    /**
+    * @description Dynamically calculates the schedule end date 
+    * based on existing Opportunities and projected installments
+    * @param records Opportunity matcher records
+    * @param rdSchedules Schedules on the Recurring Donation record
+    * @return Date The fixed-length RD schedule end date
+    */
+    private Date getScheduleEndDateForFixedLength(List<RD2_OpportunityMatcher.Record> records, Integer plannedInstallments, Integer paidInstallments) {
+        //Remove all closed Opportunities
+        RD2_OpportunityMatcher.Record lastClosedWonRecord;
+        RD2_OpportunityMatcher.Record scheduleEndRecord;
+
+        for (Integer i = records.size() - 1; i >= 0 ; i--) {
+            RD2_OpportunityMatcher.Record record = records[i];
+            Opportunity opp = record.getOpportunity();
+
+            if (opp.Id != null && opp.IsClosed) {
+                records.remove(i);
+
+                if (opp.IsWon && lastClosedWonRecord == null) {
+                    lastClosedWonRecord = record;
+                }
+            }
+        }
+
+        Integer lastIndex = plannedInstallments - paidInstallments - 1;
+        if (lastIndex < 0 || records.isEmpty()) {
+            scheduleEndRecord = lastClosedWonRecord;
+
+        } else {
+            try {
+                scheduleEndRecord = records[lastIndex];
+            } catch (Exception e) {}
+        }
+
+        return scheduleEndRecord == null
+            ? currentDate.addDays(-1)
+            : scheduleEndRecord.hasInstallment()
+                ? scheduleEndRecord.getInstallment().nextDonationDate
+                : scheduleEndRecord.getOpportunity().CloseDate; 
     }
 }
