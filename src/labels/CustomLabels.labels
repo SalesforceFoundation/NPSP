@@ -4825,6 +4825,62 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Choose this column as the master record</value>
     </labels>
     <labels>
+	    <fullName>DRS_Contact_Merge_Step1</fullName>
+	    <categories>Contact Merge</categories>
+	    <language>en_US</language>
+	    <protected>true</protected>
+	    <shortDescription>DRS Contact Merge Step 1</shortDescription>
+	    <value>Select the Duplicate Record Sets you want to merge</value>
+    </labels>
+    <labels>
+	    <fullName>conMergeFoundDRS</fullName>
+	    <categories>Contact Merge</categories>
+	    <language>en_US</language>
+	    <protected>true</protected>
+	    <shortDescription>conMergeFoundDRS</shortDescription>
+	    <value>Duplicate Record Sets</value>
+    </labels>
+    <labels>
+	    <fullName>conMergeDRSPickBtnLabel</fullName>
+	    <categories>Contact Merge</categories>
+	    <language>en_US</language>
+	    <protected>true</protected>
+   	    <shortDescription>conMergeDRSPickBtnLabel</shortDescription>
+	    <value>Pick</value>
+    </labels>
+    <labels>
+	    <fullName>conMergeShowDSR</fullName>
+	    <categories>Contact Merge</categories>
+	    <language>en_US</language>
+	    <protected>true</protected>
+	    <shortDescription>conMergeShowDSR</shortDescription>
+	    <value>Show Duplicate Record Sets</value>
+    </labels>
+    <labels>
+	    <fullName>conMergeErrorNoDRSFound</fullName>
+	    <categories>Contact Merge</categories>
+	    <language>en_US</language>
+	    <protected>true</protected>
+	    <shortDescription>Error to be displayed when no DRS records are found</shortDescription>
+	    <value>&lt;b&gt;No Duplicate Record Sets.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No Duplicate Record Sets found. Make sure duplicate rules are enabled. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;More Info&lt;/a&gt;.</value>
+    </labels>
+    <labels>
+	    <fullName>conMergeSearchByContact</fullName>
+	    <categories>Contact Merge</categories>
+	    <language>en_US</language>
+	    <protected>true</protected>
+	    <shortDescription>conMergeSearchByContact</shortDescription>
+	    <value>Search By Contacts</value>
+    </labels>
+    <labels>
+	    <fullName>conMergeErrorNoReadDSRObjPermission</fullName>
+	    <categories>Contact Merge</categories>
+	    <language>en_US</language>
+	    <protected>true</protected>
+	    <shortDescription>Read permission on the Contact object is required to for merging</shortDescription>
+	    <value>You must have Read permissions on Duplicate Record Sets in order to merge Contacts.</value>
+    </labels>
+    <labels>
         <fullName>engagementPlanCantEdit</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
