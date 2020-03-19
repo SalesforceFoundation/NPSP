@@ -32,12 +32,11 @@
             <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">                
                 <apex:commandButton id="ShowDRS"
                                     action="{!redirectToShowDRSList}" 
-                                    value="Show Duplicate Record Sets" 
+                                    value="{!$Label.conMergeShowDSR}" 
                                     styleClass="slds-button slds-button_neutral"
                                     rendered="{!AND(canContinueWithMerge,showDRSButton)}"/>
             </div>
         </apex:form>
-        
         <style type="text/css">
             .slds .slds-path__stage {
                 /* fix weird issue where check icon was not aligning properly */
@@ -56,11 +55,9 @@
                 display: inline-flex;
             }
         </style>
-        
         <apex:variable var="step1class" value="{!IF(step == 1, 'slds-is-current', 'slds-is-complete')}"/>
         <apex:variable var="step2class" value="{!IF(step < 2, 'slds-is-incomplete', IF(step == 2, 'slds-is-current', 'slds-is-complete'))}"/>
         <apex:variable var="step3class" value="{!IF(step < 3, 'slds-is-incomplete', IF(STEP == 3, 'slds-is-current', 'slds-is-complete'))}"/>
-        
         <apex:outputPanel rendered="{!showContactSearch}">
             <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">
                 <div class="slds-path" role="application tablist">
@@ -132,11 +129,9 @@
                     </apex:form>
                 </div>
             </apex:outputText>
-
             <apex:outputText rendered="{!step == 2}">
                 <apex:variable var="hasResults" value="{!searchResults.size > 0}"/>
                 <apex:variable var="cardClass" value="{!IF(hasResults, '', 'slds-card_empty')}"/>
-
                 <apex:form >
                     <div class="slds-card slds-m-horizontal_large {!cardClass}">
                         <div class="slds-card__header slds-grid slds-grid_align-spread">
@@ -150,7 +145,6 @@
                             </h3>
                             </apex:outputText>
                             <apex:outputText rendered="{!hasResults}">
-
                                 <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
                                     <thead>
                                         <tr>
@@ -199,9 +193,7 @@
                     </div>
                 </apex:form>
             </apex:outputText>
-
             <apex:outputText id="contactMerge" rendered="{!step == 3}">
-
                 <apex:form id="mergeForm" styleClass="slds-form">
                     <div class="slds-card slds-m-horizontal_large slds-m-bottom_large hide-when-modal-open">
                         <div class="slds-card__header slds-grid slds-grid_align-spread">
@@ -337,9 +329,7 @@
                         </div>
                         <div class="slds-backdrop" tabindex="-1"></div>
                     </div>
-
                 </apex:form>
-
                 <script>
                     document.getElementById('{!$Component.mergeForm}').addEventListener(
                         'submit',
@@ -358,6 +348,5 @@
                 </script>
             </apex:outputText>
         </apex:outputPanel>
-
     </div>
 </apex:page>
