@@ -747,11 +747,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             else:
                 return "fail"
         
-    def select_value_from_list(self,list_name,value): 
-        locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
-        loc = self.selenium.get_webelement(locator)
-        self.selenium.set_focus_to_element(locator)       
-        self.selenium.select_from_list_by_label(loc,value)
+    
         
     def select_value_from_bge_dd(self, list_name,value):
         list_found = False
@@ -881,16 +877,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         loc = self.selenium.get_webelement(locator).text  
         return loc 
     
-    def click_panel_sub_link (self,title):  
-        """clicks on the button on the payments page"""      
-        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
-        self.selenium.get_webelement(locator).click()
+    
 
-    @capture_screenshot_on_error
-    def click_settings_button (self,panel_id,btn_value):  
-        """clicks on the buttons on npsp settings object using panel id and button value"""      
-        locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
-        self.selenium.click_element(locator)   
 
     def verify_payment_details(self):
         locator = "//tbody/tr/td[2]/span/span"
@@ -1154,7 +1142,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def checkbox_status(self,cbx_name,status):
         """verifies if the specified checkbox is with expected status in readonly mode"""
         locator=npsp_lex_locators["custom_settings"]["cbx_status"].format(cbx_name,status)
-        self.selenium.page_should_contain_element(locator)
+        self.selenium.page_should_contain_element(locator, message='{cbx_name} checkbox is supposed to be {status}')
                 
     def go_to_setup_page(self,page):
         """ Navigates to the specified page in Salesforce Setup """
