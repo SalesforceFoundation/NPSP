@@ -3,29 +3,46 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/OpportunityPageObject.py
-Suite Setup     Open Test Browser
+...             robot/Cumulus/resources/GAUPageObject.py
+Suite Setup     Run keywords
+...             Open Test Browser
+...             Setup Test Data
 Suite Teardown  Delete Records and Close Browser
 
-*** Test Cases ***
+***Keywords***
+# Sets test data contact and an opportunity for the contact
+# Set two GAUs
+Setup Test Data
+    Setupdata   contact                  ${contact1_fields}     ${opportunity_fields}
+    &{gau1} =                            API Create GAU
+    &{gau2} =                            API Create GAU
+    Set suite variable                   &{gau1}
+    Set suite variable                   &{gau2}
 
+*** Variables ***
+&{contact1_fields}       Email=test@example.com
+&{opportunity_fields}    Type=Donation   Name=Test GAU donation   Amount=100  StageName=Closed Won
+
+*** Test Cases ***
 Assign GAU to Opportunity
-    [tags]  unstable
-    &{gau1} =  API Create GAU
-    &{gau2} =  API Create GAU
-    &{contact} =  API Create Contact    Email=skristem@robot.com
-    Store Session Record    Account    &{contact}[AccountId]
-    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Test GAU donation
-    Go To Record Home  &{opportunity}[Id]
-    Select Tab    Related
-    Click Special Related List Button    GAU Allocations    Manage Allocations
-    Wait For Locator    frame    Manage Allocations
-    Choose Frame    Manage Allocations
-    Select Search    General Accounting Unit 0    &{gau1}[Name]
-    Add GAU Allocation    Percent 0    50
-    Click Link    Add Row    
-    Select Search    General Accounting Unit 1    &{gau2}[Name]  
-    Add GAU Allocation    Amount 1    20
-    Click Button    Save
-    Current Page Should Be     Details    Opportunity  
-    Scroll Page To Location    0    0  
-    Validate Related Record Count    GAU Allocations    2
+    [Documentation]                      Create an opportunity associated to a contatct. Create two GAUs Set
+    ...                                  Set GAU Unit Allocations and assign them to the opportunity.
+
+    [tags]                               W-039818                 feature:GAU
+
+    Go To Page                           Detail
+    ...                                  Opportunity
+    ...                                  object_id=${data}[contact_opportunity][Id]
+    Select Tab                           Related
+    Click Special Related List Button    GAU Allocations         Manage Allocations
+    Current Page Should Be               Custom                  GauAllocation
+    Set Gau Allocation
+    ...                                  General Accounting Unit 0=&{gau1}[Name]
+    ...                                  Percent 0=50
+    Click Link                           Add Row
+    Set Gau Allocation
+    ...                                  General Accounting Unit 1=&{gau2}[Name]
+    ...                                  Amount 1=20
+    Click Button                         Save
+    Current Page Should Be               Details                 Opportunity
+    Validate Related Record Count        GAU Allocations         2
