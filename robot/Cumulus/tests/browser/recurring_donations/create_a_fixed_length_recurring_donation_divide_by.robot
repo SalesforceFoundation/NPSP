@@ -15,30 +15,29 @@ Setup Variables
     Set Suite Variable           ${ns}
 
 Setup Test Data
-    &{contact} =                 API Create Contact             Email=jjoseph@robot.com
-    Set Suite Variable           ${contact}
-    Store Session Record         Account                        &{contact}[AccountId]
-    &{recurringdonation} =       API Create Recurring Donation  npe03__Contact__c=&{contact}[Id]
-    ...                          Name=Julian Recurring Donation
-    ...                          npe03__Amount__c=1200
-    ...                          npe03__Installments__c=12
-    ...                          npe03__Schedule_Type__c=Divide By
-    ...                          npe03__Installment_Period__c=Monthly
-    Set Suite Variable           ${recurringdonation}
+    &{contact1_fields}=   Create Dictionary                     Email=test@example.com
+    &{recurringdonation_fields} =	Create Dictionary           Name=Julian Recurring Donation
+            ...                                                 npe03__Installment_Period__c=Monthly
+            ...                                                 npe03__Amount__c=1200
+            ...                                                 npe03__Installments__c=12
+            ...                                                 npe03__Schedule_Type__c=Divide By
+
+    Setupdata   contact         ${contact1_fields}    recurringdonation_data=${recurringdonation_fields}
 
 *** Test Cases ***
 
 Create Fixed Length Recurring Donation Divide By
     [Documentation]              This test verifies that Opportunities with the proper divided amount are created for a Recurring Donation.
+    [tags]                                   W-039820                            feature:Recurring Donations
 
     #Find 1st Opportunity for Recurring Donation and Check Amount
-    @{opportunity1} =                        API Query Installment      &{recurringdonation}[Id]    (1 of 12)
+    @{opportunity1} =                        API Query Installment      ${data}[contact_rd][Id]     (1 of 12)
     Go To Page                               Details                    Opportunity                 object_id=${opportunity1}[0][Id]
     Select Tab                               Details
     Navigate To And Validate Field Value     Amount                     contains                    $100.00
 
     #Find 2nd Opportunity for Recurring Donation and Check Amount
-    @{opportunity2} =                        API Query Installment      &{recurringdonation}[Id]    (2 of 12)
+    @{opportunity2} =                        API Query Installment      ${data}[contact_rd][Id]     (2 of 12)
     Go To Page                               Details                    Opportunity                 object_id=${opportunity2}[0][Id]
     Select Tab                               Details
     Navigate To And Validate Field Value     Amount                     contains                    $100.00
