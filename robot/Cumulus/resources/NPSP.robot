@@ -206,7 +206,7 @@ Open NPSP Settings
     [Arguments]    ${topmenu}    ${submenu}
     Go To Page                Custom         NPSP_Settings
     Open Main Menu            ${topmenu}
-    Click Link With Text      ${submenu}
+    Open Sub Link             ${submenu}
     Sleep  1
     
 Click Data Import Button
