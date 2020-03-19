@@ -47,7 +47,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     @TestSetup
     private static void createRecordData() {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR));
@@ -216,7 +216,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         addExists = getAddressRecord();
 
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
-        System.assertEquals(0, addExists.size(), 'Address record should not be created');
+        System.assertEquals(0, addExists.size(), 'Address record should not be created with Household address');
         System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType, 'The object type should match');
         System.assert(mockPerms.createSObjFields.contains(Address__c.MailingStreet__c));
     }
@@ -245,7 +245,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
 
         System.assertEquals(householdRecord.npo02__MailingStreet__c, contactRecord.MailingStreet, 'The contact address should be updated to match the contact.');
         System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType, 'The object type should match');
-        System.assertEquals(1, getAddressRecord().size(), 'Address record should be created');
+        System.assertEquals(1, getAddressRecord().size(), 'Address record should be created with HouseHold Address');
         System.assertEquals(contactRecord.AccountId, addExists[0].Household_Account__c, 'Accountid on the address and the contact should match');
     }
 
@@ -316,10 +316,14 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     * @return Contact
     */
     private static List<Address__c> getAddressRecord() {
+        String mailingStreetUpdateToHH = householdRecord.npo02__MailingStreet__c;
+
         return [
-            SELECT Id, Household_Account__c, Default_Address__c, MailingStreet__c, MailingState__c, MailingPostalCode__c, MailingCity__c, MailingCountry__c
+            SELECT Id, Household_Account__c, Default_Address__c, MailingStreet__c, MailingState__c,
+                MailingPostalCode__c, MailingCity__c, MailingCountry__c
             FROM Address__c
             WHERE Default_Address__c = true
+                AND MailingStreet__c = :mailingStreetUpdateToHH
         ];
     }
 
