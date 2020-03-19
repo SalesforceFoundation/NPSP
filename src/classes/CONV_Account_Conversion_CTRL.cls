@@ -36,6 +36,26 @@
 
 public with sharing class CONV_Account_Conversion_CTRL {
 
+    /**
+     * @description Exception thrown when conversion process cannot go ahead
+     */
+    public class ConversionException extends Exception { }
+
+    /***
+    * @description Verifies the user has Admin permissions for Opportunity naming settings.
+    * @return true when the user has the appropriate access
+    */
+    public Boolean isRunningUserIsAdmin {
+        get {
+            if (isRunningUserIsAdmin == null) {
+                isRunningUserIsAdmin = STG_Panel.runningUserIsAdmin();
+            }
+            return isRunningUserIsAdmin;
+        }
+        private set;
+    }
+
+
     /*******************************************************************************************************
     * @description Set to true before the batch job is envoked
     */
@@ -162,15 +182,21 @@ public with sharing class CONV_Account_Conversion_CTRL {
     */
     public PageReference convert() {
         try {
+            if (!isRunningUserIsAdmin) {
+                batchRunning = false;
+                throw new ConversionException(System.Label.CONV_ConversionAccessDenied);
+            }
+
             batchRunning = true;
             String query = CONV_Account_Conversion_CTRL.getBatchQuery();
             CONV_Account_Conversion_BATCH cacv = new CONV_Account_Conversion_BATCH(query, AccountHouseholdIdField, null);
-            ID batchprocessid = Database.executeBatch(cacv, scopesize);
+            Id batchprocessid = Database.executeBatch(cacv, scopesize);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.CONV);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
+
         return null;
     }
 
@@ -201,6 +227,13 @@ public with sharing class CONV_Account_Conversion_CTRL {
     * Users to display warnings about existing Household Accounts, objects owned by inactive users, and record type configuration
     */
     public void runCheck(){
+
+        if (!isRunningUserIsAdmin) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.CONV_ConversionAccessDenied));
+            runCheckErrorState = true;
+            return;
+        }
+
         Integer HHAccountCount = 0;
         Integer ContactConnectedCount;
         String displayHHAccountCount = '';
