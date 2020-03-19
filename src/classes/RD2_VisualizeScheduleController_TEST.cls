@@ -480,7 +480,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         RD2_VisualizeScheduleController.Schedule schedule = RD2_VisualizeScheduleController.getSchedules(rd.Id)[0];
         Test.stopTest();
 
-        System.assertEquals(rd.npe03__Amount__c, schedule.amount, 'The schedule amount should be return when the user has read access of the field');
+        System.assertEquals(rd.npe03__Amount__c, schedule.amount, 'The schedule amount should be available when the user has read access of the field');
         System.assertEquals(null, schedule.dayOfMonth, 'The schedule dayOfMonth should be null when the user does not have read access of the field');
         System.assertEquals(null, schedule.frequency, 'The schedule frequency should be null when the user does not have read access of the field');
         System.assertEquals(null, schedule.paymentMethod, 'The schedule paymentMethod should be null when the user does not have read access of the field');
@@ -516,7 +516,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         for (RD2_VisualizeScheduleController.Installment installment : installments) {
-            System.assertEquals(rd.npe03__Amount__c, installment.amount, 'The installment amount should be return when the user has read access of the field');
+            System.assertEquals(rd.npe03__Amount__c, installment.amount, 'The installment amount should be available when the user has read access of the field');
             System.assertEquals(null, installment.donationDate, 'The installment donationDate should be null when the user does not have read access of the field');
             System.assertEquals(null, installment.paymentMethod, 'The installment paymentMethod should be null when the user does not have read access of the field');
         }

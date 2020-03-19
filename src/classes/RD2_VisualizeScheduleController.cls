@@ -79,7 +79,7 @@ public with sharing class RD2_VisualizeScheduleController {
      *              with the new method name.
      * @param recordId Record Id
      * @param displayNum Number of installments to display
-     * @return List<Installment>
+     * @return Map<String, Object>
      */
     @AuraEnabled
     public static Map<String, Object> getSchedule(Id recordId, Integer displayNum) {
@@ -90,7 +90,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @description Builds future installments for the Recurring Donation
      * @param recordId Record Id
      * @param displayNum Number of installments to display
-     * @return List<Installment>
+     * @return Map<String, Object>
      */
     @AuraEnabled
     public static Map<String, Object> getInstallments(Id recordId, Integer displayNum) {
@@ -289,7 +289,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
-    * @description Get field accessibility for Recurring Donation
+    * @description Get field readability for Recurring Donation
     * @return Map<String, Boolean>
     */
     private static Map<String, Boolean> getFieldReadablePermissionMap() {
