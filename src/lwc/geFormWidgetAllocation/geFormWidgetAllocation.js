@@ -1,6 +1,6 @@
 import {LightningElement, api, track, wire} from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import {isNumeric, isNotEmpty, getLocalFieldName, isEmpty} from 'c/utilCommon';
+import {isNumeric, isNotEmpty, getLocalFieldName, isEmpty, debouncify} from 'c/utilCommon';
 import { handleError, generateId } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 
@@ -78,6 +78,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
 
     init = async () => {
+        this.hideWidget = false;
         if(!this.allocationSettings) {
             this.allocationSettings = await GeFormService.getAllocationSettings();
         }
@@ -175,23 +176,14 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.addAdditionalObjectRows(data);
         } else if(this.hasDonationImported(data)) {
 
-            let dataKeys = Object.keys(data);
-            if(!dataKeys.includes(DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName) ||
-                !dataKeys.includes(DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName)) {
-
-                return;
-            }
-
             if(!isEmpty(data[DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName])) {
 
                 this.hideWidget = true;
 
-            } else {
-                this.hideWidget = false;
-                let importedDonationId = data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName].value;
-
-                this.addImportedDonationRows(importedDonationId);
             }
+            let importedDonationId = data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName].value;
+
+            this.addImportedDonationRows(importedDonationId);
         }
     }
 
@@ -308,7 +300,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     handleAddRow() {
         this.addRows(
             [this.buildRow(false)]
-        );
+        )
     }
 
     /**
@@ -484,6 +476,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
         }, 0);
 
         return amount;
+    }
+
+    get wrapClasses() {
+        return this.hideWidget ? 'slds-hide' : 'slds-show';
     }
 
     /**
