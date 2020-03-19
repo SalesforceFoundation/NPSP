@@ -60,6 +60,15 @@ public with sharing class RD2_VisualizeScheduleController {
         set;
     }
 
+    public static Map<String, Boolean> rdFieldReadabilityMap {
+        get {
+            if (rdFieldReadabilityMap == null) {
+                rdFieldReadabilityMap = getFieldReadablePermissionMap();
+            }
+            return rdFieldReadabilityMap;
+        }set;
+    }
+
     /**
      * @description This method was inserted to work around an anomaly with Salesforce deploy.
      *              Deploy consistently failed after renaming this method to getInstallments.
@@ -70,7 +79,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @return List<Installment>
      */
     @AuraEnabled
-    public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
+    public static Map<String, Object> getSchedule(Id recordId, Integer displayNum) {
         return getInstallments(recordId, displayNum);
     }
 
@@ -81,7 +90,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @return List<Installment>
      */
     @AuraEnabled
-    public static List<Installment> getInstallments(Id recordId, Integer displayNum) {
+    public static Map<String, Object> getInstallments(Id recordId, Integer displayNum) {
         validate(recordId);
 
         Integer counter = 1;
@@ -102,7 +111,10 @@ public with sharing class RD2_VisualizeScheduleController {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
         }
 
-        return installments;
+        return new Map<String, Object> {
+            'installments' => installments,
+            'fieldSecurity' => rdFieldReadabilityMap
+        };
     }
 
     /**
@@ -230,16 +242,14 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public Integer installmentNumber;
         @AuraEnabled public Date donationDate;
         @AuraEnabled public Decimal amount;
-        @AuraEnabled public String campaign;
         @AuraEnabled public String paymentMethod;
         @AuraEnabled public String currencyIsoCode;
 
         public Installment(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.Installment installment) {
             this.installmentNumber = num;
-            this.paymentMethod = installment.paymentMethod;
-            this.campaign = installment.campaignName;
-            this.donationDate = installment.nextDonationDate;
-            this.amount = installment.installmentAmount;
+            this.paymentMethod = rdFieldReadabilityMap.get('PaymentMethod__c') ? installment.paymentMethod : null;
+            this.donationDate = rdFieldReadabilityMap.get('Day_of_Month__c') ? installment.nextDonationDate : null;
+            this.amount = rdFieldReadabilityMap.get('npe03__Amount__c') ? installment.installmentAmount : null;
             this.currencyIsoCode = getCurrencyCode(rd);
         }
     }
@@ -261,16 +271,15 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public String currencyIsoCode;
 
         public Schedule(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.ActiveSchedule schedule) {
-            Map<String, Boolean> permission = getFieldReadablePermissionMap();
             this.scheduleNumber = num;
             this.isCurrent = schedule.isCurrent;
-            this.amount = permission.get('npe03__Amount__c') ? schedule.installmentAmount : null;
-            this.paymentMethod = permission.get('PaymentMethod__c') ? schedule.paymentMethod : null;
-            this.campaign = permission.get('npe03__Recurring_Donation_Campaign__c') ? schedule.campaignName : null;
-            this.startDate = permission.get('StartDate__c') ? schedule.startDate : null;
-            this.period = permission.get('npe03__Installment_Period__c') ? schedule.installmentPeriod : null;
-            this.frequency = permission.get('InstallmentFrequency__c') ? schedule.installmentFrequency : null;
-            this.dayOfMonth = permission.get('Day_of_Month__c') ? schedule.dayOfMonth : null;
+            this.amount = rdFieldReadabilityMap.get('npe03__Amount__c') ? schedule.installmentAmount : null;
+            this.paymentMethod = rdFieldReadabilityMap.get('PaymentMethod__c') ? schedule.paymentMethod : null;
+            this.campaign = rdFieldReadabilityMap.get('npe03__Recurring_Donation_Campaign__c') ? schedule.campaignName : null;
+            this.startDate = rdFieldReadabilityMap.get('StartDate__c') ? schedule.startDate : null;
+            this.period = rdFieldReadabilityMap.get('npe03__Installment_Period__c') ? schedule.installmentPeriod : null;
+            this.frequency = rdFieldReadabilityMap.get('InstallmentFrequency__c') ? schedule.installmentFrequency : null;
+            this.dayOfMonth = rdFieldReadabilityMap.get('Day_of_Month__c') ? schedule.dayOfMonth : null;
             this.endDate = UTIL_Permissions.canRead('RecurringDonationSchedule__c', 'EndDate__c', false) ? schedule.endDate : null;
             this.currencyIsoCode = getCurrencyCode(rd);
         }

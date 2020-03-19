@@ -139,7 +139,8 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;      
-        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
+        List<RD2_VisualizeScheduleController.Installment> installments = 
+            (List<RD2_VisualizeScheduleController.Installment>) RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments).get('installments');
         System.assertEquals(numberOfInstallments, installments.size(), 'Number of installments should match');
 
         for (RD2_VisualizeScheduleController.Installment installment : installments) {
@@ -444,11 +445,81 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
 
         Test.startTest();
-        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, maxInstallments);
+        List<RD2_VisualizeScheduleController.Installment> installments = 
+            (List<RD2_VisualizeScheduleController.Installment>) RD2_VisualizeScheduleController.getInstallments(rd.Id, maxInstallments).get('installments');
         Test.stopTest();
 
         System.assertEquals(10 - 3 - 1, installments.size(),
             'Should only return set amount of future installments for fixed length RD (Planned - Paid - All out of cycle installments)');
+    }
+
+    /***
+    * @description Verifies that schedule fields are not readable when the user does not have read accesss to the field 
+    */
+    @IsTest
+    private static void shouldReturnScheduleWithNullValueWhenUserHasNoReadAccessOnFields() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .build();
+        insert rd;     
+
+        Map<String, Boolean> rdFieldReadabilityMapMock = new Map<String, Boolean> {
+            'StartDate__c' => false,
+            'InstallmentFrequency__c' => false,
+            'PaymentMethod__c' => false,
+            'Day_of_Month__c' => false,
+            'Status__c' => false,
+            'npe03__Installment_Period__c' => false,
+            'npe03__Amount__c' => true,
+            'npe03__Recurring_Donation_Campaign__c' => false
+        };
+
+        RD2_VisualizeScheduleController.rdFieldReadabilityMap = rdFieldReadabilityMapMock;
+        Test.startTest();
+        RD2_VisualizeScheduleController.Schedule schedule = RD2_VisualizeScheduleController.getSchedules(rd.Id)[0];
+        Test.stopTest();
+
+        System.assertEquals(rd.npe03__Amount__c, schedule.amount, 'The schedule amount should be return when the user has read access of the field');
+        System.assertEquals(null, schedule.dayOfMonth, 'The schedule dayOfMonth should be null when the user does not have read access of the field');
+        System.assertEquals(null, schedule.frequency, 'The schedule frequency should be null when the user does not have read access of the field');
+        System.assertEquals(null, schedule.paymentMethod, 'The schedule paymentMethod should be null when the user does not have read access of the field');
+        System.assertEquals(null, schedule.period, 'The schedule period should be null when the user does not have read access of the field');
+    }
+
+    /***
+    * @description Verifies that installments field are null out when the user does not have read access to the field 
+    */
+    @IsTest
+    private static void shouldReturnInstallmentsWithNullValueWhenUserHasNoReadAccessToTheFields() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+            .build();
+        insert rd;     
+
+        Map<String, Boolean> rdFieldReadabilityMapMock = new Map<String, Boolean> {
+            'StartDate__c' => false,
+            'InstallmentFrequency__c' => false,
+            'PaymentMethod__c' => false,
+            'Day_of_Month__c' => false,
+            'Status__c' => false,
+            'npe03__Installment_Period__c' => false,
+            'npe03__Amount__c' => true,
+            'npe03__Recurring_Donation_Campaign__c' => false
+        };
+
+        RD2_VisualizeScheduleController.rdFieldReadabilityMap = rdFieldReadabilityMapMock;
+        Test.startTest();
+        List<RD2_VisualizeScheduleController.Installment> installments = 
+            (List<RD2_VisualizeScheduleController.Installment>) RD2_VisualizeScheduleController.getInstallments(rd.Id, 10).get('installments');
+        Test.stopTest();
+
+        for (RD2_VisualizeScheduleController.Installment installment : installments) {
+            System.assertEquals(rd.npe03__Amount__c, installment.amount, 'The installment amount should be return when the user has read access of the field');
+            System.assertEquals(null, installment.donationDate, 'The installment donationDate should be null when the user does not have read access of the field');
+            System.assertEquals(null, installment.paymentMethod, 'The installment paymentMethod should be null when the user does not have read access of the field');
+        }
     }
 
     //// Helpers

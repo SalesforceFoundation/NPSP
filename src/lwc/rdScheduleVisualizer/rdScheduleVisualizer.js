@@ -16,7 +16,7 @@ import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donatio
 
 import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
 
-const INSTALLMENT_COLS = [
+let INSTALLMENT_COLS = [
     { label: '$DATE', fieldName: 'donationDate', type: 'date-local', sortable: false,
         typeAttributes:{
             month: "2-digit",
@@ -52,9 +52,10 @@ export default class RdScheduleVisualizer extends LightningElement {
         if (this.recordId) {
             getInstallments({ recordId: this.recordId, displayNum: this.displayNum })
                 .then(data => {
-                    this.handleCurrencyIsoCode(data);
-                    this.handleColumns();
-                    this.installments = data;
+                    this.installments = data.installments;
+                    this.handleCurrencyIsoCode(data.installments);
+                    this.handleFieldVisibility(data.fieldSecurity);
+                    this.handleColumns(data.fieldSecurity);
                     this.error = null;
 
                 })
@@ -82,9 +83,10 @@ export default class RdScheduleVisualizer extends LightningElement {
     @wire(getObjectInfo, { objectApiName: SOBJECT_RECURRING_DONATION })
     wireGetRDObjectInfo({error, data}) {
         if (data) {
+            let fieldApis = data.fields;
             this.lblCloseDate = this.lblCloseDate
-            this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
-            this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+            this.lblAmount = (fieldApis[FIELD_RD_AMOUNT.fieldApiName]) ? dafieldApis[FIELD_RD_AMOUNT.fieldApiName].label : null;
+            this.lblPmtMethod = (fieldApis[FIELD_RD_PAYMENT_METHOD.fieldApiName]) ? dafieldApis[FIELD_RD_PAYMENT_METHOD.fieldApiName].label : null;
         }
     }
 
@@ -124,6 +126,7 @@ export default class RdScheduleVisualizer extends LightningElement {
         const currencyIsoCode = this.currencyIsoCode;
 
         this.columns = INSTALLMENT_COLS;
+
         this.columns.forEach(function(col){
             if (col.label === '$AMOUNT') {
                 col.typeAttributes.currencyCode = currencyIsoCode;
@@ -134,6 +137,19 @@ export default class RdScheduleVisualizer extends LightningElement {
                 }
             });
         });
+    }
 
+    handleFieldVisibility(fieldSecurity) {
+        for (let i = 0; i < INSTALLMENT_COLS.length; i++) {
+            if ((INSTALLMENT_COLS[i].label === '$DATE' && fieldSecurity.Day_of_Month__c == false)
+                || (INSTALLMENT_COLS[i].label === '$AMOUNT' && fieldSecurity.npe03__Amount__c == false)
+                || (INSTALLMENT_COLS[i].label === '$PAYMENT_METHOD' && fieldSecurity.PaymentMethod__c == false))
+            {
+                INSTALLMENT_COLS.splice(i, 1);
+            }
+        }
+       if (fieldSecurity.Day_of_Month__c == false && fieldSecurity.npe03__Amount__c == false && fieldSecurity.PaymentMethod__c == false) {
+           this.installments = null;
+       }
     }
 }

@@ -88,8 +88,6 @@ export default class RdActiveSchedule extends LightningElement {
             this.labels['lblNone'] = lblNone;
             this.labels['lblRecordIcon'] = lblRecordIcon;
         }
-
-        this.objectInfos = data;
     }
 
     /*******************************************************************************
