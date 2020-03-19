@@ -26,7 +26,53 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains(title, 
                                                error=f"{title} link was not found on the page")  
         self.npsp.click_link_with_text(title)
+        locator=npsp_lex_locators["npsp_settings"]["main_menu"].format(title)
+        self.selenium.wait_until_page_contains_element(locator, 
+                                               error=f"click on {title} link was not successful even after 30 seconds")
         
+    def open_sub_link(self,title):  
+        """Waits for the link to load and clicks to make a part of page active"""  
+        self.selenium.wait_until_page_contains(title, 
+                                               error=f"{title} link was not found on the page")  
+        self.npsp.click_link_with_text(title)    
+        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
+        self.selenium.wait_until_page_contains_element(locator,
+                                                       error=f"click on {title} sublink was not successful even after 30 seconds")
+    
+    
+    @capture_screenshot_on_error
+    def click_settings_button (self,panel_id,btn_value):  
+        """clicks on the buttons on npsp settings object using panel id and button value"""      
+        locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
+        self.selenium.wait_until_page_contains_element(locator,
+                                                       error=f"{btn_value} did not appear on page")
+        self.selenium.click_element(locator)   
+    
+    def select_value_from_list(self,list_name,value): 
+        '''Selects value from list identified by list_name.
+           uses selenium select from list by label keyword 
+        '''
+        locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
+        loc = self.selenium.get_webelement(locator)
+        self.selenium.set_focus_to_element(locator)       
+        self.selenium.select_from_list_by_label(loc,value)
+    
+    def edit_selection(self,list_name,value):
+        """waits for edit mode and selects value from the list"""
+        save_button=npsp_lex_locators['npsp_settings']['batch-button'].format('idPanelCon','Save')
+        self.selenium.wait_until_page_contains_element(save_button,
+                                                       error=f"Edit mode is not active")
+        self.select_value_from_list(list_name,value)
+        time.sleep(2) # waiting for 2 seconds in case there is slowness
+    
+    def verify_selection(self,list_name,value):
+        """waits to exit edit mode and verifies list contains specified value"""
+        edit_button=npsp_lex_locators['npsp_settings']['batch-button'].format('idPanelCon','Edit')
+        self.selenium.wait_until_page_contains_element(edit_button,
+                                                       error=f"Still in Edit mode")
+        locator = npsp_lex_locators['npsp_settings']['list_val'].format(list_name,value)
+        self.selenium.wait_until_page_contains_element(locator, error=f"{list_name} did not contain {value}")
+    
     @capture_screenshot_on_error
     def click_toggle_button(self, page_name):
         """ specify the partial id of submenu under which the checkbox exists """
