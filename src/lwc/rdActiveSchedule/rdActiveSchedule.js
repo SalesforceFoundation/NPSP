@@ -26,6 +26,7 @@ export default class RdActiveSchedule extends LightningElement {
     @api recordId;
     @api displayNum;
 
+    @track loading = true;
     @track schedules;
     @track error;
     @track currencyIsoCode;
@@ -41,6 +42,7 @@ export default class RdActiveSchedule extends LightningElement {
                  FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD, FIELD_RD_CAMPAIGN] })
     wireRecordChange() {
         if (this.recordId) {
+            this.loading = true;
             getSchedules({ recordId: this.recordId })
                 .then(data => {
                     this.handleCurrencyIsoCode(data);
@@ -52,6 +54,7 @@ export default class RdActiveSchedule extends LightningElement {
                     this.schedules = null;
                     this.error = this.handleError(error);
                 });
+            this.loading = false;
         }
     }
 

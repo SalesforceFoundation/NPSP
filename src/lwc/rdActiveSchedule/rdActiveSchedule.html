@@ -10,7 +10,9 @@
                 <lightning-formatted-text value={error}></lightning-formatted-text>
             </span>
         </div>
-
+        <template if:true={loading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
         <div if:true={schedules}>
             <template for:each={schedules} for:item="schedule">
                 <div class="slds-m-around--large slds-border_top" key={schedule.scheduleNumber}>
@@ -36,18 +38,18 @@
                                     <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
                                         <lightning-formatted-number format-style="currency" currency-code={currencyIsoCode} value={schedule.amount}></lightning-formatted-number>
                                     </dd>
-                                    <div if:true={labels.lblPmtMethod}>
-                                    <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPmtMethod}>
-                                        <lightning-formatted-text value={labels.lblPmtMethod}></lightning-formatted-text>
-                                    </dt>
-                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:false={schedule.paymentMethod}>
-                                        <lightning-formatted-text value={labels.lblNone}></lightning-formatted-text>
-                                    </dd>
-                                    <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.paymentMethod}>
-                                        <lightning-formatted-text value={schedule.paymentMethod}></lightning-formatted-text>
-                                    </dd>
-                                    </div>
-                                    <div if:true={labels.lblCampaign}>
+                                    <template if:true={labels.lblPmtMethod}>
+                                        <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPmtMethod}>
+                                            <lightning-formatted-text value={labels.lblPmtMethod}></lightning-formatted-text>
+                                        </dt>
+                                        <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:false={schedule.paymentMethod}>
+                                            <lightning-formatted-text value={labels.lblNone}></lightning-formatted-text>
+                                        </dd>
+                                        <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.paymentMethod}>
+                                            <lightning-formatted-text value={schedule.paymentMethod}></lightning-formatted-text>
+                                        </dd>
+                                    </template>
+                                    <template if:true={labels.lblCampaign}>
                                         <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblCampaign}>
                                             <lightning-formatted-text value={labels.lblCampaign}></lightning-formatted-text>
                                         </dt>
@@ -57,14 +59,14 @@
                                         <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.campaign}>
                                             <lightning-formatted-text value={schedule.campaign}></lightning-formatted-text>
                                         </dd>
-                                    </div>
+                                    </template>
                                     <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblStartDate}>
                                         <lightning-formatted-text value={labels.lblStartDate}></lightning-formatted-text>
                                     </dt>
                                     <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12">
                                         <lightning-formatted-date-time value={schedule.startDate} year="numeric" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
                                     </dd>
-                                    <div if:true={labels.lblCampaign}>
+                                    <template if:true={labels.lblEndDate}>
                                         <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblEndDate}>
                                             <lightning-formatted-text value={labels.lblEndDate}></lightning-formatted-text>
                                         </dt>
@@ -74,7 +76,7 @@
                                         <dd class="slds-dl_horizontal__detail slds-medium-size_7-of-12" if:true={schedule.endDate}>
                                             <lightning-formatted-date-time value={schedule.endDate} year="numeric" month="2-digit" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
                                         </dd>
-                                    </div>
+                                    </template>
 
                                     <dt class="slds-dl_horizontal__label slds-text-color_weak slds-medium-size_5-of-12" title={labels.lblPeriod}>
                                         <lightning-formatted-text value={labels.lblPeriod}></lightning-formatted-text>

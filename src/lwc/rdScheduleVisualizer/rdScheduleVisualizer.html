@@ -8,17 +8,21 @@
         <div class="slds-m-around_medium" if:true={error}>
             <span class="slds-text-color_error">{error}</span>
         </div>
-
-        <div class="slds-m-around_medium" if:true={installments}>
-            <lightning-datatable
-                title={lblInstallmentTitle}
-                key-field="installmentNumber"
-                data={installments}
-                columns={columns}
-                class="visualized-installments"
-                hide-checkbox-column>
-            </lightning-datatable>
-        </div>
+        <template if:true={loading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <template if:false={loading}>
+            <div class="slds-m-around_medium" if:true={installments}>
+                <lightning-datatable
+                    title={lblInstallmentTitle}
+                    key-field="installmentNumber"
+                    data={installments}
+                    columns={columns}
+                    class="visualized-installments"
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </div>
+        </template>
 
     </lightning-card>
 </template>

@@ -31,11 +31,11 @@ export default class RdScheduleVisualizer extends LightningElement {
 
     @api recordId;
     @api displayNum;
-
+    @track loading = true;
     @track installments;
     @track error;
     @track columns = INSTALLMENT_COLS;
-    @track currencyIsoCode;
+    @track currencyIsoCode = 'USD';
     @track lblInstallmentTitle = labelInstallmentTitle;
     @track lblCloseDate = labelColumnDate;
     @track lblAmount;
@@ -50,12 +50,13 @@ export default class RdScheduleVisualizer extends LightningElement {
         fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD, FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD] })
     wireRecordChange() {
         if (this.recordId) {
+            this.loading = true;
             getInstallments({ recordId: this.recordId, displayNum: this.displayNum })
-                .then(data => {
-                    this.installments = data.installments;
+                .then(data => {   
                     this.handleCurrencyIsoCode(data.installments);
-                    this.handleFieldVisibility(data.fieldSecurity);
-                    this.handleColumns(data.fieldSecurity);
+                    this.installments = data.installments;
+                    this.handleFieldVisibility(data.fieldReadability);
+                    this.handleColumns(data.fieldReadability);
                     this.error = null;
 
                 })
@@ -63,6 +64,7 @@ export default class RdScheduleVisualizer extends LightningElement {
                     this.installments = null;
                     this.error = this.handleError(error);
                 });
+            this.loading = false;
         }
     }
 
@@ -85,8 +87,8 @@ export default class RdScheduleVisualizer extends LightningElement {
         if (data) {
             let fieldApis = data.fields;
             this.lblCloseDate = this.lblCloseDate
-            this.lblAmount = (fieldApis[FIELD_RD_AMOUNT.fieldApiName]) ? dafieldApis[FIELD_RD_AMOUNT.fieldApiName].label : null;
-            this.lblPmtMethod = (fieldApis[FIELD_RD_PAYMENT_METHOD.fieldApiName]) ? dafieldApis[FIELD_RD_PAYMENT_METHOD.fieldApiName].label : null;
+            this.lblAmount = (fieldApis[FIELD_RD_AMOUNT.fieldApiName]) ? fieldApis[FIELD_RD_AMOUNT.fieldApiName].label : null;
+            this.lblPmtMethod = (fieldApis[FIELD_RD_PAYMENT_METHOD.fieldApiName]) ? fieldApis[FIELD_RD_PAYMENT_METHOD.fieldApiName].label : null;
         }
     }
 
@@ -139,16 +141,16 @@ export default class RdScheduleVisualizer extends LightningElement {
         });
     }
 
-    handleFieldVisibility(fieldSecurity) {
+    handleFieldVisibility(fieldReadability) {
         for (let i = 0; i < INSTALLMENT_COLS.length; i++) {
-            if ((INSTALLMENT_COLS[i].label === '$DATE' && fieldSecurity.Day_of_Month__c == false)
-                || (INSTALLMENT_COLS[i].label === '$AMOUNT' && fieldSecurity.npe03__Amount__c == false)
-                || (INSTALLMENT_COLS[i].label === '$PAYMENT_METHOD' && fieldSecurity.PaymentMethod__c == false))
+            if ((INSTALLMENT_COLS[i].label === '$DATE' && fieldReadability.Day_of_Month__c == false)
+                || (INSTALLMENT_COLS[i].label === '$AMOUNT' && fieldReadability.npe03__Amount__c == false)
+                || (INSTALLMENT_COLS[i].label === '$PAYMENT_METHOD' && fieldReadability.PaymentMethod__c == false))
             {
                 INSTALLMENT_COLS.splice(i, 1);
             }
         }
-       if (fieldSecurity.Day_of_Month__c == false && fieldSecurity.npe03__Amount__c == false && fieldSecurity.PaymentMethod__c == false) {
+       if (fieldReadability.Day_of_Month__c == false && fieldReadability.npe03__Amount__c == false && fieldReadability.PaymentMethod__c == false) {
            this.installments = null;
        }
     }

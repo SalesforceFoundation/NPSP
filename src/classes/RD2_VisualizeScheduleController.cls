@@ -60,6 +60,9 @@ public with sharing class RD2_VisualizeScheduleController {
         set;
     }
 
+    /***
+    * @description Recurring Donation field readability 
+    */
     public static Map<String, Boolean> rdFieldReadabilityMap {
         get {
             if (rdFieldReadabilityMap == null) {
@@ -113,7 +116,7 @@ public with sharing class RD2_VisualizeScheduleController {
 
         return new Map<String, Object> {
             'installments' => installments,
-            'fieldSecurity' => rdFieldReadabilityMap
+            'fieldReadability' => rdFieldReadabilityMap
         };
     }
 
