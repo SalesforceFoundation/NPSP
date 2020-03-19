@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2011, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -200,6 +200,55 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         System.assert(mockPerms.updateSObjFields.contains(npo02__Household__c.npo02__MailingStreet__c));
     }
 
+    /***
+    * @description Verifies an error message is displayed when a user does not have household update permissions
+    * @return void
+    */
+    @isTest
+    private static void shouldErrorWhenBtnClickedWithoutCreateAddressPerms() {
+        List<Address__c> addExists = new List<Address__c>();
+
+        getRecordData();
+        mockPerms.hasCreate = false;
+        createCopyAddressBtnCtrl(householdRecord.Id);
+
+        copyAddressCtrl.buttonClick();
+        addExists = getAddressRecord();
+
+        UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
+        System.assertEquals(0, addExists.size(), 'Address record should not be created');
+        System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType, 'The object type should match');
+        System.assert(mockPerms.createSObjFields.contains(Address__c.MailingStreet__c));
+    }
+
+    /***
+    * @description Verifies if address record is created when user has necessary permissions
+    * @return void
+    */
+    @isTest
+    private static void shouldCreateOrCopyAddressWhenBtnClickedWithCreateAddressPerms() {
+        List<Address__c> addExists = new List<Address__c>();
+
+        getRecordData();
+
+        createCopyAddressBtnCtrl(householdRecord.Id);
+
+        copyAddressCtrl.buttonClick();
+        System.assertNotEquals(householdRecord.npo02__MailingStreet__c, contactRecord.MailingStreet, 'The original addresses should not match.');
+
+        Test.startTest();
+        copyAddressCtrl.copy();
+        Test.stopTest();
+
+        contactRecord = getContactRecordData();
+        addExists = getAddressRecord();
+
+        System.assertEquals(householdRecord.npo02__MailingStreet__c, contactRecord.MailingStreet, 'The contact address should be updated to match the contact.');
+        System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType, 'The object type should match');
+        System.assertEquals(1, getAddressRecord().size(), 'Address record should be created');
+        System.assertEquals(contactRecord.AccountId, addExists[0].Household_Account__c, 'Accountid on the address and the contact should match');
+    }
+
     /*******************************************************************************************************************
     * @description The page reference returned contains the record Id passed to the controller
     * @return void
@@ -256,9 +305,21 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     */
     private static Contact getContactRecordData() {
         return [
-            SELECT Id, MailingStreet, MailingState, MailingPostalCode, MailingCity, MailingCountry
+            SELECT Id, AccountId, MailingStreet, MailingState, MailingPostalCode, MailingCity, MailingCountry
             FROM Contact
             LIMIT 1
+        ];
+    }
+
+    /***
+    * @description Queries the Address record to verify address is created
+    * @return Contact
+    */
+    private static List<Address__c> getAddressRecord() {
+        return [
+            SELECT Id, Household_Account__c, Default_Address__c, MailingStreet__c, MailingState__c, MailingPostalCode__c, MailingCity__c, MailingCountry__c
+            FROM Address__c
+            WHERE Default_Address__c = true
         ];
     }
 
@@ -291,10 +352,13 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     private class PermissionsMock implements System.StubProvider {
         private Boolean hasRead = true;
         private Boolean hasUpdate = true;
+        private Boolean hasCreate = true;
         private SObjectType readSObjType;
         private SObjectType updateSObjType;
+        private SObjectType createSObjType;
         private Set<SObjectField> readSObjFields;
         private Set<SObjectField> updateSObjFields;
+        private Set<SObjectField> createSObjFields;
 
         public Object handleMethodCall(
             Object stubbedObject,
@@ -316,6 +380,12 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
                     updateSObjFields = (Set<SObjectField>) listOfArgs[1];
 
                     return hasUpdate;
+
+                } when 'canCreate' {
+                createSObjType = (SObjectType) listOfArgs[0];
+                createSObjFields = (Set<SObjectField>) listOfArgs[1];
+
+                return hasCreate;
 
                 } when else {
                     return null;
