@@ -1,5 +1,5 @@
 <template>
-    <div if:false={hideWidget}>
+    <div class={wrapClasses}>
         <lightning-layout if:true={hasAlert}>
             <lightning-layout-item size="12">
                 <div class={alertClass} role="alert">
