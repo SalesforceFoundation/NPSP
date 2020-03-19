@@ -1972,6 +1972,13 @@
         <members>conMergeSelectedContacts</members>
         <members>conMergeStageComplete</members>
         <members>conMergeWinnerAsstText</members>
+        <members>conMergeFoundDRS</members>
+        <members>conMergeDRSPickBtnLabel</members>
+        <members>conMergeShowDSR</members>
+        <members>conMergeErrorNoDRSFound</members>
+        <members>conMergeSearchByContact</members>
+        <members>conMergeErrorNoReadDSRObjPermission</members>
+        <members>DRS_Contact_Merge_Step1</members>
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
@@ -3373,6 +3380,7 @@
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
         <members>DataImportBatch__c.BatchGiftEntryTabColumns</members>
+        <members>DuplicateRecordSet.ContactMergeDRS</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
