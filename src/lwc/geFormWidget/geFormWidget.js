@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import { checkNestedProperty } from 'c/utilCommon';
 
 const PAYMENT_WIDGET = 'geFormWidgetPayment';
@@ -48,7 +48,7 @@ export default class GeFormWidget extends LightningElement {
         return this.element.componentName === PAYMENT_WIDGET;
     }
 
-    get isAllocation() {
+    get showAllocation() {
         return this.element.componentName === ALLOCATION_WIDGET;
     }
 

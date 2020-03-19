@@ -1,10 +1,11 @@
 import {LightningElement, api, track, wire} from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import GeFormService from 'c/geFormService';
-import GeLabelService from 'c/geLabelService';
 import {isNumeric, isNotEmpty, getLocalFieldName, isEmpty} from 'c/utilCommon';
 import { handleError, generateId } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
+
+import GeFormService from 'c/geFormService';
+import GeLabelService from 'c/geLabelService';
 
 import DI_ADDITIONAL_OBJECT from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DATA_IMPORT_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.DonationImported__c';
@@ -31,6 +32,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     @track fieldList = [];
     @track allocationSettings;
     @track _totalAmount;
+    @track hideWidget = false;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     
@@ -172,9 +174,24 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
             this.addAdditionalObjectRows(data);
         } else if(this.hasDonationImported(data)) {
-            let importedDonationId = data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName].value;
 
-            this.addImportedDonationRows(importedDonationId);
+            let dataKeys = Object.keys(data);
+            if(!dataKeys.includes(DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName) ||
+                !dataKeys.includes(DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName)) {
+
+                return;
+            }
+
+            if(!isEmpty(data[DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName])) {
+
+                this.hideWidget = true;
+
+            } else {
+                this.hideWidget = false;
+                let importedDonationId = data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName].value;
+
+                this.addImportedDonationRows(importedDonationId);
+            }
         }
     }
 
