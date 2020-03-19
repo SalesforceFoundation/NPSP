@@ -747,11 +747,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             else:
                 return "fail"
         
-    def select_value_from_list(self,list_name,value): 
-        locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
-        loc = self.selenium.get_webelement(locator)
-        self.selenium.set_focus_to_element(locator)       
-        self.selenium.select_from_list_by_label(loc,value)
+
         
     def select_value_from_bge_dd(self, list_name,value):
         list_found = False
@@ -853,7 +849,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
      
     @capture_screenshot_on_error                
     def wait_for_batch_to_process(self, batch,status):
-        """Checks every 30 secs for upto 7mins for batch with given status
+        """Checks every 30 secs for upto 9mins for batch with given status
         """
         i = 0
         sec=0
@@ -861,7 +857,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         error = npsp_lex_locators['batch_status'].format(batch,"Errors")
         while True:
             i += 1
-            if i > 14:
+            if i > 18:
                 self.selenium.capture_page_screenshot()
                 raise AssertionError("Timed out waiting for batch {} with status {} to load.".format(batch,status))
             elif self.check_if_element_exists(error):
@@ -881,18 +877,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         loc = self.selenium.get_webelement(locator).text  
         return loc 
     
-    def click_panel_sub_link (self,title):  
-        """clicks on the button on the payments page"""      
-        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
-        self.selenium.get_webelement(locator).click()
 
-    @capture_screenshot_on_error
-    def click_settings_button (self,panel_id,btn_value):  
-        """clicks on the buttons on npsp settings object using panel id and button value"""      
-        locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
-        self.selenium.click_element(locator)   
 
-    def verify_payment_details(self):
+
+    def verify_payment_details(self, numpayments):
+        """Gets the payment details from the UI and compares with the expected number of payments"""
         locator = "//tbody/tr/td[2]/span/span"
         locs1 = self.selenium.get_webelements(locator)
         locator2 = "//tbody/tr/td[3]/span/span"
@@ -904,7 +893,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 pass
             else:
                 return "fail"
-        return len(locs1)
+        self.builtin.should_be_equal_as_strings(len(locs1), numpayments)
 
     # def verify_opportunities(self, len_value):
     #     locator = "//tbody/tr[12]/th"
@@ -1154,7 +1143,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     def checkbox_status(self,cbx_name,status):
         """verifies if the specified checkbox is with expected status in readonly mode"""
         locator=npsp_lex_locators["custom_settings"]["cbx_status"].format(cbx_name,status)
-        self.selenium.page_should_contain_element(locator)
+        self.selenium.page_should_contain_element(locator, message='{cbx_name} checkbox is supposed to be {status}')
                 
     def go_to_setup_page(self,page):
         """ Navigates to the specified page in Salesforce Setup """
@@ -1257,7 +1246,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.execute_javascript(javascript)
         self.npsp.click_button_with_value(value)
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None):
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None, recurringdonation_data=None):
         """ Creates an Account if account setup data is passed
             Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
@@ -1312,6 +1301,12 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 data[f"{name}_engagement"] = engagement
             else:
                 data[name] = engagement
+
+        if recurringdonation_data is not None:
+            recurringdonation_data.update( {'npe03__Contact__c' : data[name]["Id"] } )
+            rd_id = self.salesforce.salesforce_insert("npe03__Recurring_Donation__c", **recurringdonation_data)
+            recurringdonation = self.salesforce.salesforce_get("npe03__Recurring_Donation__c",rd_id)
+            data[f"{name}_rd"] = recurringdonation
 
         if opportunity_data is not None:
             # create opportunity
