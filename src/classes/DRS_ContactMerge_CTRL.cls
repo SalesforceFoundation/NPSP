@@ -1,13 +1,47 @@
+/*
+    Copyright (c) 2020, Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2020 (2.x)
+* @description Controller for the NPSP DRS contact merge page.
+* @group ContactMerge
+* @group-content ../../ApexDocContent/ContactMerge.htm
+*/
+
 public with sharing class DRS_ContactMerge_CTRL {
       
-    
-
     private static final String MASTER_KEY = '$MASTER$';
 
     /*******************************************************************************************************
     * @description To decide whether to show Dupliacate Record Set record list on the page or not
     */ 
-    
     public Boolean showDRS { get; set; }
     
     /*******************************************************************************************************
@@ -44,6 +78,55 @@ public with sharing class DRS_ContactMerge_CTRL {
     * @description Number of selected records.
     */
     public Integer selectedRecordsCount { get; private set; } {this.selectedRecordsCount = 0;}
+
+    /*******************************************************************************************************
+    * @description we have to maintain our own set of readonly fields, because RLLP_OppRollup_UTIL.ContactFields 
+    * doesn't include them all
+    */
+    private static List<String> listStrField = new List<String>{
+        'npo02__TotalOppAmount__c',
+        'npo02__AverageAmount__c',
+        'npo02__SmallestAmount__c',
+        'npo02__LargestAmount__c',
+        'npo02__FirstCloseDate__c',
+        'npo02__LastCloseDate__c',
+        'npo02__NumberOfClosedOpps__c',
+        'npo02__OppAmountThisYear__c',
+        'npo02__OppsClosedThisYear__c',
+        'npo02__OppAmountLastYear__c',
+        'npo02__OppsClosedLastYear__c',
+        'npo02__OppsClosed2YearsAgo__c',
+        'npo02__OppAmount2YearsAgo__c',
+        'npo02__OppsClosedLastNDays__c',
+        'npo02__OppAmountLastNDays__c',
+        'npo02__TotalMembershipOppAmount__c',
+        'npo02__NumberOfMembershipOpps__c',
+        'npo02__LastMembershipDate__c',
+        'npo02__LastMembershipAmount__c',
+        'npo02__LastMembershipLevel__c',
+        'npo02__LastMembershipOrigin__c',
+        'npo02__MembershipJoinDate__c',
+        'npo02__MembershipEndDate__c',
+        'npo02__LastOppAmount__c',
+        'npo02__Best_Gift_Year__c',
+        'npo02__Best_Gift_Year_Total__c',
+        'Soft_Credit_Last_N_Days__c',
+        'npo02__Soft_Credit_Last_Year__c',
+        'npo02__Soft_Credit_This_Year__c',
+        'npo02__Soft_Credit_Total__c',
+        'npo02__Soft_Credit_Two_Years_Ago__c',
+        'First_Soft_Credit_Amount__c',
+        'First_Soft_Credit_Date__c',
+        'Largest_Soft_Credit_Amount__c',
+        'Largest_Soft_Credit_Date__c',
+        'Last_Soft_Credit_Amount__c',
+        'Last_Soft_Credit_Date__c',
+        'Number_of_Soft_Credits__c',
+        'Number_of_Soft_Credits_Last_N_Days__c',
+        'Number_of_Soft_Credits_Last_Year__c',
+        'Number_of_Soft_Credits_This_Year__c',
+        'Number_of_Soft_Credits_Two_Years_Ago__c'
+    };
 
     /*******************************************************************************************************
     * @description Standard set controller variables
@@ -295,53 +378,6 @@ public with sharing class DRS_ContactMerge_CTRL {
     * @return boolean true if should be treated as readonly, false if not.
     */
     private Boolean isNPSPReadOnly(String strField) {
-        // we have to maintain our own set of readonly fields, because
-        // RLLP_OppRollup_UTIL.ContactFields doesn't include them all!
-        List<String> listStrField = new List<String>{
-            'npo02__TotalOppAmount__c',
-            'npo02__AverageAmount__c',
-            'npo02__SmallestAmount__c',
-            'npo02__LargestAmount__c',
-            'npo02__FirstCloseDate__c',
-            'npo02__LastCloseDate__c',
-            'npo02__NumberOfClosedOpps__c',
-            'npo02__OppAmountThisYear__c',
-            'npo02__OppsClosedThisYear__c',
-            'npo02__OppAmountLastYear__c',
-            'npo02__OppsClosedLastYear__c',
-            'npo02__OppsClosed2YearsAgo__c',
-            'npo02__OppAmount2YearsAgo__c',
-            'npo02__OppsClosedLastNDays__c',
-            'npo02__OppAmountLastNDays__c',
-            'npo02__TotalMembershipOppAmount__c',
-            'npo02__NumberOfMembershipOpps__c',
-            'npo02__LastMembershipDate__c',
-            'npo02__LastMembershipAmount__c',
-            'npo02__LastMembershipLevel__c',
-            'npo02__LastMembershipOrigin__c',
-            'npo02__MembershipJoinDate__c',
-            'npo02__MembershipEndDate__c',
-            'npo02__LastOppAmount__c',
-            'npo02__Best_Gift_Year__c',
-            'npo02__Best_Gift_Year_Total__c',
-            'Soft_Credit_Last_N_Days__c',
-            'npo02__Soft_Credit_Last_Year__c',
-            'npo02__Soft_Credit_This_Year__c',
-            'npo02__Soft_Credit_Total__c',
-            'npo02__Soft_Credit_Two_Years_Ago__c',
-            'First_Soft_Credit_Amount__c',
-            'First_Soft_Credit_Date__c',
-            'Largest_Soft_Credit_Amount__c',
-            'Largest_Soft_Credit_Date__c',
-            'Last_Soft_Credit_Amount__c',
-            'Last_Soft_Credit_Date__c',
-            'Number_of_Soft_Credits__c',
-            'Number_of_Soft_Credits_Last_N_Days__c',
-            'Number_of_Soft_Credits_Last_Year__c',
-            'Number_of_Soft_Credits_This_Year__c',
-            'Number_of_Soft_Credits_Two_Years_Ago__c'
-        };
-
         for (String strF : listStrField) {
            if (strField.equalsIgnoreCase(strF))
                return true;
@@ -721,9 +757,6 @@ public with sharing class DRS_ContactMerge_CTRL {
         query +=  'createdby.name, createddate, LastModifiedBy.name, LastModifiedDate';
         // Finally completing the query by appending the table name and the filter clause
         query += ' from Contact where id IN :mergeCandidates';
-
-        //UTIL_Debug.debug('The contact query is: ' + query);
-
         List<Contact> contacts;
         try {
             contacts = Database.query(query); // Query the records
@@ -760,7 +793,7 @@ public with sharing class DRS_ContactMerge_CTRL {
 
         // Add the first row of type header with contact names as titles
         FieldRow temp = new FieldRow('', '', false, 'header');
-        for (Sobject c: contacts) {
+        for (Contact c: contacts) {
             Contact con = (Contact) c;
             temp.values.add(new Cell(c.id, con.name));
         }
@@ -768,15 +801,13 @@ public with sharing class DRS_ContactMerge_CTRL {
 
         // Add second row to select the master record. Select the one which is last modified
         temp = new FieldRow(MASTER_KEY, 'Master Record', true, null);
-        {
-            DateTime lastModifiedDate;
-            for (Sobject c: contacts) {
-                temp.values.add(new Cell(c.id, null));
-                if (lastModifiedDate == null ||
-                    (lastModifiedDate != null && (DateTime)c.get('lastModifiedDate') > lastModifiedDate)) {
-                    temp.selectedValue = c.id;
-                    lastModifiedDate = (DateTime)c.get('lastModifiedDate');
-                }
+        DateTime lastModifiedDate;
+        for (Contact c: contacts) {
+            temp.values.add(new Cell(c.id, null));
+            if (lastModifiedDate == null ||
+                (lastModifiedDate != null && (DateTime)c.get('lastModifiedDate') > lastModifiedDate)) {
+                temp.selectedValue = c.id;
+                lastModifiedDate = (DateTime)c.get('lastModifiedDate');
             }
         }
         fieldRows.add(temp);
@@ -789,7 +820,7 @@ public with sharing class DRS_ContactMerge_CTRL {
                 hasUserRecordByContactId.put(portalUser.ContactId, true);
             }
             temp = new FieldRow(System.Label.conMergePortalUser, System.Label.conMergePortalUser, false, null);
-            for (Sobject c: contacts) {
+            for (Contact c: contacts) {
                 Contact con = (Contact) c;
                 temp.values.add(new Cell(c.id, String.valueOf(hasUserRecordByContactId.containsKey(c.Id))));
             }
@@ -818,7 +849,7 @@ public with sharing class DRS_ContactMerge_CTRL {
         // Add created by and last modified by system fields to the list of FieldRow
         FieldRow createdByRow = new FieldRow('CreatedById', 'Created By', false, null),
             lastModifiedByRow = new FieldRow('LastModifiedById', 'Last Modified By', false, null);
-        for (Sobject c: contacts) {
+        for (Contact c: contacts) {
             SObject createdBy = c.getSObject('createdby');
             SObject modifiedBy = c.getSObject('lastModifiedBy');
             createdByRow.values.add(new Cell(c.id, (createdBy != null ? createdBy.get('name') : '') + ' ' + c.get('createdDate')));
@@ -838,7 +869,6 @@ public with sharing class DRS_ContactMerge_CTRL {
     */
     public void selectDefaultRecord() {
         String recordId = Apexpages.currentPage().getParameters().get('recordId');
-        //UTIL_Debug.debug('Selected Record: ' + recordId);
         if (recordId != null && selectedRecords.keySet().contains(recordId)) {
             for (FieldRow row : fieldRows) {
                 if (row.showRadio) {
@@ -874,9 +904,7 @@ public with sharing class DRS_ContactMerge_CTRL {
                         master.put(row.fieldName, null);
                     } else {
                         Object val = selectedRecord.get(row.fieldName);
-                        //UTIL_Debug.debug('Setting value: ' + val);
                         master.put(row.fieldName, val);
-                        //UTIL_Debug.debug('Set value: ' + master.get(row.fieldName));
                     }
                 }
             }
