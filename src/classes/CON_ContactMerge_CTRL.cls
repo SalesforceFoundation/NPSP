@@ -203,7 +203,6 @@ public with sharing class CON_ContactMerge_CTRL {
     * @param controller The default list controller for contact. It allows us to do pagination on the page.
     */
     public CON_ContactMerge_CTRL(ApexPages.StandardSetController controller){
-        System.debug('Contact Merge page contructor first line----->');
         searchText='';
         searchResults = new List<ContactWrapper>();
         selectedRecords = new Map<String, Contact>();
@@ -831,7 +830,7 @@ public with sharing class CON_ContactMerge_CTRL {
             showContactSearch = false;
             if (!hasDSRObjectReadPermission()) {
                 showDRSButton = false;
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.conMergeErrorNoDRSFound));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.conMergeErrorNoReadDSRObjPermission));
                 return null;
             }
             PageReference pageRef = new PageReference('/apex/DRS_ContactMerge');
