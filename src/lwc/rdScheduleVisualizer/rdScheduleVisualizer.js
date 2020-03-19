@@ -142,7 +142,7 @@ export default class RdScheduleVisualizer extends LightningElement {
     }
 
     handleFieldVisibility(fieldReadability) {
-        for (let i = 0; i < INSTALLMENT_COLS.length; i++) {
+        for (let i = INSTALLMENT_COLS.length - 1; i >= 0; i--) {
             if ((INSTALLMENT_COLS[i].label === '$DATE' && fieldReadability.Day_of_Month__c == false)
                 || (INSTALLMENT_COLS[i].label === '$AMOUNT' && fieldReadability.npe03__Amount__c == false)
                 || (INSTALLMENT_COLS[i].label === '$PAYMENT_METHOD' && fieldReadability.PaymentMethod__c == false))
