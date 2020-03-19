@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2020, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -104,7 +104,7 @@ public with sharing class UTIL_Jwt {
      * @return  String, base64url encoded string
      */
     private static String encodeStringToBase64Url(String input) {
-
+        System.debug('JWT Key raw '+ input);
         String base64Input = EncodingUtil.base64Encode(Blob.valueOf(input));
         return transcodeBase64ToBase64url( base64Input );
 

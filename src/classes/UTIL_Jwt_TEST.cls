@@ -128,31 +128,23 @@ private class UTIL_Jwt_TEST {
     @IsTest static void getSignedJWTFromString_test() {
 
         // test data 1
-        String hardcodedResult = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.' +
-                'eyJpc3MiOiJUaGUgQ0NTIFRlYW0ifQ.ceCI-fP3o109cYjPEksS6uqWSS38FbHEmX1xD8BuVNM';
+        String hardcodedResult = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaGUgQ0NTIFRlYW0i' +
+                'fQ.ceCI-fP3o109cYjPEksS6uqWSS38FbHEmX1xD8BuVNM';
         String jwtPayload = '{"iss":"The CCS Team"}';
         String jwtKey = 'MTIzNA=='; // plain-text key: 1234
 
         // test data 2
-        String hardcodedResult2 = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.' +
-                'eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.' +
-                'eE3z6mk1pgyz6prUl3_kBxwYRec0qhYzOiXwk5nUFz0';
+        String hardcodedResult2 = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0d' +
+                'HA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.YK8MsSnWjPkqOUL0wIapSYQclpavl7mQpIG6J8rhbyQ';
         String jwtPayload2 = '{"iss":"joe","exp":1300819380,"http://example.com/is_root":true}';
         String jwtKey2 = 'TVE9PQ=='; // plain-text key: MQ==
 
         Test.startTest();
-        String signedString = UTIL_Jwt.getSignedJWTFromString(jwtPayload, jwtKey);
-        System.debug(signedString);
         // correct signatures
-        System.assertEquals(hardcodedResult, UTIL_Jwt.getSignedJWTFromString(jwtPayload, jwtKey), 'correct signature was provided');
-        System.assertEquals(hardcodedResult2, UTIL_Jwt.getSignedJWTFromString(jwtPayload2, jwtKey2), 'correct signature was provided');
-
-        try {
-            UTIL_Jwt.getSignedJWTFromString(jwtPayload, 'KEY');
-            System.assert(false, 'An invalid key (not base64) was provided but no exception was thrown');
-        } catch(Exception e) {
-            System.assertEquals(e.getMessage(), UTIL_Jwt.INVALID_KEY_MESSAGE, 'invalid key');
-        }
+        System.assertEquals(hardcodedResult, UTIL_Jwt.getSignedJWTFromString(
+                jwtPayload, jwtKey), 'correct signature was provided');
+        System.assertEquals(hardcodedResult2, UTIL_Jwt.getSignedJWTFromString(
+                jwtPayload2, jwtKey2), 'correct signature was provided');
 
         try {
             UTIL_Jwt.getSignedJWTFromString(jwtPayload, '');
