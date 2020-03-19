@@ -1452,6 +1452,7 @@
         <members>CONV_Configuration_Options</members>
         <members>CONV_Contacts_Attached</members>
         <members>CONV_Conversion_Process</members>
+        <members>CONV_ConversionAccessDenied</members>
         <members>CONV_Fundamental_Changes</members>
         <members>CONV_Important_Info_Header</members>
         <members>CONV_Local_Expert</members>
