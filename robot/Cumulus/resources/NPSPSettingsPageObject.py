@@ -46,6 +46,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"{btn_value} did not appear on page")
+        self.selenium.wait_until_element_is_visible(locator, timeout=60)
         self.selenium.click_element(locator)   
     
     def select_value_from_list(self,list_name,value): 
