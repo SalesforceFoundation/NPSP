@@ -365,6 +365,8 @@
         <members>PSC_Opportunity_TDTM</members>
         <members>PSC_PartialSoftCredit_TDTM</members>
         <members>PSC_PartialSoftCredit_TEST</members>
+        <members>PS_IntegrationService</members>
+        <members>PS_IntegrationService_TEST</members>
         <members>RD2_Constants</members>
         <members>RD2_CustomFieldMapper</members>
         <members>RD2_CustomFieldMapper_TEST</members>
