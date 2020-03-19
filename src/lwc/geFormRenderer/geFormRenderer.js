@@ -1202,9 +1202,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonationDonorChange(donationDonorValue) {
         this._donationDonor = donationDonorValue;
-        if (!isUndefined(this.donorId)) {
-            this.setReviewDonationsDonorProperties(this.donorId);
-        }
+        this.setReviewDonationsDonorProperties(this.donorId);
+        this.resetDonationAndPaymentImportedFields();
     }
 
     setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
