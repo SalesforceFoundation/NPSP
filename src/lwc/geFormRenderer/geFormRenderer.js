@@ -12,7 +12,7 @@ import {
     setRecordValuesOnTemplate,
     checkPermissionErrors,
     CONTACT_FIRST_NAME_INFO,
-    CONTACT_LAST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 import {
