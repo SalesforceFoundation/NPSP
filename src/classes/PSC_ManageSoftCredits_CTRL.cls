@@ -208,13 +208,31 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Verifies the user has Create/Edit/Delete permissions for Partial Soft Credits.
+    * @description Verifies the user has Create/Edit/Delete permissions for Partial Soft Credits object
+    * and both view and edit permission on all relevant fields.
     * @return true when the user has the appropriate access
     */
     private Boolean getCurrentUserHasAccess() {
-        return Schema.SObjectType.Partial_Soft_Credit__c.isCreateable()
-            && Schema.SObjectType.Partial_Soft_Credit__c.isUpdateable()
-            && Schema.SObjectType.Partial_Soft_Credit__c.isDeletable();
+        Boolean accessResult = false;
+
+        String pscString = 'Partial_Soft_Credit__c';
+        Schema.DescribeSObjectResult dsr = UTIL_Describe.getObjectDescribe(pscString);
+
+        if (dsr.isAccessible() && dsr.isCreateable() && dsr.isDeletable() && dsr.isUpdateable()) {
+
+            Map<String, Schema.DescribeFieldResult> dfr = UTIL_Describe.getAllFieldsDescribe('Partial_Soft_Credit__c');
+            List<String> accessibleStrings = new List<String>{'amount__c', 'contact_name__c', 'contact_role_id__c', 'role_name__c'};
+            Set<String> updateableStrings = new Set<String>{'amount__c', 'contact_role_id__c', 'role_name__c'};
+
+            for (String accStr : accessibleStrings) {
+                if (!(dfr.get(accStr).isAccessible() && (updateableStrings.contains(accStr) == false || dfr.get(accStr).isUpdateable()))) {
+                    return accessResult;
+                }
+            }
+            accessResult = true;
+        }
+
+        return accessResult;
     }
 
     /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
