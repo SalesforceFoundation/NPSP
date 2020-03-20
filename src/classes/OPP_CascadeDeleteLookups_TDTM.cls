@@ -62,11 +62,12 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
         * @return List<Allocation__c> Deleted Opportunities' Allocations.
         ********************************************************************************************************/
         public List<Allocation__c> load(Set<Id> opportunityIds) {
-            return [
-                SELECT Opportunity__c
-                FROM Allocation__c
-                WHERE Opportunity__c IN :opportunityIds OR Payment__r.npe01__Opportunity__c IN :opportunityIds
-            ];
+
+            String baseQuery = 'SELECT Opportunity__c FROM Allocation__c WHERE Opportunity__c IN :opportunityIds ';
+            String paymentClause = 'OR Payment__r.npe01__Opportunity__c IN :opportunityIds';
+            String fullQuery = UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c ? baseQuery + paymentClause : baseQuery;
+
+            return Database.query(fullQuery);
         }
     }
 
