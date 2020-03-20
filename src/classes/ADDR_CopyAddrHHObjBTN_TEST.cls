@@ -46,11 +46,13 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     */
     @TestSetup
     private static void createRecordData() {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c(npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR)
+        );
 
-        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR));
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c(npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR)
+        );
 
         npo02__Household__c householdRecord = new npo02__Household__c(
             npo02__MailingStreet__c = '123 Main St.',
@@ -132,7 +134,6 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         getRecordData();
         createCopyAddressBtnCtrl(contactRecord.Id);
 
-        copyAddressCtrl.buttonClick();
         UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.addrCopyConAddBtnConfirm, ApexPages.Severity.INFO);
     }
 
@@ -146,7 +147,6 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         mockPerms.hasRead = false;
         createCopyAddressBtnCtrl(contactRecord.Id);
 
-        copyAddressCtrl.buttonClick();
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
         System.assertEquals(Contact.SObjectType, mockPerms.readSObjType);
         System.assert(mockPerms.readSObjFields.contains(Contact.MailingStreet));
@@ -162,7 +162,6 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         mockPerms.hasRead = false;
         createCopyAddressBtnCtrl(householdRecord.Id);
 
-        copyAddressCtrl.buttonClick();
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
         System.assertEquals(npo02__Household__c.SObjectType, mockPerms.readSObjType);
         System.assert(mockPerms.readSObjFields.contains(npo02__Household__c.npo02__MailingStreet__c));
@@ -178,7 +177,6 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         mockPerms.hasUpdate = false;
         createCopyAddressBtnCtrl(householdRecord.Id);
 
-        copyAddressCtrl.buttonClick();
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
         System.assertEquals(Contact.SObjectType, mockPerms.updateSObjType);
         System.assert(mockPerms.updateSObjFields.contains(Contact.MailingStreet));
@@ -194,14 +192,14 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         mockPerms.hasUpdate = false;
         createCopyAddressBtnCtrl(contactRecord.Id);
 
-        copyAddressCtrl.buttonClick();
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
         System.assertEquals(npo02__Household__c.SObjectType, mockPerms.updateSObjType);
         System.assert(mockPerms.updateSObjFields.contains(npo02__Household__c.npo02__MailingStreet__c));
     }
 
     /***
-    * @description Verifies an error message is displayed when a user does not have create address permissions
+    * @description Verifies an error message is displayed
+    * when a user does not have create permission on Address SObject
     */
     @isTest
     private static void shouldErrorWhenBtnClickedWithoutAddressCreatePerm() {
@@ -209,38 +207,48 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         mockPerms.hasCreate = false;
         createCopyAddressBtnCtrl(householdRecord.Id);
 
-        copyAddressCtrl.buttonClick();
-        List<Address__c> defaultAddresses = getDefaultAddressRecord();
-
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
-        System.assertEquals(0, defaultAddresses.size(), 'Address record should not be created with Household address');
-        System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType, 'The object type should match');
-        System.assert(mockPerms.createSObjFields.contains(Address__c.MailingStreet__c));
+
+        Address__c defaultAddress = getDefaultAddressRecord();
+        System.assertNotEquals(null, defaultAddress, 'Default address should exist for the Contact');
+        System.assertEquals(defaultAddress.MailingStreet__c, contactRecord.MailingStreet,
+            'Address on Contact should be unchanged and not copied from the household');
+
+        System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType,
+            'The create permission on Address__c SObject should be checked');
+        System.assert(mockPerms.createSObjFields.contains(Address__c.MailingStreet__c),
+            'The create permission on Address__c SObject fields should be checked');
     }
 
     /***
-    * @description Verifies if address record is created when user has create permission on
-    * the address and the address fields on the address object
+    * @description Verifies address on Contact is updated from Household
+    * when user has create permission on Address SObject
+    * and field-level visiblity on Address fields
     */
     @isTest
-    private static void shouldCreateOrCopyAddressWhenBtnClickedWithCreateAddressPerms() {
+    private static void shouldCopyAddressFromHouseholdWhenUserHasCreateAddressPerms() {
         getRecordData();
         createCopyAddressBtnCtrl(householdRecord.Id);
 
-        copyAddressCtrl.buttonClick();
-        System.assertNotEquals(householdRecord.npo02__MailingStreet__c, contactRecord.MailingStreet, 'The original addresses should not match.');
+        System.assertNotEquals(householdRecord.npo02__MailingStreet__c, contactRecord.MailingStreet,
+            'The Address on Contact and Household should be different');
 
         Test.startTest();
         copyAddressCtrl.copy();
         Test.stopTest();
 
+        //refresh the Contact Record and get the default address
         contactRecord = getContactRecordData();
-        List<Address__c> defaultAddresses = getDefaultAddressRecord();
+        Address__c defaultAddress = getDefaultAddressRecord();
 
-        System.assertEquals(householdRecord.npo02__MailingStreet__c, contactRecord.MailingStreet, 'The contact address should be updated to match the contact.');
-        System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType, 'The object type should match');
-        System.assertEquals(1, defaultAddresses.size(), 'Address record should be created with HouseHold Address');
-        System.assertEquals(contactRecord.AccountId, defaultAddresses[0].Household_Account__c, 'Accountid on the address and the contact should match');
+        System.assertNotEquals(null, defaultAddress, 'Default address should exist for the Contact');
+        System.assertEquals(householdRecord.npo02__MailingStreet__c, contactRecord.MailingStreet,
+            'The Address on Contact should be copied from the Household');
+        System.assertEquals(defaultAddress.MailingStreet__c, contactRecord.MailingStreet,
+            'Default Address should match the new Contact Address');
+
+        System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType,
+            'The create permission on Address__c SObject should be checked');
     }
 
     /*******************************************************************************************************************
@@ -306,19 +314,22 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     }
 
     /***
-    * @description Queries the Address record to verify address is created
-    * @return Address
+    * @description Returns the default address record
+    * @return Address__c
     */
-    private static List<Address__c> getDefaultAddressRecord() {
-        String mailingStreetUpdateToHH = householdRecord.npo02__MailingStreet__c;
-
-        return [
-            SELECT Id, Household_Account__c, Default_Address__c, MailingStreet__c, MailingState__c,
-                MailingPostalCode__c, MailingCity__c, MailingCountry__c
+    private static Address__c getDefaultAddressRecord() {
+        List<Address__c> addresses = [
+            SELECT Household_Account__c,
+                MailingStreet__c, MailingState__c,
+                MailingPostalCode__c, MailingCity__c,
+                MailingCountry__c
             FROM Address__c
             WHERE Default_Address__c = true
-                AND MailingStreet__c = :mailingStreetUpdateToHH
         ];
+
+        System.assertEquals(1, addresses.size(), 'One default address should exist: ' + addresses);
+
+        return addresses[0];
     }
 
     /*******************************************************************************************************************
