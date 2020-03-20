@@ -73,7 +73,7 @@
     </fields>
     <fields>
         <help>Der maximale Betrag, den das Unternehmen pro Jahr mit einem Mitarbeiter abgleicht</help>
-        <label>Abgegl. Schenkung/Jahr f. Mitarb. max.</label>
+        <label>Übereinst. Schenkung/Jahr f. Mitar. max.</label>
         <name>Matching_Gift_Annual_Employee_Max__c</name>
     </fields>
     <fields>
