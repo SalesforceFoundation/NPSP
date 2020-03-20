@@ -539,12 +539,33 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Returns true if the user has permissions to access, create and delete npe01__oppPayment__c
+    * and all relevant fields are both readable and modifiable
     * @return Boolean
     */
     private Boolean hasPaymentAccess() {
-        Schema.DescribeSObjectResult paymentDescribe = npe01__oppPayment__c.sObjectType.getDescribe();
 
-        return paymentDescribe.isCreateable() && paymentDescribe.isDeletable() && paymentDescribe.isAccessible();
+        Boolean accessResult = false;
+
+        String pmtString = 'npe01__oppPayment__c';
+        Schema.DescribeSObjectResult dsr = UTIL_Describe.getObjectDescribe(pmtString);
+
+        if (dsr.isAccessible() && dsr.isCreateable() && dsr.isDeletable() && dsr.isUpdateable()) {
+
+            Map<String, Schema.DescribeFieldResult> dfr = UTIL_Describe.getAllFieldsDescribe('npe01__oppPayment__c');
+            List<String> fieldStrings = new List<String>{
+                    'npe01__check_reference_number__c', 'npe01__custom_payment_field__c', 'npe01__paid__c',
+                    'payment_acknowledged_date__c', 'payment_acknowledgment_status__c', 'npe01__payment_amount__c',
+                    'npe01__payment_date__c', 'npe01__payment_method__c', 'npe01__scheduled_date__c',  'npe01__written_off__c'
+            };
+            for (String accStr : fieldStrings) {
+                if (!(dfr.get(accStr).isAccessible() && dfr.get(accStr).isUpdateable())) {
+                    return accessResult;
+                }
+            }
+            accessResult = true;
+        }
+
+        return accessResult;
     }
 
     /*******************************************************************************************************
