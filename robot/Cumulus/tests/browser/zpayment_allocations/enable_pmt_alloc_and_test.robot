@@ -21,7 +21,7 @@ Suite Teardown  Run keywords
 *** Test Cases ***
 
 Create Payment Allocations and Verify Opportunity Allocations Sync
-    [tags]    unstable
+    [tags]                                 W-039821            feature:Payment Allocations
     Go To Page                             Detail
     ...                                    Opportunity
     ...                                    object_id=${data}[contact_opportunity][Id]
@@ -29,7 +29,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     Load Related List                      GAU Allocations
     Click Link With Text                   &{payment}[Name]    
     Select Window
-    Current Page Should Be                 Details                npe01__OppPayment__c
+    Current Page Should Be                 Details                    npe01__OppPayment__c
     Select Tab                             Related
     Verify Payment Allocations    
     ...    &{def_gau}[Name]=$100.00
@@ -51,7 +51,7 @@ Create Payment Allocations and Verify Opportunity Allocations Sync
     ...    &{gau}[Name]=$40.00
 
 Update GAU Allocations and Verify Payment Allocations Sync
-    [tags]    unstable
+    [tags]                                 W-039821                   feature:Payment Allocations
     Go To Page                             Detail
     ...                                    Opportunity
     ...                                    object_id=${data}[contact_opportunity][Id]
@@ -65,7 +65,7 @@ Update GAU Allocations and Verify Payment Allocations Sync
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
     # As a workaround for lightning cache issue, going to the payment record directly as it would reload the record
-    Go To Page    Details    npe01__OppPayment__c    object_id=&{payment}[Id]
+    Go To Page    Details                  npe01__OppPayment__c       object_id=&{payment}[Id]
     Select Tab    Related
     Verify Payment Allocations    
     ...    &{def_gau}[Name]=$40.00
@@ -108,21 +108,10 @@ Setup Test Data
     Set suite variable    &{gau}  
     ${date} =         Get Current Date    result_format=%Y-%m-%d
     Set suite variable    ${date}
-    # Setupdata   contact   ${contact1_fields}
-    # &{contact} =      API Create Contact
-    # Set suite variable    &{contact}
-    # Store Session Record    Account    &{contact}[AccountId]
     Setupdata   contact   ${contact_fields}     ${opportunity_fields}
-    # &{opportunity} =  API Create Opportunity   &{contact}[AccountId]    Donation  
-    # ...    StageName=Prospecting    
-    # ...    Amount=100    
-    # ...    CloseDate=${date}    
-    # ...    npe01__Do_Not_Automatically_Create_Payment__c=false    
-    # ...    Name=&{contact}[LastName] Test Donation
     @{records} =     Salesforce Query    npe01__OppPayment__c    
     ...    select=Id
     ...    npe01__Opportunity__c=${data}[contact_opportunity][Id]
     &{id} =     Get From List  ${records}  0
     &{payment} =     Salesforce Get  npe01__OppPayment__c  &{id}[Id]  
-    # Set suite variable    &{opportunity}
     Set suite variable    &{payment} 
