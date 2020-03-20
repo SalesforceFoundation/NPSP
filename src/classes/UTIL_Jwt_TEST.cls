@@ -49,18 +49,18 @@ private class UTIL_Jwt_TEST {
     'V2hlcmU_'=>'V2hlcmU/',
     'MjI-MQ'=>'MjI+MQ=='};
 
-    @IsTest static void transcodeBase64ToBase64url_test() {
+    @IsTest static void verifyTranscodeBase64ToBase64Url() {
 
         for (String key: encodeMap.keySet()) {
             System.assertEquals( encodeMap.get(key),
-                    UTIL_Jwt.transcodeBase64ToBase64url(key),
+                    UTIL_Jwt.transcodeBase64ToBase64Url(key),
                     'Values should be equal' );
         }
 
-        System.assertEquals( null, UTIL_Jwt.transcodeBase64ToBase64url(null), 'test with null value');
-        System.assertEquals( '', UTIL_Jwt.transcodeBase64ToBase64url(''), 'test with empty value');
+        System.assertEquals( null, UTIL_Jwt.transcodeBase64ToBase64Url(null), 'test with null value');
+        System.assertEquals( '', UTIL_Jwt.transcodeBase64ToBase64Url(''), 'test with empty value');
         try {
-            UTIL_Jwt.transcodeBase64ToBase64url('MQ');
+            UTIL_Jwt.transcodeBase64ToBase64Url('MQ');
             System.assert(false, 'An invalid string was provided but no exception was thrown');
         } catch(Exception e) {
             System.assertEquals(e.getMessage(), UTIL_Jwt.INVALID_BASE64_MESSAGE, 'invalid base64 string');
@@ -68,7 +68,7 @@ private class UTIL_Jwt_TEST {
 
     }
 
-    @IsTest static void transcodeBase64UrlToBase64_test() {
+    @IsTest static void verifyTranscodeBase64UrlToBase64() {
 
         for (String key: decodeMap.keySet()) {
             System.assertEquals( decodeMap.get(key),
@@ -87,7 +87,7 @@ private class UTIL_Jwt_TEST {
 
     }
 
-    @IsTest static void isBase64String_test() {
+    @IsTest static void verifyBase64String() {
 
         for (String key: encodeMap.keySet()) {
             System.assertEquals( true,
@@ -106,7 +106,7 @@ private class UTIL_Jwt_TEST {
 
     }
 
-    @IsTest static void isBase64UrlString_test() {
+    @IsTest static void verifyBase64UrlString() {
 
         for (String key: decodeMap.keySet()) {
             System.assertEquals( true,
@@ -125,7 +125,7 @@ private class UTIL_Jwt_TEST {
 
     }
 
-    @IsTest static void getSignedJWTFromString_test() {
+    @IsTest static void verifyGetSignedJWTFromString() {
 
         // test data 1
         String hardcodedResult = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJUaGUgQ0NTIFRlYW0i' +
@@ -163,7 +163,7 @@ private class UTIL_Jwt_TEST {
 
     }
 
-    @IsTest static void getSignedJWT_test() {
+    @IsTest static void verifyGetSignedJWT() {
 
         // aux test data
         String issuer = 'The CCS Team';

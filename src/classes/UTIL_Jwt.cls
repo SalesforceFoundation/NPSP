@@ -51,6 +51,7 @@ public with sharing class UTIL_Jwt {
     private static final String ENC_ALG = 'HS256';
     private static final String ENC_TYPE = 'JWT';
     private static final String ALG_NAME = 'HmacSHA256';
+    private static final Integer RIGHT_PAD_CONST = 4;
 
     // custom exception
     public class UTIL_JwtException extends Exception {}
@@ -65,7 +66,7 @@ public with sharing class UTIL_Jwt {
      */
     public static String getSignedJWT(Auth.JWT jwtInstance, String key) {
 
-        if (jwtInstance==null) {
+        if (jwtInstance == null) {
             throw new UTIL_JwtException(INVALID_PAYLOAD_MESSAGE);
         }
 
@@ -75,8 +76,8 @@ public with sharing class UTIL_Jwt {
 
     /**
      * @description helper method to sign jwt using payload as string and base64 format key
-     * @param   String payload, jwt payload
-     * @param   String key, base64 encoded key
+     * @param   String payload, jwt payload ex: {"iss":"joe","exp":1300819380,"http://example.com/is_root":true}
+     * @param   String key, base64 encoded key ex: TVE9PQ==
      * @return  String, returns the compact serialization representation of the jwt as a concatenated string,
      *          with the encoded jwt header, encoded jwt payload, and encoded jwt signature strings
      *          separated by period ('.') characters.
@@ -104,9 +105,8 @@ public with sharing class UTIL_Jwt {
      * @return  String, base64url encoded string
      */
     private static String encodeStringToBase64Url(String input) {
-        System.debug('JWT Key raw '+ input);
         String base64Input = EncodingUtil.base64Encode(Blob.valueOf(input));
-        return transcodeBase64ToBase64url( base64Input );
+        return transcodeBase64ToBase64Url( base64Input );
 
     }
 
@@ -135,7 +135,7 @@ public with sharing class UTIL_Jwt {
         Blob JWTSignature = Crypto.generateMac(ALG_NAME, Blob.valueOf(signatureInput), decodedKey);
         String jwtSignatureString = EncodingUtil.base64Encode(JWTSignature);
         // return base64url encoded signature
-        return transcodeBase64ToBase64url(jwtSignatureString);
+        return transcodeBase64ToBase64Url(jwtSignatureString);
 
     }
 
@@ -145,7 +145,7 @@ public with sharing class UTIL_Jwt {
      * @return   String, to base64Url format
      */
     @TestVisible
-    private static String transcodeBase64ToBase64url(String input) {
+    private static String transcodeBase64ToBase64Url(String input) {
 
         if (String.isBlank(input)) {
             return input;
@@ -175,7 +175,8 @@ public with sharing class UTIL_Jwt {
             throw new UTIL_JwtException(INVALID_BASE64URL_MESSAGE);
         }
 
-        Integer rightPad = input.length()< 4 ? 4 : Math.mod(input.length(), 4) + input.length();
+        Integer rightPad = input.length()< RIGHT_PAD_CONST ? RIGHT_PAD_CONST :
+                Math.mod(input.length(), RIGHT_PAD_CONST) + input.length();
         return input.replace('-', '+')
                 .replace('_', '/')
                 .rightPad(rightPad)
@@ -193,7 +194,7 @@ public with sharing class UTIL_Jwt {
     @TestVisible
     private static Boolean isBase64String(String input) {
 
-        Boolean multipleOf4 = Math.mod(input.length(), 4) == 0;
+        Boolean multipleOf4 = Math.mod(input.length(), RIGHT_PAD_CONST) == 0;
         return multipleOf4 && regEx(input, BASE64_REGEX);
 
     }
