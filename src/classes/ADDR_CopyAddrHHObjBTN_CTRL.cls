@@ -106,15 +106,15 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
         };
 
     /***
-    * @description Address fields by Contact Address fields
+    * @description List of Address fields
     */
-    private static final Map<SObjectField, SObjectField> ADDRESS_BY_CONTACT_ADDR_FIELDS =
-        new Map<SObjectField, SObjectField>{
-            Contact.MailingStreet => Address__c.MailingStreet__c,
-            Contact.MailingCity => Address__c.MailingCity__c,
-            Contact.MailingState => Address__c.MailingState__c,
-            Contact.MailingPostalCode => Address__c.MailingPostalCode__c,
-            Contact.MailingCountry => Address__c.MailingCountry__c
+    private static final List<SObjectField> ADDRESS_FIELDS =
+        new List<SObjectField>{
+            Address__c.MailingStreet__c,
+            Address__c.MailingCity__c,
+            Address__c.MailingState__c,
+            Address__c.MailingPostalCode__c,
+            Address__c.MailingCountry__c
         };
 
     /*******************************************************************************************************
@@ -330,7 +330,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
             if (!perms.canUpdate(Contact.SObjectType, HH_BY_CONTACT_ADDR_FIELDS.keySet())) {
                 return false;
             }
-            if  (!perms.canCreate(Address__c.sObjectType, new Set<SObjectField>(ADDRESS_BY_CONTACT_ADDR_FIELDS.values()))) {
+            if  (!perms.canCreate(Address__c.sObjectType, new Set<SObjectField>(ADDRESS_FIELDS))) {
                 return false;
             }
         }

@@ -201,36 +201,30 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     }
 
     /***
-    * @description Verifies an error message is displayed when a user does not have household update permissions
-    * @return void
+    * @description Verifies an error message is displayed when a user does not have create address permissions
     */
     @isTest
-    private static void shouldErrorWhenBtnClickedWithoutCreateAddressPerms() {
-        List<Address__c> addExists = new List<Address__c>();
-
+    private static void shouldErrorWhenBtnClickedWithoutAddressCreatePerm() {
         getRecordData();
         mockPerms.hasCreate = false;
         createCopyAddressBtnCtrl(householdRecord.Id);
 
         copyAddressCtrl.buttonClick();
-        addExists = getAddressRecord();
+        List<Address__c> defaultAddresses = getDefaultAddressRecord();
 
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
-        System.assertEquals(0, addExists.size(), 'Address record should not be created with Household address');
+        System.assertEquals(0, defaultAddresses.size(), 'Address record should not be created with Household address');
         System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType, 'The object type should match');
         System.assert(mockPerms.createSObjFields.contains(Address__c.MailingStreet__c));
     }
 
     /***
-    * @description Verifies if address record is created when user has necessary permissions
-    * @return void
+    * @description Verifies if address record is created when user has create permission on
+    * the address and the address fields on the address object
     */
     @isTest
     private static void shouldCreateOrCopyAddressWhenBtnClickedWithCreateAddressPerms() {
-        List<Address__c> addExists = new List<Address__c>();
-
         getRecordData();
-
         createCopyAddressBtnCtrl(householdRecord.Id);
 
         copyAddressCtrl.buttonClick();
@@ -241,12 +235,12 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         Test.stopTest();
 
         contactRecord = getContactRecordData();
-        addExists = getAddressRecord();
+        List<Address__c> defaultAddresses = getDefaultAddressRecord();
 
         System.assertEquals(householdRecord.npo02__MailingStreet__c, contactRecord.MailingStreet, 'The contact address should be updated to match the contact.');
         System.assertEquals(Address__c.SObjectType, mockPerms.createSObjType, 'The object type should match');
-        System.assertEquals(1, getAddressRecord().size(), 'Address record should be created with HouseHold Address');
-        System.assertEquals(contactRecord.AccountId, addExists[0].Household_Account__c, 'Accountid on the address and the contact should match');
+        System.assertEquals(1, defaultAddresses.size(), 'Address record should be created with HouseHold Address');
+        System.assertEquals(contactRecord.AccountId, defaultAddresses[0].Household_Account__c, 'Accountid on the address and the contact should match');
     }
 
     /*******************************************************************************************************************
@@ -313,9 +307,9 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
 
     /***
     * @description Queries the Address record to verify address is created
-    * @return Contact
+    * @return Address
     */
-    private static List<Address__c> getAddressRecord() {
+    private static List<Address__c> getDefaultAddressRecord() {
         String mailingStreetUpdateToHH = householdRecord.npo02__MailingStreet__c;
 
         return [
@@ -386,10 +380,10 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
                     return hasUpdate;
 
                 } when 'canCreate' {
-                createSObjType = (SObjectType) listOfArgs[0];
-                createSObjFields = (Set<SObjectField>) listOfArgs[1];
+                    createSObjType = (SObjectType) listOfArgs[0];
+                    createSObjFields = (Set<SObjectField>) listOfArgs[1];
 
-                return hasCreate;
+                    return hasCreate;
 
                 } when else {
                     return null;
