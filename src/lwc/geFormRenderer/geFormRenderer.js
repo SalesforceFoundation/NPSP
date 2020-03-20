@@ -1222,12 +1222,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     /**
      * Function that fabricates the cardholder name for the credit card widget
      * @param fieldList (List of fields displayed on the form)
-     * @returns {string} card holder name
+     * @returns {{firstName: string, lastName: string, accountName: string}} card holder name
      */
     fabricateCardHolderName(fieldList){
-        let accountName = '';
-        let firstName = '';
-        let lastName = '';
+        let accountName, firstName, lastName;
         let index = 0;
 
         for (let field in fieldList) {
@@ -1249,9 +1247,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
 
                 if (index === Object.keys(fieldList).length) {
-                    return this.selectedDonorType ===
-                    CONTACT_LAST_NAME_INFO.objectApiName ?
-                        `${firstName}` + ' ' + `${lastName}` : accountName;
+                    if (this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName) {
+                        return {
+                            firstName: firstName,
+                            lastName: lastName,
+                            accountName: ''
+                        };
+                    } else {
+                        return {
+                            firstName: '',
+                            lastName: '',
+                            accountName: accountName
+                        };
+                    }
                 }
             }
         }
