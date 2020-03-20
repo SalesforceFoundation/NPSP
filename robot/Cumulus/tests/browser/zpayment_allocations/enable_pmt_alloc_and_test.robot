@@ -57,16 +57,18 @@ Update GAU Allocations and Verify Payment Allocations Sync
     ...                                    object_id=${data}[contact_opportunity][Id]
     Select Tab                             Related
     Click Special Related List Button      GAU Allocations            Manage Allocations
-    Current Page Should Be                 Custom                     ManageAllocations
-    Add GAU Allocation    Percent 0    60
-    Click Button    Save
-    Unselect Frame
-    Verify Allocations    GAU Allocations
+    Wait For Page Object                   Custom                     ManageAllocations
+    Add GAU Allocation                     Percent 0                  60
+    Click Button                           Save
+    # Unselect Frame
+    Current Page Should Be                 Details                    Opportunity
+    Verify Allocations                     GAU Allocations
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
     # As a workaround for lightning cache issue, going to the payment record directly as it would reload the record
-    Go To Page    Details                  npe01__OppPayment__c       object_id=&{payment}[Id]
-    Select Tab    Related
+    Go To Page                             Details                    npe01__OppPayment__c
+    ...                                    object_id=&{payment}[Id]
+    Select Tab                             Related
     Verify Payment Allocations    
     ...    &{def_gau}[Name]=$40.00
     ...    &{gau}[Name]=$60.00
