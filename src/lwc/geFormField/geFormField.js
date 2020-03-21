@@ -6,6 +6,7 @@ import {getObjectInfo} from "lightning/uiObjectInfoApi";
 import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -188,8 +189,15 @@ export default class GeFormField extends LightningElement {
         // If so, we need to update this to reflect that.
         // In the Execute Anonymous code, both fields are populated.
 
-        // TODO: Update for widget fields
-        fieldAndValue[this.formElementName] = this.value;
+        if (this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName) {
+            // value is the RecordType Id, but the DataImport's source field expects
+            // the RecordType Name
+            fieldAndValue[this.formElementName] =
+                this.objectDescribeInfo.recordTypeInfos[this.value].name;
+        } else {
+            fieldAndValue[this.formElementName] = this.value;
+        }
+
         return fieldAndValue;
     }
 
