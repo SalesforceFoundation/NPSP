@@ -206,7 +206,8 @@ public without sharing class RD2_ScheduleService {
     * @param schedulesByRd RD Schedules by RD Id (if null, active schedules will be queried)
     * @return Map<Id, List<Installment>> Upcoming installments mapped by the Recurring Donation Id
     */
-    public Map<Id, List<Installment>> getVisualizedInstallments(//Currently only used in tests
+    @TestVisible
+    private Map<Id, List<Installment>> getVisualizedInstallments(
         List<npe03__Recurring_Donation__c> rds,
         Date startDate,
         Integer numInstallments,
@@ -838,16 +839,21 @@ public without sharing class RD2_ScheduleService {
         if (lastIndex < 0 || records.isEmpty()) {
             scheduleEndRecord = lastClosedWonRecord;
 
-        } else {
-            try {
-                scheduleEndRecord = records[lastIndex];
-            } catch (Exception e) {}
+        } else if (lastIndex >= 0 && lastIndex < records.size()) {
+            scheduleEndRecord = records[lastIndex];
         }
 
-        return scheduleEndRecord == null
-            ? currentDate.addDays(-1)
-            : scheduleEndRecord.hasInstallment()
-                ? scheduleEndRecord.getInstallment().nextDonationDate
-                : scheduleEndRecord.getOpportunity().CloseDate; 
+        Date endDate;
+        if (scheduleEndRecord == null) {
+            endDate = currentDate.addDays(-1);
+
+        } else if (scheduleEndRecord.hasInstallment()) {
+            endDate = scheduleEndRecord.getInstallment().nextDonationDate;
+
+        } else {
+            endDate = scheduleEndRecord.getOpportunity().CloseDate; 
+        }
+
+        return endDate;
     }
 }
