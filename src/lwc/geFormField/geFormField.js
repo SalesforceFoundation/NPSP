@@ -399,8 +399,11 @@ export default class GeFormField extends LightningElement {
 
         }
 
-        lookup.setSelected({value, displayValue});
-
+        if (this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName) {
+            lookup.setSelected({value: value, displayValue: value});
+        } else {
+            lookup.setSelected({value, displayValue});
+        }
     }
 
     @api
