@@ -139,7 +139,8 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;      
-        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
+        List<RD2_VisualizeScheduleController.Installment> installments = getInstallments(rd.Id, numberOfInstallments);
+
         System.assertEquals(numberOfInstallments, installments.size(), 'Number of installments should match');
 
         for (RD2_VisualizeScheduleController.Installment installment : installments) {
@@ -174,7 +175,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
@@ -250,7 +251,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
         System.assertEquals(true, schedules[0].isCurrent, 'Schedule should be current');
@@ -287,7 +288,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
@@ -319,7 +320,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         try {
-            List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+            RD2_VisualizeScheduleController.getSchedules(rd.Id);
         } catch (Exception e) {
             actualException = e;
         }
@@ -354,7 +355,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
@@ -395,7 +396,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
@@ -444,7 +445,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
 
         Test.startTest();
-        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, maxInstallments);
+        List<Object> installments = getInstallments(rd.Id, maxInstallments);
         Test.stopTest();
 
         System.assertEquals(10 - 3 - 1, installments.size(),
@@ -494,6 +495,41 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
                 FROM Contact
                 LIMIT 1
         ];
+    }
+
+    /****
+    * @description Executes RD Schedule Visualizer to return installments
+    * @param rdId Recurring Donation Id
+    * @param numberOfInstallments Maximum number of installments to return
+    * @return List<RD2_VisualizeScheduleController.Installment>
+    */
+    private static List<RD2_VisualizeScheduleController.Installment> getInstallments(Id rdId, Integer numberOfInstallments) {
+        RD2_VisualizeScheduleController.DataTable dataTable = (RD2_VisualizeScheduleController.DataTable)
+            RD2_VisualizeScheduleController.getInstallments(rdId, numberOfInstallments).values()[0];
+
+        List<RD2_VisualizeScheduleController.Installment> installments = new List<RD2_VisualizeScheduleController.Installment>();
+        for (Object record : dataTable.getRecords()) {
+            installments.add((RD2_VisualizeScheduleController.Installment) record);
+        }
+
+        return installments;
+    }
+
+    /****
+    * @description Executes RD Schedule Visualizer to return active schedules
+    * @param rdId Recurring Donation Id
+    * @return List<RD2_VisualizeScheduleController.Schedule>
+    */
+    private static List<RD2_VisualizeScheduleController.Schedule> getSchedules(Id rdId) {
+        RD2_VisualizeScheduleController.DataTable dataTable = (RD2_VisualizeScheduleController.DataTable)
+            RD2_VisualizeScheduleController.getSchedules(rdId).values()[0];
+
+        List<RD2_VisualizeScheduleController.Schedule> schedules = new List<RD2_VisualizeScheduleController.Schedule>();
+        for (Object record : dataTable.getRecords()) {
+            schedules.add((RD2_VisualizeScheduleController.Schedule) record);
+        }
+
+        return schedules;
     }
 
     /****
