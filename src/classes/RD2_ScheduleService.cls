@@ -424,7 +424,7 @@ public without sharing class RD2_ScheduleService {
 
         evaluateScheduleEndDateForFixedLength(rd, rdSchedules);
         
-        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//cache current matcher by RD Id //TODO
+        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)//TODO cache current matcher by RD Id
             .includeCurrent(rd.npe03__Donations__r);
 
         Integer numberOfInstallments = matcher.getNumberOfOpportunities() + 1;
