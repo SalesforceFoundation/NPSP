@@ -10,7 +10,9 @@ import {
     handleError,
     getRecordFieldNames,
     setRecordValuesOnTemplate,
-    checkPermissionErrors
+    checkPermissionErrors,
+    CONTACT_FIRST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 import {
@@ -682,6 +684,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     dataImport,
                     section.sourceFields));
         });
+
+        this.handleNameOnCardFieldChange();
     }
 
     setStoredDonationDonorProperties(dataImport) {
@@ -868,7 +872,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             // Reset all fields related to this lookup field's object mapping
             this.reset(this.getObjectMapping(fieldApiName).DeveloperName);
         }
-
         const account1Imported = DATA_IMPORT_ACCOUNT1_IMPORTED_FIELD.fieldApiName;
         const contact1Imported = DATA_IMPORT_CONTACT1_IMPORTED_FIELD.fieldApiName;
 
@@ -1197,4 +1200,77 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
+    handleNameOnCardFieldChange() {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        let fieldList = {};
+        if (!isUndefined(sectionsList)) {
+            fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
+            this.selectedDonorType = fieldList[
+                DONATION_DONOR_FIELDS.donationDonorField
+                ].value === DONATION_DONOR.isContact1 ?
+                CONTACT_FIRST_NAME_INFO.objectApiName : ACCOUNT_NAME_FIELD.objectApiName;
+
+            sectionsList.forEach(section => {
+                if (section.isCreditCardWidgetAvailable) {
+                    section.setCardHolderName(this.fabricateCardHolderName(fieldList));
+                }
+            });
+        }
+    }
+
+
+    /**
+     * Function that fabricates the cardholder name for the credit card widget
+     * @param fieldList (List of fields displayed on the form)
+     * @returns {{firstName: string, lastName: string, accountName: string}} card holder name
+     */
+    fabricateCardHolderName(fieldList){
+        let accountName, firstName, lastName;
+        let index = 0;
+
+        for (let field in fieldList) {
+            index++;
+            if (fieldList.hasOwnProperty(field)) {
+                let value = fieldList[field].value ? fieldList[field].value : '';
+                let fieldApiName = fieldList[field].apiName;
+
+                switch (fieldApiName) {
+                    case CONTACT_FIRST_NAME_INFO.fieldApiName :
+                        firstName = value;
+                        break;
+                    case CONTACT_LAST_NAME_INFO.fieldApiName :
+                        lastName = value;
+                        break;
+                    case ACCOUNT_NAME_FIELD.fieldApiName :
+                        accountName = value;
+                        break;
+                }
+
+                if (index === Object.keys(fieldList).length) {
+                    if (this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName) {
+                        return {
+                            firstName: firstName,
+                            lastName: lastName,
+                            accountName: ''
+                        };
+                    } else {
+                        return {
+                            firstName: '',
+                            lastName: '',
+                            accountName: accountName
+                        };
+                    }
+                }
+            }
+        }
+    }
+
+    getDisplayedFieldsMappedByFieldAPIName(sectionsList) {
+        let allFields = {};
+        sectionsList.forEach(section => {
+            const fields = section.getAllFieldsByFieldAPIName();
+            allFields = Object.assign(allFields, fields);
+        });
+        return allFields;
+    }
 }
