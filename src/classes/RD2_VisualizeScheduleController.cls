@@ -47,7 +47,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /***
-    * @description Recurring Donation custom settings
+    * @description Specifies the earliest date to get Opportunities from
     */
     private static Date startDate {
         get {
@@ -61,7 +61,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
-     * @description Builds future installments for the Recurring Donation
+     * @description Builds future projected installments for the Recurring Donation
      * @param recordId Record Id
      * @param displayNum Number of installments to display
      * @return Map<String, Object>
@@ -87,7 +87,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
-     * @description Constructs the data table columns for the projected installments on the Recurring Donation
+     * @description Constructs the data table columns for the projected installments display
      * @param rd Recurring Donation
      * @return DataTable
      */
@@ -119,7 +119,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * and adds them into the data table
      * @param rd Recurring Donation
      * @param displayNum Maximum number of installments to return
-     * @param dataTable Data table containing installment columns and records
+     * @param dataTable Data table to populate with projected installment records
      * @return void
      */
     private static void getInstallmentRecords(npe03__Recurring_Donation__c rd, Integer displayNum, DataTable dataTable) {
@@ -149,7 +149,7 @@ public with sharing class RD2_VisualizeScheduleController {
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
         DataTable dataTable = buildScheduleDataTable(rd);
 
-        if (dataTable.getColumns().size() <= 1) {//is current field is always part of the data table fields
+        if (dataTable.getColumns().size() <= 1) {//"isCurrent" field is always part of the data table fields
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSSchedule);
         }
 
@@ -168,7 +168,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
-     * @description Constructs the data table columns for schedules on the Recurring Donation
+     * @description Constructs the data table RD schedule columns 
      * @param rd Recurring Donation
      * @return DataTable
      */
@@ -327,13 +327,27 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
 
+    /**
+     * @description Data table containing columns and records to display
+     */
     public with sharing class DataTable {
+        /**
+         * @description Contains data table columns and their attributes
+         */
         @TestVisible
         private List<DataTableColumn> columns = new List<DataTableColumn>();
 
+        /**
+         * @description Contains data table records
+         */
         @TestVisible
         private List<Object> records = new List<Object>();
 
+        /**
+         * @description Adds column to the data table only if the user has the field accessible permission
+         * @param column Data table column
+         * @return DataTable This data table instance
+         */
         public DataTable addColumn(DataTableColumn column) {
             if (column.isAccessible) {
                 columns.add(column);
@@ -342,19 +356,36 @@ public with sharing class RD2_VisualizeScheduleController {
             return this;
         }
 
+        /**
+         * @description Returns data table columns (if any)
+         * @return List<DataTableColumn>
+         */
         @AuraEnabled
         public List<DataTableColumn> getColumns() {
             return columns;
         }
 
+        /**
+         * @description Adds record to the data table
+         * @param Object Record
+         * @return void
+         */
         public void addRecord(Object record) {
             records.add(record);
         }
 
+        /**
+         * @description Sets all records in the data table
+         * @return void
+         */
         public void setRecords(List<Object> records) {
             this.records = records;
         }
 
+        /**
+         * @description Returns data table records (if any)
+         * @return List<Object>
+         */
         @AuraEnabled
         public List<Object> getRecords() {
             return this.records == null ? new List<Object>() : this.records;
@@ -362,6 +393,9 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
 
+    /**
+     * @description Data column containing field attributes required to display it
+     */
     public with sharing class DataTableColumn {
         @AuraEnabled public String fieldName;
         @AuraEnabled public String label;
@@ -371,12 +405,13 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public Boolean isAccessible = false;
 
         /**
-         * @description Constructor
+         * @description Default constructor
          */
         public DataTableColumn() {}
 
         /**
-         * @description Constructor
+         * @description Constructor setting field attributes
+         * @param field SObject field
          */
         public DataTableColumn(Schema.DescribeFieldResult field) {
             this.fieldName = field.getName();
@@ -387,42 +422,85 @@ public with sharing class RD2_VisualizeScheduleController {
             this.isAccessible = field.isAccessible();
         }
 
+        /**
+         * @description Sets the column label
+         * @param label Label to display to the user
+         * @return DataTableColumn This column instance
+         */
         public DataTableColumn withLabel(String label) {
             this.label = label;
             return this;
         }
 
+        /**
+         * @description Sets the field name used to connect the column 
+         * and the record field value. For example, 
+         * the Installment object has "donationDate" field that will be
+         * mapped to the column with fieldName = donationDate in the LWC component.
+         * @param fieldName Record field name so column and field value can be connected
+         * @return DataTableColumn This column instance
+         */
         public DataTableColumn withFieldName(String fieldName) {
             this.fieldName = fieldName;
             return this;
         }
 
+        /**
+         * @description Sets the accessible attribute on the column
+         * @param field The column accessible attribute is determined by the field's isAccessible() value
+         * @return DataTableColumn This column instance
+         */
         public DataTableColumn withIsAccessible(Schema.DescribeFieldResult field) {
             this.isAccessible = field.isAccessible();
             return this;
         }
 
+        /**
+         * @description Sets the accessible attribute on the column
+         * @param isAccessible Attribute value
+         * @return DataTableColumn This column instance
+         */
         public DataTableColumn withIsAccessible(Boolean isAccessible) {
             this.isAccessible = isAccessible;
             return this;
         }
 
+        /**
+         * @description Sets the column data type and type attributes
+         * @param displayType Field display type
+         * @return DataTableColumn This column instance
+         */
         public DataTableColumn withType(Schema.DisplayType displayType) {
             this.type = getType(displayType);
             this.typeAttributes = getTypeAttributes(displayType);
             return this;
         }
 
+        /**
+         * @description Returns the column data type determined based on the field display type
+         * @param displayType Field display type
+         * @return String Data type used to format field in the LWC
+         */
         public String getType(Schema.DisplayType displayType) {
             return UTIL_LightningComponentSupport.getColumnType(displayType);
         }
 
+        /**
+         * @description Sets the column data type attributes
+         * @param typeAttributes Attribute value by the attribute name, ie "month" => "2-digit"
+         * @return DataTableColumn This column instance
+         */
         public DataTableColumn withTypeAttributes(Map<String, Object> typeAttributes) {
             this.typeAttributes = typeAttributes;
             return this;
         }
 
-        public Map<String, Object> getTypeAttributes(final Schema.DisplayType displayType) {
+        /**
+         * @description Returns the column data type attributes determined based on the field display type
+         * @param displayType Field display type
+         * @return Map<String, Object> Attribute value by the attribute name, ie "month" => "2-digit"
+         */
+        public Map<String, Object> getTypeAttributes(Schema.DisplayType displayType) {
             return UTIL_LightningComponentSupport.getColumnTypeAttributes(displayType);
         }
     }
