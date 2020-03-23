@@ -40,9 +40,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     private static ADDR_CopyAddrHHObjBTN_CTRL copyAddressCtrl;
     private static PermissionsMock mockPerms = new PermissionsMock();
 
-    /*******************************************************************************************************************
+    /***
     * @description Create records common to test methods
-    * @return void
     */
     @TestSetup
     private static void createRecordData() {
@@ -75,9 +74,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         insert contactRecord;
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verify the the Contact address is copied to the Household
-    * @return void
     */
     @isTest
     private static void shouldCopyAddressFromContact() {
@@ -93,9 +91,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         verifyNoteRecordCount(householdRecord.Id);
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verify the the Household address is copied to the Contact
-    * @return void
     */
     @isTest
     private static void shouldCopyAddressFromHousehold() {
@@ -110,9 +107,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         verifyNoteRecordCount(contactRecord.Id);
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verify an error will display when an Account Id is provided
-    * @return void
     */
     @isTest
     private static void shouldErrorWhenCopyAddressFromAccount() {
@@ -125,9 +121,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.npo02.AddressCopyUnknownObject);
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verifies a confirmation message is displayed when button clicked
-    * @return void
     */
     @isTest
     private static void shouldDisplayConfirmationMessageWhenBtnClicked() {
@@ -137,9 +132,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.addrCopyConAddBtnConfirm, ApexPages.Severity.INFO);
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verifies an error message is displayed when a user does not have contact read permissions
-    * @return void
     */
     @isTest
     private static void shouldErrorWhenBtnClickedWithoutContactReadPerms() {
@@ -152,9 +146,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         System.assert(mockPerms.readSObjFields.contains(Contact.MailingStreet));
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verifies an error message is displayed when a user does not have household read permissions
-    * @return void
     */
     @isTest
     private static void shouldErrorWhenBtnClickedWithoutHHReadPerms() {
@@ -167,9 +160,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         System.assert(mockPerms.readSObjFields.contains(npo02__Household__c.npo02__MailingStreet__c));
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verifies an error message is displayed when a user does not have contact update permissions
-    * @return void
     */
     @isTest
     private static void shouldErrorWhenBtnClickedWithoutContactUpdatePerms() {
@@ -182,9 +174,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         System.assert(mockPerms.updateSObjFields.contains(Contact.MailingStreet));
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verifies an error message is displayed when a user does not have household update permissions
-    * @return void
     */
     @isTest
     private static void shouldErrorWhenBtnClickedWithoutHHUpdatePerms() {
@@ -222,8 +213,30 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
 
     /***
     * @description Verifies address on Contact is updated from Household
+    * when user does not have create permission on Address SObject
+    * and the custom settings for address management is disabled
+    * meaning the Address record is not created after the address being copied.
+    */
+    @isTest
+    private static void shouldCopyAddressFromHouseholdWhenSettingsDisabledAndNoCreateAddressPerms() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+            Household_Account_Addresses_Disabled__c = true
+        ));
+
+        getRecordData();
+        mockPerms.hasCreate = false;
+        createCopyAddressBtnCtrl(householdRecord.Id);
+
+        System.assertEquals(false, ApexPages.hasMessages(ApexPages.Severity.ERROR),
+            'No error message should be displayed on the page: ' + ApexPages.getMessages()
+        );
+    }
+
+    /***
+    * @description Verifies address on Contact is updated from Household
     * when user has create permission on Address SObject
-    * and field-level visiblity on Address fields
+    * and specified Address fields editable
     */
     @isTest
     private static void shouldCopyAddressFromHouseholdWhenUserHasCreateAddressPerms() {
@@ -251,9 +264,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
             'The create permission on Address__c SObject should be checked');
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description The page reference returned contains the record Id passed to the controller
-    * @return void
     */
     @isTest
     private static void shouldReturnPageReferenceWithRecordId() {
@@ -263,9 +275,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         System.assert(String.valueOf(copyAddressCtrl.close()).contains(contactRecord.Id), 'The page ref should contain the record Id.' );
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description The page reference returned should be the user home page when the id is not supported
-    * @return void
     */
     @isTest
     private static void shouldReturnHomePageWhenUnsupportedRecordId() {
@@ -279,7 +290,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     // Helpers
     ////////////////
 
-    /*******************************************************************************************************************
+    /***
     * @description Populates the record variables with the records generated in test setup
     * @return void
     */
@@ -288,7 +299,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         contactRecord = getContactRecordData();
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Queries the household record created in test setup
     * @return npo02__Household__c
     */
@@ -301,7 +312,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         ];
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Queries the contact record created in test setup
     * @return Contact
     */
@@ -332,7 +343,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         return addresses[0];
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Sets the current page to page controller from the button click of provided record Id
     * with user having permissions by default.
     * @param recordId - the record Id to pass to the controller
@@ -346,7 +357,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         copyAddressCtrl.buttonClick();
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Verify a note was created for the provided record Id
     * @param parentId - the id of the record the note belongs to
     * @return void
@@ -355,7 +366,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         System.assertEquals(1, [SELECT count() FROM Note where ParentID = :parentId]);
     }
 
-    /*******************************************************************************************************************
+    /***
     * @description Stub for UTIL_Permissions instance
     */
     private class PermissionsMock implements System.StubProvider {
@@ -365,34 +376,34 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         private SObjectType readSObjType;
         private SObjectType updateSObjType;
         private SObjectType createSObjType;
-        private Set<SObjectField> readSObjFields;
-        private Set<SObjectField> updateSObjFields;
-        private Set<SObjectField> createSObjFields;
+        private Set<SObjectField> readSObjFields = new Set<SObjectField>();
+        private Set<SObjectField> updateSObjFields = new Set<SObjectField>();
+        private Set<SObjectField> createSObjFields = new Set<SObjectField>();
 
         public Object handleMethodCall(
             Object stubbedObject,
-            String stubbedMethodName,
+            String methodName,
             Type returnType,
-            List<Type> listOfParamTypes,
-            List<String> listOfParamNames,
-            List<Object> listOfArgs
+            List<Type> paramTypes,
+            List<String> paramNames,
+            List<Object> args
         ) {
-            switch on stubbedMethodName {
+            switch on methodName {
                 when 'canRead' {
-                    readSObjType = (SObjectType) listOfArgs[0];
-                    readSObjFields = (Set<SObjectField>) listOfArgs[1];
+                    readSObjType = (SObjectType) args[0];
+                    readSObjFields = getArgumentFields(args);
 
                     return hasRead;
 
                 } when 'canUpdate' {
-                    updateSObjType = (SObjectType) listOfArgs[0];
-                    updateSObjFields = (Set<SObjectField>) listOfArgs[1];
+                    updateSObjType = (SObjectType) args[0];
+                    updateSObjFields = getArgumentFields(args);
 
                     return hasUpdate;
 
                 } when 'canCreate' {
-                    createSObjType = (SObjectType) listOfArgs[0];
-                    createSObjFields = (Set<SObjectField>) listOfArgs[1];
+                    createSObjType = (SObjectType) args[0];
+                    createSObjFields = getArgumentFields(args);
 
                     return hasCreate;
 
@@ -400,6 +411,15 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
                     return null;
                 }
             }
+        }
+
+        /***
+        * @description Extracts SObject fields from the second argument if specified
+        * @param args Method arguments
+        * @return Set<SObjectField> Fields specified in the second argument of the stubbed method
+        */
+        private Set<SObjectField> getArgumentFields(List<Object> args) {
+            return args.size() > 1 ? (Set<SObjectField>) args[1] : new Set<SObjectField>();
         }
     }
 

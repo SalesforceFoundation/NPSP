@@ -106,16 +106,15 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
         };
 
     /***
-    * @description List of Address fields
+    * @description Address fields
     */
-    private static final List<SObjectField> ADDRESS_FIELDS =
-        new List<SObjectField>{
-            Address__c.MailingStreet__c,
-            Address__c.MailingCity__c,
-            Address__c.MailingState__c,
-            Address__c.MailingPostalCode__c,
-            Address__c.MailingCountry__c
-        };
+    private static final Set<SObjectField> ADDRESS_FIELDS = new Set<SObjectField>{
+        Address__c.MailingStreet__c,
+        Address__c.MailingCity__c,
+        Address__c.MailingState__c,
+        Address__c.MailingPostalCode__c,
+        Address__c.MailingCountry__c
+    };
 
     /*******************************************************************************************************
     * @description Constructor for the class
@@ -330,9 +329,35 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
             if (!perms.canUpdate(Contact.SObjectType, HH_BY_CONTACT_ADDR_FIELDS.keySet())) {
                 return false;
             }
-            if  (!perms.canCreate(Address__c.sObjectType, new Set<SObjectField>(ADDRESS_FIELDS))) {
+            if (!hasPermissionsOnAddress()) {
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if the user has Create and Edit permissions on the Address SObject
+    * as well as read and editable permission on specified Address SObject fields.
+    * If the Address is not created when Mailing Address on Contact is updated,
+    * then permissions on the Address SObject are not verified.
+    * @return Boolean
+    */
+    private Boolean hasPermissionsOnAddress() {
+        if (UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+            //permissions on Address are not required
+            //when Address record is not expected to be created
+            return true;
+        }
+
+        SObjectType objType = Address__c.sObjectType;
+        //The user needs Create and Edit permissions on the Address SObject
+        //as well as read and editable permission on Mailing address fields on Address SObject
+        if (!perms.canCreate(objType, ADDRESS_FIELDS)
+            || !perms.canUpdate(objType)
+        ) {
+            return false;
         }
 
         return true;
