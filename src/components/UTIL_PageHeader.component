@@ -37,7 +37,7 @@
     <apex:attribute name="cancelDisabled" type="Boolean" default="false"
                     description="Whether the cancel button should be disabled, defaults to false."/>
     <apex:attribute name="cancelDisabledOnClick" type="Boolean" default="false"
-                    description="Whether the cancel button should be disabled when clicked/pressed.  Must be rerendered to enable again."/>
+                    description="Whether the cancel button should be disabled when clicked/pressed.  Must be rerendered to enable again, defaults to false."/>
     <apex:attribute name="cancelReRender" type="String"
                     description="Part of page to rerender when cancel is pressed."/>
     <!-- Save button attributes -->
@@ -52,7 +52,7 @@
     <apex:attribute name="saveDisabled" type="Boolean" default="false"
                     description="Whether the save button should be disabled, defaults to false."/>
     <apex:attribute name="saveDisabledOnClick" type="Boolean" default="false"
-                    description="Whether the save button should be disabled when clicked/pressed.  Must be rerendered to enable again."/>
+                    description="Whether the save button should be disabled when clicked/pressed.  Must be rerendered to enable again, defaults to false."/>
     <apex:attribute name="saveReRender" type="String"
                     description="Part of page to rerender when save is pressed."/>
     <!-- Save and new button attributes -->
@@ -67,7 +67,7 @@
     <apex:attribute name="saveAndNewDisabled" type="Boolean" default="false"
                     description="Whether the save and new button should be disabled, defaults to false."/>
     <apex:attribute name="saveAndNewDisabledOnClick" type="Boolean" default="false"
-                    description="Whether the save and new button should be disabled when clicked/pressed.  Must be rerendered to enable again."/>
+                    description="Whether the save and new button should be disabled when clicked/pressed.  Must be rerendered to enable again, defaults to false."/>
     <!-- Continue attributes -->
     <apex:attribute name="showcontinueBtn" type="Boolean" default="false"
                     description="Set to false to hide continue button, default is false"/>
@@ -80,7 +80,7 @@
     <apex:attribute name="continueDisabled" type="Boolean" default="false"
                     description="Whether the continue button should be disabled, defaults to false."/>
     <apex:attribute name="continueDisabledOnClick" type="Boolean" default="false"
-                    description="Whether the continue button should be disabled when clicked/pressed.  Must be rerendered to enable again."/>
+                    description="Whether the continue button should be disabled when clicked/pressed.  Must be rerendered to enable again, defaults to false."/>
 
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
