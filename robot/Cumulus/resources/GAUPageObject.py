@@ -20,17 +20,9 @@ class GAUListPage(BaseNPSPPage, ListingPage):
 
     
     
-@pageobject("Custom", "ManageAllocation")
+@pageobject("Custom", "ManageAllocations")
 class GauAllocationPage(BaseNPSPPage, BasePage):
-
-    def _is_current_page(self):
-        """
-        Waits for the GAU Allocations iframe to load
-        """
-        self.selenium.wait_until_location_contains("/one/one.app",timeout=60, message="Manage Allocations page did not load in 1 min")
-        self.npsp.wait_for_locator('frame','Manage Allocations')
-        self.npsp.choose_frame('Manage Allocations')        
-    
+           
     def _wait_to_appear(self, timeout=None):
         """This function is called by the keyword 'wait for page object to appear'.
         used to verify that the page is visible and selects the iframe.
@@ -38,3 +30,9 @@ class GauAllocationPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_location_contains("/one/one.app",timeout=60, message="Manage Allocations page did not load in 1 min")
         self.npsp.wait_for_locator('frame','Manage Allocations')
         self.npsp.choose_frame('Manage Allocations') 
+        
+    
+    def add_gau_allocation(self,field, value):
+        """Enter an allocation of sepecified 'value' in the given 'field'"""
+        locator = npsp_lex_locators["gaus"]["input_field"].format(field)
+        self.salesforce._populate_field(locator,value)      

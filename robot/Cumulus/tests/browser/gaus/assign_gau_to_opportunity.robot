@@ -3,6 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/OpportunityPageObject.py
+...             robot/Cumulus/resources/GAUPageObject.py
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -18,8 +19,7 @@ Assign GAU to Opportunity
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
     Click Special Related List Button    GAU Allocations    Manage Allocations
-    Wait For Locator    frame    Manage Allocations
-    Choose Frame    Manage Allocations
+    Wait For Page Object                   Custom                     ManageAllocations
     Select Search    General Accounting Unit 0    &{gau1}[Name]
     Add GAU Allocation    Percent 0    50
     Click Link    Add Row    
