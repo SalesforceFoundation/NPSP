@@ -35,6 +35,11 @@ export default class GeFormFieldLookup extends LightningElement {
         if (this.value) {
             this._getRecordId = this.value;
         }
+        this.dispatchChangeEvent({
+            value: this.value,
+            displayValue: this.displayValue,
+            fieldApiName: this.fieldApiName
+        });
     }
 
     /**
@@ -120,14 +125,11 @@ export default class GeFormFieldLookup extends LightningElement {
     handleSelect(event) {
         this.displayValue = event.detail.displayValue;
         this.value = event.detail.value;
-
-        this.dispatchEvent(new CustomEvent('change', {
-            detail: {
-                value: event.detail.value,
-                displayValue: event.detail.displayValue,
-                fieldApiName: this.fieldApiName
-            }
-        }));
+        this.dispatchChangeEvent({
+            value: this.value,
+            displayValue: this.displayValue,
+            fieldApiName: this.fieldApiName
+        });
     }
 
     @api
@@ -213,6 +215,16 @@ export default class GeFormFieldLookup extends LightningElement {
 
         let autocomplete = this.template.querySelector('c-ge-autocomplete');
         autocomplete.setValue({value: this.value, displayValue: this.displayValue});
+    }
+
+    dispatchChangeEvent(data) {
+        this.dispatchEvent(new CustomEvent('change', {
+            detail: {
+                value: data.value,
+                displayValue: data.displayValue,
+                fieldApiName: data.fieldApiName
+            }
+        }));
     }
 
 }

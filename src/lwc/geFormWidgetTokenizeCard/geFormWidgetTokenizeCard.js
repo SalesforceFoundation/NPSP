@@ -1,4 +1,4 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
@@ -15,6 +15,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track domain;
     @track visualforceOrigin;
     @track isLoading = true;
+    @api cardHolderName;
 
     get tokenizeCardHeader() {
         return GeLabelService.format(
@@ -107,5 +108,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 { action: 'createToken' },
                 this.visualforceOrigin);
         }
+    }
+
+    @api
+    load() {}
+
+    @api
+    reset() {}
+
+    @api
+    setNameOnCard(cardHolderName) {
+        this.cardHolderName = cardHolderName;
     }
 }

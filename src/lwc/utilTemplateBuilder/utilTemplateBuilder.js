@@ -55,6 +55,11 @@ import DI_CONTACT1_LAST_NAME_INFO from '@salesforce/schema/DataImport__c.Contact
 
 import CONTACT_INFO from '@salesforce/schema/Contact';
 import ACCOUNT_INFO from '@salesforce/schema/Account';
+
+import CONTACT_FIRST_NAME_INFO from '@salesforce/schema/Contact.FirstName';
+import CONTACT_LAST_NAME_INFO from '@salesforce/schema/Contact.LastName';
+import ACCOUNT_NAME_INFO from '@salesforce/schema/Account.Name';
+
 import commonError from '@salesforce/label/c.commonError';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 
@@ -494,9 +499,14 @@ export {
     EXCLUDED_BATCH_HEADER_FIELDS,
     CONTACT_INFO,
     ACCOUNT_INFO,
+    CONTACT_FIRST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO,
+    ACCOUNT_NAME_INFO,
     DI_CONTACT1_IMPORTED_INFO,
     DI_ACCOUNT1_IMPORTED_INFO,
     DI_DONATION_DONOR_INFO,
+    DI_ACCOUNT1_NAME_INFO,
+    DI_CONTACT1_LAST_NAME_INFO,
     CONTACT1,
     ACCOUNT1,
     DONATION_DONOR_FIELDS,

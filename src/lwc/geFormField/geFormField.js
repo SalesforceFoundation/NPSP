@@ -7,6 +7,15 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 
+import {
+    DI_DONATION_DONOR_INFO,
+    CONTACT_FIRST_NAME_INFO,
+    CONTACT_LAST_NAME_INFO,
+    ACCOUNT_NAME_INFO,
+    DI_ACCOUNT1_IMPORTED_INFO,
+    DI_CONTACT1_IMPORTED_INFO
+} from "c/utilTemplateBuilder";
+
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
 const TEXT_AREA_TYPE = 'TEXTAREA';
@@ -61,6 +70,11 @@ export default class GeFormField extends LightningElement {
             // fire event for reactive widget component containing the Data Import field API name and Value
             // currently only used for the Donation Amount.
             fireEvent(null, 'widgetData', { donationAmount: this.value });
+        }
+
+        if (this.isValidNameOnCardField) {
+            const evt = new CustomEvent('creditcardvaluechange');
+            this.dispatchEvent(evt);
         }
     };
 
@@ -276,6 +290,7 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    @api
     get fieldApiName() {
         return this.fieldInfo.Target_Field_API_Name;
     }
@@ -299,6 +314,26 @@ export default class GeFormField extends LightningElement {
 
         return returnMap;
 
+    }
+
+    get isValidNameOnCardField() {
+        return (
+            this.element.fieldApiName === DI_DONATION_DONOR_INFO.fieldApiName ||
+            this.element.fieldApiName === CONTACT_FIRST_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === CONTACT_LAST_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === ACCOUNT_NAME_INFO.fieldApiName ||
+            this.element.fieldApiName === DI_CONTACT1_IMPORTED_INFO.fieldApiName ||
+            this.element.fieldApiName === DI_ACCOUNT1_IMPORTED_INFO.fieldApiName
+        );
+    }
+
+    @api
+    get fieldValueAndFieldApiName() {
+        let fieldWrapper = { value: this.value, apiName: this.fieldApiName };
+        let returnMap = {};
+        returnMap[ this.fieldApiName ] = fieldWrapper;
+
+        return returnMap;
     }
 
     @api
@@ -387,7 +422,6 @@ export default class GeFormField extends LightningElement {
         lookup.setSelected({value, displayValue});
 
     }
-
 
     @api
     reset() {

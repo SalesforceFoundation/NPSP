@@ -1,10 +1,17 @@
 import {LightningElement, api, track} from 'lwc';
-import {getSubsetObject} from "c/utilCommon";
+import {getSubsetObject, isUndefined, isNotEmpty} from "c/utilCommon";
 
 export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetData;
     @track collapsed = false;
+    @track hasCreditCardWidget = false;
+
+
+    renderedCallback() {
+        this.registerCreditCardWidget();
+        this.handleChangeNameOnCardField();
+    }
 
     /**
      * Get the alternative text that represents the section expand/collapse button
@@ -180,9 +187,59 @@ export default class GeFormSection extends LightningElement {
 
         this.template.querySelectorAll('c-ge-form-widget')
             .forEach(widgetCmp => {
-                fields.push(...widgetCmp.allFieldsByAPIName);
+                if (isNotEmpty(widgetCmp.allFieldsByAPIName)) {
+                    fields.push(...widgetCmp.allFieldsByAPIName);
+                }
             });
 
         return fields;
     }
+
+
+    registerCreditCardWidget() {
+        if (!isUndefined(this.section)) {
+            this.section.elements.forEach(element => {
+                if (element.componentName === 'geFormWidgetTokenizeCard') {
+                    this.hasCreditCardWidget = true;
+                }
+            })
+        }
+    }
+
+    handleChangeNameOnCardField() {
+        const changeNameOnCardFieldEvent = new CustomEvent(
+            'changenameoncardfield'
+        );
+        this.dispatchEvent(changeNameOnCardFieldEvent);
+    }
+
+    @api
+    setCardHolderName(value) {
+        const widgetList = this.template.querySelectorAll('c-ge-form-widget');
+        widgetList.forEach(widget => {
+            if (widget.isElevateTokenizeCard) {
+                widget.setCardHolderName(value);
+            }
+        });
+    }
+
+    @api
+    get isCreditCardWidgetAvailable() {
+        return this.hasCreditCardWidget;
+    }
+
+    @api
+    getAllFieldsByFieldAPIName() {
+        const fields = this.template.querySelectorAll('c-ge-form-field');
+        let fieldData = {};
+        if (isNotEmpty(fields)) {
+            fields.forEach(field => {
+                fieldData = { ...fieldData, ...(field.fieldValueAndFieldApiName) };
+            });
+        }
+        return fieldData;
+    }
+
+
+
 }

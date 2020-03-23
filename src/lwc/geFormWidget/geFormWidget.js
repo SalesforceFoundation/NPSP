@@ -49,6 +49,7 @@ export default class GeFormWidget extends LightningElement {
         return this.element.componentName === PAYMENT_SCHEDULER_WIDGET;
     }
 
+    @api
     get isElevateTokenizeCard() {
         return this.element.componentName === TOKENIZE_CARD_WIDGET;
     }    
@@ -78,6 +79,12 @@ export default class GeFormWidget extends LightningElement {
         } else {
             return null;
         }
+    }
+
+    @api
+    setCardHolderName(value) {
+        let creditCardWidget = this.template.querySelector('c-ge-form-widget-tokenize-card');
+        creditCardWidget.setNameOnCard(value);
     }
 
 }
