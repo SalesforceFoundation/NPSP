@@ -11,17 +11,18 @@ Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 # Sets test data contact and an opportunity for the contact
-# Set two GAUs
+# Sets test data for two GAUs
 Setup Test Data
     Setupdata   contact                  ${contact1_fields}     ${opportunity_fields}
-    &{gau1} =                            API Create GAU
-    &{gau2} =                            API Create GAU
-    Set suite variable                   &{gau1}
-    Set suite variable                   &{gau2}
+    setupdata   gau1                     gau_data=${gau1_fields}
+    setupdata   gau2                     gau_data=${gau2_fields}
 
 *** Variables ***
 &{contact1_fields}       Email=test@example.com
 &{opportunity_fields}    Type=Donation   Name=Test GAU donation   Amount=100  StageName=Closed Won
+&{gau1_fields}           Name=This is Gau1
+&{gau2_fields}           Name=This is Gau2
+
 
 *** Test Cases ***
 Assign GAU to Opportunity
@@ -37,11 +38,11 @@ Assign GAU to Opportunity
     Click Special Related List Button    GAU Allocations         Manage Allocations
     Current Page Should Be               Custom                  GauAllocation
     Set Gau Allocation
-    ...                                  General Accounting Unit 0=&{gau1}[Name]
+    ...                                  General Accounting Unit 0=${data}[gau1][Name]
     ...                                  Percent 0=50
     Click Link                           Add Row
     Set Gau Allocation
-    ...                                  General Accounting Unit 1=&{gau2}[Name]
+    ...                                  General Accounting Unit 1=${data}[gau2][Name]
     ...                                  Amount 1=20
     Click Button                         Save
     Current Page Should Be               Details                 Opportunity
