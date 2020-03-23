@@ -47,7 +47,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /***
-    * @description Specifies the earliest date to get Opportunities from
+    * @description Specifies the earliest date when searching for Opportunities 
     */
     private static Date startDate {
         get {
@@ -83,35 +83,9 @@ public with sharing class RD2_VisualizeScheduleController {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
         }
 
-        return new Map<String, Object>{ 'dataTable' => dataTable };
-    }
+        sanitizeInstallments(dataTable);
 
-    /**
-     * @description Constructs the data table columns for the projected installments display
-     * @param rd Recurring Donation
-     * @return DataTable
-     */
-    private static DataTable buildInstallmentDataTable(npe03__Recurring_Donation__c rd) {
-        return new DataTable()
-            .addColumn(new DataTableColumn()
-                .withFieldName('donationDate')
-                .withLabel(System.Label.RD2_ScheduleVisualizerColumnDate)
-                .withIsAccessible(Schema.SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c)
-                .withType(Schema.DisplayType.DATE)
-                .withTypeAttributes(new Map<String, Object>{
-                    'month' => '2-digit',
-                    'day' => '2-digit'
-                })
-            )
-            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Amount__c)
-                .withFieldName('amount')
-                .withTypeAttributes(new Map<String, Object>{
-                    'currencyCode' => getCurrencyCode(rd)
-                })
-            )
-            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.PaymentMethod__c)
-                .withFieldName('paymentMethod')
-            );
+        return new Map<String, Object>{ 'dataTable' => dataTable };
     }
 
     /**
@@ -164,7 +138,38 @@ public with sharing class RD2_VisualizeScheduleController {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoActiveSchedule);
         }
 
+        sanitizeSchedules(dataTable);
+
         return new Map<String, Object>{ 'dataTable' => dataTable };
+    }
+
+
+    /**
+     * @description Constructs the data table columns for the projected installments display
+     * @param rd Recurring Donation
+     * @return DataTable
+     */
+    private static DataTable buildInstallmentDataTable(npe03__Recurring_Donation__c rd) {
+        return new DataTable()
+            .addColumn(new DataTableColumn()
+                .withFieldName('donationDate')
+                .withLabel(System.Label.RD2_ScheduleVisualizerColumnDate)
+                .withIsAccessible(Schema.SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c)
+                .withType(Schema.DisplayType.DATE)
+                .withTypeAttributes(new Map<String, Object>{
+                    'month' => '2-digit',
+                    'day' => '2-digit'
+                })
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Amount__c)
+                .withFieldName('amount')
+                .withTypeAttributes(new Map<String, Object>{
+                    'currencyCode' => getCurrencyCode(rd)
+                })
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.PaymentMethod__c)
+                .withFieldName('paymentMethod')
+            );
     }
 
     /**
@@ -207,6 +212,69 @@ public with sharing class RD2_VisualizeScheduleController {
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c)
                 .withFieldName('dayOfMonth')
             );
+    }
+
+    /**
+     * @description Sets null on fields that are not accessible
+     * @param dataTable Data table containing columns and installment records
+     * @return void
+     */
+    private static void sanitizeInstallments(DataTable dataTable) {
+        if (dataTable.getColumns().size() == 3) {
+            return;//all columns are visible
+        }
+
+        for (Object obj : dataTable.getRecords()) {  
+            Installment record = (Installment) obj;          
+            if (!dataTable.isAccessible('donationDate')) {
+                record.donationDate = null;
+            } 
+            if (!dataTable.isAccessible('amount')) {
+                record.amount = null;
+            }
+            if (!dataTable.isAccessible('paymentMethod')) {
+                record.paymentMethod = null;
+            }
+        }
+    }
+    
+    /**
+     * @description Sets null on fields that are not accessible
+     * @param dataTable Data table containing columns and schedule records
+     * @return void
+     */
+    private static void sanitizeSchedules(DataTable dataTable) {
+        if (dataTable.getColumns().size() == 9) {
+            return;//all columns are visible
+        }
+
+        for (Object obj : dataTable.getRecords()) {  
+            Schedule record = (Schedule) obj;   
+            if (!dataTable.isAccessible('amount')) {
+                record.amount = null;
+            }
+            if (!dataTable.isAccessible('paymentMethod')) {
+                record.paymentMethod = null;
+            }  
+            if (!dataTable.isAccessible('campaign')) {
+                record.campaign = null;
+            }
+            if (!dataTable.isAccessible('startDate')) {
+                record.startDate = null;
+            }  
+            if (!dataTable.isAccessible('endDate')) {
+                record.endDate = null;
+            }  
+            if (!dataTable.isAccessible('period')) {
+                record.period = null;
+            }  
+            if (!dataTable.isAccessible('frequency')) {
+                record.frequency = null;
+            }  
+            if (!dataTable.isAccessible('dayOfMonth')) {
+                record.dayOfMonth = null;
+            }
+        }
     }
 
     /**
@@ -335,7 +403,7 @@ public with sharing class RD2_VisualizeScheduleController {
          * @description Contains data table columns and their attributes
          */
         @TestVisible
-        private List<DataTableColumn> columns = new List<DataTableColumn>();
+        private Map<String, DataTableColumn> columnByFieldName = new Map<String, DataTableColumn>();
 
         /**
          * @description Contains data table records
@@ -350,7 +418,7 @@ public with sharing class RD2_VisualizeScheduleController {
          */
         public DataTable addColumn(DataTableColumn column) {
             if (column.isAccessible) {
-                columns.add(column);
+                columnByFieldName.put(column.fieldName, column);
             }
 
             return this;
@@ -362,7 +430,15 @@ public with sharing class RD2_VisualizeScheduleController {
          */
         @AuraEnabled
         public List<DataTableColumn> getColumns() {
-            return columns;
+            return columnByFieldName.values();
+        }
+
+        /**
+         * @description Determines if the Object.fieldName is accessible
+         * @return Boolean
+         */
+        public Boolean isAccessible(String fieldName) {
+            return columnByFieldName.containsKey(fieldName);
         }
 
         /**

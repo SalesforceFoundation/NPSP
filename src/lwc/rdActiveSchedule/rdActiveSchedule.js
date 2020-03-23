@@ -83,6 +83,7 @@ export default class RdActiveSchedule extends LightningElement {
                         field.column = column;
                         field.column.isCurrency = column.type === 'currency';
                         field.column.isDate = column.type === 'date-local' || column.type === 'date';
+                        field.column.isText = column.type === 'text';
 
                         if (record[column.fieldName] === undefined) {
                             field.value = null;

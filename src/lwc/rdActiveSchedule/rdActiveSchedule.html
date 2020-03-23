@@ -23,48 +23,53 @@
                                 <lightning-formatted-text value={schedule.title}></lightning-formatted-text>
                             </h3>
                             <div class="slds-tile__detail slds-m-around--xx-small">
-                                <div class="slds-list_horizontal slds-wrap slds-grid">
 
-                                    <lightning-layout multiple-rows="true" class="slds-scrollable_y list-container">
-                                        <template for:each={schedule.field} for:item="field">
-                                            <lightning-layout-item key={field.column.fieldName}
-                                                class="slds-medium-size_5-of-12 slds-dl_horizontal__label slds-text-color_weak">
-                                                {field.column.label}
-                                            </lightning-layout-item>
+                                <lightning-layout multiple-rows="true" horizontal-align="spread">
+                                    <template for:each={schedule.field} for:item="field">
+                                        <lightning-layout-item key={field.column.fieldName} size="5" flexibility="auto"
+                                            class="slds-dl_horizontal__label slds-text-color_weak">
+                                            <lightning-formatted-text value={field.column.label}>
+                                            </lightning-formatted-text>
+                                        </lightning-layout-item>
 
-                                            <lightning-layout-item key={field.column.fieldName}
-                                                class="slds-medium-size_7-of-12 slds-dl_horizontal__detail">
-                                                <template if:false={field.value}>
-                                                    <lightning-formatted-text value={labels.lblNone}>
-                                                    </lightning-formatted-text>
+                                        <lightning-layout-item key={field.column.fieldName} size="7" flexibility="auto"
+                                            class="slds-dl_horizontal__detail">
+                                            <template if:false={field.value}>
+                                                <lightning-formatted-text value={labels.lblNone}>
+                                                </lightning-formatted-text>
+                                            </template>
+
+                                            <template if:true={field.value}>
+                                                <template if:true={field.column.isCurrency}>
+                                                    <lightning-formatted-number format-style="currency"
+                                                        currency-code={field.column.currencyCode} value={field.value}>
+                                                    </lightning-formatted-number>
                                                 </template>
 
-                                                <template if:true={field.value}>
-                                                    <template if:true={field.column.isCurrency}>
-                                                        <lightning-formatted-number format-style="currency"
-                                                            currency-code={field.column.currencyCode}
-                                                            value={field.value}>
-                                                        </lightning-formatted-number>
+                                                <template if:false={field.column.isCurrency}>
+                                                    <template if:true={field.column.isDate}>
+                                                        <lightning-formatted-date-time value={field.value}
+                                                            year="numeric" month="2-digit" day="2-digit"
+                                                            time-zone="UTC">
+                                                        </lightning-formatted-date-time>
                                                     </template>
 
-                                                    <template if:false={field.column.isCurrency}>
-                                                        <template if:true={field.column.isDate}>
-                                                            <lightning-formatted-date-time value={field.value}
-                                                                year="numeric" month="2-digit" day="2-digit"
-                                                                time-zone="UTC">
-                                                            </lightning-formatted-date-time>
+                                                    <template if:false={field.column.isDate}>
+                                                        <template if:true={field.column.isText}>
+                                                            <lightning-formatted-text value={field.value}>
+                                                            </lightning-formatted-text>
                                                         </template>
 
-                                                        <template if:false={field.column.isDate}>
+                                                        <template if:false={field.column.isText}>
                                                             {field.value}
                                                         </template>
                                                     </template>
                                                 </template>
-                                            </lightning-layout-item>
-                                        </template>
-                                    </lightning-layout>
+                                            </template>
+                                        </lightning-layout-item>
+                                    </template>
+                                </lightning-layout>
 
-                                </div>
                             </div>
                         </div>
                     </article>
