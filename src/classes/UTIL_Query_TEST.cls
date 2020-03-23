@@ -375,9 +375,9 @@ private class UTIL_Query_TEST {
             .build();
 
         if (UserInfo.isMultiCurrencyOrganization()) {
-            System.assert(soql.contains('CurrencyIsoCode'), 'Multi Currency Org: CurrencyIsoCode should be present. SOQL: ' + soql);
+            System.assert(soql.contains(UTIL_Currency.CURRENCY_ISO_CODE_FIELD), 'Multi Currency Org: CurrencyIsoCode should be present. SOQL: ' + soql);
         } else {
-            System.assert(!soql.contains('CurrencyIsoCode'), 'Not a Multi Currency Org: CurrencyIsoCode should NOT be present. SOQL: ' + soql);
+            System.assert(!soql.contains(UTIL_Currency.CURRENCY_ISO_CODE_FIELD), 'Not a Multi Currency Org: CurrencyIsoCode should NOT be present. SOQL: ' + soql);
         }
     }
 

@@ -44,9 +44,6 @@ public with sharing class UTIL_Query {
     /** @description Error message when FROM value is not provided */
     private static final String FROM_ENTITY_REQUIRED = 'The FROM value is required.';
 
-    /** @description SELECT field to be returned if requested and the Org is a Multi Currency Enabled Org */
-    public static final String CURRENCYISOCODE_FIELD = 'CurrencyIsoCode';
-
     /** @description Operator AND used in the WHERE clause */
     private static final String AND_OPERATOR = ' AND ';
 
@@ -94,7 +91,7 @@ public with sharing class UTIL_Query {
     */
     public UTIL_Query withMultiCurrencyField() {
         if (UserInfo.isMultiCurrencyOrganization()) {
-            selectFields.add(CURRENCYISOCODE_FIELD);
+            selectFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
         }
         return this;
     }
