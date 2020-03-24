@@ -9,6 +9,19 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create GAU and Verify
-    ${gau_name}    Create GAU
-    ${gau_name1}    Get Main Header
-    Should be Equal as Strings    ${gau_name1}      ${gau_name} 
+     [Documentation]                   Create a General Accounting Unit name from  the UI
+     [tags]                            W-039818                 feature:GAU
+
+     ${gau_name} =                     Generate Random String
+     Go To Page                        Listing
+     ...                               General_Accounting_Unit__c
+     Click Object Button               New
+     Populate Modal Form
+     ...                               General Accounting Unit Name=${gau_name}
+     ...                               Largest Allocation=5
+     Click Modal Button                Save
+     Wait Until Modal Is Closed
+     ${gau_name}                       Get Main Header
+     Go To Page                        Listing
+     ...                               General_Accounting_Unit__c
+     Click Link                        link=${gau_name}
