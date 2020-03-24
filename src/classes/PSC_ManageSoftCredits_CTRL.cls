@@ -215,7 +215,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     private Boolean getCurrentUserHasAccess() {
         Boolean accessResult = false;
 
-        String pscString = 'Partial_Soft_Credit__c';
+        String pscObjectName = Schema.SObjectType.Partial_Soft_Credit__c.getName();
         Schema.DescribeSObjectResult dsr = UTIL_Describe.getObjectDescribe(pscString);
 
         if (dsr.isAccessible() && dsr.isCreateable() && dsr.isDeletable() && dsr.isUpdateable()) {
