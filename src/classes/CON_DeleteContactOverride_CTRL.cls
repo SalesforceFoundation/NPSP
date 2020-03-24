@@ -113,10 +113,20 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
                 shouldDeleteContactAlone = false;
 
-                String helpDeleteAccountInstead = String.format(
-                    Label.ConfirmDeleteAccount,
-                    new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
-                );
+                String helpDeleteAccountInstead;
+                if (UTIL_Describe.getFieldDescribe('Account', 'Name').isAccessible()) {
+                    helpDeleteAccountInstead = String.format(
+                        Label.ConfirmDeleteAccount,
+                        new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
+                    );
+                }
+                else {
+                    helpDeleteAccountInstead = String.format(
+                        Label.ConfirmDeleteAccountUnnamed,
+                        new List<String>{queryContact.Name.escapeHtml4()}
+                    );
+                }
+
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
             }
         }
