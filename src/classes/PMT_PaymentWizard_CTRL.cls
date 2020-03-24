@@ -554,7 +554,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
             Map<String, Schema.DescribeFieldResult> dfr = UTIL_Describe.getAllFieldsDescribe('npe01__oppPayment__c');
             List<String> fieldStrings = new List<String>{
                     'npe01__check_reference_number__c', 'npe01__custom_payment_field__c', 'npe01__paid__c',
-                    'payment_acknowledged_date__c', 'payment_acknowledgment_status__c', 'npe01__payment_amount__c',
+                    UTIL_Namespace.StrTokenNSPrefix('payment_acknowledged_date__c'),
+                    UTIL_Namespace.StrTokenNSPrefix('payment_acknowledgment_status__c'),
+                    'npe01__payment_amount__c',
                     'npe01__payment_date__c', 'npe01__payment_method__c', 'npe01__scheduled_date__c',  'npe01__written_off__c'
             };
             for (String accStr : fieldStrings) {
