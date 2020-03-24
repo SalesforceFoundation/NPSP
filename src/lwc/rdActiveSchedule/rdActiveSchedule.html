@@ -42,7 +42,8 @@
                                             <template if:true={field.value}>
                                                 <template if:true={field.column.isCurrency}>
                                                     <lightning-formatted-number format-style="currency"
-                                                        currency-code={field.column.currencyCode} value={field.value}>
+                                                        currency-code={field.column.typeAttributes.currencyCode}
+                                                        value={field.value}>
                                                     </lightning-formatted-number>
                                                 </template>
 

@@ -36,6 +36,20 @@
 */
 public with sharing class RD2_VisualizeScheduleController {
 
+    private static final String INSTALLMENT_DONATION_DATE = 'donationDate';
+    private static final String INSTALLMENT_AMOUNT = 'amount';
+    private static final String INSTALLMENT_PAYMENT_METHOD = 'paymentMethod';
+
+    private static final String SCHEDULE_IS_CURRENT = 'isCurrent';
+    private static final String SCHEDULE_AMOUNT = 'amount';
+    private static final String SCHEDULE_PAYMENT_METHOD = 'paymentMethod';
+    private static final String SCHEDULE_CAMPAIGN = 'campaign';
+    private static final String SCHEDULE_START_DATE = 'startDate';
+    private static final String SCHEDULE_END_DATE = 'endDate';
+    private static final String SCHEDULE_PERIOD = 'period';
+    private static final String SCHEDULE_FREQUENCY = 'frequency';
+    private static final String SCHEDULE_DAY_OF_MONTH = 'dayOfMonth';
+
     @TestVisible
     private static RD2_ScheduleService scheduleService {
         get {
@@ -153,7 +167,7 @@ public with sharing class RD2_VisualizeScheduleController {
     private static DataTable buildInstallmentDataTable(npe03__Recurring_Donation__c rd) {
         return new DataTable()
             .addColumn(new DataTableColumn()
-                .withFieldName('donationDate')
+                .withFieldName(INSTALLMENT_DONATION_DATE)
                 .withLabel(System.Label.RD2_ScheduleVisualizerColumnDate)
                 .withIsAccessible(Schema.SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c)
                 .withType(Schema.DisplayType.DATE)
@@ -163,13 +177,13 @@ public with sharing class RD2_VisualizeScheduleController {
                 })
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Amount__c)
-                .withFieldName('amount')
+                .withFieldName(INSTALLMENT_AMOUNT)
                 .withTypeAttributes(new Map<String, Object>{
                     'currencyCode' => getCurrencyCode(rd)
                 })
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.PaymentMethod__c)
-                .withFieldName('paymentMethod')
+                .withFieldName(INSTALLMENT_PAYMENT_METHOD)
             );
     }
 
@@ -182,37 +196,37 @@ public with sharing class RD2_VisualizeScheduleController {
     private static DataTable buildScheduleDataTable(npe03__Recurring_Donation__c rd) {
         return new DataTable()
             .addColumn(new DataTableColumn()
-                .withFieldName('isCurrent')
+                .withFieldName(SCHEDULE_IS_CURRENT)
                 .withType(Schema.DisplayType.BOOLEAN)
                 .withIsAccessible(true)
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Amount__c)
-                .withFieldName('amount')
+                .withFieldName(SCHEDULE_AMOUNT)
                 .withTypeAttributes(new Map<String, Object>{
                     'currencyCode' => getCurrencyCode(rd)
                 })
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.PaymentMethod__c)
-                .withFieldName('paymentMethod')
+                .withFieldName(SCHEDULE_PAYMENT_METHOD)
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Recurring_Donation_Campaign__c)
-                .withFieldName('campaign')
+                .withFieldName(SCHEDULE_CAMPAIGN)
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.StartDate__c)
-                .withFieldName('startDate')
+                .withFieldName(SCHEDULE_START_DATE)
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.StartDate__c)
-                .withFieldName('endDate')
+                .withFieldName(SCHEDULE_END_DATE)
                 .withLabel(System.Label.RD2_ScheduleLWCEndDate)
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Installment_Period__c)
-                .withFieldName('period')
+                .withFieldName(SCHEDULE_PERIOD)
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.InstallmentFrequency__c)
-                .withFieldName('frequency')
+                .withFieldName(SCHEDULE_FREQUENCY)
             )
             .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c)
-                .withFieldName('dayOfMonth')
+                .withFieldName(SCHEDULE_DAY_OF_MONTH)
             );
     }
 
@@ -229,13 +243,13 @@ public with sharing class RD2_VisualizeScheduleController {
 
         for (Object obj : dataTable.getRecords()) {  
             Installment record = (Installment) obj;          
-            if (!dataTable.isAccessible('donationDate')) {
+            if (!dataTable.isAccessible(INSTALLMENT_DONATION_DATE)) {
                 record.donationDate = null;
             } 
-            if (!dataTable.isAccessible('amount')) {
+            if (!dataTable.isAccessible(INSTALLMENT_AMOUNT)) {
                 record.amount = null;
             }
-            if (!dataTable.isAccessible('paymentMethod')) {
+            if (!dataTable.isAccessible(INSTALLMENT_PAYMENT_METHOD)) {
                 record.paymentMethod = null;
             }
         }
@@ -254,28 +268,28 @@ public with sharing class RD2_VisualizeScheduleController {
 
         for (Object obj : dataTable.getRecords()) {  
             Schedule record = (Schedule) obj;   
-            if (!dataTable.isAccessible('amount')) {
+            if (!dataTable.isAccessible(SCHEDULE_AMOUNT)) {
                 record.amount = null;
             }
-            if (!dataTable.isAccessible('paymentMethod')) {
+            if (!dataTable.isAccessible(SCHEDULE_PAYMENT_METHOD)) {
                 record.paymentMethod = null;
             }  
-            if (!dataTable.isAccessible('campaign')) {
+            if (!dataTable.isAccessible(SCHEDULE_CAMPAIGN)) {
                 record.campaign = null;
             }
-            if (!dataTable.isAccessible('startDate')) {
+            if (!dataTable.isAccessible(SCHEDULE_START_DATE)) {
                 record.startDate = null;
             }  
-            if (!dataTable.isAccessible('endDate')) {
+            if (!dataTable.isAccessible(SCHEDULE_END_DATE)) {
                 record.endDate = null;
             }  
-            if (!dataTable.isAccessible('period')) {
+            if (!dataTable.isAccessible(SCHEDULE_PERIOD)) {
                 record.period = null;
             }  
-            if (!dataTable.isAccessible('frequency')) {
+            if (!dataTable.isAccessible(SCHEDULE_FREQUENCY)) {
                 record.frequency = null;
             }  
-            if (!dataTable.isAccessible('dayOfMonth')) {
+            if (!dataTable.isAccessible(SCHEDULE_DAY_OF_MONTH)) {
                 record.dayOfMonth = null;
             }
         }
