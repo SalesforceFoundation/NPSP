@@ -26,6 +26,7 @@ class GauAllocationPage(BaseNPSPPage, BasePage):
         """
         Waits for the GAU Allocations iframe to load
         """
+        self.selenium.wait_until_location_contains("/one/one.app",timeout=60, message="Manage Allocations page did not load in 1 min")
         self.npsp.wait_for_locator('frame','Manage Allocations')
         self.npsp.choose_frame('Manage Allocations')
 
@@ -38,15 +39,7 @@ class GauAllocationPage(BaseNPSPPage, BasePage):
                 self.npsp.select_search(key, value)
             else:
                 self.add_gau_allocation(key, value)
-           
-    def _wait_to_appear(self, timeout=None):
-        """This function is called by the keyword 'wait for page object to appear'.
-        used to verify that the page is visible and selects the iframe.
-        """
-        self.selenium.wait_until_location_contains("/one/one.app",timeout=60, message="Manage Allocations page did not load in 1 min")
-        self.npsp.wait_for_locator('frame','Manage Allocations')
-        self.npsp.choose_frame('Manage Allocations') 
-        
+                   
     
     def add_gau_allocation(self,field, value):
         """Enter an allocation of sepecified 'value' in the given 'field'"""

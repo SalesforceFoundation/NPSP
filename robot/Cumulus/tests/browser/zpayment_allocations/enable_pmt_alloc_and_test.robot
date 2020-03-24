@@ -68,9 +68,10 @@ Update GAU Allocations and Verify Payment Allocations Sync
     ...                                    object_id=${data}[contact2_opportunity][Id]
     Select Tab                             Related
     Click Special Related List Button      GAU Allocations            Manage Allocations
-    Wait For Page Object                   Custom                     ManageAllocations   
-    Select Search                          General Accounting Unit 0  &{gau}[Name]
-    Add GAU Allocation                     Percent 0                  60
+    Current Page Should Be                 Custom                     ManageAllocations 
+    Set GAU Allocation  
+    ...                                    General Accounting Unit 0=&{gau}[Name]
+    ...                                    Percent 0=60
     Click Button                           Save
     # Unselect Frame
     Current Page Should Be                 Details                    Opportunity
