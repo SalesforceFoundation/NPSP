@@ -221,8 +221,12 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         if (dsr.isAccessible() && dsr.isCreateable() && dsr.isDeletable() && dsr.isUpdateable()) {
 
             Map<String, Schema.DescribeFieldResult> dfr = UTIL_Describe.getAllFieldsDescribe(pscObjectName);
-            List<String> accessibleStrings = new List<String>{'amount__c', 'contact_name__c', 'contact_role_id__c', 'role_name__c'};
-            Set<String> updateableStrings = new Set<String>{'amount__c', 'contact_role_id__c', 'role_name__c'};
+            String nsAmount = UTIL_Namespace.StrTokenNSPrefix('amount__c');
+            String nsContactName = UTIL_Namespace.StrTokenNSPrefix('contact_name__c');
+            String nsContactRoleId = UTIL_Namespace.StrTokenNSPrefix('contact_role_id__c');
+            String nsRoleName = UTIL_Namespace.StrTokenNSPrefix('role_name__c');
+            List<String> accessibleStrings = new List<String>{nsAmount, nsContactName, nsContactRoleId, nsRoleName};
+            Set<String> updateableStrings = new Set<String>{nsAmount, nsContactRoleId, nsRoleName};
 
             for (String accStr : accessibleStrings) {
                 if (!(dfr.get(accStr).isAccessible() && (updateableStrings.contains(accStr) == false || dfr.get(accStr).isUpdateable()))) {
