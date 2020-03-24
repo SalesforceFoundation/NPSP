@@ -546,7 +546,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
         Boolean accessResult = false;
 
-        String pmtString = 'npe01__oppPayment__c';
+        String pmtString = Schema.SObjectType.npe01__OppPayment__c.getName();
         Schema.DescribeSObjectResult dsr = UTIL_Describe.getObjectDescribe(pmtString);
 
         if (dsr.isAccessible() && dsr.isCreateable() && dsr.isDeletable() && dsr.isUpdateable()) {
