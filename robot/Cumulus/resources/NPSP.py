@@ -1246,7 +1246,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.execute_javascript(javascript)
         self.npsp.click_button_with_value(value)
 
-    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None, recurringdonation_data=None):
+    def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None,
+                  recurringdonation_data=None, gau_data=None):
         """ Creates an Account if account setup data is passed
             Creates a contact if contact_data is passed
             Creates an opportunity for the contact if opportunit_data is provided
@@ -1258,6 +1259,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # get the data variable, or an empty dictionary if not set
 
         data = self.builtin.get_variable_value("${data}", {})
+        ns=self.get_npsp_namespace_prefix()
 
         if account_data is not None:
             # create the account based on the user input specified account type
@@ -1301,13 +1303,22 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 data[f"{name}_engagement"] = engagement
             else:
                 data[name] = engagement
-
+        # set a recurring donation for a contact
         if recurringdonation_data is not None:
             recurringdonation_data.update( {'npe03__Contact__c' : data[name]["Id"] } )
             rd_id = self.salesforce.salesforce_insert("npe03__Recurring_Donation__c", **recurringdonation_data)
             recurringdonation = self.salesforce.salesforce_get("npe03__Recurring_Donation__c",rd_id)
             data[f"{name}_rd"] = recurringdonation
-
+        #set gau data
+        if gau_data is not None:
+            object_key =  f"{ns}General_Accounting_Unit__c"
+            gauname = gau_data['Name']
+            random = self.randomString(10);
+            gau_data.update( {'name' : f"{random}{gauname}"} )
+            gau_id = self.salesforce.salesforce_insert(object_key, **gau_data)
+            gau = self.salesforce.salesforce_get(object_key,gau_id)
+            data[name] = gau
+        # set opportunity association with a contact or account
         if opportunity_data is not None:
             # create opportunity
             rt_id = self.salesforce.get_record_type_id("Opportunity",opportunity_data["Type"])
