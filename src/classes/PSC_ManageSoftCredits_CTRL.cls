@@ -220,7 +220,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
 
         if (dsr.isAccessible() && dsr.isCreateable() && dsr.isDeletable() && dsr.isUpdateable()) {
 
-            Map<String, Schema.DescribeFieldResult> dfr = UTIL_Describe.getAllFieldsDescribe('Partial_Soft_Credit__c');
+            Map<String, Schema.DescribeFieldResult> dfr = UTIL_Describe.getAllFieldsDescribe(pscObjectName);
             List<String> accessibleStrings = new List<String>{'amount__c', 'contact_name__c', 'contact_role_id__c', 'role_name__c'};
             Set<String> updateableStrings = new Set<String>{'amount__c', 'contact_role_id__c', 'role_name__c'};
 
