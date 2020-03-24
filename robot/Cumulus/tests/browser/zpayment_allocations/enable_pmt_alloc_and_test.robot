@@ -89,7 +89,7 @@ Update GAU Allocations and Verify Payment Allocations Sync
 
 Enable Payment Allocations
     &{def_gau} =  API Create GAU    Name=default gau
-    Set Global Variable     &{def_gau}    &{def_gau}
+    Set suite variable              &{def_gau}
     Go To Page                      Custom                                  CustomSettings
     Select Settings Option          Allocations Settings                    Manage
     Verify Page And Select Frame    Allocations Settings
@@ -136,4 +136,3 @@ Setup Test Data
     &{id} =     Get From List  ${records}  0
     &{payment2} =     Salesforce Get  npe01__OppPayment__c  &{id}[Id]  
     Set suite variable    &{payment2} 
-    Log   ${data}
