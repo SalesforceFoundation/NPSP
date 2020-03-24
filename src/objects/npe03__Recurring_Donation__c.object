@@ -64,6 +64,19 @@
         </valueSet>
     </fields>
     <fields>
+        <fullName>CommitmentId__c</fullName>
+        <caseSensitive>true</caseSensitive>
+        <description>External identifier for Salesforce.org payment service integration.</description>
+        <externalId>true</externalId>
+        <inlineHelpText>External identifier for Salesforce.org payment service integration.</inlineHelpText>
+        <label>Commitment Id</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
         <fullName>CurrentYearValue__c</fullName>
         <description>This Recurring Donation&apos;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</description>
         <externalId>false</externalId>
