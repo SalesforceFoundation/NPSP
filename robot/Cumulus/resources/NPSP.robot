@@ -168,20 +168,7 @@ New Contact for HouseHold
     Click Link                link= ${first_name} ${last_name}
     Current Page Should be    Details    Contact
     ${contact_id} =           Save Current Record ID For Deletion      Contact
-    [return]                  ${contact_id} 
-
-
-Create GAU
-    ${gau_name} =         Generate Random String
-    Go To Page                        Listing                General_Accounting_Unit__c
-    Click Object Button       New
-    Populate Form
-    ...                    General Accounting Unit Name=${gau_name}
-    ...                    Largest Allocation=5
-    Click Modal Button        Save
-    Wait Until Modal Is Closed
-    #Sleep    2
-    [Return]           ${gau_name}    
+    [return]                  ${contact_id}
 
 Run Donations Batch Process
     Open NPSP Settings          Bulk Data Processes                Rollup Donations Batch
