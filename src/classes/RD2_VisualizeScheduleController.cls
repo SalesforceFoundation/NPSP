@@ -149,6 +149,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param rd Recurring Donation
      * @return DataTable
      */
+    @TestVisible
     private static DataTable buildInstallmentDataTable(npe03__Recurring_Donation__c rd) {
         return new DataTable()
             .addColumn(new DataTableColumn()
@@ -177,6 +178,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param rd Recurring Donation
      * @return DataTable
      */
+    @TestVisible
     private static DataTable buildScheduleDataTable(npe03__Recurring_Donation__c rd) {
         return new DataTable()
             .addColumn(new DataTableColumn()
@@ -219,6 +221,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param dataTable Data table containing columns and installment records
      * @return void
      */
+    @TestVisible
     private static void sanitizeInstallments(DataTable dataTable) {
         if (dataTable.getColumns().size() == 3) {
             return;//all columns are visible
@@ -243,6 +246,7 @@ public with sharing class RD2_VisualizeScheduleController {
      * @param dataTable Data table containing columns and schedule records
      * @return void
      */
+    @TestVisible
     private static void sanitizeSchedules(DataTable dataTable) {
         if (dataTable.getColumns().size() == 9) {
             return;//all columns are visible
@@ -431,6 +435,14 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled
         public List<DataTableColumn> getColumns() {
             return columnByFieldName.values();
+        }
+
+        /**
+         * @description Returns data table column if it is in the data table
+         * @return DataTableColumn
+         */
+        public DataTableColumn getColumn(String fieldName) {
+            return columnByFieldName.get(fieldName);
         }
 
         /**
