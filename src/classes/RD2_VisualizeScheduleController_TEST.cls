@@ -500,9 +500,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         System.assertEquals(numberOfInstallments, dataTable.getRecords().size(), 'Number of records should match');
         for (Object obj : dataTable.getRecords()) {
             RD2_VisualizeScheduleController.Installment record = (RD2_VisualizeScheduleController.Installment) obj;
-            System.assertNotEquals(null, record.donationDate, 'Date should be specified');
             System.assertNotEquals(null, record.amount, 'Amount should be specified');
-            System.assertNotEquals(null, record.paymentMethod, 'Payment Method should be specified');
         }
 
         RD2_VisualizeScheduleController.sanitizeInstallments(dataTable);
@@ -540,7 +538,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         }
 
         RD2_VisualizeScheduleController.sanitizeInstallments(dataTable);
-        
+
         for (Object obj : dataTable.getRecords()) {
             RD2_VisualizeScheduleController.Installment record = (RD2_VisualizeScheduleController.Installment) obj;
             System.assertEquals(null, record.donationDate, 'Date should be sanitized');
@@ -561,8 +559,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
         
-        Boolean isAccessible = true;
-        RD2_VisualizeScheduleController.DataTable dataTable = buildInstallmentDataTable(isAccessible);
+        RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildInstallmentDataTable(rd);
 
         dataTable.setRecords(buildInstallments(rd, numberOfInstallments));
         System.assertEquals(numberOfInstallments, dataTable.getRecords().size(), 'Number of records should match');
@@ -669,8 +666,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
 
-        Boolean isAccessible = true;
-        RD2_VisualizeScheduleController.DataTable dataTable = buildScheduleDataTable(isAccessible);
+        RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildScheduleDataTable(rd);
 
         dataTable.setRecords(buildSchedules(rd));
         System.assertEquals(1, dataTable.getRecords().size(), 'Number of records should match');
