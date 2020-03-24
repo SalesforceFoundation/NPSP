@@ -18,7 +18,7 @@ Suite Teardown  Run keywords
 *** Variables ***
 &{contact1_fields}         Email=test@example.com
 &{contact2_fields}         Email=test@example.com
-&{opportunity1_fields}     Type=Donation   Name=Opp Allocation Sync test Donation   Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
+&{opportunity1_fields}     Type=Donation   Name=Opp Allocation Sync test Donation       Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
 &{opportunity2_fields}     Type=Donation   Name=Payment Allocation Sync test Donation   Amount=100  StageName=Prospecting    npe01__Do_Not_Automatically_Create_Payment__c=false
 
 *** Test Cases ***
@@ -73,7 +73,6 @@ Update GAU Allocations and Verify Payment Allocations Sync
     ...                                    General Accounting Unit 0=&{gau}[Name]
     ...                                    Percent 0=60
     Click Button                           Save
-    # Unselect Frame
     Current Page Should Be                 Details                    Opportunity
     Verify Allocations                     GAU Allocations
     ...    &{def_gau}[Name]=$40.00
@@ -119,21 +118,21 @@ Disable Payment Allocations
     Click Button                    Save      
     
 Setup Test Data
-    &{gau} =          API Create GAU  
+    &{gau} =              API Create GAU  
     Set suite variable    &{gau}  
-    ${date} =         Get Current Date    result_format=%Y-%m-%d
+    ${date} =             Get Current Date    result_format=%Y-%m-%d
     Set suite variable    ${date}
-    Setupdata   contact1   ${contact1_fields}     ${opportunity1_fields}
-    Setupdata   contact2   ${contact2_fields}     ${opportunity2_fields}
-    @{records} =     Salesforce Query    npe01__OppPayment__c    
+    Setupdata             contact1            ${contact1_fields}     ${opportunity1_fields}
+    Setupdata             contact2            ${contact2_fields}     ${opportunity2_fields}
+    @{records} =          Salesforce Query    npe01__OppPayment__c    
     ...    select=Id
     ...    npe01__Opportunity__c=${data}[contact1_opportunity][Id]
-    &{id} =     Get From List  ${records}  0
-    &{payment1} =     Salesforce Get  npe01__OppPayment__c  &{id}[Id]  
+    &{id} =               Get From List  ${records}  0
+    &{payment1} =         Salesforce Get  npe01__OppPayment__c  &{id}[Id]  
     Set suite variable    &{payment1} 
-    @{records} =     Salesforce Query    npe01__OppPayment__c    
+    @{records} =          Salesforce Query    npe01__OppPayment__c    
     ...    select=Id
     ...    npe01__Opportunity__c=${data}[contact2_opportunity][Id]
-    &{id} =     Get From List  ${records}  0
-    &{payment2} =     Salesforce Get  npe01__OppPayment__c  &{id}[Id]  
+    &{id} =               Get From List  ${records}  0
+    &{payment2} =         Salesforce Get  npe01__OppPayment__c  &{id}[Id]  
     Set suite variable    &{payment2} 
