@@ -4,12 +4,15 @@ import saveAndProcessDataImport from '@salesforce/apex/GE_GiftEntryController.sa
 import { handleError } from 'c/utilTemplateBuilder';
 import saveAndDryRunDataImport
     from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
-import {api} from "lwc";
+import { api } from 'lwc';
 import { isNotEmpty, isEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
     from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
 import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
+import {registerListener, unregisterListener} from 'c/pubsubNoPageRef';
+
+const TOKENIZE_TIMEOUT = 10000; // 10 seconds, long enough for cold starts?
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -42,6 +45,11 @@ class GeFormService {
     objectMappings;
     fieldTargetMappings;
     donationFieldTemplateLabel;
+    tokenPromise;
+
+    constructor() {
+        registerListener('tokenRequested', this.handleTokenRequested, this);
+    }
 
     /**
      * Retrieve the default form render wrapper.
@@ -167,12 +175,22 @@ class GeFormService {
         });
     }
 
+    handleTokenRequested() {
+        this.tokenPromise = new Promise((resolve, reject) => {
+            registerListener('tokenReceived', resolve, this);
+            setTimeout(() => {
+                reject('Request timed out');
+                unregisterListener('tokenReceived', resolve, this);
+            }, TOKENIZE_TIMEOUT);
+        });
+    }
+
     /**
      * Takes a list of sections, reads the fields and values, creates a di record, and creates an opportunity from the di record
      * @param sectionList
      * @returns opportunityId
      */
-    handleSave(sectionList, record, dataImportRecord) {
+    async handleSave(sectionList, record, dataImportRecord) {
         const { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record, dataImportRecord);
 
         const hasUserSelectedDonation = isNotEmpty(dataImportRecord);
@@ -216,7 +234,7 @@ class GeFormService {
             }
         }
 
-        return {diRecord, widgetValues};
+        return { diRecord, widgetValues };
     }
 
     saveAndDryRun(batchId, dataImport, widgetData) {

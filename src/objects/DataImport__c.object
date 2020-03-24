@@ -1264,6 +1264,18 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Payment_Authorization_Token__c</fullName>
+        <description>The authorization token for the card payment provided by payment services.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Authorization token for a transaction. Do NOT update this field if it's populated by Elevate.</inlineHelpText>
+        <label>Payment Authorization Token</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Payment_Check_Reference_Number__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Payment.npe01__Check_Reference_Number__c</inlineHelpText>

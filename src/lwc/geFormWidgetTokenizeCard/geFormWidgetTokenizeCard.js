@@ -1,5 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
+import { registerListener, unregisterListener, fireEvent } from 'c/pubsubNoPageRef';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 // TODO: temporary makePurchaseCall import below. Remove later.
@@ -81,6 +82,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         } else if (message.token) {
             // TODO: Start - Remove later
             // Make purchase call... for dev only
+            fireEvent(null, 'token', message.token);
             try {
                 let purchaseCallResponse = await makePurchaseCall({ token: message.token });
                 this.purchaseResult = JSON.parse(purchaseCallResponse);
@@ -108,6 +110,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 { action: 'createToken' },
                 this.visualforceOrigin);
         }
+    }
+
+    @api
+    returnValues() {
+        fireEvent(null, 'tokenRequested');
+        this.requestToken();
     }
 
     @api
