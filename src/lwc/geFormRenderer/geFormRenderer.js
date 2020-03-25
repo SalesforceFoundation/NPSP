@@ -40,6 +40,7 @@ import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImp
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
+import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
@@ -675,6 +676,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.selectedDonation[SCHEDULED_DATE.fieldApiName];
         }
 
+        this.preprocessRecordTypeNameField(dataImport);
+
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         sectionsList.forEach(section => {
             section.load(
@@ -682,6 +685,39 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                     dataImport,
                     section.sourceFields));
         });
+    }
+
+    /**
+     * @description DataImport__c.Donation_Record_Type_Name__c field is mapped from one
+     *              data type to another (Text to Lookup).  This method:
+     *              1. ensures that when the dataImport object is loaded this field always
+     *              holds the RecordType Id value (not the RecordType Name), and
+     *              2. passes the RecordType Id to the setRecordTypeOnFields method so that
+     *              the recordTypeId property is set on sibling fields.
+     * @param dataImport The object being loaded into the form renderer.
+     * @returns {boolean} Returns false if called with a non-null falsy parameter value.
+     */
+    preprocessRecordTypeNameField(dataImport) {
+        const recordTypeNameValue = dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName];
+        if (!recordTypeNameValue && recordTypeNameValue !== null) {
+            return false;
+        }
+
+        if (recordTypeNameValue &&
+            !recordTypeNameValue.value &&
+            !recordTypeNameValue.startsWith('012')) {
+            // Probably have the RecordType Name instead of Id (opening from table row)
+
+            // Change the value from the Name to the Id of the RecordType
+            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = this.getRecordTypeIdByName(
+                this.opportunityObjectInfo.data.recordTypeInfos,
+                recordTypeNameValue
+            );
+        } else if (recordTypeNameValue.value) {
+            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = recordTypeNameValue.value;
+        }
+
+
     }
 
     setStoredDonationDonorProperties(dataImport) {
@@ -1106,12 +1142,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         } else if (data) {
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             this.load(dataImport, false);
-            for (const [key, value] of
-                Object.entries(this.selectedRecordIdByObjectMappingDevName)) {
-                if (value === data.id) {
-                    this.setRecordTypeOnFields(key, data.recordTypeId);
-                }
-            }
 
             if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
                 data.id === this.selectedDonation.Id) {
@@ -1211,6 +1241,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             .forEach(section => {
                 section.setRecordTypeOnFields(objectMappingDevName, recordTypeId);
             });
+    }
+    getRecordTypeIdByName(recordTypeInfos, d) {
+        return Object.values(recordTypeInfos)
+            .find(recordTypeInfo => recordTypeInfo.name === d).recordTypeId;
     }
 
 }
