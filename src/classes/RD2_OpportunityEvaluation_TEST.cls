@@ -592,16 +592,27 @@ private class RD2_OpportunityEvaluation_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
+        Opportunity opp = getOpportunityBuilder(rd)
             .withClosedLostStage()
             .withCloseDate(nextCloseDate)
             .build();
+        insert opp;
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
 
-        List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(1, opps.size(), 'No new Opp should be created: ' + opps);
-        System.assertEquals(true, opps[0].isClosed && !opps[0].isWon, 'Existing Closed Lost Opp should stay closed');
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+        System.assertEquals(2, oppById.size(), 
+            'New Opp should be created for the Next Donation Date offset by the closed Opp: ' + oppById.values());
+        
+        Opportunity actualOpp = oppById.remove(opp.Id);
+        System.assertEquals(true, actualOpp.IsClosed && !actualOpp.IsWon, 'Existing Closed Lost Opp should stay closed');
+
+        //verify the Next Donation Date is advanced and a new Opp is created
+        actualOpp = oppById.values()[0];
+        
+        System.assertEquals(false, actualOpp.IsClosed, 'New Opp should be open: ' + actualOpp);
+        System.assertEquals(nextCloseDate.addMonths(1), actualOpp.CloseDate, 
+            'New Opp Close Date should be the Next Donation Date after the closed Opp Close Date: ' + actualOpp);
     }
 
     /**
@@ -775,16 +786,19 @@ private class RD2_OpportunityEvaluation_TEST {
             .build();
         insert rd;
 
-        insert getOpportunityBuilder(rd)
-            .withClosedWonStage()
-            .withCloseDate(START_DATE)
-            .build();
+        TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
+        List<Opportunity> opps = new List<Opportunity>();
+
+        for (Integer month = 0; month < plannedInstallments; month++){
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(month))
+                .build());
+        }
+        insert opps;
 
         // Disable the trigger to ensure the change happens in the batch job vs. the trigger.
         TDTM_ProcessControl.toggleTriggerState('npe03__Recurring_Donation__c', 'RD2_RecurringDonations_TDTM', false);
-
-        rd.npe03__Total_Paid_Installments__c = plannedInstallments;
-        update rd;
 
         // Make sure the RD is still Active
         rd = rdGateway.getRecord(rd.Id);
@@ -796,6 +810,8 @@ private class RD2_OpportunityEvaluation_TEST {
         assertBatchJobIteration(1);
 
         rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(plannedInstallments, rd.npe03__Total_Paid_Installments__c,
+            'The Number of Paid Installments should be the same as the Number of Planned Installments');
         System.assertEquals(RD2_Constants.STATUS_CLOSED, rd.Status__c,
             'The Recurring Donation should be Closed');
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c,
@@ -863,7 +879,7 @@ private class RD2_OpportunityEvaluation_TEST {
         final Integer paidInstallments = 2;
         
         final Date startDate = Date.newInstance(2020, 1, 1);
-        Date today = Date.newInstance(2020, 3, 2);
+        Date today = Date.newInstance(2020, 3, 1);
         RD2_ScheduleService.currentDate = today;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -874,7 +890,6 @@ private class RD2_OpportunityEvaluation_TEST {
             .withRecurringTypeFixed()
             .withPlannedInstallments(plannedInstallments)
             .withPaidInstallments(paidInstallments)
-            .withNextDonationDate(today.addMonths(1))
             .build();
         insert rd;
         
@@ -904,9 +919,10 @@ private class RD2_OpportunityEvaluation_TEST {
         Opportunity nextDonationDateOpp = actualOpps[actualOpps.size() - 1];
         System.assertEquals(false, nextDonationDateOpp.IsClosed, 
             'The newly created Opp should be open: ' + nextDonationDateOpp);
-        System.assertEquals(Date.newInstance(2020, 4, 1), nextDonationDateOpp.CloseDate, 
+        System.assertEquals(today.addMonths(1), nextDonationDateOpp.CloseDate, 
             'The Next Donation Date should advance and the newly created Opp should match it');
     }
+
 
     // Helpers
     //////////////
