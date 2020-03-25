@@ -123,8 +123,8 @@ public with sharing class CON_DeleteContactOverride_CTRL {
                         Label.ConfirmDeleteAccount,
                         new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
                     );
-                }
-                else {
+                } else {
+                
                     helpDeleteAccountInstead = String.format(
                         Label.ConfirmDeleteLeaveAccountEmpty,
                         new List<String>{queryContact.Name.escapeHtml4()}
