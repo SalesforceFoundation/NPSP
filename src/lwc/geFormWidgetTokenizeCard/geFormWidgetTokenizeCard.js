@@ -1,5 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
+import { registerListener, unregisterListener, fireEvent } from 'c/pubsubNoPageRef';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import { handleError } from 'c/utilTemplateBuilder';
@@ -14,6 +15,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track visualforceOrigin;
     @track isLoading = true;
     @api cardHolderName;
+
 
     get tokenizeCardHeader() {
         return GeLabelService.format(
@@ -77,6 +79,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @param {object} message: Message received from iframe
     */
     async handleMessage(message) {
+        fireEvent(null, 'tokenResponse', message); // move so we can handle error or token
         if (message.error) {
             // Error with tokenization
             let error = JSON.stringify(message.error);
@@ -95,12 +98,18 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     requestToken() {
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+        fireEvent(null, 'tokenRequested');
 
         if (iframe) {
             iframe.contentWindow.postMessage(
                 { action: 'createToken' },
                 this.visualforceOrigin);
         }
+    }
+
+    @api
+    returnValues() {
+        this.requestToken();
     }
 
     @api

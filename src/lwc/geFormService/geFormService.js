@@ -1,26 +1,30 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
-import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
-import processDataImport from '@salesforce/apex/GE_GiftEntryController.processDataImport';
-import { handleError, showToast } from 'c/utilTemplateBuilder';
-import saveAndDryRunDataImport
-    from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
-import {api} from "lwc";
-import { isNotEmpty, isEmpty } from 'c/utilCommon';
 import getFormRenderWrapper
     from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
+import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
+import makePurchaseCall from '@salesforce/apex/GE_GiftEntryController.makePurchaseCall';
+import saveDataImport from '@salesforce/apex/GE_GiftEntryController.saveDataImport';
+import processDataImport from '@salesforce/apex/GE_GiftEntryController.processDataImport';
+import saveAndDryRunDataImport
+    from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
+
+import { handleError, showToast } from 'c/utilTemplateBuilder';
+import { api } from 'lwc';
+import { isNotEmpty, isEmpty } from 'c/utilCommon';
+import {registerListener, unregisterListener} from 'c/pubsubNoPageRef';
+
 import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 
-import saveDataImport from '@salesforce/apex/GE_GiftEntryController.saveDataImport';
-import makePurchaseCall from '@salesforce/apex/GE_GiftEntryController.makePurchaseCall';
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const ADDITIONAL_OBJECT_JSON__C = DI_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
 const TOKEN__C = 'PLACEHOLDER_TOKEN_FIELD__C';
+const TOKENIZE_TIMEOUT = 10000; // 10 seconds, long enough for cold starts?
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -53,6 +57,11 @@ class GeFormService {
     objectMappings;
     fieldTargetMappings;
     donationFieldTemplateLabel;
+    tokenPromise;
+
+    constructor() {
+        registerListener('tokenRequested', this.handleTokenRequested, this);
+    }
 
     /**
      * Retrieve the default form render wrapper.
@@ -152,6 +161,23 @@ class GeFormService {
             // return custom label from the form template layout
             return fieldElement.customLabel;
         }
+    }
+
+    handleTokenRequested() {
+        console.log('*** handleTokenRequested');
+        this.tokenPromise = new Promise((resolve, reject) => {
+            registerListener('tokenResponse', message => {
+                if(message.error) {
+                    reject(message);
+                } else if(message.token) {
+                    resolve(message.token);
+                }
+            }, this);
+            setTimeout(() => {
+                reject('Request timed out');
+                unregisterListener('tokenResponse', resolve, this);
+            }, TOKENIZE_TIMEOUT);
+        });
     }
 
     /*******************************************************************************
