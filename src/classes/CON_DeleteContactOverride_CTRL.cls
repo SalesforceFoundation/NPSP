@@ -99,7 +99,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         ];
 
         shouldDeleteContactAlone = true;
-        deleteAccountOkay = false;
+        canDeleteAccount = false;
 
         if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             accountId = queryContact.AccountId;
@@ -118,7 +118,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
                 String helpDeleteAccountInstead;
                 if (UTIL_Describe.getFieldDescribe('Account', 'Name').isAccessible()) {
-                    deleteAccountOkay = true;
+                    canDeleteAccount = true;
                     helpDeleteAccountInstead = String.format(
                         Label.ConfirmDeleteAccount,
                         new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
