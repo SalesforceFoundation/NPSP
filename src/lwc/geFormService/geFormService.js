@@ -192,7 +192,7 @@ class GeFormService {
     saveDataImport = async (dataImportRecord) => {
         console.log('*** *** saveDataImport');
         dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
-        return await saveDataImport({ diRecord: dataImportRecord });
+        return await saveDataImport({ dataImport: dataImportRecord });
     }
 
     /*******************************************************************************
