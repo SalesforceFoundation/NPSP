@@ -1541,7 +1541,7 @@
         <members>CascadeDeletionErrorLightning</members>
         <members>ClosedWonOpportunities</members>
         <members>ConfirmDeleteAccount</members>
-        <members>ConfirmDeleteAccountUnnamed</members>
+        <members>ConfirmDeleteLeaveAccountEmpty</members>
         <members>DeleteAccount</members>
         <members>DeleteContactLeaveAccount</members>
         <members>EPAddDependentTask</members>
