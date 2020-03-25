@@ -71,9 +71,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
     /** @description Flag to tell the page which operation we're doing. */
     public Boolean shouldDeleteContactAlone {get;set;}
+    /** @description Flag to tell the page account deletion is permitted. */
+    public Boolean testDeleteAccountOkay {get;set;}
     /** @description Flag indicating if only this Contact should be deleted while leaving empty Account. */
     private Boolean isDeleteContactLeaveAccount = false;
-    
+
     /** @description Boolean for disabling the account deletion button if there are errors preventing deletion. */
     public Boolean hasPageMessages {
         get {
@@ -85,7 +87,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Standard controller constructor. Queries for contact, verifies whether the contact or its
     * account should be deleted.
-    */ 
+    */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
         setNavigationParams(ApexPages.currentPage().getParameters());
 
@@ -97,6 +99,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         ];
 
         shouldDeleteContactAlone = true;
+        testDeleteAccountOkay = false;
 
         if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             accountId = queryContact.AccountId;
@@ -115,6 +118,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
                 String helpDeleteAccountInstead;
                 if (UTIL_Describe.getFieldDescribe('Account', 'Name').isAccessible()) {
+                    testDeleteAccountOkay = true;
                     helpDeleteAccountInstead = String.format(
                         Label.ConfirmDeleteAccount,
                         new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
@@ -122,7 +126,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
                 }
                 else {
                     helpDeleteAccountInstead = String.format(
-                        Label.ConfirmDeleteAccountUnnamed,
+                        Label.ConfirmDeleteLeaveAccountEmpty,
                         new List<String>{queryContact.Name.escapeHtml4()}
                     );
                 }
@@ -136,8 +140,8 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * @description Determines if the page is used in LEx or Classic.
     * Retrieves retUrl and failRetUrl values from the page params.
     * @return void
-    */ 
-    @TestVisible 
+    */
+    @TestVisible
     private void setNavigationParams(Map<String, String> params) {
         // In LEx and SF1 the returl param name differs from classic
         String param = sforceUser ? 'vfRetURLInSFX' : 'retURL';
@@ -153,11 +157,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
     /*******************************************************************************************************
     * @description Action method in Contact Delete Button override, handles deleting a contact or prompting
-    * user to delete its account if it is a system account (1:1, individual, or household) and is the last 
+    * user to delete its account if it is a system account (1:1, individual, or household) and is the last
     * contact in the account.
     * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays
     * on the page and displays error messages.
-    */ 
+    */
     public PageReference processDelete() {
         try {
             return deleteContact();
@@ -171,11 +175,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
     /*******************************************************************************************************
     * @description Deletes a contact, leaving empty Household Account, once the user has accepted to do so,
-    * after adding cascade deletion records for related opportunities and recurring donations. 
+    * after adding cascade deletion records for related opportunities and recurring donations.
     * Validates opportunities and adds error messages where appropriate.
     * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays
     * on the page and displays error messages.
-    */ 
+    */
     public PageReference deleteContactOnly() {
         isDeleteContactLeaveAccount = true;
 
@@ -191,12 +195,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Deletes a contact, after adding cascade delete Loader and Validator to load and checks the 
-    * related opportunities, cases and recurring donations. Prevents the deletion if there are closed won 
+    * @description Deletes a contact, after adding cascade delete Loader and Validator to load and checks the
+    * related opportunities, cases and recurring donations. Prevents the deletion if there are closed won
     * opportunities and cases.
     * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays
     * on the page and displays error messages.
-    */ 
+    */
     public PageReference deleteContact() {
         if (isDeleteContactOnly()) {
 
@@ -204,7 +208,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             cascadeDelete.validate();
             cascadeDelete.deleteOpportunities();
             cascadeDelete.deleteRecurringDonations();
-            
+
             delete queryContact;
 
             if (sforceUser) {
@@ -220,7 +224,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Determines if only this Contact can be deleted.
     * @return Boolean
-    */ 
+    */
     private Boolean isDeleteContactOnly() {
         return shouldDeleteContactAlone || isDeleteContactLeaveAccount;
     }
