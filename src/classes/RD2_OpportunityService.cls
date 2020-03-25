@@ -131,7 +131,8 @@ public with sharing class RD2_OpportunityService {
     }
 
     /***
-    * @description Creates Opportunities and updates payment records for specified Recurring Donations
+    * @description Creates Opportunities for the next donation date if it does not exist already 
+    * and updates payment records for specified Recurring Donations
     * @param rds Recurring Donations
     * @return RD2_OpportunityService This Opportunity Service instance
     */
@@ -141,25 +142,17 @@ public with sharing class RD2_OpportunityService {
 
         Integer numberOfInstallments = 1;
         for (npe03__Recurring_Donation__c rd : rds) {
-            List<RD2_ScheduleService.Installment> installments = scheduleService.getVisualizedInstallments(
-                currentDate, numberOfInstallments, rd.RecurringDonationSchedules__r
-            );
-            installmentsByRDId.put(rd.Id, installments);
+            RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(rd, rd.RecurringDonationSchedules__r);
 
-            if (installments.isEmpty()) {
+            if (nextDonationDateRecord == null 
+                || !nextDonationDateRecord.isNew() 
+                || nextDonationDateRecord.getInstallment().nextDonationDate < currentDate
+            ) {
                 continue;
             }
             
-
-            RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
-            .includeCurrent(rd.npe03__Donations__r)
-            .match(installments);	
-
-            for (RD2_OpportunityMatcher.Record record : matcher.getRecords()) {
-                if (record.isNew()) {
-                    oppsToCreate.add(buildOpportunity(rd, record.getInstallment()));
-                }	
-            }	
+            oppsToCreate.add(buildOpportunity(rd, nextDonationDateRecord.getInstallment()));
+            installmentsByRDId.put(rd.Id, new List<RD2_ScheduleService.Installment>{ nextDonationDateRecord.getInstallment() });
         }
 
         Set<Id> createdOppIds = dbService.insertRecords(oppsToCreate);
@@ -167,7 +160,9 @@ public with sharing class RD2_OpportunityService {
         Map<Id, RD2_ScheduleService.Installment> installmentByOppId = new Map<Id, RD2_ScheduleService.Installment>();
 
         for (Opportunity opp : oppsToCreate) {
-            if (createdOppIds.contains(opp.Id)) {
+            if (createdOppIds.contains(opp.Id) 
+                && installmentsByRDId.containsKey(opp.npe03__Recurring_Donation__c)
+            ) {
                 installmentByOppId.put(opp.Id, installmentsByRDId.get(opp.npe03__Recurring_Donation__c)[0]);
             }
         }
