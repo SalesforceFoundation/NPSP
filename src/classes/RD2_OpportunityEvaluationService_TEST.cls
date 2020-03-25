@@ -1260,8 +1260,8 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static void yearValuesShouldMatchByActualDateWhenOppIsMatchedWithInstallmentOutsideOfTheYear() {
         //set current date override
         final Date startDate = Date.newInstance(2020, 1, 1);
-        Date today = Date.newInstance(2020, 3, 1);
-        RD2_ScheduleService.currentDate = today;
+        final Date today = Date.newInstance(2020, 4, 1);//the next fiscal year is starting today
+        RD2_ScheduleService.currentDate = today;        
 
         setUpUseFiscalYear(true);
         UTIL_FiscalYearInfo.fiscalYearInfo = new UTIL_FiscalYearInfo(4, true);
@@ -1292,30 +1292,18 @@ private class RD2_OpportunityEvaluationService_TEST {
             .build()
         );
         insert opps;
-
+        
         new RD2_OpportunityEvaluationService()
             .withRds(new Set<Id>{ rd.Id })
-            .handleOutdatedRecurringDonations();
-        rd = rdGateway.getRecord(rd.Id);
-
-        System.assertEquals(RD_AMOUNT * 4, rd.CurrentYearValue__c,
-            'Current Year Value should include actual Opps with Close Date <= March 31, 2020');
-        System.assertEquals(RD_AMOUNT * 11, rd.NextYearValue__c,
-            'Next Year Value should exclude April 1 Opp since it is already included in the Current Year Value');
-
-        today = Date.newInstance(2020, 4, 1);//the next fiscal year is starting today
-        RD2_ScheduleService.currentDate = today;
-
-        new RD2_OpportunityEvaluationService()
-            .withRds(new Set<Id>{ rd.Id })
-            .handleOutdatedRecurringDonations();
+            .evaluateOpportunities();
         rd = rdGateway.getRecord(rd.Id);
 
         System.assertEquals(RD_AMOUNT * 11, rd.CurrentYearValue__c,
-            'Current Year Value should exclude April 1 Opp since it was included in the past Year Value');
+            'Current Year Value should exclude April 1 installment Opp since it was included in the past Year Value');
         System.assertEquals(RD_AMOUNT * 12, rd.NextYearValue__c,
             'Next Year Value should match with projected installments');
     }
+
     /**
      * @description Verifies field values from Recurring Donation 
      * are copied into mapped fields on Opportunity record when RD is created
@@ -1410,10 +1398,10 @@ private class RD2_OpportunityEvaluationService_TEST {
         }
         insert opps;
 
-        Test.startTest();
+        Test.startTest();        
         new RD2_OpportunityEvaluationService()
             .withRds(new Set<Id>{ rd.Id })
-            .handleOutdatedRecurringDonations();
+            .evaluateOpportunities();
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
@@ -1448,6 +1436,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         TEST_OpportunityBuilder oppBuilder = getOpportunityBuilder(rd).withClosedWonStage();
         List<Opportunity> opps = new List<Opportunity>();
+
         for (Integer month = 0; month < paidInstallments; month++){
             opps.add(oppBuilder
                 .withName()
@@ -1456,11 +1445,12 @@ private class RD2_OpportunityEvaluationService_TEST {
         }
 
         //Create an Opp not matching the schedule installment in the next year
+        Decimal extraOppAmount = 5000;
         opps.add(oppBuilder
             .withName()
             .withCloseDate(today.addYears(1).addDays(15))
             .withOpenStage()
-            .withAmount(5000)
+            .withAmount(extraOppAmount)
             .build()
         );
         insert opps;
@@ -1468,13 +1458,16 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.startTest();
         new RD2_OpportunityEvaluationService()
             .withRds(new Set<Id>{ rd.Id })
-            .handleOutdatedRecurringDonations();
+            .evaluateOpportunities();
         Test.stopTest();
 
         rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(paidInstallments, rd.npe03__Total_Paid_Installments__c, 
+            'Number of paid installments should match the RD field');
+
         System.assertEquals(RD_AMOUNT * 12, rd.CurrentYearValue__c, 
             'Current Year Value should include actual and planned installment amounts');
-        System.assertEquals(RD_AMOUNT * 6 + 5000, rd.NextYearValue__c, 
+        System.assertEquals(RD_AMOUNT * 6 + extraOppAmount, rd.NextYearValue__c, 
             'Next Year Value should match the expected planned installment and the future open Opp amounts');
     }
 
