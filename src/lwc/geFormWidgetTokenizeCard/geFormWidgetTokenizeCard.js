@@ -18,6 +18,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @track isLoading = true;
     @api cardHolderName;
 
+
     get tokenizeCardHeader() {
         return GeLabelService.format(
             this.CUSTOM_LABELS.geHeaderPaymentServices,
@@ -75,6 +76,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @param {object} message: Message received from iframe
     */
     async handleMessage(message) {
+        fireEvent(null, 'tokenResponse', message); // move so we can handle error or token
         if (message.error) {
             // Error with tokenization
             let error = JSON.stringify(message.error);
@@ -82,7 +84,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         } else if (message.token) {
             // TODO: Start - Remove later
             // Make purchase call... for dev only
-            fireEvent(null, 'token', message.token);
             try {
                 let purchaseCallResponse = await makePurchaseCall({ token: message.token });
                 this.purchaseResult = JSON.parse(purchaseCallResponse);
@@ -104,6 +105,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     requestToken() {
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+        fireEvent(null, 'tokenRequested');
 
         if (iframe) {
             iframe.contentWindow.postMessage(
@@ -114,7 +116,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     @api
     returnValues() {
-        fireEvent(null, 'tokenRequested');
         this.requestToken();
     }
 

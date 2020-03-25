@@ -177,10 +177,16 @@ class GeFormService {
 
     handleTokenRequested() {
         this.tokenPromise = new Promise((resolve, reject) => {
-            registerListener('tokenReceived', resolve, this);
+            registerListener('tokenResponse', message => {
+                if(message.error) {
+                    reject(message);
+                } else if(message.token) {
+                    resolve(message.token);
+                }
+            }, this);
             setTimeout(() => {
                 reject('Request timed out');
-                unregisterListener('tokenReceived', resolve, this);
+                unregisterListener('tokenResponse', resolve, this);
             }, TOKENIZE_TIMEOUT);
         });
     }
@@ -192,6 +198,9 @@ class GeFormService {
      */
     async handleSave(sectionList, record, dataImportRecord) {
         const { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record, dataImportRecord);
+
+        // token is available at this point. If no token was requested, token will be undefined
+        // const token = await this.tokenPromise;
 
         const hasUserSelectedDonation = isNotEmpty(dataImportRecord);
 
