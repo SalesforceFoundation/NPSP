@@ -157,30 +157,9 @@ public with sharing class RD2_VisualizeScheduleController {
                 queryFields.add('CurrencyIsoCode');
             }
 
-            //Return all schedules for the RD Schedule visualization.
-            //The RD Schedule will filter them out if not applicable within the time period.
-            String scheduleSubquery =
-                '(SELECT Id, InstallmentAmount__c, ' +
-                'Campaign__c, ' +
-                'Campaign__r.Name, ' +
-                'InstallmentFrequency__c, ' +
-                'InstallmentPeriod__c, ' +
-                'DayOfMonth__c, ' +
-                'PaymentMethod__c, ' +
-                'StartDate__c, ' +
-                'EndDate__c ' +
-                'FROM RecurringDonationSchedules__r)';
-
-            String oppSubquery =
-                '(SELECT CloseDate, ' +
-                'IsClosed, IsWon ' +
-                'FROM npe03__Donations__r ' +
-                'WHERE IsClosed = false ' +
-                'OR CloseDate >=: startDate ' +
-                'ORDER BY npe03__Recurring_Donation__c, CloseDate ASC)';
-
-            queryFields.add(scheduleSubquery);
-            queryFields.add(oppSubquery);            
+            RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService();
+            queryFields.add(oppEvalService.getScheduleSubQuery());
+            queryFields.add(oppEvalService.getOpportunitySubQuery());            
                 
             String soql = new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)
