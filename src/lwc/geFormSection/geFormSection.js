@@ -197,8 +197,12 @@ export default class GeFormSection extends LightningElement {
     setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
         this.template.querySelectorAll('c-ge-form-field')
             .forEach(field => {
-                if (field.objectMappingDevName === objectMappingDevName) {
-                    field.recordTypeId = recordTypeId;
+                // Currently only picklists need their selected record's RecordType Id,
+                // since they use it to update their available options
+                if (field.isPicklist) {
+                    if (field.objectMappingDevName === objectMappingDevName) {
+                        field.recordTypeId = recordTypeId;
+                    }
                 }
             });
     }

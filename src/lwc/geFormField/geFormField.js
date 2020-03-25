@@ -29,7 +29,7 @@ export default class GeFormField extends LightningElement {
     @api element;
     @api targetFieldName;
     _defaultValue = null;
-    @api recordTypeId;
+    _recordTypeId;
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -400,7 +400,7 @@ export default class GeFormField extends LightningElement {
         }
 
         if (this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName) {
-            lookup.setSelected({value: value, displayValue: value});
+            lookup.setSelected({value: value});
         } else {
             lookup.setSelected({value, displayValue});
         }
@@ -418,6 +418,23 @@ export default class GeFormField extends LightningElement {
         if (this.isPicklist) {
             this.template.querySelector('c-ge-form-field-picklist').reset();
             this.handlePicklistChange();
+        }
+    }
+
+    @api
+    set recordTypeId(id) {
+        this._recordTypeId = id;
+        this.setRecordTypeIdOnChildComponents();
+    }
+
+    get recordTypeId() {
+        return this._recordTypeId;
+    }
+
+    setRecordTypeIdOnChildComponents() {
+        if (this.isPicklist) {
+            this.template.querySelector('c-ge-form-field-picklist')
+                .recordTypeId = this.recordTypeId;
         }
     }
 

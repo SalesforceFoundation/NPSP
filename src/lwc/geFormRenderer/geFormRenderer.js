@@ -703,12 +703,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return false;
         }
 
+        // If value is the RecordType Name, change it to the RecordType Id since child
+        // fields are expecting the Id and not the Name.
         if (recordTypeNameValue &&
             !recordTypeNameValue.value &&
             !recordTypeNameValue.startsWith('012')) {
-            // Probably have the RecordType Name instead of Id (opening from table row)
 
-            // Change the value from the Name to the Id of the RecordType
             dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = this.getRecordTypeIdByName(
                 this.opportunityObjectInfo.data.recordTypeInfos,
                 recordTypeNameValue
@@ -717,11 +717,24 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = recordTypeNameValue.value;
         }
 
+        // Set the recordTypeId property on sibling fields that need it
+        this.setRecordTypeIdOnSiblingFieldsForSourceField(
+            DONATION_RECORD_TYPE_NAME.fieldApiName,
+            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName]
+        );
+    }
 
+    setRecordTypeIdOnSiblingFieldsForSourceField(sourceFieldApiName, recordTypeId) {
+        const objectMappingDevNames =
+            this.getObjectMappingsForSourceField(sourceFieldApiName);
+
+        for (const objectMappingDevName of objectMappingDevNames) {
+            this.setRecordTypeOnFields(objectMappingDevName, recordTypeId);
+        }
     }
 
     setStoredDonationDonorProperties(dataImport) {
-        if (dataImport[DONATION_DONOR_FIELDS.donationDonorField]) {
+    if (dataImport[DONATION_DONOR_FIELDS.donationDonorField]) {
             this.handleDonationDonorChange(
                 dataImport[DONATION_DONOR_FIELDS.donationDonorField]
             );
@@ -1242,9 +1255,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 section.setRecordTypeOnFields(objectMappingDevName, recordTypeId);
             });
     }
+
     getRecordTypeIdByName(recordTypeInfos, d) {
         return Object.values(recordTypeInfos)
             .find(recordTypeInfo => recordTypeInfo.name === d).recordTypeId;
     }
 
+    getObjectMappingsForSourceField(fieldApiName) {
+        return Object.values(GeFormService.fieldMappings)
+            .filter(({Source_Field_API_Name}) => Source_Field_API_Name === fieldApiName)
+            .map(({Target_Object_Mapping_Dev_Name}) => Target_Object_Mapping_Dev_Name);
+    }
 }
