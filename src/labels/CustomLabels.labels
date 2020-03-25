@@ -6238,14 +6238,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>An invalid string was provided but no exception was thrown</value>
     </labels>
     <labels>
-        <fullName>geUtilJWTTestNullValue</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Unit test error: test with null value</shortDescription>
-        <value>Test includes null value</value>
-    </labels>
-    <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
