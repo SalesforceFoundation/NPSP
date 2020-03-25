@@ -4604,7 +4604,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Failure message if an invalid key has been provided</shortDescription>
+        <shortDescription>Failure message if an invalid key was provided</shortDescription>
         <value>The key must contain a value and use the base64 format.</value>
     </labels>
     <labels>
