@@ -290,7 +290,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     handleSingleGiftErrors(error) {
-        if (error.error) {
+        const hasTokenizationError = error.error;
+        if (hasTokenizationError) {
             // TODO: Handle tokenization errors
             const errors = error.error;
             const tokenizationErrors = Object.keys(errors).map(e => errors[e]).join(', ');
@@ -298,11 +299,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return;
         }
 
-        if (error.body && error.body.message) {
-            console.log('handleCatch');
+        const hasAuraErrors = error.body && error.body.message;
+        if (hasAuraErrors) {
             this.handleCatchOnSave(error);
         } else {
-            console.log('handleError');
             handleError(error);
         }
     }
