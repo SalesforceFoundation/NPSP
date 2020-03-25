@@ -413,6 +413,13 @@ export default class GeFormField extends LightningElement {
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             lookup.reset();
+            if (this.fieldApiName === 'RecordTypeId') {
+                // Using setTimeout here ensures that this recordTypeId
+                // will be set on sibling fields after they are reset by queueing the event.
+                setTimeout(() => {
+                    this.fireLookupRecordSelectEvent();
+                }, 0);
+            }
         }
 
         if (this.isPicklist) {
@@ -436,6 +443,20 @@ export default class GeFormField extends LightningElement {
             this.template.querySelector('c-ge-form-field-picklist')
                 .recordTypeId = this.recordTypeId;
         }
+    }
+
+    fireLookupRecordSelectEvent() {
+        this.dispatchEvent(new CustomEvent(
+            'lookuprecordselect',
+            {
+                detail: {
+                    value: this.value,
+                    displayValue: this.value,
+                    fieldApiName: this.fieldApiName,
+                    objectMappingDevName: this.objectMappingDevName
+                }
+            }
+        ));
     }
 
 }
