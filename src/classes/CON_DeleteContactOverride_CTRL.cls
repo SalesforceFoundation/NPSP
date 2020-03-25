@@ -72,7 +72,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /** @description Flag to tell the page which operation we're doing. */
     public Boolean shouldDeleteContactAlone {get;set;}
     /** @description Flag to tell the page account deletion is permitted. */
-    public Boolean testDeleteAccountOkay {get;set;}
+    public Boolean deleteAccountOkay {get;set;}
     /** @description Flag indicating if only this Contact should be deleted while leaving empty Account. */
     private Boolean isDeleteContactLeaveAccount = false;
 
@@ -99,7 +99,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         ];
 
         shouldDeleteContactAlone = true;
-        testDeleteAccountOkay = false;
+        deleteAccountOkay = false;
 
         if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             accountId = queryContact.AccountId;
@@ -118,7 +118,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
                 String helpDeleteAccountInstead;
                 if (UTIL_Describe.getFieldDescribe('Account', 'Name').isAccessible()) {
-                    testDeleteAccountOkay = true;
+                    deleteAccountOkay = true;
                     helpDeleteAccountInstead = String.format(
                         Label.ConfirmDeleteAccount,
                         new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
