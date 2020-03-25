@@ -178,8 +178,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
             if(!isEmpty(data[DATA_IMPORT_PAYMENT_IMPORTED_FIELD.fieldApiName])) {
 
+                this.reset();
                 this.hideWidget = true;
 
+                return;
             }
             let importedDonationId = data[DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName].value;
 
@@ -312,6 +314,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     addRows(records) {
         let rows = [];
         records.forEach(record => {
+
             if(record.isDefaultGAU) {
                 rows.push(record);
             } else {
@@ -330,12 +333,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
      * @return Object representing a widget row
      */
     buildRow(isDefaultGAU, properties) {
-        let element = {};
+        let element = {disabled: true};
         const record = { apiName: ALLOCATION_OBJECT.objectApiName, ...properties};
         let row = {};
         if(isDefaultGAU === true) {
             // default GAU should be locked.
-            element.disabled = true;
             row.isDefaultGAU = true;
             record[GENERAL_ACCOUNT_UNIT] = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
         } else {
