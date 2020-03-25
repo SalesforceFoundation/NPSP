@@ -950,7 +950,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.selectedDonorId = undefined;
         this.selectedDonation = undefined;
         this.opportunities = undefined;
-        this.resetDonationAndPaymentImportedFields();
+        if (!!this.selectedDonation) {
+            this.resetDonationAndPaymentImportedFields();
+        }
     }
 
     handleChangeSelectedDonation(event) {
@@ -1245,8 +1247,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonationDonorChange(donationDonorValue) {
         this._donationDonor = donationDonorValue;
+        if (!!this.selectedDonation) {
+            this.resetDonationAndPaymentImportedFields();
+        }
         this.setReviewDonationsDonorProperties(this.donorId);
-        this.resetDonationAndPaymentImportedFields();
     }
 
     setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
