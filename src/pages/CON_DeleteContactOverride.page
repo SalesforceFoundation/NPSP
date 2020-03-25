@@ -35,7 +35,7 @@
                 <apex:commandButton value="{!$Label.DeleteAccount}"
                     id="delAccountBtn"
                     action="{!deleteAccount}"
-                    rendered="{!testDeleteAccountOkay}"
+                    rendered="{!deleteAccountOkay}"
                     rerender="delForm"
                     styleClass="slds-button slds-button_brand"
                 />
