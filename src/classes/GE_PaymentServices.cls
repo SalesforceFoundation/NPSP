@@ -40,7 +40,6 @@ public with sharing class GE_PaymentServices {
 
     public GE_PaymentServices() {}
 
-    // TODO: Update later to remove placeholder token input. Currently used to support tests.
     public GE_PaymentServices(DataImport__c dataImportRecord) {
         this.dataImportRecord = dataImportRecord;
     }
@@ -66,7 +65,6 @@ public with sharing class GE_PaymentServices {
         return responseWrapper;
     }
 
-    // TODO: Remove placeholder tokenize endpoint later. Only used because SDK endpoint is down.
     private enum ElevateEndpoints { PURCHASE }
 
     private String getEndpoint(ElevateEndpoints endpoint) {
@@ -75,10 +73,6 @@ public with sharing class GE_PaymentServices {
         }
         return null;
     }
-
-    //
-    // Methods for retrieving request headers
-    //
 
     private String getEndpointRoot() {
         return 'https://7jpea5zk79.execute-api.us-west-2.amazonaws.com';
@@ -111,26 +105,6 @@ public with sharing class GE_PaymentServices {
         public String lastName;
         public Metadata metadata;
 
-        // TODO: Remove placeholder tokenize endpoint later. Only used because SDK endpoint is down.
-        public String placeholderTokenize() {
-            // Create http request...
-            Http http = new Http();
-            HttpRequest request = new HttpRequest();
-            request.setEndpoint('https://x2t03i3rn5.execute-api.us-west-2.amazonaws.com/v1/payments/public/tokens');
-            request.setMethod('POST');
-            request.setHeader('Content-Type', 'application/json');
-            request.setHeader('productid', '1111');
-
-            // Set the body as a JSON object...
-            request.setBody('{"cardNumber": "4111111111111111","nameOnCard": "sean corgan","expMonth": "02","expYear": "2039","cvc": "123","gatewayType": "CONFIGURED"}');
-
-            HttpResponse response = http.send(request);
-
-            GE_PaymentServices.TokenizeResponse resp = (GE_PaymentServices.TokenizeResponse)JSON.deserialize(response.getBody(), GE_PaymentServices.TokenizeResponse.class);
-
-            return resp.token;
-        }
-
         //
         // Methods for retrieving the request body
         //
@@ -143,8 +117,8 @@ public with sharing class GE_PaymentServices {
             return 'USD';
         }
 
-        private String getPaymentMethodToken() {
-            return placeholderTokenize();
+        private String getPaymentMethodToken(DataImport__c dataImport) {
+            return dataImport.Payment_Authorization_Token__c;
         }
 
         private String getMerchantId() {
@@ -179,7 +153,7 @@ public with sharing class GE_PaymentServices {
         public PurchaseCallBody(DataImport__c dataImport) {
             this.amount = getAmount(dataImport);
             this.currencyCode = getCurrencyCode();
-            this.paymentMethodToken = getPaymentMethodToken();
+            this.paymentMethodToken = getPaymentMethodToken(dataImport);
             this.merchantId = getMerchantId();
             this.gatewayId = getGatewayId();
             this.email = getEmail();
@@ -189,7 +163,6 @@ public with sharing class GE_PaymentServices {
         }
 
         public String getAsJson() {
-            System.debug(JSON.serialize(this));
             return JSON.serialize(this);
         }
     }
@@ -210,10 +183,5 @@ public with sharing class GE_PaymentServices {
         public String firstName;
         public String lastName;
         public String accountName;
-    }
-
-    // TODO: Remove placeholder inner class
-    public class TokenizeResponse {
-        public String token;
     }
 }
