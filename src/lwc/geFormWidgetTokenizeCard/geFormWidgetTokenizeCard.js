@@ -82,8 +82,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         fireEvent(null, 'tokenResponse', message); // move so we can handle error or token
         if (message.error) {
             // Error with tokenization
-            let error = JSON.stringify(message.error);
-            handleError(error);
         } else if (message.token) {
             this.token = message.token;
         } else if (message.isLoaded) {

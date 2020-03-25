@@ -315,7 +315,7 @@ const handleError = (error) => {
             Array.isArray(error.detail.output.errors)) {
             message = error.detail.output.errors.map(e => e.message).join(', ');
         }
-    } else if (error.body.message) {
+    } else if (error.body && error.body.message) {
         message = error.body.message;
     }
 

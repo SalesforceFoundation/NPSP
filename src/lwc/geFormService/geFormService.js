@@ -8,7 +8,7 @@ import processDataImport from '@salesforce/apex/GE_GiftEntryController.processDa
 import saveAndDryRunDataImport
     from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
-import { handleError, showToast } from 'c/utilTemplateBuilder';
+import { handleError } from 'c/utilTemplateBuilder';
 import { api } from 'lwc';
 import { isNotEmpty, isEmpty } from 'c/utilCommon';
 import {registerListener, unregisterListener} from 'c/pubsubNoPageRef';
@@ -18,12 +18,13 @@ import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
+import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const ADDITIONAL_OBJECT_JSON__C = DI_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
-const TOKEN__C = 'PLACEHOLDER_TOKEN_FIELD__C';
+const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds, long enough for cold starts?
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
@@ -190,19 +191,8 @@ class GeFormService {
     */
     saveDataImport = async (dataImportRecord) => {
         console.log('*** *** saveDataImport');
-        dataImportRecord[TOKEN__C] = await this.retrieveElevateToken();
-
-        //return await saveDataImport({ diRecord: dataImport });
-
-        // TODO: temporarily re-add placeholder token field to dataImport to mimic that field after insert
-        dataImportRecord = await saveDataImport({ dataImport: dataImportRecord });
-        dataImportRecord[TOKEN__C] = await this.retrieveElevateToken();
-
-        return dataImportRecord;
-    }
-
-    retrieveElevateToken = async () => {
-        return 'PLACEHOLDER_TOKEN';
+        dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
+        return await saveDataImport({ diRecord: dataImportRecord });
     }
 
     /*******************************************************************************
@@ -228,7 +218,7 @@ class GeFormService {
         }
 
         if (purchaseCallResponse.statusCode !== 201) {
-            let errors = purchaseCallResponse.body.errors.map(error => error.message);
+            let errors = purchaseCallResponse.body.errors.map(error => error.message).join(', ');
             console.log('throwing purchase call error');
             errorCallback(errors);
         }

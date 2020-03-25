@@ -3,7 +3,9 @@ import { NavigationMixin } from 'lightning/navigation';
 import GeFormService from 'c/geFormService';
 import { showToast, handleError } from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
-const TOKEN__C = 'PLACEHOLDER_TOKEN_FIELD__C';
+import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+
+const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
     @api recordId;
@@ -45,7 +47,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         try {
             let { dataImportRecord, errorCallback } = event.detail;
 
-            const hasPaymentToProcess = dataImportRecord[TOKEN__C];
+            const hasPaymentToProcess = dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
             if (hasPaymentToProcess) {
                 dataImportRecord =
                     await GeFormService.handlePaymentProcessing(dataImportRecord, errorCallback);

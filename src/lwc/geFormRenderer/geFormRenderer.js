@@ -278,13 +278,32 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         console.log('*** handleSaveSingleGiftEntry');
         this.dataImport = await GeFormService.saveDataImport(dataImportRecord)
             .catch((error) => {
+                console.log('handleSaveSingleGiftEntry Error: ', error);
                 formControls.enableSaveButton();
                 formControls.toggleSpinner();
-                this.handleCatchOnSave(error);
+                this.handleSingleGiftErrors(error);
             });
-        
+
         if (this.dataImport) {
             this.dispatchSingleGiftSaveEvent(this.dataImport, formControls);
+        }
+    }
+
+    handleSingleGiftErrors(error) {
+        if (error.error) {
+            // TODO: Handle tokenization errors
+            const errors = error.error;
+            const tokenizationErrors = Object.keys(errors).map(e => errors[e]).join(', ');
+            console.log(tokenizationErrors);
+            return;
+        }
+
+        if (error.body && error.body.message) {
+            console.log('handleCatch');
+            this.handleCatchOnSave(error);
+        } else {
+            console.log('handleError');
+            handleError(error);
         }
     }
 
