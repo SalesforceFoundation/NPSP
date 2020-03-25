@@ -72,7 +72,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /** @description Flag to tell the page which operation we're doing. */
     public Boolean shouldDeleteContactAlone {get;set;}
     /** @description Flag to tell the page account deletion is permitted. */
-    public Boolean deleteAccountOkay {get;set;}
+    public Boolean canDeleteAccount {get;set;}
     /** @description Flag indicating if only this Contact should be deleted while leaving empty Account. */
     private Boolean isDeleteContactLeaveAccount = false;
 
