@@ -62,33 +62,46 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Revises and modifies the Recurring Donation Next Donation Date
-    * @param scheduleService RD Schedule Service
-    * @return RD2_RecurringDonation This record instance
-    */
-    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {
-        return reviseNextDonationDate(scheduleService, rd.RecurringDonationSchedules__r);
-    }
-
-    /**
     * @description Revises and sets the Recurring Donation Next Donation Date on the record insert
     * @param scheduleService RD Schedule Service
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation reviseNextDonationDateBeforeInsert(RD2_ScheduleService scheduleService) {
-        return reviseNextDonationDate(scheduleService, scheduleService.buildNewSchedules(rd));
+        return setNextDonationDate(
+            scheduleService.getNextDonationDate(rd)
+        );
     }
 
     /**
-    * @description Revises and modifies the Recurring Donation Next Donation Date
+    * @description Revises and modifies the Recurring Donation Next Donation Date.
     * @param scheduleService RD Schedule Service
-    * @param rdSchedules Just built or existing Schedules on the Recurring Donation
     * @return RD2_RecurringDonation This record instance
     */
-    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) {
+    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService) {  
+        return reviseNextDonationDate(scheduleService, rd.RecurringDonationSchedules__r);
+    }
 
-        Date nextDonationDate = isClosed() ? null : scheduleService.getNextDonationDate(rd, rdSchedules);
+    /**
+    * @description Revises and modifies the Recurring Donation Next Donation Date.
+    * Whenever the Next Donation Date is being revised, review the status and the Next Donation Date 
+    * for a fixed-length RD in the case it should be closed. 
+    * If so, the next installment Opp should not be created when the last open Opp on the fixed-length RD is closed.
+    * @param scheduleService RD Schedule Service
+    * @param rdSchedules Existing Schedules on the Recurring Donation
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation reviseNextDonationDate(RD2_ScheduleService scheduleService, List<RecurringDonationSchedule__c> rdSchedules) { 
+        return setNextDonationDate(
+            scheduleService.getNextDonationDate(rd, rdSchedules)
+        );
+    }
 
+    /**
+    * @description Sets the Next Donation Date on the Recurring Donation if the value has changed
+    * @param nextDonationDate Calculated value of the next donation date
+    * @return RD2_RecurringDonation This record instance
+    */
+    private RD2_RecurringDonation setNextDonationDate(Date nextDonationDate) {
         if (nextDonationDate != rd.npe03__Next_Payment_Date__c) {
             rd.npe03__Next_Payment_Date__c = nextDonationDate;
             changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
@@ -132,6 +145,7 @@ public inherited sharing class RD2_RecurringDonation {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
             rd.ClosedReason__c = RD2_Constants.FIXED_TYPE_CLOSED_REASON;
             rd.npe03__Next_Payment_Date__c = null;
+
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
             changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
@@ -140,8 +154,8 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Revises and modifies the Number of Planned Installments when
-    * RecurringType is Open and Number of Planned Installments = 1, set Number of Planned Installments to null
+    * @description Sets the Number of Planned Installments to null when RecurringType is Open 
+    * and Number of Planned Installments = 1 (default)
     * @return RD2_RecurringDonation This record instance
     */
     public RD2_RecurringDonation revisePlannedInstallments() {
@@ -149,6 +163,26 @@ public inherited sharing class RD2_RecurringDonation {
         if (isOpenEnded() && rd.npe03__Installments__c == 1) {
             rd.npe03__Installments__c = null;
             changedFields.add(npe03__Recurring_Donation__c.npe03__Installments__c);
+        }
+
+        return this;
+    }
+
+    /**
+    * @description Revises and modifies the Number of Paid Installments for a fixed-length RD
+    * @param paidInstallments Number of Paid Installments
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation revisePaidInstallments(Integer paidInstallments) {
+        //do not check if the Number of Paid Installments is up to date for an open RD,
+        //the CRLP can update the number asynchronously
+        if (!isFixedLength() || paidInstallments == null) {
+            return this;
+        }
+
+        if (paidInstallments != rd.npe03__Total_Paid_Installments__c) {
+            rd.npe03__Total_Paid_Installments__c = paidInstallments;
+            changedFields.add(npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c);
         }
 
         return this;
@@ -172,26 +206,6 @@ public inherited sharing class RD2_RecurringDonation {
             updatedRd.put(field, rd.get(field));
         }
         return updatedRd;
-    }
-
-    /**
-    * @description Return number of planned installments for the recurring donation, default to 0 when value is null
-    * @return Integer
-    */
-    public Integer getPlannedInstallments() {
-        return (rd.npe03__Installments__c != null)
-            ? rd.npe03__Installments__c.intValue()
-            : 0;
-    }
-
-    /**
-    * @description Return number of paid installments for the recurring donation, default to 0 when value is null
-    * @return Integer
-    */
-    public Integer getPaidInstallments() {
-        return (rd.npe03__Total_Paid_Installments__c != null)
-            ? rd.npe03__Total_Paid_Installments__c.intValue()
-            : 0;
     }
 
     /**
@@ -240,6 +254,26 @@ public inherited sharing class RD2_RecurringDonation {
      */
     public Boolean isFixedLengthComplete() {
         return rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c;
+    }
+    
+    /**
+    * @description Return number of planned installments on the Recurring Donation, default to 0 when null
+    * @return Integer
+    */
+    public Integer getPlannedInstallments() {
+        return rd.npe03__Installments__c == null
+            ? 0
+            : rd.npe03__Installments__c.intValue();
+    }
+
+    /**
+    * @description Return number of paid installments on the Recurring Donation, default to 0 when null
+    * @return Integer
+    */
+    public Integer getPaidInstallments() {
+        return rd.npe03__Total_Paid_Installments__c == null
+            ? 0
+            : rd.npe03__Total_Paid_Installments__c.intValue();
     }
 
     /**
@@ -302,8 +336,8 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Boolean hasCurrentOpenOpportunity(Date currentDate) {
         return new RD2_OpportunityMatcher(currentDate)
-        .includeCurrent(rd.npe03__Donations__r)
-        .hasOpenOpportunity();
+            .includeCurrent(rd.npe03__Donations__r)
+            .hasOpenOpportunity();
     }
 
     /**
