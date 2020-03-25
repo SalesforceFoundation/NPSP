@@ -36,7 +36,7 @@ Assign GAU to Opportunity
     ...                                  object_id=${data}[contact_opportunity][Id]
     Select Tab                           Related
     Click Special Related List Button    GAU Allocations         Manage Allocations
-    Current Page Should Be               Custom                  GauAllocation
+    Current Page Should Be               Custom                  ManageAllocations
     Set Gau Allocation
     ...                                  General Accounting Unit 0=${data}[gau1][Name]
     ...                                  Percent 0=50
@@ -47,3 +47,4 @@ Assign GAU to Opportunity
     Click Button                         Save
     Current Page Should Be               Details                 Opportunity
     Validate Related Record Count        GAU Allocations         2
+
