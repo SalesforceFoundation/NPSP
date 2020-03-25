@@ -58,6 +58,21 @@ public with sharing class PMT_PaymentWizard_CTRL {
     private String currencySymbol;
 
     /*******************************************************************************************************
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description Class that stored numbered payment
     */
     public class Payment {
@@ -543,28 +558,25 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @return Boolean
     */
     private Boolean hasPaymentAccess() {
-
         Boolean accessResult = false;
 
-        String pmtString = Schema.SObjectType.npe01__OppPayment__c.getName();
-        Schema.DescribeSObjectResult dsr = UTIL_Describe.getObjectDescribe(pmtString);
-
-        if (dsr.isAccessible() && dsr.isCreateable() && dsr.isDeletable() && dsr.isUpdateable()) {
-
-            Map<String, Schema.DescribeFieldResult> dfr = UTIL_Describe.getAllFieldsDescribe('npe01__oppPayment__c');
-            List<String> fieldStrings = new List<String>{
-                    'npe01__check_reference_number__c', 'npe01__custom_payment_field__c', 'npe01__paid__c',
-                    UTIL_Namespace.StrTokenNSPrefix('payment_acknowledged_date__c'),
-                    UTIL_Namespace.StrTokenNSPrefix('payment_acknowledgment_status__c'),
-                    'npe01__payment_amount__c',
-                    'npe01__payment_date__c', 'npe01__payment_method__c', 'npe01__scheduled_date__c',  'npe01__written_off__c'
+        SObjectType pmt = npe01__OppPayment__c.getSObjectType();
+        if (perms.canCreate(pmt) && UTIL_Permissions.canDelete(Schema.SObjectType.npe01__oppPayment__c.getName(), false)) {
+            Set<SObjectField> sObjectFields = new Set<SObjectField>{
+                npe01__oppPayment__c.fields.npe01__check_reference_number__c,
+                npe01__oppPayment__c.fields.npe01__custom_payment_field__c,
+                npe01__oppPayment__c.fields.npe01__paid__c,
+                npe01__oppPayment__c.fields.payment_acknowledged_date__c,
+                npe01__oppPayment__c.fields.payment_acknowledgment_status__c,
+                npe01__oppPayment__c.fields.npe01__payment_amount__c,
+                npe01__oppPayment__c.fields.npe01__payment_date__c,
+                npe01__oppPayment__c.fields.npe01__payment_method__c,
+                npe01__oppPayment__c.fields.npe01__scheduled_date__c,
+                npe01__oppPayment__c.fields.npe01__written_off__c
             };
-            for (String accStr : fieldStrings) {
-                if (!(dfr.get(accStr).isAccessible() && dfr.get(accStr).isUpdateable())) {
-                    return accessResult;
-                }
+            if (!(perms.canRead(pmt, sObjectFields) && perms.canUpdate(pmt, sObjectFields))) {
+                return accessResult;
             }
-            accessResult = true;
         }
 
         return accessResult;

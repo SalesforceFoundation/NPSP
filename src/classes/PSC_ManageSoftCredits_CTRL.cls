@@ -60,6 +60,21 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description temporary Opp to hold the current Total Soft Credit Amount and currency
     */
     public Opportunity oppTotalSoftCredit {
@@ -215,25 +230,19 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     private Boolean getCurrentUserHasAccess() {
         Boolean accessResult = false;
 
-        String pscObjectName = Schema.SObjectType.Partial_Soft_Credit__c.getName();
-        Schema.DescribeSObjectResult dsr = UTIL_Describe.getObjectDescribe(pscObjectName);
-
-        if (dsr.isAccessible() && dsr.isCreateable() && dsr.isDeletable() && dsr.isUpdateable()) {
-
-            Map<String, Schema.DescribeFieldResult> dfr = UTIL_Describe.getAllFieldsDescribe(pscObjectName);
-            String nsAmount = UTIL_Namespace.StrTokenNSPrefix('amount__c');
-            String nsContactName = UTIL_Namespace.StrTokenNSPrefix('contact_name__c');
-            String nsContactRoleId = UTIL_Namespace.StrTokenNSPrefix('contact_role_id__c');
-            String nsRoleName = UTIL_Namespace.StrTokenNSPrefix('role_name__c');
-            List<String> accessibleStrings = new List<String>{nsAmount, nsContactName, nsContactRoleId, nsRoleName};
-            Set<String> updateableStrings = new Set<String>{nsAmount, nsContactRoleId, nsRoleName};
-
-            for (String accStr : accessibleStrings) {
-                if (!(dfr.get(accStr).isAccessible() && (updateableStrings.contains(accStr) == false || dfr.get(accStr).isUpdateable()))) {
-                    return accessResult;
-                }
+        SObjectType psc = Partial_Soft_Credit__c.getSObjectType();
+        if (perms.canCreate(psc) && UTIL_Permissions.canDelete(Schema.SObjectType.Partial_Soft_Credit__c.getName(), false)) {
+            Set<SObjectField> sObjectFieldsRead = new Set<SObjectField>{
+                Partial_Soft_Credit__c.fields.Amount__c,
+                Partial_Soft_Credit__c.fields.Contact_Name__c,
+                Partial_Soft_Credit__c.fields.Contact_Role_ID__c,
+                Partial_Soft_Credit__c.fields.Role_Name__c
+            };
+            Set<SObjectField> sObjectFieldsModify = sObjectFieldsRead.clone();
+            sObjectFieldsModify.remove(Partial_Soft_Credit__c.fields.Contact_Name__c);
+            if (!(perms.canRead(psc, sObjectFieldsRead) && perms.canUpdate(psc, sObjectFieldsModify))) {
+                return accessResult;
             }
-            accessResult = true;
         }
 
         return accessResult;
