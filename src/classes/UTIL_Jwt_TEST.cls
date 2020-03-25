@@ -53,17 +53,16 @@ private class UTIL_Jwt_TEST {
 
         for (String key: encodeMap.keySet()) {
             System.assertEquals( encodeMap.get(key),
-                    UTIL_Jwt.transcodeBase64ToBase64Url(key),
-                    'Values should be equal' );
+                    UTIL_Jwt.transcodeBase64ToBase64Url(key));
         }
 
-        System.assertEquals( null, UTIL_Jwt.transcodeBase64ToBase64Url(null), 'test with null value');
-        System.assertEquals( '', UTIL_Jwt.transcodeBase64ToBase64Url(''), 'test with empty value');
+        System.assertEquals( null, UTIL_Jwt.transcodeBase64ToBase64Url(null));
+        System.assertEquals( '', UTIL_Jwt.transcodeBase64ToBase64Url(''));
         try {
             UTIL_Jwt.transcodeBase64ToBase64Url('MQ');
-            System.assert(false, 'An invalid string was provided but no exception was thrown');
+            System.assert(false, System.Label.geUtilJWTTestInvalidString);
         } catch(Exception e) {
-            System.assertEquals(e.getMessage(), UTIL_Jwt.INVALID_BASE64_MESSAGE, 'invalid base64 string');
+            System.assertEquals(e.getMessage(), UTIL_Jwt.INVALID_BASE64_MESSAGE);
         }
 
     }
@@ -72,17 +71,16 @@ private class UTIL_Jwt_TEST {
 
         for (String key: decodeMap.keySet()) {
             System.assertEquals( decodeMap.get(key),
-                    UTIL_Jwt.transcodeBase64UrlToBase64(key),
-                    'Values should be equal' );
+                    UTIL_Jwt.transcodeBase64UrlToBase64(key));
         }
 
-        System.assertEquals( null, UTIL_Jwt.transcodeBase64UrlToBase64(null), 'test with null value');
-        System.assertEquals( '', UTIL_Jwt.transcodeBase64UrlToBase64(''), 'test with empty value');
+        System.assertEquals( null, UTIL_Jwt.transcodeBase64UrlToBase64(null));
+        System.assertEquals( '', UTIL_Jwt.transcodeBase64UrlToBase64(''));
         try {
             UTIL_Jwt.transcodeBase64UrlToBase64('MQ==');
-            System.assert(false, 'An invalid string was provided but no exception was thrown');
+            System.assert(false, System.Label.geUtilJWTTestInvalidString);
         } catch(Exception e) {
-            System.assertEquals(e.getMessage(), UTIL_Jwt.INVALID_BASE64URL_MESSAGE, 'invalid base64url string');
+            System.assertEquals(e.getMessage(), UTIL_Jwt.INVALID_BASE64URL_MESSAGE);
         }
 
     }
@@ -91,16 +89,14 @@ private class UTIL_Jwt_TEST {
 
         for (String key: encodeMap.keySet()) {
             System.assertEquals( true,
-                    UTIL_Jwt.isBase64String(key),
-                    key + ' string should be base64' );
+                    UTIL_Jwt.isBase64String(key));
         }
 
         for (String key: decodeMap.keySet()) {
             // this key has valid format for both base64 and base64url
             if (key!='MTIz') {
                 System.assertEquals( false,
-                        UTIL_Jwt.isBase64String(key),
-                        key + ' string should not be base64' );
+                        UTIL_Jwt.isBase64String(key));
             }
         }
 
@@ -110,16 +106,14 @@ private class UTIL_Jwt_TEST {
 
         for (String key: decodeMap.keySet()) {
             System.assertEquals( true,
-                    UTIL_Jwt.isBase64UrlString(key),
-                    key + ' string should be base64url' );
+                    UTIL_Jwt.isBase64UrlString(key));
         }
 
         for (String key: encodeMap.keySet()) {
             // this key has valid format for both base64 and base64url
             if (key!='MTIz') {
                 System.assertEquals( false,
-                        UTIL_Jwt.isBase64UrlString(key),
-                        key + ' string should not be base64url' );
+                        UTIL_Jwt.isBase64UrlString(key));
             }
         }
 
@@ -142,22 +136,22 @@ private class UTIL_Jwt_TEST {
         Test.startTest();
         // correct signatures
         System.assertEquals(hardcodedResult, UTIL_Jwt.getSignedJWTFromString(
-                jwtPayload, jwtKey), 'correct signature was provided');
+                jwtPayload, jwtKey));
         System.assertEquals(hardcodedResult2, UTIL_Jwt.getSignedJWTFromString(
-                jwtPayload2, jwtKey2), 'correct signature was provided');
+                jwtPayload2, jwtKey2));
 
         try {
             UTIL_Jwt.getSignedJWTFromString(jwtPayload, '');
-            System.assert(false, 'An invalid key (empty) was provided but no exception was thrown');
+            System.assert(false, System.Label.geUtilJWTTestInvalidKey);
         } catch(Exception e1) {
-            System.assertEquals(e1.getMessage(), UTIL_Jwt.INVALID_KEY_MESSAGE, 'invalid key');
+            System.assertEquals(e1.getMessage(), UTIL_Jwt.INVALID_KEY_MESSAGE);
         }
 
         try {
             UTIL_Jwt.getSignedJWTFromString(null, jwtKey);
-            System.assert(false, 'An invalid payload provided but no exception was thrown');
+            System.assert(false, System.Label.geUtilJWTTestInvalidPayload);
         } catch(Exception e2) {
-            System.assertEquals(e2.getMessage(), UTIL_Jwt.INVALID_PAYLOAD_MESSAGE, 'invalid payload');
+            System.assertEquals(e2.getMessage(), UTIL_Jwt.INVALID_PAYLOAD_MESSAGE);
         }
         Test.stopTest();
 
@@ -171,20 +165,20 @@ private class UTIL_Jwt_TEST {
         Auth.JWT jwtInstance = new Auth.JWT();
         jwtInstance.setIss(issuer);
 
-        System.assertNotEquals(null, UTIL_Jwt.getSignedJWT(jwtInstance, key), 'correct signature creation');
+        System.assertNotEquals(null, UTIL_Jwt.getSignedJWT(jwtInstance, key));
 
         try {
             UTIL_Jwt.getSignedJWT(null, key);
-            System.assert(false, 'An invalid payload provided but no exception was thrown');
+            System.assert(false, System.Label.geUtilJWTTestInvalidPayload);
         } catch(Exception e) {
-            System.assertEquals(e.getMessage(), UTIL_Jwt.INVALID_PAYLOAD_MESSAGE, 'invalid payload');
+            System.assertEquals(e.getMessage(), UTIL_Jwt.INVALID_PAYLOAD_MESSAGE);
         }
 
         try {
             UTIL_Jwt.getSignedJWT(jwtInstance, null);
-            System.assert(false, 'An invalid key provided but no exception was thrown');
+            System.assert(false, System.Label.geUtilJWTTestInvalidKey);
         } catch(Exception e2) {
-            System.assertEquals(e2.getMessage(), UTIL_Jwt.INVALID_KEY_MESSAGE, 'invalid key');
+            System.assertEquals(e2.getMessage(), UTIL_Jwt.INVALID_KEY_MESSAGE);
         }
 
 

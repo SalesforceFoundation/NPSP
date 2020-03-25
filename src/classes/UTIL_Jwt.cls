@@ -35,15 +35,10 @@
 */
 public with sharing class UTIL_Jwt {
     // error messages consts
-    @TestVisible private static final String INVALID_BASE64_MESSAGE = 'The base64 format is invalid. ' +
-            'The number of characters must be a multiple of 4 and can ' +
-            'only contain these characters: [a-z A-Z 0-9 + / =]';
-    @TestVisible private static final String INVALID_BASE64URL_MESSAGE = 'The base64url format is invalid. ' +
-            'It can only contain these characters: [a-z A-Z 0-9 _ -]';
-    @TestVisible private static final String INVALID_PAYLOAD_MESSAGE = 'When signing JWT, ' +
-            'the Payload must contain a value.';
-    @TestVisible private static final String INVALID_KEY_MESSAGE = 'When signing JWT, ' +
-            'the Key must contain a value and use base64 format.';
+    @TestVisible private static final String INVALID_BASE64_MESSAGE = System.Label.geJWTUtilInvalidBase64Message;
+    @TestVisible private static final String INVALID_BASE64URL_MESSAGE = System.Label.geJWTUtilInvalidBase64UrlMessage;
+    @TestVisible private static final String INVALID_PAYLOAD_MESSAGE = System.Label.commonJWTInvalidPayload;
+    @TestVisible private static final String INVALID_KEY_MESSAGE = System.Label.commonJWTInvalidKey;
 
     // private consts
     private static final String BASE64_REGEX = '^[a-zA-Z0-9\\+/]*={0,3}$';
