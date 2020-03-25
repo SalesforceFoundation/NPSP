@@ -628,9 +628,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.get_webelement("//*[@title='Go!']").click()
         time.sleep(1)
 
-    def add_gau_allocation(self,field, value):
-        locator = npsp_lex_locators["gaus"]["input_field"].format(field)
-        self.salesforce._populate_field(locator,value)
+
 
 
     def click_save(self, page):
