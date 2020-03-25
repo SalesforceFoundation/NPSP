@@ -1953,6 +1953,8 @@
         <members>commonFieldLabel</members>
         <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
+        <members>commonJWTInvalidKey</members>
+        <members>commonJWTInvalidPayload</members>
         <members>commonMMYY</members>
         <members>commonMissingRequiredFields</members>
         <members>commonNewGift</members>
@@ -2122,6 +2124,8 @@
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
         <members>geHelpTextHouseholdMapping</members>
         <members>geHelpTextPaymentServices</members>
+        <members>geJWTUtilInvalidBase64Message</members>
+        <members>geJWTUtilInvalidBase64UrlMessage</members>
         <members>geLabelCustomTableSelectedFields</members>
         <members>geLabelCustomTableSourceFields</members>
         <members>geLabelSectionName</members>
@@ -2144,6 +2148,10 @@
         <members>geToastTemplateDeleteSuccess</members>
         <members>geToastTemplateTabsError</members>
         <members>geToastTemplateUpdateSuccess</members>
+        <members>geUtilJWTTestInvalidKey</members>
+        <members>geUtilJWTTestInvalidPayload</members>
+        <members>geUtilJWTTestInvalidString</members>
+        <members>geUtilJWTTestNullValue</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>

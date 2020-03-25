@@ -6214,14 +6214,6 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The "{0}" template was updated.</value>
     </labels>
     <labels>
-        <fullName>geUtilJWTTestEmptyValue</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Unit test error: test with empty value</shortDescription>
-        <value>Test with empty value</value>
-    </labels>
-    <labels>
         <fullName>geUtilJWTTestInvalidKey</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
