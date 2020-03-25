@@ -413,12 +413,12 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     * @description Validates that only expected amount of future installments should be return for fixed length RD
     */
     @IsTest
-    private static void shouldDisplayCorrectNumberOfFutureInstallmentsWhenRDisFixedLength() {
+    private static void shouldDisplayFutureInstallmentsWhenRDIsFixedLength() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Date startDate = Date.newInstance(2018, 2, 1);
-        Date today = Date.newInstance(2018, 3, 1);
-        String dayOfMonth = '12';
+        Date today = Date.newInstance(2018, 4, 2);
+        RD2_ScheduleService.currentDate = today;
 
         Integer maxInstallments = 100;
         Integer plannedInstallments = 10;
@@ -429,29 +429,48 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
             .withPlannedInstallments(plannedInstallments)
             .withPaidInstallments(paidInstallments)
             .withStartDate(startDate)
-            .withDayOfMonth(dayOfMonth)
+            .withDayOfMonth(String.valueOf(startDate.day()))
             .build();
         insert rd;
 
-        insert new TEST_OpportunityBuilder()
+        List<Opportunity> opps = new List<Opportunity>();
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
             .withContact(rd.npe03__Contact__c)
             .withRecurringDonation(rd.Id)
-            .withOpenStage()
             .withAmount(rd.npe03__Amount__c)
-            .withInstallmentNumber(1)
-            .withCloseDate(startDate)
-            .build();
+            .withClosedWonStage()
+            .withInstallmentNumber(1);
 
+        //add past paid Closed Won Opps
+        for (Integer month = 0; month < paidInstallments; month++) {
+            opps.add(oppBuilder
+                .withName()
+                .withCloseDate(startDate.addMonths(month))
+                .build()
+            );
+        }
+        //add an open Opp matching the Next Donation Date future installment
+        opps.add(oppBuilder
+            .withName()
+            .withCloseDate(Date.newInstance(2018, 5, 1))
+            .withOpenStage()
+            .build()
+        );
+        insert opps;
 
         Test.startTest();
         List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, maxInstallments);
         Test.stopTest();
 
-        System.assertEquals(10 - 3 - 1, installments.size(),
-            'Should only return set amount of future installments for fixed length RD (Planned - Paid - All out of cycle installments)');
+        System.assertEquals(plannedInstallments - paidInstallments, installments.size(),
+            'Should only return definite number of future installments for fixed length RD: ' + installments);
     }
 
+
+
+
     //// Helpers
+    //////////////////////////
 
     /****
     * @description Returns Recurring Donation with Monthly Installment Period
