@@ -445,6 +445,12 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    renderedCallback() {
+        if (this.value && this.fieldApiName === 'RecordTypeId') {
+            this.fireLookupRecordSelectEvent();
+        }
+    }
+
     fireLookupRecordSelectEvent() {
         this.dispatchEvent(new CustomEvent(
             'lookuprecordselect',
