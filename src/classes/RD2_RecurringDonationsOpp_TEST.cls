@@ -332,25 +332,25 @@ private class RD2_RecurringDonationsOpp_TEST {
      * @description Verifies an Opportunity is updated if its currency is the same
      * as the currency on related Recurring Donation
      */
-    @IsTest
-    private static void shouldAllowOppUpdateWhenCurrencyIsInSyncWithRD() {
-        if (!UserInfo.isMultiCurrencyOrganization()) {
-            return;
-        }
+    // @IsTest
+    // private static void shouldAllowOppUpdateWhenCurrencyIsInSyncWithRD() {
+    //     if (!UserInfo.isMultiCurrencyOrganization()) {
+    //         return;
+    //     }
 
-        RD2_ScheduleService.currentDate = TODAY;
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+    //     RD2_ScheduleService.currentDate = TODAY;
+    //     RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
-        Opportunity opp = getOpenOpportunity(rd);
-        Decimal oldAmount = opp.Amount;
+    //     npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
+    //     Opportunity opp = getOpenOpportunity(rd);
+    //     Decimal oldAmount = opp.Amount;
 
-        Exception actualException = updateOpportunity(opp, opp.Amount + 10, CURRENCY_CAD);
+    //     Exception actualException = updateOpportunity(opp, opp.Amount + 10, CURRENCY_CAD);
 
-        System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
-        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
-        System.assertNotEquals(oldAmount, oppById.get(opp.Id).Amount, 'The Opp Amount should be changed');
-    }
+    //     System.assertEquals(null, actualException, 'No Exception should be generated: ' + actualException);
+    //     Map<Id, Opportunity> oppById = new Map<Id, Opportunity>(oppGateway.getRecords(rd));
+    //     System.assertNotEquals(oldAmount, oppById.get(opp.Id).Amount, 'The Opp Amount should be changed');
+    // }
 
     /**
      * @description Verifies an Opportunity can be created and updated
