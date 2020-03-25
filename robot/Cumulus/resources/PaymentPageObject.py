@@ -7,6 +7,12 @@ from NPSP import npsp_lex_locators
 class PaymentPage(BaseNPSPPage, DetailPage):
     object_name = "npe01__OppPayment__c"
     
+    def _is_current_page(self):
+        """ Verify we are on the payment details page
+            by verifying that the url contains '/view'
+        """
+        self.selenium.wait_until_location_contains("/lightning/r/npe01__OppPayment__c",message="Current page is not a payment detail view")
+    
     
     def verify_payment_allocations(self, **kwargs):
        """To verify allocations, header is related list
