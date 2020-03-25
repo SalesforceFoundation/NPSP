@@ -564,10 +564,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         if (perms.canCreate(pmt) && UTIL_Permissions.canDelete(Schema.SObjectType.npe01__oppPayment__c.getName(), false)) {
             Set<SObjectField> sObjectFields = new Set<SObjectField>{
                 npe01__oppPayment__c.fields.npe01__check_reference_number__c,
-                npe01__oppPayment__c.fields.npe01__custom_payment_field__c,
                 npe01__oppPayment__c.fields.npe01__paid__c,
-                npe01__oppPayment__c.fields.payment_acknowledged_date__c,
-                npe01__oppPayment__c.fields.payment_acknowledgment_status__c,
                 npe01__oppPayment__c.fields.npe01__payment_amount__c,
                 npe01__oppPayment__c.fields.npe01__payment_date__c,
                 npe01__oppPayment__c.fields.npe01__payment_method__c,
