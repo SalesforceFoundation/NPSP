@@ -323,8 +323,8 @@ public with sharing class RD2_VisualizeScheduleController {
 
             RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService();
             queryFields.add(oppEvalService.getScheduleSubQuery());
-            queryFields.add(oppEvalService.getOpportunitySubQuery());
-
+            queryFields.add(oppEvalService.getOpportunitySubQuery());            
+                
             String soql = new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)
                 .withSelectFields(queryFields)
