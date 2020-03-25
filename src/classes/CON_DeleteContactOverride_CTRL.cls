@@ -117,7 +117,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
                 shouldDeleteContactAlone = false;
 
                 String helpDeleteAccountInstead;
-                if (UTIL_Describe.getFieldDescribe('Account', 'Name').isAccessible()) {
+                if (UTIL_Permissions.canRead('Account', 'Name', false)) {
                     canDeleteAccount = true;
                     helpDeleteAccountInstead = String.format(
                         Label.ConfirmDeleteAccount,
