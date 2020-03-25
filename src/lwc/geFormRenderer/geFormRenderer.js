@@ -12,7 +12,8 @@ import {
     setRecordValuesOnTemplate,
     checkPermissionErrors,
     CONTACT_FIRST_NAME_INFO,
-    CONTACT_LAST_NAME_INFO
+    CONTACT_LAST_NAME_INFO,
+    showToast
 } from 'c/utilTemplateBuilder';
 import { registerListener } from 'c/pubsubNoPageRef';
 import {
@@ -95,7 +96,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     erroredFields = [];
     CUSTOM_LABELS = { ...GeLabelService.CUSTOM_LABELS, messageLoading };
 
-    @track dataImport; // Row being updated when in update mode
+    @track dataImport = {}; // Row being updated when in update mode
     @track widgetData = {}; // data that must be passed down to the allocations widget.
     @track isAccessible = true;
 
@@ -265,55 +266,68 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleSaveSingleGiftEntry(sectionsList,enableSave,toggle) {
-
-        // handle error on callback from promise
-        const handleCatchError = (err) => this.handleCatchOnSave(err);
-
-        GeFormService.handleSave(
-            sectionsList,
-            this.donorRecord,
-            this.selectedDonationDataImportFieldValues)
-            .then(opportunityId => {
-                this.navigateToRecordPage(opportunityId);
-            })
-            .catch(error => {
-                enableSave();
-                toggle();
-                handleCatchError(error);
+    /*******************************************************************************
+    * @description Handles upserting of a Data Import record and firing a
+    * 'singlesubmit' event.
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    * @param {object} formControls: An object holding methods that control
+    * the form save button enablement and lightning spinner toggler.
+    */
+    handleSaveSingleGiftEntry = async (dataImportRecord, formControls) => {
+        console.log('*** handleSaveSingleGiftEntry');
+        this.dataImport = await GeFormService.saveDataImport(dataImportRecord)
+            .catch((error) => {
+                formControls.enableSaveButton();
+                formControls.toggleSpinner();
+                this.handleCatchOnSave(error);
             });
-
+        
+        if (this.dataImport) {
+            this.dispatchSingleGiftSaveEvent(this.dataImport, formControls);
+        }
     }
 
-    handleSaveBatchGiftEntry(sectionsList,enableSave,toggle) {
+    /*******************************************************************************
+    * @description Dispatches a 'singlesubmit' event.
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    * @param {object} formControls: An object holding methods that control
+    * the form save button enablement and lightning spinner toggler.
+    */
+    dispatchSingleGiftSaveEvent(dataImportRecord, formControls) {
+        this.dispatchEvent(new CustomEvent('singlesubmit', {
+            detail: {
+                dataImportRecord,
+                errorCallback: (error) => {
+                    console.log('error callback: ', error);
+                    formControls.enableSaveButton();
+                    formControls.toggleSpinner();
+                    showToast(`Error`, `${error}`, 'error', 'sticky');
+                    throw new Error(error);
+                }
+            }
+        }));
+    }
+
+    handleSaveBatchGiftEntry(dataImportRecord, formControls) {
 
         // reset function for callback
         const reset = () => this.reset();
         // handle error on callback from promise
         const handleCatchError = (err) => this.handleCatchOnSave(err);
 
-        // di data for save
-        let { diRecord, widgetValues } = this.getData(sectionsList);
-        // Apply any selected donation fields that are not on the form
-        // to the data import record
-        for (const [key, value] of Object.entries(
-            this.selectedDonationDataImportFieldValues)) {
-            if (!diRecord.hasOwnProperty(key)) {
-                diRecord[key] = value === null ? null : value.value || value;
-            }
-        }
-
-        this.dispatchEvent(new CustomEvent('submit', {
+        this.dispatchEvent(new CustomEvent('batchsubmit', {
             detail: {
-                data: { diRecord, widgetValues },
+                dataImportRecord,
                 success: () => {
-                    enableSave();
-                    toggle();
+                    formControls.enableSaveButton();
+                    formControls.toggleSpinner();
                     reset();
                 },
                 error: (error) => {
-                    enableSave();
-                    toggle();
+                    formControls.enableSaveButton();
+                    formControls.toggleSpinner();
                     handleCatchError(error);
                 }
             }
@@ -398,35 +412,68 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         window.scrollTo(0, 0);
     }
 
+    /*******************************************************************************
+    * @description Handles the form save action. Builds a data import record and
+    * calls handlers for Batch Gift and Single Gift depending on the form's mode.
+    *
+    * @param {object} event: Onclick event from the form save button
+    */
     handleSave(event) {
+        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
+        const isFormReadyToSave = this.prepareFormForSave(sectionsList);
 
+        if (isFormReadyToSave) {
+            // Disable save button
+            event.target.disable = true;
+            const formControls = this.getFormControls(event);
+            formControls.toggleSpinner();
+
+            let dataImport =
+                this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
+
+            // handle save depending mode
+            if (this.batchId) {
+                this.handleSaveBatchGiftEntry(dataImport, formControls);
+            } else {
+                this.handleSaveSingleGiftEntry(dataImport, formControls);
+            }
+        }
+    }
+
+    /*******************************************************************************
+    * @description Clears existing errors from the form and re-validates all form
+    * sections.
+    *
+    * @param {list} sectionsList: List of all the form sections
+    *
+    * @return {boolean}: True if the form is ready for a save attempt.
+    */
+    prepareFormForSave(sectionsList) {
         // clean errors present on form
         this.clearErrors();
-        // get sections on form
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-
         // apply custom and standard field validation
         if (!this.isFormValid(sectionsList)) {
-            return;
+            return false;
         }
+        return true;
+    }
 
-        // show the spinner
-        this.toggleSpinner();
-        // callback used to toggle spinner after Save promise
+    /*******************************************************************************
+    * @description Collects form controls for toggling the spinner and enabling
+    * the form save button in one object.
+    *
+    * @param {object} event: Onclick event from the form save button
+    *
+    * @return {object}: An object with methods that toggle the form lightning
+    * spinner and enables the form save button.
+    */
+    getFormControls(event) {
         const toggleSpinner = () => this.toggleSpinner();
-        // disable the Save button and set callback to use after Save promise
-        event.target.disabled = true;
         const enableSaveButton = function () {
             this.disabled = false;
         }.bind(event.target);
 
-        // handle save depending mode
-        if (this.batchId) {
-            this.handleSaveBatchGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
-        } else {
-            this.handleSaveSingleGiftEntry(sectionsList,enableSaveButton,toggleSpinner);
-        }
-
+        return { toggleSpinner, enableSaveButton };
     }
 
     isFormValid(sectionsList) {
@@ -736,7 +783,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     get mode() {
-        return this.dataImport ? mode.UPDATE : mode.CREATE;
+        return this.dataImport && this.dataImport.Id ? mode.UPDATE : mode.CREATE;
     }
 
     @api
@@ -761,19 +808,27 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.widgetData = {...this.widgetData, ...payload};
     }
 
-    getData(sections) {
-        let { diRecord, widgetValues } =
-            GeFormService.getDataImportRecord(sections);
+    /*******************************************************************************
+    * @description Builds a full DataImport__c record from the provided form sections
+    * and potential donor data selected from the review donations modal.
+    *
+    * @param {list} sections: List of all form sections
+    * @param {object} dataImportWithDonorData: Object holding data import values from
+    * the 'Review Donations' modal.
+    */
+    buildDataImportFromSections(sections, dataImportWithDonorData) {
+        let dataImportRecord =
+            GeFormService.buildDataImportRecord(sections, dataImportWithDonorData);
 
-        if (!diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
-            diRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
+        if (!dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName]) {
+            dataImportRecord[NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName] = this.batchId;
         }
 
-        if (this.dataImport) {
-            diRecord.Id = this.dataImport.Id;
+        if (this.dataImport && this.dataImport.Id) {
+            dataImportRecord.Id = this.dataImport.Id;
         }
 
-        return {diRecord, widgetValues};
+        return dataImportRecord;
     }
 
     /*******************************************************************************

@@ -46,16 +46,18 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static String makePurchaseCall(String token) {
-        GE_PaymentServices paymentServices = new GE_PaymentServices(token);
-        HttpResponse response = paymentServices.makePurchaseCall();
+    public static String makePurchaseCall(DataImport__c dataImportRecord) {
+        GE_PaymentServices paymentServices = new GE_PaymentServices(dataImportRecord);
+        GE_PaymentServices.ResponseWrapper response = paymentServices.makePurchaseCall();
 
-        // Parse the JSON response...
-        if (response.getStatusCode() != 201) {
-            return JSON.serialize(response.getStatus());
-        } else {
-            return JSON.serialize(response.getBody());
-        }
+        return JSON.serialize(response);
+    }
+
+    // TODO: Remove placeholder tokenize call later
+    @AuraEnabled
+    public static String makeTokenizeCall() {
+        GE_PaymentServices paymentServices = new GE_PaymentServices();
+        return 'test_token';//paymentServices.placeholderTokenize();
     }
 
     /*******************************************************************************************************
@@ -92,11 +94,11 @@ public with sharing class GE_GiftEntryController {
     * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport, String widgetData) {
+    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
-            String additionalObjectJSON = GE_FormRendererService.convertWidgetDataToObjectJSON(widgetData);
-            dataImport.Additional_Object_JSON__c = additionalObjectJSON;
+            dataImport.Additional_Object_JSON__c =
+                GE_FormRendererService.convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
             saveDataImport(dataImport);
             return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
 
@@ -114,14 +116,30 @@ public with sharing class GE_GiftEntryController {
     * @return The Id of the new Opportunity record, created from the Data Import
     */
     @AuraEnabled
-    public static Id saveAndProcessDataImport(DataImport__c diRecord, String widgetData, Boolean updateGift) {
+    public static Id saveAndProcessDataImport(DataImport__c diRecord, Boolean updateGift) {
 
         // Check for widget data and convert it to the correct format for processing
-        String additionalObjectJSON = GE_FormRendererService.convertWidgetDataToObjectJSON(widgetData);
-        diRecord.Additional_Object_JSON__c = additionalObjectJSON;
+        diRecord.Additional_Object_JSON__c =
+            GE_FormRendererService.convertWidgetDataToObjectJSON(diRecord.Additional_Object_JSON__c);
 
         // Save the Data Import record to the Database
         diRecord = saveDataImport(diRecord);
+
+        // Run the BDI process on this new Data Import
+        processDataImport(diRecord, false, updateGift);
+
+        // Get the ID of the created Opportunity so we can return it
+        Id oppId = getOpportunityIdFromImport(diRecord.Id);
+
+        return oppId;
+    }
+
+    @AuraEnabled
+    public static Id processDataImport(DataImport__c diRecord, Boolean updateGift) {
+
+        // Check for widget data and convert it to the correct format for processing
+        diRecord.Additional_Object_JSON__c =
+            GE_FormRendererService.convertWidgetDataToObjectJSON(diRecord.Additional_Object_JSON__c);
 
         // Run the BDI process on this new Data Import
         processDataImport(diRecord, false, updateGift);
@@ -151,7 +169,8 @@ public with sharing class GE_GiftEntryController {
     * @param dataImport - The DataImport__c record, as filled in by the user.
     * @return The DataImport__c record that was saved
     */
-    private static DataImport__c saveDataImport(DataImport__c dataImport) {
+    @AuraEnabled
+    public static DataImport__c saveDataImport(DataImport__c dataImport) {
         try {
             if (String.isNotBlank(dataImport.Id)) {
                 Database.update(dataImport);

@@ -11,7 +11,8 @@
     
     <c-ge-form-renderer
             batch-id={recordId}
-            onsubmit={handleSubmit}
+            onbatchsubmit={handleBatchSubmit}
+            onsinglesubmit={handleSingleSubmit}
             onsectionsretrieved={handleSectionsRetrieved}
             onpermissionerror={handlePermissionErrors}
             ontogglemodal={handleReviewDonationsModal}>

@@ -1,7 +1,7 @@
 import getRenderWrapper from '@salesforce/apex/GE_TemplateBuilderCtrl.retrieveDefaultSGERenderWrapper';
 import getAllocationSettings from '@salesforce/apex/GE_FormRendererService.getAllocationsSettings';
-import saveAndProcessDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndProcessDataImport';
-import { handleError } from 'c/utilTemplateBuilder';
+import processDataImport from '@salesforce/apex/GE_GiftEntryController.processDataImport';
+import { handleError, showToast } from 'c/utilTemplateBuilder';
 import saveAndDryRunDataImport
     from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import {api} from "lwc";
@@ -10,6 +10,17 @@ import getFormRenderWrapper
     from '@salesforce/apex/GE_FormServiceController.getFormRenderWrapper';
 import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
+import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
+import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
+
+import saveDataImport from '@salesforce/apex/GE_GiftEntryController.saveDataImport';
+import makePurchaseCall from '@salesforce/apex/GE_GiftEntryController.makePurchaseCall';
+
+const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
+const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
+const ADDITIONAL_OBJECT_JSON__C = DI_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
+const TOKEN__C = 'PLACEHOLDER_TOKEN_FIELD__C';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -143,52 +154,129 @@ class GeFormService {
         }
     }
 
-    /**
-     * Takes a Data Import record and additional object data, processes it, and returns the new Opportunity created from it.
-     * @param createdDIRecord
-     * @param widgetValues
-     * @returns {Promise<Id>}
-     */
-    saveAndProcessDataImport(createdDIRecord, widgetValues, hasUserSelectedDonation = false) {
-        const widgetDataString = JSON.stringify(widgetValues);
-        return new Promise((resolve, reject) => {
-            saveAndProcessDataImport({
-                    diRecord: createdDIRecord,
-                    widgetData: widgetDataString,
-                    updateGift: hasUserSelectedDonation
-                })
-                .then((result) => {
-                    resolve(result);
-                })
-                .catch(error => {
-                    console.error(JSON.stringify(error));
-                    reject(error);
-                });
-        });
+    /*******************************************************************************
+    * @description Upserts the provided data import record. Attempts to retrieve
+    * an Elevate token for a purchase call if needed.
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    *
+    * @return {object} dataImportRecord: A DataImport__c record
+    */
+    saveDataImport = async (dataImportRecord) => {
+        console.log('*** *** saveDataImport');
+        dataImportRecord[TOKEN__C] = await this.retrieveElevateToken();
+
+        //return await saveDataImport({ diRecord: dataImport });
+
+        // TODO: temporarily re-add placeholder token field to dataImport to mimic that field after insert
+        dataImportRecord = await saveDataImport({ dataImport: dataImportRecord });
+        dataImportRecord[TOKEN__C] = await this.retrieveElevateToken();
+
+        return dataImportRecord;
     }
 
-    /**
-     * Takes a list of sections, reads the fields and values, creates a di record, and creates an opportunity from the di record
-     * @param sectionList
-     * @returns opportunityId
-     */
-    handleSave(sectionList, record, dataImportRecord) {
-        const { diRecord, widgetValues } = this.getDataImportRecord(sectionList, record, dataImportRecord);
+    retrieveElevateToken = async () => {
+        return 'PLACEHOLDER_TOKEN';
+    }
 
-        const hasUserSelectedDonation = isNotEmpty(dataImportRecord);
+    /*******************************************************************************
+    * @description Method attempts to make a purchase call to Payment
+    * Services. Immediately attempts to the charge the card provided in the Payment
+    * Services iframe (GE_TokenizeCard).
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    * @param {function} errorCallback: An error handler function. Toggles
+    *   the form save button, lightning spinner, and catches aura exceptions.
+    *
+    * @return {object} dataImportRecord: A DataImport__c record
+    */
+    handlePaymentProcessing = async (dataImportRecord, errorCallback) => {
+        console.log('*** *** handlePaymentProcessing');
+        // TODO: If in batch mode, defer purchase call later
+        // TODO: Retrieve fabricated card name
 
-        const opportunityID = this.saveAndProcessDataImport(diRecord, widgetValues, hasUserSelectedDonation);
+        const purchaseCallResponse = await this.handlePurchaseCall(dataImportRecord);
+        if (purchaseCallResponse) {
+            dataImportRecord = this.setPaymentStatusAndDeclineReason(dataImportRecord, purchaseCallResponse);
+            dataImportRecord = await saveDataImport({ dataImport: dataImportRecord });
+        }
 
-        return opportunityID;
+        if (purchaseCallResponse.statusCode !== 201) {
+            let errors = purchaseCallResponse.body.errors.map(error => error.message);
+            console.log('throwing purchase call error');
+            errorCallback(errors);
+        }
+
+        return dataImportRecord;
+    }
+
+    /*******************************************************************************
+    * @description Posts an http request through the `makePurchaseCall` apex
+    * method and parses the response.
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    *
+    * @return {object} response: An http response object
+    */
+    handlePurchaseCall = async (dataImportRecord) => {
+        let purchaseCallResponseString = await makePurchaseCall({ dataImportRecord: dataImportRecord });
+        let response = JSON.parse(purchaseCallResponseString);
+        response.body = JSON.parse(response.body);
+
+        return response;
+    }
+
+    /*******************************************************************************
+    * @description Method sets values Payment Services related Data Import fields.
+    * Payment_Status__c and Payment_Declined_Reason__c.
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    * @param {object} purchaseResponse: An http response object
+    *
+    * @return {object} dataImportRecord: A DataImport__c record
+    */
+    setPaymentStatusAndDeclineReason = (dataImportRecord, purchaseCallResponse) => {
+        const paymentStatus = purchaseCallResponse.body.status || purchaseCallResponse.status || 'Unknown';
+        dataImportRecord[PAYMENT_STATUS__C] = paymentStatus;
+
+        const isSuccessfulPurchase = purchaseCallResponse.statusCode === 201;
+        if (isSuccessfulPurchase) {
+            dataImportRecord[PAYMENT_DECLINED_REASON__C] = null;
+        } else {
+            dataImportRecord[PAYMENT_DECLINED_REASON__C] = JSON.stringify(purchaseCallResponse.body);
+        }
+
+        return dataImportRecord;
+    }
+
+    /*******************************************************************************
+    * @description Method handles saving and processing a Data Import record.
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    * @param {boolean} hasUserSelectedDonation: True if a user has selected a
+    *   donation/payment through the 'Review Donations' modal. It means that we're
+    *   attempting to match to a specific donation record during BDI processing.
+    *
+    * @return {string} opportunityId: An Opportunity record id
+    */
+    handleProcessDataImport = async (dataImportRecord, hasUserSelectedDonation) => {
+        console.log('*** handleSaveAndProcess');
+        const opportunityId = await processDataImport({
+            diRecord: dataImportRecord,
+            updateGift: hasUserSelectedDonation
+        });
+        console.log('opportunityId: ', opportunityId);
+
+        return opportunityId;
     }
 
     /**
      * Grab the data from the form fields and widgets, convert to a data import record.
      * @param sectionList   List of ge-form-sections on the form
-     * @param record        Existing account or contact record to attach to the data import record
+     * @param dataImportWithDonorData        Existing account or contact record to attach to the data import record
      * @return {{widgetValues: {}, diRecord: {}}}
      */
-    getDataImportRecord(sectionList, record, dataImportRecord) {
+    buildDataImportRecord(sectionList, dataImportWithDonorData) {
         let fieldData = {};
         let widgetValues = {};
 
@@ -207,8 +295,8 @@ class GeFormService {
 
         // Include any fields from a user selected donation, if
         // those fields are not already on the diRecord
-        if (dataImportRecord) {
-            for (const [key, value] of Object.entries(dataImportRecord)) {
+        if (dataImportWithDonorData) {
+            for (const [key, value] of Object.entries(dataImportWithDonorData)) {
                 if (!diRecord.hasOwnProperty(key)) {
                     diRecord[key] = value === null || value.value === null ?
                         null : value.value || value;
@@ -216,12 +304,18 @@ class GeFormService {
             }
         }
 
-        return {diRecord, widgetValues};
+        // Set Data Import's additional object json field if,
+        // we values from any form widgets
+        if (widgetValues) {
+            diRecord[ADDITIONAL_OBJECT_JSON__C] = JSON.stringify(widgetValues);
+        }
+
+        return diRecord;
     }
 
-    saveAndDryRun(batchId, dataImport, widgetData) {
+    saveAndDryRun(batchId, dataImport) {
         return new Promise((resolve, reject) => {
-            saveAndDryRunDataImport({batchId, dataImport, widgetData})
+            saveAndDryRunDataImport({batchId, dataImport})
                 .then((result) => {
                     resolve(JSON.parse(result));
                 })

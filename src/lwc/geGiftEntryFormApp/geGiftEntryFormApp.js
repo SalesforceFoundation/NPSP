@@ -1,35 +1,82 @@
-import {LightningElement, api, track} from 'lwc';
+import { LightningElement, api, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 import GeFormService from 'c/geFormService';
+import { showToast, handleError } from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
+const TOKEN__C = 'PLACEHOLDER_TOKEN_FIELD__C';
 
-export default class GeGiftEntryFormApp extends LightningElement {
+export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
     @api recordId;
     @api sObjectName;
 
     @track isPermissionError;
 
-    handleSubmit(event) {
+    get isBatchMode() {
+        return this.sObjectName &&
+            this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
+    }
+
+    handleBatchSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        const { diRecord, widgetValues } = event.detail.data;
-        let widgetString = '';
-        if(widgetValues) {
-            widgetString = JSON.stringify(widgetValues);
-        }
-        GeFormService.saveAndDryRun(
-            this.recordId, diRecord, widgetString)
-            .then(
-                dataImportModel => {
-                    Object.assign(dataImportModel.dataImportRows[0],
-                        dataImportModel.dataImportRows[0].record);
-                    table.upsertData(dataImportModel.dataImportRows[0], 'Id');
-                    table.setTotalCount(dataImportModel.totalCountOfRows);
-                    table.setTotalAmount(dataImportModel.totalAmountOfRows);
-                    event.detail.success(); //Re-enable the Save button
-                }
-            )
+        const dataImportRecord = event.detail.dataImportRecord;
+        GeFormService.saveAndDryRun(this.recordId, dataImportRecord)
+            .then(dataImportModel => {
+                Object.assign(dataImportModel.dataImportRows[0],
+                    dataImportModel.dataImportRows[0].record);
+                table.upsertData(dataImportModel.dataImportRows[0], 'Id');
+                table.setTotalCount(dataImportModel.totalCountOfRows);
+                table.setTotalAmount(dataImportModel.totalAmountOfRows);
+                event.detail.success(); //Re-enable the Save button
+            })
             .catch(error => {
                 event.detail.error(error);
             });
+    }
+
+    /*******************************************************************************
+    * @description Handles a single gift entry submit. Checks to see if a payment
+    * needs to be made and processes the Data Import record.
+    *
+    * @param {object} event: Custom Event containing the Data Import record and an
+    * callback for handling and displaying errors in the form.
+    */
+    handleSingleSubmit = async (event) => {
+        console.log('*** handleSingleSubmit');
+        try {
+            let { dataImportRecord, errorCallback } = event.detail;
+
+            const hasPaymentToProcess = dataImportRecord[TOKEN__C];
+            if (hasPaymentToProcess) {
+                dataImportRecord =
+                    await GeFormService.handlePaymentProcessing(dataImportRecord, errorCallback);
+            }
+
+            if (dataImportRecord) {
+                const hasUserSelectedDonation = this.selectedDonationDataImportFieldValues ? true : false;
+                await this.processDataImport(dataImportRecord, hasUserSelectedDonation);
+            }
+        } catch (error) {
+            handleError(error);
+        }
+    }
+
+    /*******************************************************************************
+    * @description Sends the Data Import into BDI for processing and navigates to
+    * the opportunity record detail page on success.
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    * @param {boolean} hasUserSelectedDonation: True if a selection had been made in
+    * the 'Review Donations' modal and BDI needs to attempt a match.
+    */
+    processDataImport = async (dataImportRecord, hasUserSelectedDonation) => {
+        console.log('*** processDataImport: ', dataImportRecord);
+        const opportunityId =
+            await GeFormService.handleProcessDataImport(dataImportRecord, hasUserSelectedDonation)
+                .catch((error) => {
+                    showToast(`Error`, `${error}`, 'error', 'sticky');
+                });
+
+        this.navigateToRecordPage(opportunityId);
     }
 
     handleSectionsRetrieved(event) {
@@ -63,13 +110,17 @@ export default class GeGiftEntryFormApp extends LightningElement {
         this.dispatchEvent(new CustomEvent('editbatch'));
     }
 
-    get isBatchMode() {
-        return this.sObjectName &&
-            this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
-    }
-
     handleReviewDonationsModal(event) {
         this.dispatchEvent(new CustomEvent('togglereviewdonationsmodal', { detail: event.detail }));
     }
 
+    navigateToRecordPage(recordId) {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: recordId,
+                actionName: 'view'
+            }
+        });
+    }
 }

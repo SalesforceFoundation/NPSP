@@ -2,8 +2,6 @@ import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
-// TODO: temporary makePurchaseCall import below. Remove later.
-import makePurchaseCall from '@salesforce/apex/GE_GiftEntryController.makePurchaseCall';
 import { handleError } from 'c/utilTemplateBuilder';
 // TODO: maybe import data import token field reference?
 
@@ -30,6 +28,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     renderedCallback() {
         this.registerPostMessageListener();
+    }
+
+    @api
+    isValid() {
+        return true;
     }
 
     /*******************************************************************************
@@ -79,17 +82,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             let error = JSON.stringify(message.error);
             handleError(error);
         } else if (message.token) {
-            // TODO: Start - Remove later
-            // Make purchase call... for dev only
-            try {
-                let purchaseCallResponse = await makePurchaseCall({ token: message.token });
-                this.purchaseResult = JSON.parse(purchaseCallResponse);
-            } catch (error) {
-                handleError(error);
-            }
-            // TODO: End - Remove later
-
-            // TODO: Save token locally in widget until form requests it
+            this.token = message.token;
         } else if (message.isLoaded) {
             this.isLoading = false;
         }

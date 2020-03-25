@@ -35,7 +35,7 @@ private with sharing class GE_GiftEntryController_TEST {
     private static void createAndProcessDataImportRecord() {
         DataImport__c di = BDI_DataImport_TEST.newDI('First', 'Last', 100);
         // TODO: Update this test to take a Additional Object string, and also process that
-        Id oppId = GE_GiftEntryController.saveAndProcessDataImport(di, null, false);
+        Id oppId = GE_GiftEntryController.saveAndProcessDataImport(di, false);
         System.assert(oppId != null);
     }
 
@@ -57,7 +57,7 @@ private with sharing class GE_GiftEntryController_TEST {
         DataImport__c di = newDI( firstName, lastName, batchId );
 
         Test.startTest();
-        GE_GiftEntryController.saveAndDryRunDataImport(batchId,di,'');
+        GE_GiftEntryController.saveAndDryRunDataImport(batchId,di);
         Test.stopTest();
 
         List<DataImportBatch__c> result = [SELECT Id FROM DataImportBatch__c];
