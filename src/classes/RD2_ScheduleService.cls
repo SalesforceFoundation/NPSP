@@ -600,7 +600,7 @@ public without sharing class RD2_ScheduleService {
         public Id       scheduleId {get; set;}
         public Date     startDate {get; set;}
 
-        ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
+        public ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
             isCurrent =             rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
             campaignId =            rdSchedule.Campaign__c;
             campaignName =          rdSchedule.Campaign__r.Name;
