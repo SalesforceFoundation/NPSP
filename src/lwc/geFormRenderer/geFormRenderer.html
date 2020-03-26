@@ -44,6 +44,7 @@
                                        variant='brand'
                                        size='large'>
                     </lightning-spinner>
+                    <p class='loading-text'>{loadingText}</p>
                 </div>
                 <template if:true={hasPageLevelError}>
                     <c-util-page-level-message variant='error'>

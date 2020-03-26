@@ -10,7 +10,7 @@ import saveAndDryRunDataImport
 
 import { handleError } from 'c/utilTemplateBuilder';
 import { api } from 'lwc';
-import { isNotEmpty, isEmpty } from 'c/utilCommon';
+import { isNotEmpty, isEmpty, deepClone } from 'c/utilCommon';
 import {registerListener, unregisterListener} from 'c/pubsubNoPageRef';
 
 import OPPORTUNITY_AMOUNT from '@salesforce/schema/Opportunity.Amount';
@@ -19,13 +19,15 @@ import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_St
 import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DI_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
-
+import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const ADDITIONAL_OBJECT_JSON__C = DI_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
+const PAYMENT_METHOD__C = DI_PAYMENT_METHOD_FIELD.fieldApiName;
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds, long enough for cold starts?
+const CAPTURED = 'CAPTURED';
 
 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 // this list only includes fields that can be handled by lightning-input
@@ -59,9 +61,16 @@ class GeFormService {
     fieldTargetMappings;
     donationFieldTemplateLabel;
     tokenPromise;
+    fabricatedCardholderNames;
+    previouslySavedDataImport;
 
     constructor() {
         registerListener('tokenRequested', this.handleTokenRequested, this);
+    }
+
+    @api
+    setFabricatedCardholderNames(cardholderNames) {
+        this.fabricatedCardholderNames = JSON.stringify(cardholderNames);
     }
 
     /**
@@ -192,7 +201,18 @@ class GeFormService {
     saveDataImport = async (dataImportRecord) => {
         console.log('*** *** saveDataImport');
         dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
-        return await saveDataImport({ dataImport: dataImportRecord });
+        const dataImport = await saveDataImport({ dataImport: dataImportRecord });
+
+        if (this.previouslySavedDataImport && this.previouslySavedDataImport.Id === dataImport.Id ) {
+            console.log('SAVE PREVIOUSLY ATTEMPTED: ', this.previouslySavedDataImport);
+            dataImport[PAYMENT_STATUS__C] = this.previouslySavedDataImport[PAYMENT_STATUS__C];
+            dataImport[PAYMENT_DECLINED_REASON__C] = this.previouslySavedDataImport[PAYMENT_DECLINED_REASON__C];
+            dataImport[PAYMENT_METHOD__C] = this.previouslySavedDataImport[PAYMENT_METHOD__C];
+        } else {
+            this.previouslySavedDataImport = deepClone(dataImportRecord);
+        }
+
+        return dataImport;
     }
 
     /*******************************************************************************
@@ -207,20 +227,22 @@ class GeFormService {
     * @return {object} dataImportRecord: A DataImport__c record
     */
     handlePaymentProcessing = async (dataImportRecord, errorCallback) => {
-        console.log('*** *** handlePaymentProcessing');
-        // TODO: If in batch mode, defer purchase call later
-        // TODO: Retrieve fabricated card name
+        if (this.previouslySavedDataImport[PAYMENT_STATUS__C] !== CAPTURED) {
+            const purchaseCallResponse =
+                await this.handlePurchaseCall(dataImportRecord, this.fabricatedCardholderNames);
+            if (purchaseCallResponse) {
+                console.log('purchaseCallResponse: ', purchaseCallResponse);
+                dataImportRecord = this.setPaymentStatusAndDeclineReason(dataImportRecord, purchaseCallResponse);
+                dataImportRecord = await saveDataImport({ dataImport: dataImportRecord });
+                this.previouslySavedDataImport = deepClone(dataImportRecord);
+            }
 
-        const purchaseCallResponse = await this.handlePurchaseCall(dataImportRecord);
-        if (purchaseCallResponse) {
-            dataImportRecord = this.setPaymentStatusAndDeclineReason(dataImportRecord, purchaseCallResponse);
-            dataImportRecord = await saveDataImport({ dataImport: dataImportRecord });
-        }
-
-        if (purchaseCallResponse.statusCode !== 201) {
-            let errors = purchaseCallResponse.body.errors.map(error => error.message).join(', ');
-            console.log('throwing purchase call error');
-            errorCallback(errors);
+            if (purchaseCallResponse.statusCode !== 201) {
+                let errors = purchaseCallResponse.body.errors.map(error => error.message).join(', ');
+                console.log('throwing purchase call error');
+                errorCallback(errors);
+                return undefined;
+            }
         }
 
         return dataImportRecord;
@@ -234,8 +256,11 @@ class GeFormService {
     *
     * @return {object} response: An http response object
     */
-    handlePurchaseCall = async (dataImportRecord) => {
-        let purchaseCallResponseString = await makePurchaseCall({ dataImportRecord: dataImportRecord });
+    handlePurchaseCall = async (dataImportRecord, fabricatedCardholderNames) => {
+        let purchaseCallResponseString = await makePurchaseCall({
+            dataImportRecord: dataImportRecord,
+            cardholderNames: fabricatedCardholderNames
+        });
         let response = JSON.parse(purchaseCallResponseString);
         response.body = JSON.parse(response.body);
 
@@ -252,11 +277,14 @@ class GeFormService {
     * @return {object} dataImportRecord: A DataImport__c record
     */
     setPaymentStatusAndDeclineReason = (dataImportRecord, purchaseCallResponse) => {
+        console.log('*** setPaymentStatusAndDeclineReason');
         const paymentStatus = purchaseCallResponse.body.status || purchaseCallResponse.status || 'Unknown';
         dataImportRecord[PAYMENT_STATUS__C] = paymentStatus;
 
         const isSuccessfulPurchase = purchaseCallResponse.statusCode === 201;
         if (isSuccessfulPurchase) {
+            // TODO: How do we want to handle payment method for successful charges? What about failed charges?
+            dataImportRecord[PAYMENT_METHOD__C] = 'Credit Card';
             dataImportRecord[PAYMENT_DECLINED_REASON__C] = null;
         } else {
             dataImportRecord[PAYMENT_DECLINED_REASON__C] = JSON.stringify(purchaseCallResponse.body);
@@ -276,7 +304,7 @@ class GeFormService {
     * @return {string} opportunityId: An Opportunity record id
     */
     handleProcessDataImport = async (dataImportRecord, hasUserSelectedDonation) => {
-        console.log('*** handleSaveAndProcess');
+        console.log('*** handleProcessDataImport');
         const opportunityId = await processDataImport({
             diRecord: dataImportRecord,
             updateGift: hasUserSelectedDonation

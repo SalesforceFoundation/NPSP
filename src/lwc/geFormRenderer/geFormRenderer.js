@@ -72,6 +72,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorApiName;
     @api donorRecord;
 
+    @api loadingText = 'Saving data import...';
+
     fieldNames = [ ACCOUNT_NAME_FIELD, CONTACT_NAME_FIELD ];
     @api sections = [];
     @api showSpinner = false;
@@ -289,24 +291,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         }
     }
 
-    handleSingleGiftErrors(error) {
-        const hasTokenizationError = error.error;
-        if (hasTokenizationError) {
-            // TODO: Handle tokenization errors
-            const errors = error.error;
-            const tokenizationErrors = Object.keys(errors).map(e => errors[e]).join(', ');
-            console.log(tokenizationErrors);
-            return;
-        }
-
-        const hasAuraErrors = error.body && error.body.message;
-        if (hasAuraErrors) {
-            this.handleCatchOnSave(error);
-        } else {
-            handleError(error);
-        }
-    }
-
     /*******************************************************************************
     * @description Dispatches a 'singlesubmit' event.
     *
@@ -318,15 +302,39 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.dispatchEvent(new CustomEvent('singlesubmit', {
             detail: {
                 dataImportRecord,
+                formControls,
                 errorCallback: (error) => {
                     console.log('error callback: ', error);
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
-                    showToast(`Error`, `${error}`, 'error', 'sticky');
-                    throw new Error(error);
+                    this.handleSingleGiftErrors(error);
                 }
             }
         }));
+    }
+
+    handleSingleGiftErrors(error) {
+        const hasTokenizationError = error.error;
+        if (hasTokenizationError) {
+            // TODO: Handle tokenization errors
+            let tokenizationErrors = error.error;
+            if (typeof error.error === 'object') {
+                tokenizationErrors =
+                    Object.keys(tokenizationErrors).map(e => {
+                        return tokenizationErrors[e];
+                    }).join(', ');
+            }
+            console.log(tokenizationErrors);
+            showToast('Error', `${tokenizationErrors}`, 'error');
+            return;
+        }
+
+        const hasAuraErrors = error.body && error.body.message;
+        if (hasAuraErrors) {
+            this.handleCatchOnSave(error);
+        } else {
+            handleError(error);
+        }
     }
 
     handleSaveBatchGiftEntry(dataImportRecord, formControls) {
@@ -438,6 +446,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * @param {object} event: Onclick event from the form save button
     */
     handleSave(event) {
+        console.log('*** handleSave');
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         const isFormReadyToSave = this.prepareFormForSave(sectionsList);
 
@@ -449,7 +458,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             let dataImport =
                 this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
-
+            console.log('dataImport: ', dataImport);
             // handle save depending mode
             if (this.batchId) {
                 this.handleSaveBatchGiftEntry(dataImport, formControls);
@@ -1287,6 +1296,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             sectionsList.forEach(section => {
                 if (section.isCreditCardWidgetAvailable) {
                     section.setCardHolderName(this.fabricateCardHolderName(fieldList));
+                    GeFormService.setFabricatedCardholderNames(this.fabricateCardHolderName(fieldList));
                 }
             });
         }

@@ -8,3 +8,16 @@
 .illustrationContainer {
     margin-top: 3rem;
 }
+.loading-text {
+    position: absolute;
+    text-align: center;
+    z-index: 999;
+    top: 55%;
+    width: 100%;
+    animation: blinker 1s linear infinite;
+}
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}

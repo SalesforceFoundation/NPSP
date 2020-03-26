@@ -4,14 +4,18 @@ import GeFormService from 'c/geFormService';
 import { showToast, handleError } from 'c/utilTemplateBuilder';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
+const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
+const CAPTURED = 'CAPTURED';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
     @api recordId;
     @api sObjectName;
 
     @track isPermissionError;
+    @track loadingText = 'Saving data import...';
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -46,16 +50,18 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         console.log('*** handleSingleSubmit');
         try {
             let { dataImportRecord, errorCallback } = event.detail;
+            console.log('dataImportRecord: ', dataImportRecord);
 
             const hasPaymentToProcess = dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
             if (hasPaymentToProcess) {
+                this.loadingText = 'Charging card...';
                 dataImportRecord =
                     await GeFormService.handlePaymentProcessing(dataImportRecord, errorCallback);
             }
 
             if (dataImportRecord) {
                 const hasUserSelectedDonation = this.selectedDonationDataImportFieldValues ? true : false;
-                await this.processDataImport(dataImportRecord, hasUserSelectedDonation);
+                await this.processDataImport(dataImportRecord, hasUserSelectedDonation, errorCallback);
             }
         } catch (error) {
             handleError(error);
@@ -70,15 +76,24 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @param {boolean} hasUserSelectedDonation: True if a selection had been made in
     * the 'Review Donations' modal and BDI needs to attempt a match.
     */
-    processDataImport = async (dataImportRecord, hasUserSelectedDonation) => {
+    processDataImport = async (dataImportRecord, hasUserSelectedDonation, errorCallback) => {
         console.log('*** processDataImport: ', dataImportRecord);
-        const opportunityId =
-            await GeFormService.handleProcessDataImport(dataImportRecord, hasUserSelectedDonation)
-                .catch((error) => {
-                    showToast(`Error`, `${error}`, 'error', 'sticky');
-                });
-
-        this.navigateToRecordPage(opportunityId);
+        this.loadingText = 'Processing data import...';
+        GeFormService.handleProcessDataImport(dataImportRecord, hasUserSelectedDonation)
+            .then((opportunityId) => {
+                this.loadingText = 'Navigating to opportunity...';
+                let that = this;
+                setTimeout(function() {
+                    that.navigateToRecordPage(opportunityId);
+                }, 1500, that);
+            })
+            .catch((error) => {
+                // TODO: Output loud warning to let user know the card was charged, but processing failed.
+                errorCallback(error);
+                if (dataImportRecord[PAYMENT_STATUS__C] === CAPTURED) {
+                    showToast('HEY!', 'Card was charged. Please fix the outstanding errors and try again.', 'error', 'sticky');
+                }
+            });
     }
 
     handleSectionsRetrieved(event) {

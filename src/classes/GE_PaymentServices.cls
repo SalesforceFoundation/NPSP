@@ -37,11 +37,14 @@
 public with sharing class GE_PaymentServices {
 
     DataImport__c dataImportRecord;
+    FabricatedCardholderNames fabricatedCardholderNames;
 
     public GE_PaymentServices() {}
 
-    public GE_PaymentServices(DataImport__c dataImportRecord) {
+    public GE_PaymentServices(DataImport__c dataImportRecord, String fabricatedCardholderNames) {
         this.dataImportRecord = dataImportRecord;
+        this.fabricatedCardholderNames = (FabricatedCardholderNames)
+            JSON.deserialize(fabricatedCardholderNames, FabricatedCardholderNames.class);
     }
 
     public ResponseWrapper makePurchaseCall() {
@@ -56,7 +59,8 @@ public with sharing class GE_PaymentServices {
         request.setHeader('sfdo.username', getUsername());
 
         // Set the body as a JSON object...
-        String purchaseCallBodyString = new PurchaseCallBody(dataImportRecord).getAsJson();
+        String purchaseCallBodyString =
+            new PurchaseCallBody(dataImportRecord, fabricatedCardholderNames).getAsJson();
         request.setBody(purchaseCallBodyString);
 
         HttpResponse response = http.send(request);
@@ -74,6 +78,8 @@ public with sharing class GE_PaymentServices {
         return null;
     }
 
+
+    // TODO: Get header/secret info from payments configuration hidden sobject
     private String getEndpointRoot() {
         return 'https://7jpea5zk79.execute-api.us-west-2.amazonaws.com';
     }
@@ -105,10 +111,6 @@ public with sharing class GE_PaymentServices {
         public String lastName;
         public Metadata metadata;
 
-        //
-        // Methods for retrieving the request body
-        //
-
         private Double getAmount(DataImport__c dataImport) {
             return dataImport.Donation_Amount__c;
         }
@@ -135,12 +137,12 @@ public with sharing class GE_PaymentServices {
             return 'bart.simpson@example.com';
         }
 
-        private String getFirstName() {
-            return '.';
+        private String getFirstName(FabricatedCardholderNames names) {
+            return String.isNotBlank(names.firstName) ? names.firstName : names.accountName;
         }
 
-        private String getLastName() {
-            return 'Some Organization Account';
+        private String getLastName(FabricatedCardholderNames names) {
+            return String.isNotBlank(names.lastName) ? names.lastName : names.accountName;
         }
 
         private Metadata getMetadata(DataImport__c dataImport) {
@@ -150,15 +152,15 @@ public with sharing class GE_PaymentServices {
             return metadata;
         }
 
-        public PurchaseCallBody(DataImport__c dataImport) {
+        public PurchaseCallBody(DataImport__c dataImport, FabricatedCardholderNames names) {
             this.amount = getAmount(dataImport);
             this.currencyCode = getCurrencyCode();
             this.paymentMethodToken = getPaymentMethodToken(dataImport);
             this.merchantId = getMerchantId();
             this.gatewayId = getGatewayId();
             this.email = getEmail();
-            this.firstName = getFirstName();
-            this.lastName = getLastName();
+            this.firstName = getFirstName(names);
+            this.lastName = getLastName(names);
             this.metadata = getMetadata(dataImport);
         }
 
@@ -167,7 +169,7 @@ public with sharing class GE_PaymentServices {
         }
     }
 
-    public class ResponseWrapper {
+    public with sharing class ResponseWrapper {
         public Integer statusCode;
         public String status;
         public String body;
@@ -179,7 +181,7 @@ public with sharing class GE_PaymentServices {
         }
     }
 
-    public class FabricatedCardholderName {
+    public with sharing class FabricatedCardholderNames {
         public String firstName;
         public String lastName;
         public String accountName;
