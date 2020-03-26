@@ -1622,6 +1622,8 @@
         <members>RD2_ScheduleVisualizerColumnDate</members>
         <members>RD2_ScheduleVisualizerErrorEnhancedRDNot</members>
         <members>RD2_ScheduleVisualizerErrorInvalidUsage</members>
+        <members>RD2_ScheduleVisualizerFLSInstallment</members>
+        <members>RD2_ScheduleVisualizerFLSSchedule</members>
         <members>RD2_ScheduleVisualizerMessageNoActiveSchedule</members>
         <members>RD2_ScheduleVisualizerMessageNoSchedule</members>
         <members>RD2_ScheduleVisualizerTitle</members>
