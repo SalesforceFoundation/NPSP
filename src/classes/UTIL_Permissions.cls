@@ -328,6 +328,20 @@ public with sharing class UTIL_Permissions {
         return canRead(SObjFields);
     }
 
+    /***
+    * @description Determines whether the running user has create permissions on the sObject and fields provided
+    * @param sObjType the sObjectType to check create permissions
+    * @param sObjFields the list of SObjectFields to check create permissions
+    * @return Boolean true when the user has permissions for the SObjType and fields provided
+    */
+    public Boolean canCreate(SObjectType sObjType, Set<SObjectField> sObjFields) {
+        if (!canCreate(sObjType)) {
+            return false;
+        }
+
+        return canCreate(SObjFields);
+    }
+
     /*******************************************************************************************************************
     * @description Determines whether the running user has read permissions on the sObject provided
     *
