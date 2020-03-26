@@ -98,7 +98,10 @@ public with sharing class GE_PaymentServices {
     }
 
     private String getMerchantIds() {
+        // Dev1
         return '47b70ca4-0f6e-4c52-819f-667ae804f9d2';
+        // Dev2
+        //return 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4';
     }
 
     private String getUsername() {
