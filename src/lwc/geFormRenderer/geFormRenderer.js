@@ -1158,6 +1158,19 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             this.load(dataImport, false);
 
+            // If the record being loaded is an object-mapped lookup, then set the
+            // recordTypeId on its sibling fields
+            if (data.recordTypeId &&
+                Object.values(this.selectedRecordIdByObjectMappingDevName)
+                    .includes(data.id)) {
+                for (const [key, value] of
+                    Object.entries(this.selectedRecordIdByObjectMappingDevName)) {
+                    if (value === data.id) {
+                        this.setRecordTypeOnFields(key, data.recordTypeId);
+                    }
+                }
+            }
+
             if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
                 data.id === this.selectedDonation.Id) {
                 const oppId = this.parentOpportunityId(data);

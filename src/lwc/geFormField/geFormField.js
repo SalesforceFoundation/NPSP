@@ -45,9 +45,15 @@ export default class GeFormField extends LightningElement {
         this.dispatchEvent(evt);
 
         if (this.isLookup) {
+            const objMappingDevName =
+                GeFormService.importedRecordFieldNames.includes(this.fieldApiName) ?
+                    GeFormService.getObjectMappingWrapperByImportedFieldName(this.fieldApiName)
+                        .DeveloperName :
+                    this.objectMappingDevName;
+
             const detail = {
                 ...event.detail,
-                objectMappingDevName: this.objectMappingDevName
+                objectMappingDevName: objMappingDevName
             }
 
             const selectRecordEvent = new CustomEvent(
