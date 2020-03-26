@@ -41,6 +41,26 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
     private static final String PAYMENT_CREDIT_CARD = 'Credit Card';
     private static final String PAYMENT_CHECK = 'Check';
 
+    private static final String INSTALLMENT_DONATION_DATE = 'donationDate';
+    private static final String INSTALLMENT_AMOUNT = 'amount';
+    private static final String INSTALLMENT_PAYMENT_METHOD = 'paymentMethod';
+
+    private static final String SCHEDULE_IS_CURRENT = 'isCurrent';
+    private static final String SCHEDULE_AMOUNT = 'amount';
+    private static final String SCHEDULE_PAYMENT_METHOD = 'paymentMethod';
+    private static final String SCHEDULE_CAMPAIGN = 'campaign';
+    private static final String SCHEDULE_START_DATE = 'startDate';
+    private static final String SCHEDULE_END_DATE = 'endDate';
+    private static final String SCHEDULE_PERIOD = 'period';
+    private static final String SCHEDULE_FREQUENCY = 'frequency';
+    private static final String SCHEDULE_DAY_OF_MONTH = 'dayOfMonth';
+
+    private static final String DATA_TYPE_TEXT = 'text';
+    private static final String DATA_TYPE_NUMBER = 'number';
+    private static final String DATA_TYPE_CURRENCY = 'currency';
+    private static final String DATA_TYPE_DATE = 'date-local';
+    private static final String DATA_TYPE_CHECKBOX = 'checkbox';
+
     /****
     * @description Creates data required for unit tests
     */
@@ -139,7 +159,8 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;      
-        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, numberOfInstallments);
+        List<RD2_VisualizeScheduleController.Installment> installments = getInstallments(rd.Id, numberOfInstallments);
+
         System.assertEquals(numberOfInstallments, installments.size(), 'Number of installments should match');
 
         for (RD2_VisualizeScheduleController.Installment installment : installments) {
@@ -174,7 +195,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
@@ -250,7 +271,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         System.assertEquals(1, schedules.size(), 'There should be 1 schedule.');
         System.assertEquals(true, schedules[0].isCurrent, 'Schedule should be current');
@@ -287,7 +308,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
@@ -319,7 +340,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         try {
-            List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+            RD2_VisualizeScheduleController.getSchedules(rd.Id);
         } catch (Exception e) {
             actualException = e;
         }
@@ -354,7 +375,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
@@ -395,7 +416,7 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         Test.stopTest();
 
         RD2_ScheduleService.currentDate = today;
-        List<RD2_VisualizeScheduleController.Schedule> schedules = RD2_VisualizeScheduleController.getSchedules(rd.Id);
+        List<RD2_VisualizeScheduleController.Schedule> schedules = getSchedules(rd.Id);
 
         assertScheduleDates(schedules, startDate, newStartDate);
 
@@ -459,12 +480,302 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
         insert opps;
 
         Test.startTest();
-        List<RD2_VisualizeScheduleController.Installment> installments = RD2_VisualizeScheduleController.getInstallments(rd.Id, maxInstallments);
+        List<Object> installments = getInstallments(rd.Id, maxInstallments);
         Test.stopTest();
 
         System.assertEquals(plannedInstallments - paidInstallments, installments.size(),
             'Should only return definite number of future installments for fixed length RD: ' + installments);
     }
+
+    /***
+    * @description Verifies a field value is set to null when the field is not accessible
+    */
+    @IsTest
+    private static void shouldNullValueWhenAnInstallmentFieldIsNotAccessible() {  
+        Integer numberOfInstallments = 3;
+        Date today = DATE_ESTABLISHED.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
+        RD2_VisualizeScheduleController.DataTable dataTable = new RD2_VisualizeScheduleController.DataTable();
+        for (String fieldName : new String[] {
+            INSTALLMENT_DONATION_DATE,
+            INSTALLMENT_AMOUNT,
+            INSTALLMENT_PAYMENT_METHOD
+        }) {
+            dataTable.addColumn(new RD2_VisualizeScheduleController.DataTableColumn()
+                .withFieldName(fieldname)
+                .withIsAccessible(fieldName != INSTALLMENT_AMOUNT)
+            );
+        }
+
+        dataTable.setRecords(buildInstallments(rd, numberOfInstallments));
+
+        System.assertEquals(numberOfInstallments, dataTable.getRecords().size(), 'Number of records should match');
+        for (Object obj : dataTable.getRecords()) {
+            RD2_VisualizeScheduleController.Installment record = (RD2_VisualizeScheduleController.Installment) obj;
+            System.assertNotEquals(null, record.amount, 'Amount should be specified');
+        }
+
+        RD2_VisualizeScheduleController.sanitizeInstallments(dataTable);
+        
+        for (Object obj : dataTable.getRecords()) {
+            RD2_VisualizeScheduleController.Installment record = (RD2_VisualizeScheduleController.Installment) obj;
+            System.assertNotEquals(null, record.donationDate, 'Date should be specified');
+            System.assertEquals(null, record.amount, 'Amount should be sanitized');
+            System.assertNotEquals(null, record.paymentMethod, 'PaymentMethod should be specified');
+        }
+    }
+
+    /***
+    * @description Verifies all field values are set to null when no field is accessible
+    */
+    @IsTest
+    private static void shouldNullValueWhenAllInstallmentFieldsAreNotAccessible() {  
+        Integer numberOfInstallments = 3;
+        Date today = DATE_ESTABLISHED.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();        
+        
+        Boolean isAccessible = false;
+        RD2_VisualizeScheduleController.DataTable dataTable = buildInstallmentDataTable(isAccessible);
+
+        dataTable.setRecords(buildInstallments(rd, numberOfInstallments));
+        System.assertEquals(numberOfInstallments, dataTable.getRecords().size(), 'Number of records should match');
+        for (Object obj : dataTable.getRecords()) {
+            RD2_VisualizeScheduleController.Installment record = (RD2_VisualizeScheduleController.Installment) obj;
+            System.assertNotEquals(null, record.donationDate, 'Date should be specified');
+            System.assertNotEquals(null, record.amount, 'Amount should be specified');
+            System.assertNotEquals(null, record.paymentMethod, 'Payment Method should be specified');
+        }
+
+        RD2_VisualizeScheduleController.sanitizeInstallments(dataTable);
+
+        for (Object obj : dataTable.getRecords()) {
+            RD2_VisualizeScheduleController.Installment record = (RD2_VisualizeScheduleController.Installment) obj;
+            System.assertEquals(null, record.donationDate, 'Date should be sanitized');
+            System.assertEquals(null, record.amount, 'Amount should be sanitized');
+            System.assertEquals(null, record.paymentMethod, 'PaymentMethod should be sanitized');
+        }
+    }
+
+    /***
+    * @description Verifies a field value is left as is when the field is accessible
+    */
+    @IsTest
+    private static void shouldLeaveValueAsIsWhenAllInstallmentFieldsAreAccessible() {  
+        Integer numberOfInstallments = 3;
+        Date today = DATE_ESTABLISHED.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+        
+        RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildInstallmentDataTable(rd);
+
+        dataTable.setRecords(buildInstallments(rd, numberOfInstallments));
+        System.assertEquals(numberOfInstallments, dataTable.getRecords().size(), 'Number of records should match');
+
+        RD2_VisualizeScheduleController.sanitizeInstallments(dataTable);
+
+        for (Object obj : dataTable.getRecords()) {
+            RD2_VisualizeScheduleController.Installment record = (RD2_VisualizeScheduleController.Installment) obj;
+            System.assertNotEquals(null, record.donationDate, 'Date should be specified');
+            System.assertNotEquals(null, record.amount, 'Amount should be specified');
+            System.assertNotEquals(null, record.paymentMethod, 'PaymentMethod should be specified');
+        }
+    }
+
+    /***
+    * @description Verifies expected columns are added to the installment data table
+    */
+    @IsTest
+    private static void shouldAddInstallmentObjectColumnsIntoInstallmentDataTable() {  
+        Date today = DATE_ESTABLISHED.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
+        RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildInstallmentDataTable(rd);
+
+        System.assertEquals(3, dataTable.getColumns().size(), 'Number of columns should match');
+
+        RD2_VisualizeScheduleController.DataTableColumn column = dataTable.getColumn(INSTALLMENT_DONATION_DATE);
+        System.assertNotEquals(null, column, 'DonationDate column should exist in data table');
+        System.assertEquals(System.Label.RD2_ScheduleVisualizerColumnDate, column.label, 'DonationDate label should match');
+        System.assertEquals(DATA_TYPE_DATE, column.type, 'DonationDate type should match');
+
+        column = dataTable.getColumn(INSTALLMENT_AMOUNT);
+        System.assertNotEquals(null, column, 'Amount column should exist in data table');
+        System.assertEquals(DATA_TYPE_CURRENCY, column.type, 'Amount type should match');
+
+        column = dataTable.getColumn(INSTALLMENT_PAYMENT_METHOD);
+        System.assertNotEquals(null, column, 'PaymentMethod column should exist in data table');
+        System.assertEquals(DATA_TYPE_TEXT, column.type, 'PaymentMethod type should match');
+    }
+
+    /***
+    * @description Verifies expected columns are added to the schedule data table
+    */
+    @IsTest
+    private static void shouldAddScheduleColumnsIntoScheduleDataTable() {  
+        Date today = DATE_ESTABLISHED.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
+        RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildScheduleDataTable(rd);
+
+        System.assertEquals(9, dataTable.getColumns().size(), 'Number of columns should match');
+
+        RD2_VisualizeScheduleController.DataTableColumn column = dataTable.getColumn(SCHEDULE_IS_CURRENT);
+        System.assertNotEquals(null, column, 'IsCurrent column should exist in data table');
+        System.assertEquals(DATA_TYPE_CHECKBOX, column.type, 'IsCurrent type should match');
+
+        column = dataTable.getColumn(SCHEDULE_AMOUNT);
+        System.assertNotEquals(null, column, 'Amount column should exist in data table');
+        System.assertEquals(DATA_TYPE_CURRENCY, column.type, 'Amount type should match');
+
+        column = dataTable.getColumn(SCHEDULE_PAYMENT_METHOD);
+        System.assertNotEquals(null, column, 'PaymentMethod column should exist in data table');
+        System.assertEquals(DATA_TYPE_TEXT, column.type, 'PaymentMethod type should match');
+
+        column = dataTable.getColumn(SCHEDULE_CAMPAIGN);
+        System.assertNotEquals(null, column, 'Campaign column should exist in data table');
+        System.assertEquals(DATA_TYPE_TEXT, column.type, 'Campaign type should match');
+
+        column = dataTable.getColumn(SCHEDULE_START_DATE);
+        System.assertNotEquals(null, column, 'StartDate column should exist in data table');
+        System.assertEquals(DATA_TYPE_DATE, column.type, 'StartDate type should match');
+
+        column = dataTable.getColumn(SCHEDULE_END_DATE);
+        System.assertNotEquals(null, column, 'EndDate column should exist in data table');
+        System.assertEquals(DATA_TYPE_DATE, column.type, 'EndDate type should match');
+
+        column = dataTable.getColumn(SCHEDULE_PERIOD);
+        System.assertNotEquals(null, column, 'Period column should exist in data table');
+        System.assertEquals(DATA_TYPE_TEXT, column.type, 'Period type should match');
+
+        column = dataTable.getColumn(SCHEDULE_FREQUENCY);
+        System.assertNotEquals(null, column, 'Frequency column should exist in data table');
+        System.assertEquals(DATA_TYPE_NUMBER, column.type, 'Frequency type should match');
+
+        column = dataTable.getColumn(SCHEDULE_DAY_OF_MONTH);
+        System.assertNotEquals(null, column, 'DayOfMonth column should exist in data table');
+        System.assertEquals(DATA_TYPE_TEXT, column.type, 'DayOfMonth type should match');
+    }
+
+    /***
+    * @description Verifies a field value is left as is when the field is accessible
+    */
+    @IsTest
+    private static void shouldLeaveValueAsIsWhenAllScheduleFieldsAreAccessible() {  
+        Date today = DATE_ESTABLISHED.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
+        RD2_VisualizeScheduleController.DataTable dataTable = RD2_VisualizeScheduleController.buildScheduleDataTable(rd);
+
+        dataTable.setRecords(buildSchedules(rd));
+        System.assertEquals(1, dataTable.getRecords().size(), 'Number of records should match');
+
+        RD2_VisualizeScheduleController.sanitizeSchedules(dataTable);
+
+        RD2_VisualizeScheduleController.Schedule record = (RD2_VisualizeScheduleController.Schedule) dataTable.getRecords()[0];
+        System.assertEquals(true, record.isCurrent, 'IsCurrent should match');
+        System.assertNotEquals(null, record.amount, 'Amount should be specified');
+        System.assertNotEquals(null, record.paymentMethod, 'PaymentMethod should be specified');
+        System.assertNotEquals(null, record.paymentMethod, 'PaymentMethod should be specified');
+        System.assertNotEquals(null, record.startDate, 'StartDate should be specified');
+        System.assertEquals(null, record.endDate, 'EndDate should be null since this is one and only active schedule');
+        System.assertNotEquals(null, record.period, 'Period should be specified');
+        System.assertNotEquals(null, record.frequency, 'Frequency should be specified');
+        System.assertNotEquals(null, record.dayOfMonth, 'DayOfMonth should be specified');
+    }
+
+    /***
+    * @description Verifies all field values are set to null when no field is accessible
+    */
+    @IsTest
+    private static void shouldNullValueWhenAllScheduleFieldsAreNotAccessible() {
+        Date today = DATE_ESTABLISHED.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
+        Boolean isAccessible = false;
+        RD2_VisualizeScheduleController.DataTable dataTable = buildScheduleDataTable(isAccessible);
+
+        dataTable.setRecords(buildSchedules(rd));
+        System.assertEquals(1, dataTable.getRecords().size(), 'Number of records should match');
+
+        RD2_VisualizeScheduleController.sanitizeSchedules(dataTable);
+
+        RD2_VisualizeScheduleController.Schedule record = (RD2_VisualizeScheduleController.Schedule) dataTable.getRecords()[0];
+        System.assertEquals(true, record.isCurrent, 'IsCurrent should match');
+        System.assertEquals(null, record.amount, 'Amount should be sanitized');
+        System.assertEquals(null, record.paymentMethod, 'PaymentMethod should be sanitized');
+        System.assertEquals(null, record.startDate, 'StartDate should be sanitized');
+        System.assertEquals(null, record.endDate, 'EndDate should be sanitized');
+        System.assertEquals(null, record.period, 'Period should be sanitized');
+        System.assertEquals(null, record.frequency, 'Frequency should be sanitized');
+        System.assertEquals(null, record.dayOfMonth, 'DayOfMonth should be sanitized');
+    }
+
+    /***
+    * @description Verifies a field value is set to null when the field is not accessible
+    */
+    @IsTest
+    private static void shouldNullValueWhenAScheduleFieldIsNotAccessible() { 
+        Date today = DATE_ESTABLISHED.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
+        RD2_VisualizeScheduleController.DataTable dataTable = new RD2_VisualizeScheduleController.DataTable();
+        for (String fieldName : new String[] {
+            SCHEDULE_IS_CURRENT,
+            SCHEDULE_AMOUNT, 
+            SCHEDULE_PAYMENT_METHOD,
+            SCHEDULE_CAMPAIGN,
+            SCHEDULE_START_DATE,
+            SCHEDULE_END_DATE,
+            SCHEDULE_PERIOD,
+            SCHEDULE_FREQUENCY,
+            SCHEDULE_DAY_OF_MONTH
+        }) {
+            dataTable.addColumn(new RD2_VisualizeScheduleController.DataTableColumn()
+                .withFieldName(fieldname)
+                .withIsAccessible(fieldName != SCHEDULE_AMOUNT && fieldName != SCHEDULE_PERIOD)
+            );
+        }
+
+        dataTable.setRecords(buildSchedules(rd));
+        System.assertEquals(1, dataTable.getRecords().size(), 'Number of records should match');
+
+        RD2_VisualizeScheduleController.sanitizeSchedules(dataTable);
+
+        RD2_VisualizeScheduleController.Schedule record = (RD2_VisualizeScheduleController.Schedule) dataTable.getRecords()[0];
+        System.assertEquals(true, record.isCurrent, 'IsCurrent should match');
+        System.assertEquals(null, record.amount, 'Amount should be sanitized');
+        System.assertNotEquals(null, record.paymentMethod, 'PaymentMethod should be specified');
+        System.assertNotEquals(null, record.startDate, 'StartDate should be specified');
+        System.assertEquals(null, record.endDate, 'EndDate should be null since this is one and only active schedule');
+        System.assertEquals(null, record.period, 'Period should be sanitized');
+        System.assertNotEquals(null, record.frequency, 'Frequency should be specified');
+        System.assertNotEquals(null, record.dayOfMonth, 'DayOfMonth should be specified');
+    }
+
 
 
 
@@ -513,6 +824,128 @@ private with sharing class RD2_VisualizeScheduleController_TEST {
                 FROM Contact
                 LIMIT 1
         ];
+    }
+
+    /****
+    * @description Executes RD Schedule Visualizer to return installments
+    * @param rdId Recurring Donation Id
+    * @param numberOfInstallments Maximum number of installments to return
+    * @return List<RD2_VisualizeScheduleController.Installment>
+    */
+    private static List<RD2_VisualizeScheduleController.Installment> getInstallments(Id rdId, Integer numberOfInstallments) {
+        RD2_VisualizeScheduleController.DataTable dataTable = (RD2_VisualizeScheduleController.DataTable)
+            RD2_VisualizeScheduleController.getInstallments(rdId, numberOfInstallments).values()[0];
+
+        List<RD2_VisualizeScheduleController.Installment> installments = new List<RD2_VisualizeScheduleController.Installment>();
+        for (Object record : dataTable.getRecords()) {
+            installments.add((RD2_VisualizeScheduleController.Installment) record);
+        }
+
+        return installments;
+    }
+
+    /****
+    * @description Executes RD Schedule Visualizer to return active schedules
+    * @param rdId Recurring Donation Id
+    * @return List<RD2_VisualizeScheduleController.Schedule>
+    */
+    private static List<RD2_VisualizeScheduleController.Schedule> getSchedules(Id rdId) {
+        RD2_VisualizeScheduleController.DataTable dataTable = (RD2_VisualizeScheduleController.DataTable)
+            RD2_VisualizeScheduleController.getSchedules(rdId).values()[0];
+
+        List<RD2_VisualizeScheduleController.Schedule> schedules = new List<RD2_VisualizeScheduleController.Schedule>();
+        for (Object record : dataTable.getRecords()) {
+            schedules.add((RD2_VisualizeScheduleController.Schedule) record);
+        }
+
+        return schedules;
+    }
+
+    /****
+    * @description Builds projected installments for the Recurring Donation
+    * @param rd Recurring Donation
+    * @param numberOfInstallments Number of installments to return
+    * @return List<RD2_VisualizeScheduleController.Installment>
+    */
+    private static List<RD2_VisualizeScheduleController.Installment> buildInstallments(npe03__Recurring_Donation__c rd, Integer numberOfInstallments) {
+        Integer counter = 0;
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        List<RD2_VisualizeScheduleController.Installment> installments = new List<RD2_VisualizeScheduleController.Installment>();
+
+        for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
+            RD2_ScheduleService.currentDate, numberOfInstallments, scheduleService.buildNewSchedules(rd)
+        )) {
+            installments.add(new RD2_VisualizeScheduleController.Installment(counter++, installment));
+        }
+
+        return installments;
+    }
+
+    /****
+    * @description Builds schedules for the Recurring Donation
+    * @param rd Recurring Donation
+    * @return List<RD2_VisualizeScheduleController.Schedule>
+    */
+    private static List<RD2_VisualizeScheduleController.Schedule> buildSchedules(npe03__Recurring_Donation__c rd) {
+        Integer counter = 0;
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        List<RD2_VisualizeScheduleController.Schedule> schedules = new List<RD2_VisualizeScheduleController.Schedule>();
+
+        for (RecurringDonationSchedule__c schedule : scheduleService.buildNewSchedules(rd)) {
+            schedules.add(new RD2_VisualizeScheduleController.Schedule(
+                counter++, new RD2_ScheduleService.ActiveSchedule(schedule)
+            ));
+        }
+
+        return schedules;
+    }
+
+    /****
+    * @description Builds installment data table
+    * @param isAccessible Sets isAccessible field attribute based on the input argument value
+    * @return RD2_VisualizeScheduleController.DataTable
+    */
+    private static RD2_VisualizeScheduleController.DataTable buildInstallmentDataTable(Boolean isAccessible) {
+        RD2_VisualizeScheduleController.DataTable dataTable = new RD2_VisualizeScheduleController.DataTable();
+        for (String fieldName : new String[] {
+            INSTALLMENT_DONATION_DATE,
+            INSTALLMENT_AMOUNT,
+            INSTALLMENT_PAYMENT_METHOD
+        }) {
+            dataTable.addColumn(new RD2_VisualizeScheduleController.DataTableColumn()
+                .withFieldName(fieldname)
+                .withIsAccessible(isAccessible)
+            );
+        }
+
+        return dataTable;
+    }
+
+    /****
+    * @description Builds schedule data table
+    * @param isAccessible Sets isAccessible field attribute based on the input argument value
+    * @return RD2_VisualizeScheduleController.DataTable
+    */
+    private static RD2_VisualizeScheduleController.DataTable buildScheduleDataTable(Boolean isAccessible) {
+        RD2_VisualizeScheduleController.DataTable dataTable = new RD2_VisualizeScheduleController.DataTable();
+        for (String fieldName : new String[] {
+            SCHEDULE_IS_CURRENT,
+            SCHEDULE_AMOUNT,
+            SCHEDULE_PAYMENT_METHOD,
+            SCHEDULE_CAMPAIGN,
+            SCHEDULE_START_DATE,
+            SCHEDULE_END_DATE,
+            SCHEDULE_PERIOD,
+            SCHEDULE_FREQUENCY,
+            SCHEDULE_DAY_OF_MONTH
+        }) {
+            dataTable.addColumn(new RD2_VisualizeScheduleController.DataTableColumn()
+                .withFieldName(fieldname)
+                .withIsAccessible(isAccessible)
+            );
+        }
+
+        return dataTable;
     }
 
     /****
