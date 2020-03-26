@@ -278,10 +278,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * the form save button enablement and lightning spinner toggler.
     */
     handleSaveSingleGiftEntry = async (dataImportRecord, formControls) => {
-        console.log('*** handleSaveSingleGiftEntry');
         this.dataImport = await GeFormService.saveDataImport(dataImportRecord)
             .catch((error) => {
-                console.log('handleSaveSingleGiftEntry Error: ', error);
                 formControls.enableSaveButton();
                 formControls.toggleSpinner();
                 this.handleSingleGiftErrors(error);
@@ -306,7 +304,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 dataImportRecord,
                 hasUserSelectedDonation,
                 errorCallback: (error) => {
-                    console.log('error callback: ', error);
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
                     this.handleSingleGiftErrors(error);
@@ -326,7 +323,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         return tokenizationErrors[e];
                     }).join(', ');
             }
-            console.log(tokenizationErrors);
+
             showToast('Error', `${tokenizationErrors}`, 'error');
             return;
         }
@@ -448,7 +445,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * @param {object} event: Onclick event from the form save button
     */
     handleSave(event) {
-        console.log('*** handleSave');
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         const isFormReadyToSave = this.prepareFormForSave(sectionsList);
 
@@ -460,7 +456,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             let dataImport =
                 this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
-            console.log('dataImport: ', dataImport);
+
             // handle save depending mode
             if (this.batchId) {
                 this.handleSaveBatchGiftEntry(dataImport, formControls);

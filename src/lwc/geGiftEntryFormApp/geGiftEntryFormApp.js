@@ -47,16 +47,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * callback for handling and displaying errors in the form.
     */
     handleSingleSubmit = async (event) => {
-        console.log('*** handleSingleSubmit');
         try {
             let { dataImportRecord, hasUserSelectedDonation, errorCallback } = event.detail;
-            console.log('dataImportRecord: ', dataImportRecord);
 
             const hasPaymentToProcess = dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
             if (hasPaymentToProcess) {
                 this.loadingText = 'Charging card...';
-                dataImportRecord =
-                    await GeFormService.handlePaymentProcessing(dataImportRecord, errorCallback);
+                dataImportRecord = await GeFormService.handlePaymentProcessing(
+                    dataImportRecord,
+                    errorCallback);
             }
 
             if (dataImportRecord) {
@@ -76,15 +75,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * the 'Review Donations' modal and BDI needs to attempt a match.
     */
     processDataImport = async (dataImportRecord, hasUserSelectedDonation, errorCallback) => {
-        console.log('*** processDataImport: ', dataImportRecord);
         this.loadingText = 'Processing data import...';
         GeFormService.handleProcessDataImport(dataImportRecord, hasUserSelectedDonation)
             .then((opportunityId) => {
                 this.loadingText = 'Navigating to opportunity...';
-                let that = this;
-                setTimeout(function() {
-                    that.navigateToRecordPage(opportunityId);
-                }, 1500, that);
+                this.navigateToRecordPage(opportunityId);
             })
             .catch((error) => {
                 // TODO: Output loud warning to let user know the card was charged, but processing failed.

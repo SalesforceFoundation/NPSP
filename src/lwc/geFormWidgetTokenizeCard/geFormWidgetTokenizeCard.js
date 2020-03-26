@@ -4,7 +4,6 @@ import { fireEvent } from 'c/pubsubNoPageRef';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import { format } from 'c/utilCommon';
-// TODO: maybe import data import token field reference?
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
     @api cardHolderName;
