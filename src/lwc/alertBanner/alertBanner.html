@@ -1,0 +1,13 @@
+<template>
+    <lightning-layout if:true={isDisplayed}>
+        <lightning-layout-item size="12">
+            <div class={alertClass} role="alert">
+                <span class="slds-assistive-text">{assistText}</span>
+                <span class="slds-icon_container slds-icon-utility-error slds-m-right_x-small">
+                    <lightning-icon icon-name={alertIcon} variant={variant} size={size}></lightning-icon>
+                </span>
+                <h2>{message}</h2>
+            </div>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
