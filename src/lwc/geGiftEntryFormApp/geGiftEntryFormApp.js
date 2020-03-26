@@ -49,7 +49,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleSingleSubmit = async (event) => {
         console.log('*** handleSingleSubmit');
         try {
-            let { dataImportRecord, errorCallback } = event.detail;
+            let { dataImportRecord, hasUserSelectedDonation, errorCallback } = event.detail;
             console.log('dataImportRecord: ', dataImportRecord);
 
             const hasPaymentToProcess = dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
@@ -60,7 +60,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             }
 
             if (dataImportRecord) {
-                const hasUserSelectedDonation = this.selectedDonationDataImportFieldValues ? true : false;
                 await this.processDataImport(dataImportRecord, hasUserSelectedDonation, errorCallback);
             }
         } catch (error) {

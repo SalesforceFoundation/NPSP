@@ -299,10 +299,11 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     * the form save button enablement and lightning spinner toggler.
     */
     dispatchSingleGiftSaveEvent(dataImportRecord, formControls) {
+        const hasUserSelectedDonation = Object.keys(this.selectedDonationDataImportFieldValues).length > 0;
         this.dispatchEvent(new CustomEvent('singlesubmit', {
             detail: {
                 dataImportRecord,
-                formControls,
+                hasUserSelectedDonation,
                 errorCallback: (error) => {
                     console.log('error callback: ', error);
                     formControls.enableSaveButton();
