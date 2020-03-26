@@ -1,7 +1,7 @@
 <!-- Enhanced Recurring Donations Installments Visualizer -->
 <template>
     <lightning-card
-        title={lblInstallmentTitle}
+        title={labels.lblTitle}
         variant="narrow"
         icon-name="action:defer">
 
@@ -11,11 +11,12 @@
 
         <div class="slds-m-around_medium" if:true={installments}>
             <lightning-datatable
-                title={lblInstallmentTitle}
+                title={labels.lblTitle}
                 key-field="installmentNumber"
                 data={installments}
                 columns={columns}
-                class="visualized-installments"
+                class="visualized-installments slds-table_striped"
+                is-loading={isLoading}
                 hide-checkbox-column>
             </lightning-datatable>
         </div>

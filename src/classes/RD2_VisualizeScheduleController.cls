@@ -36,6 +36,20 @@
 */
 public with sharing class RD2_VisualizeScheduleController {
 
+    private static final String INSTALLMENT_DONATION_DATE = 'donationDate';
+    private static final String INSTALLMENT_AMOUNT = 'amount';
+    private static final String INSTALLMENT_PAYMENT_METHOD = 'paymentMethod';
+
+    private static final String SCHEDULE_IS_CURRENT = 'isCurrent';
+    private static final String SCHEDULE_AMOUNT = 'amount';
+    private static final String SCHEDULE_PAYMENT_METHOD = 'paymentMethod';
+    private static final String SCHEDULE_CAMPAIGN = 'campaign';
+    private static final String SCHEDULE_START_DATE = 'startDate';
+    private static final String SCHEDULE_END_DATE = 'endDate';
+    private static final String SCHEDULE_PERIOD = 'period';
+    private static final String SCHEDULE_FREQUENCY = 'frequency';
+    private static final String SCHEDULE_DAY_OF_MONTH = 'dayOfMonth';
+
     @TestVisible
     private static RD2_ScheduleService scheduleService {
         get {
@@ -47,7 +61,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /***
-    * @description Recurring Donation custom settings
+    * @description Specifies the earliest date when searching for Opportunities 
     */
     private static Date startDate {
         get {
@@ -61,74 +75,224 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
-     * @description This method was inserted to work around an anomaly with Salesforce deploy.
-     *              Deploy consistently failed after renaming this method to getInstallments.
-     *              May be able to remove this method after successful deploy of this class
-     *              with the new method name.
+     * @description Builds future projected installments for the Recurring Donation
      * @param recordId Record Id
      * @param displayNum Number of installments to display
-     * @return List<Installment>
+     * @return Map<String, Object>
      */
     @AuraEnabled
-    public static List<Installment> getSchedule(Id recordId, Integer displayNum) {
-        return getInstallments(recordId, displayNum);
-    }
-
-    /**
-     * @description Builds future installments for the Recurring Donation
-     * @param recordId Record Id
-     * @param displayNum Number of installments to display
-     * @return List<Installment>
-     */
-    @AuraEnabled
-    public static List<Installment> getInstallments(Id recordId, Integer displayNum) {
+    public static Map<String, Object> getInstallments(Id recordId, Integer displayNum) {
         validate(recordId);
 
-        Integer counter = 1;
-        List<Installment> installments = new List<Installment>();
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+        DataTable dataTable = buildInstallmentDataTable(rd);
 
-        scheduleService.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
-
-        if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
-            for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
-                RD2_ScheduleService.currentDate, displayNum, rd.RecurringDonationSchedules__r
-            )) {
-                installments.add(new Installment(counter++, rd, installment));
-            }
+        if (dataTable.getColumns().isEmpty()) {
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSInstallment);
         }
 
-        if (installments.isEmpty()) {
+        getInstallmentRecords(rd, displayNum, dataTable);
+
+        if (dataTable.getRecords().isEmpty()) {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoSchedule);
         }
 
-        return installments;
+        sanitizeInstallments(dataTable);
+
+        return new Map<String, Object>{ 'dataTable' => dataTable };
+    }
+
+    /**
+     * @description Retrieves installments for the Recurring Donation
+     * and adds them into the data table
+     * @param rd Recurring Donation
+     * @param displayNum Maximum number of installments to return
+     * @param dataTable Data table to populate with projected installment records
+     * @return void
+     */
+    private static void getInstallmentRecords(npe03__Recurring_Donation__c rd, Integer displayNum, DataTable dataTable) {
+        if (rd.Status__c == RD2_Constants.STATUS_CLOSED) {
+            return;
+        }
+
+        Integer counter = 1;
+        scheduleService.evaluateScheduleEndDateForFixedLength(rd, rd.RecurringDonationSchedules__r);
+
+        for (RD2_ScheduleService.Installment installment : scheduleService.getVisualizedInstallments(
+            RD2_ScheduleService.currentDate, displayNum, rd.RecurringDonationSchedules__r
+        )) {
+            dataTable.addRecord(new Installment(counter++, installment));
+        }
     }
 
     /**
      * @description Retrieves active schedules for the Recurring Donation
      * @param recordId Record Id
-     * @return List<Schedule>
+     * @return Map<String, Object>
      */
     @AuraEnabled
-    public static List<Schedule> getSchedules(Id recordId) {
+    public static Map<String, Object> getSchedules(Id recordId) {
         validate(recordId);
 
-        Integer counter = 1;
-        List<Schedule> activeSchedules = new List<Schedule>();
         npe03__Recurring_Donation__c rd = getRecurringDonation(recordId);
+        DataTable dataTable = buildScheduleDataTable(rd);
 
+        if (dataTable.getColumns().size() <= 1) {//"isCurrent" field is always part of the data table fields
+            throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerFLSSchedule);
+        }
+
+        Integer counter = 1;
         if (rd.Status__c != RD2_Constants.STATUS_CLOSED) {
             for (RD2_ScheduleService.ActiveSchedule schedule : scheduleService.getVisualizedSchedules(rd)) {
-                activeSchedules.add(new Schedule(counter++, rd, schedule));
+                dataTable.addRecord(new Schedule(counter++, schedule));
             }
         }
 
-        if (activeSchedules.isEmpty()) {
+        if (dataTable.getRecords().isEmpty()) {
             throw new AuraHandledException(System.Label.RD2_ScheduleVisualizerMessageNoActiveSchedule);
         }
 
-        return activeSchedules;
+        sanitizeSchedules(dataTable);
+
+        return new Map<String, Object>{ 'dataTable' => dataTable };
+    }
+
+
+    /**
+     * @description Constructs the data table columns for the projected installments display
+     * @param rd Recurring Donation
+     * @return DataTable
+     */
+    @TestVisible
+    private static DataTable buildInstallmentDataTable(npe03__Recurring_Donation__c rd) {
+        return new DataTable()
+            .addColumn(new DataTableColumn()
+                .withFieldName(INSTALLMENT_DONATION_DATE)
+                .withLabel(System.Label.RD2_ScheduleVisualizerColumnDate)
+                .withIsAccessible(Schema.SObjectType.npe03__Recurring_Donation__c.fields.Day_Of_Month__c)
+                .withType(Schema.DisplayType.DATE)
+                .withTypeAttributes(new Map<String, Object>{
+                    'month' => '2-digit',
+                    'day' => '2-digit'
+                })
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Amount__c)
+                .withFieldName(INSTALLMENT_AMOUNT)
+                .withTypeAttributes(new Map<String, Object>{
+                    'currencyCode' => getCurrencyCode(rd)
+                })
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.PaymentMethod__c)
+                .withFieldName(INSTALLMENT_PAYMENT_METHOD)
+            );
+    }
+
+    /**
+     * @description Constructs the data table RD schedule columns 
+     * @param rd Recurring Donation
+     * @return DataTable
+     */
+    @TestVisible
+    private static DataTable buildScheduleDataTable(npe03__Recurring_Donation__c rd) {
+        return new DataTable()
+            .addColumn(new DataTableColumn()
+                .withFieldName(SCHEDULE_IS_CURRENT)
+                .withType(Schema.DisplayType.BOOLEAN)
+                .withIsAccessible(true)
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Amount__c)
+                .withFieldName(SCHEDULE_AMOUNT)
+                .withTypeAttributes(new Map<String, Object>{
+                    'currencyCode' => getCurrencyCode(rd)
+                })
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.PaymentMethod__c)
+                .withFieldName(SCHEDULE_PAYMENT_METHOD)
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Recurring_Donation_Campaign__c)
+                .withFieldName(SCHEDULE_CAMPAIGN)
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.StartDate__c)
+                .withFieldName(SCHEDULE_START_DATE)
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.StartDate__c)
+                .withFieldName(SCHEDULE_END_DATE)
+                .withLabel(System.Label.RD2_ScheduleLWCEndDate)
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.npe03__Installment_Period__c)
+                .withFieldName(SCHEDULE_PERIOD)
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.InstallmentFrequency__c)
+                .withFieldName(SCHEDULE_FREQUENCY)
+            )
+            .addColumn(new DataTableColumn(Schema.SObjectType.npe03__Recurring_Donation__c.fields.Day_of_Month__c)
+                .withFieldName(SCHEDULE_DAY_OF_MONTH)
+            );
+    }
+
+    /**
+     * @description Sets null on fields that are not accessible
+     * @param dataTable Data table containing columns and installment records
+     * @return void
+     */
+    @TestVisible
+    private static void sanitizeInstallments(DataTable dataTable) {
+        if (dataTable.getColumns().size() == 3) {
+            return;//all columns are visible
+        }
+
+        for (Object obj : dataTable.getRecords()) {  
+            Installment record = (Installment) obj;          
+            if (!dataTable.isAccessible(INSTALLMENT_DONATION_DATE)) {
+                record.donationDate = null;
+            } 
+            if (!dataTable.isAccessible(INSTALLMENT_AMOUNT)) {
+                record.amount = null;
+            }
+            if (!dataTable.isAccessible(INSTALLMENT_PAYMENT_METHOD)) {
+                record.paymentMethod = null;
+            }
+        }
+    }
+    
+    /**
+     * @description Sets null on fields that are not accessible
+     * @param dataTable Data table containing columns and schedule records
+     * @return void
+     */
+    @TestVisible
+    private static void sanitizeSchedules(DataTable dataTable) {
+        if (dataTable.getColumns().size() == 9) {
+            return;//all columns are visible
+        }
+
+        for (Object obj : dataTable.getRecords()) {  
+            Schedule record = (Schedule) obj;   
+            if (!dataTable.isAccessible(SCHEDULE_AMOUNT)) {
+                record.amount = null;
+            }
+            if (!dataTable.isAccessible(SCHEDULE_PAYMENT_METHOD)) {
+                record.paymentMethod = null;
+            }  
+            if (!dataTable.isAccessible(SCHEDULE_CAMPAIGN)) {
+                record.campaign = null;
+            }
+            if (!dataTable.isAccessible(SCHEDULE_START_DATE)) {
+                record.startDate = null;
+            }  
+            if (!dataTable.isAccessible(SCHEDULE_END_DATE)) {
+                record.endDate = null;
+            }  
+            if (!dataTable.isAccessible(SCHEDULE_PERIOD)) {
+                record.period = null;
+            }  
+            if (!dataTable.isAccessible(SCHEDULE_FREQUENCY)) {
+                record.frequency = null;
+            }  
+            if (!dataTable.isAccessible(SCHEDULE_DAY_OF_MONTH)) {
+                record.dayOfMonth = null;
+            }
+        }
     }
 
     /**
@@ -209,17 +373,13 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public Integer installmentNumber;
         @AuraEnabled public Date donationDate;
         @AuraEnabled public Decimal amount;
-        @AuraEnabled public String campaign;
         @AuraEnabled public String paymentMethod;
-        @AuraEnabled public String currencyIsoCode;
 
-        public Installment(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.Installment installment) {
+        public Installment(Integer num, RD2_ScheduleService.Installment installment) {
             this.installmentNumber = num;
             this.paymentMethod = installment.paymentMethod;
-            this.campaign = installment.campaignName;
             this.donationDate = installment.nextDonationDate;
             this.amount = installment.installmentAmount;
-            this.currencyIsoCode = getCurrencyCode(rd);
         }
     }
 
@@ -237,9 +397,8 @@ public with sharing class RD2_VisualizeScheduleController {
         @AuraEnabled public String period;
         @AuraEnabled public Integer frequency;
         @AuraEnabled public String dayOfMonth;
-        @AuraEnabled public String currencyIsoCode;
 
-        public Schedule(Integer num, npe03__Recurring_Donation__c rd, RD2_ScheduleService.ActiveSchedule schedule) {
+        public Schedule(Integer num, RD2_ScheduleService.ActiveSchedule schedule) {
             this.scheduleNumber = num;
             this.isCurrent = schedule.isCurrent;
             this.amount = schedule.installmentAmount;
@@ -250,7 +409,201 @@ public with sharing class RD2_VisualizeScheduleController {
             this.period = schedule.installmentPeriod;
             this.frequency = schedule.installmentFrequency;
             this.dayOfMonth = schedule.dayOfMonth;
-            this.currencyIsoCode = getCurrencyCode(rd);
+        }
+    }
+
+
+    /**
+     * @description Data table containing columns and records to display
+     */
+    public with sharing class DataTable {
+        /**
+         * @description Contains data table columns and their attributes
+         */
+        @TestVisible
+        private Map<String, DataTableColumn> columnByFieldName = new Map<String, DataTableColumn>();
+
+        /**
+         * @description Contains data table records
+         */
+        @TestVisible
+        private List<Object> records = new List<Object>();
+
+        /**
+         * @description Adds column to the data table only if the user has the field accessible permission
+         * @param column Data table column
+         * @return DataTable This data table instance
+         */
+        public DataTable addColumn(DataTableColumn column) {
+            if (column.isAccessible) {
+                columnByFieldName.put(column.fieldName, column);
+            }
+
+            return this;
+        }
+
+        /**
+         * @description Returns data table columns (if any)
+         * @return List<DataTableColumn>
+         */
+        @AuraEnabled
+        public List<DataTableColumn> getColumns() {
+            return columnByFieldName.values();
+        }
+
+        /**
+         * @description Returns data table column if it is in the data table
+         * @return DataTableColumn
+         */
+        public DataTableColumn getColumn(String fieldName) {
+            return columnByFieldName.get(fieldName);
+        }
+
+        /**
+         * @description Determines if the Object.fieldName is accessible
+         * @return Boolean
+         */
+        public Boolean isAccessible(String fieldName) {
+            return columnByFieldName.containsKey(fieldName);
+        }
+
+        /**
+         * @description Adds record to the data table
+         * @param Object Record
+         * @return void
+         */
+        public void addRecord(Object record) {
+            records.add(record);
+        }
+
+        /**
+         * @description Sets all records in the data table
+         * @return void
+         */
+        public void setRecords(List<Object> records) {
+            this.records = records;
+        }
+
+        /**
+         * @description Returns data table records (if any)
+         * @return List<Object>
+         */
+        @AuraEnabled
+        public List<Object> getRecords() {
+            return this.records == null ? new List<Object>() : this.records;
+        }
+    }
+
+
+    /**
+     * @description Data column containing field attributes required to display it
+     */
+    public with sharing class DataTableColumn {
+        @AuraEnabled public String fieldName;
+        @AuraEnabled public String label;
+        @AuraEnabled public String type;
+        @AuraEnabled public Boolean sortable = false;
+        @AuraEnabled public Map<String, Object> typeAttributes = new Map<String, Object>();
+        @AuraEnabled public Boolean isAccessible = false;
+
+        /**
+         * @description Default constructor
+         */
+        public DataTableColumn() {}
+
+        /**
+         * @description Constructor setting field attributes
+         * @param field SObject field
+         */
+        public DataTableColumn(Schema.DescribeFieldResult field) {
+            this.fieldName = field.getName();
+            this.label = field.getLabel();
+            this.type = getType(field.getType());
+            this.typeAttributes = getTypeAttributes(field.getType());
+            this.sortable = field.isSortable();
+            this.isAccessible = field.isAccessible();
+        }
+
+        /**
+         * @description Sets the column label
+         * @param label Label to display to the user
+         * @return DataTableColumn This column instance
+         */
+        public DataTableColumn withLabel(String label) {
+            this.label = label;
+            return this;
+        }
+
+        /**
+         * @description Sets the field name used to connect the column 
+         * and the record field value. For example, 
+         * the Installment object has "donationDate" field that will be
+         * mapped to the column with fieldName = donationDate in the LWC component.
+         * @param fieldName Record field name so column and field value can be connected
+         * @return DataTableColumn This column instance
+         */
+        public DataTableColumn withFieldName(String fieldName) {
+            this.fieldName = fieldName;
+            return this;
+        }
+
+        /**
+         * @description Sets the accessible attribute on the column
+         * @param field The column accessible attribute is determined by the field's isAccessible() value
+         * @return DataTableColumn This column instance
+         */
+        public DataTableColumn withIsAccessible(Schema.DescribeFieldResult field) {
+            this.isAccessible = field.isAccessible();
+            return this;
+        }
+
+        /**
+         * @description Sets the accessible attribute on the column
+         * @param isAccessible Attribute value
+         * @return DataTableColumn This column instance
+         */
+        public DataTableColumn withIsAccessible(Boolean isAccessible) {
+            this.isAccessible = isAccessible;
+            return this;
+        }
+
+        /**
+         * @description Sets the column data type and type attributes
+         * @param displayType Field display type
+         * @return DataTableColumn This column instance
+         */
+        public DataTableColumn withType(Schema.DisplayType displayType) {
+            this.type = getType(displayType);
+            this.typeAttributes = getTypeAttributes(displayType);
+            return this;
+        }
+
+        /**
+         * @description Returns the column data type determined based on the field display type
+         * @param displayType Field display type
+         * @return String Data type used to format field in the LWC
+         */
+        public String getType(Schema.DisplayType displayType) {
+            return UTIL_LightningComponentSupport.getColumnType(displayType);
+        }
+
+        /**
+         * @description Sets the column data type attributes
+         * @param typeAttributes Attribute value by the attribute name, ie "month" => "2-digit"
+         * @return DataTableColumn This column instance
+         */
+        public DataTableColumn withTypeAttributes(Map<String, Object> typeAttributes) {
+            this.typeAttributes = typeAttributes;
+            return this;
+        }
+
+        /**
+         * @description Returns the column data type attributes determined based on the field display type
+         * @param displayType Field display type
+         * @return Map<String, Object> Attribute value by the attribute name, ie "month" => "2-digit"
+         */
+        public Map<String, Object> getTypeAttributes(Schema.DisplayType displayType) {
+            return UTIL_LightningComponentSupport.getColumnTypeAttributes(displayType);
         }
     }
 }
