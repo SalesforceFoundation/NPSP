@@ -2026,6 +2026,22 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>You must enable Enhanced Recurring Donations to use this component.</value>
     </labels>
     <labels>
+        <fullName>RD2_ScheduleVisualizerFLSInstallment</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when no field can be displayed on the upcoming installments</shortDescription>
+        <value>You don&apos;t have permissions to view Upcoming Installments. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ScheduleVisualizerFLSSchedule</fullName>
+        <categories>Recurring-Donations, Error, Component</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when no field can be displayed on the active schedules</shortDescription>
+        <value>You don&apos;t have permissions to view Active Schedules. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ScheduleVisualizerMessageNoSchedule</fullName>
         <categories>Recurring-Donations, Error, Component</categories>
         <language>en_US</language>
