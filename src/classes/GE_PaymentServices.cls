@@ -78,22 +78,68 @@ public with sharing class GE_PaymentServices {
         return null;
     }
 
-
     // TODO: Get header/secret info from payments configuration hidden sobject
     private String getEndpointRoot() {
         return 'https://7jpea5zk79.execute-api.us-west-2.amazonaws.com';
     }
 
-    private String getJwt() {
-        return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBcGlLZXlNYW5hZ2VyIiwiaWF0IjoxNTgzMTk2MTAxLCJleHAiOjE2MTQ3MzIxMTAsImF1ZCI6Ind3dy5leGFtcGxlLmNvbSIsInN1YiI6ImNiYXh0ZXIiLCJzZmRvLmlkIjoiMDBENmcwMDAwMDAwMDAwRUFBIiwic2Zkby5wcm9kdWN0IjoiQ1JNIiwic2Zkby5yb2xlcyI6IlBheW1lbnRzLlB1cmNoYXNlIn0.Fk2kH8occu-tEabrYALiAN16XlIUj4vpptWGs0x8eZs';
+    public String getJwt() {
+        JWTPayload jwtPayload = new JWTPayload();
+        String jwt = UTIL_Jwt.getSignedJWTFromString(jwtPayload.getAsString(), getJwtSecret());
+        System.debug(jwt);
+        return jwt;
+        // Hardcoded JWT for Dev 1
+        //return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBcGlLZXlNYW5hZ2VyIiwiaWF0IjoxNTgzMTk2MTAxLCJleHAiOjE2MTQ3MzIxMTAsImF1ZCI6Ind3dy5leGFtcGxlLmNvbSIsInN1YiI6ImNiYXh0ZXIiLCJzZmRvLmlkIjoiMDBENmcwMDAwMDAwMDAwRUFBIiwic2Zkby5wcm9kdWN0IjoiQ1JNIiwic2Zkby5yb2xlcyI6IlBheW1lbnRzLlB1cmNoYXNlIn0.Fk2kH8occu-tEabrYALiAN16XlIUj4vpptWGs0x8eZs';
     }
 
     private String getMerchantIds() {
+        // Dev1
         return '47b70ca4-0f6e-4c52-819f-667ae804f9d2';
+        // Dev2
+        //return 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4';
     }
 
     private String getUsername() {
         return 'cbaxter';
+    }
+
+    private String getJwtSecret() {
+        // Dev1
+        return 'd733100d-2fcb-4bcc-9ef2-8f27c40aa006';
+        // Dev2
+        //return 'cdd7216e-2b19-4803-a047-68543d9dd483';
+    }
+
+    public with sharing class JWTPayload {
+
+        public JWTPayload(/*SecretObject config*/) {
+            // TODO: Handle secret object fields
+        }
+
+        private Long getEpochTimestamp(DateTime dt) {
+            return dt.getTime() / 1000; // convert milliseconds to seconds as needed by iat
+        }
+
+        private Long getExpirationDate(Integer daysFromNow) {
+            DateTime expirationDate = DateTime.now().addDays(daysFromNow);
+            return getEpochTimestamp(expirationDate);
+        }
+
+        private String getAsString() {
+            JSONGenerator generator = JSON.createGenerator(false);
+
+            generator.writeStartObject();
+            generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
+            generator.writeNumberField('iat', getEpochTimestamp(Datetime.now())); // Issued at
+            generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
+            generator.writeStringField('aud', 'www.example.com'); // Audience
+            generator.writeStringField('sub', 'cbaxter'); // Subject
+            generator.writeStringField('sfdo.id', '00D6g0000000000EAA'); // Org ID
+            generator.writeStringField('sfdo.product', 'CRM'); // Product
+            generator.writeStringField('sfdo.roles', 'Payments.Purchase'); // Call Role
+
+            return generator.getAsString();
+        }
     }
 
     public with sharing class Metadata {
