@@ -4616,6 +4616,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>General Account Unit</value>
     </labels>
     <labels>
+        <fullName>commonJWTInvalidKey</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure message if an invalid key was provided</shortDescription>
+        <value>The key must contain a value and use the base64 format.</value>
+    </labels>
+    <labels>
+        <fullName>commonJWTInvalidPayload</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure message if an invalid JSON payload was provided</shortDescription>
+        <value>The JSON payload must contain a value.</value>
+    </labels>
+    <labels>
         <fullName>commonMMYY</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6002,6 +6018,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This shows the Object Group and target field API Name. You can edit the user-facing label below.</value>
     </labels>
     <labels>
+        <fullName>geHelpTextHouseholdMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Household Object Group</shortDescription>
+        <value>Additional information about Contact1&apos;s Household Account.</value>
+    </labels>
+    <labels>
         <fullName>geHelpTextPaymentServices</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6010,12 +6034,20 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Note: This field bundle is only available for single gifts and will not show up when entering batches of gifts.</value>
     </labels>
     <labels>
-        <fullName>geHelpTextHouseholdMapping</fullName>
+        <fullName>geJWTUtilInvalidBase64Message</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text for Household Object Group</shortDescription>
-        <value>Additional information about Contact1's Household Account.</value>
+        <shortDescription>Failure message if an invalid base64 string was provided</shortDescription>
+        <value>The base64 format is invalid. The number of characters must be a multiple of 4 and can only contain these characters: [a-z A-Z 0-9 + / =]</value>
+    </labels>
+    <labels>
+        <fullName>geJWTUtilInvalidBase64UrlMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure message if an invalid base64 url was provided</shortDescription>
+        <value>The base64url format is invalid. It can only contain these characters: [a-z A-Z 0-9 _ -]</value>
     </labels>
     <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
@@ -6196,6 +6228,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Template successfully updated</shortDescription>
         <!-- {0} is a string. Name of the template that was created. -->
         <value>The "{0}" template was updated.</value>
+    </labels>
+    <labels>
+        <fullName>geUtilJWTTestInvalidKey</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unit test error: An invalid key (empty) was provided but no exception was thrown</shortDescription>
+        <value>An invalid key (empty) was provided but no exception was thrown</value>
+    </labels>
+    <labels>
+        <fullName>geUtilJWTTestInvalidPayload</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unit test error: An invalid payload provided but no exception was thrown</shortDescription>
+        <value>An invalid payload provided but no exception was thrown</value>
+    </labels>
+    <labels>
+        <fullName>geUtilJWTTestInvalidString</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Unit test error: An invalid string was provided but no exception was thrown</shortDescription>
+        <value>An invalid string was provided but no exception was thrown</value>
     </labels>
     <labels>
         <fullName>geWarningFormFieldsModalDeleteSection</fullName>

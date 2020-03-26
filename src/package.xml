@@ -565,6 +565,8 @@
         <members>UTIL_IntegrationGateway_TEST</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
+        <members>UTIL_Jwt</members>
+        <members>UTIL_Jwt_TEST</members>
         <members>UTIL_LightningComponentSupport</members>
         <members>UTIL_ListCustomSettingsFacade</members>
         <members>UTIL_MasterSchedulable</members>
@@ -1954,6 +1956,8 @@
         <members>commonFieldLabel</members>
         <members>commonGauAllocations</members>
         <members>commonGeneralAccountUnit</members>
+        <members>commonJWTInvalidKey</members>
+        <members>commonJWTInvalidPayload</members>
         <members>commonMMYY</members>
         <members>commonMissingRequiredFields</members>
         <members>commonNewGift</members>
@@ -2123,6 +2127,8 @@
         <members>geHelpTextFormFieldsFieldLabelLabel</members>
         <members>geHelpTextHouseholdMapping</members>
         <members>geHelpTextPaymentServices</members>
+        <members>geJWTUtilInvalidBase64Message</members>
+        <members>geJWTUtilInvalidBase64UrlMessage</members>
         <members>geLabelCustomTableSelectedFields</members>
         <members>geLabelCustomTableSourceFields</members>
         <members>geLabelSectionName</members>
@@ -2145,6 +2151,9 @@
         <members>geToastTemplateDeleteSuccess</members>
         <members>geToastTemplateTabsError</members>
         <members>geToastTemplateUpdateSuccess</members>
+        <members>geUtilJWTTestInvalidKey</members>
+        <members>geUtilJWTTestInvalidPayload</members>
+        <members>geUtilJWTTestInvalidString</members>
         <members>geWarningFormFieldsModalDeleteSection</members>
         <members>giftProcessingAccountException</members>
         <members>giftProcessingConfigException</members>
