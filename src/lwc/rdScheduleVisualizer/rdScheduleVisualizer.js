@@ -1,11 +1,8 @@
-import labelInstallmentTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
-import labelColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
+import lblTitle from '@salesforce/label/c.RD2_ScheduleVisualizerTitle';
+import lblLoading from '@salesforce/label/c.labelMessageLoading'
 
 import { LightningElement, api, wire, track } from 'lwc';
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
-
-import SOBJECT_RECURRING_DONATION from '@salesforce/schema/npe03__Recurring_Donation__c';
 
 import FIELD_RD_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c';
 import FIELD_RD_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
@@ -16,45 +13,36 @@ import FIELD_RD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donatio
 
 import getInstallments from '@salesforce/apex/RD2_VisualizeScheduleController.getInstallments';
 
-const INSTALLMENT_COLS = [
-    { label: '$DATE', fieldName: 'donationDate', type: 'date-local', sortable: false,
-        typeAttributes:{
-            month: "2-digit",
-            day: "2-digit"
-        } },
-    { label: '$AMOUNT', fieldName: 'amount', type: 'currency', sortable: false,
-        typeAttributes: { currencyCode: '$CURRENCYISOCODE' } },
-    { label: '$PAYMENT_METHOD', fieldName: 'paymentMethod', type: 'text', sortable: false }
-];
-
 export default class RdScheduleVisualizer extends LightningElement {
 
     @api recordId;
     @api displayNum;
 
+    @track isLoading = true;
     @track installments;
+    @track columns = [];
     @track error;
-    @track columns = INSTALLMENT_COLS;
-    @track currencyIsoCode;
-    @track lblInstallmentTitle = labelInstallmentTitle;
-    @track lblCloseDate = labelColumnDate;
-    @track lblAmount;
-    @track lblPmtMethod;
-    @track fldAmount;
+
+    labels = {
+        lblTitle,
+        lblLoading
+    }
 
     /*******************************************************************************
-     * @description Whenever the related RD record is updated, this is called to force
-     * a refresh of the table and component.
+     * @description Track specified fields so when the Recurring Donation record is updated, 
+     * this method is called to force refresh of the data and the component.
      */
-    @wire(getRecord, { recordId: '$recordId',
-        fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD, FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD] })
+    @wire(getRecord, {
+        recordId: '$recordId',
+        fields: [FIELD_RD_AMOUNT, FIELD_RD_DAYOFMONTH, FIELD_RD_FREQUENCY, FIELD_RD_PERIOD, FIELD_RD_STARTDATE, FIELD_RD_PAYMENT_METHOD]
+    })
     wireRecordChange() {
         if (this.recordId) {
+            this.isLoading = true;
             getInstallments({ recordId: this.recordId, displayNum: this.displayNum })
-                .then(data => {
-                    this.handleCurrencyIsoCode(data);
-                    this.handleColumns();
-                    this.installments = data;
+                .then(response => {
+                    this.handleRecords(response);
+                    this.handleColumns(response);
                     this.error = null;
 
                 })
@@ -62,29 +50,7 @@ export default class RdScheduleVisualizer extends LightningElement {
                     this.installments = null;
                     this.error = this.handleError(error);
                 });
-        }
-    }
-
-    /*******************************************************************************
-     * @description Call Apex to retrieve the Currency Code to use in the UI
-     */
-    handleCurrencyIsoCode(installments) {
-        if (installments) {
-            this.currencyIsoCode = installments[0].currencyIsoCode;
-        } else {
-            this.currencyIsoCode = 'USD';
-        }
-    }
-
-    /*******************************************************************************
-     * @description Retrieve the object info for the Recurring Donation Object to set the field labels
-     */
-    @wire(getObjectInfo, { objectApiName: SOBJECT_RECURRING_DONATION })
-    wireGetRDObjectInfo({error, data}) {
-        if (data) {
-            this.lblCloseDate = this.lblCloseDate
-            this.lblAmount = data.fields[FIELD_RD_AMOUNT.fieldApiName].label;
-            this.lblPmtMethod = data.fields[FIELD_RD_PAYMENT_METHOD.fieldApiName].label;
+            this.isLoading = false;
         }
     }
 
@@ -93,6 +59,24 @@ export default class RdScheduleVisualizer extends LightningElement {
      */
     get installments() {
         return this.installments;
+    }
+
+    /*******************************************************************************
+     * @description Get the installments
+     */
+    handleRecords(response) {
+        if (response && response.dataTable) {
+            this.installments = response.dataTable.records;
+        }
+    }
+
+    /*******************************************************************************
+     * @description Get the data table columns
+     */
+    handleColumns(response) {
+        if (response && response.dataTable) {
+            this.columns = response.dataTable.columns;
+        }
     }
 
     /*******************************************************************************
@@ -108,32 +92,5 @@ export default class RdScheduleVisualizer extends LightningElement {
         } else {
             return "";
         }
-    }
-
-    /*******************************************************************************
-     * @description Configure column labels and the currency code to use for the amount field
-     * by replacing constants in the SCHEDULE_COL string with the actual (translated) field labels
-     * as well as the $CurrencyIsoCode with the RD or Org CurrencyIsoCode as retrieved from Apex
-     */
-    handleColumns() {
-        const labelConversions = [
-            { label: '$DATE', value: this.lblCloseDate },
-            { label: '$AMOUNT', value: this.lblAmount },
-            { label: '$PAYMENT_METHOD', value: this.lblPmtMethod }
-        ];
-        const currencyIsoCode = this.currencyIsoCode;
-
-        this.columns = INSTALLMENT_COLS;
-        this.columns.forEach(function(col){
-            if (col.label === '$AMOUNT') {
-                col.typeAttributes.currencyCode = currencyIsoCode;
-            }
-            labelConversions.forEach(function(lbl){
-                if (col.label === lbl.label) {
-                    col.label = lbl.value;
-                }
-            });
-        });
-
     }
 }
