@@ -32,11 +32,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.registerPostMessageListener();
     }
 
-    @api
-    isValid() {
-        return true;
-    }
-
     /*******************************************************************************
     * @description Builds the visualforce origin url that we need in order to
     * make sure we're only listening for messages from the correct source in the
