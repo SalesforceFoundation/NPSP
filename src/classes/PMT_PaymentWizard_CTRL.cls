@@ -574,6 +574,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
             if (!(perms.canRead(pmt, sObjectFields) && perms.canUpdate(pmt, sObjectFields))) {
                 return accessResult;
             }
+            accessResult = true;
         }
 
         return accessResult;

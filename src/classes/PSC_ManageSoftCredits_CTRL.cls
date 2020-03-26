@@ -243,6 +243,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             if (!(perms.canRead(psc, sObjectFieldsRead) && perms.canUpdate(psc, sObjectFieldsModify))) {
                 return accessResult;
             }
+            accessResult = true;
         }
 
         return accessResult;
