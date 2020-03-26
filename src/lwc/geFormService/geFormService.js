@@ -174,7 +174,6 @@ class GeFormService {
     }
 
     handleTokenRequested() {
-        console.log('*** handleTokenRequested');
         this.tokenPromise = new Promise((resolve, reject) => {
             registerListener('tokenResponse', message => {
                 if(message.error) {
@@ -199,15 +198,14 @@ class GeFormService {
     * @return {object} dataImportRecord: A DataImport__c record
     */
     saveDataImport = async (dataImportRecord) => {
-        console.log('*** *** saveDataImport');
         dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
         const dataImport = await saveDataImport({ dataImport: dataImportRecord });
 
         if (this.previouslySavedDataImport && this.previouslySavedDataImport.Id === dataImport.Id ) {
-            console.log('SAVE PREVIOUSLY ATTEMPTED: ', this.previouslySavedDataImport);
-            dataImport[PAYMENT_STATUS__C] = this.previouslySavedDataImport[PAYMENT_STATUS__C];
-            dataImport[PAYMENT_DECLINED_REASON__C] = this.previouslySavedDataImport[PAYMENT_DECLINED_REASON__C];
             dataImport[PAYMENT_METHOD__C] = this.previouslySavedDataImport[PAYMENT_METHOD__C];
+            dataImport[PAYMENT_STATUS__C] = this.previouslySavedDataImport[PAYMENT_STATUS__C];
+            dataImport[PAYMENT_DECLINED_REASON__C] =
+                this.previouslySavedDataImport[PAYMENT_DECLINED_REASON__C];
         } else {
             this.previouslySavedDataImport = deepClone(dataImportRecord);
         }
@@ -228,22 +226,24 @@ class GeFormService {
     */
     handlePaymentProcessing = async (dataImportRecord, errorCallback) => {
         if (this.previouslySavedDataImport[PAYMENT_STATUS__C] !== CAPTURED) {
-            const purchaseCallResponse =
-                await this.handlePurchaseCall(dataImportRecord, this.fabricatedCardholderNames);
+            const purchaseCallResponse = await this.handlePurchaseCall(
+                dataImportRecord,
+                this.fabricatedCardholderNames);
+
             if (purchaseCallResponse) {
-                console.log('purchaseCallResponse: ', purchaseCallResponse);
-                dataImportRecord = this.setPaymentStatusAndDeclineReason(dataImportRecord, purchaseCallResponse);
+                dataImportRecord = this.setPaymentStatusAndDeclineReason(
+                    dataImportRecord,
+                    purchaseCallResponse);
                 dataImportRecord = await saveDataImport({ dataImport: dataImportRecord });
                 this.previouslySavedDataImport = deepClone(dataImportRecord);
             }
 
             if (purchaseCallResponse.statusCode !== 201) {
-
                 let errors =
                     purchaseCallResponse.body.Message ||
                     purchaseCallResponse.body.errors.map(error => error.message).join(', ');
-                console.log('throwing purchase call error');
                 errorCallback(errors);
+
                 return undefined;
             }
         }
@@ -280,7 +280,6 @@ class GeFormService {
     * @return {object} dataImportRecord: A DataImport__c record
     */
     setPaymentStatusAndDeclineReason = (dataImportRecord, purchaseCallResponse) => {
-        console.log('*** setPaymentStatusAndDeclineReason');
         const paymentStatus = purchaseCallResponse.body.status || purchaseCallResponse.status || 'Unknown';
         dataImportRecord[PAYMENT_STATUS__C] = paymentStatus;
 
@@ -307,12 +306,10 @@ class GeFormService {
     * @return {string} opportunityId: An Opportunity record id
     */
     handleProcessDataImport = async (dataImportRecord, hasUserSelectedDonation) => {
-        console.log('*** handleProcessDataImport');
         const opportunityId = await processDataImport({
             diRecord: dataImportRecord,
             updateGift: hasUserSelectedDonation
         });
-        console.log('opportunityId: ', opportunityId);
 
         return opportunityId;
     }
