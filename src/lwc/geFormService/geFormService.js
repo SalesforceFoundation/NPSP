@@ -238,7 +238,10 @@ class GeFormService {
             }
 
             if (purchaseCallResponse.statusCode !== 201) {
-                let errors = purchaseCallResponse.body.errors.map(error => error.message).join(', ');
+
+                let errors =
+                    purchaseCallResponse.body.Message ||
+                    purchaseCallResponse.body.errors.map(error => error.message).join(', ');
                 console.log('throwing purchase call error');
                 errorCallback(errors);
                 return undefined;
