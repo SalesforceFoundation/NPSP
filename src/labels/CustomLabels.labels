@@ -929,6 +929,14 @@
         <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
+        <fullName>ConfirmDeleteLeaveAccountEmpty</fullName>
+        <categories>Error, Delete</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <value>{0} is the only Contact in the Account. Deleting this Contact would leave an empty Account.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_AvailableRollupType</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
