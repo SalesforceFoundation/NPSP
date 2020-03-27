@@ -374,6 +374,48 @@ public with sharing class BDI_MigrationMappingUtility {
     }
 
     /*******************************************************************************************************
+    * @description Creates the corresponding Migrated Custom Field Mapping records
+    * @param list of Default Field Mapping record developer names
+    */
+    public void migrateNewDefaultToCustomMetadata(List<String> defaultFieldMappingDeveloperNames){
+
+        queuedMetadataTypesForDeploy.clear();
+
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByFieldMappingKey =
+                helper.getFieldMappingStringsBySetDeveloperName(DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+        Map<String, Data_Import_Field_Mapping__mdt> migratedFieldMappingsByFieldMappingKey =
+                helper.getFieldMappingStringsBySetDeveloperName(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+
+        Map<String, Data_Import_Field_Mapping__mdt> referenceFieldMappingsByStrings = new Map<String, Data_Import_Field_Mapping__mdt>();
+        List<String> referenceFieldMappingKeys =
+                helper.getFieldMappingKeysByDeveloperName(defaultFieldMappingDeveloperNames, DEFAULT_FIELD_MAPPING_SET_RECORD_NAME);
+
+        for (String key : referenceFieldMappingKeys){
+            if (migratedFieldMappingsByFieldMappingKey.containsKey(key)){
+                continue;
+            } else {
+                referenceFieldMappingsByStrings.put(key, referenceFieldMappingsByFieldMappingKey.get(key));
+            }
+        }
+
+        if (referenceFieldMappingsByStrings.size()>0){
+            for (Data_Import_Field_Mapping__mdt referenceFieldMapping : referenceFieldMappingsByStrings.values()) {
+                Data_Import_Field_Mapping__mdt clone = referenceFieldMapping.clone();
+
+                DataImportFieldMapping fieldMapping = new DataImportFieldMapping(clone, MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                fieldMapping.setFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME);
+                fieldMapping.setObjectMapping(
+                        referenceFieldMapping.DeveloperName,
+                        fieldMapping.dataImportObjectName);
+
+                fieldMapping.setRecordName(null, false);
+                queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+            }
+        }
+
+    }
+
+    /*******************************************************************************************************
     * @description Creates the Migrated Custom Field Mapping Set and adds to queuedMetadataTypesForDeploy
     */
     private void createAndEnqueueMigratedCustomFieldMappingSet() {

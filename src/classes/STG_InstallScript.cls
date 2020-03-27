@@ -42,7 +42,19 @@ global without sharing class STG_InstallScript implements InstallHandler {
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
         UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
         CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL,
-        CREATE_OPP_STAGE_TO_STATE_RECORDS
+        CREATE_OPP_STAGE_TO_STATE_RECORDS,
+        CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS
+    }
+
+    public STG_InstallScript(){
+    }
+
+    /*******************************************************************************************************
+    * @description Helper and constructor that enables and supports mocking of test data
+	*/
+    private BDI_MigrationMappingUtility util;
+    public STG_InstallScript(BDI_MigrationMappingUtility util){
+        this.util = util;
     }
 
     /*******************************************************************************************************
@@ -74,6 +86,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             // Submit generic org telemetry data back to the LMO using FeatureManagement
             executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
+
+            // Check for advanced mapping setting then create migrated custom field mappings as needed
+            executeAction(InstallAction.CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS, logger);
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -125,6 +140,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 populateNamespacePrefix();
             } else if (action == InstallAction.CREATE_OPP_STAGE_TO_STATE_RECORDS) {
                 createOppStageToStateRecordsIfNecessary();
+            } else if (action == InstallAction.CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS) {
+                createMigratedCustomFieldMappings();
             }
 
         } catch(Exception e) {
@@ -417,6 +434,22 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
         if (!metadataToInsert.isEmpty()) {
             Opp_StageMappingCMT.deployOppStageToStateMetadata(metadataToInsert, params);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a new set of Migrated Custom Field Mappings based on if advanced mapping is turned on
+    */
+    @TestVisible
+    private void createMigratedCustomFieldMappings() {
+
+        STG_PanelDataImportAdvancedMapping_CTRL ctrl = new STG_PanelDataImportAdvancedMapping_CTRL();
+
+        if (ctrl.isAdvancedMappingEnabled) {
+            List<String> newDefaultMappingStrings = new List<String>{'Account_1_City','Account_1_Country'};
+            system.debug('=== entering install script here list: ' + newDefaultMappingStrings );
+            //BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
+            util.migrateNewDefaultToCustomMetadata(newDefaultMappingStrings);
         }
     }
 
