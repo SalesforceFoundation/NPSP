@@ -26,9 +26,11 @@ Differences between these orgs are relatively slight. All orgs specify a require
 
 Additionally, depending on the intended use case of the org, features for development may be enabled:
 
- - Translation Workbench
- - Disabled Lightning cache
- - Disabled parallel Apex testing
+ - Translation Workbench (Dev, Feature, Enterprise, and Prelease)
+ - Disabled Lightning cache (Dev and Feature)
+ - Disabled parallel Apex testing (All)
+ - Enable Admin to Login As Any User (Dev, Feature and Beta)
+ - Enhanced Profile UI (Dev, Feature and Beta)
 
 as well as many other features needed to define the workspace for the org's intended purpose.
 
@@ -88,6 +90,18 @@ as well as many other features needed to define the workspace for the org's inte
 | ----------------------------- | ---- | ----------------------------------------------------------------------------------- |
 | `enable_pilot_in_scratch_org` | Task | Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment |
 
+### User Setup
+
+| Name                          | Type | Description                                                                         |
+| ----------------------------- | ---- | ----------------------------------------------------------------------------------- |
+| `create_testing_user`         | Flow | Creates a testing User assigned a new NPSP_Standard_User profile with access to all NPSP objects & fields. Perfect for testing security with a non-system admin type User. **Only Use with the qa_org Flow** |
+
+### Translation XML Cleanup
+
+| Name                           | Type | Description                                                                         |
+| ------------------------------ | ---- | ----------------------------------------------------------------------------------- |
+| `cleanup_translation_metadata` | Task | Delete extraneous and translation-excluded metadata from translation files after using retrieve_unpackaged to pull down cleaned translations from a scratch org. |
+
 
 ## Unpackaged Metadata
 
@@ -108,6 +122,8 @@ Cumulus's unpackaged configuration is used as follows:
 | `rd2_post_config/`            | Configuration to complete enablement of Enhanced Recurring Donations.         | `deploy_rd2_config`                             |               |
 | `reports/`                    | Reports and dashboards.                                                       | `deploy_reports`                                |               |
 | `trial/`                      | Trial-style experience metadata.                                              | `deploy_trial_config`                           |               |
+| `trial_translations/`         | Translations for Trial-style experience metadata.                             | `deploy_trial_translations`                     |               |
+| `npsp_standard_user_profile/` | Base Non-Admin User Proile for testing                                        | via `create_testing_user`           |               |
 
 ## Data Sets
 
