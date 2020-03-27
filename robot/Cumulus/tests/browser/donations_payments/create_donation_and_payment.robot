@@ -38,6 +38,7 @@ Create Donation from a Contact
     ...                                  object_id=${data}[contact_opportunity][Id]
     Select Tab                           Related
     Load Related List                    Payments
+    Wait Until Loading Is Complete
     Click Special Related List Button    Payments               Schedule Payments
     Current Page Should Be               Custom                 SchedulePayment
 
@@ -52,6 +53,7 @@ Create Donation from a Contact
     Go To Page                           Details
         ...                              Opportunity
         ...                              object_id=${data}[contact_opportunity][Id]
+    Wait Until Loading Is Complete
     Validate Related Record Count        Payments                 4
     Click ViewAll Related List           Payments
     Wait until page contains             Payments
