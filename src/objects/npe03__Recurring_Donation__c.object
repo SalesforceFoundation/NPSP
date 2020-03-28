@@ -253,9 +253,9 @@
                     <label>30</label>
                 </value>
                 <value>
-                    <fullName>31</fullName>
+                    <fullName>Last_Day</fullName>
                     <default>false</default>
-                    <label>31</label>
+                    <label>Last Day Of Month</label>
                 </value>
             </valueSetDefinition>
         </valueSet>

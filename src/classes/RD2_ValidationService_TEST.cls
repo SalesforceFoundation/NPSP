@@ -314,7 +314,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id);
 
         for (String day : new Set<String>{
-            '29', '30', '31'
+            '29', '30', '31', RD2_Constants.DAY_OF_MONTH_LAST_DAY
         }) {
             npe03__Recurring_Donation__c rd = rdBuilder
                 .withDayOfMonth(day)
@@ -326,12 +326,7 @@ private with sharing class RD2_ValidationService_TEST {
             } catch (Exception e) {
                 errMessage = e.getMessage();
             }
-            String expectedMessage = String.format(
-                System.Label.RD2_DayOfMonthMustBeValid,
-                new String[]{day }
-            );
-            System.assert(errMessage.contains(expectedMessage),
-                'Day Of Month should be valid: ' + errMessage);
+            System.assert(errMessage.length() == 0);
         }
 
     }
