@@ -782,6 +782,12 @@ flows:
                 task: deploy_reports
                 options:
                     unmanaged: False
+            5.5:
+                task: ensure_record_type
+                options:
+                    record_type_label: Default
+                    record_type_developer_name: Default
+                    sobject: Campaign
             6:
                 task: deploy_trailhead_config
                 options:
@@ -791,7 +797,7 @@ flows:
             8:
                 task: update_admin_profile
                 options:
-                    package_xml: lib/trailhead_admin_profile.xml
+                    include_packaged_objects: True
             9:
                 task: disable_triggers
             10:
