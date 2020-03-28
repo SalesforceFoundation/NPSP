@@ -488,7 +488,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             self.salesforce._clear(field)
         else :    
             self.salesforce._populate_field(locator, value)
-        
+
+    @capture_screenshot_on_error
     def validate_related_record_count(self,title,value):
 
         self.select_tab("Related")
@@ -1232,9 +1233,11 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
 
+    @capture_screenshot_on_error
     def scroll_button_into_view_and_click_using_js(self, value):
         """Scrolls the button element into view and clicksthe button using JS """
         xpath = npsp_lex_locators['button'].format(value)
+        self.selenium.wait_until_element_is_visible(xpath)
         javascript = (
             "window.document.evaluate("
             f"    '{xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null"
@@ -1242,6 +1245,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
         )
         self.selenium.execute_javascript(javascript)
+        time.sleep(2)
         self.npsp.click_button_with_value(value)
 
     def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None,
