@@ -544,8 +544,6 @@ public without sharing class RD2_ScheduleService {
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH))
         {
-            //TODO: Problem is that the current calculation works for last day in most situations, but not for greater
-            //      than 30.  Why do the tests work for 29 and 30????
             Boolean adjustLastDay = (
                 schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
                 Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(nextDate.year(), nextDate.month())
