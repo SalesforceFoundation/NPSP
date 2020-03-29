@@ -262,6 +262,63 @@ private with sharing class RD2_ScheduleService_TEST {
     * @description Verifies next donation date for monthly donation when donation falls in next month.
     */
     @isTest
+    private static void shouldGenerateNextDonationDateLastDayInFebruaryWhenDayIs29() {
+        Date startDate = Date.newInstance(2020, 11, 29);
+        Date today = Date.newInstance(2021, 2, 10);
+        Date nextDonationDate = Date.newInstance(2021, 2, 28);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+                .withStartDate(startDate)
+                .withDayOfMonth('29')
+                .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+    }
+
+    /***
+    * @description Verifies next donation date for monthly donation when donation falls in next month.
+    */
+    @isTest
+    private static void shouldGenerateNextDonationDateLastDayInFebruaryWhenDayIs30() {
+        Date startDate = Date.newInstance(2020, 11, 30);
+        Date today = Date.newInstance(2021, 2, 10);
+        Date nextDonationDate = Date.newInstance(2021, 2, 28);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+                .withStartDate(startDate)
+                .withDayOfMonth('30')
+                .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+    }
+
+    /***
+    * @description Verifies next donation date for monthly donation when donation falls in next month.
+    */
+    @isTest
+    private static void shouldGenerateNextDonationDateLastDayInFebruaryWhenDayIs31() {
+        Date startDate = Date.newInstance(2020, 11, 29);
+        Date today = Date.newInstance(2021, 2, 10);
+        Date nextDonationDate = Date.newInstance(2021, 2, 28);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+                .withStartDate(startDate)
+                .withDayOfMonth('31')
+                .build();
+
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+    }
+
+    /***
+    * @description Verifies next donation date for monthly donation when donation falls in next month.
+    */
+    @isTest
     private static void shouldGenerateNextDonationDateLastDayInFebruaryLeapYear() {
         Date startDate = Date.newInstance(2019, 11, 30);
         Date today = Date.newInstance(2020, 2, 10);

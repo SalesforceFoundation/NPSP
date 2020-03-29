@@ -477,6 +477,7 @@ public without sharing class RD2_ScheduleService {
             adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
         }
 
+        //TODO: Shouldn't this test for any day > days of month??
         if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY && schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
             adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
         }
@@ -543,12 +544,17 @@ public without sharing class RD2_ScheduleService {
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH))
         {
+            //TODO: Problem is that the current calculation works for last day in most situations, but not for greater
+            //      than 30.  Why do the tests work for 29 and 30????
+            Boolean adjustLastDay = (
+                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
+                Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(nextDate.year(), nextDate.month())
+            );
             nextDate = Date.newInstance(
                 nextDate.year(),
                 nextDate.month(),
-                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
-                    Date.daysInMonth(nextDate.year(), nextDate.month()) :
-                    Integer.valueOf(schedule.DayOfMonth__c)
+                adjustLastDay ? Date.daysInMonth(nextDate.year(), nextDate.month()) :
+                                Integer.valueOf(schedule.DayOfMonth__c)
             );
             nextDate = nextDate >= schedule.StartDate__c ? nextDate : nextDate.addMonths(1);
         }
