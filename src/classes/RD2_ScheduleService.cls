@@ -477,7 +477,6 @@ public without sharing class RD2_ScheduleService {
             adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
         }
 
-        //TODO: Shouldn't this test for any day > days of month??
         if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY && schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
             adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
         }

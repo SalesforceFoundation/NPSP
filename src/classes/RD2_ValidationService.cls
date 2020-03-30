@@ -285,7 +285,7 @@ public with sharing class RD2_ValidationService {
             } catch (Exception e) {
             }
 
-            Boolean isValid = dayOfMonth > 0 && dayOfMonth < 32;
+            Boolean isValid = dayOfMonth > 0 && dayOfMonth < 31;
 
             if (!isValid) {
                 rd.addError(
