@@ -259,60 +259,77 @@ private with sharing class RD2_ScheduleService_TEST {
     }
 
     /***
-    * @description Verifies next donation date for February when DayOfMonth == 29.
+    * @description Verifies next donation date for February when Day Of Month is 29.
     */
     @isTest
     private static void shouldGenerateNextDonationDateLastDayInFebruaryWhenDayIs29() {
-        Date startDate = Date.newInstance(2020, 11, 29);
+        final Integer dayOfMonth = 29;
+        final Date startDate = Date.newInstance(2021, 2, 1);
         Date today = Date.newInstance(2021, 2, 10);
         Date nextDonationDate = Date.newInstance(2021, 2, 28);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
                 .withStartDate(startDate)
-                .withDayOfMonth('29')
+                .withDayOfMonth(String.valueOf(dayOfMonth))
                 .build();
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for Feb installment');
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        today = Date.newInstance(2021, 3, 1);
+        nextDonationDate = Date.newInstance(2021, 3, dayOfMonth);
+
+        service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for March installment');
     }
 
     /***
-    * @description Verifies next donation date for February when DayOfMonth == 30.
+    * @description Verifies next donation date for February when Day Of Month is 30.
     */
     @isTest
     private static void shouldGenerateNextDonationDateLastDayInFebruaryWhenDayIs30() {
-        Date startDate = Date.newInstance(2020, 11, 30);
+        final Integer dayOfMonth = 30;
+        final Date startDate = Date.newInstance(2021, 2, 1);
         Date today = Date.newInstance(2021, 2, 10);
         Date nextDonationDate = Date.newInstance(2021, 2, 28);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
                 .withStartDate(startDate)
-                .withDayOfMonth('30')
+                .withDayOfMonth(String.valueOf(dayOfMonth))
                 .build();
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for Feb installment');
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        today = Date.newInstance(2021, 3, 1);
+        nextDonationDate = Date.newInstance(2021, 3, dayOfMonth);
+
+        service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for March installment');
     }
 
     /***
-    * @description Verifies next donation date for February during leap year.
+    * @description Verifies next donation date for monthly donation when donation falls in next month.
     */
     @isTest
     private static void shouldGenerateNextDonationDateLastDayInFebruaryLeapYear() {
-        Date startDate = Date.newInstance(2019, 11, 30);
+        final Date startDate = Date.newInstance(2020, 2, 1);
         Date today = Date.newInstance(2020, 2, 10);
         Date nextDonationDate = Date.newInstance(2020, 2, 29);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withStartDate(startDate)
-            .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
-            .build();
+                .withStartDate(startDate)
+                .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+                .build();
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for Feb installment');
 
-        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match');
+        today = Date.newInstance(2020, 3, 1);
+        nextDonationDate = Date.newInstance(2020, 3, 31);
+
+        service = getScheduleServiceForCurrentDate(today);
+        System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for March installment');
     }
 
     /***

@@ -310,25 +310,25 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldFailWhenDayOfMonthIsNotValidForMonthlyInstallments() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        TEST_RecurringDonationBuilder rdBuilder = getRecurringDonationBuilder()
-            .withContact(getContact().Id);
-
-        for (String day : new Set<String>{
-            '29', '30', '31', RD2_Constants.DAY_OF_MONTH_LAST_DAY
-        }) {
-            npe03__Recurring_Donation__c rd = rdBuilder
+        String day = '31';
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+                .withContact(getContact().Id)
                 .withDayOfMonth(day)
                 .build();
 
-            String errMessage = '';
-            try {
-                insert rd;
-            } catch (Exception e) {
-                errMessage = e.getMessage();
-            }
-            System.assert(errMessage.length() == 0);
+        String errMessage = '';
+        try {
+            insert rd;
+        } catch (Exception e) {
+            errMessage = e.getMessage();
         }
 
+        String expectedMessage = String.format(
+                System.Label.RD2_DayOfMonthMustBeValid,
+                new String[]{ day }
+        );
+        System.assert(errMessage.contains(expectedMessage),
+                'The error message should contain invalud Day Of Month message: ' + errMessage);
     }
 
     /***
@@ -339,14 +339,14 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         TEST_RecurringDonationBuilder rdBuilder = getRecurringDonationBuilder()
-            .withContact(getContact().Id);
+                .withContact(getContact().Id);
 
         for (String day : new Set<String>{
-            '15', '10', '28'
+                '15', '10', '28', '29', '30'
         }) {
             npe03__Recurring_Donation__c rd = rdBuilder
-                .withDayOfMonth(day)
-                .build();
+                    .withDayOfMonth(day)
+                    .build();
 
             String errMessage = '';
             try {
