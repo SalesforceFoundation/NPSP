@@ -477,11 +477,12 @@ public without sharing class RD2_ScheduleService {
             adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
         }
 
-        if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY && schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
-        }
-        else if (Schedule.DayOfMonth__c != null && Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(firstValid.year(), firstValid.month())) {
-            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Integer.valueOf(schedule.DayOfMonth__c));
+        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+            Integer nextDayOfMonth =
+                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
+                    Date.daysInMonth(adjusted.year(),adjusted.month()) :
+                    Integer.valueOf(schedule.DayOfMonth__c);
+            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
         }
 
         return adjusted;
