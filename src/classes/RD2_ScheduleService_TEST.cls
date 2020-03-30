@@ -925,7 +925,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
-        
+
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
 
         Test.startTest();
@@ -949,13 +949,214 @@ private with sharing class RD2_ScheduleService_TEST {
             AND Active__c = true];
 
         List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
-            new List<npe03__Recurring_Donation__c>{ rd }, startDate, null, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }
+                new List<npe03__Recurring_Donation__c>{ rd }, startDate, null, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }
         ).values()[0];
 
         Integer expectedNumber = 12;
         System.assertEquals(expectedNumber, installments.size(), 'There should be 12 installments.');
-        System.assertEquals(nextDonationDate, installments[ expectedNumber - 1].nextDonationDate, 
-            'Final installment date should be 10/1/2020.');
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 1].nextDonationDate,
+                'Final installment date should be 10/1/2020.');
+    }
+
+    /***
+    * @description Verifies visualization works as expected across short month with day of month > days in short month
+    */
+    @isTest
+    private static void shouldReturnThreeInstallmentsSpanningFebruaryInNormalYear() {
+        final Date startDate = Date.newInstance(2021, 1, 1);
+        String dayOfMonth = '29';
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+                .withDayOfMonth(dayOfMonth)
+                .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> schedules = [
+            SELECT
+                Campaign__c,
+                Campaign__r.Name,
+                DayOfMonth__c,
+                EndDate__c,
+                InstallmentAmount__c,
+                InstallmentFrequency__c,
+                InstallmentPeriod__c,
+                PaymentMethod__c,
+                RecurringDonation__c,
+                StartDate__c
+            FROM RecurringDonationSchedule__c
+            WHERE RecurringDonation__c = :rd.Id
+            AND Active__c = true];
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+                new List<npe03__Recurring_Donation__c>{ rd }, startDate, 3, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }
+        ).values()[0];
+
+        Integer expectedNumber = 3;
+        System.assertEquals(expectedNumber, installments.size(), 'There should be 3 installments.');
+        Date nextDonationDate = Date.newInstance(2021, 1, 29);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 3].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
+        nextDonationDate = Date.newInstance(2021, 2, 28);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 2].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
+        nextDonationDate = Date.newInstance(2021, 3, 29);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 1].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
+    }
+
+    /***
+    * @description Verifies visualization works as expected across short month with day of month > days in short month
+    */
+    @isTest
+    private static void shouldReturnTwoInstallmentsStaringFebruaryInNormalYear() {
+        final Date startDate = Date.newInstance(2021, 2, 1);
+        String dayOfMonth = '29';
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+                .withDayOfMonth(dayOfMonth)
+                .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> schedules = [
+            SELECT
+                Campaign__c,
+                Campaign__r.Name,
+                DayOfMonth__c,
+                EndDate__c,
+                InstallmentAmount__c,
+                InstallmentFrequency__c,
+                InstallmentPeriod__c,
+                PaymentMethod__c,
+                RecurringDonation__c,
+                StartDate__c
+            FROM RecurringDonationSchedule__c
+            WHERE RecurringDonation__c = :rd.Id
+            AND Active__c = true];
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+                new List<npe03__Recurring_Donation__c>{ rd }, startDate, 2, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }
+        ).values()[0];
+
+        Integer expectedNumber = 2;
+        System.assertEquals(expectedNumber, installments.size(), 'There should be 2 installments.');
+        Date nextDonationDate = Date.newInstance(2021, 2, 28);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 2].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
+        nextDonationDate = Date.newInstance(2021, 3, 29);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 1].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);    }
+
+    /***
+    * @description Verifies visualization works as expected across short month with day of month > days in short month
+    */
+    @isTest
+    private static void shouldReturnThreeInstallmentsSpanningFebruaryInLeapYear() {
+        final Date startDate = Date.newInstance(2020, 1, 1);
+        String dayOfMonth = '30';
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+                .withDayOfMonth(dayOfMonth)
+                .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> schedules = [
+            SELECT
+                Campaign__c,
+                Campaign__r.Name,
+                DayOfMonth__c,
+                EndDate__c,
+                InstallmentAmount__c,
+                InstallmentFrequency__c,
+                InstallmentPeriod__c,
+                PaymentMethod__c,
+                RecurringDonation__c,
+                StartDate__c
+            FROM RecurringDonationSchedule__c
+            WHERE RecurringDonation__c = :rd.Id
+            AND Active__c = true];
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+                new List<npe03__Recurring_Donation__c>{ rd }, startDate, 3, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }
+        ).values()[0];
+
+        Integer expectedNumber = 3;
+        System.assertEquals(expectedNumber, installments.size(), 'There should be 3 installments.');
+        Date nextDonationDate = Date.newInstance(2020, 1, 30);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 3].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
+        nextDonationDate = Date.newInstance(2020, 2, 29);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 2].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
+        nextDonationDate = Date.newInstance(2020, 3, 30);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 1].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
+    }
+
+    /***
+    * @description Verifies visualization works as expected across short month with day of month > days in short month
+    */
+    @isTest
+    private static void shouldReturnTwoInstallmentsStaringFebruaryInLeapYear() {
+        final Date startDate = Date.newInstance(2020, 2, 1);
+        String dayOfMonth = '30';
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
+                .withDayOfMonth(dayOfMonth)
+                .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        List<RecurringDonationSchedule__c> schedules = [
+            SELECT
+                Campaign__c,
+                Campaign__r.Name,
+                DayOfMonth__c,
+                EndDate__c,
+                InstallmentAmount__c,
+                InstallmentFrequency__c,
+                InstallmentPeriod__c,
+                PaymentMethod__c,
+                RecurringDonation__c,
+                StartDate__c
+            FROM RecurringDonationSchedule__c
+            WHERE RecurringDonation__c = :rd.Id
+            AND Active__c = true];
+
+        List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
+                new List<npe03__Recurring_Donation__c>{ rd }, startDate, 2, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }
+        ).values()[0];
+
+        Integer expectedNumber = 2;
+        System.assertEquals(expectedNumber, installments.size(), 'There should be 2 installments.');
+        Date nextDonationDate = Date.newInstance(2020, 2, 29);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 2].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
+        nextDonationDate = Date.newInstance(2020, 3, 30);
+        System.assertEquals(nextDonationDate, installments[ expectedNumber - 1].nextDonationDate,
+                'Final installment date should be ' + nextDonationDate);
     }
 
     /***
