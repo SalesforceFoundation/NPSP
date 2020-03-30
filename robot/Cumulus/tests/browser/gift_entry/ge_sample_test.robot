@@ -5,14 +5,15 @@ Library         cumulusci.robotframework.PageObjects
 ...             robot/Cumulus/resources/NPSPSettingsPageObject.py
 ...             robot/Cumulus/resources/GiftEntryPageObject.py
 Suite Setup     Open Test Browser
+
 Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 
 *** Test Cases ***
 
 Enable Advanced Mapping
-    [Documentation]    This test case checks if advanced mapping is enabled. If already enabled 
-    ...                then throws an error and if not, enables Advanced Mapping for Data Imports 
-    [tags]             feature:BDI
+    [Documentation]                           This test case assumes that Advanced Mapping and GE is disabled by default. If AM is already enabled 
+    ...                                       then throws an error and if not, enables Advanced Mapping and GE for Data Imports 
+    [tags]                                    feature:GE    Accessibility
     Go To Page                                Custom          NPSP_Settings
     Open Main Menu                            System Tools
     Click Link With Text                      Advanced Mapping for Data Import & Gift Entry
@@ -22,7 +23,7 @@ Enable Advanced Mapping
     Choose Frame                              Nonprofit Success Pack Settings
     Click Toggle Button                       Gift Entry
     Wait For Message                          Gift Entry Enabled
-    Select App Launcher Tab                   Gift Entry
+    Go To page                                Custom                GE_Gift_Entry
     Wait until Page contains                  Templates
     Click Element                             //*[@data-qa-locator="button Create Template"]/button
     Wait until Page contains                  New Template
@@ -41,6 +42,15 @@ Enable Advanced Mapping
     Click Button                              New Batch
     Wait Until Modal Is Open
     Click Element                             //input[@name="Template"]
-    Click Link                                Default Gift Entry Template
-    Click Modal Button                        Next
-    
+    Click Element                             //span[text()="Default Gift Entry Template"]
+    Click Button                              Next
+    ${batch} =                                Generate Random String
+    Fill BGE Form
+    ...    Batch Name=${batch}
+    ...    Batch Description=This batch is created by using GE feature
+    Click Button                              Next
+    Scroll Element Into View                  //button[text()="Save"]  
+    Click Button                              Save
+    Wait For Locator                          bge.title              Batch Gift Entry
+    Verify Title                              Batch Gift Entry       ${batch}
+    Run Accessibility Check
