@@ -478,10 +478,13 @@ public without sharing class RD2_ScheduleService {
         }
 
         if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-            Integer nextDayOfMonth =
-                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
-                    Date.daysInMonth(adjusted.year(),adjusted.month()) :
-                    Integer.valueOf(schedule.DayOfMonth__c);
+            Integer nextDayOfMonth;
+            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY || Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(adjusted.year(), adjusted.month())) {
+                nextDayOfMonth = Date.daysInMonth(adjusted.year(),adjusted.month());
+            }
+            else {
+                nextDayOfMonth = Integer.valueOf(schedule.DayOfMonth__c);
+            }
             adjusted = Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
         }
 
