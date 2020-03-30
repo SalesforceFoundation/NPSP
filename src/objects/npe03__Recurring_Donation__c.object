@@ -257,11 +257,6 @@
                     <default>false</default>
                     <label>31</label>
                 </value>
-                <value>
-                    <fullName>Last_Day</fullName>
-                    <default>false</default>
-                    <label>Last Day Of Month</label>
-                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
