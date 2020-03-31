@@ -1,8 +1,10 @@
 /*
     Copyright (c) 2020, Salesforce.org
     All rights reserved.
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -11,6 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -27,12 +30,12 @@
 /**
 * @author Salesforce.org
 * @date 2020 (2.x)
-* @description Tests for DRS_ContactMerge_CTRL
+* @description Tests for CON_ContactMerge_CTRL
 * @group ContactMerge
 * @group-content ../../ApexDocContent/ContactMerge.htm
 */
 @isTest(isParallel=true)
-public with sharing class DRS_ContactMerge_Test {
+public with sharing class CON_DRSContactMerge_Test {
     //This is test on initail load of the Contact Merge Page
     static testMethod void testInitailLoadOfPage() {
         exerciseUI();
@@ -60,11 +63,11 @@ public with sharing class DRS_ContactMerge_Test {
         Test.stopTest();
     }
 
-    //This is test to redirection to DRS_ContactMerge Page
+    //This is test to redirection to CON_DRSContactMerge Page
     static testMethod void testRedirectToDRSContactMerge() {
         CON_ContactMerge_CTRL controller 
             = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
-        PageReference expectedPage = new PageReference('/apex/DRS_ContactMerge');
+        PageReference expectedPage = new PageReference('/apex/CON_DRSContactMerge');
         PageReference actualPage = controller.redirectToShowDRSList();
         System.assertEquals(expectedPage.getUrl() , actualPage.getUrl());
         System.assertEquals(controller.hasDSRObjectReadPermission(), true);
@@ -82,9 +85,9 @@ public with sharing class DRS_ContactMerge_Test {
         
         Test.startTest();
         getDuplicateSetOfRecords(15);  
-        Test.setCurrentPageReference(new PageReference('Page.DRS_ContactMerge'));
-        DRS_ContactMerge_CTRL controller 
-            = new DRS_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
+        Test.setCurrentPageReference(new PageReference('Page.CON_DRSContactMerge'));
+        CON_DRSContactMerge_CTRL controller 
+            = new CON_DRSContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
 
         controller.showDuplicateRecordSets();
         Boolean hasNextvalue = controller.hasNext;
@@ -115,9 +118,9 @@ public with sharing class DRS_ContactMerge_Test {
         Test.startTest();
         getDuplicateSetOfRecords(15);  
         
-        Test.setCurrentPageReference(new PageReference('Page.DRS_ContactMerge'));
-        DRS_ContactMerge_CTRL controller 
-            = new DRS_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
+        Test.setCurrentPageReference(new PageReference('Page.CON_DRSContactMerge'));
+        CON_DRSContactMerge_CTRL controller 
+            = new CON_DRSContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
 
         controller.showDuplicateRecordSets();
         controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
@@ -132,9 +135,9 @@ public with sharing class DRS_ContactMerge_Test {
 
         Test.startTest();
         getDuplicateSetOfRecords(15);        
-        Test.setCurrentPageReference(new PageReference('Page.DRS_ContactMerge'));
-        DRS_ContactMerge_CTRL controller 
-            = new DRS_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
+        Test.setCurrentPageReference(new PageReference('Page.CON_DRSContactMerge'));
+        CON_DRSContactMerge_CTRL controller 
+            = new CON_DRSContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
 
         controller.showDuplicateRecordSets();
         controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
@@ -164,22 +167,24 @@ public with sharing class DRS_ContactMerge_Test {
         
         Test.startTest();
         getDuplicateSetOfRecords(15);        
-        Test.setCurrentPageReference(new PageReference('Page.DRS_ContactMerge'));
-        DRS_ContactMerge_CTRL controller 
-            = new DRS_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
+        Test.setCurrentPageReference(new PageReference('Page.CON_DRSContactMerge'));
+        CON_DRSContactMerge_CTRL controller 
+            = new CON_DRSContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
 
         controller.showDuplicateRecordSets();
         controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
         controller.showContactRelatedToDRS(); 
-        // now select  1 contacts from the contactwrapper to proceed for merge
+        // now select  2 contacts from the contactwrapper to proceed for merge
         controller.contactResults[0].selected = true;
+        //controller.contactResults[1].selected = true;
         Id contactId = controller.contactResults[0].contactRecord.Id; 
         controller.nextStep();
+        
         apexPages.Message[] pageMessages = ApexPages.getMessages();
         System.assertNotEquals(0, pageMessages.size());
         Boolean messageFound = false;
-        for(ApexPages.Message message : pageMessages) {
-            if( message.getSeverity() == ApexPages.Severity.Error
+        for (ApexPages.Message message : pageMessages) {
+            if ( message.getSeverity() == ApexPages.Severity.Error
               && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Few_Contacts) {
                 messageFound = true;
             }
@@ -228,9 +233,10 @@ public with sharing class DRS_ContactMerge_Test {
         duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con4.Id));
         insert duplicateRecordItems;
                
-        Test.setCurrentPageReference(new PageReference('Page.DRS_ContactMerge'));
-        DRS_ContactMerge_CTRL controller 
-            = new DRS_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
+        Test.setCurrentPageReference(new PageReference('Page.CON_DRSContactMerge'));
+
+        CON_DRSContactMerge_CTRL controller 
+            = new CON_DRSContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<DuplicateRecordSet>())) ;
 
         controller.showDuplicateRecordSets();
         controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
@@ -241,12 +247,13 @@ public with sharing class DRS_ContactMerge_Test {
         controller.contactResults[2].selected = true;
         controller.contactResults[3].selected = true;
         Id contactId = controller.contactResults[0].contactRecord.Id; 
+
         controller.nextStep();
         apexPages.Message[] pageMessages = ApexPages.getMessages();
         System.assertNotEquals(0, pageMessages.size());
         Boolean messageFound = false;
-        for(ApexPages.Message message : pageMessages) {
-            if( message.getSeverity() == ApexPages.Severity.Error
+        for (ApexPages.Message message : pageMessages) {
+            if ( message.getSeverity() == ApexPages.Severity.Error
               && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Many_Contacts) {
                 messageFound = true;
             }
