@@ -43,6 +43,17 @@ public class GE_PaymentServices_TEST {
     public static final String GOOD_TOKEN = 'good-token';
     public static final String BAD_TOKEN = 'bad-token';
 
+    // JWT secret key
+    private static final string API_SECRET_KEY = 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4';
+
+    // JWT payload; exp is in miliseconds - we make the JWT valid for 1 minute
+    private static final Map<String, String> JWT_PAYLOAD = 
+            new Map<String, String> { 'iss' => 'ApiKeyManager',
+                                      'sub' => UserInfo.getUserName(),
+                                      'sfdo.roles' => 'Payments.Purchase',
+                                      'sfdo.product' => 'CRM',
+                                      'exp' => String.valueOf(Datetime.now().getTime() + 60 * 1000)};
+
     @isTest static void shouldReturnSuccessfulResponse() {
         // Set mock callout class 
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
@@ -73,6 +84,22 @@ public class GE_PaymentServices_TEST {
         String expectedValue = FAILED_RESPONSE_BODY;
         System.assertEquals(403, response.getStatusCode());
         System.assertEquals(actualValue, expectedValue);
+    }
+
+
+    @isTest
+    private static void testMakePayment() {
+        // create the payload
+        String payload = JSON.serialize(JWT_PAYLOAD);
+
+        // create the jwt
+        String jwt = UTIL_Jwt.getSignedJWTFromString(payload, API_SECRET_KEY);
+
+        // tokenize
+        
+
+        // purchase
+
     }
 
     public class MockHttpResponseGenerator implements HttpCalloutMock {
