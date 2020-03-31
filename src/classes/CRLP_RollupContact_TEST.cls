@@ -37,8 +37,12 @@
 public class CRLP_RollupContact_TEST {
 
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, testSkewBatch, TestWithAlwaysRollupToPrimary
+        TestTrigger, TestQueueuable, TestBatch, testSkewBatch, TestMultiCurrBatch, TestWithAlwaysRollupToPrimary
     }
+
+    private static String otherCurrencyCode;
+
+    private static String defaultCurrCode = UserInfo.getDefaultCurrency();
 
     /**
      * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
@@ -48,7 +52,8 @@ public class CRLP_RollupContact_TEST {
     private static void setupBaseTestData() {
         Contact c1 = UTIL_UnitTestData_TEST.getContact();
         Contact c2 = UTIL_UnitTestData_TEST.getContact();
-        insert new List<Contact>{c1, c2};
+        Contact c3 = UTIL_UnitTestData_TEST.getContact();
+        insert new List<Contact>{c1, c2, c3};
     }
 
     /**
@@ -218,6 +223,10 @@ public class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToContact,
                         'First_Soft_Credit_Amount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') + ',' +
 
+                 CMT_UnitTestData_TEST.createRollupRecord('Sum of Number in multicurrency', null,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'custom_cont_num__c', CRLP_Operation.RollupType.SUM, 'custom_number__c') + ',' +
+
                 CMT_UnitTestData_TEST.createRollupRecord('Total Writeoffs', filterGroupId2,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToContact,
                         'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') +
@@ -244,6 +253,49 @@ public class CRLP_RollupContact_TEST {
         testRollupsServices(TestType.TestWithAlwaysRollupToPrimary);
     }
 
+    @isTest
+    public static void test_Rollups_ForMultiCurrencyOrg() {
+        //CRLP_RollupAccount_TEST.test_Rollups_MultiCurrencyBatch();
+        setUpMultiCurrencyOrg();
+        testRollupsServices(TestType.TestMultiCurrBatch);
+
+    }
+    private static void setUpMultiCurrencyOrg() {
+        // Test is only relevant for multi-currency organizations.  If not, skip it
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        CRLP_RollupAccount_TEST.UtilCurrencyCacheMock mockCurrencyCache = new CRLP_RollupAccount_TEST.UtilCurrencyCacheMock();
+        UTIL_CurrencyCache.instance = mockCurrencyCache;
+
+        // Define a simple 2x exchange rate to use for this test
+        mockCurrencyCache.effectiveRatesReturn = new List<Decimal>{ 2.0 };
+        mockCurrencyCache.effectiveDatesReturn = new List<Date>{ Date.newInstance(1900,1,1) };
+
+        // Test is only relevant if the multicurrency org actually has multiple currencies.   If not, skip it
+        SObject[] currencies = Database.query('SELECT IsoCode FROM CurrencyType WHERE IsActive = True');
+        if (currencies.size() <= 1) {
+            return;
+        }
+
+        // Get another currency code to use for the future tests
+        for (SObject curr : currencies) {
+            if ((String)curr.get('IsoCode') != defaultCurrCode) {
+                otherCurrencyCode = (String)curr.get('IsoCode');
+                break;
+            }
+        }
+
+        // Enable for standard currency management in the mock
+        UTIL_Currency_TEST.UtilCurrencyMock mockCurr = new UTIL_Currency_TEST.UtilCurrencyMock();
+        UTIL_Currency.instance = mockCurr;
+        mockCurr.orgDefaultCurrencyReturn = defaultCurrCode;
+        mockCurr.getDefaultCurrencyReturn = defaultCurrCode;
+        mockCurr.isAdvancedCurrencyManagementEnabledReturn = false; // we're forcing the rates rather than attempting to query
+        mockCurr.isMultiCurrencyOrganizationReturn = true;
+    }
+
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Contact using
      * four different methods:
@@ -253,7 +305,8 @@ public class CRLP_RollupContact_TEST {
      * 4. Nightly LDV Batch Job
      */
     private static void testRollupsServices(TestType tt) {
-
+        Contact multiCurrCont;
+        Map<Id, Contact> mapConIdCon;
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
@@ -311,6 +364,7 @@ public class CRLP_RollupContact_TEST {
         insert orgAcct;
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
         List<Opportunity> opps = new List<Opportunity>();
@@ -384,6 +438,49 @@ public class CRLP_RollupContact_TEST {
             String donationYr = UTIL_String.removeNonNumericCharacters(orgDonationDate.year().format());
             donationYears.add(donationYr);
         }
+        if (tt == TestType.TestMultiCurrBatch) {
+
+            multiCurrCont = UTIL_UnitTestData_TEST.getContact();
+            insert multiCurrCont;
+            //Contact multiCurrCont = [SELECT Id, FirstName, LastName, AccountId FROM Contact where Id =:cont.Id];
+            //multiCurrCont.put('CurrencyIsoCode', otherCurrencyCode);
+            multiCurrCont.CurrencyIsoCode = otherCurrencyCode;
+            Id acc = multiCurrCont.AccountId;
+
+            Database.update(multiCurrCont);
+            Opportunity opp = new Opportunity(
+                Name = 'Test MultiCurrencyOpp',
+                CloseDate = Date.today().addDays(10),
+                Amount = 50,
+                StageName = openStage,
+                AccountId = multiCurrCont.AccountId,
+                Primary_Contact__c = multiCurrCont.Id,
+                RecordTypeId = rtId,
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                custom_number__c = 100,
+                Type = 'New'
+
+            );
+
+            Opportunity opp2 = new Opportunity(
+                Name = 'Test MultiCurrencyOpp2',
+                CloseDate = Date.today().addDays(2),
+                Amount = 100,
+                StageName = openStage,
+                AccountId = multiCurrCont.AccountId,
+                Primary_Contact__c = multiCurrCont.Id,
+                RecordTypeId = rtId,
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                custom_number__c = 200,
+                Type = 'New'
+
+            );
+            opp.put('CurrencyIsoCode', defaultCurrCode);
+            opp2.put('CurrencyIsoCode', defaultCurrCode);
+            opps.add(opp);
+            opps.add(opp2);
+
+        }
 
         // create 4 opps for con4 to test single result opp edge cases
         Date earlyLastYear = Date.newInstance(Date.today().year()-1,1,1);
@@ -438,7 +535,7 @@ public class CRLP_RollupContact_TEST {
                 Type = 'New'
         ));
 
-        insert opps;
+           insert opps;
 
         // Mark two payments as written off; though only one should be rolled up
         npe01__OppPayment__c pmt1 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
@@ -469,7 +566,7 @@ public class CRLP_RollupContact_TEST {
         if (tt == TestType.TestTrigger) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
-        } else if (tt == TestType.TestBatch) {
+        } else if (tt == TestType.TestBatch || tt == TestType.TestMultiCurrBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
         } else if (tt == TestType.testSkewBatch) {
@@ -481,10 +578,10 @@ public class CRLP_RollupContact_TEST {
         Test.stopTest();
 
         // Query the Contact with all the target fields specified in the rollups
-        String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
-        c = Database.query(conQuery);
-        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :con4Id LIMIT 1';
-        c4 = Database.query(conQuery);
+        String baseContactQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType);
+        mapConIdCon = new Map<Id, Contact>((List<Contact>)Database.query(baseContactQuery));
+        c = mapConIdCon.get(conId);
+        c4 = mapConIdCon.get(con4Id);
 
         // If the AlwaysRollupToPrimaryContact field is checked, the totals will include the org donation
         if (tt == TestType.TestWithAlwaysRollupToPrimary) {
@@ -498,6 +595,11 @@ public class CRLP_RollupContact_TEST {
             }
         }
 
+        if (tt == TestType.TestMultiCurrBatch) {
+            Contact con = mapConIdCon.get(multiCurrCont.Id);
+            System.debug('Here is the contact with multicurrency:' + con);
+            System.assertEquals(300, con.custom_cont_num__c, 'The number of closed won opps should be equal to ' + 300);
+        }
         // Basic rollup asserts using existing NPSP rollup fields.
         System.assertEquals(cnt, c.npo02__NumberOfClosedOpps__c);
         System.assertEquals(totalDonations, c.npo02__TotalOppAmount__c);
@@ -507,11 +609,12 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals(totalDonations.divide(cnt, 2, System.RoundingMode.HALF_UP), c.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, c.npo02__Best_Gift_Year__c);
-        System.assertEquals(last365Days, c.npo02__OppAmountLastNDays__c);
+        System.assertEquals(last365Days, c.npo02__OppAmountLastNDays__c, 'what is the number' + last365Days);
         System.assertEquals('New', c.Department);
 
         System.assertEquals(1, c.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
         System.assertEquals(wonCountLastYear, c.npo02__OppsClosedLastYear__c, 'The number of closed won opps should be equal to ' + wonCountLastYear);
+
 
         // These 10 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
@@ -531,15 +634,11 @@ public class CRLP_RollupContact_TEST {
         if (tt == TestType.TestBatch) {
             // Contact2.npo02__NumberOfClosedOpps__c was set to 100, but has attached opps, so it should be reset to 0.
             Id c2Id = c2.Id;
-            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
-            c2 = database.query(conQuery);
+            c2 = mapConIdCon.get(c2Id);
             System.assertEquals(0, c2.npo02__NumberOfClosedOpps__c);
 
-            // Contact3.npo02__NumberOfClosedOpps__c was set to null and has attached opps, so it remain as
-            // null (vs. being reset to 0).
             Id c3Id = c3.Id;
-            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c3Id LIMIT 1';
-            c3 = database.query(conQuery);
+            c3 = mapConIdCon.get(c3Id);
             System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
         }
     }
