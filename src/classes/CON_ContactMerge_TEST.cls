@@ -37,8 +37,8 @@
 @isTest
 public class CON_ContactMerge_TEST {
 
-    public static void selectMasterRecord(CON_ContactMerge_CTRL cont, Id masterId) {
-        for (CON_ContactMerge_CTRL.FieldRow row : cont.fieldRows) {
+    public static void selectMasterRecord(CON_ContactMerge_UTIL cont, Id masterId) {
+        for (CON_ContactMerge_UTIL.FieldRow row : cont.fieldRows) {
             if (row.showRadio) {
                 row.selectedValue = String.valueOf(masterId);
             }
@@ -106,7 +106,7 @@ public class CON_ContactMerge_TEST {
         controller.search();
         controller.searchResults[0].selected = true;
         controller.searchResults[1].selected = true; // Select second contact
-        String record1Id = controller.searchResults[1].con.id;
+        String record1Id = controller.searchResults[1].contactRecord.id;
 
         controller.nextStep();
 
@@ -114,9 +114,9 @@ public class CON_ContactMerge_TEST {
 
         System.assertEquals(3, controller.step); // We are now on step 3, "choose winning contact"
 
-        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;
+        List<CON_ContactMerge_UTIL.FieldRow> fieldRows = controller.fieldRows;
 
-        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+        for (CON_ContactMerge_UTIL.FieldRow row : fieldRows) {
             if (row.fieldName.equals('Master')) {
                 System.assert(row.showRadio);
                 System.assert(row.selectedValue != null); // Since all contacts were created simulateneously, hard to know which one will be selected by default
@@ -136,7 +136,7 @@ public class CON_ContactMerge_TEST {
         ApexPages.currentPage().getParameters().put('recordId', record1Id);
         controller.selectDefaultRecord();
 
-        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+        for (CON_ContactMerge_UTIL.FieldRow row : fieldRows) {
             if (row.showRadio) {
                 System.assertEquals(record1Id, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
             }
