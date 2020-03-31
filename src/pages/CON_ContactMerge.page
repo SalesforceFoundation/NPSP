@@ -165,19 +165,19 @@
                                                         <apex:inputCheckbox value="{!item.selected}"/>
                                                         <span class="slds-checkbox_faux" id="fauxCBSelect"></span>
                                                         <span class="slds-form-element__label slds-assistive-text">
-                                                            {!$Label.conMergeSelectContact} <apex:outputText value="{!item.con.Name}"/>
+                                                            {!$Label.conMergeSelectContact} <apex:outputText value="{!item.contactRecord.Name}"/>
                                                         </span>
                                                     </label>
                                                 </td>
                                                 <td>
-                                                    <a href="{!URLFOR($Action.Contact.View, item.con.Id)}" class="slds-truncate">
-                                                        <apex:outputText value="{!item.con.Name}"/>
+                                                    <a href="{!URLFOR($Action.Contact.View, item.contactRecord.Id)}" class="slds-truncate">
+                                                        <apex:outputText value="{!item.contactRecord.Name}"/>
                                                     </a>
                                                 </td>
                                                 <apex:repeat value="{!$ObjectType.Contact.FieldSets.ContactMergeFoundFS}" var="field">
                                                     <td>
                                                         <span class="slds-truncate">
-                                                            <apex:outputField value="{!item.con[field]}"/>
+                                                            <apex:outputField value="{!item.contactRecord[field]}"/>
                                                         </span>
                                                     </td>
                                                 </apex:repeat>
