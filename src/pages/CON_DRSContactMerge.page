@@ -1,5 +1,5 @@
 <apex:page standardController="DuplicateRecordSet"
-    extensions="DRS_ContactMerge_CTRL"
+    extensions="CON_DRSContactMerge_CTRL"
     title="{!$Label.conMergePageTitle}"
     tabStyle="Contact_Merge__tab"
     id="DSR_contactMergePage"
@@ -50,7 +50,7 @@
                                     </svg>
                                     <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
                                 </span>
-                                <span class="slds-path__title">{!$Label.DRS_Contact_Merge_Step1}</span>
+                                <span class="slds-path__title">{!$Label.conMergeDRSConMergeStep1}</span>
                             </div>
                         </li>
                         <li class="slds-path__item {!step2class}" role="presentation">
@@ -210,6 +210,7 @@
                                     <apex:outputText value="{!$Label.npe01__contact_merge_error_confirm_message_nothing_found}"/>
                                 </h3>
                             </apex:outputText>
+                            <div Class="slds-scrollable_x">
                             <apex:outputText rendered="{!hasResults}">
 
                                 <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
@@ -254,6 +255,7 @@
                                     </tbody>
                                 </table>
                             </apex:outputText>
+                            </div>
                         </div>
                         <div class="slds-card__footer">
                             <apex:commandButton action="{!nextStep}" rendered="{!hasResults}" value="{!$Label.labelListViewNext}" 
