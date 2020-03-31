@@ -840,7 +840,7 @@ Si vous n’êtes pas sûr de savoir comment résoudre ces erreurs, publiez un m
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
     <customLabels>
-        <label>La valeur {0} n&apos;est pas prise en charge pour Jour du mois. Sélectionnez une valeur de 1 à 28 ou Dernier jour du mois.</label>
+        <label>La valeur {0} n&apos;est pas prise en charge pour Jour du mois. Sélectionnez une valeur de 1 à 30 ou Dernier jour du mois.</label>
         <name>RD2_DayOfMonthMustBeValid</name>
     </customLabels>
     <customLabels>

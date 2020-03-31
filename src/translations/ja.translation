@@ -845,7 +845,7 @@
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
     <customLabels>
-        <label>{0} は、[日付] でサポートされていない値です。1 ～ 28 の値、または [末日] を選択してください。</label>
+        <label>{0} は、[日付] でサポートされていない値です。1 ～ 30 の値、または [末日] を選択してください。</label>
         <name>RD2_DayOfMonthMustBeValid</name>
     </customLabels>
     <customLabels>

@@ -840,7 +840,7 @@ Si no está seguro de cómo resolver estos errores, publique un mensaje en el gr
         <name>RD2_DayOfMonthIsRequiredForMonthlyInstallment</name>
     </customLabels>
     <customLabels>
-        <label>{0} no es un valor admitido para Día del mes. Seleccione un valor entre 1 y 28 o seleccione Último día del mes.</label>
+        <label>{0} no es un valor admitido para Día del mes. Seleccione un valor entre 1 y 30 o seleccione Último día del mes.</label>
         <name>RD2_DayOfMonthMustBeValid</name>
     </customLabels>
     <customLabels>
