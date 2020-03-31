@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -38,62 +38,62 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
     /*******************************************************************************************************
     * @description holds the Cicero authorization token from NPSP Settings
-    */     
+    */
     private String strAuthToken;
 
     /*******************************************************************************************************
     * @description holds the Cicero endpoint from NPSPS Settings
-    */     
+    */
     private String strEndPoint;
 
     /*******************************************************************************************************
     * @description holds the timeout value from NPSP Settings
-    */     
+    */
     private Double dblTimeout;
-    
+
     /*******************************************************************************************************
     * @description returns the name of the Service (Cicero)
-    */     
+    */
     public String getServiceName() {
         return 'Cicero';
     }
-    
+
     /*******************************************************************************************************
     * @description returns the default URL to use with the Cicero address verification service
-    */     
+    */
     public String getDefaultURL() {
         return 'https://cicero.azavea.com/v3.1/legislative_district';
     }
-    
+
     /*******************************************************************************************************
     * @description returns false, since Cicero does not support a batch verification mode
-    */     
+    */
     public Boolean supportsBatch() {
         return false;
     }
-    
+
     /*******************************************************************************************************
     * @description returns a message saying batch is not supported with Cicero
-    */     
+    */
     public String getBatchHelpText() {
         return Label.Addr_Verification_Batch_Not_Supported;
     }
-    
+
     /*******************************************************************************************************
     * @description Verifies the list of Address objects using the Cicero service.
     * @param listAddr the list of Address objects
     * @param settings an address verification settings object
     * @return List<Address__c> a list of verified and potentially updated addresses
-    */ 
+    */
     public List<Address__c> verifyRecords(List<Address__c> listAddr, Addr_Verification_Settings__c settings) {
 
         List<Address__c> listAddrChecked = new List<Address__c>();
         this.strAuthToken = settings.Auth_Token__c;
         this.dblTimeout = settings.Timeout__c;
-        
+
         if (settings.Address_Verification_Endpoint__c != null)
-            this.strEndPoint = settings.Address_Verification_Endpoint__c;      
-        else       
+            this.strEndPoint = settings.Address_Verification_Endpoint__c;
+        else
             this.strEndPoint = getDefaultURL();
 
         for (Address__c addr : listAddr)    {
@@ -108,9 +108,9 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     * @param addr the Address object
     * @param settings an address verification settings object
     * @return Address__c a verified and potentially updated address
-    */ 
+    */
     private Address__c verifyAddress(Address__c addr, Addr_Verification_Settings__c settings) {
-    
+
         String strRequest = '?';
         String lastFourPostalDigits;
 
@@ -147,12 +147,12 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                 // prepare the request
                 Http h = new Http();
                 HttpRequest req = new HttpRequest();
-                req.setMethod('GET');  
+                req.setMethod('GET');
                 req.setHeader('Content-Type','application/json');
                 req.setHeader('Accept','application/json');
-                req.setEndpoint(strEndPoint + strRequest + '&key=' + strAuthToken + '&format=json'); 
+                req.setEndpoint(strEndPoint + strRequest + '&key=' + strAuthToken + '&format=json');
                 req.setTimeout((dblTimeout == null) ? 5000 : (dblTimeout * 1000).intValue());
-    
+
                 // execute the request
                 HttpResponse response = new HttpResponse();
                 if (Test.isRunningTest())
@@ -161,21 +161,18 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                     response = h.send(req);
                 UTIL_Debug.debug('****CICERO RESPONDS WITH Status: ' + response.getStatus() + ' StatusCode: ' + response.getStatusCode());
                 UTIL_Debug.debug('****CICERO response.body: ' + response.getBody());
-                if (response.getStatusCode() != 200) {
+                if (response.getStatusCode() != ADDR_Validator_UTIL.RESPONSE_CODE_SUCCESS) {
                     string strError = response.getStatusCode() + ': ' + response.getStatus() + '\r\n' + response.getBody();
                     throw(new CiceroException(strError));
                 }
                 CiceroResponse cresp = (CiceroResponse)JSON.deserialize(response.getBody(), CiceroResponse.class);
                 Object objResp = JSON.deserializeUntyped(response.getBody());
-                String responseBody = JSON.serializePretty(objResp);
-                if(responseBody.length() > 32768) {
-                    responseBody = responseBody.substring(0, 32768);
-                }
+                String responseBody = ADDR_Validator_UTIL.trimBodyTo32K(JSON.serializePretty(objResp));
                 addr.API_Response__c = responseBody;
-                
+
                 if (cresp != null && cresp.response != null && cresp.response.results != null && cresp.response.results.candidates != null) {
-                    list<Candidates> listCandidates = cresp.response.results.candidates;  
-    
+                    list<Candidates> listCandidates = cresp.response.results.candidates;
+
                     // more than one candidate means should mark as ambiguous
                     if (listCandidates.size() > 1) {
                         addr.Ambiguous__c = true;
@@ -210,12 +207,12 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                         addr.County_Name__c  = candidate.match_subregion;
 
                         ADDR_Addresses_TDTM.handleMultilineStreet(addr);
-                    
+
                         // save location
                         addr.Geolocation__Latitude__s = decimal.valueOf(candidate.y);
                         addr.Geolocation__Longitude__s = decimal.valueOf(candidate.x);
                     }
-                }   
+                }
                 addr.Verified__c = true;
                 addr.Verification_Status__c = 'Response Received';
                 return addr;
@@ -225,7 +222,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         } catch (Exception ex) {
             addr.Verified__c = false;
             addr.API_Response__c = ex.getMessage();
-            addr.Verification_Status__c = addr.API_Response__c; 
+            addr.Verification_Status__c = addr.API_Response__c;
             ERR_Handler.processError(ex, ERR_Handler_API.Context.ADDR);
         }
         return addr;
@@ -233,67 +230,67 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
     /*******************************************************************************************************
     * @description an exception object wrapper for Cicero
-    */ 
+    */
     public class CiceroException extends Exception {}
-        
+
     // The following classes represent the response object from Cicero
 
     /*******************************************************************************************************
     * @description a class to contain a Cicero Response
-    */ 
+    */
     public class CiceroResponse {
         public Response response;
     }
 
     /*******************************************************************************************************
     * @description a class to contain a list of Response results
-    */ 
+    */
     public class Response {
-        public Results results;               
+        public Results results;
     }
-    
+
     /*******************************************************************************************************
     * @description a class to contain a list of Cicero Candidates
-    */ 
+    */
     public class Results {
         public list<Candidates> candidates;
     }
-    
+
     /*******************************************************************************************************
     * @description a class to contain a Cicero Candidate
-    */ 
+    */
     public class Candidates {
         /** @description the full normalized address that looks like street, city, state, zip */
         public string match_addr;
-        
+
         /** @description house # and street of the matched address */
         public string match_streetaddr;
-        
-        /** @description postal/zip code of the matched address */ 
-        public string match_postal; 
-        
+
+        /** @description postal/zip code of the matched address */
+        public string match_postal;
+
         /** @description city of the matched address */
-        public string match_city; 
-        
-        /** @description county of the matched address -- the upstream geocoder is very spotty with populating this and it is not reliable; may be used more for addresses outside the U.S. */        
-        public string match_subregion; 
+        public string match_city;
+
+        /** @description county of the matched address -- the upstream geocoder is very spotty with populating this and it is not reliable; may be used more for addresses outside the U.S. */
+        public string match_subregion;
 
         /** @description state of the matched address */
-        public string match_region; 
-        
-        /** @description country of the matched address. seems to be UN 3 character code, so I left getting country 2 digit ISO code from district. */        
-        public string match_country; 
-        
+        public string match_region;
+
+        /** @description country of the matched address. seems to be UN 3 character code, so I left getting country 2 digit ISO code from district. */
+        public string match_country;
+
         public string wkid;
         public list<Districts> districts;
         public string x;
         public string y;
         public string geoservice;
     }
-    
+
     /*******************************************************************************************************
     * @description a class to contain a Cicero District
-    */ 
+    */
     public class Districts {
         public string district_type;
         public string district_id;
@@ -302,6 +299,6 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         public string subtype;
         public string state;
         public string id;
-    }   
-    
+    }
+
 }
