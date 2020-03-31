@@ -140,6 +140,7 @@ public with sharing class CON_ContactMerge_CTRL extends CON_ContactMerge_UTIL {
                 //if we got any ids, use to try and enter the merge selected records page
                 if (mergeIds != null) {
                     loadMergeCandidates(mergeIds);
+                    this.step = 3;
                 }
             }
             catch(StringException e){
