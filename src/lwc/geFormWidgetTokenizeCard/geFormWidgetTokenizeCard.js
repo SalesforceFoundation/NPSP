@@ -1,10 +1,8 @@
 import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import { registerListener, unregisterListener, fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent } from 'c/pubsubNoPageRef';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
-import { handleError } from 'c/utilTemplateBuilder';
-// TODO: maybe import data import token field reference?
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
 
