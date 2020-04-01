@@ -499,7 +499,6 @@ private class RD2_DataMigration_TEST {
     @IsTest
     private static void shouldSetAmountFromInstallmentAmountWhenScheduleTypeIsDivideBy() {
         Integer installments = 4;
-
         npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
             .withId(null)
             .withInstallmentPeriodYearly()
@@ -509,10 +508,7 @@ private class RD2_DataMigration_TEST {
             .build();
         insert rd;
 
-        rd = getRecords()[0];
-        rd.Status__c = null;//simulate legacy Recurring Donation (Status default on insert is Active)
-
-        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(rd)
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(getRecords()[0])
             .convertToEnhancedRD();
 
         System.assertEquals(AMOUNT_VALUE / installments, convertedRD.npe03__Amount__c, 'Amount should be copied from Installment Amount');
@@ -525,16 +521,46 @@ private class RD2_DataMigration_TEST {
      */
     @IsTest
     private static void shouldNotChangeAmountWhenScheduleTypeIsMultiplyBy() {
+        Integer installments = 4;
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withInstallmentPeriodYearly()
+            .withPlannedInstallments(installments)
+            .withScheduleType(RD_Constants.SCHEDULE_TYPE_MULTIPLY_BY)
+            .withOpenEndedStatusNone()
+            .build();
+        insert rd;
 
-        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(
-            getLegacyRecurringDonationBuilder()
-                .withScheduleTypeMultiplyValue()
-                .build()
-        ).convertToEnhancedRD();
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(getRecords()[0])
+            .convertToEnhancedRD();
 
         System.assertEquals(AMOUNT_VALUE, convertedRD.npe03__Amount__c, 'Amount should be unchanged');
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, convertedRD.RecurringType__c, 'Recurring Type should be Fixed');
+        System.assertEquals(installments, convertedRD.npe03__Installments__c, 'Number of Planned Installments should be unchanged');
     }
 
+    /**
+     * @description Verifies Amount is set from Installment Amount when Schedule Type is null
+     */
+    @IsTest
+    private static void shouldSetAmountFromInstallmentAmountWhenScheduleTypeIsNull() {
+        Integer installments = 4;
+        npe03__Recurring_Donation__c rd = getLegacyRecurringDonationBuilder(getContact().Id)
+            .withId(null)
+            .withInstallmentPeriodYearly()
+            .withPlannedInstallments(installments)
+            .withScheduleType(null)
+            .withOpenEndedStatusNone()
+            .build();
+        insert rd;
+
+        npe03__Recurring_Donation__c convertedRD = new RD2_DataMigrationMapper(getRecords()[0])
+            .convertToEnhancedRD();
+
+        System.assertEquals(AMOUNT_VALUE / installments, convertedRD.npe03__Amount__c, 'Amount should be copied from Installment Amount');
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, convertedRD.RecurringType__c, 'Recurring Type should be Fixed');
+        System.assertEquals(installments, convertedRD.npe03__Installments__c, 'Number of Planned Installments should be unchanged');
+    }
 
     /**
      * @description Verifies Start Date is set to Date Established when
