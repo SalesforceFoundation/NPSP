@@ -6058,6 +6058,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The base64url format is invalid. It can only contain these characters: [a-z A-Z 0-9 _ -]</value>
     </labels>
     <labels>
+        <fullName>gePaymentProcessErrorGeneric</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Generic failure message description for tokenization or purchase errors</shortDescription>
+        <value>There was an error processing your payment. Please review your payment information and try again. Alternatively, you can select Do Not Charge Card to enter the pledged donation without payment processing.</value>
+    </labels>
+    <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
