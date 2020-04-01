@@ -535,6 +535,8 @@ public class CRLP_RollupContact_TEST {
             c2 = database.query(conQuery);
             System.assertEquals(0, c2.npo02__NumberOfClosedOpps__c);
 
+            // Contact3.npo02__NumberOfClosedOpps__c was set to null and has attached opps, so it remain as
+            // null (vs. being reset to 0).
             Id c3Id = c3.Id;
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c3Id LIMIT 1';
             c3 = database.query(conQuery);
