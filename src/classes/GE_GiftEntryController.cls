@@ -118,29 +118,12 @@ public with sharing class GE_GiftEntryController {
     }
 
     /*******************************************************************************************************
-    * @description Takes a Data Import record from the Gift Entry form and saves it to the database.
-    * @param diRecord - The DataImport__c record, as filled in by the user.
-    * @return The Id of the new Opportunity record, created from the Data Import
+    * @description Saves the data import record, dry runs the record, and returns updated
+    * totals with the new row.
+    * @param dataImport: the NPSP_Data_Import__c record to update
+    * @param updateGift: If true, BDI will attempt to match to an existing opportunity/payment
+    * @return String serialized DataImportModel
     */
-    @AuraEnabled
-    public static Id saveAndProcessDataImport(DataImport__c diRecord, Boolean updateGift) {
-
-        // Check for widget data and convert it to the correct format for processing
-        diRecord.Additional_Object_JSON__c =
-            GE_FormRendererService.convertWidgetDataToObjectJSON(diRecord.Additional_Object_JSON__c);
-
-        // Save the Data Import record to the Database
-        diRecord = upsertDataImport(diRecord);
-
-        // Run the BDI process on this new Data Import
-        processDataImport(diRecord, false, updateGift);
-
-        // Get the ID of the created Opportunity so we can return it
-        Id oppId = getOpportunityIdFromImport(diRecord.Id);
-
-        return oppId;
-    }
-
     @AuraEnabled
     public static Id processDataImport(DataImport__c diRecord, Boolean updateGift) {
 
@@ -203,13 +186,19 @@ public with sharing class GE_GiftEntryController {
     * @return void
     */
     private static void processDataImport(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
-        Id diRecordId = diRecord.Id;
+        try {
+            Id diRecordId = diRecord.Id;
 
-        Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
+            Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
 
-        List<DataImport__c> listDI = new List<DataImport__c>{diRecord};
+            List<DataImport__c> listDI = new List<DataImport__c>{diRecord};
 
-        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
+            BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
+        } catch (Exception e) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+
+            throw returnDmlException(JSONExceptionData);
+        }
     } 
 
     /*******************************************************************************************************

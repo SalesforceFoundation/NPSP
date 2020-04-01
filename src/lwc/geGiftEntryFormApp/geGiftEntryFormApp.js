@@ -50,6 +50,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         registerListener('tokenRequested', this.handleTokenRequested, this);
     }
 
+    disconnectedCallback() {
+        unregisterListener('tokenRequested', this.handleTokenRequested, this);
+    }
+
     get isBatchMode() {
         return this.sObjectName &&
             this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
@@ -71,6 +75,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         });
     }
 
+    /*******************************************************************************
+    * @description Receives a 'submit' event from geFormRenderer and proceeds down
+    * the Batch or Single save paths depending on the current app mode.
+    *
+    * @param {object} event: Custom Event containing the Data Import record and
+    * potentially other objects (booleans, callbacks, etc).
+    */
     handleSubmit(event) {
         const { errorCallback } = event.detail;
 
@@ -85,6 +96,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
+    /*******************************************************************************
+    * @description Handles a batch gift entry submit. Saves a Data Import record,
+    * runs dry run, and renders the Data Import in the Batch Gift Table.
+    *
+    * @param {object} event: Custom Event containing the Data Import record and a
+    * callback for handling and displaying errors in the form.
+    */
     batchGiftSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         const dataImportRecord = event.detail.dataImportRecord;
@@ -112,19 +130,21 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * callback for handling and displaying errors in the form.
     */
     singleGiftSubmit = async (event) => {
-        let { dataImportRecord, hasUserSelectedDonation, errorCallback } = event.detail;
+        let { inMemoryDataImport, hasUserSelectedDonation, errorCallback } = event.detail;
 
-        if (dataImportRecord) {
-            dataImportRecord = await this.saveDataImport(dataImportRecord);
-        }
+        try {
+            let dataImportRecord = await this.saveDataImport(inMemoryDataImport, errorCallback);
 
-        const hasPaymentToProcess = dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
-        if (hasPaymentToProcess) {
-            dataImportRecord = await this.startPaymentProcessing(dataImportRecord, errorCallback);
-        }
+            const hasPaymentToProcess = dataImportRecord && dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
+            if (hasPaymentToProcess) {
+                dataImportRecord = await this.startPaymentProcessing(dataImportRecord, errorCallback);
+            }
 
-        if (dataImportRecord) {
-            this.startDataImportProcessing(dataImportRecord, hasUserSelectedDonation, errorCallback);
+            if (dataImportRecord) {
+                this.startDataImportProcessing(dataImportRecord, hasUserSelectedDonation, errorCallback);
+            }
+        } catch (error) {
+            errorCallback(error);
         }
     }
 
@@ -132,28 +152,29 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @description Upserts the provided data import record. Attempts to retrieve
     * an Elevate token for a purchase call if needed.
     *
-    * @param {object} dataImportRecord: A DataImport__c record
+    * @param {object} inMemoryDataImport: DataImport__c object built from the form
+    * fields.
     *
     * @return {object} dataImportRecord: A DataImport__c record
     */
-    saveDataImport = async (dataImportRecord) => {
+    saveDataImport = async (inMemoryDataImport) => {
         if (this.previouslySavedDataImport.Id) {
             this.loadingText = 'Re-saving Data Import record...';
 
-            dataImportRecord.Id = this.previouslySavedDataImport.Id;
-            dataImportRecord[PAYMENT_METHOD__C] = this.previouslySavedDataImport[PAYMENT_METHOD__C];
-            dataImportRecord[PAYMENT_STATUS__C] = this.previouslySavedDataImport[PAYMENT_STATUS__C];
-            dataImportRecord[PAYMENT_DECLINED_REASON__C] =
+            inMemoryDataImport.Id = this.previouslySavedDataImport.Id;
+            inMemoryDataImport[PAYMENT_METHOD__C] = this.previouslySavedDataImport[PAYMENT_METHOD__C];
+            inMemoryDataImport[PAYMENT_STATUS__C] = this.previouslySavedDataImport[PAYMENT_STATUS__C];
+            inMemoryDataImport[PAYMENT_DECLINED_REASON__C] =
                 this.previouslySavedDataImport[PAYMENT_DECLINED_REASON__C];
         } else {
             this.loadingText = 'Saving Data Import record...';
         }
 
-        dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
-        const dataImport = await upsertDataImport({ dataImport: dataImportRecord });
-        this.previouslySavedDataImport = deepClone(dataImport);
+        inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
+        const dataImportRecord = await upsertDataImport({ dataImport: inMemoryDataImport });
+        this.previouslySavedDataImport = deepClone(dataImportRecord);
 
-        return dataImport;
+        return dataImportRecord;
     }
 
     /*******************************************************************************
@@ -284,6 +305,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             })
             .catch(error => {
                 errorCallback(error);
+                // TODO: Potentially have to check for other types of status that MAY
+                // indicate a charge could still occur (pending, authorized, etc)
                 if (dataImportRecord[PAYMENT_STATUS__C] === CAPTURED) {
                     showToast('HEY!', 'Card was charged. Please fix the outstanding errors and try again.', 'error', 'sticky');
                 }
