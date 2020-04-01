@@ -71,7 +71,6 @@
                 .then(function response(resp) {
                     // Send token to lwc
                     const token = resp.token
-                    console.log('token: ', token);
                     const successString = JSON.stringify({ token: token });
                     postMessage(successString);
                 })
