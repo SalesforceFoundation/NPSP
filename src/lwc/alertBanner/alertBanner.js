@@ -28,7 +28,7 @@ export default class AlertBanner extends LightningElement {
             return this.defaultClass.concat(warningThemeDefault);
         }
 
-        return this.theme;
+        return this.defaultClass.concat(this.theme);
     }
 
     get alertVariant() {
