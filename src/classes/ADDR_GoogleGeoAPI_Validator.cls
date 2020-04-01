@@ -35,12 +35,7 @@
  */
 public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator{
 
-    private String AUTH_TOKEN;
-    private String END_POINT;
-    private Double TIMEOUT;
     private List<Address__c> checked_addresses;
-
-    private Addr_Verification_Settings__c settings;
 
     /*******************************************************************************************************
     * @description Provides the called with the service name.
@@ -83,302 +78,20 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     public List<Address__c> verifyRecords(List<Address__c> addresses, Addr_Verification_Settings__c settings) {
 
         this.checked_addresses = new List<Address__c>();
-        this.AUTH_TOKEN = settings.Auth_Token__c;
-        this.TIMEOUT = settings.Timeout__c;
 
-        this.settings = settings;
+        String endPoint = settings.Address_Verification_Endpoint__c != null ?
+            settings.Address_Verification_Endpoint__c : getDefaultURL();
 
-        if (settings.Address_Verification_Endpoint__c != null) {
-            this.END_POINT = settings.Address_Verification_Endpoint__c;
-        } else {
-            this.END_POINT = getDefaultURL();
-        }
         if (!addresses.isEmpty()){
             for (Address__c a : addresses) {
-                checked_addresses.add(verifyAddress(a));
+                AddressVerifier addrVerify = new AddressVerifier(a)
+                    .withAddressSettings(settings)
+                    .withEndPoint(endPoint)
+                    .verifyAddress();
+                checked_addresses.add(addrVerify.getUpdatedAddress());
             }
         }
         return checked_addresses;
-    }
-
-    /**
-    * @description Verify a single Address
-    * @param addr Address record
-    * @return Updated Address Record
-    */
-    private Address__c verifyAddress(Address__c addr) {
-
-        String address_request_string = '';
-        String mailingStreet = '';
-        String subPremise = '';
-
-        if (!String.isBlank(addr.MailingStreet__c)) {
-            mailingStreet += addr.MailingStreet__c.trim();
-        }
-        if (!String.isBlank(addr.MailingStreet2__c)) {
-            mailingStreet += ' ' + addr.MailingStreet2__c.trim();
-        }
-
-        // if our address has a comma, split it off and append it after verification
-        if (mailingStreet.contains(',')) {
-            List<String> split = mailingStreet.split(',', 2);
-            address_request_string += 'search_address=' + split[0].replace(' ', '+') + '+';
-            subPremise = split[1];
-        } else {
-            address_request_string += 'search_address=' + mailingStreet.replace(' ', '+') + '+';
-        }
-
-        if (addr.MailingCity__c != null) {
-            address_request_string += addr.MailingCity__c.replace(' ', '+') + '+';
-        }
-        if (addr.MailingState__c != null) {
-            address_request_string += addr.MailingState__c.replace(' ', '+') + '+';
-        }
-        if (addr.MailingPostalCode__c != null) {
-            address_request_string += addr.MailingPostalCode__c.replace(' ', '+') + '+';
-        }
-        if (addr.MailingCountry__c != null) {
-            address_request_string += addr.MailingCountry__c.replace(' ', '+');
-        }
-        address_request_string = address_request_string.replace('\r\n', ',').replace('\r', ',').replace('\n', ',');
-
-        HttpResponse rawResponse = new HttpResponse();
-
-        if (AUTH_TOKEN == null || END_POINT == null) {
-            addr.Verified__c = false;
-            addr.API_Response__c = 'MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information';
-            return addr;
-        }
-
-        // copy address before verification takes place, in case any information is lost
-        if (!String.isBlank(addr.Formula_MailingAddress__c)) {
-            addr.Pre_Verification_Address__c = addr.Formula_MailingAddress__c.replace('<br>', '\r\n');
-        }
-
-        Http h = new Http();
-        HttpRequest req = new HttpRequest();
-        req.setMethod('GET');
-        req.setHeader('Accept', 'application/json');
-        req.setEndpoint(END_POINT + 'address=' + address_request_string + '&key=' + AUTH_TOKEN);
-        try {
-            UTIL_Debug.debug('****Request body: \n' + req);
-            rawResponse = h.send(req);
-            UTIL_Debug.debug('****Response body: \n' + rawResponse.getBody());
-        } catch (Exception e) {
-            addr.Verified__c = false;
-            addr.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage();
-            ERR_Handler.processError(e, ERR_Handler_API.Context.ADDR);
-            addr.Verification_Status__c = e.getMessage();
-        }
-
-        if (rawResponse.getStatusCode() != ADDR_Validator_UTIL.RESPONSE_CODE_SUCCESS) {
-            addr.Verified__c = false;
-            addr.API_Response__c = rawResponse.getStatusCode() + ': ' + rawResponse.getStatus();
-            addr.Verification_Status__c = addr.API_Response__c;
-            return addr;
-        }
-
-        ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse googleResponse = new ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse();
-        try {
-            googleResponse = (ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse) JSON.deserialize(rawResponse.getBody(), ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse.class);
-        } catch (Exception e) {
-            addr.Verified__c = false;
-            addr.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage();
-            ERR_Handler.processError(e, ERR_Handler_API.Context.ADDR);
-            addr.Verification_Status__c = e.getMessage();
-        }
-
-        if (googleResponse.status == ADDR_Validator_UTIL.RESPONSE_OK && googleResponse.results != null) {
-            Boolean ignoreAmbiguous = settings.Reject_Ambiguous_Addresses__c == true;
-            Integer resultSize = googleResponse.results.size();
-            Boolean isPartialMatch = googleResponse.results[0].partial_match == true;
-
-            if (resultSize == 1 && !(ignoreAmbiguous && isPartialMatch)) {
-
-                // Single match and not a partial match
-                return parseAddressResponse(addr, subPremise, rawResponse, googleResponse);
-
-            } else if (resultSize > 1 || (resultSize == 1 && ignoreAmbiguous && isPartialMatch)) {
-
-                // Multiple Matches and Ignore Ambiguous is enabled
-                addr.Ambiguous__c = true;
-                addr.Verified__c = true;
-                addr.API_Response__c = ADDR_Validator_UTIL.trimBodyTo32K(rawResponse);
-                addr.Verification_Status__c = 'Ambiguous';
-
-                return addr;
-            }
-        }
-
-        handleOtherResponses(addr, googleResponse, rawResponse);
-
-        return addr;
-    }
-
-    /**
-    * @description Parse a valid matched address response
-    * @param addr Address__c record to update
-    * @param subpremise portion of original address
-    * @param rawResponse The raw http response
-    * @param googleResponse The cast Google Response instance
-    * @return Updated Address__c record
-    */
-    private Address__c parseAddressResponse(Address__c addr, String subpremise, HttpResponse rawResponse, GoogleGeoResponse googleResponse) {
-
-        populateAddressFromGoogleResponse(addr, googleResponse, subpremise);
-
-        ADDR_Addresses_TDTM.handleMultilineStreet(addr);
-        addr.Geolocation__Latitude__s = googleResponse.results[0].geometry.location.lat;
-        addr.Geolocation__Longitude__s = googleResponse.results[0].geometry.location.lng;
-        addr.Verified__c = true;
-        addr.API_Response__c = ADDR_Validator_UTIL.trimBodyTo32K(rawResponse);
-        addr.Verification_Status__c = System.Label.Addr_Verified;
-
-        return addr;
-    }
-
-    /**
-    * @description Parse Address_Components from the Google Response to populate the specific address fields
-    * on the address object
-    * @param addr Address record to update
-    * @param googleResponse Parsed Google Response
-    * @param subPremise SubPremise from the original address to append to the Street Address (if not null)
-    */
-    private void populateAddressFromGoogleResponse(Address__c addr, GoogleGeoResponse googleResponse, String subPremise) {
-        String premise = '';
-        String streetNumber = '';
-        String streetName = '';
-        String intersection = '';
-
-        List<ADDR_GoogleGeoAPI_Validator.Address_components> addrComponents = googleResponse.results[0].address_components;
-        for (ADDR_GoogleGeoAPI_Validator.Address_components addrCmp : addrComponents) {
-            Set<String> type_set = new Set<String>();
-            type_set.addAll(addrCmp.types);
-
-            if (type_set.contains('postal_code')) {
-                String verified5digs = addrCmp.long_name;
-                String originalFull = addr.MailingPostalCode__c;
-                String original5digs = '';
-                if (originalFull != null && originalFull.length() > 5) {
-                    original5digs = originalFull.substring(0, 5);
-                }
-                //Google only returns 5-digit zipcodes. We don't want to override the original, if the
-                //first 5 match, and the original has the additional 4.
-                if (!(verified5digs == original5digs)) {
-                    addr.MailingPostalCode__c = addrCmp.long_name;
-                }
-            } else if (type_set.contains('country')) {
-                addr.MailingCountry__c = addrCmp.short_name;
-            } else if (type_set.contains('administrative_area_level_1')) {
-                addr.MailingState__c = addrCmp.short_name;
-            } else if (type_set.contains('administrative_area_level_2')) {
-                addr.County_Name__c = addrCmp.long_name;
-            } else if (type_set.contains('administrative_area_level_3')) {
-                addr.Administrative_Area__c = addrCmp.long_name;
-            } else if (type_set.contains('street_number')) {
-                streetNumber = addrCmp.long_name;
-            } else if (type_set.contains('route')) {
-                streetName = addrCmp.long_name;
-            } else if (type_set.contains('intersection')) {
-                intersection = addrCmp.long_name;
-            } else if (type_set.contains('premise')) {
-                premise += addrCmp.long_name;
-            } else if (type_set.contains('subpremise')) {
-                premise += addrCmp.long_name;
-            } else if (type_set.contains('locality')) {
-                addr.MailingCity__c = addrCmp.long_name;
-            }
-        }
-
-        addr.MailingStreet__c = buildStreetAddress(addr.MailingCountry__c, streetName, streetNumber,
-            intersection, premise, subPremise, googleResponse.results[0].formatted_address);
-    }
-
-    /**
-    * @description Concatenate the different components of a Street Address as appropriate based on the
-    * country and the various retrieved components from the address validation service
-    * @param mailingCountry Mailing Country
-    * @param streetName Street Name
-    * @param streetNumber Street Number
-    * @param intersection Interection (if any)
-    * @param premise Premise
-    * @param subPremise Sub-Premise from the original address
-    * @param formattedAddress Formatted Address from the validation service
-    * @return Properly formatted Street Address
-    */
-    private String buildStreetAddress(String mailingCountry, String streetName, String streetNumber,
-            String intersection, String premise, String subPremise, String formattedAddress
-    ) {
-        String verified_street = '';
-
-        // US addresses always format as StreetNumber StreetName, while many others are reversed
-        // If the country isn't this specified hardcoded list, try to figure it out based on whether
-        // the first character of the Formatted_Address response is a letter or a number.
-        Boolean intlFormattedStreet = !ADDR_Validator_UTIL.alwaysFormatAsStreetNumberBeforeStreetName(mailingCountry)
-            && formattedAddress.left(1).isAlpha();
-
-        if (intlFormattedStreet) {
-            verified_street = streetName + ' ' + streetNumber + ' ' + intersection;
-        } else {
-            verified_street = streetNumber + ' ' + streetName + ' ' + intersection;
-        }
-
-        if (!String.isBlank(premise)) {
-            verified_street = verified_street.trim() + ' ' + premise.trim();
-        }
-        if (!String.isBlank(subPremise)) {
-            if (!String.isBlank(verified_street)) {
-                verified_street = verified_street.trim() + ', ' + subPremise.trim();
-            } else{
-                verified_street = subPremise.trim();
-            }
-        }
-
-        return verified_street.trim();
-    }
-
-    /**
-    * @description Handle other response types besides OK/200
-    * @param addr Address record to update
-    * @param googleResponse Parsed Google Response instance
-    * @param rawResponse Raw HttpResponse
-    */
-    private void handleOtherResponses(Address__c addr, GoogleGeoResponse googleResponse, HttpResponse rawResponse) {
-
-        switch on googleResponse.status {
-            when 'OVER_QUERY_LIMIT' {
-                addr.Verified__c = false;
-                addr.API_Response__c = 'OVER_QUERY_LIMIT: indicates that you are over your quota.';
-                addr.Verification_Status__c = addr.API_Response__c;
-
-            } when 'REQUEST_DENIED' {
-                addr.Verified__c = false;
-                addr.API_Response__c = 'REQUEST_DENIED: indicates that your request was denied.';
-                addr.Verification_Status__c = addr.API_Response__c;
-
-            } when 'UNKNOWN_ERROR' {
-                addr.Verified__c = false;
-                addr.API_Response__c = 'UNKNOWN_ERROR: indicates that the request could not be processed due to a server error. The request may succeed if you try again.';
-                addr.Verification_Status__c = addr.API_Response__c;
-
-            } when 'INVALID_REQUEST' {
-                addr.Verified__c = true;
-                addr.API_Response__c = 'INVALID_REQUEST: generally indicates that the query (address, components or latlng) is missing.';
-                addr.Verification_Status__c = addr.API_Response__c;
-
-            } when 'ZERO_RESULTS' {
-                addr.Verified__c = true;
-                addr.API_Response__c = 'ZERO_RESULTS: indicates that the geocode was successful but returned no results. This may occur if the geocoder was passed a non-existent address.';
-                addr.Verification_Status__c = addr.API_Response__c;
-
-            } when else {
-                addr.Verified__c = true;
-                //Truncating body response to avoid STRING_TOO_LONG error.
-                addr.API_Response__c = 'STATUS: ' + googleResponse.status + ' BODY: '
-                    + ADDR_Validator_UTIL.trimBodyTo32K(rawResponse);
-                addr.Verification_Status__c = addr.API_Response__c;
-            }
-        }
     }
 
     /*******************************************************************************************************
@@ -441,5 +154,344 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     */
     public static GoogleGeoResponse parse(String json) {
         return (GoogleGeoResponse) System.JSON.deserialize(json, GoogleGeoResponse.class);
+    }
+
+    /**
+    * @description Address Verification Wrapper Class
+    */
+    public class AddressVerifier {
+
+        private Address__c address;
+        private String endPoint;
+        private Addr_Verification_Settings__c settings;
+        private GoogleGeoResponse googleResponse;
+        private HttpResponse rawResponse;
+
+        /** @description SubPremise from the original address to append to the Street Address (if not null) */
+        private String subPremise;
+
+        /** @description Constructor with the address to verify */
+        public AddressVerifier(Address__c addr) {
+            this.address = addr;
+        }
+
+        /**
+        * @description Pass an instance of the AddressVerificationSettings object
+        * @return Instance
+        * */
+        public AddressVerifier withAddressSettings(Addr_Verification_Settings__c settings) {
+            this.settings = settings;
+            return this;
+        }
+
+        /**
+        * @description Pass the endpoint to use
+        * @return Instance
+        */
+        public AddressVerifier withEndPoint(String endPoint) {
+            this.endPoint = endPoint;
+            return this;
+        }
+
+        /**
+       * @description Verify this Aaddress record and return an instance of this class
+       * @return Instance
+       */
+        public AddressVerifier verifyAddress() {
+
+            if (settings == null || settings.Auth_Token__c == null || endPoint == null) {
+                address.Verified__c = false;
+                address.API_Response__c = 'MISSING AUTHID OR ENDPOINT.  Please see the Address Verification menu in the NPSP Settings tab for more information';
+                return this;
+            }
+
+            if (!calloutToAddressService()) {
+                return this;
+            }
+
+            if (googleResponse.status != ADDR_Validator_UTIL.RESPONSE_OK || googleResponse.results == null) {
+                handleOtherResponses();
+                return this;
+            }
+
+            Boolean ignoreAmbiguous = settings.Reject_Ambiguous_Addresses__c == true;
+            Integer resultSize = googleResponse.results.size();
+            Boolean isPartialMatch = googleResponse.results[0].partial_match == true;
+
+            if (resultSize == 1 && !(ignoreAmbiguous && isPartialMatch)) {
+
+                // Single match and not a partial match
+                parseAddressResponse();
+
+            } else if (resultSize > 1 || (resultSize == 1 && ignoreAmbiguous && isPartialMatch)) {
+
+                // Multiple Matches and Ignore Ambiguous is enabled
+                address.Ambiguous__c = true;
+                address.Verified__c = true;
+                address.API_Response__c = ADDR_Validator_UTIL.trimBodyTo32K(rawResponse);
+                address.Verification_Status__c = 'Ambiguous';
+            }
+
+            return this;
+        }
+
+        /**
+        * @description Return the updated address record
+        * @return Address__c record with all updated fields
+        */
+        public Address__c getUpdatedAddress() {
+            return this.address;
+        }
+
+        /**
+        * @description Build and complete the callout to the verification service
+        * @return Boolean True if the verification callout completes with zero errors and the address
+        * is able to be properly verified.
+        */
+        private Boolean calloutToAddressService() {
+            Http h = new Http();
+            HttpRequest req = new HttpRequest();
+            req.setMethod('GET');
+            req.setHeader('Accept', 'application/json');
+            req.setEndpoint(this.endPoint +
+                'address=' + buildAddressRequestString() +
+                '&key=' + this.settings.Auth_Token__c
+            );
+
+            try {
+                UTIL_Debug.debug('****Request body: \n' + req);
+                rawResponse = h.send(req);
+                UTIL_Debug.debug('****Response body: \n' + rawResponse.getBody());
+            } catch (Exception e) {
+                address.Verified__c = false;
+                address.API_Response__c = 'REQUEST FAILED.  MESSAGE: ' + e.getMessage();
+                ERR_Handler.processError(e, ERR_Handler_API.Context.ADDR);
+                address.Verification_Status__c = e.getMessage();
+                return false;
+            }
+
+            if (rawResponse.getStatusCode() != ADDR_Validator_UTIL.RESPONSE_CODE_SUCCESS) {
+                address.Verified__c = false;
+                address.API_Response__c = rawResponse.getStatusCode() + ': ' + rawResponse.getStatus();
+                address.Verification_Status__c = address.API_Response__c;
+                return false;
+            }
+
+            googleResponse = new ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse();
+            try {
+                googleResponse = (ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse) JSON.deserialize(rawResponse.getBody(), ADDR_GoogleGeoAPI_Validator.GoogleGeoResponse.class);
+            } catch (Exception e) {
+                address.Verified__c = false;
+                address.API_Response__c = 'BAD JSON PARSE.  MESSAGE: ' + e.getMessage();
+                ERR_Handler.processError(e, ERR_Handler_API.Context.ADDR);
+                address.Verification_Status__c = e.getMessage();
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+        * @description Build the address request string to pass to the verification service in the URL
+        * @return single line of an address to be verified
+        */
+        private String buildAddressRequestString() {
+            String address_request_string = '';
+            String mailingStreet = '';
+
+            if (!String.isBlank(address.MailingStreet__c)) {
+                mailingStreet += address.MailingStreet__c.trim();
+            }
+            if (!String.isBlank(address.MailingStreet2__c)) {
+                mailingStreet += ' ' + address.MailingStreet2__c.trim();
+            }
+
+            // if our address has a comma, split it off and append it after verification
+            if (mailingStreet.contains(',')) {
+                List<String> split = mailingStreet.split(',', 2);
+                address_request_string += 'search_address=' + split[0].replace(' ', '+') + '+';
+                subPremise = split[1];
+            } else {
+                address_request_string += 'search_address=' + mailingStreet.replace(' ', '+') + '+';
+            }
+
+            if (address.MailingCity__c != null) {
+                address_request_string += address.MailingCity__c.replace(' ', '+') + '+';
+            }
+            if (address.MailingState__c != null) {
+                address_request_string += address.MailingState__c.replace(' ', '+') + '+';
+            }
+            if (address.MailingPostalCode__c != null) {
+                address_request_string += address.MailingPostalCode__c.replace(' ', '+') + '+';
+            }
+            if (address.MailingCountry__c != null) {
+                address_request_string += address.MailingCountry__c.replace(' ', '+');
+            }
+            address_request_string = address_request_string.replace('\r\n', ',').replace('\r', ',').replace('\n', ',');
+
+            this.rawResponse = new HttpResponse();
+
+            // copy address before verification takes place, in case any information is lost
+            if (!String.isBlank(address.Formula_MailingAddress__c)) {
+                address.Pre_Verification_Address__c = address.Formula_MailingAddress__c.replace('<br>', '\r\n');
+            }
+
+            return address_request_string;
+        }
+
+        /**
+        * @description Fully Parse a valid matched address response and update the Address__c record
+        * as necessary.
+        */
+        private void parseAddressResponse() {
+
+            populateAddressFromGoogleResponse();
+
+            ADDR_Addresses_TDTM.handleMultilineStreet(address);
+            address.Geolocation__Latitude__s = googleResponse.results[0].geometry.location.lat;
+            address.Geolocation__Longitude__s = googleResponse.results[0].geometry.location.lng;
+            address.Verified__c = true;
+            address.API_Response__c = ADDR_Validator_UTIL.trimBodyTo32K(rawResponse);
+            address.Verification_Status__c = System.Label.Addr_Verified;
+        }
+
+        /**
+        * @description Parse Address_Components from the Google Response to populate the specific address fields
+        * on the address object
+        */
+        private void populateAddressFromGoogleResponse() {
+            String premise = '';
+            String streetNumber = '';
+            String streetName = '';
+            String intersection = '';
+
+            List<ADDR_GoogleGeoAPI_Validator.Address_components> addrComponents = googleResponse.results[0].address_components;
+            for (ADDR_GoogleGeoAPI_Validator.Address_components addrCmp : addrComponents) {
+                Set<String> type_set = new Set<String>();
+                type_set.addAll(addrCmp.types);
+
+                if (type_set.contains('postal_code')) {
+                    String verified5digs = addrCmp.long_name;
+                    String originalFull = address.MailingPostalCode__c;
+                    String original5digs = '';
+                    if (originalFull != null && originalFull.length() > 5) {
+                        original5digs = originalFull.substring(0, 5);
+                    }
+                    //Google only returns 5-digit zipcodes. We don't want to override the original, if the
+                    //first 5 match, and the original has the additional 4.
+                    if (!(verified5digs == original5digs)) {
+                        address.MailingPostalCode__c = addrCmp.long_name;
+                    }
+                } else if (type_set.contains('country')) {
+                    address.MailingCountry__c = addrCmp.short_name;
+                } else if (type_set.contains('administrative_area_level_1')) {
+                    address.MailingState__c = addrCmp.short_name;
+                } else if (type_set.contains('administrative_area_level_2')) {
+                    address.County_Name__c = addrCmp.long_name;
+                } else if (type_set.contains('administrative_area_level_3')) {
+                    address.Administrative_Area__c = addrCmp.long_name;
+                } else if (type_set.contains('street_number')) {
+                    streetNumber = addrCmp.long_name;
+                } else if (type_set.contains('route')) {
+                    streetName = addrCmp.long_name;
+                } else if (type_set.contains('intersection')) {
+                    intersection = addrCmp.long_name;
+                } else if (type_set.contains('premise')) {
+                    premise += addrCmp.long_name;
+                } else if (type_set.contains('subpremise')) {
+                    premise += addrCmp.long_name;
+                } else if (type_set.contains('locality')) {
+                    address.MailingCity__c = addrCmp.long_name;
+                }
+            }
+
+            address.MailingStreet__c = buildStreetAddress(address.MailingCountry__c, streetName, streetNumber,
+                intersection, premise, subPremise, googleResponse.results[0].formatted_address);
+        }
+
+        /**
+        * @description Concatenate the different components of a Street Address as appropriate based on the
+        * country and the various retrieved components from the address validation service
+        * @param mailingCountry Mailing Country
+        * @param streetName Street Name
+        * @param streetNumber Street Number
+        * @param intersection Interection (if any)
+        * @param premise Premise
+        * @param subPremise Sub-Premise from the original address
+        * @param formattedAddress Formatted Address from the validation service
+        * @return Properly formatted Street Address
+        */
+        private String buildStreetAddress(String mailingCountry, String streetName, String streetNumber,
+            String intersection, String premise, String subPremise, String formattedAddress
+        ) {
+            String verified_street = '';
+
+            // US addresses always format as StreetNumber StreetName, while many others are reversed
+            // If the country isn't this specified hardcoded list, try to figure it out based on whether
+            // the first character of the Formatted_Address response is a letter or a number.
+            Boolean intlFormattedStreet = !ADDR_Validator_UTIL.alwaysFormatAsStreetNumberBeforeStreetName(mailingCountry)
+                && formattedAddress.left(1).isAlpha();
+
+            if (intlFormattedStreet) {
+                verified_street = streetName + ' ' + streetNumber + ' ' + intersection;
+            } else {
+                verified_street = streetNumber + ' ' + streetName + ' ' + intersection;
+            }
+
+            if (!String.isBlank(premise)) {
+                verified_street = verified_street.trim() + ' ' + premise.trim();
+            }
+            if (!String.isBlank(subPremise)) {
+                if (!String.isBlank(verified_street)) {
+                    verified_street = verified_street.trim() + ', ' + subPremise.trim();
+                } else{
+                    verified_street = subPremise.trim();
+                }
+            }
+
+            return verified_street.trim();
+        }
+
+        /**
+        * @description Handle other response types besides OK/200
+        */
+        private void handleOtherResponses() {
+
+            switch on googleResponse.status {
+                when 'OVER_QUERY_LIMIT' {
+                    address.Verified__c = false;
+                    address.API_Response__c = 'OVER_QUERY_LIMIT: indicates that you are over your quota.';
+                    address.Verification_Status__c = address.API_Response__c;
+
+                } when 'REQUEST_DENIED' {
+                    address.Verified__c = false;
+                    address.API_Response__c = 'REQUEST_DENIED: indicates that your request was denied.';
+                    address.Verification_Status__c = address.API_Response__c;
+
+                } when 'UNKNOWN_ERROR' {
+                    address.Verified__c = false;
+                    address.API_Response__c = 'UNKNOWN_ERROR: indicates that the request could not be processed due to a server error. The request may succeed if you try again.';
+                    address.Verification_Status__c = address.API_Response__c;
+
+                } when 'INVALID_REQUEST' {
+                    address.Verified__c = true;
+                    address.API_Response__c = 'INVALID_REQUEST: generally indicates that the query (address, components or latlng) is missing.';
+                    address.Verification_Status__c = address.API_Response__c;
+
+                } when 'ZERO_RESULTS' {
+                    address.Verified__c = true;
+                    address.API_Response__c = 'ZERO_RESULTS: indicates that the geocode was successful but returned no results. This may occur if the geocoder was passed a non-existent address.';
+                    address.Verification_Status__c = address.API_Response__c;
+
+                } when else {
+                    address.Verified__c = true;
+                    //Truncating body response to avoid STRING_TOO_LONG error.
+                    address.API_Response__c = 'STATUS: ' + googleResponse.status + ' BODY: '
+                        + ADDR_Validator_UTIL.trimBodyTo32K(rawResponse);
+                    address.Verification_Status__c = address.API_Response__c;
+                }
+            }
+        }
+
     }
 }
