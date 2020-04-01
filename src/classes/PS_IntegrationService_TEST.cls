@@ -35,16 +35,151 @@
 * @description Test class for the PS_IntegrationService class
 */
 
-@isTest
+@IsTest
 private class PS_IntegrationService_TEST {
-    
+
     /*******************************************************************************************************
      * @description tests storing of the secrets we receive from the Payment Services
      * Integrations package
      */
-    @isTest
-    private static void setConfigurationTest() {
-        // TODO This method can be implemented after the setConfiguration method is implemented
-         
+    @IsTest
+    private static void setConfigurationWithPaymentsAPIKey() {
+        Test.startTest();
+        Map<String, List<Map<String, String>>> configParams = buildConfigurationParams();
+        try {
+            PS_IntegrationService.setConfiguration(configParams);
+        } catch (PS_IntegrationService.PS_IntegrationServiceException ex){
+            System.debug(ex.getMessage());
+        }
+
+
+        List<Payment_Services_Configuration__c> configurations = [
+                SELECT apiKey__c, iss__c, sub__c,
+                        sfdo_product__c, sfdo_roles__c,
+                        sfdo_merchantids__c, gatewayids__c,
+                        baseURL__c
+                FROM Payment_Services_Configuration__c
+        ];
+
+        System.debug(configurations);
+        System.assert(!configurations.isEmpty());
+    }
+
+    @IsTest
+    private static void setConfigurationWithFallBackApiKey() {
+        Test.startTest();
+        String makanaAPIKey = 'a5146b4b-3d2b-4fc4-a5e5-makana';
+        Map<String, List<Map<String, String>>> configParams = buildConfigurationParams();
+        for(Map<String, String> paymentsConfigMap : configParams.get(PS_IntegrationService.PAYMENTS_APPLICATION_TYPE)){
+            paymentsConfigMap.put('apiKey', null);
+        }
+
+        try {
+            PS_IntegrationService.setConfiguration(configParams);
+        } catch (PS_IntegrationService.PS_IntegrationServiceException ex){
+            System.debug(ex.getMessage());
+        }
+
+
+        List<Payment_Services_Configuration__c> configurations = [
+                SELECT apiKey__c, iss__c, sub__c,
+                        sfdo_product__c, sfdo_roles__c,
+                        sfdo_merchantids__c, gatewayids__c,
+                        baseURL__c
+                FROM Payment_Services_Configuration__c
+        ];
+
+        System.debug(configurations);
+        System.assert(!configurations.isEmpty());
+        System.assertEquals(makanaAPIKey, configurations[0].apiKey__c);
+    }
+
+    @IsTest
+    private static void setConfigurationWithInvalidApiKey() {
+        Test.startTest();
+
+        Map<String, List<Map<String, String>>> configParams = buildConfigurationParams();
+        for(Map<String, String> paymentsConfigMap : configParams.get(PS_IntegrationService.PAYMENTS_APPLICATION_TYPE)){
+            paymentsConfigMap.put('apiKey', null);
+        }
+
+        for(Map<String, String> makanaConfigMap : configParams.get(PS_IntegrationService.MAKANA_APPLICATION_TYPE)){
+            makanaConfigMap.put('apiKey', null);
+        }
+
+        try {
+            PS_IntegrationService.setConfiguration(configParams);
+        } catch (PS_IntegrationService.PS_IntegrationServiceException ex) {
+            System.assertEquals(PS_IntegrationService.MISSING_API_KEY, ex.getMessage());
+        }
+    }
+
+
+    @IsTest
+    private static void setConfigurationWithInvalidConfigurationParameters() {
+        Test.startTest();
+
+        Map<String, List<Map<String, String>>> configParams = new Map<String, List<Map<String, String>>>();
+
+        try {
+            PS_IntegrationService.setConfiguration(configParams);
+        } catch (PS_IntegrationService.PS_IntegrationServiceException ex) {
+            System.assertEquals(PS_IntegrationService.INVALID_CONFIG_PARAMS, ex.getMessage());
+        }
+    }
+
+
+
+    private static Map<String, List<Map<String, String>>> buildConfigurationParams() {
+        Map<String, List<Map<String, String>>> builtConfiguration = new Map<String, List<Map<String, String>>>();
+        List<Map<String, String>> applicationConfig = new List<Map<String, String>>();
+        Integer paymentsConfigSize = 8;
+        Integer makanaConfigSize = 2;
+        Map<Integer, Config> paymentConfigParams = new Map<Integer, Config>{
+                0 => new Config('iss', 'ApiKeyManager'),
+                1 => new Config('sub', 'cbaxter'),
+                2 => new Config('sfdo.roles', 'Payments.Purchase, Payments.Refund'),
+                3 => new Config('sfdo.product', 'CRM'),
+                4 => new Config('apiKey', 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4'),
+                5 => new Config('sfdo.merchantids', '47b70ca4-0f6e-4c52-819f-667ae804f9d2'),
+                6 => new Config('gatewayids', 'f23da98a-c7aa-4637-962a-8c852e765e38'),
+                7 => new Config('baseURL', 'https://x2t03i3rn5.execute-api.us-west-2.amazonaws.com/v1')
+        };
+
+        Map<Integer, Config> makanaConfigParams = new Map<Integer, Config>{
+                0 => new Config('apiKey', 'a5146b4b-3d2b-4fc4-a5e5-makana'),
+                1 => new Config('baseURL', 'https://x2t03i3rn5.execute-api.us-west-2.amazonaws.com/v1')
+        };
+
+        for (Integer i = 0; i < paymentsConfigSize; i++) {
+            Map<String, String> stringMap = new Map<String, String>();
+            stringMap.put(paymentConfigParams.get(i).key, paymentConfigParams.get(i).value);
+            applicationConfig.add(stringMap);
+        }
+
+        builtConfiguration.put(PS_IntegrationService.PAYMENTS_APPLICATION_TYPE, applicationConfig);
+
+        applicationConfig = new List<Map<String, String>>();
+
+        for (Integer i = 0; i < makanaConfigSize; i++) {
+            Map<String, String> stringMap = new Map<String, String>();
+            stringMap.put(makanaConfigParams.get(i).key, makanaConfigParams.get(i).value);
+            applicationConfig.add(stringMap);
+        }
+
+        builtConfiguration.put(PS_IntegrationService.MAKANA_APPLICATION_TYPE, applicationConfig);
+
+        return builtConfiguration;
+    }
+
+    public class Config{
+        String key;
+        String value;
+
+        public Config (String key, String value){
+            this.key = key;
+            this.value = value;
+        }
+
     }
 }

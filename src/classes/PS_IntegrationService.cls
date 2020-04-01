@@ -35,16 +35,98 @@
 * @description Provides a public interface to the Payment Services Integration Package
 */
 global class PS_IntegrationService {
-    
+
+    @TestVisible private static final String PAYMENTS_APPLICATION_TYPE = 'payments';
+    @TestVisible private static final String MAKANA_APPLICATION_TYPE = 'makana';
+    @TestVisible private static final String INVALID_CONFIG_PARAMS = 'Missing configuration parameters';
+    @TestVisible private static final String MISSING_API_KEY = 'An error has occurred with onboarding this ' +
+            'elevate customer, missing API key';
+
     /*******************************************************************************************************
     * @description Provides an endpoint for the Payment Services Integrations package
     * to call when a Customer registers, and pass parameters containing the secrets
     * needed for calls to Payment Services endpoints(Tokenize, Purchase) and creating JWTs
-    * @param secrets contains secrets, such as the api key for creating a JWT
+    * @param configParams contains secrets, such as the api key for creating a JWT
     */
     global static void setConfiguration(Map<String, List<Map<String, String>>> configParams) {
-        // TODO This method needs to be implemented after we decide on the storage mechanism
-        // for the onboarding data
+
+        if (configParams == null || configParams.isEmpty()) {
+            throw new PS_IntegrationServiceException(INVALID_CONFIG_PARAMS);
+        }
+
+        Payment_Services_Configuration__c psConfiguration = new Payment_Services_Configuration__c();
+        List<Map<String, String>> paymentsConfiguration = configParams.get(PAYMENTS_APPLICATION_TYPE);
+        List<Map<String, String>> makanaConfiguration = configParams.get(MAKANA_APPLICATION_TYPE);
+
+        if (paymentsConfiguration != null) {
+            for (Map<String, String> valueMap : paymentsConfiguration) {
+                System.debug(valueMap.keySet());
+                String apiKeyFieldLabel = 'apiKey';
+                if (valueMap.keySet().contains(apiKeyFieldLabel)) {
+                    psConfiguration.apiKey__c = valueMap.get(apiKeyFieldLabel);
+                    if ((psConfiguration.apiKey__c == null ||
+                            String.isBlank(psConfiguration.apiKey__c)) && makanaConfiguration != null) {
+                        // Fall-back to the Makana API key if available
+                        for (Map<String, String> makanaValueMap : makanaConfiguration) {
+                            if (makanaValueMap.keySet().contains(apiKeyFieldLabel)) {
+                                psConfiguration.apiKey__c = makanaValueMap.get(apiKeyFieldLabel);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (psConfiguration.apiKey__c == null || String.isBlank(psConfiguration.apiKey__c)) {
+                        throw new PS_IntegrationServiceException(MISSING_API_KEY);
+                    }
+                }
+
+                if (valueMap.keySet().contains('iss')) {
+                    psConfiguration.iss__c = valueMap.get('iss');
+                }
+
+                if (valueMap.keySet().contains('sub')) {
+                    psConfiguration.sub__c = valueMap.get('sub');
+                }
+
+                if (valueMap.keySet().contains('sfdo.merchantids')) {
+                    psConfiguration.sfdo_merchantids__c = valueMap.get('sfdo.merchantids');
+                }
+
+                if (valueMap.keySet().contains('sfdo.roles')) {
+                    psConfiguration.sfdo_roles__c = valueMap.get('sfod.roles');
+                }
+
+                if (valueMap.keySet().contains('sfdo.product')) {
+                    psConfiguration.sfdo_product__c = valueMap.get('sfdo.product');
+                }
+
+                if (valueMap.keySet().contains('gatewayids')) {
+                    psConfiguration.gatewayids__c = valueMap.get('gatewayids');
+                }
+
+                if (valueMap.keySet().contains('baseURL')) {
+                    psConfiguration.baseURL__c = valueMap.get('baseURL');
+                }
+            }
+        }
+
+        try {
+            upsert psConfiguration;
+            System.FeatureManagement.changeProtection(UTIL_Namespace.StrTokenNSPrefix(
+                    UTIL_Describe.getObjectDescribe('Payment_Services_Configuration__c').getLocalName()),
+                    'CustomObject',
+                    'Protected'
+            );
+        } catch (Exception ex) {
+            throw new PS_IntegrationServiceException(ex.getMessage());
+        }
 
     }
+
+    // Custom Exception
+    public class PS_IntegrationServiceException extends Exception {}
+
+
+
+
 }
