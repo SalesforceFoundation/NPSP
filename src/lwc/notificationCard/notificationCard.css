@@ -1,0 +1,19 @@
+.bg-error {
+    background-color: #c23934;
+}
+
+.bg-warning {
+
+}
+
+.bg-info {
+
+}
+
+.bg-none {
+    background-color: transparent;
+}
+
+.card-border-radius {
+    border-radius: .25rem;
+}
