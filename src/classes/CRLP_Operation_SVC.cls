@@ -186,7 +186,7 @@ public class CRLP_Operation_SVC {
         if (amount == null || amount == 0
             || !UTIL_Currency.getInstance().isMultiCurrencyOrganization()
             || rollup.amountFieldType != Schema.DisplayType.Currency
-            ) {
+        ) {
             return amount;
         }
 

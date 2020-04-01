@@ -255,7 +255,6 @@ public class CRLP_RollupContact_TEST {
      * 4. Nightly LDV Batch Job
      */
     private static void testRollupsServices(TestType tt) {
-        Map<Id, Contact> mapConIdCon;
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
@@ -483,10 +482,10 @@ public class CRLP_RollupContact_TEST {
         Test.stopTest();
 
         // Query the Contact with all the target fields specified in the rollups
-        String baseContactQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType);
-        mapConIdCon = new Map<Id, Contact>((List<Contact>)Database.query(baseContactQuery));
-        c = mapConIdCon.get(conId);
-        c4 = mapConIdCon.get(con4Id);
+        String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
+        c = Database.query(conQuery);
+        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :con4Id LIMIT 1';
+        c4 = Database.query(conQuery);
 
         // If the AlwaysRollupToPrimaryContact field is checked, the totals will include the org donation
         if (tt == TestType.TestWithAlwaysRollupToPrimary) {
@@ -534,11 +533,13 @@ public class CRLP_RollupContact_TEST {
         if (tt == TestType.TestBatch) {
             // Contact2.npo02__NumberOfClosedOpps__c was set to 100, but has attached opps, so it should be reset to 0.
             Id c2Id = c2.Id;
-            c2 = mapConIdCon.get(c2Id);
+            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
+            c2 = database.query(conQuery);
             System.assertEquals(0, c2.npo02__NumberOfClosedOpps__c);
 
             Id c3Id = c3.Id;
-            c3 = mapConIdCon.get(c3Id);
+            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c3Id LIMIT 1';
+            c3 = database.query(conQuery);
             System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
         }
     }
