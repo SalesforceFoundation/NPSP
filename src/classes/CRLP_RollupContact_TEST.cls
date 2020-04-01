@@ -119,6 +119,10 @@ public class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.COUNT, null, 'Fair_Market_Value__c') + ',' +
 
+                CMT_UnitTestData_TEST.createRollupRecord('Sum of Number in multicurrency', null,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'custom_cont_num__c', CRLP_Operation.RollupType.SUM, null,'custom_number__c') + ',' +
+
                 CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') + ',' +
@@ -223,9 +227,7 @@ public class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToContact,
                         'First_Soft_Credit_Amount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') + ',' +
 
-                 CMT_UnitTestData_TEST.createRollupRecord('Sum of Number in multicurrency', null,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'custom_cont_num__c', CRLP_Operation.RollupType.SUM, 'custom_number__c') + ',' +
+
 
                 CMT_UnitTestData_TEST.createRollupRecord('Total Writeoffs', filterGroupId2,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToContact,
@@ -443,21 +445,20 @@ public class CRLP_RollupContact_TEST {
             multiCurrCont = UTIL_UnitTestData_TEST.getContact();
             insert multiCurrCont;
             //Contact multiCurrCont = [SELECT Id, FirstName, LastName, AccountId FROM Contact where Id =:cont.Id];
-            //multiCurrCont.put('CurrencyIsoCode', otherCurrencyCode);
-            multiCurrCont.CurrencyIsoCode = otherCurrencyCode;
+            multiCurrCont.put('CurrencyIsoCode', otherCurrencyCode);
             Id acc = multiCurrCont.AccountId;
 
             Database.update(multiCurrCont);
             Opportunity opp = new Opportunity(
                 Name = 'Test MultiCurrencyOpp',
                 CloseDate = Date.today().addDays(10),
-                Amount = 50,
-                StageName = openStage,
+                Amount = 100,
+                StageName = closedStage,
                 AccountId = multiCurrCont.AccountId,
                 Primary_Contact__c = multiCurrCont.Id,
                 RecordTypeId = rtId,
                 npe01__Do_Not_Automatically_Create_Payment__c = true,
-                custom_number__c = 100,
+                custom_number__c = 10,
                 Type = 'New'
 
             );
@@ -466,12 +467,12 @@ public class CRLP_RollupContact_TEST {
                 Name = 'Test MultiCurrencyOpp2',
                 CloseDate = Date.today().addDays(2),
                 Amount = 100,
-                StageName = openStage,
+                StageName = closedStage,
                 AccountId = multiCurrCont.AccountId,
                 Primary_Contact__c = multiCurrCont.Id,
                 RecordTypeId = rtId,
                 npe01__Do_Not_Automatically_Create_Payment__c = true,
-                custom_number__c = 200,
+                custom_number__c = 7,
                 Type = 'New'
 
             );
@@ -598,7 +599,7 @@ public class CRLP_RollupContact_TEST {
         if (tt == TestType.TestMultiCurrBatch) {
             Contact con = mapConIdCon.get(multiCurrCont.Id);
             System.debug('Here is the contact with multicurrency:' + con);
-            System.assertEquals(300, con.custom_cont_num__c, 'The number of closed won opps should be equal to ' + 300);
+            System.assertEquals(17, con.custom_cont_num__c, 'The number of closed won opps should be equal to ' + 300);
         }
         // Basic rollup asserts using existing NPSP rollup fields.
         System.assertEquals(cnt, c.npo02__NumberOfClosedOpps__c);
