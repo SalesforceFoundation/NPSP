@@ -40,10 +40,6 @@ public class CRLP_RollupContact_TEST {
         TestTrigger, TestQueueuable, TestBatch, testSkewBatch, TestWithAlwaysRollupToPrimary
     }
 
-    private static String otherCurrencyCode;
-
-    private static String defaultCurrCode = UserInfo.getDefaultCurrency();
-
     /**
      * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
      * be created in the actual unit test to allow for the trigger test to run
@@ -514,7 +510,7 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals(totalDonations.divide(cnt, 2, System.RoundingMode.HALF_UP), c.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, c.npo02__Best_Gift_Year__c);
-        System.assertEquals(last365Days, c.npo02__OppAmountLastNDays__c, 'what is the number' + last365Days);
+        System.assertEquals(last365Days, c.npo02__OppAmountLastNDays__c);
         System.assertEquals('New', c.Department);
 
         System.assertEquals(1, c.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
