@@ -1,47 +1,93 @@
 import { LightningElement, api } from 'lwc';
 import { isEmpty } from 'c/utilCommon';
 
+/**
+ * @typedef {Class} AlertBanner
+ * @property {string} _alertClass The class theme.
+ */
 export default class AlertBanner extends LightningElement {
-    @api _alertClass;
-    @api _variant;
-    @api _assistText;
-    @api _alertIcon;
+    /**
+     * The stylized theme for the alert.
+     * @type {string}
+     * @default warning
+     */
+    @api theme;
     @api variant;
-    @api _size;
-    @api isDisplayed;
+    @api assistText;
+    @api icon;
+    @api size;
+    @api show;
     @api message;
 
-    defaultClass = 'slds-notify slds-notify_alert slds-theme_alert-texture';
+    defaultClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_';
 
-    get alertClass() {
-        const warningThemeDefault = 'slds-theme_warning';
-        if(isEmpty(this._alertClass)) {
-            this._alertClass = this.defaultClass + ' ' + warningTheme;
+    get alertTheme() {
+        const warningThemeDefault = 'warning';
+
+        if(isEmpty(this.theme)) {
+            return this.defaultClass.concat(warningThemeDefault);
         }
-        return this._alertClass;
+
+        return this.theme;
     }
 
-    get variant() {
+    get alertVariant() {
         const variantInverseDefault = 'inverse';
-        if(isEmpty(this._variant)) {
-            this._variant = variantInverse;
+
+        if(isEmpty(this.variant)) {
+            return variantInverseDefault;
         }
-        return this._variant;
+
+        return this.variant;
     }
 
     get alertIcon() {
         const iconDefault = 'utility:warning';
-        if(isEmpty(this._alertIcon)) {
-            this._alertIcon = iconDefault;
+
+        if(isEmpty(this.icon)) {
+            return iconDefault;
         }
-        return this._alertIcon;
+
+        return this.icon
     }
 
-    get size() {
+    get alertSize() {
         const sizeDefault = 'x-small';
-        if(isEmpty(this._size)) {
-            this._size = sizeDefault;
+
+        if(isEmpty(this.size)) {
+            return sizeDefault;
         }
-        return this._size;
+
+        return this.size;
+    }
+
+    get alertAssistText() {
+        const sizeDefault = 'An error has occurred';
+
+        if(isEmpty(this.size)) {
+            return sizeDefault;
+        }
+
+        return this.size
+    }
+
+    get displayAlert() {
+        const displayDefault = true;
+
+        if(isEmpty(this.show)) {
+            return displayDefault;
+        }
+
+        return this.show;
+    }
+
+    get alertMessage() {
+        const messageDefault = 'An error has occurred.';
+
+        if(isEmpty(this.message)) {
+            return messageDefault;
+        }
+
+        return this.message;
     }
 }
