@@ -293,7 +293,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     *
     * @param {object} dataImportRecord: A DataImport__c record
     * @param {boolean} hasUserSelectedDonation: True if a selection had been made in
-    * the 'Review Donations' modal and BDI needs to attempt a match.
+    * the 'Review Donations' modal.
+    * Determines BDI matching criteria.
+    *   true = "single match or create" and means we are updating
+    *   false = "do not match"
     */
     startDataImportProcessing = (dataImportRecord, hasUserSelectedDonation, errorCallback) => {
         this.loadingText = 'Processing data import record...';
