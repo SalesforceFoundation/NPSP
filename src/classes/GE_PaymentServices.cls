@@ -47,7 +47,7 @@ public with sharing class GE_PaymentServices {
             JSON.deserialize(fabricatedCardholderNames, FabricatedCardholderNames.class);
     }
 
-    public ResponseWrapper makePurchaseCall() {
+    public ResponseWrapper createTransaction() {
         // Create http request...
         Http http = new Http();
         HttpRequest request = new HttpRequest();
@@ -65,7 +65,7 @@ public with sharing class GE_PaymentServices {
 
         HttpResponse response = http.send(request);
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
-        System.debug(responseWrapper);
+
         return responseWrapper;
     }
 
