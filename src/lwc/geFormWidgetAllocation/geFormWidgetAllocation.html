@@ -1,12 +1,12 @@
 <template>
     <c-alert-banner
-        is-displayed={hasAlert}
-        alert-class={alertClass}
-        assist-text="Allocation Error"
-        alert-icon={alertIcon}
-        variant="inverse"
-        size="x-small"
-        message={alertBanner.message}>
+            show={hasAlert}
+            theme={alertClass}
+            assist-text="Allocation Error"
+            icon= {alertIcon}
+            variant="inverse"
+            size="x-small"
+            message={alertBanner.message}>
     </c-alert-banner>
     <template for:each={rowList} for:item='row' for:index='index'>
         <c-ge-form-widget-row-allocation
