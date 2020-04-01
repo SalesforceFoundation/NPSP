@@ -54,6 +54,15 @@ public class GE_PaymentServices_TEST {
                                       'sfdo.product' => 'CRM',
                                       'exp' => String.valueOf(Datetime.now().getTime() + 60 * 1000)};
 
+    // endpoints
+    // TODO: at the moment we use the dev1 env, we should replace with a QA env when it becomes available
+    private static final String ENDPOINT_ROOT = 'https://7jpea5zk79.execute-api.us-west-2.amazonaws.com/v1/payments';
+    private static final String TOKENIZE_ENDPOINT = '/public/tokens';
+    private static final String PURCHASE_ENDPOINT = '/verified/purchase';
+
+    // TODO: use Org id 
+    private static final String PRODUCT_ID = '00D6g0000000000EAA';
+
     @isTest static void shouldReturnSuccessfulResponse() {
         // Set mock callout class 
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
@@ -96,10 +105,40 @@ public class GE_PaymentServices_TEST {
         String jwt = UTIL_Jwt.getSignedJWTFromString(payload, API_SECRET_KEY);
 
         // tokenize
-        
+        HttpResponse response = makeTokenizeCall();
+        // Parse the JSON response
+        if (response.getStatusCode() != 201) {
+            //return JSON.serialize(response.getStatus());
+        } else {
+            //return JSON.serialize(response.getBody());
+            String token = JSON.serialize(response.getBody());
+            System.debug('token = ' + token);
+        }
+        //System.debug('token = ' + token);
 
         // purchase
 
+    }
+
+    private static HttpResponse makeTokenizeCall() {
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint(ENDPOINT_ROOT + TOKENIZE_ENDPOINT);
+        request.setMethod('POST');
+        request.setHeader('Content-Type', 'application/json;charset=UTF-8');
+        request.setHeader('productid', PRODUCT_ID);
+    
+        // Set the body as a JSON object...
+        request.setBody('{"cardNumber": "411111111111111",' +
+            '"nameOnCard": "John Doe",' +
+            '"expMonth": "' + String.valueOf(Date.today().month()) + '",' +
+            '"expYear": "' + String.valueOf(Date.today().year() + 1) + '",' +
+            '"cvc": "123",' +
+            '"gatewayType": "CONFIGURED"' + '}');
+
+        HttpResponse response = http.send(request);
+
+        return response;
     }
 
     public class MockHttpResponseGenerator implements HttpCalloutMock {
