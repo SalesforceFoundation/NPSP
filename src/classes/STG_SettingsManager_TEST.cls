@@ -215,7 +215,6 @@ private with sharing class STG_SettingsManager_TEST {
         system.assertEquals(null, ctrl.cancelEdit());
         system.assertEquals(false, ctrl.isEditMode);
         system.assertEquals(3, STG_Panel.listSOAccountModels.size());
-        system.assertNotEquals(null, STG_Panel.listSOContactRoles);
         system.assertNotEquals(null, STG_Panel.listSOHHRules);
         system.assertNotEquals(null, STG_Panel.listSOContactRecTypes);
         system.assertNotEquals(null, STG_Panel.listSOAccountRecTypeIds);
