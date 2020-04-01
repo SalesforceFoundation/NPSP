@@ -218,8 +218,6 @@ public class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToContact,
                         'First_Soft_Credit_Amount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') + ',' +
 
-
-
                 CMT_UnitTestData_TEST.createRollupRecord('Total Writeoffs', filterGroupId2,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToContact,
                         'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') +
