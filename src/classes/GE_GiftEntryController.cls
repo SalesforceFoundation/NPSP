@@ -46,7 +46,7 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static String createTransaction(DataImport__c dataImportRecord, String cardholderNames) {
+    public static String sendPurchaseRequest(DataImport__c dataImportRecord, String cardholderNames) {
         try {
             GE_PaymentServices paymentServices = new GE_PaymentServices(dataImportRecord, cardholderNames);
             GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
@@ -125,7 +125,7 @@ public with sharing class GE_GiftEntryController {
     * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static Id processDataImport(DataImport__c diRecord, Boolean updateGift) {
+    public static Id submitDataImportToBDI(DataImport__c diRecord, Boolean updateGift) {
         // Check for widget data and convert it to the correct format for processing
         diRecord.Additional_Object_JSON__c =
             GE_FormRendererService.convertWidgetDataToObjectJSON(diRecord.Additional_Object_JSON__c);
