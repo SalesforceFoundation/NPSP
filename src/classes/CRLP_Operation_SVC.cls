@@ -183,8 +183,10 @@ public class CRLP_Operation_SVC {
     private static Decimal convertAmountToCurrency(Decimal amount, CRLP_Rollup rollup, SObject amtSObject, Date dateValue) {
 
         // If the amount is not null or zero, then convert to the Account currency as required
-        if (amount == null || amount == 0 || !UTIL_Currency.getInstance().isMultiCurrencyOrganization()
-            || rollup.amountFieldType != Schema.DisplayType.Currency) {
+        if (amount == null || amount == 0
+            || !UTIL_Currency.getInstance().isMultiCurrencyOrganization()
+            || rollup.amountFieldType != Schema.DisplayType.Currency
+            ) {
             return amount;
         }
 

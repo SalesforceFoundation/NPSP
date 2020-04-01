@@ -54,7 +54,7 @@ public class CRLP_Rollup {
     public String detailObject;
     public String amountObject;
     public String amountFieldName;
-    public DisplayType amountFieldType;
+    public Schema.DisplayType amountFieldType;
     public String dateObject;
     public String dateFieldName;
     public SoapType dateFieldType;
