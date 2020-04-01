@@ -36,15 +36,14 @@
 */
 public with sharing class GE_PaymentServices {
 
-    DataImport__c dataImportRecord;
-    FabricatedCardholderNames fabricatedCardholderNames;
+    PurchaseCallBody purchaseCallBody;
 
     public GE_PaymentServices() {}
 
-    public GE_PaymentServices(DataImport__c dataImportRecord, String fabricatedCardholderNames) {
-        this.dataImportRecord = dataImportRecord;
-        this.fabricatedCardholderNames = (FabricatedCardholderNames)
-            JSON.deserialize(fabricatedCardholderNames, FabricatedCardholderNames.class);
+    public void setPurchaseCallBody(String jsonString) {
+        Map<String, Object> requestBodyParameters =
+            (Map<String, Object>) JSON.deserializeUntyped(jsonString);
+        this.purchaseCallBody = new PurchaseCallBody().applyAll(requestBodyParameters);
     }
 
     public ResponseWrapper createTransaction() {
@@ -59,8 +58,7 @@ public with sharing class GE_PaymentServices {
         request.setHeader('sfdo.username', getUsername());
 
         // Set the body as a JSON object...
-        String purchaseCallBodyString =
-            new PurchaseCallBody(dataImportRecord, fabricatedCardholderNames).getAsJson();
+        String purchaseCallBodyString = purchaseCallBody.getAsJson();
         request.setBody(purchaseCallBodyString);
 
         HttpResponse response = http.send(request);
@@ -86,17 +84,12 @@ public with sharing class GE_PaymentServices {
     public String getJwt() {
         JWTPayload jwtPayload = new JWTPayload();
         String jwt = UTIL_Jwt.getSignedJWTFromString(jwtPayload.getAsString(), getJwtSecret());
-        System.debug(jwt);
+
         return jwt;
-        // Hardcoded JWT for Dev 1
-        //return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBcGlLZXlNYW5hZ2VyIiwiaWF0IjoxNTgzMTk2MTAxLCJleHAiOjE2MTQ3MzIxMTAsImF1ZCI6Ind3dy5leGFtcGxlLmNvbSIsInN1YiI6ImNiYXh0ZXIiLCJzZmRvLmlkIjoiMDBENmcwMDAwMDAwMDAwRUFBIiwic2Zkby5wcm9kdWN0IjoiQ1JNIiwic2Zkby5yb2xlcyI6IlBheW1lbnRzLlB1cmNoYXNlIn0.Fk2kH8occu-tEabrYALiAN16XlIUj4vpptWGs0x8eZs';
     }
 
     private String getMerchantIds() {
-        // Dev1
         return '47b70ca4-0f6e-4c52-819f-667ae804f9d2';
-        // Dev2
-        //return 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4';
     }
 
     private String getUsername() {
@@ -145,70 +138,44 @@ public with sharing class GE_PaymentServices {
 
     public with sharing class PurchaseCallBody {
         public Double amount;
-        public String currencyCode;
+        public String currencyCode = getCurrencyCode();
         public String paymentMethodToken;
-        public String merchantId;
-        public String gatewayId;
+        public String merchantId = getMerchantId();
+        public String gatewayId = getGatewayId();
         public String email;
         public String firstName;
         public String lastName;
         public Metadata metadata;
 
-        private Double getAmount(DataImport__c dataImport) {
-            return dataImport.Donation_Amount__c;
-        }
-
         private String getCurrencyCode() {
             return 'USD';
         }
 
-        private String getPaymentMethodToken(DataImport__c dataImport) {
-            return dataImport.Payment_Authorization_Token__c;
-        }
-
         private String getMerchantId() {
             return '47b70ca4-0f6e-4c52-819f-667ae804f9d2';
-            // Bad merchant id below
-            //return '47b70ca4-0f6e-4c52-819f-667ae804f9d3';
         }
 
         private String getGatewayId() {
             return 'f23da98a-c7aa-4637-962a-8c852e765e38';
         }
 
-        private String getEmail() {
-            return 'bart.simpson@example.com';
-        }
-
-        private String getFirstName(FabricatedCardholderNames names) {
-            return String.isNotBlank(names.firstName) ? names.firstName : names.accountName;
-        }
-
-        private String getLastName(FabricatedCardholderNames names) {
-            return String.isNotBlank(names.lastName) ? names.lastName : names.accountName;
-        }
-
-        private Metadata getMetadata(DataImport__c dataImport) {
-            Metadata metadata = new Metadata();
-            metadata.campaignCode = dataImport.Donation_Campaign_Name__c;
-
-            return metadata;
-        }
-
-        public PurchaseCallBody(DataImport__c dataImport, FabricatedCardholderNames names) {
-            this.amount = getAmount(dataImport);
+        public PurchaseCallBody() {
             this.currencyCode = getCurrencyCode();
-            this.paymentMethodToken = getPaymentMethodToken(dataImport);
             this.merchantId = getMerchantId();
             this.gatewayId = getGatewayId();
-            this.email = getEmail();
-            this.firstName = getFirstName(names);
-            this.lastName = getLastName(names);
-            this.metadata = getMetadata(dataImport);
         }
 
         public String getAsJson() {
             return JSON.serialize(this);
+        }
+
+        public PurchaseCallBody applyAll(Map<String, Object> requestBodyParameters) {
+            Map<String, Object> selfAsUntyped = (Map<String, Object>) JSON.deserializeUntyped(getAsJson());
+            for (String key : requestBodyParameters.keySet()) {
+                selfAsUntyped.put(key, requestBodyParameters.get(key));
+            }
+
+            return (PurchaseCallBody) JSON.deserialize(JSON.serialize(selfAsUntyped), PurchaseCallBody.class);
         }
     }
 
@@ -216,17 +183,19 @@ public with sharing class GE_PaymentServices {
         public Integer statusCode;
         public String status;
         public String body;
+        public Map<String, Object> headers = new Map<String, Object>{};
 
         public ResponseWrapper(HttpResponse response) {
             this.statusCode = response.getStatusCode();
             this.status = response.getStatus();
             this.body = response.getBody();
-        }
-    }
 
-    public with sharing class FabricatedCardholderNames {
-        public String firstName;
-        public String lastName;
-        public String accountName;
+            String[] headerKeys = response.getHeaderKeys();
+            if (headerKeys != null) {
+                for (String headerKey : headerKeys) {
+                    this.headers.put(headerKey, response.getHeader(headerKey));
+                }
+            }
+        }
     }
 }
