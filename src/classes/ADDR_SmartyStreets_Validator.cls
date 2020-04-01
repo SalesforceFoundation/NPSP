@@ -137,7 +137,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
             // request a few candidates to determine if the address is unique
             sr.candidates = (settings.Reject_Ambiguous_Addresses__c) ? 3 : 1;
             srList.add(sr);
-            if (ADDR_Validator_UTIL.isUS(av)) {
+            if (ADDR_Validator_UTIL.isUSAddress(av)) {
                 includesUSAddress = true;
             }
         }
@@ -217,7 +217,7 @@ public with sharing class ADDR_SmartyStreets_Validator implements ADDR_IValidato
                 av.MailingState__c,
                 av.MailingPostalCode__c
            ));
-           if (ADDR_Validator_UTIL.isUS(av)) {
+           if (ADDR_Validator_UTIL.isUSAddress(av)) {
                includesUSAddress = true;
            }
         }

@@ -73,7 +73,7 @@ public class ADDR_Validator_Batch implements Database.Batchable<sObject>, Databa
     public void execute(Database.BatchableContext bc, List<Address__c> scope) {
         List<Address__c> addressesToVerify = new List<Address__c>();
         for (Address__c a : scope) {
-            if (ADDR_Validator_UTIL.isUS(a)) {
+            if (ADDR_Validator_UTIL.isUSAddress(a)) {
                 addressesToVerify.add(a);
             }
         }

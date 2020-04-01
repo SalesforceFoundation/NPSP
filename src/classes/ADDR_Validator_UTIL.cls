@@ -38,9 +38,6 @@ public inherited sharing class ADDR_Validator_UTIL {
     public static final String RESPONSE_OK = 'OK';
     public static final Integer RESPONSE_CODE_SUCCESS = 200;
 
-    private static final Set<String> usCountryCodes = new Set<String>{
-        'US', 'USA', 'United States', 'United States of America' };
-
     /**
     * @description Trim a ResponseBody to 32K to avoid STRING_TOO_LONG error.
     * @param response HttpResponse
@@ -71,8 +68,8 @@ public inherited sharing class ADDR_Validator_UTIL {
     * @param addr The address to inspect.
     * @return Boolean True if the address is US-based. False otherwise.
     */
-    public static Boolean isUS(Address__c addr) {
-        return (isUsCountry(addr.MailingCountry__c) &&
+    public static Boolean isUSAddress(Address__c addr) {
+        return (isUSCountry(addr.MailingCountry__c) &&
             (addr.MailingStreet__c != null || addr.MailingPostalCode__c != null
             || (addr.MailingCity__c != null && addr.MailingState__c != null)));
     }
@@ -82,7 +79,35 @@ public inherited sharing class ADDR_Validator_UTIL {
     * @param country String
     * @return boolean
     */
-    public static Boolean isUsCountry(String country) {
+    public static Boolean isUSCountry(String country) {
+        final Set<String> usCountryCodes = new Set<String>{
+            'US', 'USA', 'United States', 'United States of America'
+        };
         return country == null || usCountryCodes.contains(country);
+    }
+
+    /**
+    * @description Returns True if the Country is one of those that needs to always have the street
+    * number formatted before the street name. Otherwise the code tries to figure this out using the
+    * formatted_address response. Information comes from
+    * https://www.parcelforce.com/help-and-advice/sending/address-formats-europe. There are other countries
+    * However, these are the most common exceptions outlined by CCE during research.
+    * @param country String
+    * @return boolean
+    */
+    public static Boolean alwaysFormatAsStreetNumberBeforeStreetName(String country) {
+        final Set<String> countriesList = new Set<String>{
+            'US', 'USA', 'United States', 'United States of America',
+            'CA','Canada',
+            'UK','United Kingdom',
+            'GB','Great Britain',
+            'IE','Republic of Ireland','Ireland',
+            'FR','France',
+            'LU','Luxembourg',
+            'MC','Monaco',
+            'AU','Australia',
+            'JP','Japan'
+        };
+        return countriesList.contains(country);
     }
 }

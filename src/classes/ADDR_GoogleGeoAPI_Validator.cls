@@ -140,6 +140,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         if (addr.MailingCountry__c != null) {
             address_request_string += addr.MailingCountry__c.replace(' ', '+');
         }
+        address_request_string = address_request_string.replace('\r\n', ',').replace('\r', ',').replace('\n', ',');
 
         HttpResponse rawResponse = new HttpResponse();
 
@@ -310,8 +311,10 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     ) {
         String verified_street = '';
 
-        // US addresses always format as StreetNumber StreetName, while others are reversed
-        Boolean intlFormattedStreet = !ADDR_Validator_UTIL.isUsCountry(mailingCountry)
+        // US addresses always format as StreetNumber StreetName, while many others are reversed
+        // If the country isn't this specified hardcoded list, try to figure it out based on whether
+        // the first character of the Formatted_Address response is a letter or a number.
+        Boolean intlFormattedStreet = !ADDR_Validator_UTIL.alwaysFormatAsStreetNumberBeforeStreetName(mailingCountry)
             && formattedAddress.left(1).isAlpha();
 
         if (intlFormattedStreet) {
@@ -324,7 +327,11 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             verified_street = verified_street.trim() + ' ' + premise.trim();
         }
         if (!String.isBlank(subPremise)) {
-            verified_street = verified_street.trim() + ', ' + subPremise.trim();
+            if (!String.isBlank(verified_street)) {
+                verified_street = verified_street.trim() + ', ' + subPremise.trim();
+            } else{
+                verified_street = subPremise.trim();
+            }
         }
 
         return verified_street.trim();
