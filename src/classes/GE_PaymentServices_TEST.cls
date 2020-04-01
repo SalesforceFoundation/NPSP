@@ -50,7 +50,7 @@ public class GE_PaymentServices_TEST {
         dataImport.Donation_Amount__c = 150;
 
         GE_PaymentServices paymentServices = new GE_PaymentServices(GOOD_TOKEN, dataImport);
-        GE_PaymentServices.ResponseWrapper response = paymentServices.makePurchaseCall();
+        GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
 
         String actualValue = response.body;
         String expectedValue = SUCCESS_RESPONSE_BODY;
@@ -65,7 +65,7 @@ public class GE_PaymentServices_TEST {
         dataImport.Donation_Amount__c = null;
 
         GE_PaymentServices paymentServices = new GE_PaymentServices(BAD_TOKEN, dataImport);
-        GE_PaymentServices.ResponseWrapper response = paymentServices.makePurchaseCall();
+        GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
 
         String actualValue = response.body;
         String expectedValue = FAILED_RESPONSE_BODY;

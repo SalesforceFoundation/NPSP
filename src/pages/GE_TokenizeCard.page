@@ -77,7 +77,6 @@
                 })
                 .catch(function handleError(err) {
                     // Send error to lwc
-                    console.log('error: ', err);
                     const errorString = JSON.stringify(err);
                     postMessage(errorString);
                 });
