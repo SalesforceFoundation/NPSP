@@ -16,6 +16,10 @@
 
                     <lightning-layout-item size='12'
                                            padding='around-small'>
+                        <c-notification-card
+                                theme="error">
+
+                        </c-notification-card>
                         <div class='iframe-container'>
                             <template if:true={isLoading}>
                                 <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
