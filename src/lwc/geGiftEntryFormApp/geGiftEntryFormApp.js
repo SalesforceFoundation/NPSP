@@ -1,13 +1,12 @@
 import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
-import createTransaction from '@salesforce/apex/GE_GiftEntryController.createTransaction';
+import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
-import processDataImport from '@salesforce/apex/GE_GiftEntryController.processDataImport';
+import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 
 //import GeFormService from 'c/geFormService';
 import { showToast } from 'c/utilTemplateBuilder';
-import { deepClone } from 'c/utilCommon';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 
@@ -16,12 +15,16 @@ import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.P
 import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
+import { isNotEmpty } from 'c/utilCommon';
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
 const PAYMENT_METHOD__C = DI_PAYMENT_METHOD_FIELD.fieldApiName;
-const CAPTURED = 'CAPTURED';
+const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
+const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds, long enough for cold starts?
 const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     PENDING: 'PENDING',
@@ -41,8 +44,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track isPermissionError;
     @track loadingText = 'Saving data import...';
 
-    previouslySavedDataImport = {};
+    dataImportRecord = {};
     tokenPromise;
+    errorCallback;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -83,7 +87,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * potentially other objects (booleans, callbacks, etc).
     */
     handleSubmit(event) {
-        const { errorCallback } = event.detail;
+        // Callback received from geFormRenderer. Provides functions that
+        // toggle the form save button, toggle the lightning spinner, and displays aura exceptions.
+        this.errorCallback = event.detail.errorCallback;
 
         try {
             if (this.isBatchMode) {
@@ -92,7 +98,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.singleGiftSubmit(event);
             }
         } catch (error) {
-            errorCallback(error);
+            this.errorCallback(error);
         }
     }
 
@@ -105,8 +111,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     */
     batchGiftSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        const dataImportRecord = event.detail.dataImportRecord;
-        saveAndDryRunDataImport({batchId: this.recordId, dataImport: dataImportRecord})
+        this.dataImportRecord = event.detail.dataImportRecord;
+        saveAndDryRunDataImport({batchId: this.recordId, dataImport: this.dataImportRecord})
             .then((result) => {
                 let dataImportModel = JSON.parse(result);
                 Object.assign(dataImportModel.dataImportRows[0],
@@ -130,21 +136,20 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * callback for handling and displaying errors in the form.
     */
     singleGiftSubmit = async (event) => {
-        let { inMemoryDataImport, hasUserSelectedDonation, errorCallback } = event.detail;
+        let { inMemoryDataImport } = event.detail;
+        this.hasUserSelectedDonation = event.detail.hasUserSelectedDonation;
 
         try {
-            let dataImportRecord = await this.saveDataImport(inMemoryDataImport, errorCallback);
+            await this.saveDataImport(inMemoryDataImport);
 
-            const hasPaymentToProcess = dataImportRecord && dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
+            const hasPaymentToProcess = this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
             if (hasPaymentToProcess) {
-                dataImportRecord = await this.startPaymentProcessing(dataImportRecord, errorCallback);
-            }
-
-            if (dataImportRecord) {
-                this.startDataImportProcessing(dataImportRecord, hasUserSelectedDonation, errorCallback);
+                this.processPayment();
+            } else {
+                this.processDataImport();
             }
         } catch (error) {
-            errorCallback(error);
+            this.errorCallback(error);
         }
     }
 
@@ -158,64 +163,69 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @return {object} dataImportRecord: A DataImport__c record
     */
     saveDataImport = async (inMemoryDataImport) => {
-        if (this.previouslySavedDataImport.Id) {
-            this.loadingText = 'Re-saving Data Import record...';
-
-            inMemoryDataImport.Id = this.previouslySavedDataImport.Id;
-            inMemoryDataImport[PAYMENT_METHOD__C] = this.previouslySavedDataImport[PAYMENT_METHOD__C];
-            inMemoryDataImport[PAYMENT_STATUS__C] = this.previouslySavedDataImport[PAYMENT_STATUS__C];
-            inMemoryDataImport[PAYMENT_DECLINED_REASON__C] =
-                this.previouslySavedDataImport[PAYMENT_DECLINED_REASON__C];
+        if (this.dataImportRecord.Id) {
+            this.loadingText = 'Updating Data Import record...';
+            inMemoryDataImport = this.prepareInMemoryDataImportForUpdate(inMemoryDataImport);
         } else {
             this.loadingText = 'Saving Data Import record...';
         }
 
         inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
-        const dataImportRecord = await upsertDataImport({ dataImport: inMemoryDataImport });
-        this.previouslySavedDataImport = deepClone(dataImportRecord);
-
-        return dataImportRecord;
+        this.dataImportRecord = await upsertDataImport({ dataImport: inMemoryDataImport });
     }
 
+    /*******************************************************************************
+    * @description Re-apply Data Import id and relevant payment/elevate fields.
+    * The inMemoryDataImport is built new from the form on every save click. We
+    * need to catch it up with the correct id to make sure we update instead of
+    * inserting a new record on re-save attempts.
+    *
+    * @param {object} inMemoryDataImport: DataImport__c object built from the form
+    * fields.
+    *
+    * @return {object} inMemoryDataImport: DataImport__c object built from the form
+    * fields.
+    */
+    prepareInMemoryDataImportForUpdate(inMemoryDataImport) {
+        inMemoryDataImport.Id = this.dataImportRecord.Id;
+        inMemoryDataImport[PAYMENT_METHOD__C] = this.dataImportRecord[PAYMENT_METHOD__C];
+        inMemoryDataImport[PAYMENT_STATUS__C] = this.dataImportRecord[PAYMENT_STATUS__C];
+        inMemoryDataImport[PAYMENT_DECLINED_REASON__C] =
+            this.dataImportRecord[PAYMENT_DECLINED_REASON__C];
+
+        return inMemoryDataImport;
+    }
     /*******************************************************************************
     * @description Method attempts to make a purchase call to Payment
     * Services. Immediately attempts to the charge the card provided in the Payment
     * Services iframe (GE_TokenizeCard).
     *
     * @param {object} dataImportRecord: A DataImport__c record
-    * @param {function} errorCallback: An error handler function. Toggles
-    *   the form save button, lightning spinner, and catches aura exceptions.
-    *
-    * @return {object} dataImportRecord: A DataImport__c record
     */
-    startPaymentProcessing = async (dataImportRecord, errorCallback) => {
+    processPayment = async () => {
         this.loadingText = 'Charging card...';
 
-        const isReadyToCharge = this.checkPaymentTransactionStatus(dataImportRecord[PAYMENT_STATUS__C]);
+        const isReadyToCharge = this.checkPaymentTransactionStatus(this.dataImportRecord[PAYMENT_STATUS__C]);
         if (isReadyToCharge) {
-            const renderer = this.template.querySelector('c-ge-form-renderer');
-            const cardholderNames = JSON.stringify(renderer.fabricatedCardholderNames);
-            const purchaseCallResponse = await this.makePurchaseCall(dataImportRecord, cardholderNames);
 
-            if (purchaseCallResponse) {
-                dataImportRecord = this.setDataImportElevateFields(dataImportRecord, purchaseCallResponse);
-                dataImportRecord = await upsertDataImport({ dataImport: dataImportRecord });
-                this.previouslySavedDataImport = deepClone(dataImportRecord);
-            }
+            const purchaseResponse = await this.makePurchaseCall();
+            if (purchaseResponse) {
+                this.dataImportRecord[PAYMENT_STATUS__C] = this.getPaymentStatus(purchaseResponse);
+                this.dataImportRecord[PAYMENT_DECLINED_REASON__C] =
+                    this.getPaymentDeclinedReason(purchaseResponse);
 
-            if (purchaseCallResponse.statusCode !== 201) {
-                // For some reason the key in the body object for 'Message'
-                // in the response we receive from Elevate is capitalized.
-                let errors =
-                    purchaseCallResponse.body.Message ||
-                    purchaseCallResponse.body.errors.map(error => error.message).join(', ');
-                errorCallback(errors);
+                this.dataImportRecord = await upsertDataImport({ dataImport: this.dataImportRecord });
 
-                return undefined;
+                const isFailedPurchase = purchaseResponse.statusCode !== 201;
+                if (isFailedPurchase) {
+                    let errors = this.getFailedPurchaseMessage(purchaseResponse);
+                    this.errorCallback(errors);
+                    return;
+                }
             }
         }
 
-        return dataImportRecord;
+        this.processDataImport();
     }
 
     /*******************************************************************************
@@ -248,43 +258,96 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     *
     * @return {object} response: An http response object
     */
-    makePurchaseCall = async (dataImportRecord, cardholderNames) => {
-        let purchaseCallResponseString = await createTransaction({
-            dataImportRecord: dataImportRecord,
-            cardholderNames: cardholderNames
+    makePurchaseCall = async () => {
+        let purchaseResponseString = await sendPurchaseRequest({
+            requestBodyParameters: this.buildRequestBodyParameters()
         });
-        let response = JSON.parse(purchaseCallResponseString);
+        let response = JSON.parse(purchaseResponseString);
         response.body = JSON.parse(response.body);
 
         return response;
     }
 
     /*******************************************************************************
-    * @description Method sets values Payment Services related Data Import fields.
-    * Payment_Status__c and Payment_Declined_Reason__c.
+    * @description Builds parts of the purchase request body that requires data
+    * from the Data Import record upfront. We pass this into the `sendPurchaseRequest`
+    * method and is eventually merged in with the rest of the purchase request body.
     *
     * @param {object} dataImportRecord: A DataImport__c record
-    * @param {object} purchaseResponse: An http response object
     *
-    * @return {object} dataImportRecord: A DataImport__c record
+    * @return {object}: Object that we can deserialize and apply to the purchase
+    * request body in apex.
     */
-    setDataImportElevateFields = (dataImportRecord, purchaseCallResponse) => {
-        const paymentStatus =
-            purchaseCallResponse.body.status ||
-            purchaseCallResponse.status ||
-            CUSTOM_LABELS.commonUnknownError;
-        dataImportRecord[PAYMENT_STATUS__C] = paymentStatus;
-
-        const isSuccessfulPurchase = purchaseCallResponse.statusCode === 201;
-        if (isSuccessfulPurchase) {
-            // TODO: How do we want to handle payment method for successful charges? What about failed charges?
-            dataImportRecord[PAYMENT_METHOD__C] = 'Credit Card';
-            dataImportRecord[PAYMENT_DECLINED_REASON__C] = null;
-        } else {
-            dataImportRecord[PAYMENT_DECLINED_REASON__C] = JSON.stringify(purchaseCallResponse.body);
+    buildRequestBodyParameters() {
+        const names = this.getCardholderNames();
+        const firstName = isNotEmpty(names.firstName) ? names.firstName : names.accountName;
+        const lastName = isNotEmpty(names.lastName) ? names.lastName : names.accountName;
+        const metadata = {
+            campaignCode: this.dataImportRecord[DONATION_CAMPAIGN_NAME__C]
         }
 
-        return dataImportRecord;
+        return JSON.stringify({
+            amount: this.dataImportRecord[DONATION_AMOUNT__C],
+            email: 'test@test.test',
+            firstName: firstName,
+            lastName: lastName,
+            metadata: metadata,
+            paymentMethodToken: this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C],
+        })
+    }
+
+    /*******************************************************************************
+    * @description Queries for the geFormRenderer component and retrieves the
+    * fabricated cardholder names object.
+    *
+    * @return {object}: Object containing firstName, lastName, and accountName
+    * from the form.
+    */
+    getCardholderNames() {
+        const renderer = this.template.querySelector('c-ge-form-renderer');
+        return renderer.fabricatedCardholderNames;
+    }
+
+    /*******************************************************************************
+    * @description Get the value for DataImport__c.Payment_Status__c from the
+    * purchase call response.
+    *
+    * @param {object} response: Http response object
+    *
+    * @return {string}: Status of the payment charge request
+    */
+    getPaymentStatus(response) {
+        return response.body.status || response.status || CUSTOM_LABELS.commonUnknownError;
+    }
+
+    /*******************************************************************************
+    * @description Get the value for DataImport__c.Payment_Declined_Reason__c from
+    * the purchase call response.
+    *
+    * @param {object} response: Http response object
+    *
+    * @return {string}: Reason the payment was declined
+    */
+    getPaymentDeclinedReason(response) {
+        const isSuccessfulPurchase = response.statusCode === 201;
+        return isSuccessfulPurchase ? null : JSON.stringify(response.body);
+    }
+
+    /*******************************************************************************
+    * @description Get the message or errors from a failed purchase call.
+    *
+    * @param {object} response: Http response object
+    *
+    * @return {string}: Message from a failed purchase call response
+    */
+    getFailedPurchaseMessage(response) {
+        // For some reason the key in the body object for 'Message'
+        // in the response we receive from Elevate is capitalized.
+        // Also checking for lowercase M in message in case they fix it.
+        return response.body.Message ||
+            response.body.message ||
+            response.body.errors.map(error => error.message).join(', ') ||
+            this.CUSTOM_LABELS.commonUnknownError;
     }
 
     /*******************************************************************************
@@ -298,22 +361,31 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     *   true = "single match or create" and means we are updating
     *   false = "do not match"
     */
-    startDataImportProcessing = (dataImportRecord, hasUserSelectedDonation, errorCallback) => {
+    processDataImport = async () => {
         this.loadingText = 'Processing data import record...';
-        processDataImport({ diRecord: dataImportRecord, updateGift: hasUserSelectedDonation })
+
+        submitDataImportToBDI({ diRecord: this.dataImportRecord, updateGift: this.hasUserSelectedDonation })
             .then(opportunityId => {
                 this.loadingText = 'Navigating to opportunity record...';
-                this.previouslySavedDataImport = {};
                 this.navigateToRecordPage(opportunityId);
             })
             .catch(error => {
-                errorCallback(error);
-                // TODO: Potentially have to check for other types of status that MAY
-                // indicate a charge could still occur (pending, authorized, etc)
-                if (dataImportRecord[PAYMENT_STATUS__C] === CAPTURED) {
-                    showToast('HEY!', 'Card was charged. Please fix the outstanding errors and try again.', 'error', 'sticky');
-                }
+                // TODO: Placeholder method for handling the scenario in which
+                // we've charged a card successfully, but BDI processing failed.
+                this.doSomethingLoud(error);
             });
+    }
+
+    doSomethingLoud() {
+        this.errorCallback(error);
+        // TODO: Potentially have to check for other types of status that MAY
+        // indicate a charge could still occur (pending, authorized, etc)
+        if (dataImportRecord[PAYMENT_STATUS__C] === PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED) {
+            showToast('HEY!',
+                'Card was charged. Please fix the outstanding errors and try again.',
+                'error',
+                'sticky');
+        }
     }
 
     handleSectionsRetrieved(event) {

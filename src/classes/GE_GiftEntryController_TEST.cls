@@ -57,7 +57,7 @@ private with sharing class GE_GiftEntryController_TEST {
 
         Test.StartTest();
         Boolean matchToExistingDonation = false;
-        String opportunityId = GE_GiftEntryController.processDataImport(dataImportRecord, matchToExistingDonation);
+        String opportunityId = GE_GiftEntryController.submitDataImportToBDI(dataImportRecord, matchToExistingDonation);
         Test.stopTest();
 
         System.assert(opportunityId != null);
