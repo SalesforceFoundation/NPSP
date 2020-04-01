@@ -313,7 +313,6 @@ public class CRLP_RollupContact_TEST {
         insert orgAcct;
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
-        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
         List<Opportunity> opps = new List<Opportunity>();
