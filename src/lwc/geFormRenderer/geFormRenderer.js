@@ -275,16 +275,17 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     /*******************************************************************************
     * @description Dispatches a 'submit' event for Single Gift Entry mode.
     *
-    * @param {object} dataImportRecord: A DataImport__c record
+    * @param {object} inMemoryDataImport: DataImport__c object built from the form
+    * fields.
     * @param {object} formControls: An object holding methods that control
     * the form save button enablement and lightning spinner toggler.
     */
-    handleSaveSingleGiftEntry = async (dataImportRecord, formControls) => {
-        if (dataImportRecord) {
+    handleSaveSingleGiftEntry = async (inMemoryDataImport, formControls) => {
+        if (inMemoryDataImport) {
             const hasUserSelectedDonation = Object.keys(this.selectedDonationDataImportFieldValues).length > 0;
             this.dispatchEvent(new CustomEvent('submit', {
                 detail: {
-                    dataImportRecord,
+                    inMemoryDataImport,
                     hasUserSelectedDonation,
                     errorCallback: (error) => {
                         formControls.enableSaveButton();
@@ -448,14 +449,14 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
 
-            let dataImport =
+            let inMemoryDataImport =
                 this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
 
             // handle save depending mode
             if (this.batchId) {
-                this.handleSaveBatchGiftEntry(dataImport, formControls);
+                this.handleSaveBatchGiftEntry(inMemoryDataImport, formControls);
             } else {
-                this.handleSaveSingleGiftEntry(dataImport, formControls);
+                this.handleSaveSingleGiftEntry(inMemoryDataImport, formControls);
             }
         }
     }
