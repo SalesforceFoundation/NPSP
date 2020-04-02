@@ -35,45 +35,20 @@ public with sharing class PS_TestPaymentService {
 
         // tokenize the card
         HttpResponse response = tokenize();
-
-        // parse the tokenize response
-        if (response.getStatusCode() != 201) {
-            // failed
-            String status = JSON.serialize(response.getStatus());
-            System.assert(false, 'Failed to tokenize card. ' + status);
+        String token = getToken(response);
+        if (String.isBlank(token)) {
+            // failed to get the token
             return false;
         } else {
-            // success
-            JSONParser parser = JSON.createParser(response.getBody());
-            while (parser.nextToken() != null) {
-                if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && (parser.getText() == TOKEN_FIELD_NAME)) {
-                    // read the token
-                    parser.nextToken();
-                    String token = parser.getText();
-                }
-            }
-        
-            
-            
+            // purchase
         }
-        //System.debug('token = ' + token);
-       
-       
-        
         
 
-
-        
-
-        // purchase
-
-
-        System.debug('testing payment services');
 
         return true;
     }
 
-    // get the credit card token
+    // submit the tokenize request
     private static HttpResponse tokenize() {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
@@ -94,4 +69,26 @@ public with sharing class PS_TestPaymentService {
         return response;
     }
 
+    // read the token from the tokenize response
+    private static String getToken(HttpResponse response) {
+        // parse the tokenize response
+        if (response.getStatusCode() != 201) {
+            // failed
+            String status = JSON.serialize(response.getStatus());
+            System.assert(false, 'Failed to tokenize card. ' + status);
+        } else {
+            // success
+            JSONParser parser = JSON.createParser(response.getBody());
+            while (parser.nextToken() != null) {
+                if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && (parser.getText() == TOKEN_FIELD_NAME)) {
+                    // read the token
+                    parser.nextToken();
+                    String token = parser.getText();
+                    return token;
+                }
+            } 
+        }
+        return '';
+    }
+    
 }
