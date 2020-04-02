@@ -46,6 +46,10 @@ public with sharing class GE_PaymentServices {
         this.purchaseCallBody = new PurchaseCallBody().applyAll(requestBodyParameters);
     }
 
+    /*******************************************************************************************************
+    * @description Method sends a OneTimePurchaseRequest to Elevate. Check out the Payments swagger in the
+    * SFDO Payments repo for additional information.
+    */
     public ResponseWrapper createTransaction() {
         // Create http request...
         Http http = new Http();
@@ -100,6 +104,9 @@ public with sharing class GE_PaymentServices {
         return 'foo';
     }
 
+    /*******************************************************************************************************
+    * @description Inner class to assist in constructing the Payload portion of a JSON Web Token.
+    */
     public with sharing class JWTPayload {
 
         public JWTPayload(/*SecretObject config*/) {
@@ -132,12 +139,23 @@ public with sharing class GE_PaymentServices {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Inner class of PurchaseCallBody to assist in constructing the metadata property.
+    * This could/should probably just be a map.
+    */
     public with sharing class Metadata {
         public String campaignCode;
     }
 
+    /*******************************************************************************************************
+    * @description Inner class to assist in constructing the Purchase http request body.
+    */
     public with sharing class PurchaseCallBody {
+        /*********************************
+        * Required properties
+        */
         public Double amount;
+        // Currency code for the amount property. Currently an ENUM = [USD] from Elevate
         public String currencyCode = getCurrencyCode();
         public String paymentMethodToken;
         public String merchantId = getMerchantId();
@@ -145,7 +163,24 @@ public with sharing class GE_PaymentServices {
         public String email;
         public String firstName;
         public String lastName;
+
+        /*********************************
+        * Optional properties
+        */
+        // May be any key:value pairs. i.e. campaignCode: 123
         public Metadata metadata;
+        // The donor salutation. E.g. Mr., Ms.
+        public String salutation;
+        // The donor suffix. E.g. III, Esq.
+        public String suffix;
+        public String phone;
+        public String addressLine1;
+        public String addressLine2;
+        public String city;
+        public String state;
+        public String postalCode;
+        // The ISO 3166-1 alpha-2 country code. E.g. US
+        public String country;
 
         private String getCurrencyCode() {
             return 'USD';
@@ -179,6 +214,10 @@ public with sharing class GE_PaymentServices {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Inner class needed to return contents of the HttpResponse. HttpResponse can't be directly
+    * serialized using JSON.serialize().
+    */
     public with sharing class ResponseWrapper {
         public Integer statusCode;
         public String status;
