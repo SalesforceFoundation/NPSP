@@ -29,9 +29,9 @@ const inputTypeByDescribeType = {
 };
 
 const numberFormatterByDescribeType = {
-  'PERCENT': 'percent-fixed',
-  'CURRENCY': 'currency',
-  'DECIMAL': 'decimal'
+    'PERCENT': 'percent-fixed',
+    'CURRENCY': 'currency',
+    'DECIMAL': 'decimal'
 };
 
 class GeFormService {
@@ -53,7 +53,7 @@ class GeFormService {
                     this.fieldMappings = result.fieldMappingSetWrapper.fieldMappingByDevName;
                     this.objectMappings = result.fieldMappingSetWrapper.objectMappingByDevName;
                     this.fieldTargetMappings = result.fieldMappingSetWrapper.fieldMappingByTargetFieldName;
-                    if(isEmpty(this.donationFieldTemplateLabel)) {
+                    if (isEmpty(this.donationFieldTemplateLabel)) {
                         this.donationFieldTemplateLabel = this.getDonationAmountCustomLabel(result.formTemplate);
                     }
                     resolve(result);
@@ -66,9 +66,9 @@ class GeFormService {
 
     getAllocationSettings() {
         return new Promise((resolve, reject) => {
-           getAllocationSettings()
-               .then(resolve)
-               .catch(handleError)
+            getAllocationSettings()
+                .then(resolve)
+                .catch(handleError)
         });
     }
 
@@ -127,15 +127,15 @@ class GeFormService {
         const mappingDevName = mapping.DeveloperName;
         // get developer name of mapping cmt
         let fieldElement;
-        for(const section of formTemplate.layout.sections) {
-           fieldElement = section.elements.find( element => {
-               if(Array.isArray(element.dataImportFieldMappingDevNames)) {
-                   return element.dataImportFieldMappingDevNames.includes(mappingDevName);
-               }
-           });
+        for (const section of formTemplate.layout.sections) {
+            fieldElement = section.elements.find(element => {
+                if (Array.isArray(element.dataImportFieldMappingDevNames)) {
+                    return element.dataImportFieldMappingDevNames.includes(mappingDevName);
+                }
+            });
         }
 
-        if(isNotEmpty(fieldElement)) {
+        if (isNotEmpty(fieldElement)) {
             // return custom label from the form template layout
             return fieldElement.customLabel;
         }
@@ -143,7 +143,7 @@ class GeFormService {
 
     getFormRenderWrapper(templateId) {
         return new Promise((resolve, reject) => {
-            getFormRenderWrapper({templateId: templateId})
+            getFormRenderWrapper({ templateId: templateId })
                 .then(renderWrapper => {
                     this.fieldMappings =
                         renderWrapper.fieldMappingSetWrapper.fieldMappingByDevName;
@@ -174,14 +174,14 @@ class GeFormService {
 
     get importedRecordFieldNames() {
         return Object.values(this.objectMappings).map(
-            ({Imported_Record_Field_Name}) =>
+            ({ Imported_Record_Field_Name }) =>
                 Imported_Record_Field_Name
         );
     }
 
     getObjectMappingWrapperByImportedFieldName(importedFieldName) {
         return Object.values(this.objectMappings)
-            .find(({Imported_Record_Field_Name}) =>
+            .find(({ Imported_Record_Field_Name }) =>
                 Imported_Record_Field_Name === importedFieldName);
     }
 
