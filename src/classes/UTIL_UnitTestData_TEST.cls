@@ -633,6 +633,16 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
+     * @description Build a User having specified profile and language assigned, but do not insert
+     * @param profileName Profile Name
+     * @param localSidKey An NPSP supported locale key (EN_us, es, de, fr, or NL_nl, ja)
+     * @return User
+     */
+    public static User createNonEnglishUserWithoutInsert(String profileName) {
+        return buildUser(buildUniqueLastName(), profileName, 'es');
+    }
+
+    /**
       * @description Generate a unique string to append to indexed fields to make them unique
       */
     public static String getUniqueString() {

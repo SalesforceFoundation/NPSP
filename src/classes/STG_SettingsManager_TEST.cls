@@ -1166,6 +1166,23 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verifies that the api value of the picklist will be converted into corresponding label
+    */
+    @isTest
+    private static void shouldConvertPicklistApiValueIntoLabelValue() {
+        System.runAs(UTIL_UnitTestData_TEST.createNonEnglishUserWithoutInsert(UTIL_UnitTestData_TEST.PROFILE_STANDARD_USER)) {
+            Schema.DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe('OpportunityContactRole', 'Role');
+            String label = fieldResult.getPicklistValues()[0].getLabel();
+            String apiValue = fieldResult.getPicklistValues()[0].getValue();
+
+            Test.startTest();
+            String convertedLabel = STG_Panel.getPicklistLabelFromValue('OpportunityContactRole', 'Role', apiValue);
+            Test.stopTest();
+
+            System.assertEquals(label, convertedLabel, 'The api value should be correctly converted into the corressponding label');
+        }
+    }
 
     /*********************************************************************************************************
     * @description Tests the Run RD Batch panel

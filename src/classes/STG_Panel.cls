@@ -334,7 +334,7 @@ public with sharing virtual class STG_Panel {
                 Schema.DescribeFieldResult F = Schema.sObjectType.npe4__Relationship__c.fields.npe4__Type__c;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
-                    listSORelTypes.add(new SelectOption(pe.getLabel(), pe.getLabel()));
+                    listSORelTypes.add(new SelectOption(pe.getValue(), pe.getLabel()));
                 }
             }
             return listSORelTypes;
@@ -353,7 +353,7 @@ public with sharing virtual class STG_Panel {
                 Schema.DescribeFieldResult F = Schema.sObjectType.Campaign.fields.Type;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
-                    listSOCampaignTypes.add(new SelectOption(pe.getLabel(), pe.getLabel()));
+                    listSOCampaignTypes.add(new SelectOption(pe.getValue(), pe.getLabel()));
                 }
             }
             return listSOCampaignTypes;
