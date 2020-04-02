@@ -33,7 +33,7 @@ Create Open Recurring Donation With Monthly Installment
     [Documentation]              This test verifies that an enhanced recurring donation can be created through the UI.
     ...                          Verifies that all the new fields and sections are getting populated and displayed on UI.
 
-
+    [tags]                                 unstable
     [tags]                                 W-040346                                  feature:Enhanced Recurring Donations
 
     Go To Page                             Listing                                   npe03__Recurring_Donation__c
