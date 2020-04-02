@@ -315,7 +315,7 @@ public with sharing virtual class STG_Panel {
 	            list<Schema.PicklistEntry> P = F.getPicklistValues();
 
 	            for (Schema.PicklistEntry plistentry: P) {
-	                listSOOppTypes.add(new SelectOption(plistentry.getLabel(),plistentry.getLabel()));
+	                listSOOppTypes.add(new SelectOption(plistentry.getValue(),plistentry.getLabel()));
 	            }
 	        }
 	        return listSOOppTypes;
