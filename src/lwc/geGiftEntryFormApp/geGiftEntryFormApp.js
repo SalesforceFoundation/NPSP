@@ -144,9 +144,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
             const hasPaymentToProcess = this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
             if (hasPaymentToProcess) {
-                this.processPayment();
+                await this.processPayment();
             } else {
-                this.processDataImport();
+                await this.processDataImport();
             }
         } catch (error) {
             this.errorCallback(error);
