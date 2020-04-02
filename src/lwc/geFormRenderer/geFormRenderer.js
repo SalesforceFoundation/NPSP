@@ -703,12 +703,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             return false;
         }
 
-        // If value is the RecordType Name, change it to the RecordType Id since child
-        // fields are expecting the Id and not the Name.
-        if (recordTypeNameValue &&
-            !recordTypeNameValue.value &&
-            !recordTypeNameValue.startsWith('012')) {
-
+        if (this.opportunityRecordTypeNames.includes(recordTypeNameValue)) {
+            // If value is the RecordType Name, change it to the RecordType Id since child
+            // fields are expecting the Id and not the Name.
             dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = this.getRecordTypeIdByName(
                 this.opportunityObjectInfo.data.recordTypeInfos,
                 recordTypeNameValue
@@ -1283,4 +1280,10 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             .filter(({Source_Field_API_Name}) => Source_Field_API_Name === fieldApiName)
             .map(({Target_Object_Mapping_Dev_Name}) => Target_Object_Mapping_Dev_Name);
     }
+
+    get opportunityRecordTypeNames() {
+        return Object.values(this.opportunityObjectInfo.data.recordTypeInfos)
+            .map(({name}) => name);
+    }
+
 }
