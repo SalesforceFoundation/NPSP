@@ -113,6 +113,13 @@ export default class GeFormField extends LightningElement {
             this.value = defaultValue;
             this.handlePicklistChange();
         }
+
+        if (this.value && this.isLookup) {
+            // If this field is a Lookup and has a value when connected,
+            // fire event so that the form knows to populate related fields
+            // and set recordTypeId on sibling fields.
+            this.fireLookupRecordSelectEvent();
+        }
     }
 
     getValueFromChangeEvent(event) {
@@ -456,12 +463,6 @@ export default class GeFormField extends LightningElement {
         if (this.isPicklist) {
             this.template.querySelector('c-ge-form-field-picklist')
                 .recordTypeId = this.recordTypeId;
-        }
-    }
-
-    renderedCallback() {
-        if (this.value && this.fieldApiName === 'RecordTypeId') {
-            this.fireLookupRecordSelectEvent();
         }
     }
 
