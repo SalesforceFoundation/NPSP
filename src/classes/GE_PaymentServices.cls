@@ -35,6 +35,8 @@
 * @description Class holds payment services related methods.
 */
 public with sharing class GE_PaymentServices {
+    // set the jwt expiration to 60 seconds
+    private static final Integer JWT_EXPIRATION = 60 * 1000;
 
     String paymentMethodToken = null;
 
@@ -90,8 +92,28 @@ public with sharing class GE_PaymentServices {
         return 'https://7jpea5zk79.execute-api.us-west-2.amazonaws.com';
     }
 
+    private String getApiSecretKey() {
+        return 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4';
+    }
+
     private String getJwt() {
         return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBcGlLZXlNYW5hZ2VyIiwiaWF0IjoxNTgzMTk2MTAxLCJleHAiOjE2MTQ3MzIxMTAsImF1ZCI6Ind3dy5leGFtcGxlLmNvbSIsInN1YiI6ImNiYXh0ZXIiLCJzZmRvLmlkIjoiMDBENmcwMDAwMDAwMDAwRUFBIiwic2Zkby5wcm9kdWN0IjoiQ1JNIiwic2Zkby5yb2xlcyI6IlBheW1lbnRzLlB1cmNoYXNlIn0.Fk2kH8occu-tEabrYALiAN16XlIUj4vpptWGs0x8eZs';
+
+        // the payload map
+        /*Map<String, String> payloadMap = 
+            new Map<String, String> { 'iss' => 'ApiKeyManager',
+                                      'sub' => getUsername(),
+                                      'sfdo.roles' => 'Payments.Purchase',
+                                      'sfdo.product' => 'CRM',
+                                      'exp' => String.valueOf(Datetime.now().getTime() + JWT_EXPIRATION)};
+
+        // build the payload string
+        String payload = JSON.serialize(payloadMap);
+
+        // create the jwt
+        String jwt = UTIL_Jwt.getSignedJWTFromString(payload, getApiSecretKey());
+
+        return jwt;*/
     }
 
     private String getMerchantIds() {
@@ -100,6 +122,7 @@ public with sharing class GE_PaymentServices {
 
     private String getUsername() {
         return 'cbaxter';
+        //return UserInfo.getUserName();
     }
 
     //
