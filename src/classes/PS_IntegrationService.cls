@@ -39,8 +39,11 @@ global class PS_IntegrationService {
     @TestVisible private static final String PAYMENTS_APPLICATION_TYPE = 'payments';
     @TestVisible private static final String MAKANA_APPLICATION_TYPE = 'makana';
     @TestVisible private static final String INVALID_CONFIG_PARAMS = 'Missing configuration parameters';
-    @TestVisible private static final String MISSING_API_KEY = 'An error has occurred with onboarding this ' +
-            'elevate customer, missing API key';
+    @TestVisible private static final String API_KEY_ELEVATE_ERROR = 'An invalid api key has been provided ' +
+            'for this elevate customer';
+    private static final String UNKNOWN_ELEVATE_ERROR = 'An unknown error has occurred with ' +
+            'onboarding this elevate customer: ';
+    //Are there more failure points for elevate onboarding ?
 
     /*******************************************************************************************************
     * @description Provides an endpoint for the Payment Services Integrations package
@@ -60,7 +63,6 @@ global class PS_IntegrationService {
 
         if (paymentsConfiguration != null) {
             for (Map<String, String> valueMap : paymentsConfiguration) {
-                System.debug(valueMap.keySet());
                 String apiKeyFieldLabel = 'apiKey';
                 if (valueMap.keySet().contains(apiKeyFieldLabel)) {
                     psConfiguration.apiKey__c = valueMap.get(apiKeyFieldLabel);
@@ -76,7 +78,7 @@ global class PS_IntegrationService {
                     }
 
                     if (psConfiguration.apiKey__c == null || String.isBlank(psConfiguration.apiKey__c)) {
-                        throw new PS_IntegrationServiceException(MISSING_API_KEY);
+                        throw new PS_IntegrationServiceException(API_KEY_ELEVATE_ERROR);
                     }
                 }
 
@@ -93,7 +95,7 @@ global class PS_IntegrationService {
                 }
 
                 if (valueMap.keySet().contains('sfdo.roles')) {
-                    psConfiguration.sfdo_roles__c = valueMap.get('sfod.roles');
+                    psConfiguration.sfdo_roles__c = valueMap.get('sfdo.roles');
                 }
 
                 if (valueMap.keySet().contains('sfdo.product')) {
@@ -111,14 +113,9 @@ global class PS_IntegrationService {
         }
 
         try {
-            upsert psConfiguration;
-            System.FeatureManagement.changeProtection(UTIL_Namespace.StrTokenNSPrefix(
-                    UTIL_Describe.getObjectDescribe('Payment_Services_Configuration__c').getLocalName()),
-                    'CustomObject',
-                    'Protected'
-            );
+            insert psConfiguration; // Should we be updating existing onboarding data?
         } catch (Exception ex) {
-            throw new PS_IntegrationServiceException(ex.getMessage());
+            throw new PS_IntegrationServiceException(UNKNOWN_ELEVATE_ERROR + ex.getMessage());
         }
 
     }
