@@ -68,21 +68,21 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     * @description The control's constructor 
     */
     public STG_DataBoundMultiSelect_CTRL() {
-    	isDisabled = false;
-    	isEditMode = false;
+        isDisabled = false;
+        isEditMode = false;
     }
     
     /*********************************************************************************************************
     * @description A semicolon separated string of values pulled from the object's field 
     */
     public string strValues { 
-    	get {
-    		if (strValues == null) {
+        get {
+            if (strValues == null) {
                 strValues = convertApiToLabel(String.valueOf(sobjBinding.get(strField)));
-    		}
-    		return strValues;
-    	}
-    	private set;
+            }
+            return strValues;
+        }
+        private set;
     }
 
     /*********************************************************************************************************
@@ -98,10 +98,10 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
             return listStrValues;
         }
         set {
-        	listStrValues = value;
-        	String apiValues = '';
+            listStrValues = value;
+            String apiValues = '';
             for (string str : listStrValues) {
-            	apiValues += str + ';';
+                apiValues += str + ';';
             }
             if (apiValues != '') {
                 apiValues = apiValues.left(apiValues.length()-1);
