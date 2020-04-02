@@ -328,7 +328,7 @@ private with sharing class RD2_ValidationService_TEST {
             new String[]{ day }
         );
         System.assert(errMessage.contains(expectedMessage),
-                'The error message should contain invalud Day Of Month message: ' + errMessage);
+            'The error message should contain invalid Day Of Month message: ' + errMessage);
     }
 
     /***
