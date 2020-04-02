@@ -94,7 +94,7 @@
     <fields>
         <fullName>%%%NAMESPACE%%%Day_of_Month__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly.</inlineHelpText>
+        <inlineHelpText>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don&apos;t have that many days.</inlineHelpText>
         <label>Day of Month</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -245,21 +245,19 @@
                     <label>28</label>
                 </value>
                 <value>
-                    <fullName>Last_Day</fullName>
-                    <default>false</default>
-                    <label>Last Day Of Month</label>
-                </value>
-                <value>
                     <fullName>29</fullName>
                     <default>false</default>
-                    <isActive>false</isActive>
                     <label>29</label>
                 </value>
                 <value>
                     <fullName>30</fullName>
                     <default>false</default>
-                    <isActive>false</isActive>
                     <label>30</label>
+                </value>
+                <value>
+                    <fullName>Last_Day</fullName>
+                    <default>false</default>
+                    <label>Last Day Of Month</label>
                 </value>
                 <value>
                     <fullName>31</fullName>
