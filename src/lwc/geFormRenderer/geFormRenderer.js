@@ -899,8 +899,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             }
         }
 
-        // Set Data Import's additional object json field if,
-        // we values from any form widgets
+        // Set DataImport__c.Additional_Object_JSON__c if we've retrieved values from form widgets.
         if (widgetValues) {
             diRecord[ADDITIONAL_OBJECT_JSON__C] = JSON.stringify(widgetValues);
         }
