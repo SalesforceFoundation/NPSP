@@ -177,7 +177,7 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
-    * @description Verifies that when the options are selected, the display string will be converted to Label and the
+    * @description Verifies that when the options are selected, the displayed string will be converted to Label and the
     * actual values will stay in Api format
     */
     @isTest
