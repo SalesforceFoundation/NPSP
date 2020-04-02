@@ -448,4 +448,29 @@ public with sharing virtual class STG_Panel {
         return USER_UserService.isSysAdmin(new List<User>{(new User(Id = runningUserId, ProfileId = runningUserProfileId))}).get(runningUserId);
 
     }
+
+    /*******************************************************************************************************
+    * @description Get the label of the picklist value
+    * @param objectName The Sobject name of the picklist field
+    * @param fieldName The field name of the picklist field
+    * @param apiValue The value of the picklist field
+    * @return String The label value of the picklist field
+    */
+    public static String getPicklistLabelFromValue(String objectName, String fieldName, String apiValue) {
+        Schema.DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+        
+        if (fieldResult.getType() !== Schema.DisplayType.PICKLIST && fieldResult.getType() !== Schema.DisplayType.MULTIPICKLIST) {
+            return apiValue;
+        }
+        if (String.isBlank(apiValue)) {
+            return System.Label.stgLabelNone;
+        }
+        for (Schema.PicklistEntry entry : fieldResult.getPicklistValues()) {
+            if (entry.getValue() == apiValue) {
+                return entry.getLabel();
+            }
+        }
+
+        return apiValue;
+    }
 }

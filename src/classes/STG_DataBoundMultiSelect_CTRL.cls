@@ -78,11 +78,13 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     public string strValues { 
     	get {
     		if (strValues == null) {
-    			strValues = string.valueOf(sobjBinding.get(strField));
+                String apiValues = (String) String.valueOf(sobjBinding.get(strField));
+
+                strValues = convertApiToLabel((String) String.valueOf(sobjBinding.get(strField)));
     		}
     		return strValues;
     	}
-    	private set; 
+    	private set;
     }
 
     /*********************************************************************************************************
@@ -91,22 +93,59 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     */
     public list<string> listStrValues {
         get {
-            if (listStrValues == null && strValues != null) {
-                listStrValues = strValues.split(';',0);
+            String apiValues = (String) String.valueOf(sobjBinding.get(strField));
+            if (listStrValues == null && apiValues != null) {
+                listStrValues = apiValues.split(';',0);
             }
             return listStrValues;
         }
         set {
         	listStrValues = value;
-        	strValues = '';
+        	String apiValues = '';
             for (string str : listStrValues) {
-            	strValues += str + ';';
+            	apiValues += str + ';';
             }
-            if (strValues != '')
-                strValues = strValues.left(strValues.length()-1);
-            sobjBinding.put(strField, strValues);	
+            if (apiValues != '') {
+                apiValues = apiValues.left(apiValues.length()-1);
+            }
+            sobjBinding.put(strField, apiValues);
+            
+            strValues = convertApiToLabel(apiValues);
         }
     }
-    
-    
+
+    /**
+    * @description Convert the api value into the label for display
+    * @param apiValues The api value to be converted
+    */
+    private String convertApiToLabel(String apiValues) {
+        if (String.isBlank(apiValues)) {
+            return apiValues;
+        }
+
+        Map<String, String> apiToLabelMap = constructApiToLabelMap();
+        String labelValue = '';
+
+        for (String apiValue : apiValues.split(';', 0)) {
+            labelValue += apiToLabelMap.get(apiValue) + ';';
+        }
+
+        labelValue = labelValue.left(labelValue.length()-1);
+
+        return labelValue;
+    }
+
+    /**
+    * @description Construct the Api to Label map from the passed in SelectOption
+    * @return Map<String, String>
+    */
+    private Map<String, String> constructApiToLabelMap() {
+        Map<String, String> apiToLabelMap = new Map<String, String>();
+
+        for (SelectOption option : listSelectOption) {
+            apiToLabelMap.put(option.getValue(), option.getLabel());
+        }
+
+        return apiToLabelMap;
+    }
 }
