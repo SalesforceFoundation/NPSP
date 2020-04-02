@@ -437,7 +437,7 @@ public class CRLP_RollupContact_TEST {
                 Type = 'New'
         ));
 
-           insert opps;
+        insert opps;
 
         // Mark two payments as written off; though only one should be rolled up
         npe01__OppPayment__c pmt1 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
