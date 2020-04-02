@@ -44,22 +44,18 @@ private class PS_IntegrationService_TEST {
 
 
     static {
-        buildConfigurationParams();
+        buildConfigurationParams(); // Build Test Configuration Parameters
     }
 
     /*******************************************************************************************************
-     * @description tests storing of the secrets we receive from the Payment Services
-     * Integrations package
+     * @description Test for storing the secrets we receive from the Payment Services
+     * Integrations package with a valid API Key
      */
     @IsTest
     private static void setConfigurationWithPaymentsAPIKey() {
         Test.startTest();
-        try {
-            PS_IntegrationService.setConfiguration(configParams);
-        } catch (PS_IntegrationService.PS_IntegrationServiceException ex) {
-            System.debug(ex.getMessage());
-        }
 
+        PS_IntegrationService.setConfiguration(configParams);
 
         List<Payment_Services_Configuration__c> configurations = [
                 SELECT apiKey__c, iss__c, sub__c,
@@ -80,19 +76,19 @@ private class PS_IntegrationService_TEST {
         System.assertEquals(paymentConfigParams.get('baseURL').value, configurations[0].baseURL__c);
     }
 
+    /*******************************************************************************************************
+    * @description Test for storing the configuration parameters received from the Payment Services
+    * Integrations package with the fall-back valid API Key
+    */
     @IsTest
     private static void setConfigurationWithFallBackApiKey() {
 
-        updateConfigParameter('apiKey', null,
+        updateConfigurationParameter('apiKey', null,
                         configParams.get(PS_IntegrationService.PAYMENTS_APPLICATION_TYPE));
 
         Test.startTest();
-        try {
-            PS_IntegrationService.setConfiguration(configParams);
-        } catch (PS_IntegrationService.PS_IntegrationServiceException ex) {
-            System.debug(ex.getMessage());
-        }
 
+        PS_IntegrationService.setConfiguration(configParams);
 
         List<Payment_Services_Configuration__c> configurations = [
                 SELECT apiKey__c
@@ -106,10 +102,10 @@ private class PS_IntegrationService_TEST {
     @IsTest
     private static void setConfigurationWithInvalidApiKey() {
 
-        updateConfigParameter('apiKey', null,
+        updateConfigurationParameter('apiKey', null,
                 configParams.get(PS_IntegrationService.PAYMENTS_APPLICATION_TYPE));
 
-        updateConfigParameter('apiKey', null,
+        updateConfigurationParameter('apiKey', null,
                 configParams.get(PS_IntegrationService.MAKANA_APPLICATION_TYPE));
 
         Test.startTest();
@@ -122,6 +118,10 @@ private class PS_IntegrationService_TEST {
     }
 
 
+    /*******************************************************************************************************
+    * @description Test for storing the secrets we receive from the Payment Services
+    * Integrations package with invalid configuration parameters
+    */
     @IsTest
     private static void setConfigurationWithInvalidConfigurationParameters() {
        configParams = new Map<String, List<Map<String, String>>>();
@@ -135,7 +135,9 @@ private class PS_IntegrationService_TEST {
         Test.stopTest();
     }
 
-
+    /*******************************************************************************************************
+   * @description Helper method to build test configuration parameters
+   */
     private static void buildConfigurationParams() {
         List<Map<String, String>> applicationConfig = new List<Map<String, String>>();
         configParams = new Map<String, List<Map<String, String>>>();
@@ -175,17 +177,21 @@ private class PS_IntegrationService_TEST {
         configParams.put(PS_IntegrationService.MAKANA_APPLICATION_TYPE, applicationConfig);
     }
 
-    private static void updateConfigParameter (String configParameter, String value,
-            List<Map<String, String>> configParameters) {
-        for (Integer index = 0; index < configParameters.size(); index++) {
-            if (configParameters[index].keySet().contains(configParameter)) {
-                configParameters.remove(index);
-                configParameters.add(new Map<String, String >{ configParameter => value });
+    /*******************************************************************************************************
+    * @description Helper method to update configuration parameters
+    */
+    private static void updateConfigurationParameter (String configurationParameter, String value,
+            List<Map<String, String>> configurationParameters) {
+        for (Integer index = 0; index < configurationParameters.size(); index++) {
+            if (configurationParameters[index].keySet().contains(configurationParameter)) {
+                configurationParameters.remove(index);
+                configurationParameters.add(new Map<String, String >{ configurationParameter => value });
                 break;
             }
         }
     }
 
+    // Inner class representation of the configuration parameters
     public class Config {
         String key;
         String value;
