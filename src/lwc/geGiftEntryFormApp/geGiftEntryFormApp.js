@@ -251,7 +251,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     /*******************************************************************************
-    * @description Posts an http request through the `createTransaction` apex
+    * @description Posts an http request through the `sendPurchaseRequest` apex
     * method and parses the response.
     *
     * @param {object} dataImportRecord: A DataImport__c record
@@ -376,11 +376,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             });
     }
 
-    doSomethingLoud() {
+    doSomethingLoud(error) {
         this.errorCallback(error);
         // TODO: Potentially have to check for other types of status that MAY
         // indicate a charge could still occur (pending, authorized, etc)
-        if (dataImportRecord[PAYMENT_STATUS__C] === PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED) {
+        if (this.dataImportRecord[PAYMENT_STATUS__C] === PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED) {
             showToast('HEY!',
                 'Card was charged. Please fix the outstanding errors and try again.',
                 'error',
