@@ -2142,10 +2142,15 @@
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
+        <members>geTextChargingCard</members>
         <members>geTextListViewItemCount</members>
         <members>geTextListViewItemsCount</members>
         <members>geTextListViewSortedBy</members>
         <members>geTextListViewUpdatedAgo</members>
+        <members>geTextNavigateToOpportunity</members>
+        <members>geTextProcessing</members>
+        <members>geTextSaving</members>
+        <members>geTextUpdating</members>
         <members>geToastListViewUpdated</members>
         <members>geToastSaveFailed</members>
         <members>geToastSelectActiveSection</members>
