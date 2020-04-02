@@ -6160,6 +6160,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Template Info</value>
     </labels>
     <labels>
+        <fullName>geTextChargingCard</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the card is being charged</shortDescription>
+        <value>Charging card...</value>
+    </labels>
+    <labels>
         <fullName>geTextListViewItemCount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6192,6 +6200,38 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Displays how long ago the last record in the current list view was updated</shortDescription>
         <!-- &#8226; is the character entity reference for a center dot -->
         <value>&#8226; Updated {0}</value>
+    </labels>
+    <labels>
+        <fullName>geTextNavigateToOpportunity</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text telling the user they're being taken to the Opportunity</shortDescription>
+        <value>Let's go look at the Opportunity...</value>
+    </labels>
+    <labels>
+        <fullName>geTextProcessing</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Data Import record is being processed</shortDescription>
+        <value>Processing...</value>
+    </labels>
+    <labels>
+        <fullName>geTextSaving</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Data Import record is being saved</shortDescription>
+        <value>Saving...</value>
+    </labels>
+    <labels>
+        <fullName>geTextUpdating</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the Data Import record is being updated</shortDescription>
+        <value>Updating...</value>
     </labels>
     <labels>
         <fullName>geToastListViewUpdated</fullName>

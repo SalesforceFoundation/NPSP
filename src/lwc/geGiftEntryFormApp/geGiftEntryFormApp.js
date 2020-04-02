@@ -164,10 +164,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     */
     saveDataImport = async (inMemoryDataImport) => {
         if (this.dataImportRecord.Id) {
-            this.loadingText = 'Updating Data Import record...';
+            this.loadingText = this.CUSTOM_LABELS.geTextUpdating;
             inMemoryDataImport = this.prepareInMemoryDataImportForUpdate(inMemoryDataImport);
         } else {
-            this.loadingText = 'Saving Data Import record...';
+            this.loadingText = this.CUSTOM_LABELS.geTextSaving;
         }
 
         inMemoryDataImport[PAYMENT_AUTHORIZE_TOKEN__C] = await this.tokenPromise;
@@ -203,7 +203,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @param {object} dataImportRecord: A DataImport__c record
     */
     processPayment = async () => {
-        this.loadingText = 'Charging card...';
+        this.loadingText = this.CUSTOM_LABELS.geTextChargingCard;
 
         const isReadyToCharge = this.checkPaymentTransactionStatus(this.dataImportRecord[PAYMENT_STATUS__C]);
         if (isReadyToCharge) {
@@ -364,11 +364,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     *   false = "do not match"
     */
     processDataImport = async () => {
-        this.loadingText = 'Processing data import record...';
+        this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
 
         submitDataImportToBDI({ diRecord: this.dataImportRecord, updateGift: this.hasUserSelectedDonation })
             .then(opportunityId => {
-                this.loadingText = 'Navigating to opportunity record...';
+                this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
                 this.navigateToRecordPage(opportunityId);
             })
             .catch(error => {
@@ -378,6 +378,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             });
     }
 
+    // TODO: Placeholder method, remove/replace in work item to better handle purchase call errors
     doSomethingLoud(error) {
         this.errorCallback(error);
         // TODO: Potentially have to check for other types of status that MAY
