@@ -145,9 +145,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             const hasPaymentToProcess = this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C];
             if (hasPaymentToProcess) {
                 await this.processPayment();
-            } else {
-                await this.processDataImport();
             }
+
+            await this.processDataImport();
         } catch (error) {
             this.errorCallback(error);
         }
@@ -219,15 +219,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
                 const isFailedPurchase = purchaseResponse.statusCode !== 201;
                 if (isFailedPurchase) {
-
                     let errors = this.getFailedPurchaseMessage(purchaseResponse);
-                    this.errorCallback(errors);
-                    return;
+                    throw new Error(errors);
                 }
             }
         }
-
-        this.processDataImport();
     }
 
     /*******************************************************************************
