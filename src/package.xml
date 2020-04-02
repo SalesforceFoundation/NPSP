@@ -995,6 +995,8 @@
         <members>DataImport__c.Contact1Imported__c</members>
         <members>DataImport__c.Contact1_Alternate_Email__c</members>
         <members>DataImport__c.Contact1_Birthdate__c</members>
+        <members>DataImport__c.Contact1_Consent_Message__c</members>
+        <members>DataImport__c.Contact1_Consent_Opt_In__c</members>
         <members>DataImport__c.Contact1_Firstname__c</members>
         <members>DataImport__c.Contact1_Home_Phone__c</members>
         <members>DataImport__c.Contact1_Lastname__c</members>
@@ -1071,9 +1073,22 @@
         <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
+        <members>DataImport__c.Payment_Authorized_Date__c</members>
+        <members>DataImport__c.Payment_Authorized_UTC_Timestamp__c</members>
+        <members>DataImport__c.Payment_Card_Expiration_Month__c</members>
+        <members>DataImport__c.Payment_Card_Expiration_Year__c</members>
+        <members>DataImport__c.Payment_Card_Last_4__c</members>
+        <members>DataImport__c.Payment_Card_Network__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
+        <members>DataImport__c.Payment_Elevate_Created_Date__c</members>
+        <members>DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c</members>
+        <members>DataImport__c.Payment_Elevate_ID__c</members>
+        <members>DataImport__c.Payment_Elevate_Original_Payment_ID__c</members>
+        <members>DataImport__c.Payment_Gateway_ID__c</members>
+        <members>DataImport__c.Payment_Gateway_Payment_ID__c</members>
         <members>DataImport__c.Payment_Method__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
+        <members>DataImport__c.Payment_Type__c</members>
         <members>DataImport__c.Status__c</members>
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
@@ -1324,8 +1339,21 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Organizational_Account_Addresses_Enabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Payments_Auto_Close_Stage_Name__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Simple_Address_Change_Treated_as_Update__c</members>
+        <members>npe01__OppPayment__c.Authorized_Date__c</members>
+        <members>npe01__OppPayment__c.Authorized_UTC_Timestamp__c</members>
+        <members>npe01__OppPayment__c.Card_Expiration_Month__c</members>
+        <members>npe01__OppPayment__c.Card_Expiration_Year__c</members>
+        <members>npe01__OppPayment__c.Card_Last_4__c</members>
+        <members>npe01__OppPayment__c.Card_Network__c</members>
+        <members>npe01__OppPayment__c.Elevate_Original_Payment_ID__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_Created_Date__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_Created_UTC_Timestamp__c</members>
+        <members>npe01__OppPayment__c.Elevate_Payment_ID__c</members>
+        <members>npe01__OppPayment__c.Gateway_ID__c</members>
+        <members>npe01__OppPayment__c.Gateway_Payment_ID__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
+        <members>npe01__OppPayment__c.Type__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.ClosedReason__c</members>
         <members>npe03__Recurring_Donation__c.CommitmentId__c</members>
