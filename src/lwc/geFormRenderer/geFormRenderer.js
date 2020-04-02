@@ -74,7 +74,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorApiName;
     @api donorRecord;
     @api fabricatedCardholderNames;
-
     @api loadingText;
 
     fieldNames = [ ACCOUNT_NAME_FIELD, CONTACT_NAME_FIELD ];
