@@ -312,9 +312,9 @@ private with sharing class RD2_ValidationService_TEST {
 
         String day = '31';
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-                .withContact(getContact().Id)
-                .withDayOfMonth(day)
-                .build();
+            .withContact(getContact().Id)
+            .withDayOfMonth(day)
+            .build();
 
         String errMessage = '';
         try {
@@ -324,8 +324,8 @@ private with sharing class RD2_ValidationService_TEST {
         }
 
         String expectedMessage = String.format(
-                System.Label.RD2_DayOfMonthMustBeValid,
-                new String[]{ day }
+            System.Label.RD2_DayOfMonthMustBeValid,
+            new String[]{ day }
         );
         System.assert(errMessage.contains(expectedMessage),
                 'The error message should contain invalud Day Of Month message: ' + errMessage);
@@ -339,14 +339,14 @@ private with sharing class RD2_ValidationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         TEST_RecurringDonationBuilder rdBuilder = getRecurringDonationBuilder()
-                .withContact(getContact().Id);
+            .withContact(getContact().Id);
 
         for (String day : new Set<String>{
-                '15', '10', '28', '29', '30'
+            '15', '10', '28', '29', '30'
         }) {
             npe03__Recurring_Donation__c rd = rdBuilder
-                    .withDayOfMonth(day)
-                    .build();
+                .withDayOfMonth(day)
+                .build();
 
             String errMessage = '';
             try {

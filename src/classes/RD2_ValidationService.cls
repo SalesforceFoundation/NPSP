@@ -291,9 +291,9 @@ public with sharing class RD2_ValidationService {
 
         if (!isValid) {
             rd.addError(
-                    String.format(
-                            System.Label.RD2_DayOfMonthMustBeValid,
-                            new String[]{ rd.Day_of_Month__c })
+                String.format(
+                    System.Label.RD2_DayOfMonthMustBeValid,
+                    new String[]{ rd.Day_of_Month__c })
             );
         }
     }
