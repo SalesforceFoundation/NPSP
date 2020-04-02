@@ -42,7 +42,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @api sObjectName;
 
     @track isPermissionError;
-    @track loadingText = 'Saving data import...';
+    @track loadingText = this.CUSTOM_LABELS.geTextSaving;
 
     dataImportRecord = {};
     tokenPromise;
