@@ -58,7 +58,7 @@ const unregisterAllListeners = thisArg => {
  * Fires an event to listeners.
  * @param {object} pageRef - Reference of the page that represents the event scope.
  * @param {string} eventName - Name of the event to fire.
- * @param {*=} payload - Payload of the event to fire.
+ * @param {*} payload - Payload of the event to fire.
  */
 const fireEvent = (pageRef, eventName, payload) => {
     if (events[eventName]) {
