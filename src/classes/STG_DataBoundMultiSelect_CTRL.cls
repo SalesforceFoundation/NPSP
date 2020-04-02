@@ -119,20 +119,21 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     * @param apiValues The api value to be converted
     */
     private String convertApiToLabel(String apiValues) {
-        if (String.isBlank(apiValues)) {
+        if (String.isBlank(apiValues) || listSelectOption == null) {
             return apiValues;
         }
 
         Map<String, String> apiToLabelMap = constructApiToLabelMap();
-        String labelValue = '';
+        String labelValues = '';
 
         for (String apiValue : apiValues.split(';', 0)) {
-            labelValue += apiToLabelMap.get(apiValue) + ';';
+            
+            labelValues += apiToLabelMap.get(apiValue) + ';';
         }
 
-        labelValue = labelValue.left(labelValue.length()-1);
+        labelValues = labelValues.left(labelValues.length()-1);
 
-        return labelValue;
+        return labelValues;
     }
 
     /**
