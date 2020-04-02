@@ -78,9 +78,7 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     public string strValues { 
     	get {
     		if (strValues == null) {
-                String apiValues = (String) String.valueOf(sobjBinding.get(strField));
-
-                strValues = convertApiToLabel((String) String.valueOf(sobjBinding.get(strField)));
+                strValues = convertApiToLabel(String.valueOf(sobjBinding.get(strField)));
     		}
     		return strValues;
     	}
