@@ -1483,6 +1483,11 @@
             <valueSetDefinition>
                 <sorted>false</sorted>
                 <value>
+                    <fullName>Ready To Process</fullName>
+                    <default>false</default>
+                    <label>Ready to Process</label>
+                </value>
+                <value>
                     <fullName>Imported</fullName>
                     <default>false</default>
                     <label>Imported</label>
