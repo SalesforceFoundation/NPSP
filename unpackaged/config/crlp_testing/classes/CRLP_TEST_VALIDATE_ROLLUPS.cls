@@ -732,6 +732,10 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     }
 
     private static void createTestingAllocationsAndAccountSoftCredits() {
+        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+        rdSettings.EnableAutomaticNaming__c = false;
+        update rdSettings;
+
         TDTM_Config_API.disableAllRollupTriggers();
 
         accounts = [SELECT Id, Name FROM Account WHERE Site = :TEST_SITE_NAME AND npe01__SYSTEMIsIndividual__c = true];
