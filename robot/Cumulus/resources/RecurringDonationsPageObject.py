@@ -1,8 +1,11 @@
 from cumulusci.robotframework.pageobjects import ListingPage
 from cumulusci.robotframework.pageobjects import DetailPage
 from cumulusci.robotframework.pageobjects import pageobject
+from cumulusci.robotframework.utils import capture_screenshot_on_error
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 @pageobject("Listing", "npe03__Recurring_Donation__c")
 class RDListingPage(BaseNPSPPage, ListingPage):
@@ -33,5 +36,63 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
         if self.npsp.latest_api_version == 47.0:
             self.selenium.click_link(button_name)
         else:
-            self.selenium.click_button(button_name)    
-             
+            self.selenium.click_button(button_name)
+
+    @capture_screenshot_on_error
+    def validate_field_values_on_details(self, **kwargs):
+        """For each of the key value pairs, validates that the key contains the value on the details section tab"""
+        for label, value in kwargs.items():
+            self.npsp.navigate_to_and_validate_field_value(label, "contains", value)
+
+    @capture_screenshot_on_error
+    def validate_upcoming_schedules(self, num_payments,startdate):
+        """Takes in the parameter (number of payments) and the donation start date
+        verifies that the payment schedules created on UI reflect the total number
+        verifies that the next payment dates are reflected correctly for all the schedules"""
+
+        installmentrow = npsp_lex_locators["erd"]["installment_row"]
+        installments = self.selenium.get_webelements(installmentrow)
+        count = len(installments)
+        print(f"Number of installments created is {count}")
+        assert count == int(num_payments), "Expected installments to be {} but found {}".format(num_payments, count)
+        if count == int(num_payments):
+            i = 1
+            while i < count:
+                datefield = npsp_lex_locators["erd"]["installment_date"].format(i)
+                installment_date = self.selenium.get_webelement(datefield)
+                date_object = datetime.strptime(startdate, '%m/%d/%Y').date()
+                expected_date = (date_object+relativedelta(months=+i)).replace(day=1)
+                actual_date=self.selenium.get_webelement(installment_date).text
+                formatted_actual = datetime.strptime(actual_date, '%m/%d/%Y').date()
+                assert formatted_actual == expected_date, "Expected date to be {} but found {}".format(formatted_actual, expected_date)
+                i=i+1
+
+
+    @capture_screenshot_on_error
+    def validate_field_values_under_section(self, name,**kwargs):
+        """Waits for the Active schedule section card on the side bar
+        Validates the display fields in the card match with the values passed in the key value pair"""
+
+        active_schedule_card = npsp_lex_locators["erd"]["active_schedules_card"].format(name)
+        number_fields = ['Amount','Installment Frequency']
+        date_fields =  ['Effective Date']
+        self.selenium.wait_until_element_is_visible(active_schedule_card)
+        for label, value in kwargs.items():
+            if label in number_fields:
+                locator = npsp_lex_locators["erd"]["formatted_number"].format(label)
+                actual_value=self.selenium.get_webelement(locator).text
+            elif label in date_fields:
+                locator = npsp_lex_locators["erd"]["formatted_date"].format(label)
+                actual_value=self.selenium.get_webelement(locator).text
+            else:
+                locator = npsp_lex_locators["erd"]["formatted_text"].format(label)
+                actual_value=self.selenium.get_webelement(locator).text
+
+                if self.npsp.check_if_element_exists(locator):
+                    print(f"element exists {locator}")
+                    actual_value=self.selenium.get_webelement(locator).text
+                    print(f"actual value is {actual_value}")
+                    self.builtin.log(f"actual value is {actual_value}")
+                    assert value == actual_value, "Expected {} value to be {} but found {}".format(label,value, actual_value)
+                else:
+                    self.builtin.log("element Not found")

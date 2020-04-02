@@ -173,6 +173,13 @@ npsp_lex_locators={
     'gaus':{
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
         },
+    'erd':{
+        'active_schedules_card': "//div[contains(@class, 'slds-media__body')]/h3[contains(@title,'{}')]",
+        'installment_row' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr",
+        'installment_date' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr[{}]/th//span/div/lightning-formatted-date-time",
+        'formatted_number':"//div[contains(@class,'slds-tile__detail')]/lightning-layout/slot/lightning-layout-item[contains(@class,'slds-dl_horizontal__label')]/slot/lightning-formatted-text[text() = '{}']/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-number",
+        'formatted_date':"//div[contains(@class,'slds-tile__detail')]/lightning-layout/slot/lightning-layout-item[contains(@class,'slds-dl_horizontal__label')]/slot/lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-date-time",
+        'formatted_text':"//div[contains(@class,'slds-tile__detail')]/lightning-layout/slot/lightning-layout-item[contains(@class,'slds-dl_horizontal__label')]/slot/lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text"       },
     'npsp_settings':{
         'main_menu':'//div[@class="slds-tree__branch slds-tree__item"][.//a[text()="{}"]]',
         'panel_sub_link':'//ul/li[contains(@class,"slds-is-selected")]/a[text()="{}"]',

@@ -126,6 +126,14 @@ API Query Installment
     ...                &{fields}
     [return]           @{object}
 
+API Query Opportunity For Recurring Donation
+    [Arguments]        ${id}                      &{fields}
+    @{object} =        Salesforce Query           Opportunity
+    ...                select=Id
+    ...                npe03__Recurring_Donation__c=${id}
+    ...                &{fields}
+    [return]           @{object}
+
 API Create GAU
     [Arguments]      &{fields}
     ${name} =   Generate Random String
