@@ -62,8 +62,8 @@ import geBodyBatchHeaderRightCol from '@salesforce/label/c.geBodyBatchHeaderRigh
 import geBodyBatchHeaderWarning from '@salesforce/label/c.geBodyBatchHeaderWarning';
 import geBodyEmptyFormSection from '@salesforce/label/c.geBodyEmptyFormSection';
 import geBodyFieldBundlesLeftCol from '@salesforce/label/c.geBodyFieldBundlesLeftCol';
-import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
 import geBodyFormFieldsDescLeftCol from '@salesforce/label/c.geBodyFormFieldsDescLeftCol';
+import geBodyFormFieldsLeftCol from '@salesforce/label/c.geBodyFormFieldsLeftCol';
 import geBodyFormFieldsLeftColAdditional from '@salesforce/label/c.geBodyFormFieldsLeftColAdditional';
 import geBodyFormFieldsModalDeleteSection from '@salesforce/label/c.geBodyFormFieldsModalDeleteSection';
 import geBodyFormFieldsRightCol from '@salesforce/label/c.geBodyFormFieldsRightCol';
@@ -163,10 +163,15 @@ import geSelectPlaceholder from '@salesforce/label/c.geSelectPlaceholder';
 import geTabBatchHeader from '@salesforce/label/c.geTabBatchHeader';
 import geTabFormFields from '@salesforce/label/c.geTabFormFields';
 import geTabTemplateInfo from '@salesforce/label/c.geTabTemplateInfo';
+import geTextChargingCard from '@salesforce/label/c.geTextChargingCard';
 import geTextListViewItemCount from '@salesforce/label/c.geTextListViewItemCount';
 import geTextListViewItemsCount from '@salesforce/label/c.geTextListViewItemsCount';
 import geTextListViewSortedBy from '@salesforce/label/c.geTextListViewSortedBy';
 import geTextListViewUpdatedAgo from '@salesforce/label/c.geTextListViewUpdatedAgo';
+import geTextNavigateToOpportunity from '@salesforce/label/c.geTextNavigateToOpportunity';
+import geTextProcessing from '@salesforce/label/c.geTextProcessing';
+import geTextSaving from '@salesforce/label/c.geTextSaving';
+import geTextUpdating from '@salesforce/label/c.geTextUpdating';
 import geToastListViewUpdated from '@salesforce/label/c.geToastListViewUpdated';
 import geToastSaveFailed from '@salesforce/label/c.geToastSaveFailed';
 import geToastSelectActiveSection from '@salesforce/label/c.geToastSelectActiveSection';
@@ -347,10 +352,15 @@ class GeLabelService {
         geTabBatchHeader,
         geTabFormFields,
         geTabTemplateInfo,
+        geTextChargingCard,
         geTextListViewItemCount,
         geTextListViewItemsCount,
         geTextListViewSortedBy,
         geTextListViewUpdatedAgo,
+        geTextNavigateToOpportunity,
+        geTextProcessing,
+        geTextSaving,
+        geTextUpdating,
         geToastListViewUpdated,
         geToastSaveFailed,
         geToastSelectActiveSection,
