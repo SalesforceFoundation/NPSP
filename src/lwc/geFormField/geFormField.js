@@ -358,6 +358,18 @@ export default class GeFormField extends LightningElement {
                 this.value = value.value || value;
 
                 if (this.isLookup) {
+                    if (this.fieldApiName === 'RecordTypeId') {
+                        if (value && !value.displayName) {
+                            // If the RecordTypeId field for a target record is being
+                            // loaded with only the Id (like when a Lookup field is
+                            // selected/populated on the form), get the RecordType Name
+                            // and pass it with the Id to loadLookup
+                            data[this.sourceFieldAPIName] = {
+                                value: value,
+                                displayValue: this.getRecordTypeNameById(value)
+                            };
+                        }
+                    }
                     this.loadLookUp(data, this.value);
                 }
             }
@@ -405,11 +417,7 @@ export default class GeFormField extends LightningElement {
 
         }
 
-        if (this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName) {
-            lookup.setSelected({value: value});
-        } else {
-            lookup.setSelected({value, displayValue});
-        }
+        lookup.setSelected({value, displayValue});
     }
 
     @api
@@ -469,6 +477,24 @@ export default class GeFormField extends LightningElement {
                 }
             }
         ));
+    }
+
+    /**
+     * @description Returns the name of the RecordType that corresponds to a RecordType Id.
+     *              This method references this component's objectInfo.recordTypeInfos
+     *              property.
+     * @param Id The Id of the RecordType.
+     * @returns {string|null} The name of the RecordType or null if the RecordType was
+     *          not found.
+     */
+    getRecordTypeNameById(Id) {
+        if (this.objectDescribeInfo &&
+            this.objectDescribeInfo.recordTypeInfos &&
+            this.objectDescribeInfo.recordTypeInfos[Id]) {
+            return this.objectDescribeInfo.recordTypeInfos[Id].name;
+        } else {
+            return null;
+        }
     }
 
 }
