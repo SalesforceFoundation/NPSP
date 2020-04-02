@@ -66,9 +66,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleTokenRequested() {
         this.tokenPromise = new Promise((resolve, reject) => {
             registerListener('tokenResponse', message => {
-                if(message.error) {
+                if (message.error) {
                     reject(message);
-                } else if(message.token) {
+                } else if (message.token) {
                     resolve(message.token);
                 }
             }, this);
@@ -112,7 +112,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     batchGiftSubmit(event) {
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         this.dataImportRecord = event.detail.dataImportRecord;
-        saveAndDryRunDataImport({batchId: this.recordId, dataImport: this.dataImportRecord})
+        saveAndDryRunDataImport({ batchId: this.recordId, dataImport: this.dataImportRecord })
             .then((result) => {
                 let dataImportModel = JSON.parse(result);
                 Object.assign(dataImportModel.dataImportRows[0],
@@ -210,6 +210,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
             const purchaseResponse = await this.makePurchaseCall();
             if (purchaseResponse) {
+
                 this.dataImportRecord[PAYMENT_STATUS__C] = this.getPaymentStatus(purchaseResponse);
                 this.dataImportRecord[PAYMENT_DECLINED_REASON__C] =
                     this.getPaymentDeclinedReason(purchaseResponse);
@@ -218,6 +219,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
                 const isFailedPurchase = purchaseResponse.statusCode !== 201;
                 if (isFailedPurchase) {
+
                     let errors = this.getFailedPurchaseMessage(purchaseResponse);
                     this.errorCallback(errors);
                     return;
