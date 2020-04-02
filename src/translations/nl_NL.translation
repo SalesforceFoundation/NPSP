@@ -1960,7 +1960,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiOMUIOfGroupLabel</name>
     </customLabels>
     <customLabels>
-        <label>Elk rij van deze tabel toont uw objectgroepen. U stelt individuele veldtoewijzingen in wanneer u klikt op het pictogram voor de vervolgkeuzelijst voor een objectgroep; klik vervolgens op Veldtoewijzingen weergeven.</label>
+        <label>Elke rij van deze tabel toont uw objectgroepen. U stelt individuele veldtoewijzingen in wanneer u klikt op het pictogram voor de vervolgkeuzelijst voor een objectgroep; klik vervolgens op Veldtoewijzingen weergeven.</label>
         <name>bdiOMUIPageDescriptionPt1</name>
     </customLabels>
     <customLabels>
@@ -1968,7 +1968,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiOMUIPageDescriptionPt2</name>
     </customLabels>
     <customLabels>
-        <label>Laten we eens kijken naar de twee objectgroepen GAU-toewijzing 1 en GAU-toewijzing 2 als voorbeeld. Deze objectgroepen koppelen rechtstreeks naar het object Opportunity. Maar soms wilt u wellicht twee GAU-toewijzingen toewijzen aan één opportunity. Hiervoor geeft u in uw importbestand de gegevens van Opportunity op in de kolommen Donaties, en neemt u de eerste GAU op in de/ kolommen van GAU-toewijzingen 1 en de tweede GAU-toewijzing in de kolommen van GAU-toewijzingen 2. Vanwege de objecttoewijzingen GAU-toewijzing 1 en GAU-toewijzing 2 worden bij het importeren de twee GAU-toewijzingen beide toegewezen aan de opportunity.</label>
+        <label>Laten we eens kijken naar de twee objectgroepen GAU-toewijzing 1 en GAU-toewijzing 2 als voorbeeld. Deze objectgroepen koppelen rechtstreeks naar het object Opportunity. Maar soms wilt u wellicht twee GAU-toewijzingen toewijzen aan één opportunity. Hiervoor geeft u in uw importbestand de gegevens van Opportunity op in de kolommen Donaties, en neemt u de eerste GAU op in de kolommen van GAU-toewijzingen 1 en de tweede GAU-toewijzing in de kolommen van GAU-toewijzingen 2. Vanwege de objecttoewijzingen GAU-toewijzing 1 en GAU-toewijzing 2 worden bij het importeren de twee GAU-toewijzingen beide toegewezen aan de opportunity.</label>
         <name>bdiOMUIPageDescriptionPt3</name>
     </customLabels>
     <customLabels>
@@ -2625,7 +2625,7 @@ Om uw instellingen voor GAU-Toewijzingen te controleren, gaat u naar Donaties | 
         <name>geBodyBatchFieldBundleInfo</name>
     </customLabels>
     <customLabels>
-        <label>Kies velden die moeten worden opgenomen in uw Koptekst van batch. Vink het selectievakje aan om een veld toe te voegen en hef de selectie van het veld op vanuit het formulier. Als u graag extra aangepaste velden beschikbaar wilt hebben voor Koptekst van batch, voegt u ze toe in het object NPSP-gegevensimportbatch.</label>
+        <label>Kies velden die moeten worden opgenomen in uw Koptekst van batch. Vink het selectievakje aan om een veld toe te voegen en hef de selectie op om het veld uit het formulier te verwijderen. Als u graag extra aangepaste velden beschikbaar wilt hebben voor Koptekst van batch, voegt u ze toe in het object NPSP-gegevensimportbatch.</label>
         <name>geBodyBatchHeaderLeftCol</name>
     </customLabels>
     <customLabels>

@@ -921,7 +921,7 @@
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label>拡張継続支援は、Nonprofit Success Pack (NPSP) の再設計および改善されたの継続支援機能です。フィードバックを提供し、拡張継続支援の実現を支援してくれたコミュニティメンバーに感謝します。
+        <label>拡張継続支援は、Nonprofit Success Pack (NPSP) の再設計および改善された継続支援機能です。フィードバックを提供し、拡張継続支援の実現を支援してくれたコミュニティメンバーに感謝します。
         &lt;br/&gt;&lt;br/&gt;NPSP にはすでに継続支援機能があるため、いくつかのアップグレードタスクを実行し、既存のデータを拡張継続支援モデルに移行する必要があります。必要なタスクの概要を以下に示します。
         &lt;br/&gt;&lt;br/&gt;その過程で疑問が生じると思われますが、各ステップで準備を万全にしてください。アップグレードプロセスの進行時に&lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;拡張継続支援のドキュメント&lt;/a&gt;を参照してください。</label>
         <name>RD2_EnablementIntro</name>
@@ -1933,7 +1933,7 @@
         <name>bdiOMUILinkToRecordHelp</name>
     </customLabels>
     <customLabels>
-        <label>レコードへのリンク</label>
+        <label>レコードへのリンク。</label>
         <name>bdiOMUILinkToRecordLabel</name>
     </customLabels>
     <customLabels>
