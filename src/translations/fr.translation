@@ -930,7 +930,7 @@ Si vous n’êtes pas sûr de savoir comment résoudre ces erreurs, publiez un m
         <name>RD2_EnablementMetaDeployConfirmError</name>
     </customLabels>
     <customLabels>
-        <label>Utilisez MetaDeploy pour installer de nouvelles métadonnées (valeurs de liste de sélection, texte d’aide, etc.) pour les Dons récurrents avancés. Après avoir installé les métadonnées, revenez dans cette page pour continuer la mise à niveau vers les Dons récurrents avancés.</label>
+        <label>Utilisez MetaDeploy pour installer de nouvelles métadonnées (valeurs de liste de sélection, texte d’aide, etc.) pour les Dons récurrents avancés. Après avoir installé les métadonnées, revenez à cette page pour continuer la mise à niveau vers les Dons récurrents avancés.</label>
         <name>RD2_EnablementMetaDeployIntro</name>
     </customLabels>
     <customLabels>
@@ -1898,7 +1898,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiOMUIErrorLabelNameTooLong</name>
     </customLabels>
     <customLabels>
-        <label>Erreur : Aucun champ n&apos;est mappé avec l&apos;objet Importation de données NPSP à utiliser.</label>
+        <label>Erreur : Aucun champ n&apos;est mappé avec l&apos;objet Importation de données NPSP à utiliser pour l&apos;option.</label>
         <name>bdiOMUIErrorNoUnmappedFieldsPt1</name>
     </customLabels>
     <customLabels>
@@ -1934,7 +1934,7 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>bdiOMUILinkToRecordHelp</name>
     </customLabels>
     <customLabels>
-        <label>Lier à l&apos;enregistrement</label>
+        <label>Lier à l&apos;enregistrement.</label>
         <name>bdiOMUILinkToRecordLabel</name>
     </customLabels>
     <customLabels>
@@ -2717,7 +2717,7 @@ Si vous préférez, vous pouvez désactiver la Saisie de dons et utiliser à la 
         <name>geBodyTemplateInfoLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>Un modèle est une présentation réutilisable de champs de saisie de données. Modifiez un modèle en cliquant sur son nom. Vous pouvez également créer un modèle ou cliquez sur le menu déroulant d&apos;un modèle pour afficher plus d&apos;options. Les modèles en cours d&apos;utilisation ne peuvent pas être supprimés.</label>
+        <label>Un modèle est une présentation réutilisable de champs de saisie de données. Modifiez un modèle en cliquant sur son nom. Vous pouvez également créer un modèle ou cliquer sur le menu déroulant d&apos;un modèle pour afficher plus d&apos;options. Les modèles en cours d&apos;utilisation ne peuvent pas être supprimés.</label>
         <name>geBodyTemplatesTabDescription</name>
     </customLabels>
     <customLabels>

@@ -2678,11 +2678,11 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>geBodyFormFieldsRightCol</name>
     </customLabels>
     <customLabels>
-        <label>Antes de activar Entrada de regalo, debe activar Asignación avanzada.
+        <label>Antes de activar Entrada de regalos, debe activar Asignación avanzada.
 &lt;br/&gt;&lt;br/&gt;
-Utilice plantillas de Entrada de regalo para introducir regalos por separado o lotes de regalos. Todos los regalos introducidos a través de la herramienta Entrada de regalo en lote obsoleta no se muestran en Entrada de regalo y viceversa.
+Utilice plantillas de Entrada de regalos para introducir regalos por separado o lotes de regalos. Todos los regalos introducidos a través de la herramienta Entrada de regalo en lote obsoleta no se muestran en Entrada de regalos y viceversa.
 &lt;br/&gt;&lt;br/&gt;
-Si lo prefiere, puede desactivar Entrada de regalo y utilizar la herramienta Entrada de regalo en lote obsoleta (o Entrada de regalo único si utiliza GEM).</label>
+Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta Entrada de regalo en lote obsoleta (o Entrada de regalo por separado único si utiliza GEM).</label>
         <name>geBodyGiftEntryHelp</name>
     </customLabels>
     <customLabels>
