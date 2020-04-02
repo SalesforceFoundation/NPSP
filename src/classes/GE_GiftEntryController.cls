@@ -46,9 +46,10 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static String sendPurchaseRequest(DataImport__c dataImportRecord, String cardholderNames) {
+    public static String sendPurchaseRequest(String requestBodyParameters) {
         try {
-            GE_PaymentServices paymentServices = new GE_PaymentServices(dataImportRecord, cardholderNames);
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            paymentServices.setPurchaseCallBody(requestBodyParameters);
             GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
 
             return JSON.serialize(response);

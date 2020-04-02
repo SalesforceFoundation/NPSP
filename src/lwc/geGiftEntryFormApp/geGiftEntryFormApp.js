@@ -15,12 +15,16 @@ import DI_PAYMENT_AUTHORIZE_TOKEN_FIELD from '@salesforce/schema/DataImport__c.P
 import DI_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
+import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
+import { isNotEmpty } from 'c/utilCommon';
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
 const PAYMENT_AUTHORIZE_TOKEN__C = DI_PAYMENT_AUTHORIZE_TOKEN_FIELD.fieldApiName;
 const PAYMENT_METHOD__C = DI_PAYMENT_METHOD_FIELD.fieldApiName;
-const CAPTURED = 'CAPTURED';
+const DONATION_AMOUNT__C = DI_DONATION_AMOUNT_FIELD.fieldApiName;
+const DONATION_CAMPAIGN_NAME__C = DI_DONATION_CAMPAIGN_NAME_FIELD.fieldApiName;
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds, long enough for cold starts?
 const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
     PENDING: 'PENDING',
@@ -255,15 +259,41 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @return {object} response: An http response object
     */
     makePurchaseCall = async () => {
-        const cardholderNames = this.getCardholderNames();
         let purchaseResponseString = await sendPurchaseRequest({
-            dataImportRecord: this.dataImportRecord,
-            cardholderNames: cardholderNames
+            requestBodyParameters: this.buildRequestBodyParameters()
         });
         let response = JSON.parse(purchaseResponseString);
         response.body = JSON.parse(response.body);
 
         return response;
+    }
+
+    /*******************************************************************************
+    * @description Builds parts of the purchase request body that requires data
+    * from the Data Import record upfront. We pass this into the `sendPurchaseRequest`
+    * method and is eventually merged in with the rest of the purchase request body.
+    *
+    * @param {object} dataImportRecord: A DataImport__c record
+    *
+    * @return {object}: Object that we can deserialize and apply to the purchase
+    * request body in apex.
+    */
+    buildRequestBodyParameters() {
+        const names = this.getCardholderNames();
+        const firstName = isNotEmpty(names.firstName) ? names.firstName : names.accountName;
+        const lastName = isNotEmpty(names.lastName) ? names.lastName : names.accountName;
+        const metadata = {
+            campaignCode: this.dataImportRecord[DONATION_CAMPAIGN_NAME__C]
+        }
+
+        return JSON.stringify({
+            amount: this.dataImportRecord[DONATION_AMOUNT__C],
+            email: 'test@test.test',
+            firstName: firstName,
+            lastName: lastName,
+            metadata: metadata,
+            paymentMethodToken: this.dataImportRecord[PAYMENT_AUTHORIZE_TOKEN__C],
+        })
     }
 
     /*******************************************************************************
@@ -275,7 +305,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     */
     getCardholderNames() {
         const renderer = this.template.querySelector('c-ge-form-renderer');
-        return JSON.stringify(renderer.fabricatedCardholderNames);
+        return renderer.fabricatedCardholderNames;
     }
 
     /*******************************************************************************
@@ -350,7 +380,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.errorCallback(error);
         // TODO: Potentially have to check for other types of status that MAY
         // indicate a charge could still occur (pending, authorized, etc)
-        if (dataImportRecord[PAYMENT_STATUS__C] === CAPTURED) {
+        if (dataImportRecord[PAYMENT_STATUS__C] === PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED) {
             showToast('HEY!',
                 'Card was charged. Please fix the outstanding errors and try again.',
                 'error',
