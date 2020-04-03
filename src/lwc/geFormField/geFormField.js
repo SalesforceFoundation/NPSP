@@ -113,13 +113,6 @@ export default class GeFormField extends LightningElement {
             this.value = defaultValue;
             this.handlePicklistChange();
         }
-
-        if (this.value && this.isLookup) {
-            // If this field is a Lookup and has a value when connected,
-            // fire event so that the form knows to populate related fields
-            // and set recordTypeId on sibling fields.
-            this.fireLookupRecordSelectEvent();
-        }
     }
 
     getValueFromChangeEvent(event) {
@@ -497,6 +490,15 @@ export default class GeFormField extends LightningElement {
             return this.objectDescribeInfo.recordTypeInfos[Id].name;
         } else {
             return null;
+        }
+    }
+
+    renderedCallback() {
+        if (this.value && this.isLookup) {
+            // If this field is a Lookup and has a value when connected,
+            // fire event so that the form knows to populate related fields
+            // and set recordTypeId on sibling fields.
+            this.fireLookupRecordSelectEvent();
         }
     }
 
