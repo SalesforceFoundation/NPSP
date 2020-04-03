@@ -46,15 +46,25 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static String makePurchaseCall(String token) {
-        GE_PaymentServices paymentServices = new GE_PaymentServices(token);
-        HttpResponse response = paymentServices.makePurchaseCall();
+    public static String sendPurchaseRequest(String requestBodyParameters) {
+        try {
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+            paymentServices.setPurchaseCallBody(requestBodyParameters);
+            GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
 
-        // Parse the JSON response...
-        if (response.getStatusCode() != 201) {
-            return JSON.serialize(response.getStatus());
-        } else {
-            return JSON.serialize(response.getBody());
+            return JSON.serialize(response);
+        } catch (Exception ex) {
+            Boolean hasTimedout =
+                ex.getTypeName() == 'System.CalloutException' &&
+                ex.getMessage().contains('timed out');
+
+            if (hasTimedout) {
+                ex.setMessage('Request to charge card timed out.');
+            }
+
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
+
+            throw returnDmlException(JSONExceptionData);
         }
     }
 
@@ -92,12 +102,12 @@ public with sharing class GE_GiftEntryController {
     * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport, String widgetData) {
+    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
 
         try {
-            String additionalObjectJSON = GE_FormRendererService.convertWidgetDataToObjectJSON(widgetData);
-            dataImport.Additional_Object_JSON__c = additionalObjectJSON;
-            saveDataImport(dataImport);
+            dataImport.Additional_Object_JSON__c =
+                GE_FormRendererService.convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
+            upsertDataImport(dataImport);
             return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
 
         } catch (Exception ex) {
@@ -109,19 +119,17 @@ public with sharing class GE_GiftEntryController {
     }
 
     /*******************************************************************************************************
-    * @description Takes a Data Import record from the Gift Entry form and saves it to the database.
-    * @param diRecord - The DataImport__c record, as filled in by the user.
-    * @return The Id of the new Opportunity record, created from the Data Import
+    * @description Saves the data import record, dry runs the record, and returns updated
+    * totals with the new row.
+    * @param dataImport: the NPSP_Data_Import__c record to update
+    * @param updateGift: If true, BDI will attempt to match to an existing opportunity/payment
+    * @return String serialized DataImportModel
     */
     @AuraEnabled
-    public static Id saveAndProcessDataImport(DataImport__c diRecord, String widgetData, Boolean updateGift) {
-
+    public static Id submitDataImportToBDI(DataImport__c diRecord, Boolean updateGift) {
         // Check for widget data and convert it to the correct format for processing
-        String additionalObjectJSON = GE_FormRendererService.convertWidgetDataToObjectJSON(widgetData);
-        diRecord.Additional_Object_JSON__c = additionalObjectJSON;
-
-        // Save the Data Import record to the Database
-        diRecord = saveDataImport(diRecord);
+        diRecord.Additional_Object_JSON__c =
+            GE_FormRendererService.convertWidgetDataToObjectJSON(diRecord.Additional_Object_JSON__c);
 
         // Run the BDI process on this new Data Import
         processDataImport(diRecord, false, updateGift);
@@ -151,7 +159,8 @@ public with sharing class GE_GiftEntryController {
     * @param dataImport - The DataImport__c record, as filled in by the user.
     * @return The DataImport__c record that was saved
     */
-    private static DataImport__c saveDataImport(DataImport__c dataImport) {
+    @AuraEnabled
+    public static DataImport__c upsertDataImport(DataImport__c dataImport) {
         try {
             if (String.isNotBlank(dataImport.Id)) {
                 Database.update(dataImport);
@@ -177,13 +186,19 @@ public with sharing class GE_GiftEntryController {
     * @return void
     */
     private static void processDataImport(DataImport__c diRecord, Boolean isDryRun, Boolean updateGift) {
-        Id diRecordId = diRecord.Id;
+        try {
+            Id diRecordId = diRecord.Id;
 
-        Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
+            Data_Import_Settings__c diSettings = getGiftEntrySettings(updateGift);
 
-        List<DataImport__c> listDI = new List<DataImport__c>{diRecord};
+            List<DataImport__c> listDI = new List<DataImport__c>{diRecord};
 
-        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
+            BDI_DataImport_API.processDataImportRecords(diSettings, listDI, isDryRun);
+        } catch (Exception e) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+
+            throw returnDmlException(JSONExceptionData);
+        }
     } 
 
     /*******************************************************************************************************

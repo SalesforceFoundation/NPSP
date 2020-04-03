@@ -1264,10 +1264,33 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Payment_Authorization_Token__c</fullName>
+        <description>The authorization token for the card payment provided by payment services.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Authorization token for a transaction. Do NOT update this field if it's populated by Elevate.</inlineHelpText>
+        <label>Payment Authorization Token</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Payment_Check_Reference_Number__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Payment.npe01__Check_Reference_Number__c</inlineHelpText>
         <label>Payment Check/Reference Number</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Declined_Reason__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Provides detail about why a transaction was declined.</inlineHelpText>
+        <label>Payment Declined Reason</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -1291,6 +1314,17 @@
         <externalId>false</externalId>
         <inlineHelpText>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</inlineHelpText>
         <label>Payment Possible Matches</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Status__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>The status of the transaction from Elevate. </inlineHelpText>
+        <label>Payment Status</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

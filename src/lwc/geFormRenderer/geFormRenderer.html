@@ -38,6 +38,14 @@
 
             <lightning-layout-item size='12'
                                    class='slds-card slds-p-around_small'>
+                <div if:true={showSpinner}
+                     class='spinnerContainer'>
+                    <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
+                                       variant='brand'
+                                       size='large'>
+                    </lightning-spinner>
+                    <p class='loading-text slds-text-heading_medium'>{loadingText}</p>
+                </div>
                 <template if:true={hasPageLevelError}>
                     <c-util-page-level-message variant='error'>
                         <ul slot='body'
@@ -88,13 +96,5 @@
                 </article>
             </lightning-layout-item>
         </lightning-layout>
-
-        <div if:true={showSpinner}
-             class='spinnerContainer'>
-            <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
-                               variant='brand'
-                               size='large'>
-            </lightning-spinner>
-        </div>
     </template>
 </template>

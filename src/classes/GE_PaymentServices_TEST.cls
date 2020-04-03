@@ -42,36 +42,41 @@ public class GE_PaymentServices_TEST {
     public static final String FAILED_RESPONSE_BODY = '{"message":"Unprocessable Entity"}';
     public static final String GOOD_TOKEN = 'good-token';
     public static final String BAD_TOKEN = 'bad-token';
+    public static final String BASE_PURCHASE_CALL_BODY = '{"amount":5,"email":"test@test.test","firstName":"Test First Name","lastName":"Test Last Name","metadata":{},';
+    public static final String GOOD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + GOOD_TOKEN + '"}';
+    public static final String BAD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + BAD_TOKEN + '"}';
 
     @isTest static void shouldReturnSuccessfulResponse() {
         // Set mock callout class 
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+        DataImport__c dataImport = new DataImport__c();
+        dataImport.Donation_Amount__c = 150;
+        dataImport.Payment_Authorization_Token__c = GOOD_TOKEN;
 
-        GE_PaymentServices paymentServices = new GE_PaymentServices(GOOD_TOKEN);
-        HttpResponse response = paymentServices.makePurchaseCall();
+        GE_PaymentServices paymentServices = new GE_PaymentServices();
+        paymentServices.setPurchaseCallBody(GOOD_PURCHASE_CALL_BODY);
+        GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
 
-        String contentType = response.getHeader('Content-Type');
-        System.assert(contentType == 'application/json');
-
-        String actualValue = response.getBody();
+        String actualValue = response.body;
         String expectedValue = SUCCESS_RESPONSE_BODY;
-        System.assertEquals(201, response.getStatusCode());
+        System.assertEquals(201, response.statusCode);
         System.assertEquals(actualValue, expectedValue);
     }
 
     @isTest static void shouldReturnFailedResponse() {
         // Set mock callout class 
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+        DataImport__c dataImport = new DataImport__c();
+        dataImport.Donation_Amount__c = null;
+        dataImport.Payment_Authorization_Token__c = BAD_TOKEN;
 
-        GE_PaymentServices paymentServices = new GE_PaymentServices(BAD_TOKEN);
-        HttpResponse response = paymentServices.makePurchaseCall();
+        GE_PaymentServices paymentServices = new GE_PaymentServices();
+        paymentServices.setPurchaseCallBody(BAD_PURCHASE_CALL_BODY);
+        GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
 
-        String contentType = response.getHeader('Content-Type');
-        System.assert(contentType == 'application/json');
-
-        String actualValue = response.getBody();
+        String actualValue = response.body;
         String expectedValue = FAILED_RESPONSE_BODY;
-        System.assertEquals(403, response.getStatusCode());
+        System.assertEquals(403, response.statusCode);
         System.assertEquals(actualValue, expectedValue);
     }
 

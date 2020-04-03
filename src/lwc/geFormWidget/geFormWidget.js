@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import { checkNestedProperty } from 'c/utilCommon';
+import {checkNestedProperty, isUndefined} from 'c/utilCommon';
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -25,7 +25,7 @@ export default class GeFormWidget extends LightningElement {
         let widgetAndValues = {};
         const thisWidget = this.widgetComponent;
         // Need to make sure all widget components support returnValue()
-        if(this.isValid && typeof thisWidget.returnValues === 'function'){
+        if(this.isValid && typeof thisWidget.returnValues === 'function') {
             widgetAndValues = thisWidget.returnValues();
         }
         return widgetAndValues;
@@ -37,6 +37,9 @@ export default class GeFormWidget extends LightningElement {
         if(thisWidget !== null && typeof thisWidget !== 'undefined'
             && typeof thisWidget.isValid === 'function') {
                 isValid = thisWidget.isValid();
+        } else if(isUndefined(thisWidget.isValid)) {
+            // if no validation function defined, assume widget is valid
+            return true;
         }
         return isValid;
     }

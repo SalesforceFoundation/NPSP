@@ -389,6 +389,20 @@ const getSubsetObject = (sourceObj, propertyNames) => {
     return subsetObject;
 }
 
+/*******************************************************************************
+* @description Checks to see if provided string is parsable. If true, returns
+* parsed string otherwise returns false.
+*
+* @param {string} str: String to parse
+*/
+const validateJSONString = (str) => {
+    try {
+        return JSON.parse(str);
+    } catch (error) {
+        return false;
+    }
+}
+
 export {
     debouncify,
     deepClone,
@@ -412,5 +426,6 @@ export {
     getNestedProperty,
     getLikeMatchByKey,
     arraysMatch,
-    getValueFromDotNotationString
+    getValueFromDotNotationString,
+    validateJSONString
 };
