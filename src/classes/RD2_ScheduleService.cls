@@ -602,33 +602,34 @@ public without sharing class RD2_ScheduleService {
     */
     public class ActiveSchedule {
 
-        public Boolean  isCurrent {get;set;}
-        public Id       campaignId {get; set;}
-        public String   campaignName {get; set;}
-        public String   dayOfMonth {get; set;}
-        public Date     endDate {get; set;}
-        public Decimal  installmentAmount {get; set;}
-        public Integer  installmentFrequency {get; set;}
-        public String   installmentPeriod {get; set;}
-        public String   paymentMethod {get; set;}
-        public String   recurringDonationId {get; set;}
-        public Id       scheduleId {get; set;}
-        public Date     startDate {get; set;}
+        public Boolean isCurrent { get; set; }
+        public Id campaignId { get; set; }
+        public String campaignName { get; set; }
+        public String dayOfMonth { get; set; }
+        public Date endDate { get; set; }
+        public Decimal installmentAmount { get; set; }
+        public Integer installmentFrequency { get; set; }
+        public String installmentPeriod { get; set; }
+        public String paymentMethod { get; set; }
+        public String recurringDonationId { get; set; }
+        public Id scheduleId { get; set; }
+        public Date startDate { get; set; }
 
         public ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
-            isCurrent =             rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
-            campaignId =            rdSchedule.Campaign__c;
-            campaignName =          rdSchedule.Campaign__r.Name;
-            dayOfMonth =            rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
-            endDate =               rdSchedule.EndDate__c;
-            installmentAmount =     rdSchedule.InstallmentAmount__c;
-            installmentFrequency =  rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
-            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
-            paymentMethod =         rdSchedule.PaymentMethod__c;
-            recurringDonationId =   rdSchedule.RecurringDonation__c;
-            scheduleId =            rdSchedule.Id;
-            startDate =             rdSchedule.StartDate__c;
+            isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
+            campaignId = rdSchedule.Campaign__c;
+            campaignName = rdSchedule.Campaign__r.Name;
+            dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
+            endDate = rdSchedule.EndDate__c;
+            installmentAmount = rdSchedule.InstallmentAmount__c;
+            installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
+            installmentPeriod = rdSchedule.InstallmentPeriod__c;
+            paymentMethod = rdSchedule.PaymentMethod__c;
+            recurringDonationId = rdSchedule.RecurringDonation__c;
+            scheduleId = rdSchedule.Id;
+            startDate = rdSchedule.StartDate__c;
         }
+    }
 
     /***
     * @description Performs a full analysis and rebuild of the Schedule records for a Recurring Donation,
