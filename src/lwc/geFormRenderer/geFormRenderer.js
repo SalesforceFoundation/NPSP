@@ -68,6 +68,10 @@ const mode = {
     UPDATE: 'update'
 };
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
+const DONATION_DONOR_TYPE_ENUM = Object.freeze({
+    ACCOUNT1: 'Account1',
+    CONTACT1: 'Contact1'
+});
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorRecordId;
@@ -110,11 +114,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @track selectedDonation;
     @track selectedDonationDataImportFieldValues = {};
     @track hasPreviouslySelectedDonation = false;
-
-    donationDonorEnum = {
-        account1: 'Account1',
-        contact1: 'Contact1'
-    }
 
     _donationDonor;
     _account1Imported;
@@ -168,8 +167,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonorId = this.donorRecordId = getQueryParameters().c__donorRecordId;
             this.donorApiName = getQueryParameters().c__apiName;
             this.selectedDonorType =
-                this.donorApiName === 'Account' ? this.donationDonorEnum.account1 :
-                    this.donorApiName === 'Contact' ? this.donationDonorEnum.contact1 : null;
+                this.donorApiName === 'Account' ? DONATION_DONOR_TYPE_ENUM.ACCOUNT1 :
+                    this.donorApiName === 'Contact' ? DONATION_DONOR_TYPE_ENUM.CONTACT1 : null;
 
             // read the template header info
             if (response !== null && typeof response !== 'undefined') {
@@ -1014,9 +1013,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     setReviewDonationsDonorProperties(recordId) {
         if (recordId && this._donationDonor) {
-            if ((this._donationDonor === this.donationDonorEnum.account1 &&
+            if ((this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1 &&
                 recordId.startsWith(this.accountKeyPrefix)) ||
-                (this._donationDonor === this.donationDonorEnum.contact1 &&
+                (this._donationDonor === DONATION_DONOR_TYPE_ENUM.CONTACT1 &&
                     recordId.startsWith(this.contactKeyPrefix))) {
                 this.selectedDonorId = recordId;
                 this.selectedDonorType = this._donationDonor;
@@ -1296,9 +1295,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     get donorId() {
         switch (this._donationDonor) {
-            case this.donationDonorEnum.account1:
+            case DONATION_DONOR_TYPE_ENUM.ACCOUNT1:
                 return this._account1Imported;
-            case this.donationDonorEnum.contact1:
+            case DONATION_DONOR_TYPE_ENUM.CONTACT1:
                 return this._contact1Imported;
             default:
                 return null;
@@ -1307,7 +1306,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonorAccountChange(selectedRecordId) {
         this._account1Imported = selectedRecordId;
-        if (this._donationDonor === this.donationDonorEnum.account1) {
+        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.ACCOUNT1) {
             this.setReviewDonationsDonorProperties(this._account1Imported);
         } else if (this._donationDonor === null) {
             // TODO: Maybe auto-set to 'Account1'?
@@ -1316,7 +1315,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonorContactChange(selectedRecordId) {
         this._contact1Imported = selectedRecordId;
-        if (this._donationDonor === this.donationDonorEnum.contact1) {
+        if (this._donationDonor === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
             this.setReviewDonationsDonorProperties(this._contact1Imported);
         } else if (this._donationDonor === null) {
             // TODO: Maybe auto-set to 'Contact1'?
@@ -1338,7 +1337,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonorType = fieldList[
                 DONATION_DONOR_FIELDS.donationDonorField
                 ].value === DONATION_DONOR.isContact1 ?
-                CONTACT_FIRST_NAME_INFO.objectApiName : ACCOUNT_NAME_FIELD.objectApiName;
+                DONATION_DONOR_TYPE_ENUM.CONTACT1 : DONATION_DONOR_TYPE_ENUM.ACCOUNT1;
 
             sectionsList.forEach(section => {
                 if (section.isCreditCardWidgetAvailable) {
