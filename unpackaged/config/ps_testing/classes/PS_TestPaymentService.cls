@@ -86,12 +86,21 @@ public with sharing class PS_TestPaymentService {
 
     // parse the response from the purchase method
     private static void checkPurchaseStatus(GE_PaymentServices.ResponseWrapper response) {
-        // check the status
+        // check the request status
         System.assertEquals(201, response.statusCode, 'Purchase failed. ' + response.status);
 
         // check the body
         String body = response.body;
-        System.debug('body = ' + body);
+        JSONParser parser = JSON.createParser(response.body);
+        while (parser.nextToken() != null) {
+            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && (parser.getText() == STATUS_FIELD_NAME)) {
+                // read the status
+                parser.nextToken();
+                String status = parser.getText();
+                system.debug('status = ' + status);
+                System.assertEquals(STATUS_FIELD_SUCCESS, status, 'Purchase failed. ' + status);
+            }
+        } 
     }
 
     
