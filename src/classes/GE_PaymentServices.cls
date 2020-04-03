@@ -71,17 +71,22 @@ public with sharing class GE_PaymentServices {
         return responseWrapper;
     }
 
-    private enum ElevateEndpoints { PURCHASE }
+    public enum ElevateEndpoints { TOKENIZE, PURCHASE }
 
-    private String getEndpoint(ElevateEndpoints endpoint) {
+    public String getEndpoint(ElevateEndpoints endpoint) {
+        if (endpoint === ElevateEndpoints.TOKENIZE) {
+            return '/v1/payments/public/tokens';
+        }
+
         if (endpoint === ElevateEndpoints.PURCHASE) {
             return '/v1/payments/verified/purchase';
         }
+
         return null;
     }
 
     // TODO: Get header/secret info from payments configuration hidden sobject
-    private String getEndpointRoot() {
+    public String getEndpointRoot() {
         return 'https://7jpea5zk79.execute-api.us-west-2.amazonaws.com';
     }
 
