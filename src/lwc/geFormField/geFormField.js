@@ -202,7 +202,9 @@ export default class GeFormField extends LightningElement {
         // If so, we need to update this to reflect that.
         // In the Execute Anonymous code, both fields are populated.
 
-        if (this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName) {
+        if (this.value &&
+            this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName &&
+            Object.keys(this.objectDescribeInfo.recordTypeInfos).includes(this.value)) {
             // value is the RecordType Id, but the DataImport's source field expects
             // the RecordType Name
             fieldAndValue[this.formElementName] =
