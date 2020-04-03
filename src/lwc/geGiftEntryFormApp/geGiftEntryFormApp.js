@@ -38,6 +38,10 @@ const PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze({
 });
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
+
+    // Expose custom labels to template
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+
     @api recordId;
     @api sObjectName;
 
@@ -47,8 +51,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     dataImportRecord = {};
     tokenPromise;
     errorCallback;
-
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     connectedCallback() {
         registerListener('tokenRequested', this.handleTokenRequested, this);
