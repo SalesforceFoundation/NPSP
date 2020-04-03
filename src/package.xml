@@ -1076,9 +1076,12 @@
         <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
+        <members>DataImport__c.Payment_Authorization_Token__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
+        <members>DataImport__c.Payment_Declined_Reason__c</members>
         <members>DataImport__c.Payment_Method__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
+        <members>DataImport__c.Payment_Status__c</members>
         <members>DataImport__c.Status__c</members>
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
@@ -2139,10 +2142,15 @@
         <members>geTabBatchHeader</members>
         <members>geTabFormFields</members>
         <members>geTabTemplateInfo</members>
+        <members>geTextChargingCard</members>
         <members>geTextListViewItemCount</members>
         <members>geTextListViewItemsCount</members>
         <members>geTextListViewSortedBy</members>
         <members>geTextListViewUpdatedAgo</members>
+        <members>geTextNavigateToOpportunity</members>
+        <members>geTextProcessing</members>
+        <members>geTextSaving</members>
+        <members>geTextUpdating</members>
         <members>geToastListViewUpdated</members>
         <members>geToastSaveFailed</members>
         <members>geToastSelectActiveSection</members>

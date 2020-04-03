@@ -18,9 +18,11 @@
                                            padding='around-small'>
                         <div class='iframe-container'>
                             <template if:true={isLoading}>
-                                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+                                <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
+                                </lightning-spinner>
                             </template>
-                            <iframe title={CUSTOM_LABELS.commonPaymentServices}
+                            <iframe class='payment-services-iframe'
+                                    title={CUSTOM_LABELS.commonPaymentServices}
                                     src={tokenizeCardPageUrl}
                                     data-id={CUSTOM_LABELS.commonPaymentServices}>
                             </iframe>
@@ -30,15 +32,6 @@
                 </lightning-layout>
             </article>
         </lightning-layout-item>
-
-        <!-- TODO: Remove lightning-layout-item later for dev only -->
-        <lightning-layout-item size='12'
-                               padding='around-small'>
-            <lightning-button label='Tokenize and Purchase, this can take up to 20 seconds'
-                              onclick={requestToken}>
-            </lightning-button>
-        </lightning-layout-item>
-        <!-- TODO: END -->
 
     </lightning-layout>
 </template>
