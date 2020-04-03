@@ -477,8 +477,20 @@ public without sharing class RD2_ScheduleService {
             adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
         }
 
-        if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY && schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
+        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+            if (schedule.DayOfMonth__c == null) {
+                return adjusted;
+            }
+            Integer nextDayOfMonth;
+            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
+                Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(adjusted.year(), adjusted.month()))
+            {
+                nextDayOfMonth = Date.daysInMonth(adjusted.year(),adjusted.month());
+            }
+            else {
+                nextDayOfMonth = Integer.valueOf(schedule.DayOfMonth__c);
+            }
+            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
         }
 
         return adjusted;
@@ -543,12 +555,15 @@ public without sharing class RD2_ScheduleService {
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH))
         {
+            Boolean adjustLastDay = (
+                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
+                Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(nextDate.year(), nextDate.month())
+            );
             nextDate = Date.newInstance(
                 nextDate.year(),
                 nextDate.month(),
-                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
-                    Date.daysInMonth(nextDate.year(), nextDate.month()) :
-                    Integer.valueOf(schedule.DayOfMonth__c)
+                adjustLastDay ? Date.daysInMonth(nextDate.year(), nextDate.month()) :
+                                Integer.valueOf(schedule.DayOfMonth__c)
             );
             nextDate = nextDate >= schedule.StartDate__c ? nextDate : nextDate.addMonths(1);
         }
