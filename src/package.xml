@@ -922,7 +922,6 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
-        <members>Contact_Merge_Page_Settings__c.DRS_count_for_contact_merge_page__c</members>
         <members>Custom_Column_Header__c.Field_Api_Name__c</members>
         <members>Custom_Column_Header__c.Index__c</members>
         <members>Custom_Column_Header__c.List_Name__c</members>
@@ -2901,7 +2900,6 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
-        <members>Contact_Merge_Page_Settings__c</members>
         <members>Custom_Column_Header__c</members>
         <members>Customizable_Rollup_Settings__c</members>
         <members>DataImportBatch__c</members>
