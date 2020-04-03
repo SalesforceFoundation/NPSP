@@ -67,8 +67,7 @@ global class PS_IntegrationService {
                 String apiKeyFieldLabel = 'apiKey';
                 if (valueMap.keySet().contains(apiKeyFieldLabel)) {
                     psConfiguration.apiKey__c = valueMap.get(apiKeyFieldLabel);
-                    if ((psConfiguration.apiKey__c == null ||
-                            String.isBlank(psConfiguration.apiKey__c)) && makanaConfiguration != null) {
+                    if (useFallbackApiKey(psConfiguration, makanaConfiguration)) {
                         // Fall-back to the Makana API key if available
                         for (Map<String, String> makanaValueMap : makanaConfiguration) {
                             if (makanaValueMap.keySet().contains(apiKeyFieldLabel)) {
@@ -130,6 +129,13 @@ global class PS_IntegrationService {
             throw new IntegrationServiceException(ELEVATE_ONBOARDING_ERROR + ex.getMessage());
         }
 
+    }
+
+    private static Boolean useFallbackApiKey (Payment_Services_Configuration__c psConfiguration,
+            List<Map<String, String>> makanaConfiguration) {
+        return ((psConfiguration.apiKey__c == null ||
+                String.isBlank(psConfiguration.apiKey__c))
+                && makanaConfiguration != null);
     }
 
     // Custom Exception
