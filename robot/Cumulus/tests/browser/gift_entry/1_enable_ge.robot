@@ -12,7 +12,7 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 Verify Error Message with GE Disabled and enable GE
     [Documentation]                           This test case checks if advanced mapping is enabled and if disabled, enables it. 
     ...                                       Checks if gift entry is disabled and if enabled, disables it and verifies that GE page has error. 
-    ...                                       Then enables gift entry and veries that gift entry page lands on templates page and has default template  
+    ...                                       Then enables gift entry and verifies that gift entry page lands on templates page and has default template  
     [tags]                                    feature:GE          W-039554
     Go To Page                                Custom              NPSP_Settings
     Open Main Menu                            System Tools
