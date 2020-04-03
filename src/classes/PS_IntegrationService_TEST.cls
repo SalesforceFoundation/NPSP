@@ -111,7 +111,7 @@ private class PS_IntegrationService_TEST {
         Test.startTest();
         try {
             PS_IntegrationService.setConfiguration(configParams);
-        } catch (PS_IntegrationService.PS_IntegrationServiceException ex) {
+        } catch (PS_IntegrationService.IntegrationServiceException ex) {
             System.assertEquals(PS_IntegrationService.API_KEY_ELEVATE_ERROR, ex.getMessage());
         }
         Test.stopTest();
@@ -129,7 +129,7 @@ private class PS_IntegrationService_TEST {
         Test.startTest();
         try {
             PS_IntegrationService.setConfiguration(configParams);
-        } catch (PS_IntegrationService.PS_IntegrationServiceException ex) {
+        } catch (PS_IntegrationService.IntegrationServiceException ex) {
             System.assertEquals(PS_IntegrationService.INVALID_CONFIG_PARAMS, ex.getMessage());
         }
         Test.stopTest();
