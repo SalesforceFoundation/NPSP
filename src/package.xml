@@ -1981,11 +1981,10 @@
         <members>conMergeWinnerAsstText</members>
         <members>conMergeFoundDRS</members>
         <members>conMergeDRSPickBtnLabel</members>
-        <members>conMergeShowDSR</members>
         <members>conMergeErrorNoDRSFound</members>
-        <members>conMergeSearchByContact</members>
+        <members>conMergeSeeDupConDRS</members>
         <members>conMergeErrorNoReadDSRObjPermission</members>
-        <members>conMergeDRSConMergeStep1</members>
+        <members>conMergeDRSStep1</members>
         <members>conMergeSearchConText</members>
         <members>conMergeSeeDupConText</members>
         <members>engagementPlanCantEdit</members>
