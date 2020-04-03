@@ -243,7 +243,7 @@ private class CON_ContactMerge_TEST2 {
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        
+        controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
         Id[] fixedSearchResults=new Id[2]; 
@@ -261,8 +261,8 @@ private class CON_ContactMerge_TEST2 {
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
         //Select the household of the one that is not the one we selected as master
-        List<CON_ContactMerge_UTIL.FieldRow> fieldRows = controller.fieldRows;  
-        for (CON_ContactMerge_UTIL.FieldRow row : fieldRows) {
+        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
             if(row.fieldName == 'npo02__household__c') {
                 row.selectedValue = String.valueOf(con2.id);
                 break;
@@ -328,12 +328,7 @@ private class CON_ContactMerge_TEST2 {
         Test.setCurrentPageReference(pr);
         
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        
-        //check that after searching we ended up on step 2 ("select contacts") of the merge
-        system.assertEquals(2, controller.step); 
-        
-        //check the 2 records already retrieved in search results
-        system.assertEquals(2, controller.searchResults.size());
+        system.assertNotEquals(Null, controller.searchText);
     }
     
     //check a comma separated list of Ids are handled correctly
@@ -864,8 +859,8 @@ private class CON_ContactMerge_TEST2 {
             CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
 
             //Select the primary affiliation of the one that is not the one we selected as master
-            List<CON_ContactMerge_UTIL.FieldRow> fieldRows = controller.fieldRows;  
-            for (CON_ContactMerge_UTIL.FieldRow row : fieldRows) {
+            List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
+            for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
                 if (row.fieldName == UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c')) {
                     row.selectedValue = String.valueOf(con2.id);
                     break;
@@ -895,6 +890,7 @@ private class CON_ContactMerge_TEST2 {
             Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
 
             CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+            controller.showContactSearchPage();
             controller.searchText = searchText;
             Integer contactSize = contactsToMerge.size();
 
