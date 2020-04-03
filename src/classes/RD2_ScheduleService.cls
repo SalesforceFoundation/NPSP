@@ -619,26 +619,7 @@ public without sharing class RD2_ScheduleService {
             isCurrent =             rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
             campaignId =            rdSchedule.Campaign__c;
             campaignName =          rdSchedule.Campaign__r.Name;
-            if (rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-                if (rdSchedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
-
-                    Schema.DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(
-                        UTIL_Namespace.getNamespace() + 'RecurringDonationSchedule__c',
-                        UTIL_Namespace.getNamespace() + 'DayOfMonth__c'
-                    );
-                    List<Schema.PicklistEntry> picklistEntries = dfr.getPicklistValues();
-
-                    for (Schema.PicklistEntry ple : picklistEntries) {
-                        if (ple.getValue() == RD2_Constants.DAY_OF_MONTH_LAST_DAY) {
-                            dayOfMonth = ple.getLabel();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    dayOfMonth = rdSchedule.DayOfMonth__c;
-                }
-            }
+            dayOfMonth =            rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
             endDate =               rdSchedule.EndDate__c;
             installmentAmount =     rdSchedule.InstallmentAmount__c;
             installmentFrequency =  rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
@@ -648,7 +629,6 @@ public without sharing class RD2_ScheduleService {
             scheduleId =            rdSchedule.Id;
             startDate =             rdSchedule.StartDate__c;
         }
-    }
 
     /***
     * @description Performs a full analysis and rebuild of the Schedule records for a Recurring Donation,
