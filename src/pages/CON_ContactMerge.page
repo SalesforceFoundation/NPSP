@@ -92,7 +92,7 @@
                                     <span class="slds-path__title">{!$Label.npe01__contact_merge_step1}</span>
                                 </apex:outputPanel>
                                 <apex:outputPanel rendered="{!showDRS}">
-                                    <span class="slds-path__title">{!$Label.conMergeDRSConMergeStep1}</span>
+                                    <span class="slds-path__title">{!$Label.conMergeDRSStep1}</span>
                                 </apex:outputPanel>
                             </div>
                         </li>
