@@ -41,7 +41,7 @@ global class PS_IntegrationService {
     @TestVisible private static final String INVALID_CONFIG_PARAMS = 'Missing configuration parameters';
     @TestVisible private static final String API_KEY_ELEVATE_ERROR = 'An invalid api key has been provided ' +
             'for this elevate customer';
-    private static final String UNKNOWN_ELEVATE_ERROR = 'An unknown error has occurred with ' +
+    private static final String ELEVATE_ONBOARDING_ERROR = 'An error has occurred with ' +
             'onboarding this elevate customer: ';
     //Are there more failure points for elevate onboarding ?
 
@@ -115,7 +115,7 @@ global class PS_IntegrationService {
         try {
             insert psConfiguration; // Should we be updating existing onboarding data?
         } catch (Exception ex) {
-            throw new PS_IntegrationServiceException(UNKNOWN_ELEVATE_ERROR + ex.getMessage());
+            throw new PS_IntegrationServiceException(ELEVATE_ONBOARDING_ERROR + ex.getMessage());
         }
 
     }
