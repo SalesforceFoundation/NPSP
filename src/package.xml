@@ -1986,6 +1986,8 @@
         <members>conMergeSearchByContact</members>
         <members>conMergeErrorNoReadDSRObjPermission</members>
         <members>conMergeDRSConMergeStep1</members>
+        <members>conMergeSearchConText</members>
+        <members>conMergeSeeDupConText</members>
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
