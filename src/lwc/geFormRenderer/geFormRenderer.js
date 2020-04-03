@@ -1098,8 +1098,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @param selectedRecordId Id of the selected record.
      */
     loadSelectedRecordFieldValues(lookupFieldApiName, selectedRecordId) {
-        this.selectedRecordId = selectedRecordId;
-        this.selectedRecordFields =
+        let selectedRecordFields =
             this.getSiblingFieldsForSourceField(lookupFieldApiName);
 
         if (selectedRecordId &&
@@ -1107,7 +1106,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonation.Id === selectedRecordId) {
             // This is the selected payment, so add in the parent opp field so
             // it can be used to populate the parent Opportunities' fields.
-            this.selectedRecordFields.push(
+            selectedRecordFields.push(
                 this.getQualifiedFieldName(OPP_PAYMENT_OBJECT, PARENT_OPPORTUNITY_FIELD));
         }
 
@@ -1115,6 +1114,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.getObjectMapping(lookupFieldApiName).DeveloperName,
             selectedRecordId
         );
+
+        this.queueSelectedRecordForRetrieval(selectedRecordId, selectedRecordFields);
     }
 
     getQualifiedFieldName(objectInfo, fieldInfo) {
@@ -1143,9 +1144,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 Imported_Record_Field_Name == fieldApiName);
     }
 
+    // Properties used to manage retrieval of fields for selected records
     selectedRecordIdByObjectMappingDevName = {};
     selectedRecordId;
     selectedRecordFields;
+    getSelectedRecordStatus = 'ready';
+    selectedRecordsQueue = [];
 
     @wire(getRecord, {recordId: '$selectedRecordId', optionalFields: '$selectedRecordFields'})
     getSelectedRecord({error, data}) {
@@ -1173,6 +1177,16 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 const oppId = this.parentOpportunityId(data);
                 this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
             }
+        }
+
+        // Get the next record if there is one in the queue
+        if (this.selectedRecordsQueue.length > 0) {
+            const nextSelectedRecord = this.selectedRecordsQueue.pop();
+            this.selectedRecordId = nextSelectedRecord.selectedRecordId;
+            this.selectedRecordFields = nextSelectedRecord.selectedRecordFields;
+        } else {
+            // If there are no records in the queue, set status back to 'ready'
+            this.getSelectedRecordStatus = 'ready';
         }
     }
 
@@ -1284,6 +1298,25 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     get opportunityRecordTypeNames() {
         return Object.values(this.opportunityObjectInfo.data.recordTypeInfos)
             .map(({name}) => name);
+    }
+
+    /**
+     * @description Queues selected record Ids (and fields) when getRecord is
+     *              in the progress of retrieving another record's related fields.
+     *              Prevents one lookup from overwriting the reactive selectedRecordId
+     *              and selectedRecordFields properties before getRecord has returned
+     *              with data.
+     * @param selectedRecordId Id of record to be retrieved.
+     * @param selectedRecordFields Fields list to be retrieved.
+     */
+    queueSelectedRecordForRetrieval(selectedRecordId, selectedRecordFields) {
+        if (this.getSelectedRecordStatus == 'ready') {
+            this.getSelectedRecordStatus = 'pending';
+            this.selectedRecordId = selectedRecordId;
+            this.selectedRecordFields = selectedRecordFields;
+        } else {
+            this.selectedRecordsQueue.push({selectedRecordId, selectedRecordFields});
+        }
     }
 
 }
