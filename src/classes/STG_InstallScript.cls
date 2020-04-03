@@ -446,9 +446,22 @@ global without sharing class STG_InstallScript implements InstallHandler {
         STG_PanelDataImportAdvancedMapping_CTRL ctrl = new STG_PanelDataImportAdvancedMapping_CTRL();
 
         if (ctrl.isAdvancedMappingEnabled) {
-            List<String> newDefaultMappingStrings = new List<String>{'Account_1_City','Account_1_Country'};
-            system.debug('=== entering install script here list: ' + newDefaultMappingStrings );
-            //BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
+            List<String> newDefaultMappingStrings = new List<String>{
+                    'Payment_Authorized_Date',
+                    'Payment_Authorized_UTC_Timestamp',
+                    'Payment_Card_Expiration_Month',
+                    'Payment_Card_Expiration_Year',
+                    'Payment_Card_Last_4',
+                    'Payment_Card_Network',
+                    'Payment_Elevate_Created_Date',
+                    'Payment_Elevate_Created_UTC_Timestamp',
+                    'Payment_Elevate_ID',
+                    'Payment_Elevate_Original_Payment_ID',
+                    'Payment_Gateway_ID',
+                    'Payment_Gateway_Payment_ID',
+                    'Payment_Type'
+            };
+
             util.migrateNewDefaultToCustomMetadata(newDefaultMappingStrings);
         }
     }
