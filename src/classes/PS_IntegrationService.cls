@@ -54,7 +54,8 @@ global class PS_IntegrationService {
     global static void setConfiguration(Map<String, List<Map<String, String>>> configParams) {
 
         if (configParams == null || configParams.isEmpty()) {
-            throw new PS_IntegrationServiceException(INVALID_CONFIG_PARAMS);
+            // If this is a significant point of failure, how do we want to alert the customer/caller ?
+            throw new IntegrationServiceException(INVALID_CONFIG_PARAMS);
         }
 
         Payment_Services_Configuration__c psConfiguration = new Payment_Services_Configuration__c();
@@ -78,7 +79,9 @@ global class PS_IntegrationService {
                     }
 
                     if (psConfiguration.apiKey__c == null || String.isBlank(psConfiguration.apiKey__c)) {
-                        throw new PS_IntegrationServiceException(API_KEY_ELEVATE_ERROR);
+                        // If this is a significant point of failure, how do we want to alert the customer/caller ?
+                        // NPSP Error Handler?
+                        throw new IntegrationServiceException(API_KEY_ELEVATE_ERROR);
                     }
                 }
 
@@ -112,16 +115,25 @@ global class PS_IntegrationService {
             }
         }
 
+        List<Payment_Services_Configuration__c> existingConfigurations = [
+                SELECT Id FROM Payment_Services_Configuration__c
+        ];
+
+        if(!existingConfigurations.isEmpty()){
+            psConfiguration.Id = existingConfigurations[0].Id;
+        }
+
         try {
-            insert psConfiguration; // Should we be updating existing onboarding data?
+            upsert psConfiguration;
         } catch (Exception ex) {
-            throw new PS_IntegrationServiceException(ELEVATE_ONBOARDING_ERROR + ex.getMessage());
+            // If this is a significant point of failure, how do we want to alert the customer/caller ?
+            throw new IntegrationServiceException(ELEVATE_ONBOARDING_ERROR + ex.getMessage());
         }
 
     }
 
     // Custom Exception
-    public class PS_IntegrationServiceException extends Exception {}
+    public class IntegrationServiceException extends Exception {}
 
 
 
