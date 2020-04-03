@@ -4856,7 +4856,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Choose this column as the master record</value>
     </labels>
     <labels>
-	<fullName>conMergeDRSConMergeStep1</fullName>
+	<fullName>conMergeDRSStep1</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
         <protected>true</protected>
@@ -4880,28 +4880,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
 	<value>Pick</value>
     </labels>
     <labels>
-	<fullName>conMergeShowDSR</fullName>
-	<categories>Contact Merge</categories>
-	<language>en_US</language>
-	<protected>true</protected>
-	<shortDescription>conMergeShowDSR</shortDescription>
-	<value>Show Duplicate Record Sets</value>
-    </labels>
-    <labels>
 	<fullName>conMergeErrorNoDRSFound</fullName>
 	<categories>Contact Merge</categories>
 	<language>en_US</language>
 	<protected>true</protected>
 	<shortDescription>Error to be displayed when no DRS records are found</shortDescription>
 	<value>&lt;b&gt;No Duplicate Record Sets.&lt;/b&gt;&lt;/br&gt;&lt;/br&gt; No Duplicate Record Sets found. Make sure duplicate rules are enabled. &lt;a href=&quot;https://help.salesforce.com/articleView?id=duplicate_rules_map_of_reference.htm&amp;type=5&quot; target=&quot;_blank&quot;&gt;More Info&lt;/a&gt;.</value>
-    </labels>
-    <labels>
-	<fullName>conMergeSearchByContact</fullName>
-	<categories>Contact Merge</categories>
-	<language>en_US</language>
-	<protected>true</protected>
-	<shortDescription>conMergeSearchByContact</shortDescription>
-	<value>Search By Contacts</value>
     </labels>
     <labels>
 	<fullName>conMergeErrorNoReadDSRObjPermission</fullName>
@@ -4917,7 +4901,31 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error to be displayed when there are to many contact records</shortDescription>
-        <value>There are too many duplicate contacts associated with DRS. Please set or lower the DRS count from Custom Settings -&gt; Contact Merge Page Setting -&gt; DRS count for contact merge</value>
+        <value>Too many duplicate contacts. Please use Search contact option to merge contacts</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSearchConText</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to be display before the &#39;Search Contact&#39; button</shortDescription>
+        <value>Search for specific Contacts to see if they have duplicates</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSeeDupConText</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to be display before the &#39;See Duplicate Contact&#39; button</shortDescription>
+        <value>See all duplicate Contacts found using matching rules. &lt;b&gt; Tell Me More &lt;/b&gt;</value>
+    </labels>
+    <labels>
+        <fullName>conMergeSeeDupConDRS</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeSeeDupConDRS</shortDescription>
+        <value>See Duplicate Contacts</value>
     </labels>
     <labels>
         <fullName>engagementPlanCantEdit</fullName>
