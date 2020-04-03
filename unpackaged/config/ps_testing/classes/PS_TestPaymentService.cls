@@ -1,17 +1,4 @@
 public with sharing class PS_TestPaymentService {
-   
-    // JWT secret key
-    // TODO: use the value stored in the protected object when available
-    //private static final string API_SECRET_KEY = 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4';
-
-    // JWT payload; exp is in miliseconds - we make the JWT valid for 1 minute
-    /*private static final Map<String, String> JWT_PAYLOAD = 
-            new Map<String, String> { 'iss' => 'ApiKeyManager',
-                                      'sub' => UserInfo.getUserName(),
-                                      'sfdo.roles' => 'Payments.Purchase',
-                                      'sfdo.product' => 'CRM',
-                                      'exp' => String.valueOf(Datetime.now().getTime() + 60 * 1000)};
-    */
 
     // endpoints
     // TODO: at the moment we use the dev1 env, we should replace with a QA env when it becomes available
@@ -35,36 +22,25 @@ public with sharing class PS_TestPaymentService {
 
         try {
             // tokenize the card
-            HttpResponse tokenHttpResponse = tokenize();
+            HttpResponse tokenHttpResponse = makeTokenizeCall();
             String token = getToken(tokenHttpResponse);
 
             // purchase
-            GE_PaymentServices gePaymentServices = new GE_PaymentServices(token);
-            HttpResponse purchaseHttpResponse = gePaymentServices.makePurchaseCall(token);
-
-            String status = getPurchaseStatus(purchaseHttpResponse);
-            System.assertEquals(STATUS_FIELD_SUCCESS, status, 'Failed to purchase. ' + status);    
+            GE_PaymentServices paymentServices = new GE_PaymentServices(token);
+            HttpResponse purchaseResponse = paymentServices.makePurchaseCall();
+            checkPurchaseStatus(purchaseResponse);
             
-            System.debug('Payment Service Flow successful.');
+            System.debug('Payment Service Flow successful!!!!!!');
         } catch(Exception ex) {
             success = false;
             System.debug(ex.getStackTraceString());
         } 
 
         return success;
-
-        // create the payload JSON string for the jwt creation
-        //String payload = JSON.serialize(JWT_PAYLOAD);
-
-        // create the jwt
-        //String jwt = UTIL_Jwt.getSignedJWTFromString(payload, API_SECRET_KEY);
-
-        
-        //return true;
     }
 
     // submit the tokenize request
-    private static HttpResponse tokenize() {
+    private static HttpResponse makeTokenizeCall() {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint(ENDPOINT_ROOT + TOKENIZE_ENDPOINT);
@@ -86,7 +62,6 @@ public with sharing class PS_TestPaymentService {
 
     // read the token from the tokenize response
     private static String getToken(HttpResponse response) {
-        // parse the tokenize response
         if (response.getStatusCode() != 201) {
             // failed
             String status = JSON.serialize(response.getStatus());
@@ -107,8 +82,7 @@ public with sharing class PS_TestPaymentService {
     }
 
     // parse the response from the purchase method
-    private static String getPurchaseStatus(HttpResponse response) {
-        // parse the tokenize response
+    private static void checkPurchaseStatus(HttpResponse response) {
         if (response.getStatusCode() != 201) {
             // failed
             String status = JSON.serialize(response.getStatus());
@@ -122,12 +96,10 @@ public with sharing class PS_TestPaymentService {
                     // read the status
                     parser.nextToken();
                     String status = parser.getText();
+                    System.debug('status = ' + status);
                     System.assertEquals(STATUS_FIELD_SUCCESS, status, 'Failed to purchase. ' + status);
-                    return status;
                 }
             } 
-        }
-        return '';
     }
 
    
