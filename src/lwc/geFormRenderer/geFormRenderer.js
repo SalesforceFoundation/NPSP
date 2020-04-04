@@ -40,6 +40,7 @@ import DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImp
 import DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD from '@salesforce/schema/DataImport__c.PaymentImportStatus__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
+import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
@@ -675,6 +676,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.selectedDonation[SCHEDULED_DATE.fieldApiName];
         }
 
+        this.preprocessRecordTypeNameField(dataImport);
+
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         sectionsList.forEach(section => {
             section.load(
@@ -684,8 +687,51 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         });
     }
 
+    /**
+     * @description DataImport__c.Donation_Record_Type_Name__c field is mapped from one
+     *              data type to another (Text to Lookup).  This method:
+     *              1. ensures that when the dataImport object is loaded this field always
+     *              holds the RecordType Id value (not the RecordType Name), and
+     *              2. passes the RecordType Id to the setRecordTypeOnFields method so that
+     *              the recordTypeId property is set on sibling fields.
+     * @param dataImport The object being loaded into the form renderer.
+     * @returns {boolean} Returns false if called with a non-null falsy parameter value.
+     */
+    preprocessRecordTypeNameField(dataImport) {
+        const recordTypeNameValue = dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName];
+        if (!recordTypeNameValue && recordTypeNameValue !== null) {
+            return false;
+        }
+
+        if (this.opportunityRecordTypeNames.includes(recordTypeNameValue)) {
+            // If value is the RecordType Name, change it to the RecordType Id since child
+            // fields are expecting the Id and not the Name.
+            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = this.getRecordTypeIdByName(
+                this.opportunityObjectInfo.data.recordTypeInfos,
+                recordTypeNameValue
+            );
+        } else if (recordTypeNameValue.value) {
+            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName] = recordTypeNameValue.value;
+        }
+
+        // Set the recordTypeId property on sibling fields that need it
+        this.setRecordTypeIdOnSiblingFieldsForSourceField(
+            DONATION_RECORD_TYPE_NAME.fieldApiName,
+            dataImport[DONATION_RECORD_TYPE_NAME.fieldApiName]
+        );
+    }
+
+    setRecordTypeIdOnSiblingFieldsForSourceField(sourceFieldApiName, recordTypeId) {
+        const objectMappingDevNames =
+            this.getObjectMappingsForSourceField(sourceFieldApiName);
+
+        for (const objectMappingDevName of objectMappingDevNames) {
+            this.setRecordTypeOnFields(objectMappingDevName, recordTypeId);
+        }
+    }
+
     setStoredDonationDonorProperties(dataImport) {
-        if (dataImport[DONATION_DONOR_FIELDS.donationDonorField]) {
+    if (dataImport[DONATION_DONOR_FIELDS.donationDonorField]) {
             this.handleDonationDonorChange(
                 dataImport[DONATION_DONOR_FIELDS.donationDonorField]
             );
@@ -858,11 +904,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         const fieldApiName = event.detail.fieldApiName;
 
         if(!fieldApiName ||
-            !GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
-            return false;
+            fieldApiName !== 'RecordTypeId') {
+            if (!GeFormService.importedRecordFieldNames.includes(fieldApiName)) {
+                return false;
+            }
         }
 
-        if (event.detail.hasOwnProperty('value') && event.detail.value !== null) {
+        if (fieldApiName === 'RecordTypeId') {
+            this.setRecordTypeOnFields(event.detail.objectMappingDevName, recordId);
+        } else if (event.detail.hasOwnProperty('value') && recordId !== null) {
             this.loadSelectedRecordFieldValues(fieldApiName, recordId);
         } else {
             // Reset all fields related to this lookup field's object mapping
@@ -897,7 +947,9 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
         this.selectedDonorId = undefined;
         this.selectedDonation = undefined;
         this.opportunities = undefined;
-        this.resetDonationAndPaymentImportedFields();
+        if (!!this.selectedDonation) {
+            this.resetDonationAndPaymentImportedFields();
+        }
     }
 
     handleChangeSelectedDonation(event) {
@@ -1046,8 +1098,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @param selectedRecordId Id of the selected record.
      */
     loadSelectedRecordFieldValues(lookupFieldApiName, selectedRecordId) {
-        this.selectedRecordId = selectedRecordId;
-        this.selectedRecordFields =
+        let selectedRecordFields =
             this.getSiblingFieldsForSourceField(lookupFieldApiName);
 
         if (selectedRecordId &&
@@ -1055,7 +1106,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.selectedDonation.Id === selectedRecordId) {
             // This is the selected payment, so add in the parent opp field so
             // it can be used to populate the parent Opportunities' fields.
-            this.selectedRecordFields.push(
+            selectedRecordFields.push(
                 this.getQualifiedFieldName(OPP_PAYMENT_OBJECT, PARENT_OPPORTUNITY_FIELD));
         }
 
@@ -1063,6 +1114,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             this.getObjectMapping(lookupFieldApiName).DeveloperName,
             selectedRecordId
         );
+
+        this.queueSelectedRecordForRetrieval(selectedRecordId, selectedRecordFields);
     }
 
     getQualifiedFieldName(objectInfo, fieldInfo) {
@@ -1091,9 +1144,12 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 Imported_Record_Field_Name == fieldApiName);
     }
 
+    // Properties used to manage retrieval of fields for selected records
     selectedRecordIdByObjectMappingDevName = {};
     selectedRecordId;
     selectedRecordFields;
+    getSelectedRecordStatus = 'ready';
+    selectedRecordsQueue = [];
 
     @wire(getRecord, {recordId: '$selectedRecordId', optionalFields: '$selectedRecordFields'})
     getSelectedRecord({error, data}) {
@@ -1103,11 +1159,34 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const dataImport = this.mapRecordValuesToDataImportFields(data);
             this.load(dataImport, false);
 
+            // If the record being loaded is an object-mapped lookup, then set the
+            // recordTypeId on its sibling fields
+            if (data.recordTypeId &&
+                Object.values(this.selectedRecordIdByObjectMappingDevName)
+                    .includes(data.id)) {
+                for (const [key, value] of
+                    Object.entries(this.selectedRecordIdByObjectMappingDevName)) {
+                    if (value === data.id) {
+                        this.setRecordTypeOnFields(key, data.recordTypeId);
+                    }
+                }
+            }
+
             if (this.oppPaymentObjectInfo.data.keyPrefix === data.id.substring(0, 3) &&
                 data.id === this.selectedDonation.Id) {
                 const oppId = this.parentOpportunityId(data);
                 this.loadSelectedRecordFieldValues(DATA_IMPORT_DONATION_IMPORTED_FIELD.fieldApiName, oppId);
             }
+        }
+
+        // Get the next record if there is one in the queue
+        if (this.selectedRecordsQueue.length > 0) {
+            const nextSelectedRecord = this.selectedRecordsQueue.pop();
+            this.selectedRecordId = nextSelectedRecord.selectedRecordId;
+            this.selectedRecordFields = nextSelectedRecord.selectedRecordFields;
+        } else {
+            // If there are no records in the queue, set status back to 'ready'
+            this.getSelectedRecordStatus = 'ready';
         }
     }
 
@@ -1192,8 +1271,51 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     handleDonationDonorChange(donationDonorValue) {
         this._donationDonor = donationDonorValue;
-        if (!isUndefined(this.donorId)) {
-            this.setReviewDonationsDonorProperties(this.donorId);
+        if (!!this.selectedDonation) {
+            this.resetDonationAndPaymentImportedFields();
+        }
+        this.setReviewDonationsDonorProperties(this.donorId);
+    }
+
+    setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
+        this.template.querySelectorAll('c-ge-form-section')
+            .forEach(section => {
+                section.setRecordTypeOnFields(objectMappingDevName, recordTypeId);
+            });
+    }
+
+    getRecordTypeIdByName(recordTypeInfos, d) {
+        return Object.values(recordTypeInfos)
+            .find(recordTypeInfo => recordTypeInfo.name === d).recordTypeId;
+    }
+
+    getObjectMappingsForSourceField(fieldApiName) {
+        return Object.values(GeFormService.fieldMappings)
+            .filter(({Source_Field_API_Name}) => Source_Field_API_Name === fieldApiName)
+            .map(({Target_Object_Mapping_Dev_Name}) => Target_Object_Mapping_Dev_Name);
+    }
+
+    get opportunityRecordTypeNames() {
+        return Object.values(this.opportunityObjectInfo.data.recordTypeInfos)
+            .map(({name}) => name);
+    }
+
+    /**
+     * @description Queues selected record Ids (and fields) when getRecord is
+     *              in the progress of retrieving another record's related fields.
+     *              Prevents one lookup from overwriting the reactive selectedRecordId
+     *              and selectedRecordFields properties before getRecord has returned
+     *              with data.
+     * @param selectedRecordId Id of record to be retrieved.
+     * @param selectedRecordFields Fields list to be retrieved.
+     */
+    queueSelectedRecordForRetrieval(selectedRecordId, selectedRecordFields) {
+        if (this.getSelectedRecordStatus == 'ready') {
+            this.getSelectedRecordStatus = 'pending';
+            this.selectedRecordId = selectedRecordId;
+            this.selectedRecordFields = selectedRecordFields;
+        } else {
+            this.selectedRecordsQueue.push({selectedRecordId, selectedRecordFields});
         }
     }
 
