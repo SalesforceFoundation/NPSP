@@ -25,6 +25,8 @@ import {
     sort
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
+import DONATION_RECORD_TYPE_NAME
+    from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
 const FORMAT_VERSION = '1.0';
 const DEFAULT_FIELD_MAPPING_SET = 'Migrated_Custom_Field_Mapping_Set';
@@ -632,7 +634,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         return {
             id: generateId(),
             label: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
-            customLabel: `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`,
+            customLabel: this.getCustomLabel(objectMapping, fieldMapping),
             required: fieldMapping.Is_Required || false,
             sectionId: sectionId,
             defaultValue: null,
@@ -1012,4 +1014,17 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     navigateToLandingPage() {
         dispatch(this, 'changeview', { view: GIFT_ENTRY });
     }
+
+    getCustomLabel(objectMapping, fieldMapping) {
+        // Donation_Record_Type_Name__c field holds the RecordType Name value even though
+        // it is mapped to a target RecordTypeId field because BDI processing handles the
+        // translation internally.  Since the Name is the value presented in the UI, this
+        // field's custom label is defaulted to just "Opportunity: Record Type"
+        if (fieldMapping.Source_Field_API_Name == DONATION_RECORD_TYPE_NAME.fieldApiName) {
+            return `${objectMapping.MasterLabel}: Record Type`;
+        } else {
+            return `${objectMapping.MasterLabel}: ${fieldMapping.Target_Field_Label}`;
+        }
+    }
+
 }
