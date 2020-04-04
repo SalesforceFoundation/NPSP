@@ -6,6 +6,7 @@ import {getObjectInfo} from "lightning/uiObjectInfoApi";
 import { fireEvent } from 'c/pubsubNoPageRef';
 import DI_DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DONOR_FIELD from '@salesforce/schema/DataImport__c.Donation_Donor__c';
+import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -28,6 +29,7 @@ export default class GeFormField extends LightningElement {
     @api element;
     @api targetFieldName;
     _defaultValue = null;
+    _recordTypeId;
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -43,9 +45,20 @@ export default class GeFormField extends LightningElement {
         this.dispatchEvent(evt);
 
         if (this.isLookup) {
+            const objMappingDevName =
+                GeFormService.importedRecordFieldNames.includes(this.fieldApiName) ?
+                    GeFormService.getObjectMappingWrapperByImportedFieldName(this.fieldApiName)
+                        .DeveloperName :
+                    this.objectMappingDevName;
+
+            const detail = {
+                ...event.detail,
+                objectMappingDevName: objMappingDevName
+            }
+
             const selectRecordEvent = new CustomEvent(
                 'lookuprecordselect',
-                { detail: event.detail });
+                { detail: detail });
             this.dispatchEvent(selectRecordEvent);
         }
 
@@ -76,7 +89,7 @@ export default class GeFormField extends LightningElement {
     }
 
     /**
-     * Retrieve field metadata. Used to configure how fields are displayed on the form.
+     * Retrieve object metadata. Used to configure how fields are displayed on the form.
      */
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
     wiredObjectInfo(response) {
@@ -182,8 +195,17 @@ export default class GeFormField extends LightningElement {
         // If so, we need to update this to reflect that.
         // In the Execute Anonymous code, both fields are populated.
 
-        // TODO: Update for widget fields
-        fieldAndValue[this.formElementName] = this.value;
+        if (this.value &&
+            this.sourceFieldAPIName === DONATION_RECORD_TYPE_NAME.fieldApiName &&
+            Object.keys(this.objectDescribeInfo.recordTypeInfos).includes(this.value)) {
+            // value is the RecordType Id, but the DataImport's source field expects
+            // the RecordType Name
+            fieldAndValue[this.formElementName] =
+                this.objectDescribeInfo.recordTypeInfos[this.value].name;
+        } else {
+            fieldAndValue[this.formElementName] = this.value;
+        }
+
         return fieldAndValue;
     }
 
@@ -266,6 +288,7 @@ export default class GeFormField extends LightningElement {
         }
     }
 
+    @api
     get objectMappingDevName() {
         return this.fieldInfo.Target_Object_Mapping_Dev_Name;
     }
@@ -337,6 +360,18 @@ export default class GeFormField extends LightningElement {
                 this.value = value.value || value;
 
                 if (this.isLookup) {
+                    if (this.fieldApiName === 'RecordTypeId') {
+                        if (value && !value.displayName) {
+                            // If the RecordTypeId field for a target record is being
+                            // loaded with only the Id (like when a Lookup field is
+                            // selected/populated on the form), get the RecordType Name
+                            // and pass it with the Id to loadLookup
+                            data[this.sourceFieldAPIName] = {
+                                value: value,
+                                displayValue: this.getRecordTypeNameById(value)
+                            };
+                        }
+                    }
                     this.loadLookUp(data, this.value);
                 }
             }
@@ -385,9 +420,7 @@ export default class GeFormField extends LightningElement {
         }
 
         lookup.setSelected({value, displayValue});
-
     }
-
 
     @api
     reset() {
@@ -396,6 +429,76 @@ export default class GeFormField extends LightningElement {
         if (this.isLookup) {
             const lookup = this.template.querySelector('c-ge-form-field-lookup');
             lookup.reset();
+            if (this.fieldApiName === 'RecordTypeId') {
+                // Using setTimeout here ensures that this recordTypeId
+                // will be set on sibling fields after they are reset by queueing the event.
+                setTimeout(() => {
+                    this.fireLookupRecordSelectEvent();
+                }, 0);
+            }
+        }
+
+        if (this.isPicklist) {
+            this.template.querySelector('c-ge-form-field-picklist').reset();
+            this.handlePicklistChange();
+        }
+    }
+
+    @api
+    set recordTypeId(id) {
+        this._recordTypeId = id;
+        this.setRecordTypeIdOnChildComponents();
+    }
+
+    get recordTypeId() {
+        return this._recordTypeId;
+    }
+
+    setRecordTypeIdOnChildComponents() {
+        if (this.isPicklist) {
+            this.template.querySelector('c-ge-form-field-picklist')
+                .recordTypeId = this.recordTypeId;
+        }
+    }
+
+    fireLookupRecordSelectEvent() {
+        this.dispatchEvent(new CustomEvent(
+            'lookuprecordselect',
+            {
+                detail: {
+                    value: this.value,
+                    displayValue: this.value,
+                    fieldApiName: this.fieldApiName,
+                    objectMappingDevName: this.objectMappingDevName
+                }
+            }
+        ));
+    }
+
+    /**
+     * @description Returns the name of the RecordType that corresponds to a RecordType Id.
+     *              This method references this component's objectInfo.recordTypeInfos
+     *              property.
+     * @param Id The Id of the RecordType.
+     * @returns {string|null} The name of the RecordType or null if the RecordType was
+     *          not found.
+     */
+    getRecordTypeNameById(Id) {
+        if (this.objectDescribeInfo &&
+            this.objectDescribeInfo.recordTypeInfos &&
+            this.objectDescribeInfo.recordTypeInfos[Id]) {
+            return this.objectDescribeInfo.recordTypeInfos[Id].name;
+        } else {
+            return null;
+        }
+    }
+
+    renderedCallback() {
+        if (this.value && this.isLookup) {
+            // If this field is a Lookup and has a value when connected,
+            // fire event so that the form knows to populate related fields
+            // and set recordTypeId on sibling fields.
+            this.fireLookupRecordSelectEvent();
         }
     }
 
