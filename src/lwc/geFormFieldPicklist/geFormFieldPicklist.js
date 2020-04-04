@@ -13,10 +13,11 @@ export default class GeFormFieldPicklist extends LightningElement {
     @track _objectDescribeInfo;
     @track picklistValues;
     @track defaultRecordTypeId;
+    _recordTypeId;
 
     @wire(getPicklistValues, {
         fieldApiName: '$fullFieldApiName',
-        recordTypeId: '$defaultRecordTypeId' })
+        recordTypeId: '$_recordTypeId' })
     wiredPicklistValues({error, data}) {
         if(data) {
             this.picklistValues = data.values;
@@ -31,6 +32,9 @@ export default class GeFormFieldPicklist extends LightningElement {
         this._objectDescribeInfo = val;
         if(val) {
             this.defaultRecordTypeId = val.defaultRecordTypeId;
+            if (!this.recordTypeId) {
+                this.recordTypeId = this.defaultRecordTypeId;
+            }
         } else {
             this.defaultRecordTypeId = null;
         }
@@ -70,6 +74,26 @@ export default class GeFormFieldPicklist extends LightningElement {
     @api
     resetCustomValidity() {
         this.setCustomValidity('');
+    }
+
+    @api
+    reset() {
+        this.recordTypeId = this.defaultRecordTypeId;
+    }
+
+    @api
+    get recordTypeId() {
+        return this._recordTypeId;
+    }
+
+    set recordTypeId(id) {
+        this._recordTypeId = id || this.defaultRecordTypeId;
+    }
+
+    connectedCallback() {
+        if (!this.recordTypeId) {
+            this.recordTypeId = this.defaultRecordTypeId;
+        }
     }
 
 }
