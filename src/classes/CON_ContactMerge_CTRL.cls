@@ -183,7 +183,7 @@ public with sharing class CON_ContactMerge_CTRL {
     public Integer pageNumber {
         get {
             return drsSetController.getPageNumber();
-            }
+        }
         set;
     } 
 
