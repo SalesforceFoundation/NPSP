@@ -118,14 +118,14 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description Standard set controller variables
     */ 
-    public ApexPages.StandardSetController stdSetCon {
+    public ApexPages.StandardSetController drsSetController {
         get {
-            if(stdSetCon == null){ 
-                stdSetCon = new ApexPages.StandardSetController
+            if(drsSetController == null){ 
+                drsSetController = new ApexPages.StandardSetController
                     (Database.getQueryLocator(constructDRSSOQL())); 
-                stdSetCon.setPageSize(pageSize);    
+                drsSetController.setPageSize(pageSize);    
             }
-            return stdSetCon;
+            return drsSetController;
         }
         set;
      }
@@ -158,7 +158,7 @@ public with sharing class CON_ContactMerge_CTRL {
     
     public Boolean hasNext {
         get {
-            return stdSetCon.getHasNext();
+            return drsSetController.getHasNext();
         }
         set;
     }
@@ -171,7 +171,7 @@ public with sharing class CON_ContactMerge_CTRL {
     
     public Boolean hasPrevious {
         get {
-            return stdSetCon.getHasPrevious();
+            return drsSetController.getHasPrevious();
         }
         set;
     }
@@ -182,7 +182,7 @@ public with sharing class CON_ContactMerge_CTRL {
     
     public Integer pageNumber {
         get {
-            return stdSetCon.getPageNumber();
+            return drsSetController.getPageNumber();
             }
         set;
     } 
@@ -1126,21 +1126,21 @@ public with sharing class CON_ContactMerge_CTRL {
      * @return List<DuplicateRecordSet> Returns the current list of Duplicate Record Sets
      */
     public List<DuplicateRecordSet> getDuplicateRecordSets() {
-        return (List<DuplicateRecordSet>)stdSetCon.getRecords();
+        return (List<DuplicateRecordSet>)drsSetController.getRecords();
     }
 
     /***********************************************************************************************
     * @description Calculates total number of pages of Duplicate Record Sets
     */
     public Integer getTotalPages() {
-        return (Integer)Math.ceil(Decimal.valueOf(stdSetCon.getResultSize())/pageSize);
+        return (Integer)Math.ceil(Decimal.valueOf(drsSetController.getResultSize())/pageSize);
     }
 
     /***********************************************************************************************
     * @description Fetches the records to be displayed on first page of Duplicate Record Sets
     */    
     public void firstPage() {
-        stdSetCon.first();
+        drsSetController.first();
         listDuplicateRecordSets = getDuplicateRecordSets();
     }
     
@@ -1149,7 +1149,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */ 
     
     public void previousPage() {
-        stdSetCon.previous();
+        drsSetController.previous();
         listDuplicateRecordSets = getDuplicateRecordSets();
     }   
         
@@ -1158,7 +1158,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     
     public void nextPage() {
-        stdSetCon.next();
+        drsSetController.next();
         listDuplicateRecordSets = getDuplicateRecordSets();     
     }
     
@@ -1167,7 +1167,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */ 
     
     public void lastPage() {
-        stdSetCon.last();
+        drsSetController.last();
         listDuplicateRecordSets = getDuplicateRecordSets();    
     }
 
