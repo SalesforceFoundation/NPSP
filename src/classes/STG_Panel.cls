@@ -304,6 +304,25 @@ public with sharing virtual class STG_Panel {
     }
 
     /*******************************************************************************************************
+    * @description list of SelectOptions for Opportunity Contact Roles
+    */
+    static public list<SelectOption> listSOContactRoles {
+        get {
+            if (listSOContactRoles == null) {
+                listSOContactRoles = new list<SelectOption>();
+                listSOContactRoles.add(new SelectOption('', Label.stgLabelNone));
+                Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role;
+                List<Schema.PicklistEntry> P = F.getPicklistValues();
+                for(Schema.PicklistEntry pe : P) {
+                    listSOContactRoles.add(new SelectOption(pe.getValue(), pe.getLabel()));
+                }
+            }
+            return listSOContactRoles;
+        }
+        private set;
+    }
+
+    /*******************************************************************************************************
     * @description list of SelectOptions for Opportunity Types
     */
     static public list<SelectOption> listSOOppTypes {

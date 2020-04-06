@@ -33,11 +33,18 @@
 * @group Settings
 * @description Controller for the DataBoundMultiSelect component used in 
 * many of our settings pages.  It basically takes a sobject field that
-* contains a semicolon separated string of values, and displays them in
+* contains a semicolon separated String of values, and displays them in
 * a multiselect picklist.  On saving, it renders the selections back into
-* a single semicolon separated string of values.
+* a single semicolon separated String of values.
 */
 public with sharing class STG_DataBoundMultiSelect_CTRL {
+
+    /*********************************************************************************************************
+    * @description Separator used to separate picklist field values.
+    * It is used to separate picklist field labels when the page is in read mode, and
+    * to separate picklist field API values when they are being saved.
+    */
+    private static final String SEPARATOR = ';';
 
     /*********************************************************************************************************
     * @description The list of SelectOptions 
@@ -62,7 +69,7 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     /*********************************************************************************************************
     * @description The field on the object the control is databinding to 
     */
-    public string strField { get; set; }
+    public String strField { get; set; }
     
     /*********************************************************************************************************
     * @description The control's constructor 
@@ -73,12 +80,13 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     }
     
     /*********************************************************************************************************
-    * @description A semicolon separated string of values pulled from the object's field 
+    * @description Values are displayed as a semicolon separated labels selected 
+    * for the picklist field when the page is in view (read) mode.
     */
-    public string strValues { 
+    public String strValues {
         get {
             if (strValues == null) {
-                strValues = convertApiToLabel(String.valueOf(sobjBinding.get(strField)));
+                strValues = getPicklistLabels(String.valueOf(sobjBinding.get(strField)));
             }
             return strValues;
         }
@@ -86,65 +94,67 @@ public with sharing class STG_DataBoundMultiSelect_CTRL {
     }
 
     /*********************************************************************************************************
-    * @description The list of strings values databound to the object's field.  Setting this list will
-    * save those values into the object's field.
+    * @description A multi-select picklist field API values for the specified picklist field when the page is in edit mode.  
+    * Setting this list will save those values into the object's field.
     */
-    public list<string> listStrValues {
+    public List<String> listStrValues { 
         get {
             String apiValues = (String) String.valueOf(sobjBinding.get(strField));
             if (listStrValues == null && apiValues != null) {
-                listStrValues = apiValues.split(';',0);
+                listStrValues = apiValues.split(SEPARATOR, 0);
             }
             return listStrValues;
         }
         set {
-            listStrValues = value;
-            String apiValues = '';
-            for (string str : listStrValues) {
-                apiValues += str + ';';
-            }
-            if (apiValues != '') {
-                apiValues = apiValues.left(apiValues.length()-1);
-            }
-            sobjBinding.put(strField, apiValues);
-            
-            strValues = convertApiToLabel(apiValues);
+            listStrValues = value;//assign the picklist field API values
+            strValues = null;//reset the picklist field labels
+
+            //store the API values as a semiclon separated values into the picklist field
+            String apiValues = listStrValues == null ? '' : String.join(listStrValues, SEPARATOR);
+            sobjBinding.put(strField, apiValues);            
         }
     }
 
     /**
-    * @description Convert the api value into the label for display
-    * @param apiValues The api value to be converted
+    * @description Maps specified picklist field API values into labels
+    * @param apiValues Semicolon separated API values
+    * @return String Semicolon separated labels
     */
-    private String convertApiToLabel(String apiValues) {
-        if (String.isBlank(apiValues) || listSelectOption == null) {
-            return apiValues;
+    private String getPicklistLabels(String apiValues) {
+        String labels = '';
+
+        if (String.isBlank(apiValues)) {
+            return labels;
         }
 
-        Map<String, String> apiToLabelMap = constructApiToLabelMap();
-        String labelValues = '';
+        Map<String, String> valueByLabel = getPicklistValueByLabel();
 
-        for (String apiValue : apiValues.split(';', 0)) {
-            
-            labelValues += apiToLabelMap.get(apiValue) + ';';
+        for (String apiValue : apiValues.split(SEPARATOR, 0)) { 
+            if (String.isBlank(labels)) {
+                labels = valueByLabel.get(apiValue);
+            } else {      
+                labels += SEPARATOR + valueByLabel.get(apiValue);
+            }
         }
 
-        labelValues = labelValues.left(labelValues.length()-1);
-
-        return labelValues;
+        return labels;
     }
 
     /**
-    * @description Construct the Api to Label map from the passed in SelectOption
-    * @return Map<String, String>
+    * @description Constructs the picklist field SelectOption field values and labels
+    * @return Map<String, String> Value by the label map
     */
-    private Map<String, String> constructApiToLabelMap() {
-        Map<String, String> apiToLabelMap = new Map<String, String>();
+    private Map<String, String> getPicklistValueByLabel() {
+        Map<String, String> valueByLabel = new Map<String, String>();
+
+        if (listSelectOption == null) {
+            return valueByLabel;
+        }
 
         for (SelectOption option : listSelectOption) {
-            apiToLabelMap.put(option.getValue(), option.getLabel());
+            valueByLabel.put(option.getValue(), option.getLabel());
         }
 
-        return apiToLabelMap;
+        return valueByLabel;
     }
 }

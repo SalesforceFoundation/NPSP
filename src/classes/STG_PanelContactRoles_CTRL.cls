@@ -198,90 +198,90 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
     /**
     * @description The current setting being stored on the Opportunity Contact Role Default Role
     */
-    public String individualOppsContactRole {
+    public String selectedOptionDefaultContactRole {
         get {
-            individualOppsContactRole =
+            selectedOptionDefaultContactRole =
                 STG_Panel.getPicklistLabelFromValue(
                     'OpportunityContactRole',
                     'Role',
                     STG_Panel.stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c
                 );
-            return individualOppsContactRole;
+            return selectedOptionDefaultContactRole;
         }set;
     }
 
     /**
     * @description The current setting being stored on the Contact Role for Organizational Opps
     */
-    public String organizationOppsContactRole {
+    public String selectedOptionOrgDefaultContactRole {
         get {
-            organizationOppsContactRole =
+            selectedOptionOrgDefaultContactRole =
                 STG_Panel.getPicklistLabelFromValue(
                     'OpportunityContactRole',
                     'Role',
                     STG_Panel.stgService.stgCon.Contact_Role_for_Organizational_Opps__c
                 );
-            return organizationOppsContactRole;
+            return selectedOptionOrgDefaultContactRole;
         }set;
     }
 
     /**
     * @description The current setting being stored on the Household Matched Donor Role
     */
-    public String matchedDonorRole {
+    public String selectedOptionMatchedDonorRole {
         get{
-            matchedDonorRole =
+            selectedOptionMatchedDonorRole =
                 STG_Panel.getPicklistLabelFromValue(
                     'OpportunityContactRole',
                     'Role',
                     STG_Panel.stgService.stgHH.Matched_Donor_Role__c
                 );
-            return matchedDonorRole;
+            return selectedOptionMatchedDonorRole;
         }set;
     }
 
     /**
     * @description The current setting being stored on the Household Member Contact Role
     */
-    public String hhMemberContactRole {
+    public String selectedOptionHHMemberContactRole {
         get {
-            hhMemberContactRole =
+            selectedOptionHHMemberContactRole =
                 STG_Panel.getPicklistLabelFromValue(
                     'OpportunityContactRole',
                     'Role',
                     STG_Panel.stgService.stgHH.npo02__Household_Member_Contact_Role__c
                 );
-            return hhMemberContactRole;
+            return selectedOptionHHMemberContactRole;
         }set;
     }
 
     /**
     * @description The current setting being stored on the Honoree Opportunity Contact Role
     */
-    public String honoreeOppContactRole {
+    public String selectedOptionHonoreeContactRole {
         get {
-            honoreeOppContactRole =
+            selectedOptionHonoreeContactRole =
                 STG_Panel.getPicklistLabelFromValue(
                     'OpportunityContactRole',
                     'Role',
                     STG_Panel.stgService.stgCon.Honoree_Opportunity_Contact_Role__c
                 );
-            return honoreeOppContactRole;
+            return selectedOptionHonoreeContactRole;
         }set;
     }  
 
     /**
     * @description The current setting being stored on the Notification Recipient Opportunity Contact Role
     */
-    public String recipientOppContactRole {
+    public String selectedOptionNotficationRecipientRole {
         get{
-        recipientOppContactRole =
+        selectedOptionNotficationRecipientRole =
             STG_Panel.getPicklistLabelFromValue(
                 'OpportunityContactRole',
                 'Role',
                 STG_Panel.stgService.stgCon.Notification_Recipient_Opp_Contact_Role__c
             );
-            return recipientOppContactRole;
+            return selectedOptionNotficationRecipientRole;
         }set;
     }
 }
