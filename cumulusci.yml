@@ -330,7 +330,7 @@ tasks:
                     LocaleSidKey = 'en_US',
                     EmailEncodingKey = 'UTF-8',
                     LanguageLocaleKey = 'en_US',
-                    ProfileId = [SELECT Id FROM Profile WHERE Name = 'Fundraising and Development'].Id
+                    ProfileId = [SELECT Id FROM Profile WHERE Name = 'System Administrator'].Id
                 );
 
     config_trailhead_task_ownership_marco:

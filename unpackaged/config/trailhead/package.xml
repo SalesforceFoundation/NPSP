@@ -17,10 +17,6 @@
     </types>
     <types>
         <members>Admin</members>
-        <members>Executive Management</members>
-        <members>Fundraising and Development</members>
-        <members>Office Staff</members>
-        <members>Program Staff</members>
         <name>Profile</name>
     </types>
     <types>
