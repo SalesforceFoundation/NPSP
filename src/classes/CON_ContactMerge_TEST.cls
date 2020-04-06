@@ -474,8 +474,8 @@ public class CON_ContactMerge_TEST {
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
 
-    Contact con2 = UTIL_UnitTestData_TEST.getContact();
-    con2.LastName = '2Contact_forTests_Merge';
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
 
         insert new Contact[] {con, con2};
 
@@ -591,7 +591,7 @@ public class CON_ContactMerge_TEST {
         system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
         if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
             system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-          system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
+            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
         } else {
             system.assertEquals(0,[select count() from Account where id=:con.accountId]);
             system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
@@ -960,8 +960,8 @@ public class CON_ContactMerge_TEST {
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(1,[select count() from Contact where id=:con.id]);
 
-      //second contact's account should be deleted
-      system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
+        //second contact's account should be deleted
+        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
 
         system.assertEquals(1,[select count() from Account where id=:con.accountId]);
         //First contact's account id should not have changed
