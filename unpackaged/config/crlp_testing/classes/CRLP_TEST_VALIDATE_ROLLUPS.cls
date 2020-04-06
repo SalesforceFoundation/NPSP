@@ -75,7 +75,8 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     private static final Decimal OPPORTUNITY_AMOUNT_USD = BASE_AMOUNT_USD;
     private static final Decimal OPPORTUNITY_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? BASE_AMOUNT_USD*CURR_EXCHANGE_RATE : BASE_AMOUNT_USD);
     
-    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT = OPPORTUNITY_AMOUNT / 2;
+    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT_USD = BASE_AMOUNT_USD / 2;
+    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? ACCOUNT_SOFT_CREDIT_AMOUNT_USD * CURR_EXCHANGE_RATE : ACCOUNT_SOFT_CREDIT_AMOUNT_USD);
 
     private static final Date MEMBERSHIP_FIRST_DATE = Date.newInstance(BASE_YEAR,6,30);
     private static final Decimal MEMBERSHIP_AMOUNT = 25;
@@ -313,8 +314,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
                 // Validate Account Soft Credits rollup to one Account, only when CRLPs is enabled
                 if (cs.Customizable_Rollups_Enabled__c == true && TEST_ACCOUNT_SOFT_CREDITS == true) {
-                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + ACCOUNT_SOFT_CREDIT_AMOUNT, (Double) a.get('SC_Total__c'), a.Id + ' Acccount.SC_Total__c should be');
-                    assertValue(ACCOUNT_SOFT_CREDIT_AMOUNT * 2, (Double) a.get('Largest_SC_Amount__c'), a.Id + ' Acccount.Largest_SC_Amount__c should be');
+                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT_USD * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + ACCOUNT_SOFT_CREDIT_AMOUNT_USD, 
+                        (Double) a.get('SC_Total__c'), a.Id + ' Acccount.SC_Total__c should be');
+                    assertValue(ACCOUNT_SOFT_CREDIT_AMOUNT_USD * 2, (Double) a.get('Largest_SC_Amount__c'), a.Id + ' Acccount.Largest_SC_Amount__c should be');
                 }
 
             } else if (a.Id != orgAcct.Id) {
