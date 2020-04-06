@@ -46,9 +46,7 @@
                         header: payload.modalProperties.header || '',
                         showCloseButton: payload.modalProperties.showCloseButton || true,
                         cssClass: component.getName() + ' custom-modal ' + payload.modalProperties.cssClass,
-                        closeCallback: payload.modalProperties.closeCallback || function () {
-                            component.set('v.isLoading', false);
-                        },
+                        closeCallback: payload.modalProperties.closeCallback,
                         body: modalBody,
                     });
 
