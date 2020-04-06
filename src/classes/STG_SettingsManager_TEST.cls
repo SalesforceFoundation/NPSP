@@ -181,7 +181,7 @@ private with sharing class STG_SettingsManager_TEST {
     * actual values will stay in Api format
     */
     @isTest
-    private static void shouldConvertToLabelForDispalyAndApiValueForSaving() {
+    private static void shouldConvertToLabelForDisplayAndApiValueForSaving() {
         STG_DataBoundMultiSelect_CTRL ctrl = new STG_DataBoundMultiSelect_CTRL();
         List<SelectOption> options = new List<SelectOption> {
             new SelectOption('value1', 'label1'),
@@ -190,6 +190,7 @@ private with sharing class STG_SettingsManager_TEST {
         };
 
         Contact con = new Contact();
+
         con.npo02__Naming_Exclusions__c = 'value1;value2';
         ctrl.sobjBinding = con;
         ctrl.listSelectOption = options;
