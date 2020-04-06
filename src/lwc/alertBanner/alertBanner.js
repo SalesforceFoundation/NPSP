@@ -16,7 +16,6 @@ export default class AlertBanner extends LightningElement {
     @api assistText;
     @api icon;
     @api size;
-    @api show;
     @api message;
 
     defaultClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_';
@@ -69,16 +68,6 @@ export default class AlertBanner extends LightningElement {
         }
 
         return this.size
-    }
-
-    get displayAlert() {
-        const displayDefault = true;
-
-        if(isEmpty(this.show)) {
-            return displayDefault;
-        }
-
-        return this.show;
     }
 
     get alertMessage() {
