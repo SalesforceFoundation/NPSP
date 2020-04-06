@@ -291,7 +291,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @return {string}: Status of the payment charge request
     */
     getPaymentStatus(response) {
-        return response.body.status || response.status || CUSTOM_LABELS.commonUnknownError;
+        return response.body.status || response.status || this.CUSTOM_LABELS.commonUnknownError;
     }
 
     /*******************************************************************************
