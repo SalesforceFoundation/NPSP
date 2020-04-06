@@ -73,7 +73,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @param {object} message: Message received from iframe
     */
     async handleMessage(message) {
-        fireEvent(null, 'tokenResponse', message); // move so we can handle error or token
+        fireEvent(null, 'tokenResponse', message);
         if (message.error) {
             this.alert = {
                 theme: 'error',
@@ -82,6 +82,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 variant: 'inverse',
                 icon: 'utility:error'
             };
+            /** This event can be used to extend handling payment errors at the form level by adding additional detail
+             * objects.
+             */
+            let pageLevelMessage = this.CUSTOM_LABELS.gePaymentProcessErrorGeneric + '\n\n' +
+            fireEvent(null, 'paymentError', {
+               message: this.CUSTOM_LABELS.gePaymentProcessErrorGeneric
+            });
         } else if (message.token) {
             this.token = message.token;
         } else if (message.isLoaded) {
