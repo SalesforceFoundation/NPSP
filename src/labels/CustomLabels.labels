@@ -6074,6 +6074,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>There was an error processing your payment. Please review your payment information and try again. Alternatively, you can select Do Not Charge Card to enter the pledged donation without payment processing.</value>
     </labels>
     <labels>
+        <fullName>gePaymentProcessingErrorBanner</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Banner error message for payment processing error.</shortDescription>
+        <value>There was an error processing the payment.</value>
+    </labels>
+    <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

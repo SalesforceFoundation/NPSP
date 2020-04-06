@@ -5,14 +5,15 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
+    @api cardHolderName;
 
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    
-    tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
     @track domain;
     @track visualforceOrigin;
     @track isLoading = true;
-    @api cardHolderName;
+    @track alert = {};
+
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
 
 
     get tokenizeCardHeader() {
@@ -74,7 +75,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     async handleMessage(message) {
         fireEvent(null, 'tokenResponse', message); // move so we can handle error or token
         if (message.error) {
-            // Error with tokenization
+            this.alert = {
+                theme: 'error',
+                show: true,
+                message: this.CUSTOM_LABELS.gePaymentProcessingErrorBanner,
+                variant: 'inverse',
+                icon: 'utility:error'
+            };
         } else if (message.token) {
             this.token = message.token;
         } else if (message.isLoaded) {
