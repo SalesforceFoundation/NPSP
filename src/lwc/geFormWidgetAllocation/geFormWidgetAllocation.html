@@ -1,6 +1,5 @@
 <template>
-    <c-alert-banner
-            show={hasAlert}
+    <c-alert-banner if:true={hasAlert}
             theme={alertClass}
             assist-text="Allocation Error"
             icon= {alertIcon}
