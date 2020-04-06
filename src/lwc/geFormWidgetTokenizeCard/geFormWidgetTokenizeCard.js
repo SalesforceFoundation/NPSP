@@ -3,7 +3,7 @@ import GeLabelService from 'c/geLabelService';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
-import { handleError } from 'c/utilTemplateBuilder';
+import { format } from 'c/utilCommon';
 // TODO: maybe import data import token field reference?
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
@@ -89,12 +89,17 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 variant: 'inverse',
                 icon: 'utility:error'
             };
+            let errorValues = Object.values(message.error).join(', ');
+            let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errorValues];
+            // TODO: Add newline characters to the final string
+            let pageLevelMessage = this.CUSTOM_LABELS.gePaymentProcessErrorGeneric +
+                format(this.CUSTOM_LABELS.gePaymentServicesErrorResponse, labelReplacements);
+
             /** This event can be used to extend handling payment errors at the form level by adding additional detail
              * objects.
              */
-            let pageLevelMessage = this.CUSTOM_LABELS.gePaymentProcessErrorGeneric + '\n\n' +
             fireEvent(null, 'paymentError', {
-               message: this.CUSTOM_LABELS.gePaymentProcessErrorGeneric
+               message: pageLevelMessage
             });
         } else if (message.token) {
             this.token = message.token;
