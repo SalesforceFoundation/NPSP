@@ -834,11 +834,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * Handle payment errors at the form level
      * @param event The paymentError event object
      */
-    handlePaymentError(payload) {
+    handlePaymentError(event) {
         this.pageLevelErrorMessageList = [{
             index: 0,
-            errorMessage: payload.message
+            errorMessage: event.message[0],
+            multilineMessage: event.message[1]
         }];
+
         this.hasPageLevelError = true;
     }
 

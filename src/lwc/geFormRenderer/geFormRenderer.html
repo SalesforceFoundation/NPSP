@@ -53,7 +53,10 @@
                             <template for:each={pageLevelErrorMessageList}
                                       for:item='errorMessageWrapper'>
                                 <li key={errorMessageWrapper.index}>
-                                    {errorMessageWrapper.errorMessage}
+                                    <p>{errorMessageWrapper.errorMessage}</p>
+                                    <p class="slds-p-top_small" if:true={errorMessageWrapper.multilineMessage}>
+                                        {errorMessageWrapper.multilineMessage}
+                                    </p>
                                 </li>
                             </template>
                         </ul>
