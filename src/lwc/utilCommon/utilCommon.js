@@ -159,7 +159,7 @@ const shiftToIndex = (array, oldIndex, newIndex) => {
  * Replaces placeholders in Custom Labels ({0}, {1}, etc) with provided values.
  *
  * @param {string} string: Custom Label to be formatted.
- * @param {list} replacements: List of string to use as replacements.
+ * @param {array} replacements: List of string to use as replacements.
  * @return {string} formattedString: Formatted custom label
  */
 const format = (string, replacements) => {

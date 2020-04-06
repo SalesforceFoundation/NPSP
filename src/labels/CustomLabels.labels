@@ -6074,7 +6074,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>There was an error processing the payment.</value>
     </labels>
     <labels>
-        <fullName>gePaymentServicesName</fullName>
+        <fullName>gePaymentServicesErrorResponse</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
