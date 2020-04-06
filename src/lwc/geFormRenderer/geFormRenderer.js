@@ -152,6 +152,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
+        registerListener('paymentError', this.handlePaymentError, this)
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -827,6 +828,18 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api
     get isUpdateActionDisabled() {
         return this.dataImport && this.dataImport[STATUS_FIELD.fieldApiName] === 'Imported';
+    }
+
+    /**
+     * Handle payment errors at the form level
+     * @param event The paymentError event object
+     */
+    handlePaymentError(payload) {
+        this.pageLevelErrorMessageList = [{
+            index: 0,
+            errorMessage: payload.message
+        }];
+        this.hasPageLevelError = true;
     }
 
     /**
