@@ -352,10 +352,7 @@ class GeLabelService {
         geLabelTemplateInfoNameField,
         gePaymentProcessErrorGeneric,
         gePaymentProcessingErrorBanner,
-<<<<<<< HEAD
         gePaymentServicesErrorResponse,
-=======
->>>>>>> swap to using the alert banner inside the tokenize widget and sync GAU widget attributes referencing the banner
         geSearchPlaceholder,
         geSelectPlaceholder,
         geTabBatchHeader,
