@@ -117,4 +117,34 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             if 'slds-hide' in classname:
                 self.builtin.log("As expected Advanced Mapping is not enabled by default")
             else:
-                raise Exception("Advanced Mapping is already enabled. Org should not have this enabled by default")                  
+                raise Exception("Advanced Mapping is already enabled. Org should not have this enabled by default") 
+            
+            
+    def Enable_advanced_mapping_if_not_enabled(self):
+        """Checks if advanced mapping is Enabled and enables if not enabled"""
+        locator=npsp_lex_locators['id'].format("navigateAdvancedMapping")
+        if self.npsp.check_if_element_exists(locator):
+            ele=self.selenium.get_webelement(locator)
+            classname=ele.get_attribute("class") 
+            if 'slds-hide' in classname:
+                self.builtin.log("Advanced Mapping is not enabled by default")
+                self.click_toggle_button("Advanced Mapping")
+                self.wait_for_message("Advanced Mapping is enabled")
+                self.npsp.choose_frame("Nonprofit Success Pack Settings")
+            else:
+                self.builtin.log("Advanced Mapping is already enabled")        
+            
+    def verify_gift_entry_is_not_enabled(self):
+        """Verifies that gift entry is not enabled by default 
+           If already enabled, disables it"""
+        locator=npsp_lex_locators['id'].format("enableGiftEntryToggle")
+        if self.npsp.check_if_element_exists(locator):
+            ele=self.selenium.get_webelement(locator)
+            att=ele.get_attribute("checked") 
+            if att=="true":
+                self.builtin.log("Gift Entry is already enabled. Org should not have this enabled by default")
+                self.click_toggle_button("Gift Entry")
+                self.wait_for_message("Gift Entry Disabled")
+            else:
+                self.builtin.log("As expected Gift Entry is Disabled")    
+                                          
