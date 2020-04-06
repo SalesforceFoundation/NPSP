@@ -60,6 +60,7 @@
                 <behavior>Edit</behavior>
                 <field>npe03__Installments__c</field>
             </layoutItems>
+            <layoutItems></layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
                 <field>%%%NAMESPACE%%%InstallmentFrequency__c</field>
