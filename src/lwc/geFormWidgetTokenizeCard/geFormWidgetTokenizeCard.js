@@ -7,7 +7,6 @@ import { format } from 'c/utilCommon';
 // TODO: maybe import data import token field reference?
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
-    @api cardHolderName;
 
     @track domain;
     @track visualforceOrigin;
@@ -31,11 +30,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     renderedCallback() {
         this.registerPostMessageListener();
-    }
-
-    @api
-    isValid() {
-        return true;
     }
 
     /*******************************************************************************

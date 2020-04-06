@@ -8,14 +8,14 @@
         </c-ge-batch-gift-entry-header>
         <br/>
     </template>
-    
+
     <c-ge-form-renderer
             batch-id={recordId}
-            onbatchsubmit={handleBatchSubmit}
-            onsinglesubmit={handleSingleSubmit}
+            onsubmit={handleSubmit}
             onsectionsretrieved={handleSectionsRetrieved}
             onpermissionerror={handlePermissionErrors}
-            ontogglemodal={handleReviewDonationsModal}>
+            ontogglemodal={handleReviewDonationsModal}
+            loading-text={loadingText}>
     </c-ge-form-renderer>
 
     <template if:false={isPermissionError}>
