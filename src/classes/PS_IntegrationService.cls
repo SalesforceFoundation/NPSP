@@ -43,7 +43,7 @@ global class PS_IntegrationService {
             'for this elevate customer';
     private static final String ELEVATE_ONBOARDING_ERROR = 'An error has occurred with ' +
             'onboarding this elevate customer: ';
-    //Are there more failure points for elevate onboarding ?
+    @TestVisible private static final String API_KEY = 'apiKey';
 
     /*******************************************************************************************************
     * @description Provides an endpoint for the Payment Services Integrations package
@@ -64,22 +64,19 @@ global class PS_IntegrationService {
 
         if (paymentsConfiguration != null) {
             for (Map<String, String> valueMap : paymentsConfiguration) {
-                String apiKeyFieldLabel = 'apiKey';
-                if (valueMap.keySet().contains(apiKeyFieldLabel)) {
-                    psConfiguration.apiKey__c = valueMap.get(apiKeyFieldLabel);
+                if (valueMap.keySet().contains(API_KEY)) {
+                    psConfiguration.apiKey__c = valueMap.get(API_KEY);
                     if (useFallbackApiKey(psConfiguration, makanaConfiguration)) {
                         // Fall-back to the Makana API key if available
                         for (Map<String, String> makanaValueMap : makanaConfiguration) {
-                            if (makanaValueMap.keySet().contains(apiKeyFieldLabel)) {
-                                psConfiguration.apiKey__c = makanaValueMap.get(apiKeyFieldLabel);
+                            if (makanaValueMap.keySet().contains(API_KEY)) {
+                                psConfiguration.apiKey__c = makanaValueMap.get(API_KEY);
                                 break;
                             }
                         }
                     }
 
-                    if (psConfiguration.apiKey__c == null || String.isBlank(psConfiguration.apiKey__c)) {
-                        // If this is a significant point of failure, how do we want to alert the customer/caller ?
-                        // NPSP Error Handler?
+                    if (String.isBlank(psConfiguration.apiKey__c)) {
                         throw new IntegrationServiceException(API_KEY_ELEVATE_ERROR);
                     }
                 }
@@ -125,7 +122,6 @@ global class PS_IntegrationService {
         try {
             upsert psConfiguration;
         } catch (Exception ex) {
-            // If this is a significant point of failure, how do we want to alert the customer/caller ?
             throw new IntegrationServiceException(ELEVATE_ONBOARDING_ERROR + ex.getMessage());
         }
 
@@ -133,8 +129,7 @@ global class PS_IntegrationService {
 
     private static Boolean useFallbackApiKey (Payment_Services_Configuration__c psConfiguration,
             List<Map<String, String>> makanaConfiguration) {
-        return ((psConfiguration.apiKey__c == null ||
-                String.isBlank(psConfiguration.apiKey__c))
+        return (String.isBlank(psConfiguration.apiKey__c)
                 && makanaConfiguration != null);
     }
 

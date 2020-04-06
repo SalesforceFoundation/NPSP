@@ -42,7 +42,6 @@ private class PS_IntegrationService_TEST {
     private static Map<String, Config> makanaConfigParams;
     private static Map<String, Config> paymentConfigParams;
 
-
     static {
         buildConfigurationParams(); // Build Test Configuration Parameters
     }
@@ -83,7 +82,7 @@ private class PS_IntegrationService_TEST {
     @IsTest
     private static void setConfigurationWithFallBackApiKey() {
 
-        updateConfigurationParameter('apiKey', null,
+        updateConfigurationParameter(PS_IntegrationService.API_KEY, null,
                         configParams.get(PS_IntegrationService.PAYMENTS_APPLICATION_TYPE));
 
         Test.startTest();
@@ -96,16 +95,16 @@ private class PS_IntegrationService_TEST {
         ];
         Test.stopTest();
         System.assert(!configurations.isEmpty());
-        System.assertEquals(makanaConfigParams.get('apiKey').value, configurations[0].apiKey__c);
+        System.assertEquals(makanaConfigParams.get(PS_IntegrationService.API_KEY).value, configurations[0].apiKey__c);
     }
 
     @IsTest
     private static void setConfigurationWithInvalidApiKey() {
 
-        updateConfigurationParameter('apiKey', null,
+        updateConfigurationParameter(PS_IntegrationService.API_KEY, null,
                 configParams.get(PS_IntegrationService.PAYMENTS_APPLICATION_TYPE));
 
-        updateConfigurationParameter('apiKey', null,
+        updateConfigurationParameter(PS_IntegrationService.API_KEY, null,
                 configParams.get(PS_IntegrationService.MAKANA_APPLICATION_TYPE));
 
         Test.startTest();
