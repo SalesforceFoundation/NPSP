@@ -84,7 +84,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
 
         if (!addresses.isEmpty()){
             for (Address__c a : addresses) {
-                AddressVerifier addrVerify = new AddressVerifier(a)
+                Verifier addrVerify = new Verifier(a)
                     .withAddressSettings(settings)
                     .withEndPoint(endPoint)
                     .verifyAddress();
@@ -159,7 +159,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
     /**
     * @description Address Verification Wrapper Class
     */
-    public class AddressVerifier {
+    public class Verifier {
 
         private Address__c address;
         private String endPoint;
@@ -171,7 +171,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         private String subPremise;
 
         /** @description Constructor with the address to verify */
-        public AddressVerifier(Address__c addr) {
+        public Verifier(Address__c addr) {
             this.address = addr;
         }
 
@@ -179,7 +179,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         * @description Pass an instance of the AddressVerificationSettings object
         * @return Instance
         * */
-        public AddressVerifier withAddressSettings(Addr_Verification_Settings__c settings) {
+        public Verifier withAddressSettings(Addr_Verification_Settings__c settings) {
             this.settings = settings;
             return this;
         }
@@ -188,7 +188,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         * @description Pass the endpoint to use
         * @return Instance
         */
-        public AddressVerifier withEndPoint(String endPoint) {
+        public Verifier withEndPoint(String endPoint) {
             this.endPoint = endPoint;
             return this;
         }
@@ -197,7 +197,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
        * @description Verify this Aaddress record and return an instance of this class
        * @return Instance
        */
-        public AddressVerifier verifyAddress() {
+        public Verifier verifyAddress() {
 
             if (settings == null || settings.Auth_Token__c == null || endPoint == null) {
                 address.Verified__c = false;
@@ -205,7 +205,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
                 return this;
             }
 
-            if (!calloutToAddressService()) {
+            if (!sendAdressVerificationRequest()) {
                 return this;
             }
 
@@ -248,7 +248,7 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
         * @return Boolean True if the verification callout completes with zero errors and the address
         * is able to be properly verified.
         */
-        private Boolean calloutToAddressService() {
+        private Boolean sendAdressVerificationRequest() {
             Http h = new Http();
             HttpRequest req = new HttpRequest();
             req.setMethod('GET');
@@ -429,10 +429,10 @@ public with sharing class ADDR_GoogleGeoAPI_Validator implements ADDR_IValidator
             // US addresses always format as StreetNumber StreetName, while many others are reversed
             // If the country isn't this specified hardcoded list, try to figure it out based on whether
             // the first character of the Formatted_Address response is a letter or a number.
-            Boolean intlFormattedStreet = !ADDR_Validator_UTIL.alwaysFormatAsStreetNumberBeforeStreetName(mailingCountry)
+            Boolean shouldStartWithStreetName = !ADDR_Validator_UTIL.isStreetNumberBeforeStreetName(mailingCountry)
                 && formattedAddress.left(1).isAlpha();
 
-            if (intlFormattedStreet) {
+            if (shouldStartWithStreetName) {
                 verified_street = streetName + ' ' + streetNumber + ' ' + intersection;
             } else {
                 verified_street = streetNumber + ' ' + streetName + ' ' + intersection;

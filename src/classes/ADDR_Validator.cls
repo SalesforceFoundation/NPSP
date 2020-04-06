@@ -124,6 +124,7 @@ public with sharing class ADDR_Validator {
         if (!isInstanceOfAddress) {
             // The objects we create dynamically need to implement the ADDR_IValidator interface
             ERR_Handler.processError(new ValidationException(System.Label.Addr_Verification_Wrong_Interface), ERR_Handler_API.Context.ADDR);
+            return;
         }
 
         // Setting the flag to avoid running ADDR_Validator_TDTM again after the verification
