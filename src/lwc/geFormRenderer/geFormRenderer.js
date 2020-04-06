@@ -1388,7 +1388,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
 
                 if (index === Object.keys(fieldList).length) {
-                    if (this.selectedDonorType === CONTACT_LAST_NAME_INFO.objectApiName) {
+                    if (this.selectedDonorType === DONATION_DONOR_TYPE_ENUM.CONTACT1) {
                         return {
                             firstName: firstName,
                             lastName: lastName,
