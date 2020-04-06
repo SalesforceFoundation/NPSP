@@ -6090,6 +6090,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Error from {0}: {1}</value>
     </labels>
     <labels>
+        <fullName>gePaymentProcessingErrorBanner</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Banner error message for payment processing error.</shortDescription>
+        <value>There was an error processing the payment.</value>
+    </labels>
+    <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
