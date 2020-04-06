@@ -182,6 +182,7 @@ import geToastTemplateUpdateSuccess from '@salesforce/label/c.geToastTemplateUpd
 import geWarningFormFieldsModalDeleteSection from '@salesforce/label/c.geWarningFormFieldsModalDeleteSection';
 import gePaymentProcessErrorGeneric from '@salesforce/label/c.gePaymentProcessErrorGeneric';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
+import gePaymentServicesName from '@salesforce/label/c.gePaymentServicesName';
 
 class GeLabelService {
 
@@ -351,6 +352,7 @@ class GeLabelService {
         geLabelTemplateInfoNameField,
         gePaymentProcessErrorGeneric,
         gePaymentProcessingErrorBanner,
+        gePaymentServicesName,
         geSearchPlaceholder,
         geSelectPlaceholder,
         geTabBatchHeader,
