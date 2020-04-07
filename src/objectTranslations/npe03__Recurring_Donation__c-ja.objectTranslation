@@ -223,7 +223,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Closed</masterLabel>
-            <translation>Closed</translation>
+            <translation>完了</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
