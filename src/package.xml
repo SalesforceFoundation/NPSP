@@ -1963,6 +1963,7 @@
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
+        <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
         <members>commonFieldLabel</members>
         <members>commonGauAllocations</members>
@@ -2145,6 +2146,8 @@
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
+        <members>gePS_IntegrationTestInvalidAPIKey</members>
+        <members>gePS_IntegrationTestInvalidConfigParams</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
@@ -3459,6 +3462,7 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
+        <members>Payment_Services_Configuration__c-Payment Cofiguration Layout</members>
         <members>RecurringDonationSchedule__c-Recurring Schedule Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
