@@ -59,7 +59,7 @@ export default class AlertBanner extends LightningElement {
     get alertAssistText() {
         const assistDefault = 'An error has occurred';
 
-        if(isEmpty(this.size)) {
+        if(isEmpty(this.assistText)) {
             return assistDefault;
         }
 
