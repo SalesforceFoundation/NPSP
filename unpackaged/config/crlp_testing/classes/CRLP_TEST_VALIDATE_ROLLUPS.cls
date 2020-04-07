@@ -1,6 +1,6 @@
 /**
 // Created by Michael Smith on 01/26/2018.
-// Last Modified on 04/03/2019 to disable new RD2 functionality and to improve multi-currency support
+// Last Modified on 04/03/2020 to disable new RD2 functionality and to improve multi-currency support
 //
 // - Deploy this using the "deploy_rollup_testing" CCI flow. That will create the necessary target fields
 //   on the Account object for Account-Contact Soft Credit, Account Soft Credit, and Payment Rollup testing.
