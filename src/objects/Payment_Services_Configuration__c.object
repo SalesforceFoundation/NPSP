@@ -179,11 +179,10 @@
         <description>Gateway Id</description>
         <externalId>false</externalId>
         <label>gatewayids</label>
-        <length>255</length>
-        <required>false</required>
+        <length>131072</length>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
     </fields>
     <fields>
         <fullName>iss__c</fullName>
