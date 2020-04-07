@@ -144,6 +144,7 @@ public with sharing class PS_TestPaymentService {
                 parser.nextToken();
                 String status = parser.getText();
                 System.assertEquals(STATUS_FIELD_SUCCESS, status, 'Purchase failed. ' + status);
+                break;
             }
         } 
     }
