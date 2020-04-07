@@ -269,9 +269,9 @@ private with sharing class RD2_ScheduleService_TEST {
         Date nextDonationDate = Date.newInstance(2021, 2, 28);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .withDayOfMonth(String.valueOf(dayOfMonth))
-                .build();
+            .withStartDate(startDate)
+            .withDayOfMonth(String.valueOf(dayOfMonth))
+            .build();
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
         System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for Feb installment');
@@ -294,9 +294,9 @@ private with sharing class RD2_ScheduleService_TEST {
         Date nextDonationDate = Date.newInstance(2021, 2, 28);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .withDayOfMonth(String.valueOf(dayOfMonth))
-                .build();
+            .withStartDate(startDate)
+            .withDayOfMonth(String.valueOf(dayOfMonth))
+            .build();
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
         System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for Feb installment');
@@ -318,9 +318,9 @@ private with sharing class RD2_ScheduleService_TEST {
         Date nextDonationDate = Date.newInstance(2020, 2, 29);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withStartDate(startDate)
-                .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
-                .build();
+            .withStartDate(startDate)
+            .withDayOfMonth(RD2_Constants.DAY_OF_MONTH_LAST_DAY)
+            .build();
 
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(today);
         System.assertEquals(nextDonationDate, service.getNextDonationDate(rd), 'Next Donation Date should match for Feb installment');
@@ -1159,21 +1159,21 @@ private with sharing class RD2_ScheduleService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>{
-                getRecurringDonationMonthlyBuilder()
-                        .withStartDate(startDate)
-                        .withMockId()
-                        .build()
+            getRecurringDonationMonthlyBuilder()
+                .withStartDate(startDate)
+                .withMockId()
+                .build()
         };
 
         Decimal newAmount = 250;
         List<npe03__Recurring_Donation__c> updatedRds = new List<npe03__Recurring_Donation__c>{
-                oldRds[0].clone(true)
+            oldRds[0].clone(true)
         };
         updatedRds[0].npe03__Amount__c = newAmount;
 
         RD2_ScheduleService service = new RD2_ScheduleService();
         Map<Id, npe03__Recurring_Donation__c> rdsNeedUpdate = service.getRecurringDonationsNeedingScheduleUpdates(
-                updatedRds, oldRds, TDTM_Runnable.Action.BeforeUpdate
+            updatedRds, oldRds, TDTM_Runnable.Action.BeforeUpdate
         );
 
         System.assertEquals(1, rdsNeedUpdate.size(), 'Recurring Donation should be marked for update');
@@ -1189,21 +1189,21 @@ private with sharing class RD2_ScheduleService_TEST {
         Date startDate = Date.today().addYears(12);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         List<npe03__Recurring_Donation__c> oldRds = new List<npe03__Recurring_Donation__c>{
-                getRecurringDonationMonthlyBuilder()
-                        .withStartDate(startDate)
-                        .withMockId()
-                        .build()
+            getRecurringDonationMonthlyBuilder()
+                .withStartDate(startDate)
+                .withMockId()
+                .build()
         };
 
         Decimal newAmount = 250;
         List<npe03__Recurring_Donation__c> updatedRds = new List<npe03__Recurring_Donation__c>{
-                oldRds[0].clone(true)
+            oldRds[0].clone(true)
         };
         updatedRds[0].npe03__Amount__c = newAmount;
 
         RD2_ScheduleService service = new RD2_ScheduleService();
         Map<Id, npe03__Recurring_Donation__c> rdsNeedUpdate = service.getRecurringDonationsNeedingScheduleUpdates(
-                updatedRds, oldRds, TDTM_Runnable.Action.BeforeUpdate
+            updatedRds, oldRds, TDTM_Runnable.Action.BeforeUpdate
         );
 
         System.assertEquals(1, rdsNeedUpdate.size(), 'Recurring Donation should be marked for update');
@@ -1543,9 +1543,9 @@ private with sharing class RD2_ScheduleService_TEST {
         final String dayOfMonth = '29';
 
         Map<Integer, Date> nextDonationDateByIndex = new Map<Integer, Date>{
-                0 => Date.newInstance(2021, 1, 29),
-                1 => Date.newInstance(2021, 2, 28),
-                2 => Date.newInstance(2021, 3, 29)
+            0 => Date.newInstance(2021, 1, 29),
+            1 => Date.newInstance(2021, 2, 28),
+            2 => Date.newInstance(2021, 3, 29)
         };
 
         testAndAssertVisualizedInstallments(startDate, dayOfMonth, nextDonationDateByIndex);
@@ -1560,8 +1560,8 @@ private with sharing class RD2_ScheduleService_TEST {
         final String dayOfMonth = '29';
 
         Map<Integer, Date> nextDonationDateByIndex = new Map<Integer, Date>{
-                0 => Date.newInstance(2021, 2, 28),
-                1 => Date.newInstance(2021, 3, 29)
+            0 => Date.newInstance(2021, 2, 28),
+            1 => Date.newInstance(2021, 3, 29)
         };
 
         testAndAssertVisualizedInstallments(startDate, dayOfMonth, nextDonationDateByIndex);
@@ -1576,9 +1576,9 @@ private with sharing class RD2_ScheduleService_TEST {
         final String dayOfMonth = '30';
 
         Map<Integer, Date> nextDonationDateByIndex = new Map<Integer, Date>{
-                0 => Date.newInstance(2020, 1, 30),
-                1 => Date.newInstance(2020, 2, 29),
-                2 => Date.newInstance(2020, 3, 30)
+            0 => Date.newInstance(2020, 1, 30),
+            1 => Date.newInstance(2020, 2, 29),
+            2 => Date.newInstance(2020, 3, 30)
         };
 
         testAndAssertVisualizedInstallments(startDate, dayOfMonth, nextDonationDateByIndex);
@@ -1593,8 +1593,8 @@ private with sharing class RD2_ScheduleService_TEST {
         final String dayOfMonth = '30';
 
         Map<Integer, Date> nextDonationDateByIndex = new Map<Integer, Date>{
-                0 => Date.newInstance(2020, 2, 29),
-                1 => Date.newInstance(2020, 3, 30)
+            0 => Date.newInstance(2020, 2, 29),
+            1 => Date.newInstance(2020, 3, 30)
         };
 
         testAndAssertVisualizedInstallments(startDate, dayOfMonth, nextDonationDateByIndex);
@@ -1619,18 +1619,18 @@ private with sharing class RD2_ScheduleService_TEST {
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-                .withDayOfMonth(dayOfMonth)
-                .build();
+            .withDayOfMonth(dayOfMonth)
+            .build();
 
         Test.startTest();
         insert rd;
         Test.stopTest();
 
         List<RecurringDonationSchedule__c> schedules = new RD2_OpportunityEvaluationService()
-                .getRecurringDonations(new Set<Id>{ rd.Id })[0].RecurringDonationSchedules__r;
+            .getRecurringDonations(new Set<Id>{ rd.Id })[0].RecurringDonationSchedules__r;
 
         List<RD2_ScheduleService.Installment> installments = service.getVisualizedInstallments(
-                new List<npe03__Recurring_Donation__c>{ rd }, startDate, numberOfInstallments, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }
+            new List<npe03__Recurring_Donation__c>{ rd }, startDate, numberOfInstallments, new Map<Id, List<RecurringDonationSchedule__c>>{ rd.Id => schedules }
         ).values()[0];
 
         System.assertEquals(numberOfInstallments, installments.size(), 'Number of installments should match');
@@ -1638,7 +1638,7 @@ private with sharing class RD2_ScheduleService_TEST {
         for (Integer i : nextDonationDateByIndex.keySet()) {
             Date nextDonationDate = nextDonationDateByIndex.get(i);
             System.assertEquals(nextDonationDate, installments[i].nextDonationDate,
-                    'Installment ' + i + ' date should be: ' + nextDonationDate);
+                'Installment ' + i + ' date should be: ' + nextDonationDate);
         }
     }
 
