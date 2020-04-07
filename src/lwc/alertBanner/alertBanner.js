@@ -1,10 +1,8 @@
 import { LightningElement, api } from 'lwc';
 import { isEmpty } from 'c/utilCommon';
 
-/**
- * @typedef {Class} AlertBanner
- * @property {string} _alertClass The class theme.
- */
+const defaultClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_';
+
 export default class AlertBanner extends LightningElement {
     /**
      * The stylized theme for the alert.
@@ -18,16 +16,14 @@ export default class AlertBanner extends LightningElement {
     @api size;
     @api message;
 
-    defaultClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_';
-
     get alertTheme() {
         const warningThemeDefault = 'warning';
 
         if(isEmpty(this.theme)) {
-            return this.defaultClass.concat(warningThemeDefault);
+            return defaultClass.concat(warningThemeDefault);
         }
 
-        return this.defaultClass.concat(this.theme);
+        return defaultClass.concat(this.theme);
     }
 
     get alertVariant() {
@@ -61,13 +57,13 @@ export default class AlertBanner extends LightningElement {
     }
 
     get alertAssistText() {
-        const sizeDefault = 'An error has occurred';
+        const assistDefault = 'An error has occurred';
 
         if(isEmpty(this.size)) {
-            return sizeDefault;
+            return assistDefault;
         }
 
-        return this.size
+        return this.assistText;
     }
 
     get alertMessage() {
