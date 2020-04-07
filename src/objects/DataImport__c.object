@@ -1265,9 +1265,9 @@
     </fields>
     <fields>
         <fullName>Payment_Authorization_Token__c</fullName>
-        <description>The authorization token for the card payment provided by payment services.</description>
+        <description>Authorization token for a transaction.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Authorization token for a transaction. Do NOT update this field if it's populated by Elevate.</inlineHelpText>
+        <inlineHelpText>Authorization token for a transaction.</inlineHelpText>
         <label>Payment Authorization Token</label>
         <length>255</length>
         <required>false</required>
