@@ -39,8 +39,8 @@
 private class PS_IntegrationService_TEST {
 
     private static Map<String, List<Map<String, String>>> configParams;
-    private static Map<String, Config> makanaConfigParams;
-    private static Map<String, Config> paymentConfigParams;
+    private static Map<String, PS_IntegrationService.Config> makanaConfigParams;
+    private static Map<String, PS_IntegrationService.Config> paymentConfigParams;
 
     static {
         buildConfigurationParams(); // Build Test Configuration Parameters
@@ -140,20 +140,26 @@ private class PS_IntegrationService_TEST {
     private static void buildConfigurationParams() {
         List<Map<String, String>> applicationConfig = new List<Map<String, String>>();
         configParams = new Map<String, List<Map<String, String>>>();
-        paymentConfigParams = new Map<String, Config> {
-                'iss' => new Config('iss', 'ApiKeyManager'),
-                'sub' => new Config('sub', 'cbaxter'),
-                'sfdo.roles' => new Config('sfdo.roles', 'Payments.Purchase, Payments.Refund'),
-                'sfdo.product' => new Config('sfdo.product', 'CRM'),
-                'apiKey' => new Config('apiKey', 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4'),
-                'sfdo.merchantids' => new Config('sfdo.merchantids', '47b70ca4-0f6e-4c52-819f-667ae804f9d2'),
-                'gatewayids' => new Config('gatewayids', 'f23da98a-c7aa-4637-962a-8c852e765e38'),
-                'baseURL' => new Config('baseURL', 'https://x2t03i3rn5.execute-api.us-west-2.amazonaws.com/v1')
+        paymentConfigParams = new Map<String, PS_IntegrationService.Config> {
+                'iss' => new PS_IntegrationService.Config('iss', 'ApiKeyManager'),
+                'sub' => new PS_IntegrationService.Config('sub', 'cbaxter'),
+                'sfdo.roles' => new PS_IntegrationService.Config('sfdo.roles',
+                        'Payments.Purchase, Payments.Refund'),
+                'sfdo.product' => new PS_IntegrationService.Config('sfdo.product', 'CRM'),
+                'apiKey' => new PS_IntegrationService.Config('apiKey',
+                        'a5146b4b-3d2b-4fc4-a5e5-8387968859a4'),
+                'sfdo.merchantids' => new PS_IntegrationService.Config('sfdo.merchantids',
+                        '47b70ca4-0f6e-4c52-819f-667ae804f9d2'),
+                'gatewayids' => new PS_IntegrationService.Config('gatewayids',
+                        'f23da98a-c7aa-4637-962a-8c852e765e38'),
+                'baseURL' => new PS_IntegrationService.Config('baseURL',
+                        'https://x2t03i3rn5.execute-api.us-west-2.amazonaws.com/v1')
         };
 
-        makanaConfigParams = new Map<String, Config> {
-                'apiKey' => new Config('apiKey', 'a5146b4b-3d2b-4fc4-a5e5-makana'),
-                'baseURL' => new Config('baseURL', 'https://x2t03i3rn5.execute-api.us-west-2.amazonaws.com/v1')
+        makanaConfigParams = new Map<String, PS_IntegrationService.Config> {
+                'apiKey' => new PS_IntegrationService.Config('apiKey', 'a5146b4b-3d2b-4fc4-a5e5-makana'),
+                'baseURL' => new PS_IntegrationService.Config('baseURL',
+                        'https://x2t03i3rn5.execute-api.us-west-2.amazonaws.com/v1')
         };
 
 
@@ -188,17 +194,5 @@ private class PS_IntegrationService_TEST {
                 break;
             }
         }
-    }
-
-    // Inner class representation of the configuration parameters
-    public class Config {
-        String key;
-        String value;
-
-        public Config (String key, String value){
-            this.key = key;
-            this.value = value;
-        }
-
     }
 }

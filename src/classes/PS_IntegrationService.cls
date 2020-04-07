@@ -134,6 +134,17 @@ global class PS_IntegrationService {
     // Custom Exception
     public class IntegrationServiceException extends Exception {}
 
+    // Inner class representation of the configuration parameters
+    public class Config {
+        public String key;
+        public String value;
+
+        public Config (String key, String value){
+            this.key = key;
+            this.value = value;
+        }
+
+    }
 
 
 
