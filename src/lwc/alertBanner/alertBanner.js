@@ -43,7 +43,7 @@ export default class AlertBanner extends LightningElement {
             return iconDefault;
         }
 
-        return this.icon
+        return this.icon;
     }
 
     get alertSize() {
