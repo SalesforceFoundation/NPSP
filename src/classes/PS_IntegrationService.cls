@@ -38,11 +38,9 @@ global class PS_IntegrationService {
 
     @TestVisible private static final String PAYMENTS_APPLICATION_TYPE = 'payments';
     @TestVisible private static final String MAKANA_APPLICATION_TYPE = 'makana';
-    @TestVisible private static final String INVALID_CONFIG_PARAMS = 'Missing configuration parameters';
-    @TestVisible private static final String API_KEY_ELEVATE_ERROR = 'An invalid api key has been provided ' +
-            'for this elevate customer';
-    private static final String ELEVATE_ONBOARDING_ERROR = 'An error has occurred with ' +
-            'onboarding this elevate customer: ';
+    @TestVisible private static final String INVALID_CONFIG_PARAMS = System.Label.gePS_IntegrationTestInvalidConfigParams;
+    @TestVisible private static final String API_KEY_ELEVATE_ERROR = System.Label.gePS_IntegrationTestInvalidAPIKey;
+    private static final String ELEVATE_ONBOARDING_ERROR = System.Label.commonElevateFailedOnboarding;
     @TestVisible private static final String API_KEY = 'apiKey';
 
     /*******************************************************************************************************
