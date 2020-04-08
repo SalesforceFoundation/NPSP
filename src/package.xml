@@ -1966,27 +1966,28 @@
         <members>commonYes</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
+        <members>conMergeDRSPickBtnLabel</members>
+        <members>conMergeDRSStep1</members>
         <members>conMergeErrNoPersonAccounts</members>
+        <members>conMergeErrorNoDRSFound</members>
         <members>conMergeErrorNoDeleteObjPermission</members>
         <members>conMergeErrorNoDeleteRecAccess</members>
+        <members>conMergeErrorNoReadDSRObjPermission</members>
         <members>conMergeFoundContacts</members>
+        <members>conMergeFoundDRS</members>
         <members>conMergePageTitle</members>
         <members>conMergePageTitleDetail</members>
         <members>conMergePortalUser</members>
+        <members>conMergeSearchConText</members>
         <members>conMergeSearchPlaceholder</members>
+        <members>conMergeSeeDupConDRS</members>
+        <members>conMergeSeeDupConText</members>
         <members>conMergeSelectAll</members>
         <members>conMergeSelectContact</members>
         <members>conMergeSelectedContacts</members>
         <members>conMergeStageComplete</members>
+        <members>conMergeTooManyContactError</members>
         <members>conMergeWinnerAsstText</members>
-        <members>conMergeFoundDRS</members>
-        <members>conMergeDRSPickBtnLabel</members>
-        <members>conMergeErrorNoDRSFound</members>
-        <members>conMergeSeeDupConDRS</members>
-        <members>conMergeErrorNoReadDSRObjPermission</members>
-        <members>conMergeDRSStep1</members>
-        <members>conMergeSearchConText</members>
-        <members>conMergeSeeDupConText</members>
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
