@@ -10,7 +10,7 @@ from logging import exception
 class GiftEntryPage(BaseNPSPPage, BasePage):
 
     
-    def _go_to_page(self, filter_name=None):
+    def _go_to_page(self):
         """To go to Gift Entry page"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
@@ -19,3 +19,44 @@ class GiftEntryPage(BaseNPSPPage, BasePage):
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
         self.selenium.wait_until_page_contains("Templates")
+
+    def _is_current_page(self):
+        """
+        Verifies that current page is Gift Entry landing page
+        """
+        self.selenium.wait_until_location_contains("GE_Gift_Entry", timeout=60, 
+                                                   message="Current page is not Gift Entry landing page")
+        self.selenium.wait_until_page_contains("Default Gift Entry Template")                                               
+
+    def click_gift_entry_button(self,title):
+        """clicks on Gift Entry button identified with title"""
+        locator=npsp_lex_locators["gift_entry"]["button"].format(title)
+        self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.click_element(locator)  
+
+    def enter_value_in_field(self,**kwargs):
+        """Enter value in specified field"""
+        for key,value in kwargs.items():
+            if key=='Description':
+                locator=npsp_lex_locators["gift_entry"]["textarea"].format(key)
+                self.selenium.wait_until_page_contains_element(locator)
+                self.salesforce._populate_field(locator, value)
+            else:
+                locator=npsp_lex_locators["gift_entry"]["field_input"].format(key)
+                self.selenium.wait_until_page_contains_element(locator)
+                self.salesforce._populate_field(locator, value)      
+
+    def select_template_action(self,name,action):
+        """From the template table, select template with name and select an action from the dropdown"""
+        locator=npsp_lex_locators["gift_entry"]["actions_dropdown"].format(name)
+        self.selenium.click_element(locator)
+        element=self.selenium.get_webelement(locator)
+        status=element.get_attribute("aria-expanded")
+        if status=="false":
+            time.sleep(2)    
+        self.selenium.click_link(action)
+        if action=="Edit" or "Clone":
+            self.selenium.wait_until_page_contains("Gift Entry Template Information")
+
+        
+

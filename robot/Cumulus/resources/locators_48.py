@@ -250,6 +250,12 @@ npsp_lex_locators={
     'modal-form':{
         'label':'//div[./*/*[text()="{}"]]',
         },
+    'gift_entry':{
+        'button':'//*[@data-qa-locator="button {}"]/button',
+        'field_input':'//*[contains(@data-qa-locator,"{}")]//child::input',
+        'textarea':'//*[contains(@data-qa-locator,"{}")]//child::textarea',
+        'actions_dropdown':'//tbody/tr[./th//a[text()="{}"]]/td//button',
+        },
     
 }
     
