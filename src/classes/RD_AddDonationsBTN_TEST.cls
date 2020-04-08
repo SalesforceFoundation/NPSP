@@ -40,7 +40,6 @@ private with sharing class RD_AddDonationsBTN_TEST {
 
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
 
-
     /***
     * @description Verifies Opportunities are recreated when the button is clicked on
     */
@@ -143,6 +142,47 @@ private with sharing class RD_AddDonationsBTN_TEST {
         Test.stopTest();
     }
 
+    /***
+    * @description Verify if it displays error message if the user do not have Edit or Delete permissions
+    */
+    @isTest
+    private static void shouldDisplayErrorMessageWhenUserHaveNoEditOrDeletePermission() {
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert acc;
+
+        npe03__Recurring_Donation__c rd = getLegacyRDBuilder()
+            .withAccount(acc.Id)
+            .withNextDonationDate(System.today())
+            .build();
+
+        insert rd;
+
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        // Run as admin user to set the permission set with object level create permission for the readonlyuser
+        System.runas(adminUser) {
+            assignCreateOnlyPermissionSet(readOnlyUser.id);
+        }
+
+
+        Test.startTest();
+
+        System.runAs(readOnlyUser) {
+            RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
+                new ApexPages.StandardController(rd)
+            );
+
+            // The error should be generated and rendered by the constructor
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
+            UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationPermissionDenied, ApexPages.Severity.ERROR);
+
+        }
+
+        Test.stopTest();
+
+    }
+
 
     // Helpers
     /////////////
@@ -175,4 +215,34 @@ private with sharing class RD_AddDonationsBTN_TEST {
             npe03__Recurring_Donation_Field__c = 'Name'
         );
     }
+
+    /***
+    * @description Creates and assigns the permission set with Create permission without edit or delete
+    * permission on Opportunity object
+    */
+    private static void assignCreateOnlyPermissionSet(Id userId) {
+        PermissionSet permission = new PermissionSet(
+            Name = 'PermissionTest',
+            Label = 'PermissionTest'
+        );
+
+        insert permission;
+
+
+        insert new ObjectPermissions (
+            SObjectType = 'Opportunity',
+            ParentId = permission.id,
+            PermissionsRead = true,
+            PermissionsEdit = false,
+            PermissionsCreate = true,
+            PermissionsDelete = false
+        );
+
+        insert new PermissionSetAssignment(
+            AssigneeId = userId,
+            PermissionSetId = permission.Id
+        );
+
+    }
+
 }

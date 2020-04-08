@@ -148,8 +148,12 @@ public with sharing class RD_AddDonationsBTN_CTRL {
         } else if (sc.getId() == null) {
             addMessageAndReturn(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationMissingId);
 
-        } else if (!Schema.SObjectType.Opportunity.isCreateable()) {
-            addMessageAndReturn(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied);
+        } else if (!Schema.SObjectType.Opportunity.isCreateable()
+            || !Schema.SObjectType.Opportunity.isUpdateable()
+            || !Schema.SObjectType.Opportunity.isDeletable()
+
+        ) {
+            addMessageAndReturn(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationPermissionDenied);
 
         } else {
             this.showContinueBtn = true;
