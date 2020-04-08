@@ -63,7 +63,6 @@ import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
 
 const ADDITIONAL_OBJECT_JSON__C = DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD.fieldApiName;
-const PAYMENT_AUTHORIZATION_TOKEN__C = DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName;
 
 const mode = {
     CREATE: 'create',
