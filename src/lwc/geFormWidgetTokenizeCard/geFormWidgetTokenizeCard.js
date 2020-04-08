@@ -1,8 +1,11 @@
 import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import { fireEvent } from 'c/pubsubNoPageRef';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
+import { isFunction } from 'c/utilCommon';
+import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+
+const TOKENIZE_TIMEOUT = 10000; // 10 seconds
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
 
@@ -71,12 +74,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     *
     * @param {object} message: Message received from iframe
     */
-    async handleMessage(message) {
-        fireEvent(null, 'tokenResponse', message); // move so we can handle error or token
-        if (message.error) {
-            // Error with tokenization
-        } else if (message.token) {
-            this.token = message.token;
+    handleMessage(message) {
+        if (message.error || message.token) {
+            if(isFunction(this.tokenCallback)) {
+                this.tokenCallback(message);
+            }
         } else if (message.isLoaded) {
             this.isLoading = false;
         }
@@ -89,18 +91,43 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     */
     requestToken() {
         const iframe = this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-        fireEvent(null, 'tokenRequested');
+
+        const tokenPromise = new Promise((resolve, reject) => {
+
+            const timer = setTimeout(() => {
+                reject('Request timed out');
+            }, TOKENIZE_TIMEOUT);
+
+            this.tokenCallback = message => {
+                clearTimeout(timer);
+                if(message.error) {
+                    reject(message);
+                } else if(message.token) {
+                    resolve({ [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName]: message.token });
+                }
+            };
+
+        });
 
         if (iframe) {
             iframe.contentWindow.postMessage(
                 { action: 'createToken' },
                 this.visualforceOrigin);
         }
+
+        return tokenPromise;
     }
 
+    /**
+     * Requests a payment token when the form is saved
+     * @return {paymentToken: Promise<*>} Promise that will resolve to the token
+     */
     @api
     returnValues() {
-        this.requestToken();
+        return {
+            type: 'diFieldValue',
+            payload: this.requestToken()
+        };
     }
 
     @api
@@ -108,6 +135,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     @api
     reset() {}
+
+    @api
+    get allFieldsByAPIName() {
+        return [DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD.fieldApiName];
+    }
 
     @api
     setNameOnCard(cardHolderName) {

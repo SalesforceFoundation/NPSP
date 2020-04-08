@@ -134,7 +134,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
                     let rowRecord = row.getValues();
                     // need attributes to be able to deserialize this later.
                     const rowWithAttributes = {
-                        attributes: { type: ALLOCATION_OBJECT.objectApiName},
+                        attributes: { type: ALLOCATION_OBJECT.objectApiName },
                         ...rowRecord
                     };
                     widgetRowValues.push(rowWithAttributes);
@@ -144,7 +144,10 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
         // use custom metadata record name as key
         widgetData[this.element.dataImportObjectMappingDevName] = widgetRowValues;
-        return widgetData;
+        return {
+            type: 'diFieldValue',
+            payload: { [DI_ADDITIONAL_OBJECT.fieldApiName]: widgetData }
+        }
     }
 
     @api

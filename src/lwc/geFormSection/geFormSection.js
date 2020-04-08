@@ -1,5 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
-import {getSubsetObject, isUndefined, isNotEmpty} from "c/utilCommon";
+import { getSubsetObject, isUndefined, isNotEmpty } from 'c/utilCommon';
+import { handleError } from 'c/utilTemplateBuilder';
 
 export default class GeFormSection extends LightningElement {
     @api section;
@@ -79,12 +80,14 @@ export default class GeFormSection extends LightningElement {
     @api
     get widgetValues() {
         const widgets = this.template.querySelectorAll('c-ge-form-widget');
-        let widgetValues = {};
-        if(widgets !== null && typeof widgets !== 'undefined') {
+        let widgetValues = [];
+
+        if (widgets !== null && typeof widgets !== 'undefined') {
             widgets.forEach(widget => {
-                widgetValues = { ...widgetValues, ...(widget.widgetAndValues) };
+                widgetValues.push(widget.widgetAndValues);
             });
         }
+
         return widgetValues;
     }
 

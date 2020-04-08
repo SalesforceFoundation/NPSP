@@ -108,7 +108,7 @@ const isUndefined = (value) => {
 };
 
 /**
- * Check if a value is undefined, null or blank string.
+ * Check if a primitive is undefined, null or blank string.
  * @param value         Value to check.
  * @returns {boolean}   TRUE when the given value is undefined, null or blank string.
  */
