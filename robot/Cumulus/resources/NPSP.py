@@ -5,6 +5,7 @@ import random
 import string
 from datetime import datetime
 from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 
 
 from robot.libraries.BuiltIn import RobotNotRunningError
@@ -294,6 +295,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 #                 break
 #  
 #         assert list_found, "locator not found"
+
+
+
+
     @selenium_retry
     @capture_screenshot_on_error
     def navigate_to_and_validate_field_value(self, field,status,value,section=None):
@@ -325,6 +330,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             list_found = True    
  
         assert list_found, "locator not found" 
+
     @capture_screenshot_on_error
     def verify_record(self, name):
         """ Checks for the record in the object page and returns true if found else returns false
@@ -1521,7 +1527,8 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Clicks on the link in the actions container on top right corner of the page using Javascript"""
         locator=npsp_lex_locators["link-title"].format(title)
         self.salesforce._jsclick(locator)
-     
+        time.sleep(1)
+
     def click_more_activity_button(self): 
         """Clicks on View More button on Activity tab of the record""" 
         locator = npsp_lex_locators["record"]["activity-button"].format('showMoreButton') 

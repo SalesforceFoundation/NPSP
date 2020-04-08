@@ -57,7 +57,7 @@ npsp_lex_locators={
     'id':'//*[contains(@id,"{}")]',
     'button':'//input[contains(@value,"{}")]',
     'link':'//a[.//span[text()="{}" or contains(text(),"{}")]]',
-    'link-text':'//a[text()="{}"]',
+    'link-text':'//a[contains(text(),"{}")]',
     'link-title':'//a[@title="{}"]',
     'link-contains':'//button[.//span[contains(text(),"{}")]]',
     'checkbox':{
@@ -179,10 +179,14 @@ npsp_lex_locators={
         'installment_date' : "//table[contains(@class, 'slds-table_edit')]/tbody/tr[{}]/th//span/div/lightning-formatted-date-time",
         'formatted_number':"//div[contains(@class,'slds-tile__detail')]/lightning-layout/slot/lightning-layout-item[contains(@class,'slds-dl_horizontal__label')]/slot/lightning-formatted-text[text() = '{}']/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-number",
         'formatted_date':"//div[contains(@class,'slds-tile__detail')]/lightning-layout/slot/lightning-layout-item[contains(@class,'slds-dl_horizontal__label')]/slot/lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-date-time",
-        'formatted_text':"//div[contains(@class,'slds-tile__detail')]/lightning-layout/slot/lightning-layout-item[contains(@class,'slds-dl_horizontal__label')]/slot/lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text"       },
+        'formatted_text':"//div[contains(@class,'slds-tile__detail')]/lightning-layout/slot/lightning-layout-item[contains(@class,'slds-dl_horizontal__label')]/slot/lightning-formatted-text[contains(text(),'{}')]/following::lightning-layout-item[contains(@class,'slds-dl_horizontal__detail')]/slot/lightning-formatted-text"
+      },
+    'erd_metadeploy':{
+       'preinstall_validation_btn': 'css: span[title = "Enhanced Recurring Donations Metadata Updates"]'
+     },
     'npsp_settings':{
         'main_menu':'//div[@class="slds-tree__branch slds-tree__item"][.//a[text()="{}"]]',
-        'panel_sub_link':'//ul/li[contains(@class,"slds-is-selected")]/a[text()="{}"]',
+        'panel_sub_link':'//ul/li[contains(@class,"slds-is-selected")]/a[contains(text(),"{}")]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
         'side_panel':'//div[@id="{}"]//child::button[contains(@class,"chevronright")]',
         'list':"//div[@class='slds-form-element']/label[text()='{}']/following-sibling::div/select",

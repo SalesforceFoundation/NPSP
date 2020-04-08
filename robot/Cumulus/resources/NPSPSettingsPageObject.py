@@ -38,8 +38,26 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         self.selenium.wait_until_page_contains_element(locator,
                                                        error=f"click on {title} sublink was not successful even after 30 seconds")
-    
-    
+
+    @capture_screenshot_on_error
+    def launch_meta_deploy(self):
+        """Clicks on the Metadeploy link from the settings tab, waits for the new tab to open up and ensures that the new tab is loaded
+        After which the handle is switched back to the parent window"""
+
+        title = "Launch MetaDeploy"
+        tab_title = "Enhanced Recurring Donations Metadata Updates"
+        locator=npsp_lex_locators['erd_metadeploy']['preinstall_validation_btn']
+        self.npsp.click_actions_link(title)
+        self.selenium.select_window("New")
+        self.selenium.wait_until_page_contains_element(locator,
+                                                       error=f"tab {tab_title} is not loaded")
+        title_var  = self.selenium.get_window_titles()
+        self.num_tabs=len(title_var)
+        if  self.num_tabs == 2:
+            self.selenium.select_window(title_var[0])
+        else:
+            return
+
     @capture_screenshot_on_error
     def click_settings_button (self,panel_id,btn_value):  
         """clicks on the buttons on npsp settings object using panel id and button value"""      

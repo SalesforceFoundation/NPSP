@@ -9,7 +9,7 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 # Setup a contact with parameters specified
@@ -17,23 +17,26 @@ Setup Test Data
     Setupdata           account      None    None    ${account_fields}
     ${date} =     Get Current Date      result_format=%-m/%-d/%Y
     Set Suite Variable  ${date}
-    ${ns} =                      Get NPSP Namespace Prefix
-    Set Suite Variable           ${ns}
+    ${currdate}=  Get Current Date  result_format=datetime
+    ${currentvalue} =  Evaluate  ${12-${currdate.month}}*100
+    Set Suite Variable  ${currentvalue}
+    ${ns} =             Get NPSP Namespace Prefix
+    Set Suite Variable  ${ns}
 
 *** Variables ***
 &{account_fields}  Type=Organization
-${installments}  6
+${installments}  1
 ${frequency}  1
 ${amount}  100
 ${method}  Credit Card
-${type}    Fixed
+${type}    Open
 
 *** Test Cases ***
 
-Create Fixed Recurring Donation With Monthly Installment
-    [Documentation]              This test verifies that an enhanced recurring donation can be created through the UI.
+Create Open Recurring Donation With Monthly Installment
+    [Documentation]              This test verifies that an enhanced recurring donation of type open can be created through the UI.
     ...                          Verifies that all the new fields and sections are getting populated and displayed on UI.
-    ...                          Verify the number of payments and that one opportunity with status pledged is created.
+    ...                          Verify the values under donation statistics, upcoming installments sections
 
 
     [tags]                                 W-040346                                  feature:Enhanced Recurring Donations
@@ -43,7 +46,7 @@ Create Fixed Recurring Donation With Monthly Installment
     Click Object Button                    New
     Wait For Modal                         New                                       Recurring Donations
 
-    # Create Enhanced recurring donation of type  Fixed
+    # Create Enhanced recurring donation of type Open
     Populate Modal Form
     ...                                    Recurring Donation Name=ERD Recurring Donation Fixed
     ...                                    Amount= ${amount}
@@ -65,7 +68,6 @@ Create Fixed Recurring Donation With Monthly Installment
     ...                                     Account=${data}[account][Name]
     ...                                     Amount=$100.00
     ...                                     Status=Active
-    ...                                     Number of Planned Installments=${installments}
 
     # Validate the fields under Current Schedule card
     Validate Field Values Under Section     Current Schedule
@@ -75,11 +77,16 @@ Create Fixed Recurring Donation With Monthly Installment
      ...                                    Installment Period=Monthly
      ...                                    Day of Month=1
     # Validate upcoming installments
-    Validate_Upcoming_Schedules             ${installments}                                      ${date}
+    Validate_Upcoming_Schedules             12                                      ${date}
 
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${rd_id}
+
+    # validate recurring donation statistics current and next year value
+    Validate Field Values On Details
+        ...                                     Current Year Value=$${currentvalue}.00
+        ...                                     Next Year Value=$1,200.00
 
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend and validate the stage on opportunity is Pledged
     Validate Related Record Count          Opportunities                                                    1
