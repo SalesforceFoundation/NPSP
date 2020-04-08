@@ -154,9 +154,19 @@
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>Private</externalSharingModel>
     <fields>
-        <fullName>apiKey__c</fullName>
+        <fullName>Is_Secret__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Denotes whether the Key and Value are secret.</description>
         <externalId>false</externalId>
-        <label>apiKey</label>
+        <label>Is Secret</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Key__c</fullName>
+        <description>The name of a piece of configuration data from Elevate. It&apos;s associated value is stored in the Value__c field.</description>
+        <externalId>false</externalId>
+        <label>Key</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -164,10 +174,10 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>baseURL__c</fullName>
-        <description>Endpoint root URL for purchase call</description>
+        <fullName>Service_Key__c</fullName>
+        <description>The combination of the Service and the Key value, delimited by &quot;::&quot;.</description>
         <externalId>false</externalId>
-        <label>baseURL</label>
+        <label>Service Key</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -175,67 +185,25 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>gatewayids__c</fullName>
-        <description>Gateway Id</description>
+        <fullName>Service__c</fullName>
+        <description>The name of the Elevate service the Key and Value are associated with.</description>
         <externalId>false</externalId>
-        <label>gatewayids</label>
+        <label>Service</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Value__c</fullName>
+        <description>The value of a piece of configuration data from Elevate. It&apos;s associated name is stored in the key__c field.</description>
+        <externalId>false</externalId>
+        <label>Value</label>
         <length>131072</length>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
-    </fields>
-    <fields>
-        <fullName>iss__c</fullName>
-        <description>Issuer</description>
-        <externalId>false</externalId>
-        <label>iss</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>sfdo_merchantids__c</fullName>
-        <description>Merchant Id</description>
-        <externalId>false</externalId>
-        <label>sfdo.merchantids</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>sfdo_product__c</fullName>
-        <externalId>false</externalId>
-        <label>sfdo.product</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>sfdo_roles__c</fullName>
-        <description>Enumeration of roles</description>
-        <externalId>false</externalId>
-        <label>roles</label>
-        <length>131072</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>3</visibleLines>
-    </fields>
-    <fields>
-        <fullName>sub__c</fullName>
-        <description>User name of the principal</description>
-        <externalId>false</externalId>
-        <label>sub</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
     </fields>
     <label>Payment Services Configuration</label>
     <nameField>

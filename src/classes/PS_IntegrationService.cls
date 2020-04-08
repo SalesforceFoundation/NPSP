@@ -36,12 +36,24 @@
 */
 global class PS_IntegrationService {
 
-    @TestVisible private static final String PAYMENTS_APPLICATION_TYPE = 'payments';
-    @TestVisible private static final String MAKANA_APPLICATION_TYPE = 'makana';
-    @TestVisible private static final String INVALID_CONFIG_PARAMS = System.Label.gePS_IntegrationTestInvalidConfigParams;
-    @TestVisible private static final String API_KEY_ELEVATE_ERROR = System.Label.gePS_IntegrationTestInvalidAPIKey;
+    @TestVisible
+    private static final String INVALID_CONFIG_PARAMS = System.Label.gePS_IntegrationTestInvalidConfigParams;
     private static final String ELEVATE_ONBOARDING_ERROR = System.Label.commonElevateFailedOnboarding;
-    @TestVisible private static final String API_KEY = 'apiKey';
+    public static final String SERVICE_CONST = 'service';
+    public static final String IS_SECRET_CONST = 'issecret';
+    public static final String KEY_CONST = 'key';
+    public static final String VALUE_CONST = 'value';
+    public static final String TRUE_CONST = 'true';
+    public static final String FALSE_CONST = 'false';
+    public static final String DELIMETER_CONST = '::';
+
+    private static final Map<String, String> fieldMappingConstants = new Map<String, String>{
+            KEY_CONST => 'Key__c',
+            VALUE_CONST => 'Value__c',
+            IS_SECRET_CONST => 'Is_Secret__c',
+            SERVICE_CONST => 'Service__c'
+    };
+
 
     /*******************************************************************************************************
     * @description Provides an endpoint for the Payment Services Integrations package
@@ -52,89 +64,68 @@ global class PS_IntegrationService {
     global static void setConfiguration(Map<String, List<Map<String, String>>> configParams) {
 
         if (configParams == null || configParams.isEmpty()) {
-            // If this is a significant point of failure, how do we want to alert the customer/caller ?
             throw new IntegrationServiceException(INVALID_CONFIG_PARAMS);
         }
 
-        Payment_Services_Configuration__c psConfiguration = new Payment_Services_Configuration__c();
-        List<Map<String, String>> paymentsConfiguration = configParams.get(PAYMENTS_APPLICATION_TYPE);
-        List<Map<String, String>> makanaConfiguration = configParams.get(MAKANA_APPLICATION_TYPE);
+        List<Payment_Services_Configuration__c> configurations = new List<Payment_Services_Configuration__c>();
 
-        if (paymentsConfiguration != null) {
-            for (Map<String, String> valueMap : paymentsConfiguration) {
-                if (valueMap.keySet().contains(API_KEY)) {
-                    psConfiguration.apiKey__c = valueMap.get(API_KEY);
-                    if (useFallbackApiKey(psConfiguration, makanaConfiguration)) {
-                        // Fall-back to the Makana API key if available
-                        for (Map<String, String> makanaValueMap : makanaConfiguration) {
-                            if (makanaValueMap.keySet().contains(API_KEY)) {
-                                psConfiguration.apiKey__c = makanaValueMap.get(API_KEY);
-                                break;
-                            }
-                        }
-                    }
-
-                    if (String.isBlank(psConfiguration.apiKey__c)) {
-                        throw new IntegrationServiceException(API_KEY_ELEVATE_ERROR);
-                    }
-                }
-
-                if (valueMap.keySet().contains('iss')) {
-                    psConfiguration.iss__c = valueMap.get('iss');
-                }
-
-                if (valueMap.keySet().contains('sub')) {
-                    psConfiguration.sub__c = valueMap.get('sub');
-                }
-
-                if (valueMap.keySet().contains('sfdo.merchantids')) {
-                    psConfiguration.sfdo_merchantids__c = valueMap.get('sfdo.merchantids');
-                }
-
-                if (valueMap.keySet().contains('sfdo.roles')) {
-                    psConfiguration.sfdo_roles__c = valueMap.get('sfdo.roles');
-                }
-
-                if (valueMap.keySet().contains('sfdo.product')) {
-                    psConfiguration.sfdo_product__c = valueMap.get('sfdo.product');
-                }
-
-                if (valueMap.keySet().contains('gatewayids')) {
-                    psConfiguration.gatewayids__c = valueMap.get('gatewayids');
-                }
-
-                if (valueMap.keySet().contains('baseURL')) {
-                    psConfiguration.baseURL__c = valueMap.get('baseURL');
-                }
+        for (String service : configParams.keySet()) {
+            for (Map<String, String> valueMap : configParams.get(service)) {
+                configurations.add(createConfiguration(service, valueMap));
             }
         }
 
-        List<Payment_Services_Configuration__c> existingConfigurations = [
-                SELECT Id FROM Payment_Services_Configuration__c
-        ];
-
-        if(!existingConfigurations.isEmpty()){
-            psConfiguration.Id = existingConfigurations[0].Id;
-        }
-
         try {
-            upsert psConfiguration;
+            upsert configurations Service_Key__c;
         } catch (Exception ex) {
             throw new IntegrationServiceException(ELEVATE_ONBOARDING_ERROR + ex.getMessage());
         }
 
     }
 
-    private static Boolean useFallbackApiKey (Payment_Services_Configuration__c psConfiguration,
-            List<Map<String, String>> makanaConfiguration) {
-        return (String.isBlank(psConfiguration.apiKey__c)
-                && makanaConfiguration != null);
+    /******************************************************************************************************
+    * @description This method builds the a configuration object based on key value pair configuration
+    * parameters and the configuration service type
+    * @param service Configuration service type, ex: payments, makana
+    * @param keyValuePairs
+    *
+    * @return Payment Services Configuration object
+    */
+    public static Payment_Services_Configuration__c createConfiguration(
+            String service, Map<String, String> keyValuePairs) {
+
+        Payment_Services_Configuration__c configuration = new Payment_Services_Configuration__c();
+        configuration = setValue(configuration, SERVICE_CONST, service);
+
+        for (String key : keyValuePairs.keySet()) {
+            Object value = keyValuePairs.get(key);
+            configuration = setValue(configuration, key, value);
+        }
+
+        configuration.Service_Key__c = configuration.Service__c + DELIMETER_CONST + configuration.Key__c;
+        return configuration;
+    }
+
+
+    public static Payment_Services_Configuration__c setValue(
+            Payment_Services_Configuration__c configuration, String key, Object value) {
+
+        if (key == IS_SECRET_CONST) {
+            if (((String)value) != TRUE_CONST && ((String)value) != FALSE_CONST) {
+                throw new JSONException();
+            }
+            value = Boolean.valueOf(value);
+        }
+
+        configuration.put(fieldMappingConstants.get(key), value);
+
+        return configuration;
     }
 
     // Custom Exception
     public class IntegrationServiceException extends Exception {}
 
-    // Inner class representation of the configuration parameters
+    // Inner class representation of the configuration parameters for tests
     public class Config {
         public String key;
         public String value;
