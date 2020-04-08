@@ -6062,23 +6062,23 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Generic failure message description for tokenization or purchase errors</shortDescription>
-        <value>There was an error processing your payment. Please review your payment information and try again. Alternatively, you can select Do Not Charge Card to enter the pledged donation without payment processing.</value>
+        <shortDescription>General failure message description for tokenization or purchase errors</shortDescription>
+        <value>There was an error processing the transaction. Please review the error and try again. Alternatively, select Do Not Charge Card to enter a pledged donation without processing a card payment.</value>
     </labels>
     <labels>
         <fullName>gePaymentProcessingErrorBanner</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Banner error message for payment processing error.</shortDescription>
-        <value>There was an error processing the payment.</value>
+        <shortDescription>Banner error message for card processing error.</shortDescription>
+        <value>There was an error processing the transaction.</value>
     </labels>
     <labels>
         <fullName>gePaymentServicesErrorResponse</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error message from payment services.</shortDescription>
+        <shortDescription>Error message from Elevate payment processing.</shortDescription>
         <value>Error from {0}: {1}</value>
     </labels>
     <labels>
