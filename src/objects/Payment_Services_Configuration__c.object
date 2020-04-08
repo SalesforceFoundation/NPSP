@@ -176,7 +176,7 @@
     <fields>
         <fullName>Service_Key__c</fullName>
         <description>The combination of the Service and the Key value, delimited by &quot;::&quot;.</description>
-        <externalId>false</externalId>
+        <externalId>true</externalId>
         <label>Service Key</label>
         <length>255</length>
         <required>false</required>
