@@ -253,7 +253,6 @@ public class CRLP_RollupContact_TEST {
      * 4. Nightly LDV Batch Job
      */
     private static void testRollupsServices(TestType tt) {
-
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
@@ -513,6 +512,7 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals(1, c.npo02__OppsClosed2YearsAgo__c, 'The number of close lost opps should be 1');
         System.assertEquals(wonCountLastYear, c.npo02__OppsClosedLastYear__c, 'The number of closed won opps should be equal to ' + wonCountLastYear);
 
+
         // These 10 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
@@ -543,4 +543,85 @@ public class CRLP_RollupContact_TEST {
             System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
         }
     }
+
+     /**
+     * @description Multi-Currency Specific tests:
+     * 1. Verifies the SUM on numeric source field will not use currency conversion when calculating the target field value
+     * 2. Verifies that a SingleResultRollup (Largest Gift) is properly converted
+     */
+    @isTest
+    private static void shouldHandleCurrencyConversionWhereNeeded() {
+        final Decimal oppAmountUSD = 100;
+        final Decimal oppAmountCAD = 500;
+
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+        
+        // Enable Customizable Rollups (which disables all legacy rollup operations)
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true,
+            Rollups_Limit_on_Attached_Opps_for_Skew__c = 0,
+            Rollups_Skew_Dispatcher_Batch_Size__c = 200
+        ));
+
+        // Disable all legacy rollup triggers
+        UTIL_UnitTestData_TEST.disableRollupTriggers();
+
+        // Create a single rollup definition
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('Number field in the SUM rollup', null,
+                CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.SUM,
+                null, 'Recurring_Donation_Installment_Number__c') + ',' +
+            CMT_UnitTestData_TEST.createRollupRecord('Largest Gift Amount', null,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                    'npo02__LargestAmount__c', CRLP_Operation.RollupType.FIRST, 'Amount') +
+        ']';
+
+        // Deserialize the rollups to use for testing
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        final Date closeDate = Date.newInstance(2019, 6, 15);
+        TEST_OpportunityBuilder oppBuilder = new TEST_OpportunityBuilder()
+            .withContact(c.Id);
+
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withCurrencyIsoCode('CAD')
+                .withAmount(oppAmountCAD)
+                .withCloseDate(closeDate)
+                .withClosedWonStage()
+                .withInstallmentNumber(10)
+                .build(),
+            oppBuilder
+                .withCurrencyIsoCode('USD')
+                .withAmount(oppAmountUSD)
+                .withCloseDate(closeDate.addMonths(1))
+                .withOpenStage()
+                .withInstallmentNumber(15)
+                .withAmount(500)
+                .build()
+        };
+
+        Test.startTest();
+        insert opps;
+        Test.stopTest();
+
+        // Query the Contact with all the target fields specified in the rollups
+        Id contactId = c.Id;
+        c = Database.query(
+            CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :contactId LIMIT 1'
+        );
+
+        Decimal convertedAmt = UTIL_CurrencyConversion.convertAmountUsingStandardRates('CAD', 'USD', oppAmountCAD);
+
+        System.assertEquals(25, c.npo02__NumberOfClosedOpps__c,
+            'Rollup target field should contain sum of numeric field values without currency conversion');
+        System.assertEquals(convertedAmt, c.npo02__LargestAmount__c,
+            'The Largest Gift Amount should be equal to the CAD amount converted to USD');
+   }
 }
