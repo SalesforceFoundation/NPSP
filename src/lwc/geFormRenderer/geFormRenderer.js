@@ -895,7 +895,13 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             // diFieldValues is an array of objects where the key is the field name
             // and the value is the value to be stored
-            const diFieldValuesArray = await Promise.all(diFieldPayloads);
+            let diFieldValuesArray;
+            try {
+                diFieldValuesArray = await Promise.all(diFieldPayloads);
+            } catch (ex) {
+                // ex will be whatever was sent to the reject() function in the original promise
+                // handle payment error here: handlePaymentError(ex);
+            }
             let additionalObjectValues = {};
 
             diFieldValuesArray.forEach(fieldValues => {
