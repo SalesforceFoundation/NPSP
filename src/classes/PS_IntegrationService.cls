@@ -59,7 +59,7 @@ global class PS_IntegrationService {
     * @description Provides an endpoint for the Payment Services Integrations package
     * to call when a Customer registers, and pass parameters containing the secrets
     * needed for calls to Payment Services endpoints(Tokenize, Purchase) and creating JWTs
-    * @param configParams contains secrets, such as the api key for creating a JWT
+    * @param configParams contains settings, such as the baseURL for connecting to payments services
     */
     global static void setConfiguration(Map<String, List<Map<String, String>>> configParams) {
 
