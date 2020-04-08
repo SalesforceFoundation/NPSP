@@ -91,7 +91,7 @@ global class PS_IntegrationService {
     *
     * @return Payment Services Configuration object
     */
-    public static Payment_Services_Configuration__c createConfiguration(
+    private static Payment_Services_Configuration__c createConfiguration(
             String service, Map<String, String> keyValuePairs) {
 
         Payment_Services_Configuration__c configuration = new Payment_Services_Configuration__c();
@@ -107,7 +107,7 @@ global class PS_IntegrationService {
     }
 
 
-    public static Payment_Services_Configuration__c setValue(
+    private static Payment_Services_Configuration__c setValue(
             Payment_Services_Configuration__c configuration, String key, Object value) {
 
         if (key == IS_SECRET_CONST) {
