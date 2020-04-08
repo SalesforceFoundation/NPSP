@@ -41,8 +41,18 @@
         <members>ADV_PackageInfo_SVC</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
+        <members>ALLO_AllocationsDMLService</members>
+        <members>ALLO_AllocationsDMLService_TEST</members>
+        <members>ALLO_AllocationsRecalculateService</members>
+        <members>ALLO_AllocationsRetrievalService</members>
+        <members>ALLO_AllocationsRetrievalService_TEST</members>
+        <members>ALLO_AllocationsReviewService</members>
+        <members>ALLO_AllocationsReviewService_TEST</members>
+        <members>ALLO_AllocationsService</members>
+        <members>ALLO_AllocationsSettings</members>
         <members>ALLO_AllocationsUtil</members>
         <members>ALLO_AllocationsUtil_TEST</members>
+        <members>ALLO_AllocationsWrapper</members>
         <members>ALLO_Allocations_TDTM</members>
         <members>ALLO_Allocations_TEST</members>
         <members>ALLO_MakeDefaultAllocations_BATCH</members>
@@ -55,6 +65,7 @@
         <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
+        <members>ALLO_UnitHelperTest_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>

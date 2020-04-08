@@ -2683,7 +2683,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when Allocations are cleared because amounts can't convert to percentages</shortDescription>
-        <value>The amount allocated exceeds the {obj_type} amount. Update Allocation amounts so that the total equals the {obj_type} amount.</value>
+        <value>The amount allocated exceeds the {0} amount. Update Allocation amounts so that the total equals the {0} amount.</value>
     </labels>
     <labels>
         <fullName>alloPaidPmtsExceedsOpp</fullName>
@@ -2699,7 +2699,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>An error occurred associated with a specific Allocation.</shortDescription>
-        <value>Allocation Error occurred on the {obj_type} record with Salesforce Id {parent_id} for Allocation named {alloc_name}. Reason: {error}</value>
+        <value>Allocation Error occurred on the {0} record with Salesforce Id {1} for Allocation named {2}. Reason: {3}</value>
     </labels>
     <labels>
         <fullName>alloPaymentAllocationBatchRecordError</fullName>
@@ -2707,7 +2707,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>An error occurred not associated with a specific Allocation.</shortDescription>
-        <value>Allocation Error occurred on the {obj_type} record with Salesforce Id {parent_id}. Reason: {error}</value>
+        <value>Allocation Error occurred on the {0} record with Salesforce Id {1}. Reason: {2}</value>
     </labels>
     <labels>
         <fullName>alloPaymentAllocationBatchRetriesExceeded</fullName>

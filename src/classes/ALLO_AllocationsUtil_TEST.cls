@@ -54,7 +54,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void addIndividualRecordExclusions() {
-        ALLO_AllocationsUTIL.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+/*        ALLO_AllocationsUTIL.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
         // is not a core part of this test
@@ -79,7 +79,7 @@ public class ALLO_AllocationsUtil_TEST {
         recExcl.addExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD);
         excls = recExcl.exclusionsByRecordId.get(UserInfo.getUserId());
         System.assertEquals(2, excls.size(), '# of Exclusions Present after adding same exclusion again');
-    }
+    */    }
 
     /**
      * @description Test 2 - Add Set of Exclusions) (Add Set of Exclusions and Confirm)
@@ -87,7 +87,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void addSetOfRecordExclusions() {
-        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+/*        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
         // is not a core part of this test
@@ -107,7 +107,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD + ' should be present');
         System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC + ' should be present');
         System.assertEquals(true, excls.contains(ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE), 'Exclusion ' + ALLO_AllocationsUtil.PROCESS_DEF.PMT_ALLOC_INITIALIZE + ' should be present');
-    }
+    */    }
 
      /**
       * @description Test 3 - Verify Exclusion via "Has Exclusion"
@@ -115,7 +115,7 @@ public class ALLO_AllocationsUtil_TEST {
       */
     @isTest
     private static void addExclusionsAndConfirmHasExclusions() {
-        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+/*        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
         // is not a core part of this test
@@ -123,7 +123,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(true, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD), 'Exclusion should be present for' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_AMT_UPD);
         System.assertEquals(true, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD), 'Exclusion should be present for' + ALLO_AllocationsUtil.PROCESS_DEF.OPP_ALLOC_UPD);
         System.assertEquals(false, recExcl.hasExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.ALL), 'Exclusion should not be present for' + ALLO_AllocationsUtil.PROCESS_DEF.ALL);
-    }
+    */    }
 
     /**
      * @description Test 4 - Verify Has No Exclusions is true when no exclusions are present. call
@@ -131,7 +131,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmHasNoExclusionsIsTrueWhenExclusionsAreNotPresentAndIsFalseWhenPresent() {
-        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
+/*        ALLO_AllocationsUtil.RecordExclusions recExcl = new ALLO_AllocationsUTIL.RecordExclusions();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
         // is not a core part of this test
@@ -140,7 +140,7 @@ public class ALLO_AllocationsUtil_TEST {
         recExcl.addExclusion(UserInfo.getUserId(), ALLO_AllocationsUtil.PROCESS_DEF.ALL);
         System.assertEquals(false, recExcl.hasNoExclusions(UserInfo.getUserId()), 'Should be exclusions present after adding on for current user');
         System.assertEquals(true, recExcl.hasNoExclusions(UserInfo.getOrganizationId()), 'Should be no exclusions for Organization Id');
-    }
+    */    }
 
     /*******************************************************************************************************
      * AllocationResults Inner Class Tests
@@ -152,7 +152,7 @@ public class ALLO_AllocationsUtil_TEST {
       */
     @isTest
     private static void addErrorsIndividuallyToTheAllocationsResultsAndConfirmResult() {
-        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
+/*        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
         // is not a core part of this test
@@ -165,7 +165,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals (2, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '2 Errors are present for ' + UserInfo.getUserId());
 
         System.assertEquals (false, allocResults.errorsByRecordId.containsKey(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
-    }
+    */    }
 
     /**
      * @description Test 2 - Test Add Errors
@@ -173,7 +173,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void addMultipleErrorsToTheAllocationsResultsAndConfirmResult() {
-        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
+/*        ALLO_AllocationsUtil.AllocationResults allocResults = new ALLO_AllocationsUtil.AllocationResults();
 
         // Since we are not restricting to the Opportunity Id, we will just use the User Id as the Record Id as
         // is not a core part of this test
@@ -186,7 +186,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals (4, allocResults.errorsByRecordId.get(UserInfo.getUserId()).size(), '4 Errors are present for ' + UserInfo.getUserId());
 
         System.assertEquals (false, allocResults.errorsByRecordId.containsKey(UserInfo.getOrganizationId()), 'No Errors are present for ' + UserInfo.getOrganizationId());
-    }
+    */    }
 
     /*******************************************************************************************************
      * RecordsForReview Inner Class Tests
@@ -198,7 +198,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void addAllocationByTypeToRecordsForReviewAndConfirmAddedToCorrectList() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+/*        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
         .enableDefaultAllocations()
         .enablePaymentAllocations()
         .disableAllocationTriggers()
@@ -303,7 +303,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(2, recsForRev.campaignAllocations.get(cam.Id).size(), 'Campaign Allocation List Size after Second Add');
         System.assertEquals (allosForInsert[6].Id, recsForRev.campaignAllocations.get(cam.Id)[0].Id, 'Campaign Allocation 0');
         System.assertEquals (allosForInsert[7].Id, recsForRev.campaignAllocations.get(cam.Id)[1].Id, 'Campaign Allocation 1');
-    }
+    */    }
 
    /**
     * @Description Test 2 - Test method to identify Opportunities require Review
@@ -311,7 +311,7 @@ public class ALLO_AllocationsUtil_TEST {
     */
     @isTest
     private static void confirmReturnsTrueWhenOpportunityRequiresReviewAndFalseOtherwise() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+/*        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
         .enableDefaultAllocations()
         .enablePaymentAllocations()
         .disableAllocationTriggers()
@@ -369,7 +369,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals (false, recsForRev.isOpportunityWithParentAndNoAllocations(opps[0]), '1st Opportunity should have parent and Amount and allocations');
         System.assertEquals (true, recsForRev.isOpportunityWithParentAndNoAllocations(opps[1]), '2nd Opportunity should have parent and Amount and no allocations');
         System.assertEquals (false, recsForRev.isOpportunityWithParentAndNoAllocations(opps[2]), '3rd Opportunity should have no parent And Amount and no allocations');
-    }
+    */    }
 
     /**
      * @description Test 3 - Test initialize Errors [ALLO_AllocationsUtil.RecordsForReview.initializeErrors]
@@ -378,7 +378,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void initializeErrorsStructureSuccessfully() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+    /*    AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
             .disableAllocationTriggers()
@@ -414,7 +414,7 @@ public class ALLO_AllocationsUtil_TEST {
         recsForRev2.initializeErrors('Test', null);
 
         System.assertNotEquals(null, recsForRev2.recErrs.get(opps[0].Id), 'Error For First Opportunity should be present (retrieved from Error__c object)');
-    }
+    */}
 
     /*******************************************************************************************************
      * Main Class Tests [Critical Path is covering as many as possible in this section]
@@ -430,7 +430,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void excludeOpportunitiesForTypeAndRecordtype() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+    /*    AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
             .withAllocationSettings(
@@ -469,7 +469,7 @@ public class ALLO_AllocationsUtil_TEST {
         for (Integer i = 0; i < oppsToTest.size(); i++) {
             System.assertEquals(expectedResults[i], ALLO_AllocationsUtil.isExcluded(oppsToTest[i]), 'Opportunity with Type value of \'' + oppsToTest[i].Type + '\' and RecordtypeId value of ' + oppsToTest[i].RecordtypeId + ' should be ' + (expectedResults[i] ? 'excluded' : 'included'));
         }
-    }
+    */}
 
     /**
      * @description Test 2 - Confirm returns true for all scenarios it should with Default Allocations Enabled
@@ -490,7 +490,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmOnlyOppsNeedingReviewAreFlaggedWhenDefaultAllocEnabled() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+    /*    AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
             .disableAllocationTriggers()
@@ -556,7 +556,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(true, ALLO_AllocationsUtil.isRequiresReview(opp6pmt0, recsForRev.paymentAllocations.get(opp6pmt0.Id), System.now().addDays(1)), 'Opportunity 6 - Payment 0, boundary date of tomorrow');
         // Confirm Opportunity with Payments with non null/zero Amount and valid Allocations are not flagged for review
         System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp7.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp7.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 7 - Payment 0, boundary date of tomorrow');
-    }
+    */}
 
     /**
      * @description Test 3 - Confirm returns true for all scenarios it should with Default Allocations Not Enabled
@@ -578,7 +578,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmOnlyOppsNeedingReviewAreFlaggedWhenDefaultAllocNotEnabled() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+    /*    AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .disableAllocationTriggers()
             .applyConfiguration();
 
@@ -633,7 +633,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp6.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp6.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 6 - Payment 0, boundary date of tomorrow');
         // Confirm Opportunity with Payments with non null/zero Amount and valid Allocations are not flagged for review
         System.assertEquals(false, ALLO_AllocationsUtil.isRequiresReview(opp7.npe01__OppPayment__r[0], recsForRev.paymentAllocations.get(opp7.npe01__OppPayment__r[0].Id), System.now().addDays(1)), 'Opportunity 7 - Payment 0, boundary date of tomorrow');
-    }
+    */}
 
     // [DEFERRED] isRequiresReview: Confirm that Opportunities with Allocations Modified Since Boundary are flagged for review
     // TODO: Determine viable approach...Difficult to make work with limitations of setting LastModified versus boundary date in tests distinct for Allocations versus Opportunity
@@ -646,7 +646,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmProcessRecordsUpdatesAllocationsCorrectlyWhenPaymentAllocationsAreEnabled() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+    /*    AllocationSetupTest alloSetupTest = new AllocationSetupTest()
         .enableDefaultAllocations()
         .enablePaymentAllocations()
         .disableAllocationTriggers()
@@ -891,7 +891,7 @@ public class ALLO_AllocationsUtil_TEST {
         if (alloSetupTest.isPaymentAllocationsEnabled()) {
             assertPaymentAllocationsAfterProcessing(allocsByPmtId, oppIds, gaus, defaultGAU);
         }
-    }
+    */}
 
     /**
      * @description Executes various Opportunity and Payment Allocation Scenarios when
@@ -900,7 +900,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmProcessRecordsUpdatesAllocationsCorrectlyWhenDefaultAllocationsAreNotEnabled() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+    /*    AllocationSetupTest alloSetupTest = new AllocationSetupTest()
         .disableAllocationTriggers()
         .applyConfiguration();
 
@@ -1129,7 +1129,7 @@ public class ALLO_AllocationsUtil_TEST {
         campAllocs = allocsByCampaignId.get(campaignId);
         assertSObjectList(campAllocs, 1, message);
         assertCampaignAllocation(findByGAU(campAllocs, gaus[1]), campaignId, 10, null, gaus[1].Id, message + ' - Allocation 0');
-    }
+    */}
 
      /**
      * @description Asserts that the Payment Allocations are correct before processing (called
@@ -1141,7 +1141,7 @@ public class ALLO_AllocationsUtil_TEST {
      * @param defaultGAU The default GAU
      */
     private static void assertPaymentAllocationsBeforeProcessing(Map<Id, List<Allocation__c>> allocsByPmtId, List<Id> oppIds, List<General_Accounting_Unit__c> gaus, General_Accounting_Unit__c defaultGAU) {
-        Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>([SELECT    Id,
+    /*    Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>([SELECT    Id,
                                                                             (SELECT     Id
                                                                             FROM npe01__OppPayment__r
                                                                             ORDER BY npe01__Scheduled_Date__c ASC
@@ -1244,7 +1244,7 @@ public class ALLO_AllocationsUtil_TEST {
         allocs = allocsByPmtId.get(pmts[0].Id);
         assertSObjectList(allocs, 1, message);
         assertPaymentAllocation(findByGAU(allocs, gaus[1]), pmts[0].Id, 10, 100, gaus[1].Id, message + ' - Allocation 0');
-    }
+    */}
 
      /**
      * @description Asserts that the Payment Allocations are correct after processing (called
@@ -1255,7 +1255,7 @@ public class ALLO_AllocationsUtil_TEST {
      * @param defaultGAU The default GAU
      */
     private static void assertPaymentAllocationsAfterProcessing(Map<Id, List<Allocation__c>> allocsByPmtId, List<Id> oppIds, List<General_Accounting_Unit__c> gaus, General_Accounting_Unit__c defaultGAU) {
-        Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>([SELECT    Id,
+    /*    Map<Id, Opportunity> oppsById = new Map<Id, Opportunity>([SELECT    Id,
                                                                             (SELECT     Id
                                                                             FROM npe01__OppPayment__r
                                                                             ORDER BY npe01__Scheduled_Date__c ASC
@@ -1359,7 +1359,7 @@ public class ALLO_AllocationsUtil_TEST {
         allocs = allocsByPmtId.get(pmts[0].Id);
         assertSObjectList(allocs, 1, message);
         assertPaymentAllocation(findByGAU(allocs, gaus[1]), pmts[0].Id, 10, 100, gaus[1].Id, message + ' - Allocation 0');
-    }
+    */}
 
      /**
      * @description Finds an Allocation in a List of Allocations by GAU
@@ -1433,7 +1433,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmOpportunitiesInSetAreRetrievedSuccessfully() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+    /*    AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .disableAllocationTriggers()
             .applyConfiguration();
@@ -1500,7 +1500,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(false, opp6pmt2.npe01__Paid__c, 'Opportunity 6 - Payment 2 - Paid');
         System.assertEquals(opp6.Id, opp6pmt2.npe01__Opportunity__c, 'Opportunity 6 - Payment 2 - Opportunity Id');
         System.assertNotEquals(null, opp6pmt2.LastModifiedDate, 'Opportunity 6 - Payment 2 - LastModifiedDate');
-    }
+    */}
 
     /**
      * @description Confirm retrieves Allocation Data for the Opportunities, Payments, Recurring Donations, and
@@ -1509,7 +1509,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmAllocationsAreRetrievedSuccessfully() {
-        AllocationSetupTest alloSetupTest = new AllocationSetupTest()
+    /*    AllocationSetupTest alloSetupTest = new AllocationSetupTest()
             .enableDefaultAllocations()
             .enablePaymentAllocations()
             .disableAllocationTriggers()
@@ -1575,7 +1575,7 @@ public class ALLO_AllocationsUtil_TEST {
         }
         assertRecurringDonationAllocation(alloc, recurringDonationId, null, 50, 'GAU 1', 'Recurring Donation - Allocation 0');
         assertRecurringDonationAllocation(alloc2, recurringDonationId, 10, null, 'GAU 2', 'Recurring Donation - Allocation 1');
-    }
+    */}
 
     /*******************************************************************************************************
      * Helper Methods - Allocation Triggers
@@ -1653,7 +1653,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmInvalidAllocationReturnErrors() {
-        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+    /*    List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert ctcs;
 
         List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 20, null, null);
@@ -1699,7 +1699,7 @@ public class ALLO_AllocationsUtil_TEST {
             List<String> errors = ALLO_AllocationsUtil.validateAllocation(parentObj,testAllos[i]);
             System.assertEquals(testResults[i], errors.size(), 'Validation Test # ' + (i + 1));
         }
-    }
+    */}
 
     /******************************************************
      * Helper Methods - Error Tests
@@ -1721,7 +1721,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmGetOpportunityIdForReturnsTheOpportunityIdAssociatedWiththeTheObject() {
-        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+    /*    List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert ctcs;
 
         List<Opportunity> opps = UTIL_UnitTestData_TEST.oppsForContactList(ctcs, null, UTIL_UnitTestDATA_TEST.getClosedWonStage(), System.today().addDays(30), 20, null, null);
@@ -1735,7 +1735,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(opps[0].Id, ALLO_AllocationsUtil.getOpportunityIdFor(opps[0]), 'Opportunity Id for Opportunity');
         System.assertEquals(opps[0].Id, ALLO_AllocationsUtil.getOpportunityIdFor(pmts[0]), 'Opportunity Id associated with Payment');
         System.assertEquals(null, ALLO_AllocationsUtil.getOpportunityIdFor(ctcs[0]), 'Other Objects will return null');
-    }
+    */}
 
     /**
      * @description Confirm it returns the right Amount depending on whether the Opportunity or the Payment is passed.
@@ -1743,7 +1743,7 @@ public class ALLO_AllocationsUtil_TEST {
      */
     @isTest
     private static void confirmGetAmountForReturnsTheCorrectAmountDependingOnTheObject() {
-        List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+    /*    List<Contact> ctcs = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert ctcs;
 
         Opportunity testOpportunity = new Opportunity(
@@ -1757,7 +1757,7 @@ public class ALLO_AllocationsUtil_TEST {
         System.assertEquals(testPayment.npe01__Payment_Amount__c, ALLO_AllocationsUtil.getAmountFor(testPayment), 'Confirm getAmountFor with Payment');
         System.assertEquals(testOpportunity.Amount, ALLO_AllocationsUtil.getAmountFor(testOpportunity), 'Confirm getAmountFor with Opportunity');
         System.assertEquals(null, ALLO_AllocationsUtil.getAmountFor(ctcs[0]), 'Confirm getAmountFor With Unsupported Object');
-    }
+    */}
 
     /**
      * @description Confirm it returns the right Label for each of the supported objects
@@ -1907,7 +1907,7 @@ public class ALLO_AllocationsUtil_TEST {
      * @param defaultAllocationsEnabled Boolean if true, Default Allocations will be enabled
      * @return List<Id> List of Opportunities Ids, in the order they were inserted
      ********************************************************************************************************/
-    private static List<Id> createTestDataAndReturnOppIds(AllocationSetupTest alloSetupTest) {
+    /*private static List<Id> createTestDataAndReturnOppIds(AllocationSetupTest alloSetupTest) {
         List<General_Accounting_Unit__c> gaus = alloSetupTest.getGAUs();
         General_Accounting_Unit__c defaultGAU = (alloSetupTest.isDefaultAllocationsEnabled()) ? alloSetupTest.getDefaultGAU() : null;
 
@@ -2342,7 +2342,7 @@ public class ALLO_AllocationsUtil_TEST {
         }
 
         return oppIds;
-    }
+    }*/
 
     /*******************************************************************************************************
      * @description Asserts the list sizes for each of the allocations list in the RecordsForReview
@@ -2355,12 +2355,12 @@ public class ALLO_AllocationsUtil_TEST {
      * @param rdAllocSize The expected size of the Recurring Donations Allocations Map
      * @param campAllocSize The expected size of the Campaign Allocations Map
      ********************************************************************************************************/
-    private static void assertRecsForReviewAllocations(ALLO_AllocationsUtil.RecordsForReview recsForRev, String addtlMsg, Integer oppsAllocSize, Integer pmtAllocSize, Integer rdAllocSize, Integer campAllocSize) {
+    /*private static void assertRecsForReviewAllocations(ALLO_AllocationsUtil.RecordsForReview recsForRev, String addtlMsg, Integer oppsAllocSize, Integer pmtAllocSize, Integer rdAllocSize, Integer campAllocSize) {
         System.assertEquals (oppsAllocSize, recsForRev.oppsAllocations.size(), addtlMsg + ': Opportunity Allocations Map Size');
         System.assertEquals (pmtAllocSize, recsForRev.paymentAllocations.size(), addtlMsg + ': Payment Allocations Map Size');
         System.assertEquals (rdAllocSize, recsForRev.recurringDonationAllocations.size(), addtlMsg + ': Recurring Donation Allocations Map Size');
         System.assertEquals (campAllocSize, recsForRev.campaignAllocations.size(), addtlMsg + ': Campaign Allocations Map Size');
-    }
+    }*/
 
     /*******************************************************************************************************
      * @description Asserts the various expected field values of an Opportunity Allocation__c record
