@@ -54,7 +54,7 @@ private class PS_IntegrationService_TEST {
      * Integrations package with a valid API Key
      */
     @IsTest
-    private static void setConfigurationWithPaymentsAPIKey() {
+    private static void shouldSetConfigurationWithPaymentsAPIKey() {
         Test.startTest();
 
         PS_IntegrationService.setConfiguration(configParams);
@@ -82,7 +82,7 @@ private class PS_IntegrationService_TEST {
     * Integrations package with invalid configuration parameters
     */
     @IsTest
-    private static void setConfigurationWithInvalidConfigurationParameters() {
+    private static void shouldSetConfigurationWithInvalidConfigurationParameters() {
        configParams = new Map<String, List<Map<String, String>>>();
 
         Test.startTest();
