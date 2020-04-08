@@ -117,3 +117,4 @@ class GiftEntryPage(BaseNPSPPage, BasePage):
                 self.builtin.log("As expected Advanced Mapping is not enabled by default")
             else:
                 raise Exception("Advanced Mapping is already enabled. Org should not have this enabled by default")                  
+
