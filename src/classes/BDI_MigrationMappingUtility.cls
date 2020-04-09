@@ -94,7 +94,9 @@ public with sharing class BDI_MigrationMappingUtility {
     * utility as bad help text mappings and need to be skipped
     */
     private final Set<String> HELP_TEXT_EXCEPTIONS = new Set<String>{
-        'The role that the Opportunity Contact Role should be created with.  For example enter \'Soft Credit\' to create a soft credit opportunity contact role.'
+        'The role that the Opportunity Contact Role should be created with.  For example enter \'Soft Credit\' '+
+                'to create a soft credit opportunity contact role.',
+            'Indicates the type of transaction.'
     };
 
     /*******************************************************************************************************
