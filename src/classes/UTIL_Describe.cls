@@ -609,7 +609,8 @@ public class UTIL_Describe {
     }
 
     /**
-    * @description Retrieve the localized picklist label for any given picklist api name
+    * @description Retrieve the localized picklist labels for any given picklist api name. This returns
+    * the translation for all picklist values, not just the active ones.
     * @param objectType SObjectType
     * @param fieldType SObjectField
     * @param apiName picklist api name
@@ -620,8 +621,10 @@ public class UTIL_Describe {
             picklistTranslations.put(fieldType, new Map<String, String>());
             String fieldName = String.valueOf(fieldType);
             String objectName = String.valueOf(objectType);
-            for (SelectOption option : UTIL_Describe.getSelectOptions(objectName, fieldName)) {
-                picklistTranslations.get(fieldType).put(option.getValue(), option.getLabel());
+
+            Schema.DescribeFieldResult describeField = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+            for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
+                picklistTranslations.get(fieldType).put(entry.getValue(), entry.getLabel());
             }
         }
         return picklistTranslations.get(fieldType).get(apiName);
