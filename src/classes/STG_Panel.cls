@@ -179,25 +179,6 @@ public with sharing virtual class STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description list of SelectOptions for Opportunity Contact Roles
-    */
-    static public list<SelectOption> listSOContactRoles {
-        get {
-            if (listSOContactRoles == null) {
-                listSOContactRoles = new list<SelectOption>();
-                listSOContactRoles.add(new SelectOption('', Label.stgLabelNone));
-                Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role;
-                List<Schema.PicklistEntry> P = F.getPicklistValues();
-                for (Schema.PicklistEntry pe : P) {
-                    listSOContactRoles.add(new SelectOption(pe.getLabel(), pe.getLabel()));
-                }
-            }
-            return listSOContactRoles;
-        }
-        private set;
-    }
-
-    /*******************************************************************************************************
     * @description list of SelectOptions for Household Object Creation Rules
     */
     static public list<SelectOption> listSOHHRules {
@@ -314,10 +295,29 @@ public with sharing virtual class STG_Panel {
                 Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for(Schema.PicklistEntry pe : P) {
-                    listSOOppContactRoles.add(new SelectOption(pe.getLabel(), pe.getLabel()));
+                    listSOOppContactRoles.add(new SelectOption(pe.getValue(), pe.getLabel()));
                 }
             }
             return listSOOppContactRoles;
+        }
+        private set;
+    }
+
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Opportunity Contact Roles
+    */
+    static public list<SelectOption> listSOContactRoles {
+        get {
+            if (listSOContactRoles == null) {
+                listSOContactRoles = new list<SelectOption>();
+                listSOContactRoles.add(new SelectOption('', Label.stgLabelNone));
+                Schema.DescribeFieldResult F = Schema.sObjectType.OpportunityContactRole.fields.Role;
+                List<Schema.PicklistEntry> P = F.getPicklistValues();
+                for(Schema.PicklistEntry pe : P) {
+                    listSOContactRoles.add(new SelectOption(pe.getValue(), pe.getLabel()));
+                }
+            }
+            return listSOContactRoles;
         }
         private set;
     }
@@ -334,7 +334,7 @@ public with sharing virtual class STG_Panel {
 	            list<Schema.PicklistEntry> P = F.getPicklistValues();
 
 	            for (Schema.PicklistEntry plistentry: P) {
-	                listSOOppTypes.add(new SelectOption(plistentry.getLabel(),plistentry.getLabel()));
+	                listSOOppTypes.add(new SelectOption(plistentry.getValue(),plistentry.getLabel()));
 	            }
 	        }
 	        return listSOOppTypes;
@@ -353,7 +353,7 @@ public with sharing virtual class STG_Panel {
                 Schema.DescribeFieldResult F = Schema.sObjectType.npe4__Relationship__c.fields.npe4__Type__c;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
-                    listSORelTypes.add(new SelectOption(pe.getLabel(), pe.getLabel()));
+                    listSORelTypes.add(new SelectOption(pe.getValue(), pe.getLabel()));
                 }
             }
             return listSORelTypes;
@@ -372,7 +372,7 @@ public with sharing virtual class STG_Panel {
                 Schema.DescribeFieldResult F = Schema.sObjectType.Campaign.fields.Type;
                 List<Schema.PicklistEntry> P = F.getPicklistValues();
                 for (Schema.PicklistEntry pe : P) {
-                    listSOCampaignTypes.add(new SelectOption(pe.getLabel(), pe.getLabel()));
+                    listSOCampaignTypes.add(new SelectOption(pe.getValue(), pe.getLabel()));
                 }
             }
             return listSOCampaignTypes;
@@ -466,5 +466,30 @@ public with sharing virtual class STG_Panel {
         Id runningUserProfileId = UserInfo.getProfileId();
         return USER_UserService.isSysAdmin(new List<User>{(new User(Id = runningUserId, ProfileId = runningUserProfileId))}).get(runningUserId);
 
+    }
+
+    /*******************************************************************************************************
+    * @description Get the label of the picklist value
+    * @param objectName The Sobject name of the picklist field
+    * @param fieldName The field name of the picklist field
+    * @param apiValue The value of the picklist field
+    * @return String The label value of the picklist field
+    */
+    public static String getPicklistLabelFromValue(String objectName, String fieldName, String apiValue) {
+        Schema.DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+        
+        if (fieldResult.getType() !== Schema.DisplayType.PICKLIST && fieldResult.getType() !== Schema.DisplayType.MULTIPICKLIST) {
+            return apiValue;
+        }
+        if (String.isBlank(apiValue)) {
+            return System.Label.stgLabelNone;
+        }
+        for (Schema.PicklistEntry entry : fieldResult.getPicklistValues()) {
+            if (entry.getValue() == apiValue) {
+                return entry.getLabel();
+            }
+        }
+
+        return apiValue;
     }
 }
