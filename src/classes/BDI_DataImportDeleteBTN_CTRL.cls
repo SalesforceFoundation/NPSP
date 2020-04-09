@@ -69,11 +69,8 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
      */
     public PageReference buttonClick() {
         if (!canDelete) {
-            ApexPages.addMessage(new ApexPages.Message(
-                ApexPages.Severity.ERROR,
-                String.format(
-                    System.Label.exceptionDeletePermission,
-                    new List<String>{ SObjectType.DataImport__c.getLabel() })));
+            displayDeleteError();
+
 
             return null;
         }
@@ -93,6 +90,14 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
 
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errMsg)); 
         return null;
+    }
+
+    private void displayDeleteError() {
+        ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR,
+                String.format(
+                        System.Label.exceptionDeletePermission,
+                        new List<String>{ SObjectType.DataImport__c.getLabel() })));
     }
 
     /** 
@@ -129,9 +134,13 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
         }
 
         try {
-            delete dataImports;
-            return close();
-
+            if(canDelete) {
+                delete dataImports;
+                return close();
+            } else {
+                displayDeleteError();
+                return null;
+            }
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage())); 
             return null; 
