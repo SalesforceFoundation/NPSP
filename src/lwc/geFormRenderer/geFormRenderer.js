@@ -311,8 +311,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         return tokenizationErrors[e];
                     }).join(', ');
             }
-
-            showToast('Error', `${tokenizationErrors}`, 'error');
             return;
         }
 
