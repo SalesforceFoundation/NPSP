@@ -50,10 +50,9 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     @TestVisible
     public Boolean canDelete {
         get {
-            if (canDelete == null) {
-                canDelete = SObjectType.DataImport__c.isDeletable();
+            if(canDelete == null) {
+                canDelete = checkDelete();
             }
-
             return canDelete;
         }
         private set;
@@ -70,8 +69,6 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     public PageReference buttonClick() {
         if (!canDelete) {
             displayDeleteError();
-
-
             return null;
         }
 
@@ -90,6 +87,10 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
 
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errMsg)); 
         return null;
+    }
+
+    private Boolean checkDelete() {
+        return UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
     }
 
     private void displayDeleteError() {
@@ -134,7 +135,8 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
         }
 
         try {
-            if(canDelete) {
+            // avoid using VF view state to check delete permissions
+            if(checkDelete()) {
                 delete dataImports;
                 return close();
             } else {

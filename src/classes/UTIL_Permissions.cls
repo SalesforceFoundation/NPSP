@@ -167,6 +167,17 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
+    /**
+    * @description Instance method which can be mocked
+    * Determines whether the running user has delete permissions on the given object
+    *
+    * @param sObjectType SObjectType to check
+    * @return returns boolean to indicate whether the user has permission
+    */
+    public Boolean canDelete(Schema.SObjectType sObjectType) {
+        return canDelete(sObjectType.getDescribe().getName(), false);
+    }
+
     /*** Field Level Security ***/
 
     /**
