@@ -493,6 +493,14 @@ public without sharing class RD2_ScheduleService {
             adjusted = Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
         }
 
+        if (
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY &&
+            schedule.StartDate__c.day() != adjusted.day() &&
+            schedule.StartDate__c.day() == Date.daysInMonth(adjusted.year(), adjusted.month())
+        ) {
+            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(), adjusted.month()));
+        }
+
         return adjusted;
     }
 
