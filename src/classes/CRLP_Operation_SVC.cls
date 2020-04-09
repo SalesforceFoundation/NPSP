@@ -45,6 +45,9 @@ public class CRLP_Operation_SVC {
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     private static final String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
 
+    /* @description Is the Org enabled for Multi-Currency */
+    private static final Boolean isMultiCurrencyOrg = UTIL_Currency.getInstance().isMultiCurrencyOrganization();
+
     /**
      * @description Perform the rollup operation based on the details in the CRLP_Rollup_SVC.Rollup instance
      * against the passed  SObjects
@@ -183,7 +186,10 @@ public class CRLP_Operation_SVC {
     private static Decimal convertAmountToCurrency(Decimal amount, CRLP_Rollup rollup, SObject amtSObject, Date dateValue) {
 
         // If the amount is not null or zero, then convert to the Account currency as required
-        if (amount == null || amount == 0 || !UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+        if (amount == null || amount == 0
+            || !isMultiCurrencyOrg
+            || rollup.amountFieldType != Schema.DisplayType.Currency
+        ) {
             return amount;
         }
 
@@ -237,7 +243,7 @@ public class CRLP_Operation_SVC {
             CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.operation);
 
             // If the ResultField (DetailField) is the same as the Amount Field, then just get the value that
-            // was retrieved/converted in the code block above. Otherwise retrieve and convert as required.
+            // was retrieved/converted in the code block above. Otherwise retrieve and convert.
             if (r.detailField == amtField && r.detailObject == oppObjectName) {
                 resultVal = amountValue;
             } else {
@@ -247,10 +253,16 @@ public class CRLP_Operation_SVC {
 
                 // If the result field is a currency type field and multi-currency is enabled in the org
                 // then convert it to the target currency
-                if (resultVal != null && r.resultFieldDisplayType == DisplayType.CURRENCY &&
-                    UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-                    String fromCurrCode = UserInfo.getDefaultCurrency(); // default just in case there's an issue getting the detail record currency
-                    resultVal = UTIL_CurrencyConversion.convertAmount((Decimal) resultVal, dateValue, fromCurrCode, rollup.currCode);
+                if (resultVal != null && r.resultFieldDisplayType == DisplayType.CURRENCY && isMultiCurrencyOrg) {
+                    String fromCurrency = UserInfo.getDefaultCurrency(); // default just in case there's an issue getting the detail record currency
+                    try {
+                        Object currencyIsoCode = (r.detailObject == oppObjectName ?
+                            oppSObject.get('CurrencyIsoCode') : detailSObject.get('CurrencyIsoCode'));
+                        if (currencyIsoCode != null) {
+                            fromCurrency = (String) currencyIsoCode;
+                        }
+                    } catch (Exception ex) { }
+                    resultVal = UTIL_CurrencyConversion.convertAmount((Decimal) resultVal, dateValue, fromCurrency, rollup.currCode);
                 }
             }
 
