@@ -198,33 +198,36 @@ public class BDI_MigrationMappingHelper {
     *        developerName = Field Mapping Set's developer name
     * @return Collection of Strings composed of Target and Source names
     */
-    public List<String> getFieldMappingKeysByDeveloperName (List<String> defaultFieldMappingNames, String developerName){
+    public List<String> getFieldMappingKeysByDeveloperName (
+            List<String> defaultFieldMappingNames, String developerName){
 
         List<String> fieldMappingKeys = new List<String>();
 
-        Data_Import_Field_Mapping_Set__mdt[] fieldMappingSets = [SELECT Id
-                                                                FROM Data_Import_Field_Mapping_Set__mdt
-                                                                WHERE DeveloperName = :developerName];
+        Data_Import_Field_Mapping_Set__mdt[] fieldMappingSets = [SELECT
+                Id
+        FROM Data_Import_Field_Mapping_Set__mdt
+        WHERE DeveloperName = :developerName];
 
-        List<Data_Import_Field_Mapping__mdt> referenceFieldMappings = [SELECT Id,
-                                                                                DeveloperName,
-                                                                                Source_Field_API_Name__c,
-                                                                                Target_Field_API_Name__c,
-                                                                                Data_Import_Field_Mapping_Set__c,
-                                                                                Target_Object_Mapping__r.Object_API_Name__c,
-                                                                                Target_OBject_Mapping__r.Legacy_Data_Import_Object_Name__c,
-                                                                                Is_Deleted__c
-                                                                        FROM Data_Import_Field_Mapping__mdt
-                                                                        WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSets[0].Id
-                                                                        AND DeveloperName = :defaultFieldMappingNames
-                                                                        AND Is_Deleted__c = false];
+        List<Data_Import_Field_Mapping__mdt> referenceFieldMappings = [SELECT
+                Id,
+                DeveloperName,
+                Source_Field_API_Name__c,
+                Target_Field_API_Name__c,
+                Data_Import_Field_Mapping_Set__c,
+                Target_Object_Mapping__r.Object_API_Name__c,
+                Target_OBject_Mapping__r.Legacy_Data_Import_Object_Name__c,
+                Is_Deleted__c
+        FROM Data_Import_Field_Mapping__mdt
+        WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSets[0].Id
+        AND DeveloperName = :defaultFieldMappingNames
+        AND Is_Deleted__c = false];
 
         for (Data_Import_Field_Mapping__mdt reference : referenceFieldMappings) {
             if (UTIL_Namespace.shouldAlignNamespace) {
-                reference.Source_Field_API_Name__c =
-                        UTIL_Namespace.alignSchemaNSWithEnvironment(reference.Source_Field_API_Name__c);
-                reference.Target_Object_Mapping__r.Object_API_Name__c =
-                        UTIL_Namespace.alignSchemaNSWithEnvironment(reference.Target_Object_Mapping__r.Object_API_Name__c);
+                reference.Source_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                                reference.Source_Field_API_Name__c);
+                reference.Target_Object_Mapping__r.Object_API_Name__c =UTIL_Namespace.alignSchemaNSWithEnvironment(
+                                reference.Target_Object_Mapping__r.Object_API_Name__c);
             }
             fieldMappingKeys.add(
                     reference.Target_Object_Mapping__r.Object_API_Name__c
@@ -282,10 +285,10 @@ public class BDI_MigrationMappingHelper {
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
             if (UTIL_Namespace.shouldAlignNamespace) {
-                fieldMapping.Source_Field_API_Name__c =
-                        UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Source_Field_API_Name__c);
-                fieldMapping.Target_Object_Mapping__r.Object_API_Name__c =
-                        UTIL_Namespace.alignSchemaNSWithEnvironment(fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
+                fieldMapping.Source_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                                fieldMapping.Source_Field_API_Name__c);
+                fieldMapping.Target_Object_Mapping__r.Object_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                                fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
             }
             fieldMappingsBySourceFieldName.put(
                     fieldMapping.Target_Object_Mapping__r.Object_API_Name__c

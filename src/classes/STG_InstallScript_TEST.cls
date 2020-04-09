@@ -495,7 +495,7 @@ public with sharing class STG_InstallScript_TEST {
     @isTest
     public static void shouldCreateMigratedCustomFieldMappingOnUpdate() {
         Data_Import_Settings__c setting = new Data_Import_Settings__c();
-        setting.Field_Mapping_Method__c = 'Data Import Field Mapping';
+        setting.Field_Mapping_Method__c = BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
         insert setting;
 
         BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
@@ -505,7 +505,8 @@ public with sharing class STG_InstallScript_TEST {
         BDI_MigrationMappingUtility util= new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
 
         Test.testInstall(new STG_InstallScript(util), new Version(1,0), true);
-        System.assertEquals(2, util.queuedMetadataTypesForDeploy.size(), 'We have 2 metadata records queued for deployment.');
+        System.assertEquals(2, util.queuedMetadataTypesForDeploy.size(),
+                'We have 2 metadata records queued for deployment.');
     }
 
 
@@ -791,7 +792,8 @@ public with sharing class STG_InstallScript_TEST {
                                         '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
                                         '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
                                         '","Target_Object_Mapping__r":{"Id":"' + account1ObjectMapping.Id +
-                                        '","DeveloperName":"Account1","MasterLabel":"Account1","Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
+                                        '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                        '"Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
                                 Data_Import_Field_Mapping__mdt.class);
 
                 Data_Import_Field_Mapping__mdt fieldMapping2 =
@@ -806,7 +808,8 @@ public with sharing class STG_InstallScript_TEST {
                                         '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
                                         '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
                                         '","Target_Object_Mapping__r":{"Id":"' + account1ObjectMapping.Id +
-                                        '","DeveloperName":"Account1","MasterLabel":"Account1","Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
+                                        '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                        '"Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
                                 Data_Import_Field_Mapping__mdt.class);
 
                 List<String> referenceFieldMappings = new List<String>();
@@ -870,7 +873,8 @@ public with sharing class STG_InstallScript_TEST {
                                         '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
                                         '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
                                         '","Target_Object_Mapping__r":{"Id":"' + account1ObjectMapping.Id +
-                                        '","DeveloperName":"Account1","MasterLabel":"Account1","Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
+                                        '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                        '"Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
                                 Data_Import_Field_Mapping__mdt.class);
 
                 if (listOfArgs.contains('Migrated_Custom_Field_Mapping_Set')) {
@@ -892,7 +896,8 @@ public with sharing class STG_InstallScript_TEST {
                                             '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
                                             '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
                                             '","Target_Object_Mapping__r":{"Id":"' + account1ObjectMapping.Id +
-                                            '","DeveloperName":"Account1","MasterLabel":"Account1","Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
+                                            '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                            '"Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
                                     Data_Import_Field_Mapping__mdt.class);
                     Data_Import_Field_Mapping__mdt fieldMapping2 =
                             (Data_Import_Field_Mapping__mdt)JSON.deserialize(
@@ -906,7 +911,8 @@ public with sharing class STG_InstallScript_TEST {
                                             '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
                                             '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
                                             '","Target_Object_Mapping__r":{"Id":"' + account1ObjectMapping.Id +
-                                            '","DeveloperName":"Account1","MasterLabel":"Account1","Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
+                                            '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                            '"Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
                                     Data_Import_Field_Mapping__mdt.class);
 
                     return new Map<String, Data_Import_Field_Mapping__mdt>{
