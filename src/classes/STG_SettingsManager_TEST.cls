@@ -176,24 +176,35 @@ private with sharing class STG_SettingsManager_TEST {
         System.assertEquals(null, ctrl.errorMsg);
     }
 
-
-    /*********************************************************************************************************
-    * @description Tests the DataBoundMultiSelect control used in Settings
-    * @return void
+    /**
+    * @description Verifies that when the options are selected, the displayed string will be converted to Label and the
+    * actual values will stay in Api format
     */
     @isTest
-    private static void testDataBoundMultiSelect() {
+    private static void shouldConvertToLabelForDisplayAndApiValueForSaving() {
         STG_DataBoundMultiSelect_CTRL ctrl = new STG_DataBoundMultiSelect_CTRL();
+        List<SelectOption> options = new List<SelectOption> {
+            new SelectOption('value1', 'label1'),
+            new SelectOption('value2', 'label2'),
+            new SelectOption('value3', 'label3')
+        };
+
         Contact con = new Contact();
-        con.npo02__Naming_Exclusions__c = 'a;b;c';
+
+        con.npo02__Naming_Exclusions__c = 'value1;value2';
         ctrl.sobjBinding = con;
+        ctrl.listSelectOption = options;
         ctrl.strField = 'npo02__Naming_Exclusions__c';
-        system.assertNotEquals(null, ctrl.listStrValues);
-        system.assertEquals(3, ctrl.listStrValues.size());
-        system.assertEquals('a;b;c', ctrl.strValues);
-        list<string> listStr = new list<string>{'x', 'y', 'z'};
-        ctrl.listStrValues = listStr;
-        system.assertEquals('x;y;z', ctrl.strValues);
+
+        System.assertEquals('label1;label2', ctrl.strValues, 'strValues should be convert to label for display');
+        System.assertEquals('value1;value2', con.npo02__Naming_Exclusions__c, 'Field value should remain the API value');
+
+        Test.startTest();
+        ctrl.listStrValues = new List<String>{'value2', 'value3'};        
+        Test.stopTest();
+
+        System.assertEquals('label2;label3', ctrl.strValues, 'strValues should be convert to label for display');
+        System.assertEquals('value2;value3', con.npo02__Naming_Exclusions__c, 'Field value should remain the API value');
     }
 
     /*********************************************************************************************************
@@ -215,7 +226,6 @@ private with sharing class STG_SettingsManager_TEST {
         system.assertEquals(null, ctrl.cancelEdit());
         system.assertEquals(false, ctrl.isEditMode);
         system.assertEquals(3, STG_Panel.listSOAccountModels.size());
-        system.assertNotEquals(null, STG_Panel.listSOContactRoles);
         system.assertNotEquals(null, STG_Panel.listSOHHRules);
         system.assertNotEquals(null, STG_Panel.listSOContactRecTypes);
         system.assertNotEquals(null, STG_Panel.listSOAccountRecTypeIds);
@@ -1157,6 +1167,23 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     }
 
+    /**
+    * @description Verifies that the api value of the picklist will be converted into corresponding label
+    */
+    @isTest
+    private static void shouldConvertPicklistApiValueIntoLabelValue() {
+        System.runAs(UTIL_UnitTestData_TEST.createNonEnglishUserWithoutInsert(UTIL_UnitTestData_TEST.PROFILE_STANDARD_USER)) {
+            Schema.DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe('OpportunityContactRole', 'Role');
+            String label = fieldResult.getPicklistValues()[0].getLabel();
+            String apiValue = fieldResult.getPicklistValues()[0].getValue();
+
+            Test.startTest();
+            String convertedLabel = STG_Panel.getPicklistLabelFromValue('OpportunityContactRole', 'Role', apiValue);
+            Test.stopTest();
+
+            System.assertEquals(label, convertedLabel, 'The api value should be correctly converted into the corressponding label');
+        }
+    }
 
     /*********************************************************************************************************
     * @description Tests the Run RD Batch panel
