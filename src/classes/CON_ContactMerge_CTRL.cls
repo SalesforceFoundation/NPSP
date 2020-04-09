@@ -437,7 +437,6 @@ public with sharing class CON_ContactMerge_CTRL {
                 showDRSButton = false;
                 showContactSearch = true;
             }
-            
         }
 
         //otherwise, check for a search parameter for the SOSL query and use that
