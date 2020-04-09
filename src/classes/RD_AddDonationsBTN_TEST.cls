@@ -147,6 +147,8 @@ private with sharing class RD_AddDonationsBTN_TEST {
     */
     @isTest
     private static void shouldDisplayErrorMessageWhenUserHaveNoEditOrDeletePermission() {
+        String accessType = 'CreateOnly';
+
         Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert acc;
 
@@ -162,7 +164,7 @@ private with sharing class RD_AddDonationsBTN_TEST {
         User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
         // Run as admin user to set the permission set with object level create permission for the readonlyuser
         System.runas(adminUser) {
-            assignCreateOnlyPermissionSet(readOnlyUser.id);
+            assignPermissionSet(accessType, readOnlyUser.id);
         }
 
 
@@ -176,12 +178,56 @@ private with sharing class RD_AddDonationsBTN_TEST {
             // The error should be generated and rendered by the constructor
             UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
             UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationPermissionDenied, ApexPages.Severity.ERROR);
+            System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
 
         }
 
         Test.stopTest();
 
     }
+
+    /***
+    * @description Verify if it refreshes the opportunity when the read only user has all permissions
+    */
+    @isTest
+    private static void shouldContinueRefreshOpportunityWithAllPermissions() {
+        String accessType = 'All';
+
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert acc;
+
+        npe03__Recurring_Donation__c rd = getLegacyRDBuilder()
+            .withAccount(acc.Id)
+            .withNextDonationDate(System.today())
+            .build();
+
+        insert rd;
+
+        User readOnlyUserWithAllPermission = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        // Run as admin user to set the permission set with object level create permission for the readonlyuser
+        System.runas(adminUser) {
+            assignPermissionSet(accessType, readOnlyUserWithAllPermission.id);
+        }
+
+
+        Test.startTest();
+
+        System.runAs(readOnlyUserWithAllPermission) {
+            RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
+                new ApexPages.StandardController(rd)
+            );
+
+           System.assertEquals(true, ctrl.showContinueBtn, 'The continue button should be there');
+           System.assertEquals(rd.Id, ctrl.sc.getId());
+
+        }
+
+        Test.stopTest();
+
+    }
+
 
 
     // Helpers
@@ -217,10 +263,12 @@ private with sharing class RD_AddDonationsBTN_TEST {
     }
 
     /***
-    * @description Creates and assigns the permission set with Create permission without edit or delete
-    * permission on Opportunity object
+    * @description Creates and assigns the permission set with Create permission or with all
+    * permissions on Opportunity object
     */
-    private static void assignCreateOnlyPermissionSet(Id userId) {
+    private static void assignPermissionSet(String access, Id userId) {
+        Boolean allPermission = false;
+
         PermissionSet permission = new PermissionSet(
             Name = 'PermissionTest',
             Label = 'PermissionTest'
@@ -228,14 +276,15 @@ private with sharing class RD_AddDonationsBTN_TEST {
 
         insert permission;
 
+        allPermission = access == 'All' ? allPermission = true : allPermission;
 
         insert new ObjectPermissions (
             SObjectType = 'Opportunity',
             ParentId = permission.id,
             PermissionsRead = true,
-            PermissionsEdit = false,
+            PermissionsEdit = allPermission,
             PermissionsCreate = true,
-            PermissionsDelete = false
+            PermissionsDelete = allPermission
         );
 
         insert new PermissionSetAssignment(
