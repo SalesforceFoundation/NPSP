@@ -433,11 +433,18 @@ public with sharing class CON_ContactMerge_CTRL {
 
         if(!mergeIds.isEmpty()) {
             loadMergeCandidates(mergeIds);
+            if(!ApexPages.hasMessages()) {
+                showDRSButton = false;
+                showContactSearch = true;
+            }
+            
         }
 
         //otherwise, check for a search parameter for the SOSL query and use that
         else if(ApexPages.CurrentPage().getParameters().containsKey('srch')) {
             searchText = ApexPages.CurrentPage().getParameters().get('srch');
+            showDRSButton = false;
+            showContactSearch = true;
             search();
         }
         //otherwise, check for a mergeIds parameter, which should contain a comma separated list 
@@ -451,7 +458,10 @@ public with sharing class CON_ContactMerge_CTRL {
                 //if we got any ids, use to try and enter the merge selected records page
                 if (mergeIds != null) {
                     loadMergeCandidates(mergeIds);
-                    this.step = 3;
+                    if(!ApexPages.hasMessages()) {
+                        showDRSButton = false;
+                        showContactSearch = true;
+                    }
                 }
             }
             catch(StringException e){
@@ -512,6 +522,8 @@ public with sharing class CON_ContactMerge_CTRL {
         }
 
         selectedRecordsCount = mergeCandidates.size();
+        fieldRows.clear();
+        selectedRecords.clear();
 
         Map<String, Schema.SObjectField> contactFields = Schema.SObjectType.Contact.fields.getMap();
         Map<String, Schema.DescribeFieldResult> standardFieldMap = 
@@ -585,7 +597,7 @@ public with sharing class CON_ContactMerge_CTRL {
                 System.Label.conMergeErrorNoDeleteRecAccess));
             return;
         }
-
+        
         // Update the list of searched records with only the ones selected
         searchResults.clear();
         for (Contact c : contacts) {
@@ -920,6 +932,7 @@ public with sharing class CON_ContactMerge_CTRL {
     public PageReference mergeContacts() {
         SObject master;
         // Find the master record based the selected value of the Master FieldRow
+        
         for (FieldRow row : fieldRows) {
             if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {
                 master = new Contact(id = row.selectedValue);
