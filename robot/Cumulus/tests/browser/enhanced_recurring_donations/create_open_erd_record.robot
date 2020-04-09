@@ -9,16 +9,16 @@ Library         cumulusci.robotframework.PageObjects
 Suite Setup     Run keywords
 ...             Open Test Browser
 ...             Setup Test Data
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 ***Keywords***
 # Setup a contact with parameters specified
 Setup Test Data
     Setupdata           account      None    None    ${account_fields}
-    ${date} =     Get Current Date      result_format=%-m/%-d/%Y
+    ${date} =           Get Current Date      result_format=%-m/%-d/%Y
     Set Suite Variable  ${date}
-    ${currdate}=  Get Current Date  result_format=datetime
-    ${currentvalue} =  Evaluate  ${12-${currdate.month}}*100
+    ${currdate}=        Get Current Date  result_format=datetime
+    ${currentvalue} =   Evaluate  ${12-${currdate.month}}*100
     Set Suite Variable  ${currentvalue}
     ${ns} =             Get NPSP Namespace Prefix
     Set Suite Variable  ${ns}
@@ -59,11 +59,11 @@ Create Open Recurring Donation With Monthly Installment
     Select Value From Dropdown             Day of Month                               1
     Click Modal Button                     Save
     Wait Until Modal Is Closed
-    Current Page Should Be                 Details                               npe03__Recurring_Donation__c
+    Current Page Should Be                 Details                                   npe03__Recurring_Donation__c
 
-    ${rd_id}                               Save Current Record ID For Deletion   npe03__Recurring_Donation__c
+    ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
 
-    Validate Field Values On Details
+    Validate Field Values Under Section
     ...                                     Recurring Donation Name=${data}[account][Name] $${amount} - Recurring
     ...                                     Account=${data}[account][Name]
     ...                                     Amount=$100.00
@@ -82,15 +82,19 @@ Create Open Recurring Donation With Monthly Installment
     Go To Page                              Details
     ...                                     npe03__Recurring_Donation__c
     ...                                     object_id=${rd_id}
+    Wait Until Loading Is Complete
 
     # validate recurring donation statistics current and next year value
-    Validate Field Values On Details
-        ...                                     Current Year Value=$${currentvalue}.00
-        ...                                     Next Year Value=$1,200.00
+    Validate Field Values Under Section     Recurring Donation Statistics
+        ...                                 Current Year Value=$${currentvalue}.00
+        ...                                 Next Year Value=$1,200.00
 
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend and validate the stage on opportunity is Pledged
-    Validate Related Record Count          Opportunities                                                    1
-    @{opportunity1} =                      API Query Opportunity For Recurring Donation                   ${rd_id}
-    Store Session Record                   Opportunity                                                    ${opportunity1}[0][Id]
-    Go To Page                             Details                        Opportunity                     object_id=${opportunity1}[0][Id]
-    Navigate To And Validate Field Value   Stage                          contains                        Pledged
+    Go To Page                              Details
+    ...                                     npe03__Recurring_Donation__c
+    ...                                     object_id=${rd_id}
+    Validate Related Record Count           Opportunities                                                    1
+    @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
+    Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
+    Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
+    Navigate To And Validate Field Value    Stage                          contains                        Pledged

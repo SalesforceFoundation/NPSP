@@ -15,10 +15,10 @@ Suite Teardown  Delete Records and Close Browser
 # Setup a contact with parameters specified
 Setup Test Data
     Setupdata           account      None    None    ${account_fields}
-    ${date} =     Get Current Date      result_format=%-m/%-d/%Y
+    ${date} =           Get Current Date      result_format=%-m/%-d/%Y
     Set Suite Variable  ${date}
-    ${ns} =                      Get NPSP Namespace Prefix
-    Set Suite Variable           ${ns}
+    ${ns} =             Get NPSP Namespace Prefix
+    Set Suite Variable  ${ns}
 
 *** Variables ***
 &{account_fields}  Type=Organization
@@ -56,11 +56,11 @@ Create Fixed Recurring Donation With Monthly Installment
     Select Value From Dropdown             Day of Month                               1
     Click Modal Button                     Save
     Wait Until Modal Is Closed
-    Current Page Should Be                 Details                               npe03__Recurring_Donation__c
+    Current Page Should Be                 Details                                   npe03__Recurring_Donation__c
 
-    ${rd_id}                               Save Current Record ID For Deletion   npe03__Recurring_Donation__c
+    ${rd_id}                               Save Current Record ID For Deletion       npe03__Recurring_Donation__c
 
-    Validate Field Values On Details
+    Validate Field Values Under Section
     ...                                     Recurring Donation Name=${data}[account][Name] $${amount} - Recurring
     ...                                     Account=${data}[account][Name]
     ...                                     Amount=$100.00
@@ -82,8 +82,8 @@ Create Fixed Recurring Donation With Monthly Installment
     ...                                     object_id=${rd_id}
 
     #Validate the number of opportunities on UI, Verify Opportinity got created in the backend and validate the stage on opportunity is Pledged
-    Validate Related Record Count          Opportunities                                                    1
-    @{opportunity1} =                      API Query Opportunity For Recurring Donation                   ${rd_id}
-    Store Session Record                   Opportunity                                                    ${opportunity1}[0][Id]
-    Go To Page                             Details                        Opportunity                     object_id=${opportunity1}[0][Id]
-    Navigate To And Validate Field Value   Stage                          contains                        Pledged
+    Validate Related Record Count           Opportunities                                                    1
+    @{opportunity1} =                       API Query Opportunity For Recurring Donation                   ${rd_id}
+    Store Session Record                    Opportunity                                                    ${opportunity1}[0][Id]
+    Go To Page                              Details                        Opportunity                     object_id=${opportunity1}[0][Id]
+    Navigate To And Validate Field Value    Stage                          contains                        Pledged

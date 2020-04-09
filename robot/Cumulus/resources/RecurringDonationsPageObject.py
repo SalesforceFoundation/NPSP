@@ -39,10 +39,40 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
             self.selenium.click_button(button_name)
 
     @capture_screenshot_on_error
-    def validate_field_values_on_details(self, **kwargs):
-        """For each of the key value pairs, validates that the key contains the value on the details section tab"""
-        for label, value in kwargs.items():
-            self.npsp.navigate_to_and_validate_field_value(label, "contains", value)
+    def validate_field_values_under_section(self, section=None, **kwargs):
+        """Based on the section name , navigates to the sections and validates the key. value pair values passed in kwargs.
+         If the section is current schedule, waits for the Current schedule section card on the side bar
+        Validates the display fields in the card match with the values passed in the key value pair"""
+
+        if section == "Current Schedule":
+            active_schedule_card = npsp_lex_locators["erd"]["active_schedules_card"].format(section)
+            number_fields = ['Amount','Installment Frequency']
+            date_fields =  ['Effective Date']
+            self.selenium.wait_until_element_is_visible(active_schedule_card)
+            for label, value in kwargs.items():
+                if label in number_fields:
+                    locator = npsp_lex_locators["erd"]["formatted_number"].format(label)
+                    actual_value=self.selenium.get_webelement(locator).text
+                elif label in date_fields:
+                    locator = npsp_lex_locators["erd"]["formatted_date"].format(label)
+                    actual_value=self.selenium.get_webelement(locator).text
+                else:
+                    locator = npsp_lex_locators["erd"]["formatted_text"].format(label)
+                    actual_value=self.selenium.get_webelement(locator).text
+
+                    if self.npsp.check_if_element_exists(locator):
+                        print(f"element exists {locator}")
+                        actual_value=self.selenium.get_webelement(locator).text
+                        print(f"actual value is {actual_value}")
+                        self.builtin.log(f"actual value is {actual_value}")
+                        assert value == actual_value, "Expected {} value to be {} but found {}".format(label,value, actual_value)
+                    else:
+                        self.builtin.log("element Not found")
+        else:
+            for label, value in kwargs.items():
+                self.npsp.navigate_to_and_validate_field_value(label, "contains", value, section)
+
+
 
     @capture_screenshot_on_error
     def validate_upcoming_schedules(self, num_payments,startdate):
@@ -66,33 +96,3 @@ class RDDetailPage(BaseNPSPPage,DetailPage ):
                 formatted_actual = datetime.strptime(actual_date, '%m/%d/%Y').date()
                 assert formatted_actual == expected_date, "Expected date to be {} but found {}".format(formatted_actual, expected_date)
                 i=i+1
-
-
-    @capture_screenshot_on_error
-    def validate_field_values_under_section(self, name,**kwargs):
-        """Waits for the Active schedule section card on the side bar
-        Validates the display fields in the card match with the values passed in the key value pair"""
-
-        active_schedule_card = npsp_lex_locators["erd"]["active_schedules_card"].format(name)
-        number_fields = ['Amount','Installment Frequency']
-        date_fields =  ['Effective Date']
-        self.selenium.wait_until_element_is_visible(active_schedule_card)
-        for label, value in kwargs.items():
-            if label in number_fields:
-                locator = npsp_lex_locators["erd"]["formatted_number"].format(label)
-                actual_value=self.selenium.get_webelement(locator).text
-            elif label in date_fields:
-                locator = npsp_lex_locators["erd"]["formatted_date"].format(label)
-                actual_value=self.selenium.get_webelement(locator).text
-            else:
-                locator = npsp_lex_locators["erd"]["formatted_text"].format(label)
-                actual_value=self.selenium.get_webelement(locator).text
-
-                if self.npsp.check_if_element_exists(locator):
-                    print(f"element exists {locator}")
-                    actual_value=self.selenium.get_webelement(locator).text
-                    print(f"actual value is {actual_value}")
-                    self.builtin.log(f"actual value is {actual_value}")
-                    assert value == actual_value, "Expected {} value to be {} but found {}".format(label,value, actual_value)
-                else:
-                    self.builtin.log("element Not found")

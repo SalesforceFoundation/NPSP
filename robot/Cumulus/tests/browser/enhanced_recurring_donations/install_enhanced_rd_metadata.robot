@@ -16,10 +16,10 @@ Suite Teardown  Delete Records and Close Browser
 # Setup a contact with parameters specified
 Setup Test Data
     Setupdata           account      None    None    ${account_fields}
-    ${date} =     Get Current Date      result_format=%-m/%-d/%Y
+    ${date} =           Get Current Date      result_format=%-m/%-d/%Y
     Set Suite Variable  ${date}
-    ${ns} =                      Get NPSP Namespace Prefix
-    Set Suite Variable           ${ns}
+    ${ns} =             Get NPSP Namespace Prefix
+    Set Suite Variable  ${ns}
 
 *** Variables ***
 &{account_fields}  Type=Organization
