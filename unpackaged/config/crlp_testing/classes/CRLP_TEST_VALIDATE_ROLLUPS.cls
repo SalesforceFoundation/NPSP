@@ -1,6 +1,6 @@
 /**
 // Created by Michael Smith on 01/26/2018.
-// Last Modified on 04/09/2019 to include in the deploy_rollup_testing cci flow
+// Last Modified on 04/03/2020 to disable new RD2 functionality and to improve multi-currency support
 //
 // - Deploy this using the "deploy_rollup_testing" CCI flow. That will create the necessary target fields
 //   on the Account object for Account-Contact Soft Credit, Account Soft Credit, and Payment Rollup testing.
@@ -40,6 +40,11 @@
 */
 public class CRLP_TEST_VALIDATE_ROLLUPS {
 
+    // ========================================================================
+    // NOTE: When testing in a multi-currency org, set up CAD with this rate:
+    private static final Double CURR_EXCHANGE_RATE = 2.0;
+    // ========================================================================
+
     // THE FOLLOWING CAN BE ADJUSTED BY THE RUNNING USER DURING THE TESTING TO ADJUST FOR ORG CONFIGURATION
     private static final Boolean ROLLUPS_INCLUDES_MEMBERSHIP = true;
     private static final Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
@@ -57,9 +62,6 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     private static final Integer OPP_COUNT_PER_ACCT = 500;
     private static final Integer CLOSED_OPP_COUNT_PER_ACCT = 450;
 
-    // When testing in a multi-currency org, set up CAD with this rate: 1.2311
-    private static final Double CURR_EXCHANGE_RATE = 2.0;
-
     private static final String ACCOUNT_NAME_RD = 'CRLP TEST ACCOUNT - RD';
     private static final String ACCOUNT_NAME_ORG = 'CRLP TEST ACCOUNT - ORG';
     private static final String ACCOUNT_NAME_ASC = 'CRLP TEST ACCOUNT - AccSoftCredit';
@@ -70,9 +72,11 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     private static final String ACCOUNT_SOFT_CREDIT_ROLE_A = 'Influencer';
     private static final String ACCOUNT_SOFT_CREDIT_ROLE_B = 'Donation Source';
 
+    private static final Decimal OPPORTUNITY_AMOUNT_USD = BASE_AMOUNT_USD;
     private static final Decimal OPPORTUNITY_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? BASE_AMOUNT_USD*CURR_EXCHANGE_RATE : BASE_AMOUNT_USD);
-    private static final Decimal ACCOUNT_SOFT_CREDIT_BASE_AMOUNT = BASE_AMOUNT_USD/2;
-    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? ACCOUNT_SOFT_CREDIT_BASE_AMOUNT*CURR_EXCHANGE_RATE : ACCOUNT_SOFT_CREDIT_BASE_AMOUNT);
+    
+    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT_USD = BASE_AMOUNT_USD / 2;
+    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? ACCOUNT_SOFT_CREDIT_AMOUNT_USD * CURR_EXCHANGE_RATE : ACCOUNT_SOFT_CREDIT_AMOUNT_USD);
 
     private static final Date MEMBERSHIP_FIRST_DATE = Date.newInstance(BASE_YEAR,6,30);
     private static final Decimal MEMBERSHIP_AMOUNT = 25;
@@ -83,7 +87,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             + (ROLLUPS_INCLUDES_MEMBERSHIP ? MEMBERSHIP_TOTAL : 0);
     private static final Decimal ROLLUP_TOTAL_WON_COUNT = CLOSED_OPP_COUNT_PER_ACCT
             + (ROLLUPS_INCLUDES_MEMBERSHIP ? MEMBERSHIP_COUNT : 0);
-    private static final Decimal ROLLUP_TOTAL_LASTYEAR = (OPPORTUNITY_AMOUNT * MAX_OPPS_PER_YEAR)
+    private static final Decimal ROLLUP_TOTAL_LASTYEAR = (BASE_AMOUNT_USD * MAX_OPPS_PER_YEAR)
             + (ROLLUPS_INCLUDES_MEMBERSHIP ? MEMBERSHIP_AMOUNT : 0) ;
     private static final Decimal ROLLUP_AVERAGE = ROLLUP_TOTAL_WON_AMOUNT.divide(ROLLUP_TOTAL_WON_COUNT, 2, System.RoundingMode.HALF_UP);
     private static final Decimal ROLLUP_LARGEST = BASE_AMOUNT_USD;
@@ -310,8 +314,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
                 // Validate Account Soft Credits rollup to one Account, only when CRLPs is enabled
                 if (cs.Customizable_Rollups_Enabled__c == true && TEST_ACCOUNT_SOFT_CREDITS == true) {
-                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + ACCOUNT_SOFT_CREDIT_AMOUNT, (Double) a.get('SC_Total__c'), a.Id + ' Acccount.SC_Total__c should be');
-                    assertValue(ACCOUNT_SOFT_CREDIT_AMOUNT * 2, (Double) a.get('Largest_SC_Amount__c'), a.Id + ' Acccount.Largest_SC_Amount__c should be');
+                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT_USD * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + ACCOUNT_SOFT_CREDIT_AMOUNT_USD, 
+                        (Double) a.get('SC_Total__c'), a.Id + ' Acccount.SC_Total__c should be');
+                    assertValue(ACCOUNT_SOFT_CREDIT_AMOUNT_USD * 2, (Double) a.get('Largest_SC_Amount__c'), a.Id + ' Acccount.Largest_SC_Amount__c should be');
                 }
 
             } else if (a.Id != orgAcct.Id) {
@@ -436,7 +441,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                     assertValue(ORG_DONATION_AMT, c.Largest_Soft_Credit_Amount__c, 'Org Contact.Largest_Soft_Credit_Amount__c should be');
                 }
                 assertValue(0, c.npo02__TotalOppAmount__c, 'Contact.npo02__TotalOppAmount__c should be');
-                assertValue(OPPORTUNITY_AMOUNT, (Double) c.get('First_Soft_Credit_Amount__c'), c.Id + ' Contact.First_Soft_Credit_Amount__c should be');
+                assertValue(OPPORTUNITY_AMOUNT_USD, (Double) c.get('First_Soft_Credit_Amount__c'), c.Id + ' Contact.First_Soft_Credit_Amount__c should be');
 
                 assertValue(null, c.npo02__MembershipJoinDate__c, 'Contact.npo02__MembershipJoinDate__c should be');
                 assertValue(null, c.npo02__MembershipEndDate__c, 'Contact.npo02__MembershipEndDate__c should be');
@@ -732,17 +737,26 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     }
 
     private static void createTestingAllocationsAndAccountSoftCredits() {
+        npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
+        rdSettings.EnableAutomaticNaming__c = false;
+        update rdSettings;
+
         TDTM_Config_API.disableAllRollupTriggers();
 
         accounts = [SELECT Id, Name FROM Account WHERE Site = :TEST_SITE_NAME AND npe01__SYSTEMIsIndividual__c = true];
         contacts = [SELECT Id, FirstName, LastName FROM Contact WHERE Account.Site = :TEST_SITE_NAME];
         gau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = :GAU_NAME LIMIT 1];
 
-        List<Opportunity> opps = [
-            SELECT Id, AccountId, Amount, CloseDate, RecordTypeId, StageName
-            FROM Opportunity
-            WHERE Account.Site = :TEST_SITE_NAME
-        ];
+        UTIL_Query queryOpps = new UTIL_Query()
+            .withFrom(Opportunity.SObjectType)
+            .withSelectFields(new Set<String>{
+                'Id', 'AccountId', 'Amount', 'CloseDate', 'RecordTypeId', 'StageName'
+            })
+            .withWhere('Account.Site = :TEST_SITE_NAME');
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            queryOpps.withSelectFields(new Set<String>{ 'CurrencyIsoCode' });
+        }
+        List<Opportunity> opps = Database.query(queryOpps.build());
 
         Account orgAcct = [
             SELECT Id, Name FROM Account
