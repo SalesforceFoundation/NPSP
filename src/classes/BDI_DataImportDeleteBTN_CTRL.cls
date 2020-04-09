@@ -42,6 +42,15 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     /** @description Action type specified to delete all Data Import records */
     public static final String ACTION_DELETE_ALL = 'deleteAll';
 
+    /** @description Data Import SObject API name */
+    static final String DATA_IMPORT_API_NAME = 'DataImport__c';
+
+    /** @description Identifier for when Salesforce classic is displayed for the user */
+    static final String UI_CLASSIC_THEME = 'Theme3';
+
+    /** @description Identifier for when Lightning Experience is displayed for the user */
+    static final String UI_LIGHTNING_THEME = 'Theme4d';
+
     /** @description The list of found Data Import records to be deleted */
     @TestVisible
     private List<DataImport__c> dataImports;
@@ -143,10 +152,20 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
      * @return PageReference 
      */
     public PageReference close() {
-        String retUrl = ApexPages.currentPage().getParameters().get('retURL');
+        String uiTheme = UserInfo.getUiThemeDisplayed();
+        String url;
+        Schema.DescribeSObjectResult dataImportDescribe = UTIL_Describe.getObjectDescribe(
+                UTIL_Namespace.StrTokenNSPrefix(DATA_IMPORT_API_NAME));
+
+        if (uiTheme == UI_CLASSIC_THEME) {
+            url = '/' + dataImportDescribe.getKeyPrefix();
+        } else if (uiTheme == UI_LIGHTNING_THEME) {
+            url = '/lightning/o/' + dataImportDescribe.getName() + '/list?filterName=Recent';
+        }
+
         PageReference p;
-        if (!String.isBlank(retUrl)) {
-            p = new PageReference(retUrl);
+        if (!String.isBlank(url)) {
+            p = new PageReference(url);
         } else {
             p = USER_UserService.getHomePageReference();
         }
