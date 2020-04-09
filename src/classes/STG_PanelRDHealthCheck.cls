@@ -416,7 +416,7 @@ public inherited sharing class STG_PanelRDHealthCheck {
          */
         private Set<String> getSupportedDayOfMonth() {
             Set<String> values = new Set<String>();
-            for (Integer i = 0; i < 29; i++) {
+            for (Integer i = 0; i < 31; i++) {
                 values.add(String.valueOf(i));
             }
 
