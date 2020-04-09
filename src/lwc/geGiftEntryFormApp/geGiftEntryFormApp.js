@@ -7,7 +7,7 @@ import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submi
 
 //import GeFormService from 'c/geFormService';
 import { showToast } from 'c/utilTemplateBuilder';
-import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { registerListener, unregisterListener, fireEvent } from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
@@ -17,7 +17,7 @@ import DI_PAYMENT_DECLINED_REASON_FIELD from '@salesforce/schema/DataImport__c.P
 import DI_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DI_DONATION_CAMPAIGN_NAME_FIELD from '@salesforce/schema/DataImport__c.Donation_Campaign_Name__c';
-import { isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty, format } from 'c/utilCommon';
 
 const PAYMENT_STATUS__C = DI_PAYMENT_STATUS_FIELD.fieldApiName;
 const PAYMENT_DECLINED_REASON__C = DI_PAYMENT_DECLINED_REASON_FIELD.fieldApiName;
@@ -51,6 +51,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     dataImportRecord = {};
     tokenPromise;
     errorCallback;
+    isFailedPurchase = false;
 
     connectedCallback() {
         registerListener('tokenRequested', this.handleTokenRequested, this);
@@ -149,7 +150,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 await this.processPayment();
             }
 
-            await this.processDataImport();
+            if (!this.isFailedPurchase) {
+                await this.processDataImport();
+            }
+            
         } catch (error) {
             this.errorCallback(error);
         }
@@ -219,10 +223,17 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
                 this.dataImportRecord = await upsertDataImport({ dataImport: this.dataImportRecord });
 
-                const isFailedPurchase = purchaseResponse.statusCode !== 201;
-                if (isFailedPurchase) {
+                this.isFailedPurchase = purchaseResponse.statusCode !== 201;
+                if (this.isFailedPurchase) {
                     let errors = this.getFailedPurchaseMessage(purchaseResponse);
-                    throw new Error(errors);
+
+                    //throw new Error(errors);
+                    this.errorCallback(errors);
+                    let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errors];
+                    let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentServicesErrorResponse, labelReplacements);
+                    fireEvent(null, 'paymentError', {
+                        message: [this.CUSTOM_LABELS.gePaymentProcessErrorGeneric, formattedErrorResponse]
+                    });
                 }
             }
         }
