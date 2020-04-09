@@ -53,10 +53,28 @@ class GiftEntryPage(BaseNPSPPage, BasePage):
         element=self.selenium.get_webelement(locator)
         status=element.get_attribute("aria-expanded")
         if status=="false":
-            time.sleep(2)    
+            self.selenium.wait_until_page_contains("Clone")    
         self.selenium.click_link(action)
-        if action=="Edit" or "Clone":
+        if action=="Edit" or action=="Clone":
             self.selenium.wait_until_page_contains("Gift Entry Template Information")
+
+    def select_object_group_field(self,object_group,field):
+        """Select the specified field under specified object group 
+           to add the field to gift entry form and verify field is added"""
+        locator=npsp_lex_locators["gift_entry"]["form_object_dropdown"].format(object_group)
+        self.selenium.scroll_element_into_view(locator)
+        self.selenium.click_element(locator)
+        element=self.selenium.get_webelement(locator)
+        status=element.get_attribute("aria-expanded")
+        if status=="false":
+            time.sleep(2)       
+        field_checkbox=npsp_lex_locators["gift_entry"]["object_field_checkbox"].format(field)  
+        self.selenium.scroll_element_into_view(field_checkbox)   
+        self.selenium.click_element(field_checkbox)
+        field_label=object_group+': '+field
+        self.selenium.wait_until_page_contains(field_label)
+
+   
 
         
 

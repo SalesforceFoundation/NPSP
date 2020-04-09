@@ -255,6 +255,8 @@ npsp_lex_locators={
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::input',
         'textarea':'//*[contains(@data-qa-locator,"{}")]//child::textarea',
         'actions_dropdown':'//tbody/tr[./th//a[text()="{}"]]/td//button',
+        'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
+        'object_field_checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
         },
     
 }
