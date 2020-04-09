@@ -41,6 +41,15 @@ class BDI_DataImportDeleteBTN_TEST {
     /** @description Error message returned when user does not have Delete permission on the SObject */
     static String INSUFFICIENT_ACCESS_ERROR_MSG = 'INSUFFICIENT_ACCESS_OR_READONLY';
 
+    /** @description Identifier for when Salesforce classic is displayed for the user */
+    static final String UI_CLASSIC_THEME = 'Theme3';
+
+    /** @description Identifier for when Lightning Experience is displayed for the user */
+    static final String UI_LIGHTNING_THEME = 'Theme4d';
+
+    /** @description Data Import SObject API name */
+    static final String DATA_IMPORT_API_NAME = 'DataImport__c';
+
     /** @description Static method executed before each test method is run */
     static {
         Test.setCurrentPage(Page.BDI_DataImportDeleteBTN); 
@@ -213,16 +222,13 @@ class BDI_DataImportDeleteBTN_TEST {
 
     /**
      * @description operation: 
-     *    Test close() method when page parameter retURL is provided
+     *    Test close() method when the user is using Salesforce classic
      * verify: 
-     *    retURL page is returned
+     *    The correct URL is used for the Salesforce classic context
      */
     @isTest
     static void TestCloseWhenRetUrlIsProvided() {
-        String retURL = '/testpage.jsp';
-        ApexPages.currentPage().getParameters().put('retURL', retURL);
-
-        assertPage(retURL, new BDI_DataImportDeleteBTN_CTRL().close());
+        assertPage(UI_CLASSIC_THEME, new BDI_DataImportDeleteBTN_CTRL().close());
     }
 
     // Helpers
@@ -320,14 +326,29 @@ class BDI_DataImportDeleteBTN_TEST {
 
     /**
      * @description Assert page URL and redirect values
-     * @param expectedUrl Expected URL
+     * @param uiTheme Salesforce UI Theme
      * @param actual Page to verify
      * @return void
      */
-    static void assertPage(String expectedUrl, PageReference actual) {
+    static void assertPage(String uiTheme, PageReference actual) {
+
+        Schema.DescribeSObjectResult dataImportDescribe = UTIL_Describe.getObjectDescribe(
+                UTIL_Namespace.StrTokenNSPrefix(DATA_IMPORT_API_NAME));
+
         System.assertNotEquals(null, actual);
         System.assert(actual.getRedirect());
-        System.assertEquals(expectedUrl, actual.getUrl());
+
+        if (uiTheme == UI_CLASSIC_THEME) {
+            String diObjectPrefix = dataImportDescribe.getKeyPrefix();
+
+            String expectedUrl = '/' + diObjectPrefix;
+
+            System.assertEquals(expectedUrl, actual.getUrl());
+
+        } else if (uiTheme == UI_LIGHTNING_THEME) {
+            String expectedUrl = '/lightning/o/' + dataImportDescribe.getName() + '/list/filterName=Recent';
+            System.assertEquals(expectedUrl, actual.getUrl());
+        }
     }
 	
 }
