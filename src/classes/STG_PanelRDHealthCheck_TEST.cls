@@ -117,17 +117,17 @@ private class STG_PanelRDHealthCheck_TEST {
         }
 
         // Since RD1 is enabled by default, there are 4 configuration errors:
-        // - Quarterly in the Installment Period field
-        // - 29,30,31 in the DayOfMonth field
-        System.assertEquals(4, errCount,
-            'There should exactly four entries in this validation.\n' + results
+        // - Value of Quarterly in the Installment Period field
+        // - Value of 31 in the DayOfMonth field
+        System.assertEquals(2, errCount,
+            'Number of entries in the validation should match.\n' + results
         );
 
         System.assert(errResults.contains(RD_Constants.INSTALLMENT_PERIOD_QUARTERLY),
             'The error should reference the "' + RD_Constants.INSTALLMENT_PERIOD_QUARTERLY + '" picklist value.\n' + errResults
         );
-        System.assert(errResults.contains('29'),
-            'The error should reference the "29" picklist value.\n' + errResults
+        System.assert(errResults.contains('31'),
+            'The error should reference the "31" picklist value.\n' + errResults
         );
     }
 

@@ -1587,7 +1587,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if it is valid day of month</shortDescription>
-        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 28 or select Last Day of Month.</value>
+        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 30 or select Last Day of Month.</value>
     </labels>
     <labels>
         <fullName>RD2_DayOfMonthIsRequiredForMonthlyInstallment</fullName>
