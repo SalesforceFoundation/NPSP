@@ -9,50 +9,50 @@
         <value><!-- Data Import Field Mapping --></value>
     </caseValues>
     <fields>
-        <help><!-- The Data Import Field Mapping Set containing this field mapping. --></help>
-        <label><!-- Data Import Field Mapping Set --></label>
+        <help>De veldtoewijzingsset voor gegevensimport bevat deze veldtoewijzing.</help>
+        <label>Veldtoewijzingsset voor gegevensimport</label>
         <name>Data_Import_Field_Mapping_Set__c</name>
-        <relationshipLabel><!-- Data Import Field Mappings --></relationshipLabel>
+        <relationshipLabel>Veldtoewijzingen voor gegevensimport</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing. --></help>
-        <label><!-- Is Deleted --></label>
+        <help>Geeft, indien ingeschakeld, aan dat deze record is verwijderd uit de gebruikersinterface Geavanceerd toewijzen voor gegevensimport en dat deze wordt genegeerd tijdens de verwerking van NPSP-gegevensimport.</help>
+        <label>Is verwijderd</label>
         <name>Is_Deleted__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates if the field on the NPSP Data Import object must contain a value. When it&apos;s required, Dry Run will fail if that field doesn&apos;t contain a value. --></help>
-        <label><!-- Required? --></label>
+        <help>Geeft aan of het veld voor het object NPSP-gegevensimport een waarde moet bevatten. Wanneer dit verplicht is, zal de testuitvoering mislukken als dat veld geen waarde bevat.</help>
+        <label>Vereist?</label>
         <name>Required__c</name>
         <picklistValues>
             <masterLabel>No</masterLabel>
-            <translation><!-- No --></translation>
+            <translation>Nee</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Yes</masterLabel>
-            <translation><!-- Yes --></translation>
+            <translation>Ja</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The API name of the field on the NPSP Data Import object. --></help>
-        <label><!-- Source Field API Name --></label>
+        <help>De API-naam van het veld voor het object NPSP-gegevensimport.</help>
+        <label>API-naam van bronveld</label>
         <name>Source_Field_API_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The API name of the field on the target object. --></help>
-        <label><!-- Target Field API Name --></label>
+        <help>De API-naam van het veld voor het doelobject.</help>
+        <label>API-naam van doelveld</label>
         <name>Target_Field_API_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The target Data Import Object Group for this field mapping. --></help>
-        <label><!-- Target Object Mapping --></label>
+        <help>De doel Objectgroep voor gegevensimport voor deze veldtoewijzing.</help>
+        <label>Toewijzing van doelobject</label>
         <name>Target_Object_Mapping__c</name>
-        <relationshipLabel><!-- Data Import Field Mappings --></relationshipLabel>
+        <relationshipLabel>Veldtoewijzingen voor gegevensimport</relationshipLabel>
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>Data Import Field Mapping Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste koppelingen</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
