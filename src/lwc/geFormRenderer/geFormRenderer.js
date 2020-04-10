@@ -449,7 +449,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             let inMemoryDataImport =
                 await this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
-
             // handle save depending mode
             if (this.batchId) {
                 this.handleSaveBatchGiftEntry(inMemoryDataImport, formControls);
