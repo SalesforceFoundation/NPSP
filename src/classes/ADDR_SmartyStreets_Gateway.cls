@@ -110,7 +110,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         HttpResponse res = sendRequest(addresses, endpoint);
 
         List<AddressResponse> sr;
-        if (res.getStatusCode() == 200)
+        if (res.getStatusCode() == ADDR_Validator_UTIL.RESPONSE_CODE_SUCCESS)
             sr = (List<AddressResponse>)(JSON.deserialize(res.getBody(), List<AddressResponse>.class));
         else if(res.getStatusCode() == 400)
             throw new LiveAddressException('Bad input. Required fields missing from input or are malformed.');
@@ -173,7 +173,7 @@ public with sharing class ADDR_SmartyStreets_Gateway {
         HttpResponse res = sendRequest(zreqs, validator.getDefaultZipcodeURL());
 
         list<ZipResponse> sz;
-        if (res.getStatusCode() == 200)
+        if (res.getStatusCode() == ADDR_Validator_UTIL.RESPONSE_CODE_SUCCESS)
             sz = (list<ZipResponse>)(JSON.deserialize(res.getBody(), list<ZipResponse>.class));
 
         if (sz == null || sz.isEmpty()) return null;
