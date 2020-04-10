@@ -47,7 +47,7 @@
     <fields>
         <label>Account1 importiert</label>
         <name>Account1Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Account1 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (Account1 importiert)</relationshipLabel>
     </fields>
     <fields>
         <label>Account1 Stadt</label>
@@ -88,7 +88,7 @@
     <fields>
         <label>Account2 importiert</label>
         <name>Account2Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Account2 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (Account2 importiert)</relationshipLabel>
     </fields>
     <fields>
         <label>Account2 Stadt</label>
@@ -123,7 +123,12 @@
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
     <fields>
-        <help>Die ApexJobID des Batchauftrags, mit dem der Datensatz verarbeitet wurde.</help>
+        <help>Dieses Feld lässt die Erstellung einer dynamischen Anzahl Datensätze für eine dynamische Anzahl Objekte aus einem einzelnen Datenimport-Datensatz zu. Zusätzliche Objektinformationen werden hier im JSON-Format gespeichert.</help>
+        <label>Zusätzliches Objekt-JSON</label>
+        <name>Additional_Object_JSON__c</name>
+    </fields>
+    <fields>
+        <help>Die ApexJobID des Batch-Auftrags, mit dem der Datensatz verarbeitet wurde.</help>
         <label>ApexJobId</label>
         <name>ApexJobId__c</name>
     </fields>
@@ -138,7 +143,7 @@
     <fields>
         <label>Kontakt1 importiert</label>
         <name>Contact1Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Contact1 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (Kontakt1 importiert)</relationshipLabel>
     </fields>
     <fields>
         <label>Kontakt1 Alternative E-Mail-Adresse</label>
@@ -231,7 +236,7 @@
     <fields>
         <label>Kontakt2 importiert</label>
         <name>Contact2Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (Contact2 Imported) --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (Kontakt2 importiert)</relationshipLabel>
     </fields>
     <fields>
         <label>Kontakt2 Alternative E-Mail-Adresse</label>
@@ -324,7 +329,7 @@
     <fields>
         <label>Spendenkampagnenquelle</label>
         <name>DonationCampaignImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte</relationshipLabel>
     </fields>
     <fields>
         <label>Spende Importstatus</label>
@@ -333,7 +338,7 @@
     <fields>
         <label>Spende importiert</label>
         <name>DonationImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (Opportunity1 importiert)</relationshipLabel>
     </fields>
     <fields>
         <label>Spende Betrag</label>
@@ -386,11 +391,11 @@
     </fields>
     <fields>
         <help>Eine durch Komma getrennte Liste mit Kennungen für die ersten 10 möglichen Opportunity-Übereinstimmungen für eine Spende</help>
-        <label>Mögliche Spendenübereinstimmungen</label>
+        <label>Mögliche Spendenverdopplungen</label>
         <name>Donation_Possible_Matches__c</name>
     </fields>
     <fields>
-        <label>Spendenname für Datensatztyp</label>
+        <label>Name des Spendendatensatztyps</label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>
     <fields>
@@ -407,57 +412,57 @@
         <name>FailureInformation__c</name>
     </fields>
     <fields>
-        <help><!-- The monetary amount attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 1: Amount --></label>
+        <help>Der Geldbetrag, der der ersten GAU-Zuordnung (allgemeine Verrechnungseinheit) zugeschrieben wurde. Für die Zuordnung dieses Feldes muss beim Datenimport die Erweiterte Zuordnung verwendet werden.</help>
+        <label>GAU-Zuordnung 1: Betrag</label>
         <name>GAU_Allocation_1_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the GAU to be used for the first allocation. --></help>
-        <label><!-- GAU Allocation 1: GAU --></label>
+        <help>Die Salesforce-ID der GAU (allgemeine Verrechnungseinheit), die für die erste Zuordnung verwendet werden soll.</help>
+        <label>GAU-Zuordnung 1: GAU</label>
         <name>GAU_Allocation_1_GAU__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (GAU 1)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the first GAU Allocation. --></help>
-        <label><!-- GAU Allocation 1: Import Status --></label>
+        <help>Der Status aus der versuchten Einfügung der ersten GAU-Zuordnung.</help>
+        <label>GAU-Zuordnung 1: Importstatus</label>
         <name>GAU_Allocation_1_Import_Status__c</name>
     </fields>
     <fields>
-        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
-        <label><!-- GAU Allocation 1: Imported --></label>
+        <help>Ein Nachschlagefeld für die erste GAU-Zuordnung, wenn sie erfolgreich erstellt wurde.</help>
+        <label>GAU-Zuordnung 1: Importiert</label>
         <name>GAU_Allocation_1_Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 1) --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (GAU 1)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 1: Percent --></label>
+        <help>Der Prozentsatz, der der ersten GAU-Zuordnung (allgemeine Verrechnungseinheit) zugeschrieben wurde. Für die Zuordnung dieses Feldes muss beim Datenimport die Erweiterte Zuordnung verwendet werden.</help>
+        <label>GAU-Zuordnung 1: Prozent</label>
         <name>GAU_Allocation_1_Percent__c</name>
     </fields>
     <fields>
-        <help><!-- The monetary amount attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 2: Amount --></label>
+        <help>Der Geldbetrag, der der zweiten GAU-Zuordnung (allgemeine Verrechnungseinheit) zugeschrieben wurde. Für die Zuordnung dieses Feldes muss beim Datenimport die Erweiterte Zuordnung verwendet werden.</help>
+        <label>GAU-Zuordnung 2: Betrag</label>
         <name>GAU_Allocation_2_Amount__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the GAU to be used for the second GAU allocation. --></help>
-        <label><!-- GAU Allocation 2: GAU --></label>
+        <help>Die Salesforce-ID der GAU (allgemeine Verrechnungseinheit), die für die zweite Zuordnung verwendet werden soll.</help>
+        <label>GAU-Zuordnung 2: GAU</label>
         <name>GAU_Allocation_2_GAU__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (GAU 2)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the second GAU Allocation. --></help>
-        <label><!-- GAU Allocation 2: Import Status --></label>
+        <help>Der Status aus der versuchten Einfügung der zweiten GAU-Zuordnung.</help>
+        <label>GAU-Zuordnung 2: Importstatus</label>
         <name>GAU_Allocation_2_Import_Status__c</name>
     </fields>
     <fields>
-        <help><!-- A lookup to the first GAU Allocation if it was successfully created. --></help>
-        <label><!-- GAU Allocation 2: Imported --></label>
+        <help>Ein Nachschlagefeld für die erste GAU-Zuordnung, wenn sie erfolgreich erstellt wurde.</help>
+        <label>GAU-Zuordnung 2: Importiert</label>
         <name>GAU_Allocation_2_Imported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports (GAU 2) --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte (GAU 2)</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The percent attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
-        <label><!-- GAU Allocation 2: Percent --></label>
+        <help>Der Prozentsatz, der der zweiten GAU-Zuordnung (allgemeine Verrechnungseinheit) zugeschrieben wurde. Für die Zuordnung dieses Feldes muss beim Datenimport die Erweiterte Zuordnung verwendet werden.</help>
+        <label>GAU-Zuordnung 2: Prozent</label>
         <name>GAU_Allocation_2_Percent__c</name>
     </fields>
     <fields>
@@ -467,7 +472,7 @@
     <fields>
         <label>Privatadresse importiert</label>
         <name>HomeAddressImported__c</name>
-        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte</relationshipLabel>
     </fields>
     <fields>
         <label>Stadt privat</label>
@@ -492,7 +497,7 @@
     <fields>
         <label>Haushalt-Account importiert</label>
         <name>HouseholdAccountImported__c</name>
-        <relationshipLabel>NPSP-Datenimporte (Haushalt-Account importiert)</relationshipLabel>
+        <relationshipLabel>NPSP-Datenimporte</relationshipLabel>
     </fields>
     <fields>
         <label>Haushalt-Telefon</label>
@@ -510,33 +515,33 @@
         <relationshipLabel>NPSP-Datenimporte</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the first Opportunity Contact Role. --></help>
-        <label><!-- Opportunity Contact Role 1: ImportStatus --></label>
+        <help>Der Status aus der versuchten Einfügung der ersten Opportunity-Kontaktrolle.</help>
+        <label>Opportunity-Kontaktrolle 1: ImportStatus</label>
         <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 1: Imported --></label>
+        <help>Die Salesforce-ID der importierten Opportunity-Kontaktrolle.</help>
+        <label>Opportunity-Kontaktrolle 1: importiert</label>
         <name>Opportunity_Contact_Role_1_Imported__c</name>
     </fields>
     <fields>
-        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 1: Role --></label>
+        <help>Die Rolle, mit der die Opportunity-Kontaktrolle erstellt werden soll. Geben Sie beispielsweise &quot;Soft Credit&quot; ein, um eine Soft Credit-Opportunity-Kontaktrolle zu erstellen.</help>
+        <label>Opportunity-Kontaktrolle 1: Rolle</label>
         <name>Opportunity_Contact_Role_1_Role__c</name>
     </fields>
     <fields>
-        <help><!-- The status from attempting to insert the second Opportunity Contact Role. --></help>
-        <label><!-- Opportunity Contact Role 2: ImportStatus --></label>
+        <help>Der Status aus der versuchten Einfügung der zweiten Opportunity-Kontaktrolle.</help>
+        <label>Opportunity-Kontaktrolle 2: ImportStatus</label>
         <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
     </fields>
     <fields>
-        <help><!-- The salesforce id of the imported opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 2: Imported --></label>
+        <help>Die Salesforce-ID der importierten Opportunity-Kontaktrolle.</help>
+        <label>Opportunity-Kontaktrolle 2: importiert</label>
         <name>Opportunity_Contact_Role_2_Imported__c</name>
     </fields>
     <fields>
-        <help><!-- The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role. --></help>
-        <label><!-- Opportunity Contact Role 2: Role --></label>
+        <help>Die Rolle, mit der die Opportunity-Kontaktrolle erstellt werden soll. Geben Sie beispielsweise &quot;Soft Credit&quot; ein, um eine Soft Credit-Opportunity-Kontaktrolle zu erstellen.</help>
+        <label>Opportunity-Kontaktrolle 2: Rolle</label>
         <name>Opportunity_Contact_Role_2_Role__c</name>
     </fields>
     <fields>
@@ -610,11 +615,11 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- GAU Allocation 1 Information --></label>
+            <label>Informationen zur Zuordnung 1 zur allgemeinen Buchungseinheit</label>
             <section>GAU Allocation 1 Information</section>
         </sections>
         <sections>
-            <label><!-- GAU Allocation 2 Information --></label>
+            <label>Informationen zur Zuordnung 2 zur allgemeinen Buchungseinheit</label>
             <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
@@ -626,19 +631,19 @@
             <section>Household Account Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Contact Role 1 Information --></label>
+            <label>Informationen zur Opportunity-Kontaktrolle 1</label>
             <section>Opportunity Contact Role 1 Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Contact Role 2 Information --></label>
+            <label>Informationen zur Opportunity-Kontaktrolle 2</label>
             <section>Opportunity Contact Role 2 Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Information --></label>
+            <label>Opportunity-Informationen</label>
             <section>Opportunity Information</section>
         </sections>
         <sections>
-            <label><!-- Payment Information --></label>
+            <label>Zahlungsinformationen</label>
             <section>Payment Information</section>
         </sections>
     </layouts>
