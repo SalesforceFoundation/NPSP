@@ -459,6 +459,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     'Payment_Elevate_Original_Payment_ID',
                     'Payment_Gateway_ID',
                     'Payment_Gateway_Payment_ID',
+                    'Payment_Origin_ID',
+                    'Payment_Origin_Name',
+                    'Payment_Origin_Type',
                     'Payment_Type'
             };
 

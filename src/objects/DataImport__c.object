@@ -1447,6 +1447,42 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Payment_Origin_ID__c</fullName>
+        <description>The ID for the system where the transaction was initiated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ID for the system where the transaction was initiated.</inlineHelpText>
+        <label>Payment Origin ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Origin_Name__c</fullName>
+        <description>The name of the system where the transaction was initiated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The name of the system where the transaction was initiated.</inlineHelpText>
+        <label>Payment Origin Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Origin_Type__c</fullName>
+        <description>The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.</inlineHelpText>
+        <label>Payment Origin Type</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Payment_Possible_Matches__c</fullName>
         <description>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</description>
         <externalId>false</externalId>

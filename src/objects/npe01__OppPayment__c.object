@@ -219,6 +219,42 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Origin_ID__c</fullName>
+        <description>The ID for the system where the transaction was initiated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ID for the system where the transaction was initiated.</inlineHelpText>
+        <label>Origin ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Origin_Name__c</fullName>
+        <description>The name of the system where the transaction was initiated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The name of the system where the transaction was initiated.</inlineHelpText>
+        <label>Origin Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Origin_Type__c</fullName>
+        <description>The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.</inlineHelpText>
+        <label>Origin Type</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Payment_Acknowledged_Date__c</fullName>
         <description>Used to track date opportunity was acknowledged</description>
         <externalId>false</externalId>

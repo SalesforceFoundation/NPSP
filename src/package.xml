@@ -1088,6 +1088,9 @@
         <members>DataImport__c.Payment_Gateway_ID__c</members>
         <members>DataImport__c.Payment_Gateway_Payment_ID__c</members>
         <members>DataImport__c.Payment_Method__c</members>
+        <members>DataImport__c.Payment_Origin_ID__c</members>
+        <members>DataImport__c.Payment_Origin_Name__c</members>
+        <members>DataImport__c.Payment_Origin_Type__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
         <members>DataImport__c.Payment_Type__c</members>
         <members>DataImport__c.Status__c</members>
@@ -1352,6 +1355,9 @@
         <members>npe01__OppPayment__c.Elevate_Payment_ID__c</members>
         <members>npe01__OppPayment__c.Gateway_ID__c</members>
         <members>npe01__OppPayment__c.Gateway_Payment_ID__c</members>
+        <members>npe01__OppPayment__c.Origin_ID__c</members>
+        <members>npe01__OppPayment__c.Origin_Name__c</members>
+        <members>npe01__OppPayment__c.Origin_Type__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe01__OppPayment__c.Type__c</members>
@@ -2909,6 +2915,9 @@
         <members>Data_Import_Field_Mapping.Payment_Gateway_ID</members>
         <members>Data_Import_Field_Mapping.Payment_Gateway_Payment_ID</members>
         <members>Data_Import_Field_Mapping.Payment_Method</members>
+        <members>Data_Import_Field_Mapping.Payment_Origin_ID</members>
+        <members>Data_Import_Field_Mapping.Payment_Origin_Name</members>
+        <members>Data_Import_Field_Mapping.Payment_Origin_Type</members>
         <members>Data_Import_Field_Mapping.Payment_Type</members>
         <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
         <members>Data_Import_Object_Mapping.Account1</members>
