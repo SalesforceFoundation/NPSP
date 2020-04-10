@@ -9,27 +9,27 @@
         <value><!-- Form Template --></value>
     </caseValues>
     <fields>
-        <help><!-- The short description users can enter for a template. --></help>
-        <label><!-- Description --></label>
+        <help>De korte beschrijving die gebruikers kunnen opgeven voor een sjabloon.</help>
+        <label>Beschrijving</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- The version of Gift Entry used to create this template. --></help>
-        <label><!-- Format Version --></label>
+        <help>De versie van Opgave van gift, die is gebruikt om deze sjabloon te maken.</help>
+        <label>Versienotatie</label>
         <name>Format_Version__c</name>
     </fields>
     <fields>
-        <help><!-- The sections and fields on this template, along with their order, requirements, and default values. Stored as JSON. Do not edit directly. --></help>
-        <label><!-- Template JSON --></label>
+        <help>De secties en velden in deze sjabloon, samen met hun volgorde, vereisten en standaardwaarden. Opgeslagen als JSON. Niet rechtstreeks bewerken.</help>
+        <label>Sjabloon-JSON</label>
         <name>Template_JSON__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>Form Template Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste koppelingen</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Form Template Name --></nameFieldLabel>
+    <nameFieldLabel>Naam van formuliersjabloon</nameFieldLabel>
 </CustomObjectTranslation>

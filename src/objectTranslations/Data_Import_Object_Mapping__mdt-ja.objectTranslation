@@ -5,75 +5,75 @@
         <value><!-- Data Import Object Mapping --></value>
     </caseValues>
     <fields>
-        <help><!-- If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method. --></help>
-        <label><!-- Custom Mapping Logic Class --></label>
+        <help>カスタム Apex ロジックを使用してこのオブジェクトの項目を対応付ける必要がある場合、BDI_ObjectMappingLogic クラスを拡張し、populateObject メソッドを上書きするクラスの名前 (必要に応じて名前空間を含める) でこの項目を入力する必要があります。</help>
+        <label>カスタム対応付けロジッククラス</label>
         <name>Custom_Mapping_Logic_Class__c</name>
     </fields>
     <fields>
-        <help><!-- The Data Import Object Group containing this record. --></help>
-        <label><!-- Data Import Object Mapping Set --></label>
+        <help>このレコードが含まれるデータインポートオブジェクトグループ。</help>
+        <label>データインポートオブジェクトの対応付けセット</label>
         <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel><!-- Data Import Object Mappings --></relationshipLabel>
+        <relationshipLabel>データインポートオブジェクトの対応付け</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The Field API Name on the NPSP Data Import object where the ID for the imported record will be placed when the import is successful. This is also where the code will verify if this record was imported or matched. --></help>
-        <label><!-- Imported Record Field Name --></label>
+        <help>インポートが成功したときにインポートされたレコードの ID が配置される NPSP データインポートオブジェクトの項目 API 参照名。これは、コードでこのレコードがインポートまたは照合されたかどうかを検証する場所でもあります。</help>
+        <label>インポートされたレコードの項目名</label>
         <name>Imported_Record_Field_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The Field API Name where the success or failure of the import will be recorded for an NPSP Data Import record. --></help>
-        <label><!-- Imported Record Status Field Name --></label>
+        <help>NPSP データインポートレコードのインポートの成功または失敗が記録される項目 API 参照名。</help>
+        <label>インポートされたレコードの状況項目名</label>
         <name>Imported_Record_Status_Field_Name__c</name>
     </fields>
     <fields>
-        <label><!-- Is Deleted --></label>
+        <label>削除済み</label>
         <name>Is_Deleted__c</name>
     </fields>
     <fields>
-        <help><!-- The legacy Data Import object name of the object this Data Import Object Group is based on. --></help>
-        <label><!-- Legacy Data Import Object Name --></label>
+        <help>このデータインポートオブジェクトグループのベースとなるオブジェクトの従来のデータインポートオブジェクト名。</help>
+        <label>従来のデータインポートオブジェクト名</label>
         <name>Legacy_Data_Import_Object_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The API name of the target object for this Object Group. --></help>
-        <label><!-- Object API Name --></label>
+        <help>このオブジェクトグループの対象オブジェクトの API 参照名。</help>
+        <label>オブジェクト API 参照名</label>
         <name>Object_API_Name__c</name>
     </fields>
     <fields>
-        <help><!-- The Data Import Object Group record that must exist before this record can be created (either Parent or Child). --></help>
-        <label><!-- Predecessor --></label>
+        <help>このレコード (親または子) を作成する前に存在している必要のあるデータインポートオブジェクトグループレコード。</help>
+        <label>前提要素</label>
         <name>Predecessor__c</name>
     </fields>
     <fields>
-        <help><!-- If this Object Group is a child of the predecessor, this field should look up to the parent. If it&apos;s the parent of the predecessor, this should be the lookup field on the child record. --></help>
-        <label><!-- Relationship Field --></label>
+        <help>このオブジェクトグループが前提要素の子である場合、この項目で親を参照する必要があります。このオブジェクトグループが前提要素の親である場合、この項目が子レコードの参照項目になっている必要があります。</help>
+        <label>リレーション項目</label>
         <name>Relationship_Field__c</name>
     </fields>
     <fields>
-        <help><!-- This indicates if this object is a parent or child of the predecessor. --></help>
-        <label><!-- Relationship To Predecessor --></label>
+        <help>これは、このオブジェクトが前提要素の親または子であることを示します。</help>
+        <label>前提要素とのリレーション</label>
         <name>Relationship_To_Predecessor__c</name>
         <picklistValues>
             <masterLabel>Child</masterLabel>
-            <translation><!-- Child --></translation>
+            <translation>子ども</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>No Predecessor</masterLabel>
-            <translation><!-- No Predecessor --></translation>
+            <translation>前提要素なし</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Parent</masterLabel>
-            <translation><!-- Parent --></translation>
+            <translation>親</translation>
         </picklistValues>
     </fields>
     <layouts>
         <layout>Data Import Object Mapping Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>カスタムリンク</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Custom Object Relationship Details --></label>
+            <label>カスタムオブジェクトリレーションの詳細</label>
             <section>Custom Object Relationship Details</section>
         </sections>
     </layouts>

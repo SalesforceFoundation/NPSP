@@ -20,14 +20,14 @@
         <name>Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- JSON for the CMT deployment result
-{ &quot;jobId&quot;: &quot;repsonse&quot; } --></help>
-        <label><!-- CMT API Deployment Result --></label>
+        <help>CMT リリース結果用の JSON
+{ &quot;jobId&quot;: &quot;repsonse&quot; }</help>
+        <label>CMT API リリース結果</label>
         <name>CMT_API_Status__c</name>
     </fields>
     <fields>
-        <help><!-- ID of Custom Metadata deployment --></help>
-        <label><!-- CMT Deployment ID --></label>
+        <help>カスタムメタデータリリースの ID</help>
+        <label>CMT リリース ID</label>
         <name>CMT_Deployment_ID__c</name>
     </fields>
     <fields>
@@ -41,8 +41,8 @@
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- The custom metadata api name of the Data Import Field Mapping Set record that should be used by default. --></help>
-        <label><!-- Default Data Import Field Mapping Set --></label>
+        <help>デフォルトで使用する必要のあるデータインポート項目の対応付けセットレコードのカスタムメタデータ API 参照名。</help>
+        <label>デフォルトのデータインポート項目の対応付けセット</label>
         <name>Default_Data_Import_Field_Mapping_Set__c</name>
     </fields>
     <fields>
@@ -66,8 +66,8 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help><!-- Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping. --></help>
-        <label><!-- Field Mapping Method --></label>
+        <help>NPSP データインポートレコードの項目を Salesforce の他のオブジェクトに対応付ける方法を定義します。オプションは [ヘルプテキスト] または [データインポート項目の対応付け] です。</help>
+        <label>項目の対応付け方法</label>
         <name>Field_Mapping_Method__c</name>
     </fields>
     <fields>
