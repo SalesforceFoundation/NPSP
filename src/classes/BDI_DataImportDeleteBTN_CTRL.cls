@@ -46,18 +46,6 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     @TestVisible
     private List<DataImport__c> dataImports;
 
-    /** @description True when user can delete data import records */
-    @TestVisible
-    public Boolean canDelete {
-        get {
-            if(canDelete == null) {
-                canDelete = checkDelete();
-            }
-            return canDelete;
-        }
-        private set;
-    }
-
     /** @description Controller constructor */
     public BDI_DataImportDeleteBTN_CTRL() {}
 
@@ -67,7 +55,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
      * @return PageReference Page specified in 'retURL' parameter or Home page
      */
     public PageReference buttonClick() {
-        if (!canDelete) {
+        if (!getCanDelete()) {
             displayDeleteError();
             return null;
         }
@@ -89,7 +77,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
         return null;
     }
 
-    private Boolean checkDelete() {
+    public Boolean getCanDelete() {
         return UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
     }
 
@@ -136,7 +124,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
 
         try {
             // avoid using VF view state to check delete permissions
-            if(checkDelete()) {
+            if(getCanDelete()) {
                 delete dataImports;
                 return close();
             } else {
