@@ -2,88 +2,75 @@
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
-        <customLabel>false</customLabel>
+        <customLabel>true</customLabel>
         <detailHeading>true</detailHeading>
         <editHeading>true</editHeading>
-        <label>Information</label>
-        <layoutColumns>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>Name</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>npe03__Organization__c</field>
-            </layoutItems>
-            <layoutItems>
+        <label>Donor Information</label>
+        <layoutColumns>            
+             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>npe03__Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>npe03__Amount__c</field>
+                <field>npe03__Date_Established__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>npe03__Date_Established__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>%%%NAMESPACE%%%RecurringType__c</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%Status__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>npe03__Recurring_Donation_Campaign__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%ClosedReason__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>npe03__Installments__c</field>
-            </layoutItems>
-        </layoutColumns>
+                <field>npe03__Organization__c</field>
+            </layoutItems>       
+        </layoutColumns>        
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
     <layoutSections>
         <customLabel>true</customLabel>
         <detailHeading>true</detailHeading>
         <editHeading>true</editHeading>
-        <label>Schedule Details</label>
+        <label>Donation Information</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>%%%NAMESPACE%%%PaymentMethod__c</field>
+                <behavior>Required</behavior>
+                <field>%%%NAMESPACE%%%RecurringType__c</field>
             </layoutItems>
             <layoutItems>
+                <behavior>Required</behavior>
+                <field>npe03__Amount__c</field>
+            </layoutItems>
+             <layoutItems>
                 <behavior>Required</behavior>
                 <field>npe03__Installment_Period__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>%%%NAMESPACE%%%InstallmentFrequency__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>%%%NAMESPACE%%%StartDate__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%Day_of_Month__c</field>
             </layoutItems>
-        </layoutColumns>
-        <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>npe03__Next_Payment_Date__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%PaymentMethod__c</field>
+            </layoutItems> 
+        </layoutColumns>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>npe03__Installments__c</field>
+            </layoutItems>
+            <layoutItems>
+                <emptySpace>true</emptySpace>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>%%%NAMESPACE%%%InstallmentFrequency__c</field>
+            </layoutItems>
+             <layoutItems>
+                <behavior>Required</behavior>
+                <field>%%%NAMESPACE%%%StartDate__c</field>
+            </layoutItems> 
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>npe03__Last_Payment_Date__c</field>
@@ -91,11 +78,38 @@
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
+     <layoutSections>
+        <customLabel>true</customLabel>
+        <detailHeading>true</detailHeading>
+        <editHeading>true</editHeading>
+        <label>Other Information</label>
+        <layoutColumns>
+           <layoutItems>
+                <behavior>Required</behavior>
+                <field>Name</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Status__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <layoutColumns> 
+           <layoutItems>
+                <behavior>Edit</behavior>
+                <field>npe03__Recurring_Donation_Campaign__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%ClosedReason__c</field>
+            </layoutItems>
+        </layoutColumns>
+        <style>TwoColumnsTopToBottom</style>
+    </layoutSections>
     <layoutSections>
         <customLabel>true</customLabel>
         <detailHeading>true</detailHeading>
         <editHeading>true</editHeading>
-        <label>Recurring Donation Statistics</label>
+        <label>Statistics</label>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
