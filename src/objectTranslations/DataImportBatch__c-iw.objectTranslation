@@ -34,9 +34,19 @@
         <name>Active_Fields__c</name>
     </fields>
     <fields>
+        <help><!-- The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch. --></help>
+        <label><!-- Batch Defaults --></label>
+        <name>Batch_Defaults__c</name>
+    </fields>
+    <fields>
         <help><!-- An optional description about this batch. --></help>
         <label><!-- Batch Description --></label>
         <name>Batch_Description__c</name>
+    </fields>
+    <fields>
+        <help><!-- The version of the Batch Gift Entry feature used to create this Batch. --></help>
+        <label><!-- Batch Gift Entry Version --></label>
+        <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
         <help><!-- The number of records to process at a time in each batch. --></help>
@@ -108,6 +118,7 @@
         <name>Expected_Total_Batch_Amount__c</name>
     </fields>
     <fields>
+        <help><!-- The Template to use for the gift entry form for this Batch. --></help>
         <label><!-- Form Template --></label>
         <name>Form_Template__c</name>
         <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>

@@ -81,13 +81,13 @@
         <name>Record_URL__c</name>
     </fields>
     <fields>
-        <help><!-- The Salesforce ID of the record associated with this error. --></help>
-        <label><!-- Related Record ID --></label>
+        <help>Die Salesforce-ID des Datensatzes, der diesem Fehler zugeordnet ist.</help>
+        <label>Verwandte Datensatz-ID</label>
         <name>Related_Record_ID__c</name>
     </fields>
     <fields>
-        <help><!-- When selected, indicates that the record specified in Related Record ID will be reprocessed in the next scheduled process. If reprocessing succeeds, this field is then deselected. Applies to specific types of errors that occur during scheduled processes. --></help>
-        <label><!-- Retry Pending? --></label>
+        <help>Diese Option zeigt an, dass der Datensatz in &quot;Verwandte Datensatz-ID&quot; bei der nächsten planmäßigen Verarbeitung erneut verarbeitet wird. Gelingt dies, wird das Feld deaktiviert. Gilt für bestimmte Fehlertypen, die in geplanten Prozessen auftreten.</help>
+        <label>Ausstehende wiederholen?</label>
         <name>Retry_Pending__c</name>
     </fields>
     <fields>

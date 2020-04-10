@@ -41,27 +41,27 @@
         <value><!-- Form Template --></value>
     </caseValues>
     <fields>
-        <help><!-- The short description users can enter for a template. --></help>
-        <label><!-- Description --></label>
+        <help>Die Kurzbeschreibung, die Benutzer für eine Vorlage eingeben können.</help>
+        <label>Beschreibung</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- The version of Gift Entry used to create this template. --></help>
-        <label><!-- Format Version --></label>
+        <help>Die Version der Schenkungseingabe, die zum Erstellen dieser Vorlage verwendet wurde.</help>
+        <label>Formatversion</label>
         <name>Format_Version__c</name>
     </fields>
     <fields>
-        <help><!-- The sections and fields on this template, along with their order, requirements, and default values. Stored as JSON. Do not edit directly. --></help>
-        <label><!-- Template JSON --></label>
+        <help>Die Abschnitte und Felder in dieser Vorlage zusammen mit ihrer Reihenfolge, Anforderungen und Standardwerten. Als JSON gespeichert. Nicht direkt bearbeiten.</help>
+        <label>Vorlagen-JSON</label>
         <name>Template_JSON__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>Form Template Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Benutzerdefinierte Links</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Form Template Name --></nameFieldLabel>
+    <nameFieldLabel>Name der Formularvorlage</nameFieldLabel>
 </CustomObjectTranslation>

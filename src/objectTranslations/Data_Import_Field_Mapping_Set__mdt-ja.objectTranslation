@@ -5,9 +5,9 @@
         <value><!-- Data Import Field Mapping Set --></value>
     </caseValues>
     <fields>
-        <help><!-- The Data Import Object Group that contains this Field Mapping Set. --></help>
-        <label><!-- Data Import Object Mapping Set --></label>
+        <help>この項目の対応付けセットが含まれるデータインポートオブジェクトグループ。</help>
+        <label>データインポートオブジェクトの対応付けセット</label>
         <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel><!-- Data Import Field Mapping Sets --></relationshipLabel>
+        <relationshipLabel>データインポート項目の対応付けセット</relationshipLabel>
     </fields>
 </CustomObjectTranslation>

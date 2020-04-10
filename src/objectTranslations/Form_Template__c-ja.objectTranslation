@@ -5,26 +5,26 @@
         <value><!-- Form Template --></value>
     </caseValues>
     <fields>
-        <help><!-- The short description users can enter for a template. --></help>
-        <label><!-- Description --></label>
+        <help>ユーザが入力できるテンプレートの簡単な説明。</help>
+        <label>説明</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- The version of Gift Entry used to create this template. --></help>
-        <label><!-- Format Version --></label>
+        <help>このテンプレートの作成に使用する支援エントリのバージョン。</help>
+        <label>形式バージョン</label>
         <name>Format_Version__c</name>
     </fields>
     <fields>
-        <help><!-- The sections and fields on this template, along with their order, requirements, and default values. Stored as JSON. Do not edit directly. --></help>
-        <label><!-- Template JSON --></label>
+        <help>このテンプレートのセクションと項目、およびそれらの順序、要件、デフォルト値。JSON として保存されます。直接編集しないでください。</help>
+        <label>テンプレートの JSON</label>
         <name>Template_JSON__c</name>
     </fields>
     <layouts>
         <layout>Form Template Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>カスタムリンク</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Form Template Name --></nameFieldLabel>
+    <nameFieldLabel>フォームテンプレート名</nameFieldLabel>
 </CustomObjectTranslation>
