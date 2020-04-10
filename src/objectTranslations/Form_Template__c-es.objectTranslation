@@ -9,27 +9,27 @@
         <value><!-- Form Template --></value>
     </caseValues>
     <fields>
-        <help><!-- The short description users can enter for a template. --></help>
-        <label><!-- Description --></label>
+        <help>La breve descripción que los usuarios pueden introducir para una plantilla.</help>
+        <label>Descripción</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help><!-- The version of Gift Entry used to create this template. --></help>
-        <label><!-- Format Version --></label>
+        <help>La versión de Entrada de regalos utilizada para crear esta plantilla.</help>
+        <label>Versión de formato</label>
         <name>Format_Version__c</name>
     </fields>
     <fields>
-        <help><!-- The sections and fields on this template, along with their order, requirements, and default values. Stored as JSON. Do not edit directly. --></help>
-        <label><!-- Template JSON --></label>
+        <help>Las secciones y los campos de esta plantilla, junto con su orden, requisitos y valores predeterminados. Se almacena como JSON. No modificar directamente.</help>
+        <label>JSON de plantilla</label>
         <name>Template_JSON__c</name>
     </fields>
     <gender><!-- Feminine --></gender>
     <layouts>
         <layout>Form Template Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Vínculos personalizados</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Form Template Name --></nameFieldLabel>
+    <nameFieldLabel>Nombre de plantilla de formulario</nameFieldLabel>
 </CustomObjectTranslation>
