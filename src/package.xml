@@ -36,6 +36,7 @@
         <members>ADDR_Validator_REST</members>
         <members>ADDR_Validator_TDTM</members>
         <members>ADDR_Validator_TEST</members>
+        <members>ADDR_Validator_UTIL</members>
         <members>ADV_Adapter</members>
         <members>ADV_Adapter_TEST</members>
         <members>ADV_PackageInfo_SVC</members>
