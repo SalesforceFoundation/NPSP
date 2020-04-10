@@ -5,21 +5,21 @@
         <value><!-- Opportunity Stage To State Mapping --></value>
     </caseValues>
     <fields>
-        <help><!-- API name of the Opportunity Stage that will be mapped to the state. --></help>
-        <label><!-- Opportunity Stage --></label>
+        <help>支援フェーズに対応付けられるのそのフェーズの API 参照名。</help>
+        <label>支援フェーズ</label>
         <name>Opportunity_Stage__c</name>
     </fields>
     <fields>
-        <help><!-- Valid entries are “Uncommitted”, “Committed”, or “Finalized”. --></help>
-        <label><!-- Opportunity State --></label>
+        <help>有効なエントリは、[未確定]、[確定済み]、[最終決定済み] です。</help>
+        <label>支援状態</label>
         <name>Opportunity_State__c</name>
         <picklistValues>
             <masterLabel>Committed</masterLabel>
-            <translation><!-- Committed --></translation>
+            <translation>確定済み</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Finalized</masterLabel>
-            <translation><!-- Finalized --></translation>
+            <translation>最終決定済み</translation>
         </picklistValues>
     </fields>
 </CustomObjectTranslation>

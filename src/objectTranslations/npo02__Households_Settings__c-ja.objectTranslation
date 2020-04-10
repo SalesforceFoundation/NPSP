@@ -6,8 +6,8 @@
         <name>Matched_Donor_Role__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when setting seasonal address as the mailing address. --></help>
-        <label><!-- Seasonal Address Batch Size --></label>
+        <help>住所 (季節性) を郵送先住所として設定する場合のバッチあたりの処理対象レコード数。</help>
+        <label>住所 (季節性) のバッチサイズ</label>
         <name>Seasonal_Addresses_Batch_Size__c</name>
     </fields>
     <fields>
