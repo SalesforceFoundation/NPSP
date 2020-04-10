@@ -22,12 +22,18 @@
         <name>Active_Fields__c</name>
     </fields>
     <fields>
+        <help>Los valores de campo predeterminados para un lote en Entrada de regalos. No los modifique directamente. Se deben actualizar en la interfaz de usuario donde modifica su lote.</help>
+        <label>Valores predeterminados de lote</label>
+        <name>Batch_Defaults__c</name>
+    </fields>
+    <fields>
         <help>Una descripción opcional sobre este lote.</help>
         <label>Descripción de lote</label>
         <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <label><!-- Batch Gift Entry Version --></label>
+        <help>La versión de la función Entrada de regalos en lote utilizada para crear este lote.</help>
+        <label>Versión de Entrada de regalos en lote</label>
         <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
@@ -100,9 +106,10 @@
         <name>Expected_Total_Batch_Amount__c</name>
     </fields>
     <fields>
-        <label><!-- Form Template --></label>
+        <help>La plantilla que se utilizará para el formulario de Entrada de regalos para este lote.</help>
+        <label>Plantilla de formulario</label>
         <name>Form_Template__c</name>
-        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
+        <relationshipLabel>Lotes de importación de datos de NPSP</relationshipLabel>
     </fields>
     <fields>
         <help>Este lote se utilizará con la entrada de regalos en lote. Los lotes se marcan automáticamente como lotes de regalos cuando se configuran a través de la ficha Entrada de regalo en lote. El cambio manual de este campo podría tener consecuencias inesperadas.</help>
