@@ -43,10 +43,6 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     public static final String ACTION_DELETE_ALL = 'deleteAll';
 
     @TestVisible
-    /** @description Data Import SObject API name */
-    static final String DATA_IMPORT_API_NAME = 'DataImport__c';
-
-    @TestVisible
     /** @description Identifier for when Salesforce classic is displayed for the user */
     static final String UI_CLASSIC_THEME = 'Theme3';
 
@@ -163,7 +159,8 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
         String uiTheme = String.isNotBlank(testUITheme) ? testUITheme : displayedUITheme;
         String url;
         Schema.DescribeSObjectResult dataImportDescribe = UTIL_Describe.getObjectDescribe(
-                UTIL_Namespace.StrTokenNSPrefix(DATA_IMPORT_API_NAME));
+                DataImport__c.SObjectType
+        );
 
         if (uiTheme == UI_CLASSIC_THEME) {
             url = '/' + dataImportDescribe.getKeyPrefix();

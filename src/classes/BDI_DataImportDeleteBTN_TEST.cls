@@ -339,7 +339,8 @@ class BDI_DataImportDeleteBTN_TEST {
     static void assertPage(String uiTheme, PageReference actual) {
 
         Schema.DescribeSObjectResult dataImportDescribe = UTIL_Describe.getObjectDescribe(
-                UTIL_Namespace.StrTokenNSPrefix(BDI_DataImportDeleteBTN_CTRL.DATA_IMPORT_API_NAME));
+                DataImport__c.SObjectType
+        );
 
         System.assertNotEquals(null, actual);
         System.assert(actual.getRedirect());
