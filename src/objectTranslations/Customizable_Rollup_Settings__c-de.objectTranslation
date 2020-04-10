@@ -52,12 +52,12 @@
         <name>CMT_API_Status__c</name>
     </fields>
     <fields>
-        <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. M. SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batchauftr. in Organisat. mit vielen Mio. Accounts, wird d. max. Anz. an Acc. angeg., die in jedem Batch verarb. werden.</help>
+        <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. M. SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batch-Auftr. in Organisat. mit vielen Mio. Accounts, wird d. max. Anz. an Acc. angeg., die in jedem Batch verarb. werden.</help>
         <label>Gr. Datenvol.: Acc.-Hard Credit-Blockgr.</label>
         <name>ChunkSize_Account_HardCredit__c</name>
     </fields>
     <fields>
-        <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. M. SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batchauftr. in Organisat. mit vielen Mio. Kontakten, wird d. max. Anz. an Kont. angeg., die in jedem Batch verarb. werden.</help>
+        <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. M. SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batch-Auftr. in Organisat. mit vielen Mio. Kontakten, wird d. max. Anz. an Kont. angeg., die in jedem Batch verarb. werden.</help>
         <label>Gr. Datenvol.: Kont-Hard Credit-Blockgr.</label>
         <name>ChunkSize_Contact_HardCredit__c</name>
     </fields>
@@ -83,42 +83,42 @@
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Account-Objekt verarbeitet werden.</help>
-        <label>Account-Hard Credit-Batchgröße</label>
+        <label>Account-Hard Credit-Batch-Größe</label>
         <name>Rollups_Account_Batch_Size__c</name>
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Account-Objekt im verzerrten Modus verarbeitet werden.</help>
-        <label>Account verzerrter Modus – Batchgröße</label>
+        <label>Account verzerrter Modus – Batch-Größe</label>
         <name>Rollups_Account_SkewMode_Batch_Size__c</name>
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Soft Credit Spender-Rollups zum Account-Objekt verarbeitet werden.</help>
-        <label>Account-Soft Credit-Batchgröße</label>
+        <label>Account-Soft Credit-Batch-Größe</label>
         <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Soft Credit Spender-Rollups zum Account-Objekt verarbeitet werden.</help>
-        <label>Kontakt-Soft Credit zu Acct – Batchgröße</label>
+        <label>Kontakt-Soft Credit zu Acct – Batch-Größe</label>
         <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Hard Credit Spender-Rollups zum Kontakt-Objekt verarbeitet werden.</help>
-        <label>Kontakt-Hard Credit-Batchgröße</label>
+        <label>Kontakt-Hard Credit-Batch-Größe</label>
         <name>Rollups_Contact_Batch_Size__c</name>
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Kontakt-Objekt im verzerrten Modus verarbeitet werden.</help>
-        <label>Kontakt verzerrter Modus – Batchgröße</label>
+        <label>Kontakt verzerrter Modus – Batch-Größe</label>
         <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Soft Credit Spender-Rollups zum Kontakt-Objekt verarbeitet werden.</help>
-        <label>Kontakt-Soft Credit-Batchgröße</label>
+        <label>Kontakt-Soft Credit-Batch-Größe</label>
         <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Objekt Allgemeine Verrechnungseinheit verarbeitet werden.</help>
-        <label>Allg. Verrechn‘einh. – Batchgröße</label>
+        <label>Allg. Verrechn‘einh. – Batch-Größe</label>
         <name>Rollups_GAU_Batch_Size__c</name>
     </fields>
     <fields>
@@ -132,13 +132,13 @@
         <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
     </fields>
     <fields>
-        <help>Die max. Zahl an verb. Opp. in einem Acc. o. Kont., die i. d. Rollup-Batchaufträgen im nicht verz. Modus zulässig sind. Ein Acc. o. Kont. mit einer höheren Zahl als diese Zahl an verb. Opp. wird immer im verz. Modus zusammengefasst.</help>
+        <help>Die max. Zahl an verb. Opp. in einem Acc. o. Kont., die i. d. Rollup-Batch-Aufträgen im nicht verz. Modus zulässig sind. Ein Acc. o. Kont. mit einer höheren Zahl als diese Zahl an verb. Opp. wird immer im verz. Modus zusammengefasst.</help>
         <label>Verzerrter Modus – Schwellenwert</label>
         <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
     </fields>
     <fields>
         <help>Anzahl an Account-, Kontakt- oder allgemeinen Verrechnungseinheits-Datensätzen pro Batch, die zur Verarbeitung im verzerrten Modus ausgewählt werden.</help>
-        <label>Verzerrter Modus, Disponent – Batchgröße</label>
+        <label>Verzerrter Modus, Disponent – Batch-Größe</label>
         <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
