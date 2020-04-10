@@ -9,13 +9,13 @@
         <value><!-- Gift Entry Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts. --></help>
-        <label><!-- Default Gift Entry Template --></label>
+        <help>Dit is een voor Opgave van gift gebruikte startsjabloon voor het opgeven van enkelvoudige giften of batches van giften. Dit is de standaardsjabloon voor het opgeven van enkelvoudige giften.</help>
+        <label>Standaardsjabloon voor Opgave van gift</label>
         <name>Default_Gift_Entry_Template__c</name>
     </fields>
     <fields>
-        <help><!-- Enables the Gift Entry tool. This feature requires Advanced Mapping. --></help>
-        <label><!-- Enable Gift Entry --></label>
+        <help>Schakelt de tool Opgave van gift in. Deze voorziening vereist wat Geavanceerd toewijzen.</help>
+        <label>Opgave van gift inschakelen</label>
         <name>Enable_Gift_Entry__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
