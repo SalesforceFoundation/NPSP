@@ -9,13 +9,13 @@
         <value><!-- Gift Entry Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts. --></help>
-        <label><!-- Default Gift Entry Template --></label>
+        <help>Modèle de départ utilisé pour la Saisie de dons, qui peut être utilisé pour saisir des dons uniques ou des lots de dons. Ce modèle est défini par défaut pour la saisie de don unique.</help>
+        <label>Modèle Saisie de dons par défaut</label>
         <name>Default_Gift_Entry_Template__c</name>
     </fields>
     <fields>
-        <help><!-- Enables the Gift Entry tool. This feature requires Advanced Mapping. --></help>
-        <label><!-- Enable Gift Entry --></label>
+        <help>Active l&apos;outil Saisie de dons. Cette fonctionnalité nécessite le Mappage avancé.</help>
+        <label>Activer la saisie de dons</label>
         <name>Enable_Gift_Entry__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
