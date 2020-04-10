@@ -426,7 +426,7 @@
     <enableReports>true</enableReports>
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
-    <label>Recurring Donations</label>
+    <label>Recurring Donation</label>
     <nameField>
         <label>Recurring Donation Name</label>
         <trackHistory>false</trackHistory>
