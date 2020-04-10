@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>Contact-de</members>
+        <members>Contact-es</members>
+        <members>Contact-fr</members>
+        <members>Contact-ja</members>
+        <members>Contact-nl_NL</members>
         <members>Opportunity-de</members>
         <members>Opportunity-es</members>
         <members>Opportunity-fr</members>
