@@ -71,8 +71,8 @@
         <name>Error_Notifications_To__c</name>
     </fields>
     <fields>
-        <help><!-- Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product License in the LMO. --></help>
-        <label><!-- Scratch Org Override: Pilot Enabled --></label>
+        <help>Nicht aktualisieren. Nur für Salesforce.org-Pilot-Tests. Ermöglicht das Überschreiben mit eingeschränktem Zugriff des PilotEnabled-Featureparameters in Scratch-Organisationen, in denen keine zugeordnete Produktlizenz im LMO vorhanden ist.</help>
+        <label>Scratch-Org. Override: Pilot aktiviert</label>
         <name>OverrideFeature_PilotEnabled__c</name>
     </fields>
     <fields>
