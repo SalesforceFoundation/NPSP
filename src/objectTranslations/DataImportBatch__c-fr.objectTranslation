@@ -22,12 +22,18 @@
         <name>Active_Fields__c</name>
     </fields>
     <fields>
+        <help>Les valeurs de champ par défaut d&apos;un lot dans la Saisie de dons. Ne pas modifier directement. Doivent être mises à jour dans l&apos;interface utilisateur à l&apos;emplacement où vous modifiez votre lot.</help>
+        <label>Valeurs par défaut du lot</label>
+        <name>Batch_Defaults__c</name>
+    </fields>
+    <fields>
         <help>Description facultative de ce lot.</help>
         <label>Description du lot</label>
         <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <label><!-- Batch Gift Entry Version --></label>
+        <help>La version de la fonctionnalité Entrée de saisie de dons utilisée pour créer ce lot.</help>
+        <label>Version de l&apos;entrée de saisie de dons</label>
         <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
@@ -96,13 +102,14 @@
     </fields>
     <fields>
         <help>Le montant total attendu de tous les dons saisis dans ce lot.</help>
-        <label>Montant par lots total attendu</label>
+        <label>Montant total des lots attendus</label>
         <name>Expected_Total_Batch_Amount__c</name>
     </fields>
     <fields>
-        <label><!-- Form Template --></label>
+        <help>Le modèle à utiliser pour le formulaire d&apos;entrée de dons pour ce lot.</help>
+        <label>Modèle de formulaire</label>
         <name>Form_Template__c</name>
-        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
+        <relationshipLabel>Lots d’importation de données NPSP</relationshipLabel>
     </fields>
     <fields>
         <help>Ce lot est destiné à être utilisé avec une saisie de dons par lots. Les lots sont marqués autom. comme des lots de dons lorsqu&apos;ils sont configurés dans l&apos;onglet Saisie de dons par lots. La modif. manuelle de ce champ peut avoir des conséquences imprévues.</help>
