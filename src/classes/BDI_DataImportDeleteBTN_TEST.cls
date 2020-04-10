@@ -41,15 +41,6 @@ class BDI_DataImportDeleteBTN_TEST {
     /** @description Error message returned when user does not have Delete permission on the SObject */
     static String INSUFFICIENT_ACCESS_ERROR_MSG = 'INSUFFICIENT_ACCESS_OR_READONLY';
 
-    /** @description Identifier for when Salesforce classic is displayed for the user */
-    static final String UI_CLASSIC_THEME = 'Theme3';
-
-    /** @description Identifier for when Lightning Experience is displayed for the user */
-    static final String UI_LIGHTNING_THEME = 'Theme4d';
-
-    /** @description Data Import SObject API name */
-    static final String DATA_IMPORT_API_NAME = 'DataImport__c';
-
     /** @description Static method executed before each test method is run */
     static {
         Test.setCurrentPage(Page.BDI_DataImportDeleteBTN); 
@@ -227,8 +218,23 @@ class BDI_DataImportDeleteBTN_TEST {
      *    The correct URL is used for the Salesforce classic context
      */
     @isTest
-    static void TestCloseWhenRetUrlIsProvided() {
-        assertPage(UI_CLASSIC_THEME, new BDI_DataImportDeleteBTN_CTRL().close());
+    static void TestCloseClassicTheme() {
+        BDI_DataImportDeleteBTN_CTRL.testUITheme = BDI_DataImportDeleteBTN_CTRL.UI_CLASSIC_THEME;
+
+        assertPage(BDI_DataImportDeleteBTN_CTRL.UI_CLASSIC_THEME, new BDI_DataImportDeleteBTN_CTRL().close());
+    }
+
+    /**
+     * @description operation:
+     *    Test close() method when the user is using Salesforce Lightning
+     * verify:
+     *    The correct URL is used for the Salesforce Lightning context
+     */
+    @isTest
+    static void TestCloseLightningTheme() {
+        BDI_DataImportDeleteBTN_CTRL.testUITheme = BDI_DataImportDeleteBTN_CTRL.UI_LIGHTNING_THEME;
+
+        assertPage(BDI_DataImportDeleteBTN_CTRL.UI_LIGHTNING_THEME, new BDI_DataImportDeleteBTN_CTRL().close());
     }
 
     // Helpers
@@ -333,20 +339,20 @@ class BDI_DataImportDeleteBTN_TEST {
     static void assertPage(String uiTheme, PageReference actual) {
 
         Schema.DescribeSObjectResult dataImportDescribe = UTIL_Describe.getObjectDescribe(
-                UTIL_Namespace.StrTokenNSPrefix(DATA_IMPORT_API_NAME));
+                UTIL_Namespace.StrTokenNSPrefix(BDI_DataImportDeleteBTN_CTRL.DATA_IMPORT_API_NAME));
 
         System.assertNotEquals(null, actual);
         System.assert(actual.getRedirect());
 
-        if (uiTheme == UI_CLASSIC_THEME) {
+        if (uiTheme == BDI_DataImportDeleteBTN_CTRL.UI_CLASSIC_THEME) {
             String diObjectPrefix = dataImportDescribe.getKeyPrefix();
 
             String expectedUrl = '/' + diObjectPrefix;
 
             System.assertEquals(expectedUrl, actual.getUrl());
 
-        } else if (uiTheme == UI_LIGHTNING_THEME) {
-            String expectedUrl = '/lightning/o/' + dataImportDescribe.getName() + '/list/filterName=Recent';
+        } else if (uiTheme == BDI_DataImportDeleteBTN_CTRL.UI_LIGHTNING_THEME) {
+            String expectedUrl = '/lightning/o/' + dataImportDescribe.getName() + '/list?filterName=Recent';
             System.assertEquals(expectedUrl, actual.getUrl());
         }
     }
