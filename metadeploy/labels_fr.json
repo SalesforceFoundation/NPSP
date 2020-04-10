@@ -5,7 +5,7 @@
             "description": "name of product"
         },
         "short_description": {
-            "message": "La Fondation pour l'organisme sans but lucratif non connecté",
+            "message": "La Fondation pour l'organisme sans but lucratif connecté",
             "description": "tagline of product"
         },
         "description": {
