@@ -12,12 +12,13 @@ ${new_template}   Robot Copy Template
 
 *** Test Cases ***
 
-Create a template and make changes
-    [Documentation]                             
-    [tags]                                    feature:GE                     
+Create Clone and Delete Template
+    [Documentation]                           Create a Template and verify template shows up in gift entry landing page. 
+    ...                                       Clone the template and verify that template name has to be unique.
+    ...                                       Delete Template and verify that template is not avaialable for selection while creating a batch.  
+    [tags]                                    feature:GE                    W-039556   
     #Create Template                             
     Go To Page                                Custom                        GE_Gift_Entry
-    Wait Until Page Contains                  Default Gift Entry Template
     Click Gift Entry Button                   Create Template
     Wait Until Page Contains                  Gift Entry Template Information
     Enter Value In Field
@@ -28,10 +29,10 @@ Create a template and make changes
     Click Gift Entry Button                   Save & Close
     Current Page Should Be                    Custom                        GE_Gift_Entry
     Page Should Contain                       ${template}
+    Store Template Record Id                  ${template}
     
     #Clone Template
     Select Template Action                    ${template}                   Clone
-    # Save Current Record ID For Deletion       Form_Template__c
     Click Gift Entry Button                   Save & Close
     Wait Until Page Contains                  This name has been used by another template. Please enter a unique name.
     Enter Value In Field                      Template Name=${new_template}
@@ -41,4 +42,7 @@ Create a template and make changes
     
     #Delete Template
     Select Template Action                    ${new_template}               Delete
-    Wait Until Page Does not Contain          ${new_template}
+    Click Button                              New Batch
+    Wait Until Modal Is Open
+    Verify Template Is Not Available          ${new_template}
+

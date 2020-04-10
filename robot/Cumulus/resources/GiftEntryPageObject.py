@@ -1,4 +1,5 @@
 import time
+import re
 from cumulusci.robotframework.utils import capture_screenshot_on_error
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
@@ -6,6 +7,7 @@ from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
 
+OID_REGEX = r"^(%2F)?([a-zA-Z0-9]{15,18})$"
 @pageobject("Custom", "GE_Gift_Entry")
 class GiftEntryPage(BaseNPSPPage, BasePage):
 
@@ -57,6 +59,8 @@ class GiftEntryPage(BaseNPSPPage, BasePage):
         self.selenium.click_link(action)
         if action=="Edit" or action=="Clone":
             self.selenium.wait_until_page_contains("Gift Entry Template Information")
+        elif action=="Delete":
+            self.selenium.wait_until_page_does_not_contain(name)    
 
     def select_object_group_field(self,object_group,field):
         """Select the specified field under specified object group 
@@ -73,6 +77,41 @@ class GiftEntryPage(BaseNPSPPage, BasePage):
         self.selenium.click_element(field_checkbox)
         field_label=object_group+': '+field
         self.selenium.wait_until_page_contains(field_label)
+
+    def verify_template_is_not_available(self,template):
+        """Verify that a gift template is not available for selection while creating a new batch"""
+        field=npsp_lex_locators["adv_mappings"]["field_mapping"].format("Template")
+        self.selenium.click_element(field)
+        element=self.selenium.get_webelement(field)
+        status=element.get_attribute("aria-activedescendant")
+        if status is not None:
+            self.selenium.page_should_not_contain(template)
+        else:
+            self.selenium.wait_until_page_contains("Default Gift Entry Template")
+            self.selenium.page_should_not_contain(template)  
+        self.selenium.click_button("Cancel")
+
+    def get_template_record_id(self,template):
+        """ Parses the current url to get the object id of the current record.
+            Expects url format like: [a-zA-Z0-9]{15,18}
+        """
+        locator=npsp_lex_locators["link-text"].format(template)
+        element = self.selenium.get_webelement(locator)
+        e=element.get_attribute("href")
+        print(f"url is {e}")
+        for part in e.split("="):
+            oid_match = re.match(OID_REGEX, part)
+            if oid_match is not None:
+                return oid_match.group(2)
+        raise AssertionError("Could not parse record id from url: {}".format(e))
+
+    def store_template_record_id(self,template):
+        """ Parses the template href to get the object id of the current record.
+            Expects url format like: [a-zA-Z0-9]{15,18}
+        """
+        id=self.get_template_record_id(template) 
+        self.salesforce.store_session_record("Form_Template__c",id)   
+              
 
    
 
