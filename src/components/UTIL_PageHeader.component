@@ -1,68 +1,73 @@
 <apex:component >
     <!-- Breadcrumb attributes -->
     <apex:attribute name="showBreadcrumb" type="Boolean" default="false"
-        description="Set to true to display the breadcrumb navigation, default is false"/>
+                    description="Set to true to display the breadcrumb navigation, default is false"/>
     <apex:attribute name="parentEntityLabel" type="String"
-        description="Breadcrumb label for parent entity."/>
+                    description="Breadcrumb label for parent entity."/>
     <apex:attribute name="parentAction" type="String"
-        description="Breadcrumb action for parent entity"/>
+                    description="Breadcrumb action for parent entity"/>
     <apex:attribute name="parentRecordName" type="String"
-        description="Breadcrumb label for parent record."/>
+                    description="Breadcrumb label for parent record."/>
     <apex:attribute name="parentRecordAction" type="String"
-        description="Breadcrumb action for parent record."/>
+                    description="Breadcrumb action for parent record."/>
     <!-- Page header title attributes -->
     <apex:attribute name="headerLabel" type="String" default=""
-        description="Header title under breadcrumb."/>
+                    description="Header title under breadcrumb."/>
     <apex:attribute name="header" type="String" default=""
-        description="Subtitle under breadcrumb title."/>
+                    description="Subtitle under breadcrumb title."/>
     <apex:attribute name="icon" type="String" default=""
-        description="The name of the icon .png to display in the header, e.g. account, custom1"/>
+                    description="The name of the icon .png to display in the header, e.g. account, custom1"/>
     <apex:attribute name="iconCategory" type="String" default=""
-        description="The category the icon belongs to, e.g. standard, utility"/>
+                    description="The category the icon belongs to, e.g. standard, utility"/>
     <apex:attribute name="iconContainer" type="String"
-        description="The icon name for the container class will default to the icon name, e.g. account, custom1"/>
+                    description="The icon name for the container class will default to the icon name, e.g. account, custom1"/>
     <apex:attribute name="useNPSPicon" type="Boolean" default="false"
-        description="Use the RGB_npsp-stacked-color.png icon from static resources in the header instead of lex icon"/>
+                    description="Use the RGB_npsp-stacked-color.png icon from static resources in the header instead of lex icon"/>
     <apex:attribute name="smallSubtitleFont" type="Boolean" default="false"
                     description="When true, longer text in the header subtitle text is displayed in a smaller font"/>
     <!-- Cancel button attributes -->
     <apex:attribute name="showCancelBtn" type="Boolean" default="true"
-        description="Set to false to hide cancel button, default is true"/>
+                    description="Set to false to hide cancel button, default is true"/>
     <apex:attribute name="cancelAction" type="ApexPages.Action" default=""
-        description="Action for cancel button."/>
+                    description="Action for cancel button."/>
     <apex:attribute name="cancelLabel" type="String"
-        description="Label for cancel button. When blank will display stgBtnCancel label."/>
+                    description="Label for cancel button. When blank will display stgBtnCancel label."/>
     <apex:attribute name="cancelImmediate" type="Boolean" default="true"
-        description="Whether the cancel action should be immediate, defaults to true."/>
+                    description="Whether the cancel action should be immediate, defaults to true."/>
     <apex:attribute name="cancelDisabled" type="Boolean" default="false"
-        description="Whether the cancel button should be disabled, defaults to false."/>
+                    description="Whether the cancel button should be disabled, defaults to false."/>
+    <apex:attribute name="cancelDisabledOnClick" type="Boolean" default="false"
+                    description="Whether the cancel button should be disabled when clicked/pressed.  Must be rerendered to enable again, defaults to false."/>
     <apex:attribute name="cancelReRender" type="String"
-        description="Part of page to rerender when cancel is pressed."/>
+                    description="Part of page to rerender when cancel is pressed."/>
     <!-- Save button attributes -->
     <apex:attribute name="showSaveBtn" type="Boolean" default="true"
-        description="Set to false to hide save button, default is true"/>
+                    description="Set to false to hide save button, default is true"/>
     <apex:attribute name="saveAction" type="ApexPages.Action" default=""
-        description="Action for save button."/>
+                    description="Action for save button."/>
     <apex:attribute name="saveLabel" type="String"
-        description="Label for save button. When blank will display stgBtnSave label."/>
+                    description="Label for save button. When blank will display stgBtnSave label."/>
     <apex:attribute name="saveImmediate" type="Boolean" default="false"
-        description="Whether the save action should be immediate, defaults to false."/>
+                    description="Whether the save action should be immediate, defaults to false."/>
     <apex:attribute name="saveDisabled" type="Boolean" default="false"
-        description="Whether the save button should be disabled, defaults to false."/>
+                    description="Whether the save button should be disabled, defaults to false."/>
+    <apex:attribute name="saveDisabledOnClick" type="Boolean" default="false"
+                    description="Whether the save button should be disabled when clicked/pressed.  Must be rerendered to enable again, defaults to false."/>
     <apex:attribute name="saveReRender" type="String"
-        description="Part of page to rerender when save is pressed."/>
+                    description="Part of page to rerender when save is pressed."/>
     <!-- Save and new button attributes -->
     <apex:attribute name="showSaveAndNewBtn" type="Boolean" default="false"
-        description="Set to false to hide save button, default is false"/>
+                    description="Set to false to hide save button, default is false"/>
     <apex:attribute name="saveAndNewAction" type="ApexPages.Action" default=""
-        description="Action for save button."/>
+                    description="Action for save button."/>
     <apex:attribute name="saveAndNewLabel" type="String"
-        description="Label for save and new button."/>
+                    description="Label for save and new button."/>
     <apex:attribute name="saveAndNewImmediate" type="Boolean" default="false"
-        description="Whether the save and new action should be immediate, defaults to false."/>
+                    description="Whether the save and new action should be immediate, defaults to false."/>
     <apex:attribute name="saveAndNewDisabled" type="Boolean" default="false"
-        description="Whether the save and new button should be disabled, defaults to false."/>
-
+                    description="Whether the save and new button should be disabled, defaults to false."/>
+    <apex:attribute name="saveAndNewDisabledOnClick" type="Boolean" default="false"
+                    description="Whether the save and new button should be disabled when clicked/pressed.  Must be rerendered to enable again, defaults to false."/>
     <!-- Continue attributes -->
     <apex:attribute name="showcontinueBtn" type="Boolean" default="false"
                     description="Set to false to hide continue button, default is false"/>
@@ -74,6 +79,8 @@
                     description="Whether the continue action should be immediate, defaults to false."/>
     <apex:attribute name="continueDisabled" type="Boolean" default="false"
                     description="Whether the continue button should be disabled, defaults to false."/>
+    <apex:attribute name="continueDisabledOnClick" type="Boolean" default="false"
+                    description="Whether the continue button should be disabled when clicked/pressed.  Must be rerendered to enable again, defaults to false."/>
 
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -120,16 +127,16 @@
                 <div class="slds-button-group" role="group" id="grpBTN">
                     <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" action="{!cancelAction}"
                         value="{!BLANKVALUE(cancelLabel,$Label.stgBtnCancel)}"  immediate="{!cancelImmediate}" disabled="{!cancelDisabled}"
-                        rendered="{!showCancelBtn}" reRender="{!cancelReRender}"/>
+                        rendered="{!showCancelBtn}" reRender="{!cancelReRender}" onclick="{!IF(cancelDisabledOnClick == true,"this.disabled=true;", "")}"/>
                     <apex:commandButton id="saveBTN" styleClass="slds-button slds-button_brand" action="{!saveAction}"
                         value="{!BLANKVALUE(saveLabel,$Label.stgBtnSave)}" immediate="{!saveImmediate}" disabled="{!saveDisabled}"
-                        rendered="{!showSaveBtn}" reRender="{!saveReRender}"/>
+                        rendered="{!showSaveBtn}" reRender="{!saveReRender}" onclick="{!IF(saveDisabledOnClick == true,"this.disabled=true;", "")}"/>
                     <apex:commandButton id="saveAndNewBTN" styleClass="slds-button slds-button_neutral" action="{!saveAndNewAction}"
                         value="{!BLANKVALUE(saveAndNewLabel,$Label.lvlBtnSaveAndNew)}" immediate="{!saveAndNewImmediate}"
-                        disabled="{!saveAndNewDisabled}" rendered="{!showSaveAndNewBtn}"/>
+                        disabled="{!saveAndNewDisabled}" rendered="{!showSaveAndNewBtn}" onclick="{!IF(saveAndNewDisabledOnClick == true,"this.disabled=true;", "")}"/>
                     <apex:commandButton id="continueBTN" styleClass="slds-button slds-button_brand" action="{!continueAction}"
                         value="{!BLANKVALUE(continueLabel,$Label.btnContinue)}" immediate="{!continueImmediate}"
-                        disabled="{!continueDisabled}" rendered="{!showContinueBtn}"/>
+                        disabled="{!continueDisabled}" rendered="{!showContinueBtn}" onclick="{!IF(continueDisabledOnClick == true,"this.disabled=true;", "")}"/>
                 </div>
             </div>
 
