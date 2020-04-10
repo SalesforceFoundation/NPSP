@@ -6,29 +6,38 @@
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
     <fields>
-        <help><!-- The reason this Recurring Donation was closed. --></help>
-        <label><!-- Closed Reason --></label>
+        <help>De reden waarom deze terugkerende donatie is gesloten.</help>
+        <label>Reden voor Gesloten</label>
         <name>ClosedReason__c</name>
         <picklistValues>
             <masterLabel>Card Expired</masterLabel>
-            <translation><!-- Card Expired --></translation>
+            <translation>Kaart vervallen</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Commitment Completed</masterLabel>
+            <translation>Verplichting voltooid</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Deceased Donor</masterLabel>
-            <translation><!-- Deceased Donor --></translation>
+            <translation>Donor overleden</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Financial Difficulty</masterLabel>
-            <translation><!-- Financial Difficulty --></translation>
+            <translation>Financieel probleem</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>No Longer Interested</masterLabel>
-            <translation><!-- No Longer Interested --></translation>
+            <translation>Geen interesse meer</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Unknown</masterLabel>
-            <translation><!-- Unknown --></translation>
+            <translation>Onbekend</translation>
         </picklistValues>
+    </fields>
+    <fields>
+        <help>Het totaalbedrag van deze terugkerende donatie voor de huidige kalender of het huidige fiscale jaar (alleen-lezen). Omvat Gesloten Gewonnen opportunities plus toekomstige termijnen voor de rest van het jaar.</help>
+        <label>Waarde voor huidig jaar</label>
+        <name>CurrentYearValue__c</name>
     </fields>
     <fields>
         <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op geselecteerde dag van de maand, onafh. van Volgende Donatiedatum. OPMERKING: Altijd laatste dag van maand aanvinken, overschrijft de waarde Dag van Maand.</help>
@@ -160,58 +169,71 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;. --></help>
-        <label><!-- Installment Frequency --></label>
+        <help>De Frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
+        <label>Frequentie van termijnen</label>
         <name>InstallmentFrequency__c</name>
     </fields>
     <fields>
-        <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
-        <label><!-- Payment Method --></label>
+        <help>Het verwachte totaalbedrag van deze terugkerende donatie voor de volgende kalender of het volgende fiscale jaar (alleen-lezen).</help>
+        <label>Waarde voor volgend jaar</label>
+        <name>NextYearValue__c</name>
+    </fields>
+    <fields>
+        <help>De vorm van betaling voor deze terugkerende donatie. NPSP kopieert de geselecteerde waarde automatisch naar elke gerelateerde record Betaling.</help>
+        <label>Betalingswijze</label>
         <name>PaymentMethod__c</name>
         <picklistValues>
             <masterLabel>ACH/EFT</masterLabel>
-            <translation><!-- ACH/EFT --></translation>
+            <translation>ACH/EFT</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>
-            <translation><!-- Check --></translation>
+            <translation>Cheque</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Credit Card</masterLabel>
-            <translation><!-- Credit Card --></translation>
+            <translation>Creditcard</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- Default value is Open, meaning a recurring donation with no end date. --></help>
-        <label><!-- Recurring Type --></label>
+        <help>Standaardwaarde is Open, hetgeen betekent dat het een terugkerende donatie zonder einddatum is.</help>
+        <label>Type terugkeer</label>
         <name>RecurringType__c</name>
         <picklistValues>
+            <masterLabel>Fixed</masterLabel>
+            <translation>Vast</translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>Open</masterLabel>
-            <translation><!-- Open --></translation>
+            <translation>Open</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The date of the first installment Opportunity for this Recurring Donation. Changes made to this field after the schedule has started will not impact future installment Opportunities or the schedule. The default is the current date. --></help>
-        <label><!-- Start Date --></label>
+        <help>De datum waarop nieuwe of bijgewerkte planningsgegevens (Bedrag, Dag van de maand, enz.) voor deze terugkerende donatie van kracht worden. De standaardwaarde is de huidige datum.</help>
+        <label>Ingangsdatum</label>
         <name>StartDate__c</name>
     </fields>
     <fields>
-        <help><!-- Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed. --></help>
-        <label><!-- Status --></label>
+        <help>Geeft aan of deze terugkerende donatie actief in gebruik, tijdelijk opgeschort of gesloten is.</help>
+        <label>Status</label>
         <name>Status__c</name>
         <picklistValues>
             <masterLabel>Active</masterLabel>
-            <translation><!-- Active --></translation>
+            <translation>Actief</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Closed</masterLabel>
-            <translation><!-- Closed --></translation>
+            <translation>Gesloten</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Lapsed</masterLabel>
-            <translation><!-- Lapsed --></translation>
+            <translation>Verstreken</translation>
         </picklistValues>
     </fields>
+    <quickActions>
+        <label>Terugkerende donatie sluiten</label>
+        <name>Close_Recurring_Donation</name>
+    </quickActions>
     <quickActions>
         <label>Nieuwe Opportunity</label>
         <name>New_Opportunity</name>

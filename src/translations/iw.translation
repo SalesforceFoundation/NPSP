@@ -162,8 +162,16 @@
         <name>AssistiveTextError</name>
     </customLabels>
     <customLabels>
+        <label><!-- AssistiveText for &quot;Info&quot; --></label>
+        <name>AssistiveTextInfo</name>
+    </customLabels>
+    <customLabels>
         <label><!-- AssistiveTextNewWindow --></label>
         <name>AssistiveTextNewWindow</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Assistive Text for a record icon --></label>
+        <name>AssistiveTextRecordIcon</name>
     </customLabels>
     <customLabels>
         <label><!-- AssistiveTextWarning --></label>
@@ -186,6 +194,46 @@
         <name>BatchProgressStatus</name>
     </customLabels>
     <customLabels>
+        <label><!-- BatchProgressStatusComplete --></label>
+        <name>BatchProgressStatusComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusCompleteErrors --></label>
+        <name>BatchProgressStatusCompleteErrors</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusError --></label>
+        <name>BatchProgressStatusError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusFailed --></label>
+        <name>BatchProgressStatusFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusHolding --></label>
+        <name>BatchProgressStatusHolding</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusPreparing --></label>
+        <name>BatchProgressStatusPreparing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusProcessing --></label>
+        <name>BatchProgressStatusProcessing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusQueued --></label>
+        <name>BatchProgressStatusQueued</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusStopped --></label>
+        <name>BatchProgressStatusStopped</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressStatusSuccess --></label>
+        <name>BatchProgressStatusSuccess</name>
+    </customLabels>
+    <customLabels>
         <label><!-- BatchProgressTimeElapsed --></label>
         <name>BatchProgressTimeElapsed</name>
     </customLabels>
@@ -200,6 +248,18 @@
     <customLabels>
         <label><!-- BatchProgressTotalJobItems --></label>
         <name>BatchProgressTotalJobItems</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressTotalRecords --></label>
+        <name>BatchProgressTotalRecords</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressTotalRecordsFailed --></label>
+        <name>BatchProgressTotalRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BatchProgressTotalRecordsProcessed --></label>
+        <name>BatchProgressTotalRecordsProcessed</name>
     </customLabels>
     <customLabels>
         <label><!-- Confirmation message when a user wants to delete something. --></label>
@@ -746,6 +806,26 @@
         <name>RD2_AmountMustBeValid</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validate RD Contact/Account update when a closed opportunity exists on the RD --></label>
+        <name>RD2_ContactChangeIsRestricted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Currency change restriction on an Opportunity --></label>
+        <name>RD2_CurrencyChangeIsRestrictedOnOpp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Currency change restriction on a Recurring Donation --></label>
+        <name>RD2_CurrencyChangeIsRestrictedOnRD</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Details of the schedule which is currently in effect --></label>
+        <name>RD2_CurrentScheduleTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Open Opportunities cannot be migrated due to No_Action configuration --></label>
+        <name>RD2_DataMigrationInvalidCloseAction</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Installment Period cannot be converted to enhanced Recurring Donation format --></label>
         <name>RD2_DataMigrationInvalidInstallmentPeriod</name>
     </customLabels>
@@ -762,91 +842,155 @@
         <name>RD2_DayOfMonthMustBeValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementDisabledHeader --></label>
+        <label><!-- Warning displayed on Customizable Rollups page when enhanced RDs are enabled --></label>
+        <name>RD2_DisableCustomizableRollupWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Enablement page header displayed due to missing prerequisites --></label>
         <name>RD2_EnablementDisabledHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementDisabledMessage --></label>
+        <label><!-- Enablement page message displayed due to missing prerequisites --></label>
         <name>RD2_EnablementDisabledMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableConfirm --></label>
+        <label><!-- Validation batch job title --></label>
+        <name>RD2_EnablementDryRunBatchTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validation button label --></label>
+        <name>RD2_EnablementDryRunButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validation section message displayed on a successful validation --></label>
+        <name>RD2_EnablementDryRunComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validation section introduction and guidelines --></label>
+        <name>RD2_EnablementDryRunIntro</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label displayed to enable the migration context --></label>
+        <name>RD2_EnablementDryRunNextButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error displayed when migration validation is outdated --></label>
+        <name>RD2_EnablementDryRunOutdatedError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Information displayed when migration validation is outdated --></label>
+        <name>RD2_EnablementDryRunOutdatedInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label displayed when validation can be skipped --></label>
+        <name>RD2_EnablementDryRunSkipButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label displayed when validation batch can be stopped --></label>
+        <name>RD2_EnablementDryRunStopButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validation section title --></label>
+        <name>RD2_EnablementDryRunTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Enablement section confirmation message --></label>
         <name>RD2_EnablementEnableConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableIntro --></label>
+        <label><!-- Enablement section introduction and details --></label>
         <name>RD2_EnablementEnableIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableMessage --></label>
+        <label><!-- Enablement section enable guidelines --></label>
         <name>RD2_EnablementEnableMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableTitle --></label>
+        <label><!-- Enablement section title --></label>
         <name>RD2_EnablementEnableTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementEnableWarning --></label>
+        <label><!-- Enablement section warning --></label>
         <name>RD2_EnablementEnableWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementIntro --></label>
+        <label><!-- Enablement page introduction and guidelines --></label>
         <name>RD2_EnablementIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployConfirm --></label>
+        <label><!-- MetaDeploy section confirmation message --></label>
         <name>RD2_EnablementMetaDeployConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployConfirmError --></label>
+        <label><!-- Error message on confirmation check when org does not have metadata deployed --></label>
         <name>RD2_EnablementMetaDeployConfirmError</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployIntro --></label>
+        <label><!-- MetaDeploy section introduction and guidelines --></label>
         <name>RD2_EnablementMetaDeployIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployLaunch --></label>
+        <label><!-- MetaDeploy section launch guidelines --></label>
         <name>RD2_EnablementMetaDeployLaunch</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployLaunchLinkLabel --></label>
+        <label><!-- MetaDeploy link label --></label>
         <name>RD2_EnablementMetaDeployLaunchLinkLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMetaDeployTitle --></label>
+        <label><!-- MetaDeploy section title --></label>
         <name>RD2_EnablementMetaDeployTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationButton --></label>
+        <label><!-- Migration button label --></label>
         <name>RD2_EnablementMigrationButton</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationCompleteMessage --></label>
+        <label><!-- Message displayed on a successful migration --></label>
         <name>RD2_EnablementMigrationCompleteMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationIntro --></label>
+        <label><!-- Message displayed on a migration error --></label>
+        <name>RD2_EnablementMigrationErrorMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Migration section introduction and guidelines --></label>
         <name>RD2_EnablementMigrationIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationTitle --></label>
+        <label><!-- Button label displayed enabling move back to the validation context --></label>
+        <name>RD2_EnablementMigrationSkipButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Migration section validation context guidelines --></label>
+        <name>RD2_EnablementMigrationStepDryRun</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Migration section migration context guidelines --></label>
+        <name>RD2_EnablementMigrationStepFinal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button label displayed when migration can be stopped --></label>
+        <name>RD2_EnablementMigrationStopButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Migration section title --></label>
         <name>RD2_EnablementMigrationTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementMigrationWarning --></label>
+        <label><!-- Migration section warning --></label>
         <name>RD2_EnablementMigrationWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepIntro --></label>
+        <label><!-- Enablement preparation task introduction and guidelines --></label>
         <name>RD2_EnablementPrepIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepTasks --></label>
+        <label><!-- Enablement preparation tasks introduction and guidelines --></label>
         <name>RD2_EnablementPrepTasks</name>
     </customLabels>
     <customLabels>
-        <label><!-- RD2_EnablementPrepTitle --></label>
+        <label><!-- Enablement preparation tasks title --></label>
         <name>RD2_EnablementPrepTitle</name>
     </customLabels>
     <customLabels>
@@ -858,8 +1002,68 @@
         <name>RD2_ErrorEnhancedRDBatchJobCannotBeRun</name>
     </customLabels>
     <customLabels>
+        <label><!-- Displayed when Installment Frequency on a Recurring Donation is not valid --></label>
+        <name>RD2_InstallmentFrequencyMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Validate Recurring Donations data if it is valid install period --></label>
         <name>RD2_InstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Validate Planned Installments field is greater than number of Paid Installments --></label>
+        <name>RD2_NumberInstallmentsCannotBeLessThanPaid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Disallow a value in Planned Installments on the RD for Recurring Type is Open --></label>
+        <name>RD2_NumberInstallmentsNotAllowedWhenOpen</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Require Planned Installments field on the RD when Recurring Type is Fixed --></label>
+        <name>RD2_NumberInstallmentsRequiredWhenFixed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header displayed indicating data is not available when enhanced RDs are enabled --></label>
+        <name>RD2_PageNotAvailableHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message displayed indicating data is not available when enhanced RDs are enabled --></label>
+        <name>RD2_PageNotAvailableMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The end date of the recurring donation schedule --></label>
+        <name>RD2_ScheduleLWCEndDate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Details of a schedule that will take effect at a future date --></label>
+        <name>RD2_ScheduleLWCFutureSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of the Active Schedules Component --></label>
+        <name>RD2_ScheduleLWCTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Date Column Header --></label>
+        <name>RD2_ScheduleVisualizerColumnDate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when Enhanced RD is not enabled --></label>
+        <name>RD2_ScheduleVisualizerErrorEnhancedRDNot</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when the component is used on a Non-Recurring Donations page --></label>
+        <name>RD2_ScheduleVisualizerErrorInvalidUsage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when there is no active schedule to render --></label>
+        <name>RD2_ScheduleVisualizerMessageNoActiveSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when there is no future schedule to render --></label>
+        <name>RD2_ScheduleVisualizerMessageNoSchedule</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title of the Schedule Visualizer Component --></label>
+        <name>RD2_ScheduleVisualizerTitle</name>
     </customLabels>
     <customLabels>
         <label><!-- Validate Recurring Donations data if contact is not found with HH Account --></label>
@@ -872,6 +1076,10 @@
     <customLabels>
         <label><!-- Refresh Opportunities --></label>
         <name>RD_ErrorAddDonationHeaderText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Refresh Opportunities button action can be executed in the legacy mode only --></label>
+        <name>RD_ErrorAddDonationLimitedToLegacyMode</name>
     </customLabels>
     <customLabels>
         <label><!-- Recurring Donation ID missing --></label>
@@ -892,6 +1100,10 @@
     <customLabels>
         <label><!-- The total Amount of all Closed Won Opps is not equal to the RD Amount. --></label>
         <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Confirmation message displayed to user before the process runs --></label>
+        <name>RD_RefreshOppsContinueMessage</name>
     </customLabels>
     <customLabels>
         <label>צור קשר חדש</label>
@@ -1240,7 +1452,7 @@
         <name>bdiAdditionalObjRequiredFieldsNull</name>
     </customLabels>
     <customLabels>
-        <label><!-- Data Import Advanced Mapping Summary --></label>
+        <label><!-- Header for Advanced Mapping settings page --></label>
         <name>bdiAdvancedMapping</name>
     </customLabels>
     <customLabels>
@@ -2092,6 +2304,126 @@
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
+        <label><!-- Assistive text for the header of an error page level message. --></label>
+        <name>commonAssistiveError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Assistive text for the header of an info page level message. --></label>
+        <name>commonAssistiveInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Assistive text for the header of a success page level message. --></label>
+        <name>commonAssistiveSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Assistive text for the header of a warning page level message. --></label>
+        <name>commonAssistiveWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Back --></label>
+        <name>commonBack</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Batches --></label>
+        <name>commonBatches</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Cancel --></label>
+        <name>commonCancel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Clone --></label>
+        <name>commonClone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Default Value --></label>
+        <name>commonDefaultValue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Delete --></label>
+        <name>commonDelete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Edit --></label>
+        <name>commonEdit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error --></label>
+        <name>commonError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Field Label --></label>
+        <name>commonFieldLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New Gift --></label>
+        <name>commonNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Next --></label>
+        <name>commonNext</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- No --></label>
+        <name>commonNo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Notification for empty tables --></label>
+        <name>commonNoItems</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Open --></label>
+        <name>commonOpen</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Read More --></label>
+        <name>commonReadMore</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Required --></label>
+        <name>commonRequired</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Save --></label>
+        <name>commonSave</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Save and Close --></label>
+        <name>commonSaveAndClose</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Template --></label>
+        <name>commonTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Templates --></label>
+        <name>commonTemplates</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Unknown Error --></label>
+        <name>commonUnknownError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Update --></label>
+        <name>commonUpdate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- View All --></label>
+        <name>commonViewAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- View More --></label>
+        <name>commonViewMore</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning --></label>
+        <name>commonWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Yes --></label>
+        <name>commonYes</name>
+    </customLabels>
+    <customLabels>
         <label>נכשלה יצירת חשבון עבור איש הקשר {0} {1}. {2}</label>
         <name>conFailedAccountCreate</name>
     </customLabels>
@@ -2206,6 +2538,566 @@
     <customLabels>
         <label><!-- flsReadAccessError --></label>
         <name>flsReadAccessError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Active section icon --></label>
+        <name>geAssistiveActiveSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Trash can button to remove field from batch header --></label>
+        <name>geAssistiveBatchHeaderRemoveField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Arrow button to move field down --></label>
+        <name>geAssistiveFieldDown</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Arrow button to move field up --></label>
+        <name>geAssistiveFieldUp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Button to collapse all Object Groups and Template Components --></label>
+        <name>geAssistiveFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Button to expand all Object Groups and Template Components --></label>
+        <name>geAssistiveFormFieldsExpandAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Trash can button to remove field from template --></label>
+        <name>geAssistiveFormFieldsRemoveField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Gift Entry Template Builder Form Fields section edit button alt text --></label>
+        <name>geAssistiveFormFieldsSectionEdit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Button to cancel and discard changes to section settings --></label>
+        <name>geAssistiveModalCancelAndDiscard</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt Text: Button to remove selected option --></label>
+        <name>geAssistiveRemoveSelectedOption</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Arrow button to move section down --></label>
+        <name>geAssistiveSectionDown</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Arrow button to move section up --></label>
+        <name>geAssistiveSectionUp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: Button/Picklist for selecting a list view --></label>
+        <name>geAssistiveShowMenu</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Alt text: lightning-spinner --></label>
+        <name>geAssistiveSpinner</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Advanced Form Fields header --></label>
+        <name>geBodyAdvancedFieldMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Info about setting default values on New Batch screen --></label>
+        <name>geBodyBatchDefaultValues</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text block about inability to set default values for Field Bundles --></label>
+        <name>geBodyBatchFieldBundleInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text block about adding or removing fields in the batch header --></label>
+        <name>geBodyBatchHeaderLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text block about setting up batch header fields --></label>
+        <name>geBodyBatchHeaderRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning body of required field added to Batch Header --></label>
+        <name>geBodyBatchHeaderWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body for illustration card when a form section is empty --></label>
+        <name>geBodyEmptyFormSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Field Bundles header --></label>
+        <name>geBodyFieldBundlesLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body below the Form Fields header --></label>
+        <name>geBodyFormFieldsDescLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Form Fields sidebar text block --></label>
+        <name>geBodyFormFieldsLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- More information about adding and mapping fields --></label>
+        <name>geBodyFormFieldsLeftColAdditional</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message for deleting a section without required fields --></label>
+        <name>geBodyFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Form Fields main section text block --></label>
+        <name>geBodyFormFieldsRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Information about enabling Gift Entry in NPSP Settings --></label>
+        <name>geBodyGiftEntryHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message about applying a new Payment to an Opportunity --></label>
+        <name>geBodyMatchingApplyNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message about creating a new Opportunity --></label>
+        <name>geBodyMatchingNewOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when an Opportunity has no Payments that are not paid --></label>
+        <name>geBodyMatchingNoPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when an existing gift found --></label>
+        <name>geBodyMatchingPendingDonation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body for modal to review matching Opportunities and Payments --></label>
+        <name>geBodyMatchingSelectRecord</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message about Payment or Opportunity that will be updated --></label>
+        <name>geBodyMatchingUpdatingDonation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Template Info sidebar text block --></label>
+        <name>geBodyTemplateInfoLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Template landing screen text block --></label>
+        <name>geBodyTemplatesTabDescription</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to go back to form fields --></label>
+        <name>geButtonBuilderNavBackFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to go back to configure template information --></label>
+        <name>geButtonBuilderNavBackTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to continue and configure the batch header --></label>
+        <name>geButtonBuilderNavBatchHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to choose fields to include on your form --></label>
+        <name>geButtonBuilderNavFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Cancel and clear form --></label>
+        <name>geButtonCancelAndClear</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to add new section to template --></label>
+        <name>geButtonFormFieldsAddSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to collapse all --></label>
+        <name>geButtonFormFieldsCollapseAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to expand all --></label>
+        <name>geButtonFormFieldsExpandAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to delete a section and remove its fields --></label>
+        <name>geButtonFormFieldsModalDeleteSectionAndFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button in Review Donations modal to create a new Opportunity --></label>
+        <name>geButtonMatchingNewOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to add a new Payment to an Opportunity --></label>
+        <name>geButtonMatchingNewPayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to open Review Donations modal --></label>
+        <name>geButtonMatchingReviewDonations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to open Review Donations modal and change Opportunity/Payment selection --></label>
+        <name>geButtonMatchingUpdateDonationSelection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to select an existing Opportunity to update --></label>
+        <name>geButtonMatchingUpdateOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to select an existing Payment to update --></label>
+        <name>geButtonMatchingUpdatePayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Enter batch of gifts button --></label>
+        <name>geButtonNewBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Enter a single gift button --></label>
+        <name>geButtonNewSingleGift</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Create gift and enter another one --></label>
+        <name>geButtonSaveNewGift</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Create Template button --></label>
+        <name>geButtonTemplatesTabCreateTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Toast reporting Gift Entry is disabled --></label>
+        <name>geDisableGiftEntryInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for column in batch gift entry table that links to the matched Gift. --></label>
+        <name>geDonationColumnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for column in batch gift entry table that links to the Account or Contact. --></label>
+        <name>geDonorColumnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Button to edit batch information --></label>
+        <name>geEditBatchInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Toast reporting Gift Entry is enabled --></label>
+        <name>geEnableGiftEntrySuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Common error when a total doesn&apos;t match Donation Amount. --></label>
+        <name>geErrorAmountDoesNotMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Field level validation error message when a required field is not filled in --></label>
+        <name>geErrorCompleteThisField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error for when Donation Donor doesn&apos;t match fields on the form --></label>
+        <name>geErrorDonorTypeInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error for gift entered without required donor info, 2 fields present --></label>
+        <name>geErrorDonorTypeValidation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error for gift entered without required donor info, 1 field present --></label>
+        <name>geErrorDonorTypeValidationSingle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Field-level error message when template name is not unique --></label>
+        <name>geErrorExistingTemplateName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body of full page error when insufficient field access to what&apos;s on the form --></label>
+        <name>geErrorFLSBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header of full page error when insufficient field access to what&apos;s on the form --></label>
+        <name>geErrorFLSHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Field-level error message for insufficient field access --></label>
+        <name>geErrorFieldPermission</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body of full page error when insufficient access to all objects on the form --></label>
+        <name>geErrorObjectCRUDBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header of full page error when insufficient access to all objects on the form --></label>
+        <name>geErrorObjectCRUDHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error message body when Advanced Mapping and Gift Entry are off --></label>
+        <name>geErrorPageLevelAdvancedMappingBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error message header when Advanced Mapping and Gift Entry are off --></label>
+        <name>geErrorPageLevelAdvancedMappingHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error for insufficient field access with fields listed --></label>
+        <name>geErrorPageLevelFieldPermission1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error for insufficient field access about exiting without saving --></label>
+        <name>geErrorPageLevelFieldPermission2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error message for required field missing on template --></label>
+        <name>geErrorPageLevelMissingRequiredFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Page-level error message for required group of fields is missing --></label>
+        <name>geErrorPageLevelMissingRequiredGroupFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Field-level error message for required field missing on NPSP Data Import object --></label>
+        <name>geErrorRequiredField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Name of GAU Allocations field bundle --></label>
+        <name>geGauAllocationsBundle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for advanced form fields --></label>
+        <name>geHeaderAdvancedFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header to enter batch info --></label>
+        <name>geHeaderBatchEnterInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Batch Gift Entry header --></label>
+        <name>geHeaderBatchGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header to select batch header fields --></label>
+        <name>geHeaderBatchHeaderLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header to configure batch header fields --></label>
+        <name>geHeaderBatchHeaderRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header to select template --></label>
+        <name>geHeaderBatchSelectTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header to set default values --></label>
+        <name>geHeaderBatchSetDefaultValues</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for selecting fields to include as columns --></label>
+        <name>geHeaderCustomTableHeaders</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for illustration card when a form section is empty --></label>
+        <name>geHeaderEmptyFormSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for field bundles (aka widgets) --></label>
+        <name>geHeaderFieldBundles</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Name of default form section in a new template --></label>
+        <name>geHeaderFormFieldsDefaultSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for Form Fields sidebar --></label>
+        <name>geHeaderFormFieldsLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for deleting section in settings modal --></label>
+        <name>geHeaderFormFieldsModalDeleteSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for renaming section in settings modal --></label>
+        <name>geHeaderFormFieldsModalRenameSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for form fields section settings modal --></label>
+        <name>geHeaderFormFieldsModalSectionSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for Form Fields body --></label>
+        <name>geHeaderFormFieldsRightCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Gift Entry --></label>
+        <name>geHeaderGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Donor Information --></label>
+        <name>geHeaderMatchingGiftBy</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label with key Opportunity information --></label>
+        <name>geHeaderMatchingOpportunity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label with key Payment information --></label>
+        <name>geHeaderMatchingPayment</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for modal to review matching Opportunities and Payments --></label>
+        <name>geHeaderMatchingReviewDonations</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for a new section --></label>
+        <name>geHeaderNewSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Template header --></label>
+        <name>geHeaderNewTemplate</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for page level errors --></label>
+        <name>geHeaderPageLevelError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Single Gift Entry Header --></label>
+        <name>geHeaderSingleGiftEntry</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for gift entry template information --></label>
+        <name>geHeaderTemplateInfoLeftCol</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Account1 Object Group --></label>
+        <name>geHelpTextAccount1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Account2 Object Group --></label>
+        <name>geHelpTextAccount2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Address Object Group --></label>
+        <name>geHelpTextAddressMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for GAU Allocation 1 object group --></label>
+        <name>geHelpTextAllocation1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for GAU Allocation 2 object group --></label>
+        <name>geHelpTextAllocation2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text about GAU Allocation field bundle --></label>
+        <name>geHelpTextAllocationBundle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Batch Header Field Label --></label>
+        <name>geHelpTextBatchHeaderFieldLabelLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Contact1 Object Group --></label>
+        <name>geHelpTextContact1Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Contact2 Object Group --></label>
+        <name>geHelpTextContact2Mapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Form Fields individual field help text --></label>
+        <name>geHelpTextFormFieldsFieldCustomLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Form Fields Field Label --></label>
+        <name>geHelpTextFormFieldsFieldLabelLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Household Object Group --></label>
+        <name>geHelpTextHouseholdMapping</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for fields that are included as columns --></label>
+        <name>geLabelCustomTableSelectedFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for fields that aren&apos;t included as columns --></label>
+        <name>geLabelCustomTableSourceFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for the Section Name field --></label>
+        <name>geLabelSectionName</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for the Description field --></label>
+        <name>geLabelTemplateInfoDescriptionField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for the Template Name field --></label>
+        <name>geLabelTemplateInfoNameField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Gift Entry lookup placeholder text --></label>
+        <name>geSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Placeholder text for a picklist field --></label>
+        <name>geSelectPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Batch Header navigation subtab --></label>
+        <name>geTabBatchHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Form Fields navigation subtab --></label>
+        <name>geTabFormFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for Template Info navigation subtab --></label>
+        <name>geTabTemplateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text to show the record count in the list view, one record --></label>
+        <name>geTextListViewItemCount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text to show the record count in the list view, more than one record --></label>
+        <name>geTextListViewItemsCount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Text to display what the table is currently sorted by --></label>
+        <name>geTextListViewSortedBy</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Displays how long ago the last record in the current list view was updated --></label>
+        <name>geTextListViewUpdatedAgo</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- List view successfully updated --></label>
+        <name>geToastListViewUpdated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when trying to save and system error isn&apos;t displayed --></label>
+        <name>geToastSaveFailed</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning when attempting to add a gift field and a section hasn&apos;t been selected. --></label>
+        <name>geToastSelectActiveSection</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Template successfully created --></label>
+        <name>geToastTemplateCreateSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Body for toast error if deleting template used by a batch or is set as default --></label>
+        <name>geToastTemplateDeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Template successfully deleted --></label>
+        <name>geToastTemplateDeleteSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when trying to save a template with errors --></label>
+        <name>geToastTemplateTabsError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Template successfully updated --></label>
+        <name>geToastTemplateUpdateSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message for deleting a section if it contains required fields --></label>
+        <name>geWarningFormFieldsModalDeleteSection</name>
     </customLabels>
     <customLabels>
         <label><!-- Gift Processing account model error --></label>
@@ -2340,6 +3232,10 @@
         <name>healthDetailsInvalidPaymentField</name>
     </customLabels>
     <customLabels>
+        <label><!-- The picklist value is not supported --></label>
+        <name>healthDetailsInvalidPicklistValue</name>
+    </customLabels>
+    <customLabels>
         <label>תקופת התשלומים המותאמת אישית {0} אינה נכללת בערכי רשימת הבחירה עבור שדה תקופת התשלומים של התרומה החוזרת.</label>
         <name>healthDetailsInvalidRDCustomPeriod</name>
     </customLabels>
@@ -2366,6 +3262,10 @@
     <customLabels>
         <label>{0} הזדמנויות שצריכות להשתייך לתשלומים חסרות בתשלומים אלה.</label>
         <name>healthDetailsMissingOppPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The picklist value is not supported --></label>
+        <name>healthDetailsMissingRequiredPicklistValue</name>
     </customLabels>
     <customLabels>
         <label>מחלקות ברירת המחדל המתוזמנות של NPSP אינן מתוזמנות.</label>
@@ -2688,6 +3588,10 @@
         <name>healthSolutionMissingOppPayments</name>
     </customLabels>
     <customLabels>
+        <label><!-- A Required picklist value is missing for this specific field --></label>
+        <name>healthSolutionMissingPicklistValue</name>
+    </customLabels>
+    <customLabels>
         <label>עליך לתזמן את ההפעלה של מחלקות ברירת המחדל המתוזמנות של NPSP.</label>
         <name>healthSolutionNothingScheduled</name>
     </customLabels>
@@ -2734,6 +3638,10 @@
     <customLabels>
         <label>בכרטיסיית ההגדרות של NPSP, לחץ על &apos;{0} | {1}&apos; והוסף את שדה ההזדמנות החסר, או מחק את רשומת סיכום המשתמשים.</label>
         <name>healthSolutionUDFOppField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The picklist value is not supported in this specific field --></label>
+        <name>healthSolutionUnsupportedPicklistValue</name>
     </customLabels>
     <customLabels>
         <label>חזור למבצע</label>
@@ -3596,6 +4504,10 @@
         <name>stgDefaultValue</name>
     </customLabels>
     <customLabels>
+        <label><!-- The user do not have delete permission to delete custom setting. --></label>
+        <name>stgDeletePermissionError</name>
+    </customLabels>
+    <customLabels>
         <label><!-- stgDeploymentCustomMetadataMappingEnabled --></label>
         <name>stgDeploymentCustomMetadataMappingEnabled</name>
     </customLabels>
@@ -3635,6 +4547,10 @@
 &lt;br/&gt; 
 כדי להציג משימות אלה, חפש את  המשימות המתוזמנות בהגדרות של Salesforce.</label>
         <name>stgDontAutoScheduleHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The user do not have edit permission to edit custom setting. --></label>
+        <name>stgEditPermissionError</name>
     </customLabels>
     <customLabels>
         <label>מחלקת היישום אינה מיישמת את הממשק HH_INaming.</label>
@@ -4101,6 +5017,10 @@
         <name>stgHelpRDFieldMapRDField</name>
     </customLabels>
     <customLabels>
+        <label><!-- Help Text for Recurring Donation Setting Installment Opportunity Auto-Creation --></label>
+        <name>stgHelpRDInstallmentCreateOptionMessage</name>
+    </customLabels>
+    <customLabels>
         <label>התאריך והשעה של עדכון האצווה האחרון של תרומות חוזרות.</label>
         <name>stgHelpRDLastRun</name>
     </customLabels>
@@ -4299,6 +5219,18 @@
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
+        <label><!-- Disable Installments Auto-Creation process --></label>
+        <name>stgInstallmentOppDisableAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Disable First Installment Auto-Creation on Create --></label>
+        <name>stgInstallmentOppDisableFirst</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Always Create Next Installment --></label>
+        <name>stgInstallmentOppEnableAll</name>
+    </customLabels>
+    <customLabels>
         <label>פעולה</label>
         <name>stgLabelActionColumn</name>
     </customLabels>
@@ -4389,6 +5321,10 @@
     <customLabels>
         <label><!-- stgLabelField --></label>
         <name>stgLabelField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Display the value None --></label>
+        <name>stgLabelFieldValueNone</name>
     </customLabels>
     <customLabels>
         <label>הגדרות כלליות</label>
@@ -4847,7 +5783,7 @@
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
     <customPageWebLinks>
-        <label><!-- Nonprofit Edition Reports --></label>
+        <label><!-- DEPRECATED: Nonprofit Edition Reports --></label>
         <name>Nonprofit_Edition_Reports</name>
     </customPageWebLinks>
     <customTabs>
@@ -4873,6 +5809,10 @@
     <customTabs>
         <label><!-- Contacts Settings --></label>
         <name>Contacts_Settings</name>
+    </customTabs>
+    <customTabs>
+        <label><!-- Gift Entry --></label>
+        <name>GE_Gift_Entry</name>
     </customTabs>
     <customTabs>
         <label><!-- Households Settings --></label>
@@ -4971,4 +5911,4 @@
             <name>Contacts</name>
         </sections>
     </reportTypes>
-</Translations>
+    </Translations>
