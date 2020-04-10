@@ -6,6 +6,7 @@ import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import { format } from 'c/utilCommon';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
+    @api cardHolderName;
 
     @track domain;
     @track visualforceOrigin;
