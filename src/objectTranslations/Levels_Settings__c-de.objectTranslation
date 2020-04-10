@@ -50,7 +50,7 @@
     </fields>
     <fields>
         <help>Anzahl der Datensätze pro Batch, die beim Neuberechnen der Ebenen verarbeitet werden sollen.</help>
-        <label>Batchgröße Ebenenzuweisungs</label>
+        <label>Ebenenzuweisung der Batch-Größe </label>
         <name>Level_Assignment_Batch_Size__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
