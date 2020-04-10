@@ -4600,6 +4600,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Edit</value>
     </labels>
     <labels>
+        <fullName>commonElevateFailedOnboarding</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure message if a customer fails to get onboarded</shortDescription>
+        <value>An error has occurred with onboarding this elevate customer</value>
+    </labels>
+    <labels>
         <fullName>commonError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6120,6 +6128,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Label for the Template Name field</shortDescription>
         <value>Template Name</value>
+    </labels>
+    <labels>
+        <fullName>gePS_IntegrationTestInvalidAPIKey</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure messge if an invalid apiKey was provided</shortDescription>
+        <value>An invalid api key has been provided for this elevate customer</value>
+    </labels>
+    <labels>
+        <fullName>gePS_IntegrationTestInvalidConfigParams</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure messge if invalid configuration params was provided for onboarding</shortDescription>
+        <value>Invalid configuration parameters were provided</value>
     </labels>
     <labels>
         <fullName>geSearchPlaceholder</fullName>

@@ -35,16 +35,112 @@
 * @description Test class for the PS_IntegrationService class
 */
 
-@isTest
+@IsTest
 private class PS_IntegrationService_TEST {
-    
+
+    private static Map<String, List<Map<String, String>>> configParams;
+    private static Map<String, PS_IntegrationService.Config> makanaConfigParams;
+    private static Map<String, PS_IntegrationService.Config> paymentConfigParams;
+    private static final String API_KEY = 'apiKey';
+    private static final String PAYMENTS_APPLICATION_TYPE = 'payments';
+    private static final String MAKANA_APPLICATION_TYPE = 'makana';
+
+    static {
+        buildConfigurationParams(); // Build Test Configuration Parameters
+    }
+
     /*******************************************************************************************************
-     * @description tests storing of the secrets we receive from the Payment Services
-     * Integrations package
+     * @description Test for storing the secrets we receive from the Payment Services
+     * Integrations package with a valid API Key
      */
-    @isTest
-    private static void setConfigurationTest() {
-        // TODO This method can be implemented after the setConfiguration method is implemented
-         
+    @IsTest
+    private static void shouldSetConfigurationWithPaymentsAPIKey() {
+        Test.startTest();
+
+        PS_IntegrationService.setConfiguration(configParams);
+
+        List<Payment_Services_Configuration__c> configurations = [
+                SELECT Key__c, Service_Key__c, Value__c, Is_Secret__c, Service__c
+                FROM Payment_Services_Configuration__c
+        ];
+        Test.stopTest();
+        System.assert(!configurations.isEmpty());
+        for (Payment_Services_Configuration__c config : configurations) {
+            if (config.Service__c == PAYMENTS_APPLICATION_TYPE) {
+                System.assertEquals(paymentConfigParams.get(config.Key__c).value, config.Value__c);
+            }
+
+            if (config.Service__c == MAKANA_APPLICATION_TYPE) {
+                System.assertEquals(makanaConfigParams.get(config.Key__c).value, config.Value__c);
+            }
+
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Test for storing the secrets we receive from the Payment Services
+    * Integrations package with invalid configuration parameters
+    */
+    @IsTest
+    private static void shouldSetConfigurationWithInvalidConfigurationParameters() {
+        configParams = new Map<String, List<Map<String, String>>>();
+
+        Test.startTest();
+        try {
+            PS_IntegrationService.setConfiguration(configParams);
+        } catch (PS_IntegrationService.IntegrationServiceException ex) {
+            System.assertEquals(PS_IntegrationService.INVALID_CONFIG_PARAMS, ex.getMessage());
+        }
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************
+   * @description Helper method to build test configuration parameters
+   */
+    private static void buildConfigurationParams() {
+        List<Map<String, String>> applicationConfig = new List<Map<String, String>>();
+        configParams = new Map<String, List<Map<String, String>>>();
+        paymentConfigParams = new Map<String, PS_IntegrationService.Config>{
+                'iss' => new PS_IntegrationService.Config('iss', 'ApiKeyManager'),
+                'sub' => new PS_IntegrationService.Config('sub', 'voduyemi'),
+                'sfdo.roles' => new PS_IntegrationService.Config('sfdo.roles',
+                        'Payments.Purchase, Payments.Refund, Payments.Commitment'),
+                'sfdo.product' => new PS_IntegrationService.Config('sfdo.product', 'CRM'),
+                'apiKey' => new PS_IntegrationService.Config('apiKey', 'a5146b4b-3d2b-4fc4-a5e5-8387968859a4'),
+                'sfdo.merchantids' => new PS_IntegrationService.Config('sfdo.merchantids',
+                        '47b70ca4-0f6e-4c52-819f-667ae804f9d2'),
+                'gatewayids' => new PS_IntegrationService.Config('gatewayids',
+                        'f23da98a-c7aa-4637-962a-8c852e765e38'),
+                'baseURL' => new PS_IntegrationService.Config('baseURL',
+                        'https://SOMEURL.execute-api.us-west-2.amazonaws.com/v1')
+        };
+
+        makanaConfigParams = new Map<String, PS_IntegrationService.Config>{
+                'apiKey' => new PS_IntegrationService.Config('apiKey',
+                        'a5146b4b-3d2b-4fc4-a5e5-8387968859a4-makana'),
+                'baseURL' => new PS_IntegrationService.Config('baseURL',
+                        'https://SOMEURL.execute-api.us-west-2.amazonaws.com/v1')
+        };
+
+        for (String field : paymentConfigParams.keySet()) {
+            Map<String, String> stringMap = new Map<String, String>();
+            stringMap.put(PS_IntegrationService.KEY_CONST, field);
+            stringMap.put(PS_IntegrationService.VALUE_CONST, paymentConfigParams.get(field).value);
+            stringMap.put(PS_IntegrationService.IS_SECRET_CONST, field == API_KEY ? 'true' : 'false');
+            applicationConfig.add(stringMap);
+        }
+
+        configParams.put(PAYMENTS_APPLICATION_TYPE, applicationConfig);
+        applicationConfig = new List<Map<String, String>>();
+
+        for (String field : makanaConfigParams.keySet()) {
+            Map<String, String> stringMap = new Map<String, String>();
+            stringMap.put(PS_IntegrationService.KEY_CONST, field);
+            stringMap.put(PS_IntegrationService.VALUE_CONST, makanaConfigParams.get(field).value);
+            stringMap.put(PS_IntegrationService.IS_SECRET_CONST, field == API_KEY ? 'true' : 'false');
+            applicationConfig.add(stringMap);
+        }
+
+        configParams.put(MAKANA_APPLICATION_TYPE, applicationConfig);
     }
 }
