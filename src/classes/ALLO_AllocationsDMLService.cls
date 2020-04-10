@@ -35,10 +35,10 @@
 */
 public inherited sharing class ALLO_AllocationsDMLService {
     /** @description The number of times it will retry the set of Database operations, after first removing any with errors. */
-    private static final Integer NUM_DATABASE_RETRIES = 1;
+    @testVisible private static Integer numberOfDatabaseRetries = 1;
 
     /** @description Set of Opportunity or Payment Ids with Allocations DML errors during processing */
-    private Set<Id> recordIdsWithErrors {
+    @testVisible private Set<Id> recordIdsWithErrors {
         private get {
             if (recordIdsWithErrors == null) {
                 recordIdsWithErrors = new Set<Id>();
@@ -49,7 +49,7 @@ public inherited sharing class ALLO_AllocationsDMLService {
     }
 
     /** @description Set of All Opportunity or Payment Ids with Allocations DML */
-    private Set<Id> allRecordIdsWithDML {
+    @testVisible private Set<Id> allRecordIdsWithDML {
         private get {
             if (allRecordIdsWithDML == null) {
                 allRecordIdsWithDML = new Set<Id>();
@@ -93,10 +93,10 @@ public inherited sharing class ALLO_AllocationsDMLService {
     }
 
     /** @description Allocations Wrapper Allocations Work */
-    private ALLO_AllocationsWrapper allocationsWrapper;
+    @testVisible private ALLO_AllocationsWrapper allocationsWrapper;
 
     /** @description Exclusions that should be added if there are errors */
-    private Set<ALLO_AllocationsService.processDefinitionType> processExclusions {
+    @testVisible private Set<ALLO_AllocationsService.processDefinitionType> processExclusions {
         private get {
             if (processExclusions == null) {
                 processExclusions = new Set<ALLO_AllocationsService.processDefinitionType>();
@@ -156,12 +156,16 @@ public inherited sharing class ALLO_AllocationsDMLService {
         Integer dmlIteration = 0;
 
         // Clone existing allocation lists in case they need to be restored when rolling back
-        Map<Id, List<Allocation__c>> backupOppsAllocations = allocationsWrapper.oppsAllocations.clone();
-        Map<Id, List<Allocation__c>> backupPaymentAllocations = allocationsWrapper.paymentAllocations.clone();
+        Map<Id, List<Allocation__c>> backupOppsAllocations;
+        Map<Id, List<Allocation__c>> backupPaymentAllocations;
 
         Savepoint sp = Database.setSavepoint();
 
         do {
+            // Clone existing allocation lists in case they need to be restored when rolling back
+            backupOppsAllocations = allocationsWrapper.oppsAllocations.clone();
+            backupPaymentAllocations = allocationsWrapper.paymentAllocations.clone();
+
             dmlIteration++;
             dmlErrors = false;
 
@@ -184,11 +188,13 @@ public inherited sharing class ALLO_AllocationsDMLService {
                 allocationsWrapper.oppsAllocations = backupOppsAllocations;
                 allocationsWrapper.paymentAllocations = backupPaymentAllocations;
 
+                // Removes and Allocations associated with Parents with one or more DML Errors
                 removeAllDMLAssociatedWithErroredRecords();
-                System.assertEquals (1, dmlIteration, 'Entered dmlErrors section a second time...');
-            }
 
-        } while (dmlIteration <= NUM_DATABASE_RETRIES && dmlErrors);
+                // Insert DML Lists need special handling to clear id and read only timestamp fields from prior execution
+                removeIdAndTimestampsFromDMLList(allocationsWrapper.allocationsForInsert);
+            }
+        } while (dmlIteration <= numberOfDatabaseRetries && dmlErrors);
 
         if (dmlErrors) { // Need to log errors for all Opportunities that don't already have errors since retries exhausted
             addErrorsWhenRetriesExceeded();
@@ -229,8 +235,6 @@ public inherited sharing class ALLO_AllocationsDMLService {
                 Allocation__c deletedAlloc = allocationsWrapper.allocationsForDelete[i];
                 Database.DeleteResult delResult = deletes[i];
                 Id parentRecordId = (deletedAlloc.Opportunity__c != null) ? deletedAlloc.Opportunity__c : deletedAlloc.Payment__c;
-                Id opportunityId = (deletedAlloc.Opportunity__c != null) ? deletedAlloc.Opportunity__c : allocationsWrapper.paymentIdsToOppIds.get(deletedAlloc.Payment__c);
-                SObject parentSObjectType = (deletedAlloc.Opportunity__c != null) ? opportunitySObjectType : paymentSObjectType;
                 allRecordIdsWithDML.add(parentRecordId);
 
                 if (delResult.isSuccess()) {
@@ -238,11 +242,8 @@ public inherited sharing class ALLO_AllocationsDMLService {
                     allocationsWrapper.removeAllocation(deletedAlloc);
                 } else {
                     dmlErrorsPresent = true;
-                    getErrorLogger().addError(parentRecordId, delResult, parentSObjectType);
-                    allocationsWrapper.addExclusions(opportunityId, processExclusions);
-                    recordIdsWithErrors.add(parentRecordId);
+                    handleError(parentRecordId, deletedAlloc, delResult);
                 }
-
             }
         }
 
@@ -270,19 +271,13 @@ public inherited sharing class ALLO_AllocationsDMLService {
                 Allocation__c insertedAlloc = allocationsWrapper.allocationsForInsert[i];
                 Database.SaveResult insResult = inserts[i];
                 Id parentRecordId = (insertedAlloc.Opportunity__c != null) ? insertedAlloc.Opportunity__c : insertedAlloc.Payment__c;
-                Id opportunityId = (insertedAlloc.Opportunity__c != null) ? insertedAlloc.Opportunity__c : allocationsWrapper.paymentIdsToOppIds.get(insertedAlloc.Payment__c);
-                SObject parentSObjectType = (insertedAlloc.Opportunity__c != null) ? opportunitySObjectType : paymentSObjectType;
                 allRecordIdsWithDML.add(parentRecordId);
-
                 if (insResult.isSuccess()) {
-
                     // add the successfully inserted Allocation to the Opportunity Allocations List, indexed by the Opportunity Id
                     allocationsWrapper.addAllocation(insertedAlloc);
                 } else {
-                    dmlErrorsPresent = true;
-                    getErrorLogger().addError(parentRecordId, insResult, parentSObjectType);
-                    allocationsWrapper.addExclusions(opportunityId, processExclusions);
-                    recordIdsWithErrors.add(parentRecordId);
+                        dmlErrorsPresent = true;
+                        handleError(parentRecordId, insertedAlloc, insResult);
                 }
             }
         }
@@ -311,8 +306,6 @@ public inherited sharing class ALLO_AllocationsDMLService {
                 Allocation__c updatedAlloc = allocationsWrapper.allocationsForUpdate[i];
                 Database.SaveResult updResult = updates[i];
                 Id parentRecordId = (updatedAlloc.Opportunity__c != null) ? updatedAlloc.Opportunity__c : updatedAlloc.Payment__c;
-                Id opportunityId = (updatedAlloc.Opportunity__c != null) ? updatedAlloc.Opportunity__c : allocationsWrapper.paymentIdsToOppIds.get(updatedAlloc.Payment__c);
-                SObject parentSObjectType = (updatedAlloc.Opportunity__c != null) ? opportunitySObjectType : paymentSObjectType;
                 allRecordIdsWithDML.add(parentRecordId);
 
                 if (updResult.isSuccess()) {
@@ -320,13 +313,28 @@ public inherited sharing class ALLO_AllocationsDMLService {
                     allocationsWrapper.replaceAllocation(updatedAlloc);
                 } else {
                     dmlErrorsPresent = true;
-                    getErrorLogger().addError(parentRecordId, updResult, parentSObjectType);
-                    allocationsWrapper.addExclusions(opportunityId, processExclusions);
-                    recordIdsWithErrors.add(parentRecordId);
+                    handleError(parentRecordId, updatedAlloc, updResult);
                 }
             }
         }
         return dmlErrorsPresent;
+    }
+
+    /**
+     * @description Handles DML Errors, add appropriate exclusions, an Error via the ERR_RecordError functionality,
+     *              and recording the recordId in the set of Record Ids with Errors to be able to filter out
+     *              Allocations with by Parent Id's with Allocation's that errored
+     * @param parentRecordId Id of the Parent Record of the Allocation
+     * @param the Allocation associated with the error
+     * @param dmlResult associated with the Allocation that errored
+     */
+    private void handleError(Id parentRecordId, Allocation__c alloc, Object dmlResult) {
+        Id opportunityId = (alloc.Opportunity__c != null) ? alloc.Opportunity__c : allocationsWrapper.paymentIdsToOppIds.get(alloc.Payment__c);
+        SObject parentSObjectType = (alloc.Opportunity__c != null) ? opportunitySObjectType : paymentSObjectType;
+
+        getErrorLogger().addError(parentRecordId, dmlResult, parentSObjectType);
+        allocationsWrapper.addExclusions(opportunityId, processExclusions);
+        recordIdsWithErrors.add(parentRecordId);
     }
 
     /**
@@ -353,23 +361,41 @@ public inherited sharing class ALLO_AllocationsDMLService {
      *              DML can be retried without these records
      */
     private void removeAllDMLAssociatedWithErroredRecords() {
-        List<List<Allocation__c>> listsOfAllocsForDML = new List<List<Allocation__c>>();
-        listsOfAllocsForDML.add(allocationsWrapper.allocationsForDelete);
-        listsOfAllocsForDML.add(allocationsWrapper.allocationsForInsert);
-        listsOfAllocsForDML.add(allocationsWrapper.allocationsForUpdate);
+        removeAllocationsAssociatedWithErroredRecordsFromDMLList(allocationsWrapper.allocationsForDelete);
+        removeAllocationsAssociatedWithErroredRecordsFromDMLList(allocationsWrapper.allocationsForInsert);
+        removeAllocationsAssociatedWithErroredRecordsFromDMLList(allocationsWrapper.allocationsForUpdate);
+    }
 
-        for (List<Allocation__c> allocs : listsOfAllocsForDML) {
-            Integer idx = 0;
-            while (idx < allocs.size()) {
-                Allocation__c alloc = allocs[idx];
-                Id allocParentRecordId = (alloc.Opportunity__c != null) ? alloc.Opportunity__c : alloc.Payment__c;
+    /**
+     * @description Removes DML associated with Parent Records whose related allocations DML failed so the
+     *              DML can be retried without these records
+     * @param List of Allocations to filter/remove Allocations associated with Errors from
+     */
+    private void removeAllocationsAssociatedWithErroredRecordsFromDMLList(List<Allocation__c> allocs) {
+        Integer idx = 0;
+        while (idx < allocs.size()) {
+            Allocation__c alloc = allocs[idx];
+            Id allocParentRecordId = (alloc.Opportunity__c != null) ? alloc.Opportunity__c : alloc.Payment__c;
 
-                if (allocParentRecordId != null && this.recordIdsWithErrors.contains(allocParentRecordId)) { // If it is in the errors set, remove it
-                    allocs.remove(idx);
-                } else { // Move to next element
-                    idx++;
-                }
+            if (allocParentRecordId != null && this.recordIdsWithErrors.contains(allocParentRecordId)) {
+                // If it is in the errors set, remove it
+                allocs.remove(idx);
+            } else { // Move to next element
+                idx++;
             }
+        }
+    }
+
+    /**
+     * @description Removes The ID and Readonly timestamp fields form the Allocations List
+     * @param List of Allocations to process/update
+     */
+    private void removeIdAndTimestampsFromDMLList(List<Allocation__c> allocs) {
+        Integer idx = 0;
+        while (idx < allocs.size()) {
+            Allocation__c alloc = allocs[idx].clone(false, true, false, false);
+            allocs.set(idx, alloc);
+            idx++;
         }
     }
 
@@ -384,5 +410,4 @@ public inherited sharing class ALLO_AllocationsDMLService {
             }
         }
     }
-
 }

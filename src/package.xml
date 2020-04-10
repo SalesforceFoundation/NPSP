@@ -44,6 +44,7 @@
         <members>ALLO_AllocationsDMLService</members>
         <members>ALLO_AllocationsDMLService_TEST</members>
         <members>ALLO_AllocationsRecalculateService</members>
+        <members>ALLO_AllocationsRecalculateService_TEST</members>
         <members>ALLO_AllocationsRetrievalService</members>
         <members>ALLO_AllocationsRetrievalService_TEST</members>
         <members>ALLO_AllocationsReviewService</members>
@@ -65,7 +66,7 @@
         <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
-        <members>ALLO_UnitHelperTest_TEST</members>
+        <members>ALLO_UnitTestHelper_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
