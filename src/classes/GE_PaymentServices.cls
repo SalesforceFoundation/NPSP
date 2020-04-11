@@ -101,7 +101,7 @@ public with sharing class GE_PaymentServices {
     }
 
     private String getJwtSecret() {
-        return 'd733100d-2fcb-4bcc-9ef2-8f27c40aa006';
+        return 'foo';
     }
 
     /*******************************************************************************************************
