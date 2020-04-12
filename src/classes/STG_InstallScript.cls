@@ -46,7 +46,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS
     }
 
-    public STG_InstallScript(){
+    public STG_InstallScript() {
     }
 
     /*******************************************************************************************************

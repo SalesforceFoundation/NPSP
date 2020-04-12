@@ -379,7 +379,7 @@ public with sharing class BDI_MigrationMappingUtility {
     * @description Creates the corresponding Migrated Custom Field Mapping records
     * @param list of Default Field Mapping record developer names
     */
-    public void migrateNewDefaultToCustomMetadata(List<String> defaultFieldMappingDeveloperNames){
+    public void migrateNewDefaultToCustomMetadata(List<String> defaultFieldMappingDeveloperNames) {
 
         queuedMetadataTypesForDeploy.clear();
 
