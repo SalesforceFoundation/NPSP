@@ -47,6 +47,8 @@ import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
 import OPP_PAYMENT_AMOUNT from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
+import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
+
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
@@ -886,7 +888,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             let diFieldPayloads = [];
 
             widgetValues.forEach(widgetValue => {
-                if(widgetValue.type === 'diFieldValue' && !isUndefined(widgetValue.payload)) {
+                if(widgetValue.type === WIDGET_TYPE_DI_FIELD_VALUE && !isUndefined(widgetValue.payload)) {
                     diFieldPayloads.push(widgetValue.payload);
                 }
             });
@@ -898,7 +900,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 diFieldValuesArray = await Promise.all(diFieldPayloads);
             } catch (ex) {
                 // ex will be whatever was sent to the reject() function in the original promise
-                // handle payment error here: handlePaymentError(ex);
+                // TODO: handle payment error here: handlePaymentError(ex);
             }
             let additionalObjectValues = {};
 

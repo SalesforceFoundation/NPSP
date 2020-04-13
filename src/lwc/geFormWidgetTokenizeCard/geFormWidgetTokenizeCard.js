@@ -4,6 +4,7 @@ import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import { isFunction } from 'c/utilCommon';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
 
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
 
@@ -125,7 +126,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @api
     returnValues() {
         return {
-            type: 'diFieldValue',
+            type: WIDGET_TYPE_DI_FIELD_VALUE,
             payload: this.requestToken()
         };
     }
