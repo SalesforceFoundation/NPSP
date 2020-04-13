@@ -40,6 +40,8 @@ private with sharing class RD_AddDonationsBTN_TEST {
 
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
 
+    private static UTIL_Permissions_TEST.Stub permissionStub = new UTIL_Permissions_TEST.Stub();
+
     /***
     * @description Verifies Opportunities are recreated when the button is clicked on
     */
@@ -143,11 +145,10 @@ private with sharing class RD_AddDonationsBTN_TEST {
     }
 
     /***
-    * @description Verify if it displays error message if the user do not have Edit or Delete permissions
+    * @description Verifies if it displays error message when the uer has no create permission
     */
     @isTest
-    private static void shouldDisplayErrorMessageWhenUserHaveNoEditOrDeletePermission() {
-        String accessType = 'CreateOnly';
+    private static void shouldDisplayErrorMessageWhenUserHasNoCreatePermission() {
 
         Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert acc;
@@ -156,42 +157,51 @@ private with sharing class RD_AddDonationsBTN_TEST {
             .withAccount(acc.Id)
             .withNextDonationDate(System.today())
             .build();
-
         insert rd;
 
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        permissionStub.hasCreate = false;
+        RD_AddDonationsBTN_CTRL.perms = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
-        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
-        // Run as admin user to set the permission set with object level create permission for the readonlyuser
-        System.runas(adminUser) {
-            assignPermissionSet(accessType, readOnlyUser.id);
-        }
+        RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
+            new ApexPages.StandardController(rd)
+        );
 
+        UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
+        System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
+    }
 
-        Test.startTest();
+    /***
+    * @description Verifies if it displays error message when the uer has no edit permission
+    */
+    @isTest
+    private static void shouldDisplayErrorMessageWhenUserHasNoEditPermission() {
 
-        System.runAs(readOnlyUser) {
-            RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
-                new ApexPages.StandardController(rd)
-            );
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert acc;
 
-            // The error should be generated and rendered by the constructor
-            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
-            UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationPermissionDenied, ApexPages.Severity.ERROR);
-            System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
+        npe03__Recurring_Donation__c rd = getLegacyRDBuilder()
+            .withAccount(acc.Id)
+            .withNextDonationDate(System.today())
+            .build();
+        insert rd;
 
-        }
+        permissionStub.hasUpdate = false;
+        RD_AddDonationsBTN_CTRL.perms = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
-        Test.stopTest();
+        RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
+            new ApexPages.StandardController(rd)
+        );
+
+        UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
+        System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
 
     }
 
     /***
-    * @description Verify if it refreshes the opportunity when the read only user has all permissions
+    * @description Verifies if it displays error message when the uer has no delete permission
     */
     @isTest
-    private static void shouldContinueRefreshOpportunityWithAllPermissions() {
-        String accessType = 'All';
+    private static void shouldDisplayErrorMessageWhenUserHasNoDeletePermission() {
 
         Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
         insert acc;
@@ -200,35 +210,19 @@ private with sharing class RD_AddDonationsBTN_TEST {
             .withAccount(acc.Id)
             .withNextDonationDate(System.today())
             .build();
-
         insert rd;
 
-        User readOnlyUserWithAllPermission = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        permissionStub.hasDelete = false;
+        RD_AddDonationsBTN_CTRL.perms = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
-        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
-        // Run as admin user to set the permission set with object level create permission for the readonlyuser
-        System.runas(adminUser) {
-            assignPermissionSet(accessType, readOnlyUserWithAllPermission.id);
-        }
+        RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
+            new ApexPages.StandardController(rd)
+        );
 
-
-        Test.startTest();
-
-        System.runAs(readOnlyUserWithAllPermission) {
-            RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
-                new ApexPages.StandardController(rd)
-            );
-
-           System.assertEquals(true, ctrl.showContinueBtn, 'The continue button should be there');
-           System.assertEquals(rd.Id, ctrl.sc.getId());
-
-        }
-
-        Test.stopTest();
+        UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
+        System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
 
     }
-
-
 
     // Helpers
     /////////////
@@ -260,38 +254,6 @@ private with sharing class RD_AddDonationsBTN_TEST {
             npe03__Opportunity_Field__c = 'closedate',
             npe03__Recurring_Donation_Field__c = 'Name'
         );
-    }
-
-    /***
-    * @description Creates and assigns the permission set with Create permission or with all
-    * permissions on Opportunity object
-    */
-    private static void assignPermissionSet(String access, Id userId) {
-        Boolean allPermission = false;
-
-        PermissionSet permission = new PermissionSet(
-            Name = 'PermissionTest',
-            Label = 'PermissionTest'
-        );
-
-        insert permission;
-
-        allPermission = access == 'All' ? allPermission = true : allPermission;
-
-        insert new ObjectPermissions (
-            SObjectType = 'Opportunity',
-            ParentId = permission.id,
-            PermissionsRead = true,
-            PermissionsEdit = allPermission,
-            PermissionsCreate = true,
-            PermissionsDelete = allPermission
-        );
-
-        insert new PermissionSetAssignment(
-            AssigneeId = userId,
-            PermissionSetId = permission.Id
-        );
-
     }
 
 }
