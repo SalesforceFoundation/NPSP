@@ -74,4 +74,41 @@ public class RD2_QueueableService {
         }
     }
 
+    /**
+     * @description Queueable service to process inserted Recurring Donations that have a value
+     * in the Elevate CommitmentId__c field.
+     */
+    public class FindMatchingOpportunitiesByCommitmentId implements Queueable {
+        Map<String, Id> commitmentIdToRdIds;
+
+        /***
+         * @description Constructor
+         * @param commitmentIdToRdId - Map of CommitmentId's to RecurringDonation.Id
+         */
+        public FindMatchingOpportunitiesByCommitmentId(Map<String, Id> commitmentIdToRdId) {
+            this.commitmentIdToRdIds = commitmentIdToRdId;
+        }
+
+        /**
+         * @description Execute method called when the Queueable runs. Delegates to the
+         * evaluation service
+         * @param context queuableContext
+         */
+        public void execute(QueueableContext context) {
+            if (commitmentIdToRdIds == null || commitmentIdToRdIds.isEmpty()) {
+                return;
+            }
+
+            executeMapOfOpportunityToRecurringDonation();
+        }
+
+        /**
+         * @description Delegate processing of the Recurring Donations to the Evaluation Service
+         */
+        public void executeMapOfOpportunityToRecurringDonation() {
+            new RD2_ElevateIntegrationService()
+                .withCommitmentIdMap(commitmentIdToRdIds)
+                .matchRecurringDonationsToOpps();
+        }
+    }
 }
