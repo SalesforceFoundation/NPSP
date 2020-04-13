@@ -160,7 +160,7 @@ private with sharing class RD_AddDonationsBTN_TEST {
         insert rd;
 
         permissionStub.hasCreate = false;
-        RD_AddDonationsBTN_CTRL.perms = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
+        RD_AddDonationsBTN_CTRL.permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
         RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
             new ApexPages.StandardController(rd)
@@ -186,7 +186,7 @@ private with sharing class RD_AddDonationsBTN_TEST {
         insert rd;
 
         permissionStub.hasUpdate = false;
-        RD_AddDonationsBTN_CTRL.perms = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
+        RD_AddDonationsBTN_CTRL.permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
         RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
             new ApexPages.StandardController(rd)
@@ -213,7 +213,7 @@ private with sharing class RD_AddDonationsBTN_TEST {
         insert rd;
 
         permissionStub.hasDelete = false;
-        RD_AddDonationsBTN_CTRL.perms = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
+        RD_AddDonationsBTN_CTRL.permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
         RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
             new ApexPages.StandardController(rd)

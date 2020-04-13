@@ -353,7 +353,6 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         System.currentPageReference().getParameters().put('id', recordId);
         copyAddressCtrl = new ADDR_CopyAddrHHObjBTN_CTRL();
         copyAddressCtrl.perms = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, mockPerms);
-        System.debug('what is in perms:' + copyAddressCtrl.perms);
         copyAddressCtrl.buttonClick();
     }
 
