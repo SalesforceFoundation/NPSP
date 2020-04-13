@@ -79,14 +79,14 @@ public class RD2_QueueableService {
      * in the Elevate CommitmentId__c field.
      */
     public class FindMatchingOpportunitiesByCommitmentId implements Queueable {
-        Map<String, Id> commitmentIdToRdIds;
+        Map<String, Id> commitmentIdToRdId;
 
         /***
          * @description Constructor
          * @param commitmentIdToRdId - Map of CommitmentId's to RecurringDonation.Id
          */
         public FindMatchingOpportunitiesByCommitmentId(Map<String, Id> commitmentIdToRdId) {
-            this.commitmentIdToRdIds = commitmentIdToRdId;
+            this.commitmentIdToRdId = commitmentIdToRdId;
         }
 
         /**
@@ -95,7 +95,7 @@ public class RD2_QueueableService {
          * @param context queuableContext
          */
         public void execute(QueueableContext context) {
-            if (commitmentIdToRdIds == null || commitmentIdToRdIds.isEmpty()) {
+            if (commitmentIdToRdId == null || commitmentIdToRdId.isEmpty()) {
                 return;
             }
 
@@ -107,7 +107,7 @@ public class RD2_QueueableService {
          */
         public void executeMapOfOpportunityToRecurringDonation() {
             new RD2_ElevateIntegrationService()
-                .withCommitmentIdMap(commitmentIdToRdIds)
+                .withCommitmentIdMap(commitmentIdToRdId)
                 .matchRecurringDonationsToOpps();
         }
     }

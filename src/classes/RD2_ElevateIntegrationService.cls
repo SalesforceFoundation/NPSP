@@ -38,15 +38,15 @@ public inherited sharing class RD2_ElevateIntegrationService {
     /**
     * @description Map of CommitmentId to a specific RecordId (Opp or RD).
     */
-    private Map<String, Id> commitmentIdToRecordIds = new Map<String, Id>();
+    private Map<String, Id> commitmentIdToRecordId = new Map<String, Id>();
 
     /**
     * @description Pass the map of CommitmentId to RecordId (Opp or RD)
-    * @param commitmentIdToRecordIds Map by CommitmentId
+    * @param commitmentIdToRecordId Map by CommitmentId
     * @return this
     */
-    public RD2_ElevateIntegrationService withCommitmentIdMap(Map<String, Id> commitmentIdToRecordIds) {
-        this.commitmentIdToRecordIds = commitmentIdToRecordIds;
+    public RD2_ElevateIntegrationService withCommitmentIdMap(Map<String, Id> commitmentIdToRecordId) {
+        this.commitmentIdToRecordId = commitmentIdToRecordId;
         return this;
     }
 
@@ -55,24 +55,24 @@ public inherited sharing class RD2_ElevateIntegrationService {
     * and update the RecuringDonation lookup field (only if null).
     */
     public void matchRecurringDonationsToOpps() {
-        if (commitmentIdToRecordIds == null || commitmentIdToRecordIds.isEmpty()) {
+        if (commitmentIdToRecordId == null || commitmentIdToRecordId.isEmpty()) {
             return;
         }
 
         // Skip the process if the Id does not point to a RecurringDonation record
-        if (commitmentIdToRecordIds.values()[0].getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
+        if (commitmentIdToRecordId.values()[0].getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
             return;
         }
 
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for (Opportunity opp : [SELECT Id, npe03__Recurring_Donation__c, CommitmentId__c
             FROM Opportunity
-            WHERE CommitmentId__c IN :commitmentIdToRecordIds.keySet()
+            WHERE CommitmentId__c IN :commitmentIdToRecordId.keySet()
         ]) {
             if (opp.CommitmentId__c == null || opp.npe03__Recurring_Donation__c != null) {
                 continue;
             }
-            opp.npe03__Recurring_Donation__c = commitmentIdToRecordIds.get(opp.CommitmentId__c);
+            opp.npe03__Recurring_Donation__c = commitmentIdToRecordId.get(opp.CommitmentId__c);
             oppsToUpdate.add(opp);
         }
 
@@ -86,25 +86,25 @@ public inherited sharing class RD2_ElevateIntegrationService {
     * and update the RecurringDonation lookup field on the Opp.
     */
     public void matchOppsToRecurringDonations() {
-        if (commitmentIdToRecordIds == null || commitmentIdToRecordIds.isEmpty()) {
+        if (commitmentIdToRecordId == null || commitmentIdToRecordId.isEmpty()) {
             return;
         }
 
         // Skip the process if the Id does not point to an Opportunity record
-        if (commitmentIdToRecordIds.values()[0].getSobjectType() != Opportunity.SObjectType) {
+        if (commitmentIdToRecordId.values()[0].getSobjectType() != Opportunity.SObjectType) {
             return;
         }
 
         List<Opportunity> oppsToUpdate = new List<Opportunity>();
         for (npe03__Recurring_Donation__c rd : [SELECT Id, CommitmentId__c
             FROM npe03__Recurring_Donation__c
-            WHERE CommitmentId__c IN :commitmentIdToRecordIds.keySet()
+            WHERE CommitmentId__c IN :commitmentIdToRecordId.keySet()
         ]) {
             if (rd.CommitmentId__c == null) {
                 continue;
             }
             Opportunity opp = new Opportunity(
-                Id = commitmentIdToRecordIds.get(rd.CommitmentId__c),
+                Id = commitmentIdToRecordId.get(rd.CommitmentId__c),
                 npe03__Recurring_Donation__c = rd.Id
             );
             oppsToUpdate.add(opp);
