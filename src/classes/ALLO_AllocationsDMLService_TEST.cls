@@ -158,6 +158,8 @@ public class ALLO_AllocationsDMLService_TEST {
         System.assertEquals(0, allocDMLSvc.allRecordIdsWithDML.size(), message + '# of Record Ids With DML');
         System.assertEquals(null, allocDMLSvc.allocationsWrapper, message + 'Allocation Wrapper');
         System.assertEquals(0, allocDMLSvc.processExclusions.size(), message + 'Process Exclusions');
+
+        // Commit Record Errors
         recErr.processErrors();
 
         // Confirm exclusions before re-retrieving data
@@ -328,6 +330,7 @@ public class ALLO_AllocationsDMLService_TEST {
         allocDMLSvc.processAllocationResults();
         Test.stopTest();
 
+        // Commit RecordErrrors
         recErr.processErrors();
 
         Integer idx =0;
@@ -376,7 +379,7 @@ public class ALLO_AllocationsDMLService_TEST {
         System.assertEquals(true, opp0Err.Full_Message__c.contains('Test Error 2'), 'Functional Error 2 for Opportunity 1');
     }
 
-        /**
+    /**
      * @description Confirms DML Processing of Payment Allocations with partial success
      *              [ALLO_AllocationsDMLService.processAllocationResults]
      */
@@ -439,9 +442,9 @@ public class ALLO_AllocationsDMLService_TEST {
         alloc2.Amount__c = 5;
         allocWrapper.allocationsForUpdate.add(alloc2);
 
-        // Opportunity 6 - Payment 2 (Changing 1st allocation to GAU[1], Deleting 2nd allocation, and attempting an invalid update)
-        message = baseMessage + 'Opportunity 6 - Payment 2 - ';
-        allocs = allocWrapper.paymentAllocations.get(pmts[2].Id);
+        // Opportunity 6 - Payment 3 (Changing 1st allocation to GAU[1], Deleting 2nd allocation, and attempting an invalid update)
+        message = baseMessage + 'Opportunity 6 - Payment 3 - ';
+        allocs = allocWrapper.paymentAllocations.get(pmts[3].Id);
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 2, message + 'Allocations');
         alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
         alloc1 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, defaultGAU);
@@ -452,8 +455,8 @@ public class ALLO_AllocationsDMLService_TEST {
         allocWrapper.allocationsForDelete.add(alloc1);
         allocWrapper.allocationsForUpdate.add(
             new Allocation__c(
-                Payment__c = pmts[2].Id,
-                Amount__c = 0,
+                Payment__c = pmts[3].Id,
+                Amount__c = 10,
                 General_Accounting_Unit__c = defaultGAU.Id
             )
         );
@@ -477,10 +480,12 @@ public class ALLO_AllocationsDMLService_TEST {
         System.assertEquals(0, allocDMLSvc.allRecordIdsWithDML.size(), message + '# of Record Ids With DML');
         System.assertEquals(null, allocDMLSvc.allocationsWrapper, message + 'Allocation Wrapper');
         System.assertEquals(0, allocDMLSvc.processExclusions.size(), message + 'Process Exclusions');
+
+        // Commit Record Errors
         recErr.processErrors();
 
         // Confirm exclusions before re-retrieving data
-        Set<Id> oppIdsWithExcl = new Set<Id> { oppIds[6]};
+        Set<Id> oppIdsWithExcl = new Set<Id> { oppIds[6] };
 
         Integer idx =0;
         for (Id oppId : oppIds) {
@@ -499,5 +504,36 @@ public class ALLO_AllocationsDMLService_TEST {
 
         baseMessage = 'After DML - ';
 
+        // Opportunity 6 - Payment 0
+        message = baseMessage + 'Opportunity 6 - Payment 0 - ';
+        allocs = allocWrapper.paymentAllocations.get(pmts[0].Id);
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 1, message + 'Allocations');
+        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[1]);
+        alloc1 = null;
+        alloc2 = null;
+        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[0].Id, 20, 100, gaus[1].Id, message + 'Allocation 0');
+
+        // Opportunity 6 - Payment 1
+        allocs = allocWrapper.paymentAllocations.get(pmts[1].Id);
+        message = baseMessage + 'Opportunity 6 - Payment 1 - ';
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 2, message + 'Allocations');
+        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
+        alloc1 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, defaultGAU);
+        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[1].Id, 5, 50, gaus[0].Id, message + 'Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc1, pmts[1].Id, 5, null, defaultGAU.Id, message + 'Allocation 0');
+
+        // Opportunity 6 - Payment 3 - No changes.  Error should be present
+        message = baseMessage + 'Opportunity 6 - Payment 3 - ';
+        allocs = allocWrapper.paymentAllocations.get(pmts[3].Id);
+        ALLO_UnitTestHelper_TEST.assertSObjectList(allocs, 2, message + 'Allocations');
+        alloc0 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, gaus[0]);
+        alloc1 = ALLO_UnitTestHelper_TEST.findByGAU(allocs, defaultGAU);
+        alloc2 = null;
+        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc0, pmts[3].Id, 10, 100, gaus[0].Id, message + 'Allocation 0');
+        ALLO_UnitTestHelper_TEST.assertPaymentAllocation(alloc1, pmts[3].Id, 10, null, defaultGAU.Id, message + 'Allocation 1');
+
+        Map<Id, Error__c> errsByRecordId = ALLO_UnitTestHelper_TEST.getErrorsByRecordId();
+        System.assertEquals (1, errsByRecordId.size(), baseMessage + '# of Errors');
+        System.assertEquals(true, errsByRecordId.containsKey(pmts[3].Id), baseMessage + 'Error is present for Opportunity 6 - Payment 3');
     }
 }

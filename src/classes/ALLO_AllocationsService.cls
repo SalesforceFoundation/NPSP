@@ -88,13 +88,6 @@ public inherited sharing class ALLO_AllocationsService {
     @testVisible private ERR_RecordError recErrs;
 
     /**
-     * @description Boundary Date to be used as a cutoff when record isn't flagged as needing review for
-     *               other reasons.
-     *               Default is no boundary date. which mean automatically included for review
-     */
-    @testVisible private Datetime boundaryDate = null;
-
-    /**
      * @description Indicates whether or not Allocation triggers should be disabled during processing.
      *               Default is true
      */
@@ -148,19 +141,6 @@ public inherited sharing class ALLO_AllocationsService {
      */
     public ALLO_AllocationsService withAlternateRecordErrorsLogger(ERR_RecordError altRecErrs) {
         this.recErrs = (altRecErrs != null) ? altRecErrs : this.recErrs;
-        return this;
-    }
-
-    /**
-     * @description Boundary Date is used as a quicker way of determining whether or not a record
-     *              needs to be included.  Even if it does not meet inclusion criteria for boundary
-     *              date it may be included based on other criteria
-     * @param boundaryDate Records updated after this date are considered to be included, without
-     *        bothering to sum allocations, etc.
-     * @return Class Instance
-     */
-    public ALLO_AllocationsService withBoundaryDate(DateTime boundaryDate) {
-        this.boundaryDate = boundaryDate;
         return this;
     }
 
@@ -225,7 +205,7 @@ public inherited sharing class ALLO_AllocationsService {
 
         // Process Opportunity Allocations DML
         allocationsDMLService
-            .withProcessExclusions(processExclusions.get(processDefinitionType.OPP_ALLOC_UPD))
+            .withProcessExclusions(getProcessExclusionsFor(processDefinitionType.OPP_ALLOC_UPD))
             .withAllocationsWrapper(allocationsWrapper)
             .processAllocationResults();
 
@@ -238,7 +218,7 @@ public inherited sharing class ALLO_AllocationsService {
 
         // Process Payment Allocations DML
         allocationsDMLService
-            .withProcessExclusions(processExclusions.get(processDefinitionType.PMT_ALLOC))
+            .withProcessExclusions(getProcessExclusionsFor(processDefinitionType.PMT_ALLOC))
             .processAllocationResults();
 
         // Clear Pending DML
@@ -305,5 +285,4 @@ public inherited sharing class ALLO_AllocationsService {
         }
         return successfullyProcessedOpportunityIds;
     }
-
 }

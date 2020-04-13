@@ -51,7 +51,9 @@
         <members>ALLO_AllocationsReviewService</members>
         <members>ALLO_AllocationsReviewService_TEST</members>
         <members>ALLO_AllocationsService</members>
+        <members>ALLO_AllocationsService_TEST</members>
         <members>ALLO_AllocationsSettings</members>
+        <members>ALLO_AllocationsSettings_TEST</members>
         <members>ALLO_AllocationsUtil</members>
         <members>ALLO_AllocationsUtil_TEST</members>
         <members>ALLO_AllocationsWrapper</members>

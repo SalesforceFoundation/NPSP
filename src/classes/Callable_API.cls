@@ -107,7 +107,6 @@ global with sharing class Callable_API implements System.Callable {
                 return new ALLO_AllocationsService()
                                 .withAllocationTriggersDisabled(disableOppAndPmtAlloTriggers)
                                 .withAlternateContextType(contextType)
-                                .withBoundaryDate(processingBoundary)
                                 .withCommitAndClearRecordsEnabled(true)
                                 .processRecords(opportunityIds);
 
