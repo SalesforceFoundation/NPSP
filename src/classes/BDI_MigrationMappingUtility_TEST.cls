@@ -657,14 +657,21 @@ private class BDI_MigrationMappingUtility_TEST {
                                         '"MasterLabel":"Account 1 City",' +
                                         '"Label":"Account 1 City",' +
                                         '"DeveloperName":"npsp__Account1_City",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c + '":"npsp__Account1_City__c",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c + '":"BillingCity",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Required__c + '":"No",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c + '":"' + fieldMappingSet.Id + '",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c + '":"' + account1ObjectMapping.Id +
-                                        '","' + targetObjectMapping + '":{"Id":"' + account1ObjectMapping.Id +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c +
+                                        '":"npsp__Account1_City__c",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c +
+                                        '":"BillingCity",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Required__c +
+                                        '":"No",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c +
+                                        '":"' + fieldMappingSet.Id + '",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c +
+                                        '":"' + account1ObjectMapping.Id +
+                                        '","' + targetObjectMapping +
+                                        '":{"Id":"' + account1ObjectMapping.Id +
                                         '","DeveloperName":"Account1","MasterLabel":"Account1",' +
-                                        '"' + legacyDataImportObjectName + '":"Account1","' + objectAPIName + '":"Account"}}',
+                                        '"' + legacyDataImportObjectName + '":"Account1","' +
+                                        objectAPIName + '":"Account"}}',
                                 Data_Import_Field_Mapping__mdt.class);
 
                 Data_Import_Field_Mapping__mdt fieldMapping2 =
@@ -673,14 +680,21 @@ private class BDI_MigrationMappingUtility_TEST {
                                         '"MasterLabel":"Account 1 Country",' +
                                         '"Label":"Account 1 Country",' +
                                         '"DeveloperName":"npsp__Account1_Country",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c + '":"npsp__Account1_Country__c",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c + '":"BillingCountry",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Required__c + '":"No",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c + '":"' + fieldMappingSet.Id + '",' +
-                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c + '":"' + account1ObjectMapping.Id +
-                                        '","' + targetObjectMapping + '":{"Id":"' + account1ObjectMapping.Id +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c +
+                                        '":"npsp__Account1_Country__c",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c +
+                                        '":"BillingCountry",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Required__c +
+                                        '":"No",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c +
+                                        '":"' + fieldMappingSet.Id + '",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c +
+                                        '":"' + account1ObjectMapping.Id +
+                                        '","' + targetObjectMapping +
+                                        '":{"Id":"' + account1ObjectMapping.Id +
                                         '","DeveloperName":"Account1","MasterLabel":"Account1",' +
-                                        '"' + legacyDataImportObjectName + '":"Account1","' + objectAPIName + '":"Account"}}',
+                                        '"' + legacyDataImportObjectName + '":"Account1","' +
+                                        objectAPIName + '":"Account"}}',
                                 Data_Import_Field_Mapping__mdt.class);
 
                 List<String> referenceFieldMappings = new List<String>();
