@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,31 +13,31 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
 * @date 2014
 * @group Address Management
-* @description Class that generates mock HTTP responses for Google Geo API 
+* @description Class that generates mock HTTP responses for Google Geo API
 */
 @isTest
 public with sharing class ADDR_MockGoogleGeoAPIResponse_TEST implements HttpCalloutMock {
 
-    public HTTPResponse respond(HTTPRequest req) {
-        String singleAddressResponse = '{'+
+    public HttpResponse respond(HttpRequest req) {
+        String singleUSAddressResponse = '{'+
         '   \"results\" : ['+
         '      {'+
         '         \"address_components\" : ['+
@@ -83,6 +83,76 @@ public with sharing class ADDR_MockGoogleGeoAPIResponse_TEST implements HttpCall
         '            }'+
         '         ],'+
         '         \"formatted_address\" : \"1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA\",'+
+        '         \"geometry\" : {'+
+        '            \"location\" : {'+
+        '               \"lat\" : 37.42291810,'+
+        '               \"lng\" : -122.08542120'+
+        '            },'+
+        '            \"location_type\" : \"ROOFTOP\",'+
+        '            \"viewport\" : {'+
+        '               \"northeast\" : {'+
+        '                  \"lat\" : 37.42426708029149,'+
+        '                  \"lng\" : -122.0840722197085'+
+        '               },'+
+        '               \"southwest\" : {'+
+        '                  \"lat\" : 37.42156911970850,'+
+        '                  \"lng\" : -122.0867701802915'+
+        '               }'+
+        '            }'+
+        '         },'+
+        '         \"partial_match\" : false,'+
+        '         \"types\" : [ \"street_address\" ]'+
+        '      }'+
+        '   ],'+
+        '   \"status\" : \"OK\"'+
+        '}';
+
+        String singleInternationalAddressResponse = '{'+
+        '   \"results\" : ['+
+        '      {'+
+        '         \"address_components\" : ['+
+        '            {'+
+        '               \"long_name\" : \"8\",'+
+        '               \"short_name\" : \"8\",'+
+        '               \"types\" : [ \"street_number\" ]'+
+        '            },'+
+        '            {'+
+        '               \"long_name\" : \"Prälat-Zistl-Straße\",'+
+        '               \"short_name\" : \"Prälat-Zistl-Straße\",'+
+        '               \"types\" : [ \"route\" ]'+
+        '            },'+
+        '            {'+
+        '               \"long_name\" : \"München\",'+
+        '               \"short_name\" : \"München\",'+
+        '               \"types\" : [ \"locality\", \"political\" ]'+
+        '            },'+
+        '            {' +
+        '                \"long_name\" : \"Altstadt-Lehel\",' +
+        '                \"short_name\" : \"Altstadt-Lehel\",' +
+        '                \"types\" : [ \"political\", \"sublocality\", \"sublocality_level_1\" ]' +
+        '            },'+
+        '            {'+
+        '               \"long_name\" : \"Oberbayern\",'+
+        '               \"short_name\" : \"Oberbayern\",'+
+        '               \"types\" : [ \"administrative_area_level_2\", \"political\" ]'+
+        '            },'+
+        '            {'+
+        '               \"long_name\" : \"Bayern\",'+
+        '               \"short_name\" : \"BY\",'+
+        '               \"types\" : [ \"administrative_area_level_1\", \"political\" ]'+
+        '            },'+
+        '            {'+
+        '               \"long_name\" : \"Germany\",'+
+        '               \"short_name\" : \"DE\",'+
+        '               \"types\" : [ \"country\", \"political\" ]'+
+        '            },'+
+        '            {'+
+        '               \"long_name\" : \"80331\",'+
+        '               \"short_name\" : \"80331\",'+
+        '               \"types\" : [ \"postal_code\" ]'+
+        '            }'+
+        '         ],'+
+        '         \"formatted_address\" : \"Prälat-Zistl-Straße 8, 80331 München, Germany\",'+
         '         \"geometry\" : {'+
         '            \"location\" : {'+
         '               \"lat\" : 37.42291810,'+
@@ -262,11 +332,13 @@ public with sharing class ADDR_MockGoogleGeoAPIResponse_TEST implements HttpCall
             res.setStatusCode(401);
             res.setStatus('Not authenticated.');
         } else {
-            res.setStatusCode(200);
-            res.setStatus('OK');
+            res.setStatusCode(ADDR_Validator_UTIL.RESPONSE_CODE_SUCCESS);
+            res.setStatus(ADDR_Validator_UTIL.RESPONSE_OK);
 
             if(req.getEndPoint().contains('single-address')) {
-                res.setBody(singleAddressResponse);
+                res.setBody(singleUSAddressResponse);
+            } else if(req.getEndPoint().contains('international-address')) {
+                res.setBody(singleInternationalAddressResponse);
             } else if(req.getEndPoint().contains('ambiguous-address')) {
                 res.setBody(ambiguousAddressResponse);
             } else if(req.getEndPoint().contains('invalid-request')) {

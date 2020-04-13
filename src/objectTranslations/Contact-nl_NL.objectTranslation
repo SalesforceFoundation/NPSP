@@ -191,6 +191,10 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
+        <label>Nieuwe gift</label>
+        <name>New_Gift</name>
+    </webLinks>
+    <webLinks>
         <label>Totaliseringen opnieuw berekenen</label>
         <name>Recalculate_Rollups</name>
     </webLinks>

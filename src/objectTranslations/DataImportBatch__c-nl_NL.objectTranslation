@@ -22,12 +22,18 @@
         <name>Active_Fields__c</name>
     </fields>
     <fields>
+        <help>De standaardveldwaarden voor een batch in Opgave van gift. Niet rechtstreeks bewerken. Dit moet worden bijgewerkt in de UI waar u uw batch bewerkt.</help>
+        <label>Standaardwaarden voor Batch</label>
+        <name>Batch_Defaults__c</name>
+    </fields>
+    <fields>
         <help>Een optionele beschrijving van deze batch.</help>
         <label>Batchomschrijving</label>
         <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <label><!-- Batch Gift Entry Version --></label>
+        <help>De versie van de voorziening Batchinvoer van giften, die is gebruikt om deze batch te maken.</help>
+        <label>Versie van Batchinvoer van giften</label>
         <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
@@ -90,11 +96,6 @@
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <label><!-- Form Template --></label>
-        <name>Form_Template__c</name>
-        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
-    </fields>
-    <fields>
         <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
         <label>Verwachte telling van giften</label>
         <name>Expected_Count_of_Gifts__c</name>
@@ -105,9 +106,10 @@
         <name>Expected_Total_Batch_Amount__c</name>
     </fields>
     <fields>
-        <label><!-- Form Template --></label>
+        <help>De te gebruiken sjabloon voor het formulier Opgave van gift voor deze batch.</help>
+        <label>Formuliersjabloon</label>
         <name>Form_Template__c</name>
-        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
+        <relationshipLabel>Batches van NPSP-gegevensimport</relationshipLabel>
     </fields>
     <fields>
         <help>Deze batch is bedoeld voor gebruik met Batchgiftinvoer. Batches worden automatisch gemarkeerd als giftbatches wanneer ze via het tabblad Batchgiftinvoer worden ingesteld. Dit veld handmatig wijzigen, kan onbedoelde gevolgen hebben.</help>
