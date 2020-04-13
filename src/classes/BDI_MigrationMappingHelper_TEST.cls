@@ -132,7 +132,7 @@ private class BDI_MigrationMappingHelper_TEST {
     * (Data_Import_Field_Mapping__mdt)
     */
     @isTest
-    static void shouldgetFieldMappingKeysByDeveloperName() {
+    static void shouldGetFieldMappingKeysByDeveloperName() {
         BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
 
         List<String> fieldMappings =

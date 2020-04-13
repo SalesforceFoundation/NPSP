@@ -224,10 +224,14 @@ public class BDI_MigrationMappingHelper {
 
         for (Data_Import_Field_Mapping__mdt reference : referenceFieldMappings) {
             if (UTIL_Namespace.shouldAlignNamespace) {
+                reference.Target_Object_Mapping__r.Object_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        reference.Target_Object_Mapping__r.Object_API_Name__c);
+                reference.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        reference.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c);
+                reference.Target_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        reference.Target_Field_API_Name__c);
                 reference.Source_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
-                                reference.Source_Field_API_Name__c);
-                reference.Target_Object_Mapping__r.Object_API_Name__c =UTIL_Namespace.alignSchemaNSWithEnvironment(
-                                reference.Target_Object_Mapping__r.Object_API_Name__c);
+                        reference.Source_Field_API_Name__c);
             }
             fieldMappingKeys.add(
                     reference.Target_Object_Mapping__r.Object_API_Name__c
