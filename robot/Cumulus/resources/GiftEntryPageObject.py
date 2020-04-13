@@ -40,11 +40,11 @@ class GiftEntryPage(BaseNPSPPage, BasePage):
         """Enter value in specified field"""
         for key,value in kwargs.items():
             if key=='Description':
-                locator=npsp_lex_locators["gift_entry"]["textarea"].format(key)
+                locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
                 self.selenium.wait_until_page_contains_element(locator)
                 self.salesforce._populate_field(locator, value)
             else:
-                locator=npsp_lex_locators["gift_entry"]["field_input"].format(key)
+                locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
                 self.selenium.wait_until_page_contains_element(locator)
                 self.salesforce._populate_field(locator, value)      
 
