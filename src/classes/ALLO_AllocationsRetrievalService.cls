@@ -37,6 +37,7 @@ public inherited sharing class ALLO_AllocationsRetrievalService {
     /** @description The Set of Opportunities to retrieve */
     private Set<Id> oppIds;
 
+    /** @description Allocations Wrapper */
     public ALLO_AllocationsWrapper allocationsWrapper {
         public get {
             if (allocationsWrapper == null) {
@@ -165,7 +166,10 @@ public inherited sharing class ALLO_AllocationsRetrievalService {
         }
     }
 
-
+    /**
+     * @description Inner class to facilitate querying Opportunity and related payment information (if Payment Allocations is
+     *              enabled)
+     */
     public class OpportunitiesQuery {
         @testVisible private Set<Id> opportunityIds;
         @testVisible private Boolean retrievePaymentInfo = UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c == TRUE;
@@ -180,10 +184,10 @@ public inherited sharing class ALLO_AllocationsRetrievalService {
             return this;
         }
 
-        /*******************************************************************************************************
+        /**
          * @description Retrieves Opportunity and Payment Data into a Map by Opportunity Id
          * @return Map<Id, Opportunity> Map of Opportunities by Opportunity Id
-         ********************************************************************************************************/
+         */
         public Map<Id, Opportunity> query() {
             Set<String> oppPaymentFields = new Set<String> {
                 'Id',
@@ -237,6 +241,9 @@ public inherited sharing class ALLO_AllocationsRetrievalService {
         }
     }
 
+    /**
+     * @description Inner class to make retrieving Allocations easier
+     */
     public class AllocationsQuery {
         @testVisible private Set<Id> opportunityIds;
         @testVisible private Set<Id> paymentIds;

@@ -186,5 +186,4 @@ public class ALLO_AllocationsReviewService_TEST {
             System.assertEquals(expectedValue, oppIdsForReview.contains(oppId), 'Opportunity #' + i + ' - Flagged for Review');
         }
     }
-
 }

@@ -555,7 +555,6 @@ public inherited sharing class ALLO_AllocationsWrapper {
         this.allocationsForUpdate = new List<Allocation__c>();
     }
 
-
     /**
      * @description Returns a Set of Opportunities that failed to be processed properly,
      *              or were identified as having an Allocation issue.

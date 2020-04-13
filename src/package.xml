@@ -1736,6 +1736,7 @@
         <members>alloRemoveOppWithPmt</members>
         <members>alloSignMistmatch</members>
         <members>alloSingleParent</members>
+        <members>alloSuccessfulRecordRetry</members>
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
@@ -2007,7 +2008,6 @@
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
         <members>errErrorNoContext</members>
-        <members>errErrorRecordRetrySuccessful</members>
         <members>errErrorTypeOther</members>
         <members>errErrorTypeRequiredFieldMissing</members>
         <members>errErrorTypeValidationFailed</members>

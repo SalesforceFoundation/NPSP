@@ -70,7 +70,6 @@ public class ALLO_AllocationsRecalculateService_TEST {
         ALLO_AllocationsRecalculateService allocRecalcSvc = new ALLO_AllocationsRecalculateService()
                                                                 .withAllocationsWrapper(allocWrapper);
 
-
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 0, 'Before Recalculate - Delete List');
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 0, 'Before Recalculate - Insert List');
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 0, 'Before Recalculate - Update List');
@@ -251,7 +250,6 @@ public class ALLO_AllocationsRecalculateService_TEST {
         ALLO_AllocationsRecalculateService allocRecalcSvc = new ALLO_AllocationsRecalculateService()
                                                                 .withAllocationsWrapper(allocWrapper);
 
-
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 0, 'Before Recalculate - Delete List');
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 0, 'Before Recalculate - Insert List');
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForUpdate, 0, 'Before Recalculate - Update List');
@@ -265,7 +263,6 @@ public class ALLO_AllocationsRecalculateService_TEST {
         Map<Id, List<Allocation__c>> allocsForDeleteByOppId = ALLO_UnitTestHelper_TEST.buildMapOfAllocationsByOpportunityId(allocWrapper.allocationsForDelete);
         Map<Id, List<Allocation__c>> allocsForInsertByOppId = ALLO_UnitTestHelper_TEST.buildMapOfAllocationsByOpportunityId(allocWrapper.allocationsForInsert);
         Map<Id, List<Allocation__c>> allocsForUpdateByOppId = ALLO_UnitTestHelper_TEST.buildMapOfAllocationsByOpportunityId(allocWrapper.allocationsForUpdate);
-
 
         List<Allocation__c> allocs = null;
         String message = '';
@@ -385,7 +382,7 @@ public class ALLO_AllocationsRecalculateService_TEST {
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocsForDeleteByOppId.get(oppIds[13]), null, message + 'Allocations - Delete');
     }
 
-         /**
+    /**
      * @description Confirm Recalculate Service creates correct DML changes when
      *              Default Allocations Enabled
      *              Payment Allocations Enabled
@@ -418,7 +415,6 @@ public class ALLO_AllocationsRecalculateService_TEST {
 
         ALLO_AllocationsRecalculateService allocRecalcSvc = new ALLO_AllocationsRecalculateService()
                                                                 .withAllocationsWrapper(allocWrapper);
-
 
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForDelete, 0, 'Before Recalculate - Delete List');
         ALLO_UnitTestHelper_TEST.assertSObjectList(allocWrapper.allocationsForInsert, 0, 'Before Recalculate - Insert List');

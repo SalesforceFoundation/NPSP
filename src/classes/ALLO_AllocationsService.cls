@@ -231,7 +231,7 @@ public inherited sharing class ALLO_AllocationsService {
 
         // Clear Retry Pending and add Retry Successful for Records that were successful
         // that have existing errors flagged for Retry
-        recErrs.clearErrors(successfullyProcessedOpportunityIds, Label.errErrorRecordRetrySuccessful);
+        recErrs.clearErrors(successfullyProcessedOpportunityIds, Label.alloSuccessfulRecordRetry);
 
         finish();
 
@@ -277,6 +277,12 @@ public inherited sharing class ALLO_AllocationsService {
         return processExclusions.get(process);
     }
 
+    /**
+     * @description Returns A set of Opportunity Ids after removing any that errored.
+     * @param opportunityIds All opportunity Ids submitted for processing
+     * @param opportunityIdsWithErrors opportunity Ids that errored during processing
+     * @return Set<Id> opportunity Ids that did not erroring during processing
+     */
     private Set<Id> determineSucessfullyProcessedRecords(Set<Id> opportunityIds, Set<Id> opportunityIdsWithErrors) {
         Set<Id> successfullyProcessedOpportunityIds = new Set<Id>(opportunityIds);
 

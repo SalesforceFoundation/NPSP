@@ -2806,6 +2806,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Ensure that this Allocation has only one parent object: Payment, Opportunity, Recurring Donation, or Campaign.</value>
     </labels>
     <labels>
+        <fullName>alloSuccessfulRecordRetry</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloSuccessfulRecordRetry</shortDescription>
+        <value>Allocations reprocessing completed successfully. </value>
+    </labels>
+    <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
@@ -4943,14 +4951,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>errErrorNoContext</shortDescription>
         <value>No process context supplied to constructor</value>
-    </labels>
-    <labels>
-        <fullName>errErrorRecordRetrySuccessful</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>errErrorRecordRetrySuccessful</shortDescription>
-        <value>Record reprocessing completed successfully. </value>
     </labels>
     <labels>
         <fullName>errErrorTypeOther</fullName>

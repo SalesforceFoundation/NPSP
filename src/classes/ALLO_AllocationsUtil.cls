@@ -34,14 +34,14 @@
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Utility class to support shared functionality for Allocations
 */
-public class ALLO_AllocationsUtil {
+public inherited sharing class ALLO_AllocationsUtil {
 
     // Lazy initialization on use to reduce describes for Object Labels
     /** @description Caches The Allocation Object's Label */
     @testVisible private static String allocationObjectLabel {
         get {
             if (allocationObjectLabel == null) {
-                allocationObjectLabel = UTIL_Describe.getObjectLabel('Allocation__c');
+                allocationObjectLabel = UTIL_Describe.getObjectLabel(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'));
             }
             return allocationObjectLabel;
         }
@@ -70,40 +70,36 @@ public class ALLO_AllocationsUtil {
         private set;
     }
 
-    /*******************************************************************************************************
+    /**
      * @description Disables the following Allocation Triggers, on the Allocation, Opportunity,
      *              and npe01__OppPayment__c objects: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM (in
      *              memory only)
-     ********************************************************************************************************/
+     */
     public static void disableAllocationTriggers() {
         updateAllocationTriggersState(false);
     }
 
-    /*******************************************************************************************************
+    /**
      * @description Enables the following Allocation Triggers, on the Allocation, Opportunity,
      *              and npe01__OppPayment__c objects: ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM (in
      *              memory only)
-     ********************************************************************************************************/
+     */
     public static void enableAllocationTriggers() {
         updateAllocationTriggersState(true);
     }
 
-    /*******************************************************************************************************
+    /**
      * @description Updates the state of the Allocation triggers in the in memory cache, enabling or
      *              disabling the trigger.  The following triggers are enabled/disabled by this method:
      *              ALLO_Allocations_TDTM, ALLO_PaymentSync_TDTM.
      * @param Boolean state - If true, they are active, if false, they are inactive.
-     ********************************************************************************************************/
+     */
     @testVisible private static void updateAllocationTriggersState(Boolean state) {
-        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_Allocations_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'), 'ALLO_Allocations_TDTM', state);
         TDTM_ProcessControl.toggleTriggerState('Opportunity', 'ALLO_Allocations_TDTM', state);
         TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'ALLO_Allocations_TDTM', state);
-        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_PaymentSync_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'), 'ALLO_PaymentSync_TDTM', state);
     }
-
-    /***************************
-     * Helper Methods - General
-     ***************************/
 
     /**
      * @description Determines whether this is a Opportunity or a Payment Object, and returns the

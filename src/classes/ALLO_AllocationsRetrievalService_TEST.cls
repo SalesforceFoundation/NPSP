@@ -229,8 +229,6 @@ public class ALLO_AllocationsRetrievalService_TEST {
         System.assertEquals(opp6.Id, opp6pmt2.npe01__Opportunity__c, 'Opportunity 6 - Payment 2 - Opportunity Id');
         System.assertNotEquals(null, opp6pmt2.LastModifiedDate, 'Opportunity 6 - Payment 2 - LastModifiedDate');
 
-
-
         Set<Id> campaignIds = new Set<Id>();
         Set<Id> recurringDonationIds = new Set<Id>();
         Set<Id> pmtIds = new Set<Id>();

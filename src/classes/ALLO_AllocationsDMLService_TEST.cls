@@ -58,7 +58,6 @@ public class ALLO_AllocationsDMLService_TEST {
                                                         .retrieveData()
                                                         .allocationsWrapper;
 
-
         List<General_Accounting_Unit__c> gaus = alloSetupTest.getGAUs();
         General_Accounting_Unit__c defaultGAU = alloSetupTest.getDefaultGAU();
 
@@ -213,7 +212,6 @@ public class ALLO_AllocationsDMLService_TEST {
         System.assertEquals(true, opp0Err.Full_Message__c.contains('Test Error 1'), 'Functional Error 1 for Opportunity 1');
         System.assertEquals(true, opp0Err.Full_Message__c.contains('Test Error 2'), 'Functional Error 2 for Opportunity 1');
         System.assertEquals(true, errsByRecordId.containsKey(oppIds[6]), baseMessage + 'Error is present for Opportunity 6');
-
     }
 
     /**
