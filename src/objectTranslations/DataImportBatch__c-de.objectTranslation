@@ -54,17 +54,23 @@
         <name>Active_Fields__c</name>
     </fields>
     <fields>
+        <help>Die Standardwerte für einen Batch in der Schenkungseingabe. Bearbeiten Sie diese nicht direkt. Diese Werte sollten über die Benutzeroberfläche aktualisiert werden, auf der Sie Ihren Batch bearbeiten.</help>
+        <label>Batch-Standardwerte</label>
+        <name>Batch_Defaults__c</name>
+    </fields>
+    <fields>
         <help>Eine optionale Beschreibung zu diesem Batch.</help>
-        <label>Batchbeschreibung</label>
+        <label>Batch-Beschreibung</label>
         <name>Batch_Description__c</name>
     </fields>
     <fields>
-        <label><!-- Batch Gift Entry Version --></label>
+        <help>Die Version des Batch-Schenkungseingabe-Features, das zum Erstellen dieses Batch verwendet wird.</help>
+        <label>Version der Batch-Schenkungseingabe</label>
         <name>Batch_Gift_Entry_Version__c</name>
     </fields>
     <fields>
         <help>Die Anzahl der jeweils in jedem Batch zu verarbeitenden Datensätze.</help>
-        <label>Batchprozessgröße</label>
+        <label>Batch-Prozessgröße</label>
         <name>Batch_Process_Size__c</name>
     </fields>
     <fields>
@@ -78,12 +84,12 @@
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help>Geben Sie d. Anz. an Tagen a. d. Spendendatum ein, die auf der Suche nach einer übereinst. Opp. o. Zahl‘g zu berücks. sind. NPSP wählt die übereinst. Opp. o. Zahl‘g aus, deren Datum i. d. Anz. an Tagen fällt UND am nächsten am Spendendatum liegt.</help>
+        <help>Geben Sie die Anzahl an Tagen ab dem Spendendatum ein, die auf der Suche nach einer übereinst. Opp. o. Zahl‘g zu berücks. sind. NPSP wählt die übereinst. Opp. o. Zahl‘g aus, deren Datum i. d. Anz. an Tagen fällt UND am nächsten am Spendendatum liegt.</help>
         <label>Anzahl der Tage ab Spendendatum</label>
         <name>Donation_Date_Range__c</name>
     </fields>
     <fields>
-        <help>Definiert, wie NPSP übereinstimmende Spenden handhaben sollte.</help>
+        <help>Definiert, wie NPSP Spendenverdopplungen handhaben sollte.</help>
         <label>Spendenabgleichsverhalten</label>
         <name>Donation_Matching_Behavior__c</name>
         <picklistValues>
@@ -117,28 +123,29 @@
         <name>Donation_Matching_Implementing_Class__c</name>
     </fields>
     <fields>
-        <help>Gibt an, nach welchen Feldern abgeglichen werden soll, wenn versucht wird, Spenden in Batchdatensätzen gegen vorhandene Opportunities und Zahlungen abzugleichen.</help>
+        <help>Gibt an, nach welchen Feldern abgeglichen werden soll, wenn versucht wird, Spenden in Batch-Datensätzen gegen vorhandene Opportunities und Zahlungen abzugleichen.</help>
         <label>Spendenabgleichsregel</label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help>Die Zahl der Spenden, die in diesen Batch einzugeben erwartet wird.</help>
-        <label>Erwartete Zahl an Spenden</label>
+        <help>Die Zahl der Schenkungen, die in diesen Batch einzugeben erwartet wird.</help>
+        <label>Erwartete Anzahl an Schenkungen</label>
         <name>Expected_Count_of_Gifts__c</name>
     </fields>
     <fields>
-        <help>Die erwartete Summe aller in diesen Batch eingetragenen Spenden.</help>
-        <label>Erwarteter Batchbetrag insgesamt</label>
+        <help>Die erwartete Summe aller in diesen Batch eingetragenen Schenkungen.</help>
+        <label>Erwarteter Batch-Betrag insgesamt</label>
         <name>Expected_Total_Batch_Amount__c</name>
     </fields>
     <fields>
-        <label><!-- Form Template --></label>
+        <help>Die Vorlage, die für die Schenkungseingabe aus diesem Batch verwendet werden soll.</help>
+        <label>Formularvorlage</label>
         <name>Form_Template__c</name>
-        <relationshipLabel><!-- NPSP Data Import Batches --></relationshipLabel>
+        <relationshipLabel>NPSP-Datenimportbatches</relationshipLabel>
     </fields>
     <fields>
-        <help>Dieser Batch ist zur Verw. mit der Batch-Spendeneingabe vorges. Batches werden autom. als Spendenbatches gekennz., wenn sie über eine Batch-Spendeneingabe-Registerkarte einger. werden. Die manuelle Änd. dieses Felds kann unerwünschte Konsequenzen haben.</help>
-        <label>Spendenbatch</label>
+        <help>Dieser Batch ist zur Verw. mit der Batch-Schenkungseingabe vorges. Batches werden autom. als Schenkungs-Batches gekennz., wenn sie über eine Batch-Schenkungseingabe-Registerkarte einger. werden. Die manuelle Änd. dieses Felds kann unerwünschte Konsequenzen haben.</help>
+        <label>Schenkungs-Batch</label>
         <name>GiftBatch__c</name>
     </fields>
     <fields>
@@ -167,7 +174,7 @@
         <name>Records_Successfully_Processed__c</name>
     </fields>
     <fields>
-        <help>Wenn dieses Kontrollkästchen aktiviert ist, müssen die Gesamtanzahl an Spenden und der Gesamtbetrag mit dem für den Batch eingegebenen erwarteten Gesamtbetrag übereinstimmen.</help>
+        <help>Wenn dieses Kontrollkästchen aktiviert ist, müssen die Gesamtanzahl an Schenkungen und der Gesamtbetrag mit dem für den Batch eingegebenen erwarteten Gesamtbetrag übereinstimmen.</help>
         <label>Übereinst. d. erw. Gesamtbeträge erford.</label>
         <name>RequireTotalMatch__c</name>
     </fields>
@@ -180,7 +187,7 @@
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
-            <label>Kontakt- und Account-Übereinstimmung</label>
+            <label>Kontakt- und Account-Abgleich</label>
             <section>Contact &amp; Account Matching</section>
         </sections>
         <sections>
@@ -188,7 +195,7 @@
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label>Spendenübereinstimmung</label>
+            <label>Spendenabgleich</label>
             <section>Donation Matching</section>
         </sections>
         <sections>
@@ -196,7 +203,7 @@
             <section>Extensibility</section>
         </sections>
     </layouts>
-    <nameFieldLabel>Batchname</nameFieldLabel>
+    <nameFieldLabel>Batch-Name</nameFieldLabel>
     <webLinks>
         <label>Batch verarbeiten</label>
         <name>Process_Batch</name>
