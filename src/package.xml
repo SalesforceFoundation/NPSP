@@ -3481,7 +3481,7 @@
         <name>Letterhead</name>
     </types>
     <types>
-        <members>alertBanner</members>
+        <members>utilAlertBanner</members>
         <members>batchProgress</members>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>
