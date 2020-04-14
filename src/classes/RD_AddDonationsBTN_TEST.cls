@@ -40,8 +40,6 @@ private with sharing class RD_AddDonationsBTN_TEST {
 
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
 
-    private static UTIL_Permissions_TEST.Stub permissionStub = new UTIL_Permissions_TEST.Stub();
-
     /***
     * @description Verifies Opportunities are recreated when the button is clicked on
     */
@@ -146,82 +144,41 @@ private with sharing class RD_AddDonationsBTN_TEST {
 
     /***
     * @description Verifies if it displays error message when the uer has no create permission
+    * on the Opportunity SObject
     */
     @isTest
     private static void shouldDisplayErrorMessageWhenUserHasNoCreatePermission() {
 
-        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
-        insert acc;
-
-        npe03__Recurring_Donation__c rd = getLegacyRDBuilder()
-            .withAccount(acc.Id)
-            .withNextDonationDate(System.today())
-            .build();
-        insert rd;
-
+        UTIL_Permissions_TEST.Stub permissionStub = new UTIL_Permissions_TEST.Stub();
         permissionStub.hasCreate = false;
-        RD_AddDonationsBTN_CTRL.permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
-        RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
-            new ApexPages.StandardController(rd)
-        );
-
-        UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
-        System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
+        testAndAssertUserDoesNotHavePermissions(permissionStub);
     }
 
     /***
-    * @description Verifies if it displays error message when the uer has no edit permission
+    * @description Verifies if it displays error message when the user has no edit permission
+    * on the Opportunity SObject
     */
     @isTest
     private static void shouldDisplayErrorMessageWhenUserHasNoEditPermission() {
 
-        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
-        insert acc;
-
-        npe03__Recurring_Donation__c rd = getLegacyRDBuilder()
-            .withAccount(acc.Id)
-            .withNextDonationDate(System.today())
-            .build();
-        insert rd;
-
+        UTIL_Permissions_TEST.Stub permissionStub = new UTIL_Permissions_TEST.Stub();
         permissionStub.hasUpdate = false;
-        RD_AddDonationsBTN_CTRL.permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
-        RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
-            new ApexPages.StandardController(rd)
-        );
-
-        UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
-        System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
-
+        testAndAssertUserDoesNotHavePermissions(permissionStub);
     }
 
     /***
     * @description Verifies if it displays error message when the uer has no delete permission
+    * on the Opportunity SObject
     */
     @isTest
     private static void shouldDisplayErrorMessageWhenUserHasNoDeletePermission() {
 
-        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
-        insert acc;
-
-        npe03__Recurring_Donation__c rd = getLegacyRDBuilder()
-            .withAccount(acc.Id)
-            .withNextDonationDate(System.today())
-            .build();
-        insert rd;
-
+        UTIL_Permissions_TEST.Stub permissionStub = new UTIL_Permissions_TEST.Stub();
         permissionStub.hasDelete = false;
-        RD_AddDonationsBTN_CTRL.permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
 
-        RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
-            new ApexPages.StandardController(rd)
-        );
-
-        UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
-        System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
-
+        testAndAssertUserDoesNotHavePermissions(permissionStub);
     }
 
     // Helpers
@@ -254,6 +211,32 @@ private with sharing class RD_AddDonationsBTN_TEST {
             npe03__Opportunity_Field__c = 'closedate',
             npe03__Recurring_Donation_Field__c = 'Name'
         );
+    }
+
+
+    /***
+    * @description builds test data for account and recurring donations and verifies if it generates
+    * error message if the user do not have required permissions on the opportunity SObject.
+    */
+    private static void testAndAssertUserDoesNotHavePermissions(UTIL_Permissions_TEST.Stub permissionStub) {
+        Account acc = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert acc;
+
+        npe03__Recurring_Donation__c rd = getLegacyRDBuilder()
+            .withAccount(acc.Id)
+            .withNextDonationDate(System.today())
+            .build();
+        insert rd;
+
+        RD_AddDonationsBTN_CTRL.permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, permissionStub);
+
+        RD_AddDonationsBTN_CTRL ctrl = new RD_AddDonationsBTN_CTRL(
+            new ApexPages.StandardController(rd)
+        );
+
+        UTIL_UnitTestData_TEST.assertPageHasError(System.Label.RD_ErrorAddDonationPermissionDenied);
+        System.assertEquals(false, ctrl.showContinueBtn, 'The continue button should be hidden');
+
     }
 
 }
