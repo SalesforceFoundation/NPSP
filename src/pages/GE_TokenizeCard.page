@@ -11,7 +11,7 @@
     </article>
 
     <!-- TODO: Update src with production url and/or upload as static resource -->
-    <script src="https://d2w37eyz6rciar.cloudfront.net/elevate.min.js"></script>
+    <script src="https://dmjphp3j3je7i.cloudfront.net/elevate.min.js"></script>
 
     <script>
         const hostname = window.location.hostname;
@@ -25,7 +25,7 @@
             id: 'payments',
             // TODO: Replace clientId value below with the orgId ({!$Organization.Id})
             // Currently hardcoded to a specific orgId as needed by payment services.
-            clientId: '00D6g0000000000EAA',
+            clientId: 'bees',
             designSystem: 'Lightning',
             styles: '' +
                 '.logo {' +

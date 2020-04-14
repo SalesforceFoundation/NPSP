@@ -68,6 +68,12 @@ public with sharing class GE_PaymentServices {
         HttpResponse response = http.send(request);
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
 
+        System.debug('**** Response: '+responseWrapper.status+' '+responseWrapper.statusCode+' '+responseWrapper.body);
+        Map<String, Object> headers = responseWrapper.headers;
+        for(String headerKey: headers.keySet()) {
+            System.debug(' ***** response header key: '+headerKey+'='+headers.get(headerKey));
+        }
+        
         return responseWrapper;
     }
 
@@ -87,7 +93,7 @@ public with sharing class GE_PaymentServices {
 
     // TODO: Get header/secret info from payments configuration hidden sobject
     public String getEndpointRoot() {
-        return 'https://7jpea5zk79.execute-api.us-west-2.amazonaws.com';
+        return 'https://olzivl9ym0.execute-api.us-west-2.amazonaws.com';
     }
 
     public String getJwt() {
@@ -98,11 +104,11 @@ public with sharing class GE_PaymentServices {
     }
 
     private String getMerchantIds() {
-        return '47b70ca4-0f6e-4c52-819f-667ae804f9d2';
+        return 'b3bb9373-932c-4909-ab56-08b3e780823b';
     }
 
     private String getUsername() {
-        return 'cbaxter';
+        return 'trickyp';
     }
 
     private String getJwtSecret() {
@@ -132,13 +138,13 @@ public with sharing class GE_PaymentServices {
 
             generator.writeStartObject();
             generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
-            generator.writeNumberField('iat', getEpochTimestamp(Datetime.now())); // Issued at
+            //generator.writeNumberField('iat', getEpochTimestamp(Datetime.now())); // Issued at
             generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
-            generator.writeStringField('aud', 'www.example.com'); // Audience
-            generator.writeStringField('sub', 'cbaxter'); // Subject
-            generator.writeStringField('sfdo.id', '00D6g0000000000EAA'); // Org ID
+            //generator.writeStringField('aud', 'www.example.com'); // Audience
+            generator.writeStringField('sub', 'trickyp'); // Subject
+            generator.writeStringField('sfdo.id', 'bees'); // Org ID
             generator.writeStringField('sfdo.product', 'CRM'); // Product
-            generator.writeStringField('sfdo.roles', 'Payments.Purchase'); // Call Role
+            generator.writeStringField('sfdo.roles', 'Payments.Purchase,Payments.Refund,Payments.Token'); // Call Role
 
             return generator.getAsString();
         }
@@ -192,11 +198,11 @@ public with sharing class GE_PaymentServices {
         }
 
         private String getMerchantId() {
-            return '47b70ca4-0f6e-4c52-819f-667ae804f9d2';
+            return 'b3bb9373-932c-4909-ab56-08b3e780823b';
         }
 
         private String getGatewayId() {
-            return 'f23da98a-c7aa-4637-962a-8c852e765e38';
+            return '8498ba2a-de53-400e-9ba3-693d0d5fd515';
         }
 
         public PurchaseCallBody() {
