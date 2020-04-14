@@ -201,8 +201,9 @@ Click Data Import Button
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
 
 Run Accessibility Check
+    [Arguments]       &{css_selector}
     Inject Axe Core Library
-    &{results}    Get Axe Analysis Results
+    &{results}    Get Axe Analysis Results      &{css_selector}
     Log Summary Of Results    ${results}
     Warn On Incomplete Rules    ${results}
     Warn On Violations Rules    ${results}    
