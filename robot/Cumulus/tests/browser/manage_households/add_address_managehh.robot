@@ -42,7 +42,11 @@ Add New Address to Household
     ...                                  object_id=&{contact1}[AccountId]
 
     Click Actions Link                   Manage Household
-    Current Page Should Be               Custom                             ManageHousehold
+    Wait Until Keyword Succeeds          1 minute
+        ...                              5 seconds
+        ...                              Current Page Should Be               Custom                             ManageHousehold
+
+
     Select Frame And Click Element       Manage Household
     ...                                  span_button
     ...                                  Change Address
