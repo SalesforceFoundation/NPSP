@@ -2143,6 +2143,8 @@
         <members>geLabelSectionName</members>
         <members>geLabelTemplateInfoDescriptionField</members>
         <members>geLabelTemplateInfoNameField</members>
+        <members>gePS_IntegrationTestInvalidAPIKey</members>
+        <members>gePS_IntegrationTestInvalidConfigParams</members>
         <members>gePaymentProcessErrorGeneric</members>
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentServicesErrorResponse</members>
