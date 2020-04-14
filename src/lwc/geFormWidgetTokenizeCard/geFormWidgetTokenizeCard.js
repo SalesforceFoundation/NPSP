@@ -96,7 +96,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         const tokenPromise = new Promise((resolve, reject) => {
 
             const timer = setTimeout(() => {
-                reject('Request timed out');
+                reject(this.CUSTOM_LABELS.gePaymentRequestTimedOut);
             }, TOKENIZE_TIMEOUT);
 
             this.tokenCallback = message => {
