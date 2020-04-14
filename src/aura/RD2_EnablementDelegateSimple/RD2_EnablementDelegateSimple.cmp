@@ -1,5 +1,15 @@
 <aura:component controller="RD2_EnablementDelegate_CTRL"
-implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
+    implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
+    <aura:attribute name="state" type="Object" description="Contains enablement state attributes" />
+   
+    <aura:attribute name="metaDeployURL" type="String" description="Contains metadata deployment URL" />
+
+    <aura:attribute name="errorSection" type="String" description="Contains section number where error has occurred" />
+    <aura:attribute name="errorMessage" type="String" description="Contains latest error message" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.refreshView}" />
+
     <aura:registerEvent name="enhancementEnabledEvent" type="c:RD2_EnhancementEnabledEvent" />
 
     <lightning:layout horizontalAlign="spread" multipleRows="true" class="slds-hide" aura:id="enablementDisabled">
@@ -18,4 +28,5 @@ implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressa
         </lightning:layoutItem>
     </lightning:layout>
 
+   
 </aura:component>	
