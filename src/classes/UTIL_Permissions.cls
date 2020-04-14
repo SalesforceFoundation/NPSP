@@ -174,8 +174,8 @@ public with sharing class UTIL_Permissions {
     * @param sObjectName Name of the sObject to check
     * @return returns boolean to indicate whether the user has permission
     */
-    public Boolean canDeleteSObject(String sObjectName) {
-        return canDelete(sObjectName, false);
+    public Boolean canDelete(SObjectType sObjectType) {
+        return UTIL_Describe.getObjectDescribe(sObjectType).isDeletable();
     }
 
     /*** Field Level Security ***/

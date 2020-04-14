@@ -78,7 +78,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     }
 
     public Boolean getCanDelete() {
-        return UTIL_Permissions.getInstance().canDeleteSObject(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+        return UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
     }
 
     private void displayDeleteError() {
