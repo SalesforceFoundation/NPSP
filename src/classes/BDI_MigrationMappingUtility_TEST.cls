@@ -623,9 +623,12 @@ private class BDI_MigrationMappingUtility_TEST {
 
             if (stubbedMethodName == 'getFieldMappingKeysByDeveloperName') {
                 Data_Import_Field_Mapping_Set__mdt fieldMappingSet;
-                String targetObjectMapping = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Target_Object_Mapping__r');
-                String legacyDataImportObjectName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Legacy_Data_Import_Object_Name__c');
-                String objectAPIName = UTIL_Namespace.alignSchemaNSWithEnvironment('npsp__Object_API_Name__c');
+                String targetObjectMapping = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        'npsp__Target_Object_Mapping__r');
+                String legacyDataImportObjectName = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        'npsp__Legacy_Data_Import_Object_Name__c');
+                String objectAPIName = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        'npsp__Object_API_Name__c');
 
                 if (listOfArgs.contains('Migrated_Custom_Field_Mapping_Set')) {
                     fieldMappingSet = new Data_Import_Field_Mapping_Set__mdt(

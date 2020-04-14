@@ -226,8 +226,6 @@ public class BDI_MigrationMappingHelper {
             if (UTIL_Namespace.shouldAlignNamespace) {
                 reference.Target_Object_Mapping__r.Object_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
                         reference.Target_Object_Mapping__r.Object_API_Name__c);
-                reference.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
-                        reference.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c);
                 reference.Target_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
                         reference.Target_Field_API_Name__c);
                 reference.Source_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
@@ -291,8 +289,6 @@ public class BDI_MigrationMappingHelper {
             if (UTIL_Namespace.shouldAlignNamespace) {
                 fieldMapping.Target_Object_Mapping__r.Object_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
                         fieldMapping.Target_Object_Mapping__r.Object_API_Name__c);
-                fieldMapping.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
-                        fieldMapping.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c);
                 fieldMapping.Target_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
                         fieldMapping.Target_Field_API_Name__c);
                 fieldMapping.Source_Field_API_Name__c = UTIL_Namespace.alignSchemaNSWithEnvironment(
