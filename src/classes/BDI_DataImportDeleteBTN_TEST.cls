@@ -365,9 +365,10 @@ class BDI_DataImportDeleteBTN_TEST {
                 Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
                 List<Object> listOfArgs) {
 
-            if (stubbedMethodName == 'canDelete' && listOfArgs.size() == 1) {
-                Schema.SObjectType sObjectType = (Schema.SObjectType)listOfArgs[0];
-                if(sObjectType == DataImport__c.SObjectType) {
+            if (stubbedMethodName == 'canDeleteSObject' && listOfArgs.size() == 1) {
+                String sObjectType = (String)listOfArgs[0];
+                String expectedType = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+                if(sObjectType == expectedType) {
                     return canDeleteDataImport;
                 }
             }
