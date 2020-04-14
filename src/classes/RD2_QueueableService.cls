@@ -107,8 +107,7 @@ public class RD2_QueueableService {
          */
         public void match() {
             new RD2_ElevateIntegrationService()
-                .withCommitmentIdMap(rdIdByCommitmentId)
-                .matchRecurringDonationsToOpps();
+                .matchRecurringDonationsToOpps(rdIdByCommitmentId);
         }
     }
 }
