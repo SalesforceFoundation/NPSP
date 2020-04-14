@@ -216,26 +216,25 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        Map<String, Id> commitmentIdToRecordId = new Map<String, Id>();
+        Map<String, Id> rdIdByCommitmentId = new Map<String, Id>();
         for (npe03__Recurring_Donation__c rd : rds) {
-            if (rd.CommitmentId__c == null || String.isBlank(rd.CommitmentId__c)) {
-                continue;
+            if (String.isNotBlank(rd.CommitmentId__c)) {
+                rdIdByCommitmentId.put(rd.CommitmentId__c, rd.Id);
             }
-            commitmentIdToRecordId.put(rd.CommitmentId__c, rd.Id);
         }
 
-        if (commitmentIdToRecordId.isEmpty()) {
+        if (rdIdByCommitmentId.isEmpty()) {
             return;
         }
 
-        RD2_QueueableService.FindMatchingOpportunitiesByCommitmentId service
-            = new RD2_QueueableService.FindMatchingOpportunitiesByCommitmentId(commitmentIdToRecordId);
+        RD2_QueueableService.ElevateOpportunityMatcher service
+            = new RD2_QueueableService.ElevateOpportunityMatcher(rdIdByCommitmentId);
 
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(service);
 
         } else {
-            service.executeMapOfOpportunityToRecurringDonation();
+            service.match();
         }
 
     }

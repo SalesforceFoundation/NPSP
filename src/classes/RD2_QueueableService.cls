@@ -78,15 +78,15 @@ public class RD2_QueueableService {
      * @description Queueable service to process inserted Recurring Donations that have a value
      * in the Elevate CommitmentId__c field.
      */
-    public class FindMatchingOpportunitiesByCommitmentId implements Queueable {
-        Map<String, Id> commitmentIdToRdId;
+    public class ElevateOpportunityMatcher implements Queueable {
+        Map<String, Id> rdIdByCommitmentId;
 
         /***
          * @description Constructor
-         * @param commitmentIdToRdId - Map of CommitmentId's to RecurringDonation.Id
+         * @param rdIdByCommitmentId - Map of CommitmentId's to RecurringDonation.Id
          */
-        public FindMatchingOpportunitiesByCommitmentId(Map<String, Id> commitmentIdToRdId) {
-            this.commitmentIdToRdId = commitmentIdToRdId;
+        public ElevateOpportunityMatcher(Map<String, Id> rdIdByCommitmentId) {
+            this.rdIdByCommitmentId = rdIdByCommitmentId;
         }
 
         /**
@@ -95,19 +95,19 @@ public class RD2_QueueableService {
          * @param context queuableContext
          */
         public void execute(QueueableContext context) {
-            if (commitmentIdToRdId == null || commitmentIdToRdId.isEmpty()) {
+            if (rdIdByCommitmentId == null || rdIdByCommitmentId.isEmpty()) {
                 return;
             }
 
-            executeMapOfOpportunityToRecurringDonation();
+            match();
         }
 
         /**
          * @description Delegate processing of the Recurring Donations to the Evaluation Service
          */
-        public void executeMapOfOpportunityToRecurringDonation() {
+        public void match() {
             new RD2_ElevateIntegrationService()
-                .withCommitmentIdMap(commitmentIdToRdId)
+                .withCommitmentIdMap(rdIdByCommitmentId)
                 .matchRecurringDonationsToOpps();
         }
     }
