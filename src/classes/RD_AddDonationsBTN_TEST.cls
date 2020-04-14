@@ -143,7 +143,7 @@ private with sharing class RD_AddDonationsBTN_TEST {
     }
 
     /***
-    * @description Verifies if it displays error message when the uer has no create permission
+    * @description Verifies if it displays error message when the user has no create permission
     * on the Opportunity SObject
     */
     @isTest
