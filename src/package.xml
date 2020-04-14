@@ -771,6 +771,7 @@
         <members>ManageHHApp</members>
         <members>RD2_EnablementApp</members>
         <members>RD2_EnablementDelegate</members>
+        <members>RD2_EnablementDelegateNoRecord</members>
         <members>RD2_EnhancementEnabledEvent</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>

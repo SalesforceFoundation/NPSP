@@ -23,8 +23,10 @@
             namespace = 'c';
         }
         $Lightning.use(namespace + ":RD2_EnablementApp", function () {
+            var compName = namespace + (('{!hasRDRecord}' == 'true')? ':RD2_EnablementDelegate' : ':RD2_EnablementDelegateNoRecord');
+
             $Lightning.createComponent(
-                namespace + ":RD2_EnablementDelegate",
+                compName,
                 {},
                 "enablementDelegateDiv",
                 function () {

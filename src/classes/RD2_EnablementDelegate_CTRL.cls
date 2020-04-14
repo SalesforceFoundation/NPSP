@@ -98,6 +98,12 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Verifies if the org has any Recurring Donation 
+    */
+    public Boolean getHasRDRecord() {
+        return ![SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty();
+    }
+    /***
     * @description An empty method called from actionFunction to reRender panels when it completes
     */
     public void refreshPanels() {

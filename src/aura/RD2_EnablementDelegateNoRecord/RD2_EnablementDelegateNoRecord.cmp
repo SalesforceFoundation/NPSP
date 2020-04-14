@@ -1,0 +1,21 @@
+<aura:component controller="RD2_EnablementDelegate_CTRL"
+implements="force:appHostable,lightning:hasPageReference,lightning:isUrlAddressable" access="global">
+    <aura:registerEvent name="enhancementEnabledEvent" type="c:RD2_EnhancementEnabledEvent" />
+
+    <lightning:layout horizontalAlign="spread" multipleRows="true" class="slds-hide" aura:id="enablementDisabled">
+        <lightning:layoutItem padding="horizontal-large" size="10">
+            <div class="slds-illustration slds-illustration_large">
+                <br /><br />
+                <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="OpenRoad" />
+                <div class="slds-text-longform">
+                    <h3 class="slds-text-heading_medium">{!$Label.c.RD2_EnablementDisabledHeader}</h3>
+                    <p>
+                        <lightning:formattedRichText value="{!$Label.c.RD2_EnablementDisabledMessage}">
+                        </lightning:formattedRichText>
+                    </p>
+                </div>
+            </div>
+        </lightning:layoutItem>
+    </lightning:layout>
+
+</aura:component>	
