@@ -95,10 +95,10 @@ public inherited sharing class ALLO_AllocationsUtil {
      * @param Boolean state - If true, they are active, if false, they are inactive.
      */
     @testVisible private static void updateAllocationTriggersState(Boolean state) {
-        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'), 'ALLO_Allocations_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_Allocations_TDTM', state);
         TDTM_ProcessControl.toggleTriggerState('Opportunity', 'ALLO_Allocations_TDTM', state);
         TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'ALLO_Allocations_TDTM', state);
-        TDTM_ProcessControl.toggleTriggerState(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'), 'ALLO_PaymentSync_TDTM', state);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'ALLO_PaymentSync_TDTM', state);
     }
 
     /**
