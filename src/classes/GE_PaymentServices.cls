@@ -59,7 +59,7 @@ public with sharing class GE_PaymentServices {
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
         request.setHeader('jwttoken', getJwt());
         request.setHeader('sfdo.merchantids', getMerchantIds());
-        request.setHeader('sfdo.username', getUsername());
+        request.setHeader('sfdo.username', UserInfo.getUserName());
 
         // Set the body as a JSON object...
         String purchaseCallBodyString = purchaseCallBody.getAsJson();
@@ -87,7 +87,7 @@ public with sharing class GE_PaymentServices {
 
     // TODO: Get header/secret info from payments configuration hidden sobject
     public String getEndpointRoot() {
-        return 'https://7jpea5zk79.execute-api.us-west-2.amazonaws.com';
+        return 'https://olzivl9ym0.execute-api.us-west-2.amazonaws.com';
     }
 
     public String getJwt() {
@@ -98,11 +98,7 @@ public with sharing class GE_PaymentServices {
     }
 
     private String getMerchantIds() {
-        return '47b70ca4-0f6e-4c52-819f-667ae804f9d2';
-    }
-
-    private String getUsername() {
-        return 'cbaxter';
+        return '2db73f51-ca1e-4664-9c7a-9705e3f44fad';
     }
 
     private String getJwtSecret() {
@@ -132,11 +128,9 @@ public with sharing class GE_PaymentServices {
 
             generator.writeStartObject();
             generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
-            generator.writeNumberField('iat', getEpochTimestamp(Datetime.now())); // Issued at
             generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
-            generator.writeStringField('aud', 'www.example.com'); // Audience
-            generator.writeStringField('sub', 'cbaxter'); // Subject
-            generator.writeStringField('sfdo.id', '00D6g0000000000EAA'); // Org ID
+            generator.writeStringField('sub', UserInfo.getUserName()); // Subject
+            generator.writeStringField('sfdo.id', 'bees'); // Org ID
             generator.writeStringField('sfdo.product', 'CRM'); // Product
             generator.writeStringField('sfdo.roles', 'Payments.Purchase'); // Call Role
 
@@ -192,11 +186,11 @@ public with sharing class GE_PaymentServices {
         }
 
         private String getMerchantId() {
-            return '47b70ca4-0f6e-4c52-819f-667ae804f9d2';
+            return '2db73f51-ca1e-4664-9c7a-9705e3f44fad';
         }
 
         private String getGatewayId() {
-            return 'f23da98a-c7aa-4637-962a-8c852e765e38';
+            return '9d6c6140-a890-4c84-aebc-8907bd2c541f';
         }
 
         public PurchaseCallBody() {
