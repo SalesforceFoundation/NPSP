@@ -6066,28 +6066,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The base64url format is invalid. It can only contain these characters: [a-z A-Z 0-9 _ -]</value>
     </labels>
     <labels>
-        <fullName>gePaymentProcessErrorGeneric</fullName>
+        <fullName>gePaymentProcessError</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>General failure message description for tokenization or purchase errors</shortDescription>
-        <value>There was an error processing the transaction. Please review the error and try again. Alternatively, select Do Not Charge Card to enter a pledged donation without processing a card payment.</value>
+        <shortDescription>Failure message description for tokenization or purchase errors</shortDescription>
+        <value>There was an error processing the transaction. Please review the error and try again. Alternatively,
+            select Do Not Charge Card to enter a pledged donation without processing a card payment. {0} errors:
+            /newline/ {1} </value>
     </labels>
     <labels>
         <fullName>gePaymentProcessingErrorBanner</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Banner error message for card processing error.</shortDescription>
+        <shortDescription>Banner failure message for tokenization or purchase errors</shortDescription>
         <value>There was an error processing the transaction.</value>
-    </labels>
-    <labels>
-        <fullName>gePaymentServicesErrorResponse</fullName>
-        <categories>Gift Entry</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error message from Elevate payment processing.</shortDescription>
-        <value>Error from {0}: {1}</value>
     </labels>
     <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>

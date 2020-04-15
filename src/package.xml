@@ -2147,7 +2147,6 @@
         <members>gePS_IntegrationTestInvalidConfigParams</members>
         <members>gePaymentProcessErrorGeneric</members>
         <members>gePaymentProcessingErrorBanner</members>
-        <members>gePaymentServicesErrorResponse</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>

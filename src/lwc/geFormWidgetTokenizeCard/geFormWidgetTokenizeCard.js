@@ -83,20 +83,27 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
                 variant: 'inverse',
                 icon: 'utility:error'
             };
-            let errorValues;
+            let errorValue;
+            let isObject = false;
             if (typeof message.error === 'object') {
-                errorValues = Object.values(message.error).join(', ');
+                errorValue = JSON.stringify(Object.values(message.error));
+                isObject = true;
             } else if (typeof message.error === 'string') {
-                errorValues = message.error;
+                errorValue = message.error;
             }
-            let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errorValues];
+            let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errorValue];
 
             /** This event can be used to extend handling payment errors at the form level by adding additional detail
              * objects.
              */
-            let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentServicesErrorResponse, labelReplacements);
+            let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+            let splitErrorResponse = formattedErrorResponse.split('/newline/');
+
             fireEvent(null, 'paymentError', {
-               message: [this.CUSTOM_LABELS.gePaymentProcessErrorGeneric, formattedErrorResponse]
+               error: {
+                   message: splitErrorResponse,
+                   isObject: isObject
+               }
             });
         } else if (message.token) {
             this.token = message.token;
