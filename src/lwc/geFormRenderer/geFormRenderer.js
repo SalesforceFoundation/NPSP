@@ -72,6 +72,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     ACCOUNT1: 'Account1',
     CONTACT1: 'Contact1'
 });
+const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
 
 export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api donorRecordId;
@@ -213,8 +214,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 this.sections = formTemplate.layout.sections;
             }
 
-            if (this.batchId) {
-                this.sections = this.setBatchDefaults(formTemplate.layout.sections);
+            if (!this.isSingleGiftEntry) {
+                this.sections = this.prepareFormForBatchMode(formTemplate.layout.sections);
                 this.dispatchEvent(new CustomEvent('sectionsretrieved'));
             }
         }
@@ -1135,19 +1136,21 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     }
 
     /**
-     * @description Function that sets batch defaults on the BGE Form
+     * @description Function that prepares (sets batch defaults, remove credit card widget)
+     * the gift entry form in Batch Mode
      * @param templateSections
      * @returns {sections}
      */
-    setBatchDefaults(templateSections) {
+    prepareFormForBatchMode (templateSections) {
         let sections = deepClone(templateSections);
         if (isNotEmpty(this._batchDefaults)) {
             let batchDefaultsObject;
             try {
                 batchDefaultsObject = JSON.parse(this._batchDefaults);
                 sections.forEach(section => {
-                    const elements = section.elements;
-                    elements.forEach(element => {
+                    section.elements = section.elements.filter(element =>
+                        element.componentName !== CREDIT_CARD_WIDGET_NAME);
+                    section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {
                             if (batchDefaultsObject.hasOwnProperty(key)) {
                                 const batchDefault = batchDefaultsObject[key];
@@ -1330,7 +1333,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     handleNameOnCardFieldChange() {
         const sectionsList = this.template.querySelectorAll('c-ge-form-section');
         let fieldList = {};
-        if (!isUndefined(sectionsList)) {
+        if (!isUndefined(sectionsList) && this.isSingleGiftEntry) {
             fieldList = this.getDisplayedFieldsMappedByFieldAPIName(sectionsList);
             this.selectedDonorType = fieldList[
                 DONATION_DONOR_FIELDS.donationDonorField
