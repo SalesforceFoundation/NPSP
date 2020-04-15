@@ -44,10 +44,7 @@ Change Name Display Settings on Manage Household Page
     Current Page Should Be                  Details                                                             Account
     Wait Until Loading Is Complete
     Click Link                              link=Manage Household
-    Wait Until Keyword Succeeds             1 minute
-            ...                             5 seconds
-            ...                             Current Page Should Be               Custom                             ManageHousehold
-
+    Current Page Should Be                  Custom                                                              ManageHousehold
 
     # Choose the display option as Informal Greeting for contact#1
 
