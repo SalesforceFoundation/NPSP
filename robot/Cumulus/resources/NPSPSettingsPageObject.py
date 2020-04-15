@@ -157,6 +157,6 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             ele=self.selenium.get_webelement(locator)
             classname=ele.get_attribute("value")
             if 'Configure Customizable Rollups' in classname:
-                self.builtin.log("As expected CRLP is not enabled by default")
+                self.builtin.log("This Org has Customizable Rollups Enabled")
                 isPresent = True
             return isPresent
