@@ -104,7 +104,7 @@ public with sharing class GE_PaymentServices {
     }
 
     private String getMerchantIds() {
-        return 'b3bb9373-932c-4909-ab56-08b3e780823b';
+        return '2db73f51-ca1e-4664-9c7a-9705e3f44fad';
     }
 
     private String getUsername() {
@@ -138,9 +138,7 @@ public with sharing class GE_PaymentServices {
 
             generator.writeStartObject();
             generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
-            //generator.writeNumberField('iat', getEpochTimestamp(Datetime.now())); // Issued at
             generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
-            //generator.writeStringField('aud', 'www.example.com'); // Audience
             generator.writeStringField('sub', 'trickyp'); // Subject
             generator.writeStringField('sfdo.id', 'bees'); // Org ID
             generator.writeStringField('sfdo.product', 'CRM'); // Product
@@ -198,11 +196,11 @@ public with sharing class GE_PaymentServices {
         }
 
         private String getMerchantId() {
-            return 'b3bb9373-932c-4909-ab56-08b3e780823b';
+            return '2db73f51-ca1e-4664-9c7a-9705e3f44fad';
         }
 
         private String getGatewayId() {
-            return '8498ba2a-de53-400e-9ba3-693d0d5fd515';
+            return '9d6c6140-a890-4c84-aebc-8907bd2c541f';
         }
 
         public PurchaseCallBody() {
