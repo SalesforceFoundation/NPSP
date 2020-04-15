@@ -152,7 +152,7 @@ API Create DataImport
     ${dataimport_id} =  Salesforce Insert  ${ns}DataImport__c
     ...                  &{fields}
     &{data_import} =     Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
-    [return]         &{data_import} 
+    [return]         &{data_import}    
 
 New Contact for HouseHold
     Click Related List Button  Contacts    New 
