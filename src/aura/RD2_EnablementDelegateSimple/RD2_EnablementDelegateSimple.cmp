@@ -195,22 +195,27 @@
                 </div>
             </lightning:card>
         </lightning:layoutItem>
+        <lightning:layoutItem padding="horizontal-small" size="12">
+            <lightning:layout horizontalAlign="spread" multipleRows="true">
+                <lightning:card class="pageSection" aura:id="succuessNextStep">
+                    <lightning:layoutItem class="slds-p-left_medium" size="9">
+                        <aura:if isTrue="{!v.state.isMetaConfirmed}">
+                            <lightning:formattedRichText
+                                value="{!$Label.c.RD2_EnablementMigrationCompleteMessage}" />
+                        </aura:if>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="3" />
 
-        <lightning:layoutItem size="9" class="slds-p-top_large">
-            <aura:if isTrue="{!v.state.isMetaConfirmed}">
-                <lightning:formattedRichText
-                    value="{!$Label.c.RD2_EnablementMigrationCompleteMessage}" />
-            </aura:if>
-        </lightning:layoutItem>
-        <lightning:layoutItem size="3" />
-
-        <lightning:layoutItem size="9" class="slds-p-left_medium">
-            <aura:if isTrue="{!equals(v.errorSection, 'migration')}">
-                <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
-            </aura:if>
-        </lightning:layoutItem>
-    
-        <lightning:layoutItem size="3" padding="horizontal-medium" class="slds-p-bottom_xx-large">
+                    <lightning:layoutItem size="9" >
+                        <aura:if isTrue="{!equals(v.errorSection, 'migration')}">
+                            <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
+                        </aura:if>
+                    </lightning:layoutItem>
+                
+                    <lightning:layoutItem size="3" padding="horizontal-medium" class="slds-p-bottom_xx-large">
+                    </lightning:layoutItem>
+                </lightning:card>
+            </lightning:layout>
         </lightning:layoutItem>
     </lightning:layout>
 

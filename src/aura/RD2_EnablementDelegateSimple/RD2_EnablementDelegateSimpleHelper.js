@@ -220,7 +220,7 @@
         }
         component.set('v.state.enableProgress', enableProgress);
 
-        if (!state.isConfirmed || state.isEnabled) {
+        if (state.isEnabled) {
             this.disableEdit(component, "enableToggle");
         } else {
             this.enableEdit(component, "enableToggle");
