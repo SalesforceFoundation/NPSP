@@ -108,7 +108,7 @@ public with sharing class GE_PaymentServices {
     }
 
     private String getUsername() {
-        return 'trickyp';
+        return UserInfo.getUserName();
     }
 
     private String getJwtSecret() {
@@ -139,7 +139,7 @@ public with sharing class GE_PaymentServices {
             generator.writeStartObject();
             generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
             generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
-            generator.writeStringField('sub', 'trickyp'); // Subject
+            generator.writeStringField('sub', UserInfo.getUserName()); // Subject
             generator.writeStringField('sfdo.id', 'bees'); // Org ID
             generator.writeStringField('sfdo.product', 'CRM'); // Product
             generator.writeStringField('sfdo.roles', 'Payments.Purchase'); // Call Role
