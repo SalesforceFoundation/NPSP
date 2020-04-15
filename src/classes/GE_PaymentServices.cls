@@ -67,7 +67,7 @@ public with sharing class GE_PaymentServices {
 
         HttpResponse response = http.send(request);
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
-        
+
         return responseWrapper;
     }
 
