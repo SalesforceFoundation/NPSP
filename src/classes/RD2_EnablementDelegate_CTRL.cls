@@ -84,6 +84,19 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Verifies if the org has any Recurring Donation 
+    */
+    public static Boolean hasRDRecord {
+        get {
+            if (hasRDRecord == null) {
+                hasRDRecord = ![SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty();
+            }
+            return hasRDRecord;
+        }
+        set;
+    }
+
+    /***
     * @description A unique enhanced Recurring Donation enablement panel Id
     */
     public override String idPanel() {
@@ -97,12 +110,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         return UTIL_Namespace.getNamespace();
     }
 
-    /***
-    * @description Verifies if the org has any Recurring Donation 
-    */
-    public Boolean getHasRDRecord() {
-        return ![SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty();
-    }
     /***
     * @description An empty method called from actionFunction to reRender panels when it completes
     */
@@ -164,12 +171,14 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Determines if the dry run is outdated
+    * @description Determines if the dry run is outdated. Return false when no RD exist
     * @param state Enablement state
     * @return Boolean
     */
     private static Boolean isDryRunOutdated(EnablementState state) {
-        return batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
+        return (hasRDRecord) 
+            ? batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit
+            : false;
     }
 
     /***
