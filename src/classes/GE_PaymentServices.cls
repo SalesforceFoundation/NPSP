@@ -142,7 +142,7 @@ public with sharing class GE_PaymentServices {
             generator.writeStringField('sub', 'trickyp'); // Subject
             generator.writeStringField('sfdo.id', 'bees'); // Org ID
             generator.writeStringField('sfdo.product', 'CRM'); // Product
-            generator.writeStringField('sfdo.roles', 'Payments.Purchase,Payments.Refund,Payments.Token'); // Call Role
+            generator.writeStringField('sfdo.roles', 'Payments.Purchase'); // Call Role
 
             return generator.getAsString();
         }
