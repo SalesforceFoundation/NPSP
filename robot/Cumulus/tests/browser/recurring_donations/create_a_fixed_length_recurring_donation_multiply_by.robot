@@ -56,10 +56,17 @@ Create Fixed Length Recurring Donation Multiply By
     Click Object Button          Edit
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
-    
 
-    #Open NPSP Settings and run Rollups Donations Batch job
-    Run Donations Batch Process
+    Go To Page                   Custom                         NPSP_Settings
+    Open Main Menu               Donations
+    Click Link With Text         Customizable Rollups
+    ${crlp_enabled} =            Check Crlp Not Enabled By Default
+
+    #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
+    Run Keyword if      ${crlp_enabled} != True
+        ...             Validate Batch Process When CRLP Unchecked
+        ...     ELSE    Validate Batch Process When CRLP Checked
+
 
     #Check if 50th Opportunity for Recurring Donation Exists
     @{opportunity50} =           API Query Installment          ${data}[contact1_rd][Id]     (50 of 50)
