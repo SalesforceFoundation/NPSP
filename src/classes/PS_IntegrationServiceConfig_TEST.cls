@@ -36,7 +36,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     /***
     * @description Stub for the integration service config instance
     */
-    private class Stub implements System.StubProvider {
+    public class Stub implements System.StubProvider {
         private Boolean isEnabled = false;
         private Boolean hasPermissions = false;
 

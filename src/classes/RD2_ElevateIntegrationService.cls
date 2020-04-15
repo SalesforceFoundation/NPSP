@@ -73,7 +73,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * @param oldRd Old Recurring Donation
      * @return Boolean
      */
-    public Boolean hasChangePermissions(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+    public Boolean hasUpdatePermissions(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
         // Do not check changed fields if 
         // 1. the Recurring Donation is not referencing an Elevate record or
         // 2. the Elevate integration is not configured/enabled or
@@ -99,13 +99,14 @@ public inherited sharing class RD2_ElevateIntegrationService {
             || rd.PaymentMethod__c != oldRd.PaymentMethod__c
             || rd.Status__c != oldRd.Status__c
             || rd.CommitmentId__c != oldRd.CommitmentId__c;
-        // what about the rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c? //TODO
+        
+        if (!isChanged && rd.Status__c != RD2_Constants.STATUS_CLOSED) {
+            isChanged = rd.ClosedReason__c != oldRd.ClosedReason__c;
+        }
 
         if (!isChanged && isMultiCurrencyEnabled) {
             isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);
         }
-
-        //what about the customFieldMapper? //TODO
 
         // If any of the restricted fields has been changed, prevent the RD update
         return !isChanged;
