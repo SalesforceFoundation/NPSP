@@ -67,12 +67,6 @@ public with sharing class GE_PaymentServices {
 
         HttpResponse response = http.send(request);
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
-
-        System.debug('**** Response: '+responseWrapper.status+' '+responseWrapper.statusCode+' '+responseWrapper.body);
-        Map<String, Object> headers = responseWrapper.headers;
-        for(String headerKey: headers.keySet()) {
-            System.debug(' ***** response header key: '+headerKey+'='+headers.get(headerKey));
-        }
         
         return responseWrapper;
     }
