@@ -59,7 +59,7 @@ public with sharing class GE_PaymentServices {
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
         request.setHeader('jwttoken', getJwt());
         request.setHeader('sfdo.merchantids', getMerchantIds());
-        request.setHeader('sfdo.username', getUsername());
+        request.setHeader('sfdo.username', UserInfo.getUserName());
 
         // Set the body as a JSON object...
         String purchaseCallBodyString = purchaseCallBody.getAsJson();
@@ -99,10 +99,6 @@ public with sharing class GE_PaymentServices {
 
     private String getMerchantIds() {
         return '2db73f51-ca1e-4664-9c7a-9705e3f44fad';
-    }
-
-    private String getUsername() {
-        return UserInfo.getUserName();
     }
 
     private String getJwtSecret() {
