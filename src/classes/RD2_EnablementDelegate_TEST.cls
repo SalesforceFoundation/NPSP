@@ -576,10 +576,11 @@ public with sharing class RD2_EnablementDelegate_TEST {
 
     /****
     * @description Sets latest dry run validation as outdated,
-    * ie today - Completed Date > dry run valid days
+    * ie today - Completed Date > dry run valid days and there is at least one Recurring Donation
     * @return void
     */
     private static void setLatestDryRunAsOutdated() {
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
         setLatestDryRunDaysBetween(RD2_EnablementDelegate_CTRL.DRY_RUN_VALID_DAYS + 1);
     }
 
