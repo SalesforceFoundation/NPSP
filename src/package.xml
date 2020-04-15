@@ -1593,6 +1593,7 @@
         <members>RD2_EnablementMetaDeployIntro</members>
         <members>RD2_EnablementMetaDeployLaunch</members>
         <members>RD2_EnablementMetaDeployLaunchLinkLabel</members>
+        <members>RD2_EnablementMetaDeploySimpleIntro</members>
         <members>RD2_EnablementMetaDeployTitle</members>
         <members>RD2_EnablementMigrationButton</members>
         <members>RD2_EnablementMigrationCompleteMessage</members>
@@ -1607,6 +1608,8 @@
         <members>RD2_EnablementPrepIntro</members>
         <members>RD2_EnablementPrepTasks</members>
         <members>RD2_EnablementPrepTitle</members>
+        <members>RD2_EnablementEnableSimpleIntro</members>
+        <members>RD2_EnablementSimpleIntro</members>
         <members>RD2_ErrorDataMigrationJobCannotBeRun</members>
         <members>RD2_ErrorEnhancedRDBatchJobCannotBeRun</members>
         <members>RD2_InstallmentFrequencyMustBeValid</members>

@@ -30,22 +30,8 @@
 
     <lightning:layout horizontalAlign="spread" multipleRows="true" class="slds-hide" aura:id="enabler">
     
-        <lightning:layoutItem padding="horizontal-large" size="12">
-            <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementIntro}" />
-        </lightning:layoutItem>
-
-        <lightning:layoutItem padding="horizontal-large" class="slds-p-top_large" size="12">
-            <lightning:layout multipleRows="true">
-                <h2 class="title slds-text-heading_small">{!$Label.c.RD2_EnablementPrepTitle}</h2>
-                <lightning:layoutItem class="slds-p-top_small" size="12">
-                    <lightning:formattedRichText class="slds-text-longform"
-                        value="{!$Label.c.RD2_EnablementPrepIntro}" />
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="horizontal-small" class="slds-p-top_small" size="12">
-                    <lightning:formattedRichText class="slds-text-longform"
-                        value="{!$Label.c.RD2_EnablementPrepTasks}" />
-                </lightning:layoutItem>
-            </lightning:layout>
+        <lightning:layoutItem padding="horizontal-large" size="12" class="slds-p-bottom_large">
+            <lightning:formattedRichText class="slds-text-longform" value="{!$Label.c.RD2_EnablementSimpleIntro}" />
         </lightning:layoutItem>
 
         <lightning:layoutItem padding="horizontal-small" size="12" flexibility="auto">
@@ -63,56 +49,23 @@
                     <lightning:layout>
                         <lightning:layoutItem size="9">
                             <lightning:formattedText class="slds-text-longform"
-                                value="{!$Label.c.RD2_EnablementEnableIntro}" />
+                                value="{!$Label.c.RD2_EnablementEnableSimpleIntro}" />
                         </lightning:layoutItem>
                     </lightning:layout>
 
                     <div class="slds-progress slds-progress_vertical">
-                        <ol class="slds-progress__list slds-progress__list-bordered">
+                        <ol>
                             <li
-                                class="{!'slds-progress__item ' + if(v.state.isConfirmed, 'slds-is-completed', 'slds-is-active')}">
-
-                                <c:progressMarker isComplete="{!v.state.isConfirmed}"
-                                    isPreviousComplete="true"
-                                    isNextComplete="{!v.state.isEnabled}" />
-
-                                <div class="slds-progress__item_content slds-grid slds-grid_align-spread">
-                                    <div class="slds-size_3-of-4">
-                                        <lightning:formattedText value="{!$Label.c.RD2_EnablementEnableConfirm}" />
-                                    </div>
-                                    <div class="slds-grid slds-grid_align-end slds-size_1-of-4">
-
-                                        <div class="slds-is-relative slds-m-right_large">
-                                            <lightning:spinner aura:id="enableConfirmSpinner" size="small"
-                                                variant="brand" alternativeText="{!$Label.c.labelMessageLoading}"
-                                                class="slds-hide" />
-                                        </div>
-                                        <lightning:input type="checkbox" aura:id="enableConfirm" name="enableConfirm"
-                                            label="{!$Label.c.RD2_EnablementEnableConfirm}" variant="label-hidden"
-                                            title="{!$Label.c.RD2_EnablementEnableConfirm}"
-                                            checked="{!v.state.isConfirmed}" onchange="{!c.handleEnableConfirm}"
-                                            disabled="{!v.state.isConfirmed}" />
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li
-                                class="{!'slds-progress__item ' + if(v.state.isEnabled, 'slds-is-completed', if(v.state.isConfirmed, 'slds-is-active', ''))}">
+                                class="{!'slds-progress__item ' + if(v.state.isEnabled, 'slds-is-completed', 'slds-is-active')}">
 
                                 <c:progressMarker isComplete="{!v.state.isEnabled}"
-                                    isPreviousComplete="{!v.state.isConfirmed}"
+                                    isPreviousComplete="true"
                                     isNextComplete="{!v.state.isMetaLaunched}" />
-
 
                                 <div class="slds-progress__item_content slds-grid slds-grid_align-spread">
                                     <div class="slds-size_3-of-4">
                                         <span>
                                             <lightning:formattedText value="{!$Label.c.RD2_EnablementEnableMessage}" />
-                                            <lightning:icon iconName="utility:warning"
-                                                alternativeText="{!$Label.c.AssistiveTextWarning}" size="x-small"
-                                                variant="warning" class="slds-p-left_medium slds-p-right_x-small" />
-                                            <lightning:formattedRichText
-                                                value="{!$Label.c.RD2_EnablementEnableWarning}" />
                                         </span>
                                     </div>
                                     <div class="slds-grid slds-grid_align-end slds-size_1-of-4 slds-p-right_x-small">
@@ -162,7 +115,7 @@
                     <lightning:layout>
                         <lightning:layoutItem size="9">
                             <lightning:formattedText class="slds-text-longform"
-                                value="{!$Label.c.RD2_EnablementMetaDeployIntro}" />
+                                value="{!$Label.c.RD2_EnablementMetaDeploySimpleIntro}" />
                         </lightning:layoutItem>
                     </lightning:layout>
 
@@ -243,7 +196,7 @@
             </lightning:card>
         </lightning:layoutItem>
 
-        <lightning:layoutItem size="9">
+        <lightning:layoutItem size="9" class="slds-p-top_large">
             <aura:if isTrue="{!v.state.isMetaConfirmed}">
                 <lightning:formattedRichText
                     value="{!$Label.c.RD2_EnablementMigrationCompleteMessage}" />

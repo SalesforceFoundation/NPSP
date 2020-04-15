@@ -218,7 +218,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Tracks the enhanced Recurring Donation enablement user action
+    * @description Tracks the enhanced Recurring Donation enablement user action. Set enable confrimation when no RD exist
     * @return void
     */
     @AuraEnabled
@@ -228,6 +228,11 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         if (isDryRunOutdated(state)) {
             throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
         }
+
+        if (!hasRDRecord) {
+            state.isConfirmed = true;
+            saveEnablementState(state);
+        }   
 
         try {
             STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
@@ -283,7 +288,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Tracks the MetaDeploy install confirmation user action
+    * @description Tracks the MetaDeploy install confirmation user action. Enable migration when no RD record exist
     * @return void
     */
     @AuraEnabled
@@ -294,6 +299,11 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         EnablementState state = getEnablementState();
         state.isMetaConfirmed = true;
+
+        if (!hasRDRecord) {
+            state.isMigrationEnabled = true;
+        }
+
         saveEnablementState(state);
     }
 

@@ -3,9 +3,6 @@
         helper.loadState(component);
         helper.getDeployURL(component);
     },
-    handleEnableConfirm: function (component, event, helper) {
-        helper.confirmEnable(component);
-    },
     handleEnable: function (component, event, helper) {
         helper.completeEnable(component);
     },

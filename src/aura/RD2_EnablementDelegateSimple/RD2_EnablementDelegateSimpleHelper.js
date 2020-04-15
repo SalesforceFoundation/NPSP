@@ -43,38 +43,6 @@
     },
 
     /****
-    * @description Confirms enhanced Recurring Donations enablement
-    */
-   confirmEnable: function (component) {
-        //disable the current active step so the next step is enabled only on current step success
-        component.set('v.state.isConfirmed', false);
-        this.showSpinner(component, 'enableConfirmSpinner');
-        this.clearError(component);
-
-        var action = component.get('c.confirmEnablement');
-
-        action.setCallback(this, function (response) {
-            if (!component.isValid()) {
-                return;
-            }
-            const state = response.getState();
-
-            if (state === 'SUCCESS') {
-                component.set('v.state.hideDryRun', true);
-                component.set('v.state.isConfirmed', true);
-
-            } else if (state === 'ERROR') {
-                this.handleError(component, response.getError(), 'enablement');
-            }
-
-            this.refreshEnable(component);
-            this.hideSpinner(component, 'enableConfirmSpinner');
-        });
-
-        $A.enqueueAction(action);
-    },
-
-    /****
     * @description Enables enhanced Recurring Donations
     */
    completeEnable: function (component) {
