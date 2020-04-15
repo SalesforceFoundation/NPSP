@@ -4576,6 +4576,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Credit Number</value>
     </labels>
     <labels>
+        <fullName>commonCriticalError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Critical Error</shortDescription>
+        <value>Critical Error</value>
+    </labels>
+    <labels>
         <fullName>commonDefaultValue</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5542,6 +5550,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Common error when a total doesn't match Donation Amount.</shortDescription>
         <value>Total amount doesn't match the {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorCardChargedBDIFailed</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure description if card is charged and donation record has not been created</shortDescription>
+        <value>The card has been successfully charged but the payment has not been recorded in Salesforce. Please correct the errors and resubmit the form to record the donation in Salesforce.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorPurchaseRequestTimeout</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure message description for system error &amp; uncertain if card charged</shortDescription>
+        <value>A system error occurred. Check {0} to determine if the card was charged. If it was not charged, retry processing this donation through Gift Entry.</value>
     </labels>
     <labels>
         <fullName>geDonorColumnLabel</fullName>

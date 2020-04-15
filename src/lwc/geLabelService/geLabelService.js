@@ -13,6 +13,7 @@ import commonCancel from '@salesforce/label/c.commonCancel';
 import commonCardType from '@salesforce/label/c.commonCardType';
 import commonClone from '@salesforce/label/c.commonClone';
 import commonCreditNumber from '@salesforce/label/c.commonCreditNumber';
+import commonCriticalError from '@salesforce/label/c.commonCriticalError';
 import commonDefaultValue from '@salesforce/label/c.commonDefaultValue';
 import commonDelete from '@salesforce/label/c.commonDelete';
 import commonEdit from '@salesforce/label/c.commonEdit';
@@ -96,6 +97,7 @@ import geButtonNewSingleGift from '@salesforce/label/c.geButtonNewSingleGift';
 import geButtonSaveNewGift from '@salesforce/label/c.geButtonSaveNewGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
+import geErrorCardChargedBDIFailed from '@salesforce/label/c.geErrorCardChargedBDIFailed';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
 import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
@@ -112,6 +114,7 @@ import geErrorPageLevelFieldPermission1 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLevelFieldPermission2';
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
+import geErrorPurchaseRequestTimeout from '@salesforce/label/c.geErrorPurchaseRequestTimeout';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 import geHeaderAdvancedFormFields from '@salesforce/label/c.geHeaderAdvancedFormFields';
 import geHeaderBatchEnterInfo from '@salesforce/label/c.geHeaderBatchEnterInfo';
@@ -202,6 +205,7 @@ class GeLabelService {
         commonCardType,
         commonClone,
         commonCreditNumber,
+        commonCriticalError,
         commonDefaultValue,
         commonDelete,
         commonEdit,
@@ -285,6 +289,7 @@ class GeLabelService {
         geButtonSaveNewGift,
         geButtonTemplatesTabCreateTemplate,
         geErrorAmountDoesNotMatch,
+        geErrorCardChargedBDIFailed,
         geErrorCompleteThisField,
         geErrorDonorTypeInvalid,
         geErrorDonorTypeValidation,
@@ -301,6 +306,7 @@ class GeLabelService {
         geErrorPageLevelFieldPermission2,
         geErrorPageLevelMissingRequiredFields,
         geErrorPageLevelMissingRequiredGroupFields,
+        geErrorPurchaseRequestTimeout,
         geErrorRequiredField,
         geHeaderAdvancedFormFields,
         geHeaderBatchEnterInfo,
