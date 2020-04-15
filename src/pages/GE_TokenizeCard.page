@@ -23,8 +23,8 @@
         const sfdo = new sfdoPaymentsJsSdk();
         sfdo.mount({
             id: 'payments',
-            // TODO: Replace clientId value below with the orgId ({!$Organization.Id})
-            // Currently hardcoded to a specific orgId as needed by payment services.
+            // TODO: Replace clientId value below with the productId provided by onboarding
+            // Currently hardcoded to a specific value as needed by payment services.
             clientId: 'bees',
             designSystem: 'Lightning',
             styles: '' +
