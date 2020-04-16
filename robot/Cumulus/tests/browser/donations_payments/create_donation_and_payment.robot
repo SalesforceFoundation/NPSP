@@ -46,14 +46,13 @@ Create Donation from a Contact
     Current Page Should Be               Custom                 SchedulePayment
 
     Enter Text Field Value               ${date}
-    Enter Payment Schedule               ${No_of_payments}      ${intervel}    ${frequency}
+    Enter Payment Schedule               ${No_of_payments}      ${intervel}            ${frequency}
     scroll button into view and click using js                  Calculate Payments
-    ${value}                             Verify Payment Split   1000           ${No_of_payments}
-    Should be equal as strings           ${value}    ${No_of_payments}
-    Verify Date Split                    ${date}     ${No_of_payments}         ${intervel}
-    scroll button into view and click using js       Create Payments
+    Verify Payment Split                 1000                   ${No_of_payments}
+    Verify Date Split                    ${date}                ${No_of_payments}      ${intervel}
+    scroll button into view and click using js                  Create Payments
     Wait until page contains             ${opp_name}
-    Go To Page                           Listing                            Opportunity
+    Go To Page                           Listing                                       Opportunity
     Wait Until Keyword Succeeds          1 minute
     ...                                  5 seconds
     ...                                  Ensure Opportunity Details Are Loaded        ${data}[contact_opportunity][Id]        ${data}[contact_opportunity][Name]
@@ -63,4 +62,4 @@ Create Donation from a Contact
     Click ViewAll Related List           Payments
     Wait until page contains             Payments
     ${flag}                              Verify payment
-    should be equal as strings           ${flag}               pass
+    should be equal as strings           ${flag}                 pass

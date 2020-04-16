@@ -662,9 +662,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if  self.t_loc == int(no_payments):
             for i in list_payments:
                 self.selenium.page_should_contain_element(i)
-            return str(self.t_loc)
+            actual_payments = str(self.t_loc)
         else:
-            return str(self.t_loc)
+            actual_payments = str(self.t_loc)
+        assert no_payments == actual_payments, "Expected {} number of payment but found {}".format(no_payments,actual_payments)
 
     def verify_date_split(self,date, no_payments, interval):
         ddate=[]
