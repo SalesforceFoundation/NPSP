@@ -2145,6 +2145,8 @@
         <members>geLabelTemplateInfoNameField</members>
         <members>gePS_IntegrationTestInvalidAPIKey</members>
         <members>gePS_IntegrationTestInvalidConfigParams</members>
+        <members>gePaymentProcessError</members>
+        <members>gePaymentProcessingErrorBanner</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
         <members>geTabBatchHeader</members>
@@ -3478,6 +3480,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>utilAlertBanner</members>
         <members>batchProgress</members>
         <members>bdiFieldMappingModal</members>
         <members>bdiFieldMappings</members>

@@ -165,7 +165,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         if (!dataImportRow) {
             return;
         }
-        let rowList = new Array();
+        let rowList = [];
         let fieldMappings = GeFormService.fieldMappings;
         let gauMappingKeys = Object.keys(fieldMappings).filter(key => {
             return key.toLowerCase().includes(GAU_ALLOCATION_1_KEY);
@@ -406,12 +406,13 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     get alertClass() {
         if(isNotEmpty(this.alertBanner.level)) {
-            const warningClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning';
-            const errorClass = 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error';
+            const errorClass = 'error';
+            const warningClass = 'warning';
+
             switch(this.alertBanner.level) {
-                case 'error':
+                case errorClass:
                     return errorClass;
-                case 'warning':
+                case warningClass:
                     return warningClass;
                 default:
                     return errorClass;

@@ -154,6 +154,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
+        registerListener('paymentError', this.handlePaymentError, this)
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -311,8 +312,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                         return tokenizationErrors[e];
                     }).join(', ');
             }
-
-            showToast('Error', `${tokenizationErrors}`, 'error');
             return;
         }
 
@@ -817,6 +816,33 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
     @api
     get isUpdateActionDisabled() {
         return this.dataImport && this.dataImport[STATUS_FIELD.fieldApiName] === 'Imported';
+    }
+
+    /**
+     * Handle payment errors at the form level
+     * @param event The paymentError event object
+     */
+    handlePaymentError(event) {
+        let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null
+        let errorObjects = [];
+        if(event.error.isObject) {
+            // Represents the error response returned from payment services
+            let errorObject = JSON.parse(errorResponse);
+            errorObject.forEach((message, index) => {
+                errorObjects.push({
+                    message: message,
+                    index: index
+                });
+            });
+        }
+
+        this.pageLevelErrorMessageList = [{
+            index: 0,
+            errorMessage: event.error.message[0],
+            multilineMessages: isNotEmpty(errorObjects) ? errorObjects : errorResponse
+        }];
+
+        this.hasPageLevelError = true;
     }
 
     /**
