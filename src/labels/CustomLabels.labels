@@ -5723,6 +5723,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>GAU Allocations</value>
     </labels>
     <labels>
+        <fullName>gauAllocationErrorGeneral</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>General error for accessbility text when an error occurs in the GAU widget</shortDescription>
+        <value>GAU Allocation Error</value>
+    </labels>
+    <labels>
         <fullName>geHeaderAdvancedFormFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6071,7 +6079,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Failure message description for tokenization or purchase errors</shortDescription>
-        <value>There was an error processing the transaction. Please review the error and try again. Alternatively,
+        <value>There was an error processing the payment. Please review the error and try again. Alternatively,
             select Do Not Charge Card to enter a pledged donation without processing a card payment. {0} errors:
             /newline/ {1} </value>
     </labels>
