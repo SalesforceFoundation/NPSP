@@ -43,13 +43,14 @@ public class UTIL_Describe {
     // throw custom exceptions when a bogus object or field is provided.
     public class SchemaDescribeException extends Exception {}
 
-    //maps to hold the describe info
+    // maps to hold the describe info
     private static Map<String, Schema.SObjectType> gd;
     private static Map<String, Schema.DescribeSObjectResult> objectDescribes = new Map<String, Schema.DescribeSObjectResult>();
     private static Map<Schema.SObjectType, Schema.DescribeSObjectResult> objectDescribesByType = new Map<Schema.SObjectType, Schema.DescribeSObjectResult>();
     private static Map<String, Map<String, Schema.SObjectField>> fieldTokens = new Map<String,Map<String, Schema.SObjectField>>();
     private static Map<String, Map<String, Schema.DescribeFieldResult>> fieldDescribes = new Map<String,Map<String, Schema.DescribeFieldResult>>();
     private static UTIL_Describe utilDescribeInstance;
+    private static Map<Schema.SObjectField, Map<String, String>> picklistTranslations = new Map<Schema.SObjectField, Map<String, String>>();
 
     /**
     * @description Returns static instance of this class.  Primarily used to facilitate
@@ -73,7 +74,7 @@ public class UTIL_Describe {
     private static void setInstance(UTIL_Describe utilDescribe){
         utilDescribeInstance = utilDescribe;
     }
-    
+
     /*******************************************************************************************************
     * @description Map display types to a friendly user-readable label.
     */
@@ -623,6 +624,29 @@ public class UTIL_Describe {
         return options;
     }
 
+    /**
+    * @description Retrieve the localized picklist labels for any given picklist api name. This returns
+    * the translation for all picklist values, not just the active ones.
+    * @param objectType SObjectType
+    * @param fieldType SObjectField
+    * @param apiName picklist api name
+    * @return Translated picklist label (could be English if the language is English)
+    */
+    public static String getTranslatedPicklistLabel(SObjectType objectType, SObjectField fieldType, String apiName) {
+        if (!picklistTranslations.containsKey(fieldType)) {
+            picklistTranslations.put(fieldType, new Map<String, String>());
+            String fieldName = String.valueOf(fieldType);
+            String objectName = String.valueOf(objectType);
+
+            Schema.DescribeFieldResult describeField = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+            for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
+                picklistTranslations.get(fieldType).put(entry.getValue(), entry.getLabel());
+            }
+        }
+        return picklistTranslations.get(fieldType).get(apiName);
+    }
+
+
     /** @description For a given object and field, verifies that the field is accessible and updateable
      * throwing an exception if it isn't.*/
     public static void checkFieldFLS(String objectName, String fieldName) {
@@ -706,7 +730,7 @@ public class UTIL_Describe {
     * @param displayType The all caps version of the display type provided from a field describe
     * @return String the friendly label name for the display type
     */
-    public static String getLabelForDisplayType(String displayType) {   
+    public static String getLabelForDisplayType(String displayType) {
         return LABELS_BY_DISPLAY_TYPE.get(displayType);
     }
 }
