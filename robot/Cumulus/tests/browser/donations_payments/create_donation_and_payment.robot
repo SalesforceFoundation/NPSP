@@ -61,5 +61,4 @@ Create Donation from a Contact
 
     Click ViewAll Related List           Payments
     Wait until page contains             Payments
-    ${flag}                              Verify payment
-    should be equal as strings           ${flag}                 pass
+    Verify payment
