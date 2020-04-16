@@ -69,7 +69,7 @@
         <description>External identifier for Salesforce.org payment service integration.</description>
         <externalId>true</externalId>
         <inlineHelpText>External identifier for Salesforce.org payment service integration.</inlineHelpText>
-        <label>Commitment Id</label>
+        <label>Elevate Recurring Id</label>
         <length>100</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
