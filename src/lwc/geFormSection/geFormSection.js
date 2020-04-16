@@ -131,6 +131,10 @@ export default class GeFormSection extends LightningElement {
                         data,
                         [fieldCmp.sourceFieldAPIName]));
             }
+
+            if (data.recordTypeId || data.recordTypeId === null) {
+                fieldCmp.recordTypeId = data.recordTypeId;
+            }
         });
 
         const widgetList = this.template.querySelectorAll('c-ge-form-widget');
@@ -167,7 +171,10 @@ export default class GeFormSection extends LightningElement {
     handleLookupRecordSelect(event) {
         const selectEvent = new CustomEvent(
             'lookuprecordselect',
-            { detail: event.detail });
+            {
+                detail: event.detail,
+                objectMappingDevName: event.objectMappingDevName
+            });
         this.dispatchEvent(selectEvent);
     }
 
@@ -197,7 +204,6 @@ export default class GeFormSection extends LightningElement {
 
         return fields;
     }
-
 
     registerCreditCardWidget() {
         if (!isUndefined(this.section)) {
@@ -244,5 +250,19 @@ export default class GeFormSection extends LightningElement {
     }
 
 
+
+    @api
+    setRecordTypeOnFields(objectMappingDevName, recordTypeId) {
+        this.template.querySelectorAll('c-ge-form-field')
+            .forEach(field => {
+                // Currently only picklists need their selected record's RecordType Id,
+                // since they use it to update their available options
+                if (field.isPicklist) {
+                    if (field.objectMappingDevName === objectMappingDevName) {
+                        field.recordTypeId = recordTypeId;
+                    }
+                }
+            });
+    }
 
 }

@@ -194,6 +194,10 @@
         <name>Merge_Contacts</name>
     </webLinks>
     <webLinks>
+        <label><!-- New_Gift --></label>
+        <name>New_Gift</name>
+    </webLinks>
+    <webLinks>
         <label><!-- Recalculate_Rollups --></label>
         <name>Recalculate_Rollups</name>
     </webLinks>

@@ -45,7 +45,7 @@
         <name>BatchDetailView</name>
     </fieldSets>
     <fields>
-        <label>Batchstatus</label>
+        <label>Batch-Status</label>
         <name>Batch_Status__c</name>
         <picklistValues>
             <masterLabel>Complete</masterLabel>
@@ -77,5 +77,5 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel>Batchname</nameFieldLabel>
+    <nameFieldLabel>Batch-Name</nameFieldLabel>
 </CustomObjectTranslation>

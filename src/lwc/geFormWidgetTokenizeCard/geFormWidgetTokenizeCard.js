@@ -2,6 +2,7 @@ import { LightningElement, track, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
+import { format } from 'c/utilCommon';
 import { isFunction } from 'c/utilCommon';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
@@ -9,14 +10,15 @@ import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
+    @api cardHolderName;
 
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    
-    tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
     @track domain;
     @track visualforceOrigin;
     @track isLoading = true;
-    @api cardHolderName;
+    @track alert = {};
+
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
 
 
     get tokenizeCardHeader() {
@@ -75,8 +77,39 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     *
     * @param {object} message: Message received from iframe
     */
-    handleMessage(message) {
-        if (message.error || message.token) {
+    async handleMessage(message) {
+        fireEvent(null, 'tokenResponse', message);
+        if (message.error) {
+            this.alert = {
+                theme: 'error',
+                show: true,
+                message: this.CUSTOM_LABELS.gePaymentProcessingErrorBanner,
+                variant: 'inverse',
+                icon: 'utility:error'
+            };
+            let errorValue;
+            let isObject = false;
+            if (typeof message.error === 'object') {
+                errorValue = JSON.stringify(Object.values(message.error));
+                isObject = true;
+            } else if (typeof message.error === 'string') {
+                errorValue = message.error;
+            }
+            let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errorValue];
+
+            /** This event can be used to extend handling payment errors at the form level by adding additional detail
+             * objects.
+             */
+            let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+            let splitErrorResponse = formattedErrorResponse.split('/newline/');
+
+            fireEvent(null, 'paymentError', {
+               error: {
+                   message: splitErrorResponse,
+                   isObject: isObject
+               }
+            });
+        } else if (message.token) {
             if(isFunction(this.tokenCallback)) {
                 this.tokenCallback(message);
             }
