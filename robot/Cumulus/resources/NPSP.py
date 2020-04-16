@@ -740,7 +740,6 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             cc=payment_com.replace("$","")
             if cc == str(self.val) and self.t_loc == l_no_payments :
                 result = 'pass'
-            #return cc, self.val
             else:
                 result = "fail"
         assert result == 'pass', "Expected payment value not present."
