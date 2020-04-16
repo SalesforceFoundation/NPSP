@@ -213,28 +213,16 @@ class BDI_DataImportDeleteBTN_TEST {
 
     /**
      * @description operation: 
-     *    Test close() method when the user is using Salesforce classic
+     *    Test close() method when page parameter retURL is provided
      * verify: 
-     *    The correct URL is used for the Salesforce classic context
+     *    retURL page is returned
      */
     @isTest
-    static void TestCloseClassicTheme() {
-        BDI_DataImportDeleteBTN_CTRL.testUITheme = BDI_DataImportDeleteBTN_CTRL.UI_CLASSIC_THEME;
+    static void TestCloseWhenRetUrlIsProvided() {
+        String retURL = '/testpage.jsp';
+        ApexPages.currentPage().getParameters().put('retURL', retURL);
 
-        assertPage(BDI_DataImportDeleteBTN_CTRL.UI_CLASSIC_THEME, new BDI_DataImportDeleteBTN_CTRL().close());
-    }
-
-    /**
-     * @description operation:
-     *    Test close() method when the user is using Salesforce Lightning
-     * verify:
-     *    The correct URL is used for the Salesforce Lightning context
-     */
-    @isTest
-    static void TestCloseLightningTheme() {
-        BDI_DataImportDeleteBTN_CTRL.testUITheme = BDI_DataImportDeleteBTN_CTRL.UI_LIGHTNING_THEME;
-
-        assertPage(BDI_DataImportDeleteBTN_CTRL.UI_LIGHTNING_THEME, new BDI_DataImportDeleteBTN_CTRL().close());
+        assertPage(retURL, new BDI_DataImportDeleteBTN_CTRL().close());
     }
 
     // Helpers
@@ -296,7 +284,6 @@ class BDI_DataImportDeleteBTN_TEST {
     /**
      * @description Apply delete action as a user with Standard User profile.
      * Assert the exception message is displayed on the Visualforce page.
-     * @return void
      */
     static void testPageErrorMessageDisplayOnDeleteActionException(
         String testMethodName,
@@ -324,7 +311,6 @@ class BDI_DataImportDeleteBTN_TEST {
     /**
      * @description Assert Home page URL and redirect values
      * @param actual Page to verify
-     * @return void
      */
     static void assertHomePage(PageReference actual) {
         assertPage('/home/home.jsp', actual);
@@ -332,30 +318,13 @@ class BDI_DataImportDeleteBTN_TEST {
 
     /**
      * @description Assert page URL and redirect values
-     * @param uiTheme Salesforce UI Theme
+     * @param expectedUrl Expected URL
      * @param actual Page to verify
-     * @return void
      */
-    static void assertPage(String uiTheme, PageReference actual) {
-
-        Schema.DescribeSObjectResult dataImportDescribe = UTIL_Describe.getObjectDescribe(
-                DataImport__c.SObjectType
-        );
-
+    static void assertPage(String expectedUrl, PageReference actual) {
         System.assertNotEquals(null, actual);
         System.assert(actual.getRedirect());
-
-        if (uiTheme == BDI_DataImportDeleteBTN_CTRL.UI_CLASSIC_THEME) {
-            String diObjectPrefix = dataImportDescribe.getKeyPrefix();
-
-            String expectedUrl = '/' + diObjectPrefix;
-
-            System.assertEquals(expectedUrl, actual.getUrl());
-
-        } else if (uiTheme == BDI_DataImportDeleteBTN_CTRL.UI_LIGHTNING_THEME) {
-            String expectedUrl = '/lightning/o/' + dataImportDescribe.getName() + '/list?filterName=Recent';
-            System.assertEquals(expectedUrl, actual.getUrl());
-        }
+        System.assertEquals(expectedUrl, actual.getUrl());
     }
 	
 }

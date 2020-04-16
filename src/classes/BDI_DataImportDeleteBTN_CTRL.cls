@@ -155,22 +155,11 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
      * @return PageReference 
      */
     public PageReference close() {
-        String displayedUITheme = UserInfo.getUiThemeDisplayed();
-        String uiTheme = String.isNotBlank(testUITheme) ? testUITheme : displayedUITheme;
-        String url;
-        Schema.DescribeSObjectResult dataImportDescribe = UTIL_Describe.getObjectDescribe(
-                DataImport__c.SObjectType
-        );
-
-        if (uiTheme == UI_CLASSIC_THEME) {
-            url = '/' + dataImportDescribe.getKeyPrefix();
-        } else if (uiTheme == UI_LIGHTNING_THEME) {
-            url = '/lightning/o/' + dataImportDescribe.getName() + '/list?filterName=Recent';
-        }
+        String retUrl = UTIL_String.getInternalUrlPath(ApexPages.currentPage().getParameters().get('retURL'));
 
         PageReference p;
-        if (!String.isBlank(url)) {
-            p = new PageReference(url);
+        if (!String.isBlank(retUrl)) {
+            p = new PageReference(retUrl);
         } else {
             p = USER_UserService.getHomePageReference();
         }

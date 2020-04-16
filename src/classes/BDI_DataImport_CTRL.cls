@@ -224,7 +224,7 @@ public with sharing class BDI_DataImport_CTRL {
     * @return PageReference
     */
     public PageReference close() {
-        String retUrl = '/' + diBatch.Id;
+        String retUrl = UTIL_String.getInternalUrlPath(ApexPages.currentPage().getParameters().get('retURL'));
 
         PageReference p;
         if (!String.isBlank(retUrl)) {
