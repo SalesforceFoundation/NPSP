@@ -1248,6 +1248,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.execute_javascript(javascript)
         time.sleep(2)
         self.npsp.click_button_with_value(value)
+        time.sleep(1)
 
     def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None,
                   recurringdonation_data=None, gau_data=None):
