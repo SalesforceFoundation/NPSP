@@ -2145,7 +2145,7 @@
         <members>geLabelTemplateInfoNameField</members>
         <members>gePS_IntegrationTestInvalidAPIKey</members>
         <members>gePS_IntegrationTestInvalidConfigParams</members>
-        <members>gePaymentProcessErrorGeneric</members>
+        <members>gePaymentProcessError</members>
         <members>gePaymentProcessingErrorBanner</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectPlaceholder</members>
