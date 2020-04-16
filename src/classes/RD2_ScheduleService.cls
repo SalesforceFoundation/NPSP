@@ -152,7 +152,7 @@ public without sharing class RD2_ScheduleService {
 
     /***
     * @description Determines whether changes to recurring donation should trigger creation of new schedule(s)
-    * @param rd Trigger.new record
+    * @param newRd Trigger.new record
     * @param oldRd Trigger.old record
     * @return Boolean
     */
@@ -493,6 +493,14 @@ public without sharing class RD2_ScheduleService {
             adjusted = Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
         }
 
+        if (
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY &&
+            schedule.StartDate__c.day() != adjusted.day() &&
+            schedule.StartDate__c.day() == Date.daysInMonth(adjusted.year(), adjusted.month())
+        ) {
+            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(), adjusted.month()));
+        }
+
         return adjusted;
     }
 
@@ -829,7 +837,8 @@ public without sharing class RD2_ScheduleService {
     * @description Dynamically calculates the schedule end date 
     * based on existing Opportunities and projected installments
     * @param records Opportunity matcher records
-    * @param rdSchedules Schedules on the Recurring Donation record
+    * @param plannedInstallments Number of planned installments
+    * @param paidInstallments Number of paid installments
     * @return Date The fixed-length RD schedule end date
     */
     private Date getScheduleEndDateForFixedLength(List<RD2_OpportunityMatcher.Record> records, Integer plannedInstallments, Integer paidInstallments) {
