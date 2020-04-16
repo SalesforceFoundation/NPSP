@@ -53,15 +53,8 @@ Create Recurring Donation And Check Rollups
     Select Value From Dropdown   Stage                          Closed Won
     Click Modal Button           Save
 
-    Go To Page                   Custom                         NPSP_Settings
-    Open Main Menu               Donations
-    Click Link With Text         Customizable Rollups
-    ${crlp_enabled} =            Check Crlp Not Enabled By Default
-
-    #Open NPSP Settings and run Rollups Donations Batch job Validate the batch jobs completeness based accordingly
-    Run Keyword if      ${crlp_enabled} != True
-        ...             Validate Batch Process When CRLP Unchecked
-        ...     ELSE    Validate Batch Process When CRLP Checked
+    #Open NPSP Settings and run Rollups Donations Batch job
+    Run Donations Batch Process
 
     #Check Rollups on Recurring Donation
     Go To Page                   Details                npe03__Recurring_Donation__c   object_id=${data}[contact_rd][Id]
