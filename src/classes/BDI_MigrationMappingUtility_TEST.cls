@@ -251,6 +251,22 @@ private class BDI_MigrationMappingUtility_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Test that the migration utility creates Migrated Custom Settings
+    */
+    @isTest
+    static void shouldCreateCustomMetadataRecordsFromNewDefault() {
+        BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
+                (BDI_MigrationMappingHelper) Test.createStub(
+                        BDI_MigrationMappingHelper.class,
+                        new BDI_MigrationMappingHelperMock());
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
+
+        List<String> newDefaultMappingStrings = new List<String>{'Account_1_City__c', 'Account_1_Country__c'};
+        util.migrateNewDefaultToCustomMetadata(newDefaultMappingStrings);
+        System.assertEquals(2, util.queuedMetadataTypesForDeploy.size(), 'We have 2 metadata records queued for deployment.');
+    }
+
+    /*******************************************************************************************************
     * @description Method builds an instance of the BDI_MigrationMappingUtility.DataImportFieldMapping
     *
     * @param label: Label of the Data Import field
@@ -605,6 +621,197 @@ private class BDI_MigrationMappingUtility_TEST {
                     'npsp__Allocation__c.GAU_Allocation_1.npsp__GAU_Allocation_1_Amount__c' => fieldMapping3};
             }
 
+            if (stubbedMethodName == 'getFieldMappingKeysByDeveloperName') {
+                Data_Import_Field_Mapping_Set__mdt fieldMappingSet;
+                String targetObjectMapping = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        'npsp__Target_Object_Mapping__r');
+                String legacyDataImportObjectName = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        'npsp__Legacy_Data_Import_Object_Name__c');
+                String objectAPIName = UTIL_Namespace.alignSchemaNSWithEnvironment(
+                        'npsp__Object_API_Name__c');
+
+                if (listOfArgs.contains('Migrated_Custom_Field_Mapping_Set')) {
+                    fieldMappingSet = new Data_Import_Field_Mapping_Set__mdt(
+                            Id=getFakeId(Schema.Data_Import_Field_Mapping_Set__mdt.SObjectType),
+                            DeveloperName='Migrated_Custom_Field_Mapping_Set',
+                            MasterLabel='Migrated Custom Field Mapping Set',
+                            Label='Migrated Custom Field Mapping Set');
+                } else {
+                    fieldMappingSet = new Data_Import_Field_Mapping_Set__mdt(
+                            Id=getFakeId(Schema.Data_Import_Field_Mapping_Set__mdt.SObjectType),
+                            DeveloperName='Default_Field_Mapping_Set',
+                            MasterLabel='Default Field Mapping Set',
+                            Label='Default Field Mapping Set');
+                }
+                Data_Import_Object_Mapping__mdt account1ObjectMapping =
+                        new Data_Import_Object_Mapping__mdt(
+                                Id=account1ObjectMappingId,
+                                DeveloperName='Account1',
+                                MasterLabel='Account 1',
+                                Label='Account 1',
+                                Object_API_Name__c='Account',
+                                Imported_Record_Field_Name__c='npsp__Account1Imported__c',
+                                Legacy_Data_Import_Object_Name__c = 'Account1',
+                                Imported_Record_Status_Field_Name__c='npsp__Account1ImportStatus__c');
+
+                Data_Import_Field_Mapping__mdt fieldMapping1 =
+                        (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                                '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                                        '"MasterLabel":"Account 1 City",' +
+                                        '"Label":"Account 1 City",' +
+                                        '"DeveloperName":"npsp__Account1_City",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c +
+                                        '":"npsp__Account1_City__c",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c +
+                                        '":"BillingCity",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Required__c +
+                                        '":"No",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c +
+                                        '":"' + fieldMappingSet.Id + '",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c +
+                                        '":"' + account1ObjectMapping.Id +
+                                        '","' + targetObjectMapping +
+                                        '":{"Id":"' + account1ObjectMapping.Id +
+                                        '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                        '"' + legacyDataImportObjectName + '":"Account1","' +
+                                        objectAPIName + '":"Account"}}',
+                                Data_Import_Field_Mapping__mdt.class);
+
+                Data_Import_Field_Mapping__mdt fieldMapping2 =
+                        (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                                '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                                        '"MasterLabel":"Account 1 Country",' +
+                                        '"Label":"Account 1 Country",' +
+                                        '"DeveloperName":"npsp__Account1_Country",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c +
+                                        '":"npsp__Account1_Country__c",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c +
+                                        '":"BillingCountry",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Required__c +
+                                        '":"No",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c +
+                                        '":"' + fieldMappingSet.Id + '",' +
+                                        '"' + Schema.Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c +
+                                        '":"' + account1ObjectMapping.Id +
+                                        '","' + targetObjectMapping +
+                                        '":{"Id":"' + account1ObjectMapping.Id +
+                                        '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                        '"' + legacyDataImportObjectName + '":"Account1","' +
+                                        objectAPIName + '":"Account"}}',
+                                Data_Import_Field_Mapping__mdt.class);
+
+                List<String> referenceFieldMappings = new List<String>();
+                String referenceFieldMapping1 =
+                        fieldMapping1.Target_Object_Mapping__r.Object_API_Name__c
+                        + '.'
+                        + fieldMapping1.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c
+                        + '.'
+                        + fieldMapping1.Target_Field_API_Name__c
+                        + '.'
+                        + fieldMapping1.Source_Field_API_Name__c;
+
+                String referenceFieldMapping2 =
+                        fieldMapping2.Target_Object_Mapping__r.Object_API_Name__c
+                        + '.'
+                        + fieldMapping2.Target_Object_Mapping__r.Legacy_Data_Import_Object_Name__c
+                        + '.'
+                        + fieldMapping2.Target_Field_API_Name__c
+                        + '.'
+                        + fieldMapping2.Source_Field_API_Name__c;
+                referenceFieldMappings.add(referenceFieldMapping1);
+                referenceFieldMappings.add(referenceFieldMapping2);
+
+                return referenceFieldMappings;
+            }
+            if (stubbedMethodName == 'getFieldMappingStringsBySetDeveloperName') {
+                Data_Import_Field_Mapping_Set__mdt fieldMappingSet;
+
+                if (listOfArgs.contains('Migrated_Custom_Field_Mapping_Set')) {
+                    fieldMappingSet = new Data_Import_Field_Mapping_Set__mdt(
+                            Id=getFakeId(Schema.Data_Import_Field_Mapping_Set__mdt.SObjectType),
+                            DeveloperName='Migrated_Custom_Field_Mapping_Set',
+                            MasterLabel='Migrated Custom Field Mapping Set',
+                            Label='Migrated Custom Field Mapping Set');
+                } else {
+                    fieldMappingSet = new Data_Import_Field_Mapping_Set__mdt(
+                            Id=getFakeId(Schema.Data_Import_Field_Mapping_Set__mdt.SObjectType),
+                            DeveloperName='Default_Field_Mapping_Set',
+                            MasterLabel='Default Field Mapping Set',
+                            Label='Default Field Mapping Set');
+                }
+
+                Data_Import_Object_Mapping__mdt account1ObjectMapping =
+                        new Data_Import_Object_Mapping__mdt(
+                                Id=account1ObjectMappingId,
+                                DeveloperName='Account1',
+                                MasterLabel='Account 1',
+                                Label='Account 1',
+                                Object_API_Name__c='Account',
+                                Legacy_Data_Import_Object_Name__c = 'Account1',
+                                Imported_Record_Field_Name__c='npsp__Account1Imported__c',
+                                Imported_Record_Status_Field_Name__c='npsp__Account1ImportStatus__c');
+
+                Data_Import_Field_Mapping__mdt fieldMapping =
+                        (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                                '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                                        '"MasterLabel":"Account 1 Name",' +
+                                        '"Label":"Account 1 Name",' +
+                                        '"DeveloperName":"npsp__Account1_Name",' +
+                                        '"Source_Field_API_Name__c":"npsp__Account1_Name__c",' +
+                                        '"Target_Field_API_Name__c":"Name",' +
+                                        '"Required__c":"No",' +
+                                        '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
+                                        '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
+                                        '","Target_Object_Mapping__r":{"Id":"' + account1ObjectMapping.Id +
+                                        '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                        '"Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
+                                Data_Import_Field_Mapping__mdt.class);
+
+                if (listOfArgs.contains('Migrated_Custom_Field_Mapping_Set')) {
+                    return new Map<String, Data_Import_Field_Mapping__mdt>{
+                            'Account.Account1.Name.npsp__Account1_Name__c' => fieldMapping
+                    };
+                }
+
+                if (!listOfArgs.contains('Migrated_Custom_Field_Mapping_Set')){
+                    Data_Import_Field_Mapping__mdt fieldMapping1 =
+                            (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                                    '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                                            '"MasterLabel":"Account 1 City",' +
+                                            '"Label":"Account 1 City",' +
+                                            '"DeveloperName":"npsp__Account1_City",' +
+                                            '"Source_Field_API_Name__c":"npsp__Account1_City__c",' +
+                                            '"Target_Field_API_Name__c":"BillingCity",' +
+                                            '"Required__c":"No",' +
+                                            '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
+                                            '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
+                                            '","Target_Object_Mapping__r":{"Id":"' + account1ObjectMapping.Id +
+                                            '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                            '"Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
+                                    Data_Import_Field_Mapping__mdt.class);
+                    Data_Import_Field_Mapping__mdt fieldMapping2 =
+                            (Data_Import_Field_Mapping__mdt)JSON.deserialize(
+                                    '{"Id":"' + getFakeId(Schema.Data_Import_Field_Mapping__mdt.SObjectType) + '",' +
+                                            '"MasterLabel":"Account 1 Country",' +
+                                            '"Label":"Account 1 Country",' +
+                                            '"DeveloperName":"npsp__Account1_Country",' +
+                                            '"Source_Field_API_Name__c":"npsp__Account1_Country__c",' +
+                                            '"Target_Field_API_Name__c":"BillingCountry",' +
+                                            '"Required__c":"No",' +
+                                            '"Data_Import_Field_Mapping_Set__c":"' + fieldMappingSet.Id + '",' +
+                                            '"Target_Object_Mapping__c":"' + account1ObjectMapping.Id +
+                                            '","Target_Object_Mapping__r":{"Id":"' + account1ObjectMapping.Id +
+                                            '","DeveloperName":"Account1","MasterLabel":"Account1",' +
+                                            '"Legacy_Data_Import_Object_Name__c":"Account1","Object_API_Name__c":"Account"}}',
+                                    Data_Import_Field_Mapping__mdt.class);
+
+                    return new Map<String, Data_Import_Field_Mapping__mdt>{
+                            'Account.Account1.Name.npsp__Account1_Name__c' => fieldMapping,
+                            'Account.Account1.BillingCity.npsp__Account1_City__c' => fieldMapping1,
+                            'Account.Account1.BillingCountry.npsp__Account1_Country__c' => fieldMapping2
+                    };
+                }
+            }
             return null;
         }
     }
