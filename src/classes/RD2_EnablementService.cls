@@ -81,18 +81,6 @@ public with sharing class RD2_EnablementService {
         }
         set;
     }
-    /***
-    * @description Contains attribute confirming if PilotEnabled feature parameter is enabled
-    */
-    public Boolean isPilotEnabled {
-        get {
-            if (isPilotEnabled == null) {
-                isPilotEnabled = UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled();
-            }
-            return isPilotEnabled;
-        }
-        set;
-    }
     
     /***
     * @description Returns true if enhanced Recurring Donations can be enabled
@@ -101,8 +89,7 @@ public with sharing class RD2_EnablementService {
     public Boolean isRecurringDonations2Ready() {
         return 
             STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c == true
-            && isUserRunningLightning
-            && isPilotEnabled;
+            && isUserRunningLightning;
     }
     
     /***
@@ -115,7 +102,6 @@ public with sharing class RD2_EnablementService {
         }
 
         return 
-            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true
-            && isPilotEnabled;
+            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().isRecurringDonations2Enabled__c == true;
     }
 }
