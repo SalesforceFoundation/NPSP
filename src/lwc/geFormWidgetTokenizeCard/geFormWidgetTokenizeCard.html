@@ -16,6 +16,12 @@
 
                     <lightning-layout-item size='12'
                                            padding='around-small'>
+                        <c-util-alert-banner if:true={alert.show}
+                                theme={alert.theme}
+                                variant={alert.variant}
+                                icon={alert.icon}
+                                message={alert.message}>
+                        </c-util-alert-banner>
                         <div class='iframe-container'>
                             <template if:true={isLoading}>
                                 <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>

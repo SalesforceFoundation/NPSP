@@ -3,16 +3,18 @@ import GeLabelService from 'c/geLabelService';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
+import { format } from 'c/utilCommon';
 
 export default class geFormWidgetTokenizeCard extends LightningElement {
+    @api cardHolderName;
 
-    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
-    
-    tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
     @track domain;
     @track visualforceOrigin;
     @track isLoading = true;
-    @api cardHolderName;
+    @track alert = {};
+
+    CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
+    tokenizeCardPageUrl = '/apex/GE_TokenizeCard';
 
 
     get tokenizeCardHeader() {
@@ -72,9 +74,37 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @param {object} message: Message received from iframe
     */
     async handleMessage(message) {
-        fireEvent(null, 'tokenResponse', message); // move so we can handle error or token
+        fireEvent(null, 'tokenResponse', message);
         if (message.error) {
-            // Error with tokenization
+            this.alert = {
+                theme: 'error',
+                show: true,
+                message: this.CUSTOM_LABELS.gePaymentProcessingErrorBanner,
+                variant: 'inverse',
+                icon: 'utility:error'
+            };
+            let errorValue;
+            let isObject = false;
+            if (typeof message.error === 'object') {
+                errorValue = JSON.stringify(Object.values(message.error));
+                isObject = true;
+            } else if (typeof message.error === 'string') {
+                errorValue = message.error;
+            }
+            let labelReplacements = [this.CUSTOM_LABELS.commonPaymentServices, errorValue];
+
+            /** This event can be used to extend handling payment errors at the form level by adding additional detail
+             * objects.
+             */
+            let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
+            let splitErrorResponse = formattedErrorResponse.split('/newline/');
+
+            fireEvent(null, 'paymentError', {
+               error: {
+                   message: splitErrorResponse,
+                   isObject: isObject
+               }
+            });
         } else if (message.token) {
             this.token = message.token;
         } else if (message.isLoaded) {

@@ -1587,7 +1587,7 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Validate Recurring Donations data if it is valid day of month</shortDescription>
-        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 28 or select Last Day of Month.</value>
+        <value>{0} is not a supported value for Day of Month. Select a value between 1 and 30 or select Last Day of Month.</value>
     </labels>
     <labels>
         <fullName>RD2_DayOfMonthIsRequiredForMonthlyInstallment</fullName>
@@ -2126,8 +2126,8 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>You do not have permission to create a donation record</shortDescription>
-        <value>You do not have permission to create a donation record. Please contact your system administrator for more information.</value>
+        <shortDescription>You do not have permission to Refresh opportunities</shortDescription>
+        <value>You don&apos;t  have the required permissions to Refresh Opportunities. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>RD_ErrorLegacyBatchJobCannotBeRun</fullName>
@@ -5747,6 +5747,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>GAU Allocations</value>
     </labels>
     <labels>
+        <fullName>gauAllocationErrorGeneral</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>General error for accessbility text when an error occurs in the GAU widget</shortDescription>
+        <value>GAU Allocation Error</value>
+    </labels>
+    <labels>
         <fullName>geHeaderAdvancedFormFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6088,6 +6096,24 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Failure message if an invalid base64 url was provided</shortDescription>
         <value>The base64url format is invalid. It can only contain these characters: [a-z A-Z 0-9 _ -]</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentProcessError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Failure message description for tokenization or purchase errors</shortDescription>
+        <value>There was an error processing the payment. Please review the error and try again. Alternatively,
+            select Do Not Charge Card to enter a pledged donation without processing a card payment. {0} errors:
+            /newline/ {1} </value>
+    </labels>
+    <labels>
+        <fullName>gePaymentProcessingErrorBanner</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Banner failure message for tokenization or purchase errors</shortDescription>
+        <value>There was an error processing the transaction.</value>
     </labels>
     <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
