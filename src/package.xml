@@ -3543,6 +3543,7 @@
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
+        <members>geConstants</members>
         <members>geDonationMatching</members>
         <members>geDonationMatchingOpportunityCard</members>
         <members>geDonationMatchingPaymentCard</members>
