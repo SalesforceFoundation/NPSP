@@ -1726,6 +1726,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Enable the Enhanced Recurring Donations functionality.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementEnableSimpleIntro</fullName>
+         <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple enablement section introduction and details</shortDescription>
+        <value>This step changes the processing logic for Recurring Donations to use Enhanced Recurring Donations logic. Recurring Donations will not function the same way as before.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementEnableTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1920,14 +1928,6 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Enablement preparation tasks title</shortDescription>
         <value>Preparation Tasks</value>
-    </labels>
-    <labels>
-        <fullName>RD2_EnablementEnableSimpleIntro</fullName>
-         <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Simple enablement section introduction and details</shortDescription>
-        <value>This step changes the processing logic for Recurring Donations to use Enhanced Recurring Donations logic. Recurring Donations will not function the same way as before.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementSimpleIntro</fullName>

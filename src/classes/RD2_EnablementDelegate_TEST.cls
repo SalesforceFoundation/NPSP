@@ -505,6 +505,55 @@ public with sharing class RD2_EnablementDelegate_TEST {
         System.assertEquals(null, job, 'A Queueable job after error on Enhanced Recurring Donations should not be running');
     }
 
+    /**
+    * @description Verifies that when no legacy RD exists in the org, the enablement page should load the simple version 
+    */
+    @isTest
+    private static void shouldIndicateSimplePageConfigWhenNoLegacyRdExists() {
+        Test.startTest();
+        Boolean isSimpleVersion = RD2_EnablementDelegate_CTRL.isSimpleVersion;
+        Test.stopTest();
+
+        System.assert(isSimpleVersion, 'The enablement page should be in simple version when no legacy RD exists');
+    }
+
+    /***
+    * @description Verifies that when a legacy RD exists, the enablement page should load the complex version 
+    */
+    @isTest
+    private static void shouldIndicateStandardPageConfigWhenLegacyRdExists() {
+        insert getLegacyRecurringDonationBuilder(getContact().Id).build();
+
+        Test.startTest();
+        Boolean isSimpleVersion = RD2_EnablementDelegate_CTRL.isSimpleVersion;
+        Test.stopTest();
+
+        System.assert(!isSimpleVersion, 'The enablement page should be in standard version when a legacy RD exists');
+    }
+
+    /***
+    * @description Verifies when the RD2 is enabled through the simple page(no migration ran and no legacy RD exists),
+    * the enablement page should stay in the simple version after the RD2 is enable and enhanced RD is created 
+    */
+    @isTest
+    private static void shouldPreserveSinglePageConfigWhenEnablingRdThroughSimplePage() {
+        Boolean beforeEnablePageVersion = RD2_EnablementDelegate_CTRL.isSimpleVersion;
+        
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        insert TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+        .withDefaultValues()
+        .withAmount(1)
+        .withContact(getContact().Id)
+        .withDayOfMonth('1')
+        .build();
+
+        Test.startTest();
+        Boolean afterEnablePageVersion = RD2_EnablementDelegate_CTRL.isSimpleVersion;
+        Test.stopTest();
+
+        System.assertEquals(beforeEnablePageVersion, afterEnablePageVersion, 'The page version should stay the same once enablement is fully completed');
+    }
 
     // Helpers
     ////////////////

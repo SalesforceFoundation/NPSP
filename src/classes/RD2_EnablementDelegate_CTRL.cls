@@ -84,14 +84,14 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Verifies if the org has any Recurring Donation 
+    * @description Control if the simple or complex enablement page should be displayed  
     */
-    public static Boolean hasRDRecord {
+    public static Boolean isSimpleVersion {
         get {
-            if (hasRDRecord == null) {
-                hasRDRecord = ![SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1].isEmpty();
+            if (isSimpleVersion == null) {
+                isSimpleVersion = isSimplePageCandidate();
             }
-            return hasRDRecord;
+            return isSimpleVersion;
         }
         set;
     }
@@ -176,7 +176,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @return Boolean
     */
     private static Boolean isDryRunOutdated(EnablementState state) {
-        return (hasRDRecord) 
+        return (!isSimpleVersion) 
             ? batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit
             : false;
     }
@@ -229,7 +229,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
             throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
         }
 
-        if (!hasRDRecord) {
+        if (isSimpleVersion) {
             state.isConfirmed = true;
             saveEnablementState(state);
         }   
@@ -288,7 +288,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Tracks the MetaDeploy install confirmation user action. Enable migration when no RD record exist
+    * @description Tracks the MetaDeploy install confirmation user action.
     * @return void
     */
     @AuraEnabled
@@ -299,10 +299,6 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         EnablementState state = getEnablementState();
         state.isMetaConfirmed = true;
-
-        if (!hasRDRecord) {
-            state.isMigrationEnabled = true;
-        }
 
         saveEnablementState(state);
     }
@@ -455,7 +451,21 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         throw e;
     }
 
+    /***
+    * @description Determine if the enablement page should be in simple or complex version
+    * @return Boolean 
+    */
+    private static Boolean isSimplePageCandidate() {
+        Boolean noLegacyRd = [
+            SELECT Id
+            FROM npe03__Recurring_Donation__c
+            WHERE (Status__c = null OR InstallmentFrequency__c = null)
+            LIMIT 1].isEmpty();
 
+        Boolean noMigrationRan = String.isBlank(UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2MigrationState__c);
+
+        return noLegacyRd && noMigrationRan;
+    }
 
     /***
     * @description Represents enhanced Recurring Donation options and status
