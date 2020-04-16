@@ -61,7 +61,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /***
-    * @description Specifies the earliest date when searching for Opportunities 
+    * @description Specifies the earliest date when searching for Opportunities
     */
     private static Date startDate {
         get {
@@ -188,7 +188,7 @@ public with sharing class RD2_VisualizeScheduleController {
     }
 
     /**
-     * @description Constructs the data table RD schedule columns 
+     * @description Constructs the data table RD schedule columns
      * @param rd Recurring Donation
      * @return DataTable
      */
@@ -241,11 +241,11 @@ public with sharing class RD2_VisualizeScheduleController {
             return;//all columns are visible
         }
 
-        for (Object obj : dataTable.getRecords()) {  
-            Installment record = (Installment) obj;          
+        for (Object obj : dataTable.getRecords()) {
+            Installment record = (Installment) obj;
             if (!dataTable.isAccessible(INSTALLMENT_DONATION_DATE)) {
                 record.donationDate = null;
-            } 
+            }
             if (!dataTable.isAccessible(INSTALLMENT_AMOUNT)) {
                 record.amount = null;
             }
@@ -254,7 +254,7 @@ public with sharing class RD2_VisualizeScheduleController {
             }
         }
     }
-    
+
     /**
      * @description Sets null on fields that are not accessible
      * @param dataTable Data table containing columns and schedule records
@@ -266,29 +266,29 @@ public with sharing class RD2_VisualizeScheduleController {
             return;//all columns are visible
         }
 
-        for (Object obj : dataTable.getRecords()) {  
-            Schedule record = (Schedule) obj;   
+        for (Object obj : dataTable.getRecords()) {
+            Schedule record = (Schedule) obj;
             if (!dataTable.isAccessible(SCHEDULE_AMOUNT)) {
                 record.amount = null;
             }
             if (!dataTable.isAccessible(SCHEDULE_PAYMENT_METHOD)) {
                 record.paymentMethod = null;
-            }  
+            }
             if (!dataTable.isAccessible(SCHEDULE_CAMPAIGN)) {
                 record.campaign = null;
             }
             if (!dataTable.isAccessible(SCHEDULE_START_DATE)) {
                 record.startDate = null;
-            }  
+            }
             if (!dataTable.isAccessible(SCHEDULE_END_DATE)) {
                 record.endDate = null;
-            }  
+            }
             if (!dataTable.isAccessible(SCHEDULE_PERIOD)) {
                 record.period = null;
-            }  
+            }
             if (!dataTable.isAccessible(SCHEDULE_FREQUENCY)) {
                 record.frequency = null;
-            }  
+            }
             if (!dataTable.isAccessible(SCHEDULE_DAY_OF_MONTH)) {
                 record.dayOfMonth = null;
             }
@@ -323,8 +323,8 @@ public with sharing class RD2_VisualizeScheduleController {
 
             RD2_OpportunityEvaluationService oppEvalService = new RD2_OpportunityEvaluationService();
             queryFields.add(oppEvalService.getScheduleSubQuery());
-            queryFields.add(oppEvalService.getOpportunitySubQuery());            
-                
+            queryFields.add(oppEvalService.getOpportunitySubQuery());
+
             String soql = new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)
                 .withSelectFields(queryFields)
@@ -377,7 +377,9 @@ public with sharing class RD2_VisualizeScheduleController {
 
         public Installment(Integer num, RD2_ScheduleService.Installment installment) {
             this.installmentNumber = num;
-            this.paymentMethod = installment.paymentMethod;
+            this.paymentMethod =
+                UTIL_Describe.getTranslatedPicklistLabel(npe03__Recurring_Donation__c.SObjectType,
+                    npe03__Recurring_Donation__c.PaymentMethod__c, installment.paymentMethod);
             this.donationDate = installment.nextDonationDate;
             this.amount = installment.installmentAmount;
         }
@@ -402,13 +404,22 @@ public with sharing class RD2_VisualizeScheduleController {
             this.scheduleNumber = num;
             this.isCurrent = schedule.isCurrent;
             this.amount = schedule.installmentAmount;
-            this.paymentMethod = schedule.paymentMethod;
+            this.paymentMethod = UTIL_Describe.getTranslatedPicklistLabel(
+                npe03__Recurring_Donation__c.SObjectType,
+                npe03__Recurring_Donation__c.PaymentMethod__c,
+                schedule.paymentMethod);
             this.campaign = schedule.campaignName;
             this.startDate = schedule.startDate;
             this.endDate = schedule.endDate;
-            this.period = schedule.installmentPeriod;
+            this.period = UTIL_Describe.getTranslatedPicklistLabel(
+                npe03__Recurring_Donation__c.SObjectType,
+                npe03__Recurring_Donation__c.npe03__Installment_Period__c,
+                schedule.installmentPeriod);
             this.frequency = schedule.installmentFrequency;
-            this.dayOfMonth = schedule.dayOfMonth;
+            this.dayOfMonth = UTIL_Describe.getTranslatedPicklistLabel(
+                npe03__Recurring_Donation__c.SObjectType,
+                npe03__Recurring_Donation__c.Day_of_Month__c,
+                schedule.dayOfMonth);
         }
     }
 
@@ -535,8 +546,8 @@ public with sharing class RD2_VisualizeScheduleController {
         }
 
         /**
-         * @description Sets the field name used to connect the column 
-         * and the record field value. For example, 
+         * @description Sets the field name used to connect the column
+         * and the record field value. For example,
          * the Installment object has "donationDate" field that will be
          * mapped to the column with fieldName = donationDate in the LWC component.
          * @param fieldName Record field name so column and field value can be connected

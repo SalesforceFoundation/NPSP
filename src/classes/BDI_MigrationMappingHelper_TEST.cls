@@ -49,6 +49,11 @@ private class BDI_MigrationMappingHelper_TEST {
     public static final String DEFAULT_OBJECT_MAPPING_SET= 'Default_Object_Mapping_Set';
 
     /*******************************************************************************************************
+    * @description list of Strings as defaultFieldMapping input
+    */
+    public static List<String> newDefaultMappingStrings = new List<String>{'Account_1_City', 'Account_1_Country'};
+
+    /*******************************************************************************************************
     * @description Test that we can retrieve the packaged default field mapping set
     */
     @isTest
@@ -105,5 +110,35 @@ private class BDI_MigrationMappingHelper_TEST {
 
         System.assert(fieldMappings.size() > 0,
             'We\'re able to retrieve a map of the packaged data import field mappings');
+    }
+
+    /*******************************************************************************************************
+    * @description Test that we can retrieve the packaged data import field mappings
+    * (Data_Import_Field_Mapping__mdt)
+    */
+    @isTest
+    static void shouldGetFieldMappingStringsBySetDeveloperName() {
+        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+
+        Map<String, Data_Import_Field_Mapping__mdt> fieldMappings =
+                helper.getFieldMappingStringsBySetDeveloperName(DEFAULT_FIELD_MAPPING_SET);
+
+        System.assert(fieldMappings.size() > 0,
+                'We\'re able to retrieve a map of the packaged data import field mappings');
+    }
+
+    /*******************************************************************************************************
+    * @description Test that we can retrieve field values from the packaged data import field mappings
+    * (Data_Import_Field_Mapping__mdt)
+    */
+    @isTest
+    static void shouldGetFieldMappingKeysByDeveloperName() {
+        BDI_MigrationMappingHelper helper = new BDI_MigrationMappingHelper();
+
+        List<String> fieldMappings =
+                helper.getFieldMappingKeysByDeveloperName(newDefaultMappingStrings, DEFAULT_FIELD_MAPPING_SET);
+
+        System.assert(fieldMappings.size() > 0,
+                'We\'re able to retrieve a map of the packaged data import field mappings');
     }
 }
