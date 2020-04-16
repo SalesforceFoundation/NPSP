@@ -335,6 +335,27 @@
         <type>Date</type>
     </fields>
     <fields>
+        <fullName>Contact1_Consent_Message__c</fullName>
+        <description>Provides details on what the Contact opted in to.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Provides details on what the Contact opted in to.</inlineHelpText>
+        <label>Contact1 Consent Message</label>
+        <length>2000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>4</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Contact1_Consent_Opt_In__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Determines if a Contact consented to opt in.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Determines if a Contact consented to opt in.</inlineHelpText>
+        <label>Contact1 Consent Opt-In</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Contact1_Firstname__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.Firstname</inlineHelpText>
@@ -702,6 +723,29 @@
         <type>Phone</type>
     </fields>
     <fields>
+        <fullName>DonationCampaignImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Campaign Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>DonationCampaignImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.CampaignId</inlineHelpText>
+        <label>Donation Campaign Source</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>NPSP Data Imports</relationshipLabel>
+        <relationshipName>Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>DonationImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>Donation Import Status</label>
@@ -733,29 +777,6 @@
         <scale>2</scale>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
-    </fields>
-    <fields>
-        <fullName>DonationCampaignImported__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <externalId>false</externalId>
-        <inlineHelpText>Opportunity.CampaignId</inlineHelpText>
-        <label>Donation Campaign Source</label>
-        <referenceTo>Campaign</referenceTo>
-        <relationshipLabel>NPSP Data Imports</relationshipLabel>
-        <relationshipName>Data_Imports</relationshipName>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
-        <fullName>DonationCampaignImportStatus__c</fullName>
-        <externalId>false</externalId>
-        <label>Donation Campaign Import Status</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Donation_Campaign_Name__c</fullName>
@@ -1264,10 +1285,150 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Payment_Authorized_Date__c</fullName>
+        <description>The date and time the transaction was authorized.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date and time the transaction was authorized.</inlineHelpText>
+        <label>Payment Authorized Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Authorized_UTC_Timestamp__c</fullName>
+        <description>The exact date and time (down to the millisecond) from the payment gateway that this transaction was successfully authorized.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The exact date and time (down to the millisecond) from the payment gateway that this transaction was successfully authorized.</inlineHelpText>
+        <label>Payment Authorized UTC Timestamp</label>
+        <length>30</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Card_Expiration_Month__c</fullName>
+        <description>The expiration month of the card used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The expiration month of the card used for this transaction.</inlineHelpText>
+        <label>Payment Card Expiration Month</label>
+        <length>2</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Card_Expiration_Year__c</fullName>
+        <description>The expiration year of the card used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The expiration year of the card used for this transaction.</inlineHelpText>
+        <label>Payment Card Expiration Year</label>
+        <length>4</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Card_Last_4__c</fullName>
+        <description>The last four digits of the card used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The last four digits of the card used for this transaction.</inlineHelpText>
+        <label>Payment Card Last 4</label>
+        <length>4</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Card_Network__c</fullName>
+        <description>The card network of the card used for this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The card network of the card used for this transaction.</inlineHelpText>
+        <label>Payment Card Network</label>
+        <length>20</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Payment_Check_Reference_Number__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Payment.npe01__Check_Reference_Number__c</inlineHelpText>
         <label>Payment Check/Reference Number</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Elevate_Created_Date__c</fullName>
+        <description>The date and time the transaction was created.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date and time the transaction was created.</inlineHelpText>
+        <label>Payment Elevate Created Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Payment_Elevate_Created_UTC_Timestamp__c</fullName>
+        <description>The exact date and time (down to the millisecond) from Elevate that the transaction was created.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The exact date and time (down to the millisecond) from Elevate that the transaction was created.</inlineHelpText>
+        <label>Payment Elevate Created UTC  Timestamp</label>
+        <length>30</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Elevate_ID__c</fullName>
+        <description>The unique ID for this transaction from Elevate.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The unique ID for this transaction from Elevate.</inlineHelpText>
+        <label>Payment Elevate ID</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Elevate_Original_Payment_ID__c</fullName>
+        <description>For refunds only. Shows the ID of the original payment transaction from Elevate.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>For refunds only. Shows the ID of the original payment transaction from Elevate.</inlineHelpText>
+        <label>Payment Elevate Original Payment ID</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Gateway_ID__c</fullName>
+        <description>The ID of the payment gateway that processed this transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ID of the payment gateway that processed this transaction.</inlineHelpText>
+        <label>Payment Gateway ID</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Gateway_Payment_ID__c</fullName>
+        <description>The unique ID for this transaction from the payment gateway.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The unique ID for this transaction from the payment gateway.</inlineHelpText>
+        <label>Payment Gateway Payment ID</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -1286,12 +1447,60 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Payment_Origin_ID__c</fullName>
+        <description>The ID for the system where the transaction was initiated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The ID for the system where the transaction was initiated.</inlineHelpText>
+        <label>Payment Origin ID</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Origin_Name__c</fullName>
+        <description>The name of the system where the transaction was initiated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The name of the system where the transaction was initiated.</inlineHelpText>
+        <label>Payment Origin Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Origin_Type__c</fullName>
+        <description>The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.</inlineHelpText>
+        <label>Payment Origin Type</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Payment_Possible_Matches__c</fullName>
         <description>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</inlineHelpText>
         <label>Payment Possible Matches</label>
         <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Payment_Type__c</fullName>
+        <description>Indicates the type of transaction.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Indicates the type of transaction.</inlineHelpText>
+        <label>Payment Type</label>
+        <length>40</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -1309,6 +1518,11 @@
         <valueSet>
             <valueSetDefinition>
                 <sorted>false</sorted>
+                <value>
+                    <fullName>Ready To Process</fullName>
+                    <default>false</default>
+                    <label>Ready to Process</label>
+                </value>
                 <value>
                     <fullName>Imported</fullName>
                     <default>false</default>
