@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { dispatch, handleError, generateId, showToast } from 'c/utilTemplateBuilder';
-import { format, sort, deepClone, checkNestedProperty } from 'c/utilCommon';
+import { format, deepClone, checkNestedProperty } from 'c/utilCommon';
 import LibsMoment from 'c/libsMoment';
 import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
@@ -40,6 +40,7 @@ const BATCHES = 'Batches';
 const SLDS_ICON_CATEGORY_STANDARD = 'standard';
 const DEFAULT_INCREMENT_BY = 10;
 const DEFAULT_LIMIT = 10;
+const DEFAULT_ORDER_BY = 'LastModifiedDate DESC, Id ASC';
 const MAX_RECORDS = 2000;
 const NAME = 'Name';
 const USER = 'User';
@@ -49,7 +50,7 @@ const SAVE = 'save';
 const EXCLUDED_COLUMN_HEADERS = [
     'CloneSourceId',
     'SystemModstamp'
-]
+];
 
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 
@@ -86,6 +87,7 @@ export default class geListView extends LightningElement {
     columnHeadersByFieldApiName;
     currentUserId;
     isLoaded = false;
+    hasAdditionalRows = false;
 
     @wire(getRecord, { recordId: userId, fields: [USER_TIMEZONE_SID_KEY_FIELD] })
     wiredUserRecord;
@@ -98,7 +100,7 @@ export default class geListView extends LightningElement {
     }
 
     get hasCustomTitle() {
-        return this.title ? true : false;
+        return this.title && this.title.length > 0;
     }
 
     get iconName() {
@@ -149,15 +151,17 @@ export default class geListView extends LightningElement {
     }
 
     get isShowStandardFooter() {
-        const showFooter =
-            this.showStandardFooter === 'true' ||
+        return this.showStandardFooter === 'true' ||
             this.showStandardFooter === true ||
             this.showStandardFooter === 1;
-        return showFooter ? true : false;
     }
 
     get hasRecords() {
-        return this.recordsToDisplay && this.recordsToDisplay.length > 0 ? true : false;
+        return this.recordsToDisplay && this.recordsToDisplay.length > 0;
+    }
+
+    get showViewMore() {
+        return this.hasRecords && this.hasAdditionalRows;
     }
 
     /*******************************************************************************
@@ -219,7 +223,7 @@ export default class geListView extends LightningElement {
                 handleError(error);
             });
         this.isLoading = false;
-    }
+    };
 
     @wire(getObjectInfo, { objectApiName: '$objectApiName' })
     wiredObjectInfo(response) {
@@ -277,7 +281,7 @@ export default class geListView extends LightningElement {
     getRecords = async (columns) => {
         const fields = columns.filter(column => column.fieldApiName).map(column => column.fieldApiName);
         if (fields.length > 0) {
-            let orderBy = null;
+            let orderBy = DEFAULT_ORDER_BY;
             if (this.sortedBy && this.sortedDirection) {
                 const columnEntry = this.columnEntriesByName[this.sortedBy];
                 let orderedByFieldApiName;
@@ -293,19 +297,25 @@ export default class geListView extends LightningElement {
                 }
             }
 
-            let formTemplates = await retrieveRecords({
+            const records = await retrieveRecords({
                 selectFields: fields,
                 sObjectApiName: this.objectApiName,
                 orderByClause: orderBy,
-                limitClause: this.limit
+                limitClause: this.limit + 1
             })
                 .catch(error => {
                     handleError(error);
                 });
 
-            this.setDatatableRecordsForImperativeCall(formTemplates);
+            if(records.length > this.limit) {
+                this.hasAdditionalRows = true;
+                this.setDatatableRecordsForImperativeCall(records.slice(0,-1));
+            } else {
+                this.hasAdditionalRows = false;
+                this.setDatatableRecordsForImperativeCall(records);
+            }
         }
-    }
+    };
 
     /*******************************************************************************
     * @description Method retrieves the column header data held in the List Custom
@@ -319,7 +329,7 @@ export default class geListView extends LightningElement {
             .catch(error => {
                 handleError(error);
             });
-    }
+    };
 
     /*******************************************************************************
     * @description Method sets the columnHeadersByFieldApiName map. Map conatains
@@ -617,9 +627,9 @@ export default class geListView extends LightningElement {
             });
 
             record[URL] = format(recordUrl, [record.Id]);
-
-            this.records = [...this.records, record];
         });
+
+        this.records = records;
     }
 
     /*******************************************************************************
@@ -656,7 +666,7 @@ export default class geListView extends LightningElement {
             sortedBy = columnEntry.typeAttributes.label.fieldName;
         }
 
-        this.records = sort(this.records, sortedBy, this.sortedDirection, false);
+        this.getRecords(this.columns);
     }
 
     /*******************************************************************************
@@ -678,7 +688,7 @@ export default class geListView extends LightningElement {
         this.limit = NEW_LIMIT < MAX_RECORDS ? NEW_LIMIT : MAX_RECORDS;
 
         this.refresh();
-    }
+    };
 
     /*******************************************************************************
     * @description Method handles dispatches a custom event to the parent component
