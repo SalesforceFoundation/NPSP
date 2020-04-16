@@ -104,6 +104,8 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         TDTM_TriggerHandler.processDML(dmlActions);
         dmlActions = null;
 
+        findMatchingElevateOpps(rds, triggerAction);
+
         evaluateOpportunities(rds, oldRds, triggerAction);
 
         dispatchToIntegrationGateway(rds, oldRds, triggerAction);
@@ -186,6 +188,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     /***
     * @description Validates Recurring Donations data
     * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     */
     public void validate(List<SObject> rds, List<SObject> oldRds, TDTM_Runnable.Action triggerAction) {
@@ -199,6 +202,41 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
                 .withOldRecurringDonations(oldRds)
                 .validateOnChange();
         }
+    }
+
+    /**
+    * @description When new recurring donations are inserted that have a value in the CommitmentId field
+    * launch up a queueable process to look for matching existing Opportunities with that same CommmitmentId.
+    * @param rds Inserted Recurring Donations
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    */
+    private void findMatchingElevateOpps(List<npe03__Recurring_Donation__c> rds, TDTM_Runnable.Action triggerAction) {
+
+        if (triggerAction != Action.AfterInsert) {
+            return;
+        }
+
+        Map<String, Id> rdIdByCommitmentId = new Map<String, Id>();
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (String.isNotBlank(rd.CommitmentId__c)) {
+                rdIdByCommitmentId.put(rd.CommitmentId__c, rd.Id);
+            }
+        }
+
+        if (rdIdByCommitmentId.isEmpty()) {
+            return;
+        }
+
+        RD2_QueueableService.ElevateOpportunityMatcher service
+            = new RD2_QueueableService.ElevateOpportunityMatcher(rdIdByCommitmentId);
+
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+            System.enqueueJob(service);
+
+        } else {
+            service.match();
+        }
+
     }
 
     /***
@@ -232,16 +270,18 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (!rdIds.isEmpty()) {
-            RD2_QueueableService.EvaluateInstallmentOpportunities service =
-                new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds);
+        if (rdIds.isEmpty()) {
+            return;
+        }
 
-            if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-                System.enqueueJob(service);
+        RD2_QueueableService.EvaluateInstallmentOpportunities service =
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds);
 
-            } else {
-                service.executeOppEvaluationService();
-            }
+        if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+            System.enqueueJob(service);
+
+        } else {
+            service.executeOppEvaluationService();
         }
     }
 
