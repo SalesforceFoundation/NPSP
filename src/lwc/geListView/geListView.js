@@ -289,30 +289,32 @@ export default class geListView extends LightningElement {
                 if (columnEntry) {
                     if (checkNestedProperty(this.columnEntriesByName[this.sortedBy],
                         'typeAttributes', 'label', 'fieldName')) {
+                        debugger;
                         orderedByFieldApiName = columnEntry.typeAttributes.label.fieldName;
                     } else {
-                        orderedByFieldApiName = columnEntry.fieldName;
+                        orderedByFieldApiName = columnEntry.fieldApiName;
                     }
                     orderBy = `${orderedByFieldApiName} ${this.sortedDirection}`;
                 }
             }
-
-            const records = await retrieveRecords({
-                selectFields: fields,
-                sObjectApiName: this.objectApiName,
-                orderByClause: orderBy,
-                limitClause: this.limit + 1
-            })
-                .catch(error => {
-                    handleError(error);
+            try {
+                const records = await retrieveRecords({
+                    selectFields: fields,
+                    sObjectApiName: this.objectApiName,
+                    orderByClause: orderBy,
+                    limitClause: this.limit + 1
                 });
 
-            if(records.length > this.limit) {
-                this.hasAdditionalRows = true;
-                this.setDatatableRecordsForImperativeCall(records.slice(0,-1));
-            } else {
-                this.hasAdditionalRows = false;
-                this.setDatatableRecordsForImperativeCall(records);
+                if (records.length > this.limit) {
+                    this.hasAdditionalRows = true;
+                    this.setDatatableRecordsForImperativeCall(records.slice(0, -1));
+                } else {
+                    this.hasAdditionalRows = false;
+                    this.setDatatableRecordsForImperativeCall(records);
+                }
+
+            } catch (error) {
+                handleError(error);
             }
         }
     };
@@ -445,7 +447,7 @@ export default class geListView extends LightningElement {
                 fieldApiName: fieldDescribe.apiName,
                 label: fieldDescribe.label,
                 sortable: fieldDescribe.sortable
-            }
+            };
 
             columnEntry = this.handleReferenceTypeFields(fieldDescribe, columnEntry);
 
@@ -460,7 +462,7 @@ export default class geListView extends LightningElement {
                 'double': 'number',
                 'datetime': 'date',
                 'date': 'date-local'
-            }
+            };
             const convertedType = types[fieldDescribe.dataType.toLowerCase()];
 
             columnEntry.fieldName = fieldApiName;
@@ -570,7 +572,7 @@ export default class geListView extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
             })
-    }
+    };
 
     /*******************************************************************************
     * @description Method prepares the provided column headers to be saved.
