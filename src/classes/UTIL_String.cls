@@ -84,21 +84,24 @@ public class UTIL_String {
     /**
     * @description Builds an internal URL string from a fully composed URL and also sanitizes an existing internal URL
     * @param url The url to be sanitized
-    * @return String - The new sanitized internal url
+    * @return String - The new sanitized internal url. If the fully qualified url is invalid, the method returns null.
     */
     public static String getInternalUrlPath(String url) {
-        String internalUrl = '';
+        try {
 
-        if (url.startsWith('/')) {
-            internalUrl = '/' + url.replaceFirst('/+', '');
-        } else {
+            String internalUrl = '';
 
-            try {
-                internalUrl = new URL(url).getPath();
-            } catch(Exception pokemon) {
-                internalUrl = null;
+            if (url.startsWith('/')) {
+                internalUrl = '/' + url.replaceFirst('/+', '');
+            } else {
+                internalUrl = new Url(url).getPath();
             }
+
+            return internalUrl;
+
+        } catch(Exception pokemon) {
+
+            return null;
         }
-        return internalUrl;
     }
 }
