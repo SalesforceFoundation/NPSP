@@ -3,9 +3,10 @@ import GeLabelService from 'c/geLabelService';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import getOrgDomain from '@salesforce/apex/GE_GiftEntryController.getOrgDomain';
 import { format } from 'c/utilCommon';
+import { fireEvent } from 'c/pubsubNoPageRef';
 import { isFunction } from 'c/utilCommon';
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
+import { EVENT_TYPE_PAYMENT_ERROR, WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
 
 const TOKENIZE_TIMEOUT = 10000; // 10 seconds
 
@@ -78,7 +79,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @param {object} message: Message received from iframe
     */
     async handleMessage(message) {
-        fireEvent(null, 'tokenResponse', message);
         if (message.error) {
             this.alert = {
                 theme: 'error',
@@ -103,7 +103,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             let formattedErrorResponse = format(this.CUSTOM_LABELS.gePaymentProcessError, labelReplacements);
             let splitErrorResponse = formattedErrorResponse.split('/newline/');
 
-            fireEvent(null, 'paymentError', {
+            fireEvent(null, EVENT_TYPE_PAYMENT_ERROR, {
                error: {
                    message: splitErrorResponse,
                    isObject: isObject

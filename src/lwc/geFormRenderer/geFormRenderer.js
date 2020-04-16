@@ -49,7 +49,7 @@ import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import { WIDGET_TYPE_DI_FIELD_VALUE } from 'c/geConstants';
+import {EVENT_TYPE_PAYMENT_ERROR, WIDGET_TYPE_DI_FIELD_VALUE} from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -158,7 +158,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
-        registerListener('paymentError', this.handlePaymentError, this)
+        registerListener(EVENT_TYPE_PAYMENT_ERROR, this.handlePaymentError, this);
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
