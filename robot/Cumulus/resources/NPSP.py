@@ -735,17 +735,15 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locators=npsp_lex_locators['payments']['no_payments']
         list_ele=self.selenium.get_webelements(locators)
         l_no_payments = len(list_ele)
-        #return list_ele
-        #return l_no_payments, self.t_loc
-        #if self.t_loc == l_no_payments:
         for element in list_ele:
             payment_com=self.selenium.get_webelement(element).text
             cc=payment_com.replace("$","")
             if cc == str(self.val) and self.t_loc == l_no_payments :
-                return 'pass'
+                result = 'pass'
             #return cc, self.val
             else:
-                return "fail"
+                result = "fail"
+        assert result == 'pass', "Expected payment value not present."
         
 
         
