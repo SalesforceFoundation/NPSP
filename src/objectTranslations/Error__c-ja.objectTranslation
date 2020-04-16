@@ -45,13 +45,13 @@
         <name>Record_URL__c</name>
     </fields>
     <fields>
-        <help><!-- The Salesforce ID of the record associated with this error. --></help>
-        <label><!-- Related Record ID --></label>
+        <help>このエラーに関連付けられているレコードの Salesforce ID。</help>
+        <label>関連レコード ID</label>
         <name>Related_Record_ID__c</name>
     </fields>
     <fields>
-        <help><!-- When selected, indicates that the record specified in Related Record ID will be reprocessed in the next scheduled process. If reprocessing succeeds, this field is then deselected. Applies to specific types of errors that occur during scheduled processes. --></help>
-        <label><!-- Retry Pending? --></label>
+        <help>オンになっていると、[関連レコード ID] で指定されたレコードが、スケジュールされている次回のプロセスで再処理されることを示します。再処理に成功すると、この項目はオフになります。スケジュールされているプロセスで発生する特定のエラー種別に適用されます。</help>
+        <label>保留中を再試行?</label>
         <name>Retry_Pending__c</name>
     </fields>
     <fields>
