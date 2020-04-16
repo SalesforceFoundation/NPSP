@@ -396,6 +396,17 @@ public with sharing class UTIL_Permissions {
         return canCreate(String.valueOf(sObjType), false);
     }
 
+    /***
+    * @description Determines whether the running user has delete permissions for the object
+    * provided
+    *
+    * @param sObjType the sObjectType to check delete permissions
+    * @return Boolean true when the user has permissions for the SObjType provided
+    */
+    public Boolean canDelete(SObjectType sObjType) {
+        return canDelete(String.valueOf(sObjType), false);
+    }
+
     /*******************************************************************************************************************
     * @description Determines whether the running user has update permissions on the sObject and fields provided
     *
