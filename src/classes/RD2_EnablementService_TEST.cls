@@ -205,7 +205,6 @@ public with sharing class RD2_EnablementService_TEST {
         RD2_EnablementService service = new RD2_EnablementService();
         setCustomizableRollups(false);
         RD2_EnablementService.isUserRunningLightning = true;
-        setPilotEnabledFeatureParameter(true);
 
         System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
     }
@@ -220,22 +219,6 @@ public with sharing class RD2_EnablementService_TEST {
 
         setCustomizableRollups(true);
         RD2_EnablementService.isUserRunningLightning = false;
-        setPilotEnabledFeatureParameter(true);
-
-        System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
-    }
-
-    /****
-    * @description Verifies enhanced Recurring Donations are not ready for enablement
-    * when PilotEnabled feature parameter is false
-    */
-    @isTest
-    private static void shouldNotActivateEnhancementWhenPilotEnabledIsFalse() {
-        RD2_EnablementService service = new RD2_EnablementService();
-
-        setCustomizableRollups(true);
-        RD2_EnablementService.isUserRunningLightning = true;
-        setPilotEnabledFeatureParameter(false);
 
         System.assertEquals(false, service.isRecurringDonations2Ready(), 'Enhancement should not be ready');
     }
@@ -244,7 +227,6 @@ public with sharing class RD2_EnablementService_TEST {
     * @description Verifies enhanced Recurring Donations can be enabled
     * when Customizable Rollups are enabled
     * and LEX is enabled
-    * and PilotEnabled feature parameter is set to true
     */
     @isTest
     private static void shouldActivateEnhancementWhenAllDependenciesAreCompleted() {
@@ -252,55 +234,33 @@ public with sharing class RD2_EnablementService_TEST {
 
         setCustomizableRollups(true);
         RD2_EnablementService.isUserRunningLightning = true;
-        setPilotEnabledFeatureParameter(true);
 
         System.assertEquals(true, service.isRecurringDonations2Ready(), 'Enhancement should be ready');
     }
 
     /****
-    * @description Verifies enhanced Recurring Donations are enabled
-    * when enablement override is set
-    */
-    @isTest
-    private static void shouldEnableEnhancementWhenOverrideIsTrue() {
-        RD2_EnablementService.isRecurringDonations2EnabledOverride = true;
-
-        setPilotEnabledFeatureParameter(false);
-
-        System.assertEquals(true, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should be enabled');
-    }
-
-    /****
-    * @description Verifies enhanced Recurring Donations are not enabled
+    * @description Verifies enhanced Recurring Donations are ready for enablement
     * when PilotEnabled feature parameter is false
     */
     @isTest
-    private static void shouldNotEnableEnhancementWhenPilotEnabledIsFalse() {
+    private static void shouldActivateEnhancementWhenPilotEnabledIsFalse() {
+        RD2_EnablementService service = new RD2_EnablementService();
+
+        setCustomizableRollups(true);
+        RD2_EnablementService.isUserRunningLightning = true;
         setPilotEnabledFeatureParameter(false);
-        configureRecurringDonations2Enabled();
 
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should not be enabled');
+        System.assertEquals(true, service.isRecurringDonations2Ready(), 
+            'Enhancement should be ready for enablement regardless of the PilotEnabled value');
     }
 
     /****
-    * @description Verifies enhanced Recurring Donations are not enabled
-    * when enhanced Recurring Donations are not configured
+    * @description Verifies enhanced Recurring Donations can be enabled
+    * when PilotEnabled feature parameter is false
     */
     @isTest
-    private static void shouldNotEnableEnhancementWhenNotConfigured() {
-        setPilotEnabledFeatureParameter(true);
-
-        System.assertEquals(false, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should not be enabled');
-    }
-
-    /****
-    * @description Verifies enhanced Recurring Donations are enabled
-    * when PilotEnabled feature parameter is set to true
-    * and enhanced Recurring Donations are configured
-    */
-    @isTest
-    private static void shouldEnableEnhancementWhenDependenciesAreCompleted() {
-        setPilotEnabledFeatureParameter(true);
+    private static void shouldEnableEnhancementWhenPilotEnabledIsFalse() {
+        setPilotEnabledFeatureParameter(false);
         configureRecurringDonations2Enabled();
 
         System.assertEquals(true, RD2_EnablementService.isRecurringDonations2Enabled, 'Enhancement should be enabled');
