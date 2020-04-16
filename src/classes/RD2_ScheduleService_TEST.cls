@@ -1548,7 +1548,7 @@ private with sharing class RD2_ScheduleService_TEST {
             2 => Date.newInstance(2021, 3, 29)
         };
 
-        testAndAssertVisualizedInstallments(startDate, dayOfMonth, nextDonationDateByIndex);
+        testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, startDate, dayOfMonth, nextDonationDateByIndex);
     }
 
     /***
@@ -1564,7 +1564,7 @@ private with sharing class RD2_ScheduleService_TEST {
             1 => Date.newInstance(2021, 3, 29)
         };
 
-        testAndAssertVisualizedInstallments(startDate, dayOfMonth, nextDonationDateByIndex);
+        testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, startDate, dayOfMonth, nextDonationDateByIndex);
     }
 
     /***
@@ -1581,7 +1581,7 @@ private with sharing class RD2_ScheduleService_TEST {
             2 => Date.newInstance(2020, 3, 30)
         };
 
-        testAndAssertVisualizedInstallments(startDate, dayOfMonth, nextDonationDateByIndex);
+        testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, startDate, dayOfMonth, nextDonationDateByIndex);
     }
 
     /***
@@ -1597,7 +1597,44 @@ private with sharing class RD2_ScheduleService_TEST {
             1 => Date.newInstance(2020, 3, 30)
         };
 
-        testAndAssertVisualizedInstallments(startDate, dayOfMonth, nextDonationDateByIndex);
+        testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, startDate, dayOfMonth, nextDonationDateByIndex);
+    }
+
+    /***
+    * @description Verifies visualization works as expected with yearly frequency beginning 2/29 of leap year
+    */
+    @isTest
+    private static void shouldReturnExpectedYearlyNextDonationDatesFebruary29InLeapYear() {
+        final Date startDate = Date.newInstance(2020, 2, 29);
+
+        Map<Integer, Date> nextDonationDateByIndex = new Map<Integer, Date>{
+            0 => Date.newInstance(2020, 2, 29),
+            1 => Date.newInstance(2021, 2, 28),
+            2 => Date.newInstance(2022, 2, 28),
+            3 => Date.newInstance(2023, 2, 28),
+            4 => Date.newInstance(2024, 2, 29),
+            5 => Date.newInstance(2025, 2, 28)
+        };
+
+        testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_YEARLY, startDate, null, nextDonationDateByIndex);
+    }
+
+    /***
+    * @description Verifies visualization works as expected with yearly frequency beginning 2/28 of non-leap year
+    */
+    @isTest
+    private static void shouldReturnExpectedYearlyNextDonationDatesFebruary29InNonLeapYear() {
+        final Date startDate = Date.newInstance(2021, 2, 28);
+
+        Map<Integer, Date> nextDonationDateByIndex = new Map<Integer, Date>{
+            0 => Date.newInstance(2021, 2, 28),
+            1 => Date.newInstance(2022, 2, 28),
+            2 => Date.newInstance(2023, 2, 28),
+            3 => Date.newInstance(2024, 2, 28),
+            4 => Date.newInstance(2025, 2, 28)
+        };
+
+        testAndAssertVisualizedInstallments(RD2_Constants.INSTALLMENT_PERIOD_YEARLY, startDate, null, nextDonationDateByIndex);
     }
 
 
@@ -1607,20 +1644,30 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /***
     * @description Creates data and verifies the visualized installments have expected next donation dates
+    * @param installmentPeriod Recurring donation installment period
     * @param startDate Start date to set on Recurring Donation
     * @param dayOfMonth Day of month to set on the Recurring Donation
     * @param nextDonationDateByIndex Next Donation Date by the visualized installment list index
     * @return void
     */
-    private static void testAndAssertVisualizedInstallments(Date startDate, String dayOfMonth, Map<Integer, Date> nextDonationDateByIndex) {
+    private static void testAndAssertVisualizedInstallments(String installmentPeriod, Date startDate, String dayOfMonth, Map<Integer, Date> nextDonationDateByIndex) {
         final Integer numberOfInstallments = nextDonationDateByIndex.size();
+        npe03__Recurring_Donation__c rd;
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ScheduleService service = getScheduleServiceForCurrentDate(startDate);
 
-        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder()
-            .withDayOfMonth(dayOfMonth)
-            .build();
+        if (installmentPeriod == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+            rd = getRecurringDonationMonthlyBuilder()
+                .withDayOfMonth(dayOfMonth)
+                .build();
+        }
+
+        else if (installmentPeriod == RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
+            rd = getRecurringDonationYearlyBuilder()
+                .withStartDate(startDate)
+                .build();
+        }
 
         Test.startTest();
         insert rd;
@@ -1644,6 +1691,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /****
     * @description Returns Recurring Donation with Yearly Installment Period
+    * @return TEST_RecurringDonationBuilder
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationYearlyBuilder() {
         return getRecurringDonationBaseBuilder()
@@ -1652,6 +1700,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /****
     * @description Returns Recurring Donation with Monthly Installment Period
+    * @return TEST_RecurringDonationBuilder
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationMonthlyBuilder() {
         return getRecurringDonationBaseBuilder()
@@ -1661,6 +1710,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /****
     * @description Returns Recurring Donation with Weekly Installment Period
+    * @return TEST_RecurringDonationBuilder
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationWeeklyBuilder() {
         return getRecurringDonationBaseBuilder()
@@ -1669,6 +1719,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /****
     * @description Returns Recurring Donation with Daily Installment Period
+    * @return TEST_RecurringDonationBuilder
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationDailyBuilder() {
         return getRecurringDonationBaseBuilder()
@@ -1677,6 +1728,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /****
     * @description Returns Recurring Donation with 1st and 15th Installment Period
+    * @return TEST_RecurringDonationBuilder
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationFirstAndFifteenthBuilder() {
         return getRecurringDonationBaseBuilder()
@@ -1685,6 +1737,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /****
     * @description Returns Recurring Donation with default values
+    * @return TEST_RecurringDonationBuilder
     */
     private static TEST_RecurringDonationBuilder getRecurringDonationBaseBuilder() {
         return TEST_RecurringDonationBuilder.constructEnhancedBuilder()
@@ -1698,6 +1751,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /****
     * @description Returns Schedule Service with current date override
+    * @return RD2_ScheduleService
     */
     private static RD2_ScheduleService getScheduleServiceForCurrentDate(Date currentDate) {
         RD2_ScheduleService.currentDate = currentDate;
@@ -1720,6 +1774,7 @@ private with sharing class RD2_ScheduleService_TEST {
 
     /****
     * @description Returns contact record
+    * @return Contact
     */
     private static Contact getContact() {
         return [
