@@ -662,9 +662,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         if  self.t_loc == int(no_payments):
             for i in list_payments:
                 self.selenium.page_should_contain_element(i)
-            return str(self.t_loc)
+            actual_payments = str(self.t_loc)
         else:
-            return str(self.t_loc)
+            actual_payments = str(self.t_loc)
+        assert no_payments == actual_payments, "Expected {} number of payment but found {}".format(no_payments,actual_payments)
 
     def verify_date_split(self,date, no_payments, interval):
         ddate=[]
@@ -734,17 +735,14 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locators=npsp_lex_locators['payments']['no_payments']
         list_ele=self.selenium.get_webelements(locators)
         l_no_payments = len(list_ele)
-        #return list_ele
-        #return l_no_payments, self.t_loc
-        #if self.t_loc == l_no_payments:
         for element in list_ele:
             payment_com=self.selenium.get_webelement(element).text
             cc=payment_com.replace("$","")
             if cc == str(self.val) and self.t_loc == l_no_payments :
-                return 'pass'
-            #return cc, self.val
+                result = 'pass'
             else:
-                return "fail"
+                result = "fail"
+        assert result == 'pass', "Expected payment value not present."
         
 
         
@@ -1247,6 +1245,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.selenium.execute_javascript(javascript)
         time.sleep(2)
         self.npsp.click_button_with_value(value)
+        time.sleep(1)
 
     def setupdata(self, name, contact_data=None, opportunity_data=None, account_data=None, payment_data=None, engagement_data=None,
                   recurringdonation_data=None, gau_data=None):
