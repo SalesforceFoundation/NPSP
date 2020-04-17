@@ -148,7 +148,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
 
         this.dataImportRecord = await upsertDataImport({ dataImport: inMemoryDataImport });
-    }
+    };
 
     /*******************************************************************************
     * @description Re-apply Data Import id and relevant payment/elevate fields.

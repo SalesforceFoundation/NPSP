@@ -49,7 +49,7 @@ import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation
 import OPP_PAYMENT_AMOUNT
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Payment_Amount__c';
 import SCHEDULED_DATE from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
-import {EVENT_TYPE_PAYMENT_ERROR, WIDGET_TYPE_DI_FIELD_VALUE} from 'c/geConstants';
+import {WIDGET_TYPE_DI_FIELD_VALUE} from 'c/geConstants';
 
 
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -158,7 +158,6 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
     connectedCallback() {
         registerListener('widgetData', this.handleWidgetData, this);
-        registerListener(EVENT_TYPE_PAYMENT_ERROR, this.handlePaymentError, this);
 
         if (this.batchId) {
             // When the form is being used for Batch Gift Entry, the Form Template JSON
@@ -298,7 +297,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
                 }
             }));
         }
-    }
+    };
 
     /*******************************************************************************
     * @description Handles errors for the Single Gift Entry save flow.
@@ -450,8 +449,15 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
 
-            let inMemoryDataImport =
-                await this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
+            let inMemoryDataImport;
+            try {
+                inMemoryDataImport = await this.buildDataImportFromSections(sectionsList, this.selectedDonationDataImportFieldValues);
+            } catch(ex) {
+                // exceptions that we expect here are all async widget-related
+                this.handleAsyncWidgetError(ex);
+                return;
+            }
+
             // handle save depending mode
             if (this.batchId) {
                 this.handleSaveBatchGiftEntry(inMemoryDataImport, formControls);
@@ -870,8 +876,8 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * Handle payment errors at the form level
      * @param event The paymentError event object
      */
-    handlePaymentError(event) {
-        let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null
+    handleAsyncWidgetError(event) {
+        let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null;
         let errorObjects = [];
         if(event.error.isObject) {
             // Represents the error response returned from payment services
@@ -889,7 +895,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
             errorMessage: event.error.message[0],
             multilineMessages: isNotEmpty(errorObjects) ? errorObjects : errorResponse
         }];
-
+        this.showSpinner = false;
         this.hasPageLevelError = true;
     }
 
@@ -969,13 +975,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
 
             // diFieldValues is an array of objects where the key is the field name
             // and the value is the value to be stored
-            let diFieldValuesArray;
-            try {
-                diFieldValuesArray = await Promise.all(diFieldPayloads);
-            } catch (ex) {
-                // ex will be whatever was sent to the reject() function in the original promise
-                // TODO: handle payment error here: handlePaymentError(ex);
-            }
+            const diFieldValuesArray = await Promise.all(diFieldPayloads);
             let additionalObjectValues = {};
 
             diFieldValuesArray.forEach(fieldValues => {
