@@ -126,6 +126,10 @@ private class RD2_OpportunityEvaluation_TEST {
             'Next Year Value should be zero for a Closed RD');
     }
 
+    /**
+    * @description Verifies no opportunity is created on RD insert when elevate integration
+    * is enabled and RD have commitment Id.
+    */
     @IsTest
     private static void shouldNotCreateFutureOppWhenRDIsFromElevateIntegration() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();

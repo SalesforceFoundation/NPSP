@@ -413,9 +413,9 @@ private class RD2_OpportunityEvaluationService_TEST {
             'The installment Opportunity should be created: ' + opps);
     }
 
-     /**
-    * @description Verifies on installment Opportunity is created on RD insert
-    * when Installment Auto Creation Setting is set to Always Create Next Installment.
+    /**
+    * @description Verifies no opportunity is created on RD insert when elevate integration
+    * is enabled and RD is created with commitment Id.
     */
     @IsTest
     private static void shouldNotCreateFutureOppWhenRDisFromElevateWithCommitmentID() {
@@ -431,6 +431,10 @@ private class RD2_OpportunityEvaluationService_TEST {
 
     }
 
+    /**
+    * @description Verifies opportunity is created on RD insert when elevate integration
+    * is enabled and RD is created without commitment Id.
+    */
     @IsTest
     private static void shouldCreateFutureOppWhenRDisFromElevateWithoutCommitmentId() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -447,6 +451,10 @@ private class RD2_OpportunityEvaluationService_TEST {
 
     }
 
+    /**
+    * @description Verifies opportunity is created on RD insert when elevate integration
+    * is disabled and RD is created with commitment Id.
+    */
     @IsTest
     private static void shouldCreateFutureOppWhenRDIsNotFromElevateWithCommitmentId() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
