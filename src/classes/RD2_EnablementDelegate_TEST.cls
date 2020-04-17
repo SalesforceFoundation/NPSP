@@ -521,14 +521,14 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @description Verifies that when a legacy RD exists, the enablement page should load the full version 
     */
     @isTest
-    private static void shouldIndicateStandardPageConfigWhenLegacyRdExists() {
+    private static void shouldIndicateFullPageConfigWhenLegacyRdExists() {
         insert getLegacyRecurringDonationBuilder(getContact().Id).build();
 
         Test.startTest();
         Boolean isSimpleVersion = RD2_EnablementDelegate_CTRL.isSimpleVersion;
         Test.stopTest();
 
-        System.assert(!isSimpleVersion, 'The enablement page should be in standard version when a legacy RD exists');
+        System.assert(!isSimpleVersion, 'The enablement page should be in full version when a legacy RD exists');
     }
 
     /***
