@@ -13,6 +13,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         Waits for the current page to be a Manage Household page
         """
         self.selenium.wait_until_location_contains("/one",timeout=60, message="Manage Household page did not load in 1 min")
+        self.npsp.wait_for_locator("frame","Manage Household")
 
 
     def _go_to_page(self, filter_name=None):
