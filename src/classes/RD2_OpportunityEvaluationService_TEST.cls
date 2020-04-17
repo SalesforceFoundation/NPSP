@@ -419,10 +419,8 @@ private class RD2_OpportunityEvaluationService_TEST {
     */
     @IsTest
     private static void shouldNotCreateFutureOppWhenRDisFromElevateWithCommitmentID() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Boolean isEnabled = true;
-        mockperms.withIsIntegrationEnabled(isEnabled);
+        mockperms.withIsIntegrationEnabled(true);
 
         List<Opportunity> opps = testDataForElevateRD(mockperms, MOCK_COMMITMENT_ID);
 
@@ -437,10 +435,8 @@ private class RD2_OpportunityEvaluationService_TEST {
     */
     @IsTest
     private static void shouldCreateFutureOppWhenRDisFromElevateWithoutCommitmentId() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Boolean isEnabled = true;
-        mockperms.withIsIntegrationEnabled(isEnabled);
+        mockperms.withIsIntegrationEnabled(true);
 
         Id MockId = null;
         List<Opportunity> opps = testDataForElevateRD(mockperms, MockId);
@@ -457,10 +453,8 @@ private class RD2_OpportunityEvaluationService_TEST {
     */
     @IsTest
     private static void shouldCreateFutureOppWhenRDIsNotFromElevateWithCommitmentId() {
-        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Boolean isEnabled = false;
-        mockperms.withIsIntegrationEnabled(isEnabled);
+        mockperms.withIsIntegrationEnabled(false);
 
         List<Opportunity> opps = testDataForElevateRD(mockperms, MOCK_COMMITMENT_ID);
 
