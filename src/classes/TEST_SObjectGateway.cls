@@ -189,7 +189,8 @@ public class TEST_SObjectGateway {
             'npe03__Recurring_Donation__c',
             'Recurring_Donation_Installment_Number__c',
             'npe01__Contact_Id_for_Role__c',
-            'Primary_Contact__c'
+            'Primary_Contact__c',
+            'CommitmentId__c'
         };
 
 

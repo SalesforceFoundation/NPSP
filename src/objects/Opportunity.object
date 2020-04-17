@@ -846,6 +846,7 @@
     </fields>
     <fields>
         <fullName>CommitmentId__c</fullName>
+        <caseSensitive>false</caseSensitive>
         <description>External identifier for Salesforce.org payment service integration.</description>
         <externalId>true</externalId>
         <inlineHelpText>External identifier for Salesforce.org payment service integration.</inlineHelpText>
@@ -854,6 +855,7 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>DisableContactRoleAutomation__c</fullName>
