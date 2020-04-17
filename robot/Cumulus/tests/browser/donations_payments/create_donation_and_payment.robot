@@ -36,6 +36,9 @@ Create Donation from a Contact
     Go To Page                           Details
     ...                                  Opportunity
     ...                                  object_id=${data}[contact_opportunity][Id]
+    Wait Until Keyword Succeeds          1 minute
+    ...                                  5 seconds
+    ...                                  Ensure Opportunity Details Are Loaded        ${data}[contact_opportunity][Id]        ${data}[contact_opportunity][Name]
     Select Tab                           Related
     Load Related List                    Payments
     Wait Until Loading Is Complete
@@ -43,19 +46,19 @@ Create Donation from a Contact
     Current Page Should Be               Custom                 SchedulePayment
 
     Enter Text Field Value               ${date}
-    Enter Payment Schedule               ${No_of_payments}      ${intervel}    ${frequency}
-    scroll button into view and click using js       Calculate Payments
-    ${value}                             Verify Payment Split   1000           ${No_of_payments}
-    Should be equal as strings           ${value}    ${No_of_payments}
-    Verify Date Split                    ${date}     ${No_of_payments}         ${intervel}
-    scroll button into view and click using js       Create Payments
+    Enter Payment Schedule               ${No_of_payments}      ${intervel}            ${frequency}
+    scroll button into view and click using js                  Calculate Payments
+    Verify Payment Split                 1000                   ${No_of_payments}
+    Verify Date Split                    ${date}                ${No_of_payments}      ${intervel}
+    scroll button into view and click using js                  Create Payments
     Wait until page contains             ${opp_name}
-    Go To Page                           Details
-        ...                              Opportunity
-        ...                              object_id=${data}[contact_opportunity][Id]
-    Wait Until Loading Is Complete
+    Go To Page                           Listing                                       Opportunity
+    Wait Until Keyword Succeeds          1 minute
+    ...                                  5 seconds
+    ...                                  Ensure Opportunity Details Are Loaded        ${data}[contact_opportunity][Id]        ${data}[contact_opportunity][Name]
+
     Validate Related Record Count        Payments                 4
+
     Click ViewAll Related List           Payments
     Wait until page contains             Payments
-    ${flag}                              Verify payment
-    should be equal as strings           ${flag}               pass
+    Verify payment
