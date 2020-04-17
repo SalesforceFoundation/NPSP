@@ -152,7 +152,7 @@ public without sharing class RD2_ScheduleService {
 
     /***
     * @description Determines whether changes to recurring donation should trigger creation of new schedule(s)
-    * @param rd Trigger.new record
+    * @param newRd Trigger.new record
     * @param oldRd Trigger.old record
     * @return Boolean
     */
@@ -477,8 +477,28 @@ public without sharing class RD2_ScheduleService {
             adjusted = addDateUnits(adjusted, adjustedFrequency, schedule.InstallmentPeriod__c);
         }
 
-        if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY && schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
-            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(),adjusted.month()));
+        if (schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+            if (schedule.DayOfMonth__c == null) {
+                return adjusted;
+            }
+            Integer nextDayOfMonth;
+            if (schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
+                Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(adjusted.year(), adjusted.month()))
+            {
+                nextDayOfMonth = Date.daysInMonth(adjusted.year(),adjusted.month());
+            }
+            else {
+                nextDayOfMonth = Integer.valueOf(schedule.DayOfMonth__c);
+            }
+            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), nextDayOfMonth);
+        }
+
+        if (
+            schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_YEARLY &&
+            schedule.StartDate__c.day() != adjusted.day() &&
+            schedule.StartDate__c.day() == Date.daysInMonth(adjusted.year(), adjusted.month())
+        ) {
+            adjusted = Date.newInstance(adjusted.year(), adjusted.month(), Date.daysInMonth(adjusted.year(), adjusted.month()));
         }
 
         return adjusted;
@@ -543,12 +563,15 @@ public without sharing class RD2_ScheduleService {
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
             schedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH))
         {
+            Boolean adjustLastDay = (
+                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ||
+                Integer.valueOf(schedule.DayOfMonth__c) > Date.daysInMonth(nextDate.year(), nextDate.month())
+            );
             nextDate = Date.newInstance(
                 nextDate.year(),
                 nextDate.month(),
-                schedule.DayOfMonth__c == RD2_Constants.DAY_OF_MONTH_LAST_DAY ?
-                    Date.daysInMonth(nextDate.year(), nextDate.month()) :
-                    Integer.valueOf(schedule.DayOfMonth__c)
+                adjustLastDay ? Date.daysInMonth(nextDate.year(), nextDate.month()) :
+                                Integer.valueOf(schedule.DayOfMonth__c)
             );
             nextDate = nextDate >= schedule.StartDate__c ? nextDate : nextDate.addMonths(1);
         }
@@ -587,32 +610,32 @@ public without sharing class RD2_ScheduleService {
     */
     public class ActiveSchedule {
 
-        public Boolean  isCurrent {get;set;}
-        public Id       campaignId {get; set;}
-        public String   campaignName {get; set;}
-        public String   dayOfMonth {get; set;}
-        public Date     endDate {get; set;}
-        public Decimal  installmentAmount {get; set;}
-        public Integer  installmentFrequency {get; set;}
-        public String   installmentPeriod {get; set;}
-        public String   paymentMethod {get; set;}
-        public String   recurringDonationId {get; set;}
-        public Id       scheduleId {get; set;}
-        public Date     startDate {get; set;}
+        public Boolean isCurrent { get; set; }
+        public Id campaignId { get; set; }
+        public String campaignName { get; set; }
+        public String dayOfMonth { get; set; }
+        public Date endDate { get; set; }
+        public Decimal installmentAmount { get; set; }
+        public Integer installmentFrequency { get; set; }
+        public String installmentPeriod { get; set; }
+        public String paymentMethod { get; set; }
+        public String recurringDonationId { get; set; }
+        public Id scheduleId { get; set; }
+        public Date startDate { get; set; }
 
         public ActiveSchedule(RecurringDonationSchedule__c rdSchedule) {
-            isCurrent =             rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
-            campaignId =            rdSchedule.Campaign__c;
-            campaignName =          rdSchedule.Campaign__r.Name;
-            dayOfMonth =            rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
-            endDate =               rdSchedule.EndDate__c;
-            installmentAmount =     rdSchedule.InstallmentAmount__c;
-            installmentFrequency =  rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
-            installmentPeriod =     rdSchedule.InstallmentPeriod__c;
-            paymentMethod =         rdSchedule.PaymentMethod__c;
-            recurringDonationId =   rdSchedule.RecurringDonation__c;
-            scheduleId =            rdSchedule.Id;
-            startDate =             rdSchedule.StartDate__c;
+            isCurrent = rdSchedule.StartDate__c <= RD2_ScheduleService.currentDate ? true : false;
+            campaignId = rdSchedule.Campaign__c;
+            campaignName = rdSchedule.Campaign__r.Name;
+            dayOfMonth = rdSchedule.InstallmentPeriod__c == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ? rdSchedule.DayOfMonth__c : null;
+            endDate = rdSchedule.EndDate__c;
+            installmentAmount = rdSchedule.InstallmentAmount__c;
+            installmentFrequency = rdSchedule.InstallmentFrequency__c != null ? Integer.valueOf(rdSchedule.InstallmentFrequency__c) : null;
+            installmentPeriod = rdSchedule.InstallmentPeriod__c;
+            paymentMethod = rdSchedule.PaymentMethod__c;
+            recurringDonationId = rdSchedule.RecurringDonation__c;
+            scheduleId = rdSchedule.Id;
+            startDate = rdSchedule.StartDate__c;
         }
     }
 
@@ -814,7 +837,8 @@ public without sharing class RD2_ScheduleService {
     * @description Dynamically calculates the schedule end date 
     * based on existing Opportunities and projected installments
     * @param records Opportunity matcher records
-    * @param rdSchedules Schedules on the Recurring Donation record
+    * @param plannedInstallments Number of planned installments
+    * @param paidInstallments Number of paid installments
     * @return Date The fixed-length RD schedule end date
     */
     private Date getScheduleEndDateForFixedLength(List<RD2_OpportunityMatcher.Record> records, Integer plannedInstallments, Integer paidInstallments) {
