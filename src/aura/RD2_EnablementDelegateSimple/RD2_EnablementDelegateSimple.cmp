@@ -195,9 +195,9 @@
                 </div>
             </lightning:card>
         </lightning:layoutItem>
-        <lightning:layoutItem padding="horizontal-small" size="12">
-            <lightning:layout horizontalAlign="spread" multipleRows="true">
-                <lightning:card class="pageSection" aura:id="succuessNextStep">
+        <lightning:layoutItem padding="horizontal-small" size="12" flexibility="auto">
+            <lightning:card class="pageSection" aura:id="succuessNextStep">
+                <lightning:layout horizontalAlign="spread" multipleRows="true">
                     <lightning:layoutItem class="slds-p-left_medium" size="9">
                         <aura:if isTrue="{!v.state.isMetaConfirmed}">
                             <lightning:formattedRichText
@@ -214,8 +214,8 @@
                 
                     <lightning:layoutItem size="3" padding="horizontal-medium" class="slds-p-bottom_xx-large">
                     </lightning:layoutItem>
-                </lightning:card>
-            </lightning:layout>
+                </lightning:layout>
+            </lightning:card>
         </lightning:layoutItem>
     </lightning:layout>
 
