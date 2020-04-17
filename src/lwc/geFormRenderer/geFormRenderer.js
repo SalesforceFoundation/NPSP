@@ -823,7 +823,7 @@ export default class GeFormRenderer extends NavigationMixin(LightningElement) {
      * @param event The paymentError event object
      */
     handlePaymentError(event) {
-        let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null
+        let errorResponse = isNotEmpty(event.error.message[1]) ? event.error.message[1] : null;
         let errorObjects = [];
         if(event.error.isObject) {
             // Represents the error response returned from payment services
