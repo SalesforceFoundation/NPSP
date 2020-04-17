@@ -99,7 +99,7 @@ public class UTIL_String {
 
             return internalUrl;
 
-        } catch(Exception pokemon) {
+        } catch(Exception ex) {
 
             return null;
         }
