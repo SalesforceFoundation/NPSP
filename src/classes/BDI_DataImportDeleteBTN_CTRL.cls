@@ -46,15 +46,12 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     @TestVisible
     private List<DataImport__c> dataImports;
 
-    /** @description True when user can delete data import records */
-    @TestVisible
     public Boolean canDelete {
         get {
-            if (canDelete == null) {
-                canDelete = SObjectType.DataImport__c.isDeletable();
+            if(this.canDelete == null) {
+               this.canDelete = this.checkDelete();
             }
-
-            return canDelete;
+            return this.canDelete;
         }
         private set;
     }
@@ -68,13 +65,8 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
      * @return PageReference Page specified in 'retURL' parameter or Home page
      */
     public PageReference buttonClick() {
-        if (!canDelete) {
-            ApexPages.addMessage(new ApexPages.Message(
-                ApexPages.Severity.ERROR,
-                String.format(
-                    System.Label.exceptionDeletePermission,
-                    new List<String>{ SObjectType.DataImport__c.getLabel() })));
-
+        if (!checkDelete()) {
+            displayDeleteError();
             return null;
         }
 
@@ -93,6 +85,18 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
 
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errMsg)); 
         return null;
+    }
+
+    public Boolean checkDelete() {
+        return UTIL_Permissions.getInstance().canDelete(DataImport__c.SObjectType);
+    }
+
+    private void displayDeleteError() {
+        ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR,
+                String.format(
+                        System.Label.exceptionDeletePermission,
+                        new List<String>{ SObjectType.DataImport__c.getLabel() })));
     }
 
     /** 
@@ -129,9 +133,14 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
         }
 
         try {
-            delete dataImports;
-            return close();
-
+            // avoid using VF view state to check delete permissions
+            if(checkDelete()) {
+                delete dataImports;
+                return close();
+            } else {
+                displayDeleteError();
+                return null;
+            }
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage())); 
             return null; 
