@@ -74,6 +74,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * @param {object} message: Message received from iframe
     */
     async handleMessage(message) {
+        this.alert = {};
         fireEvent(null, 'tokenResponse', message);
         if (message.error) {
             this.alert = {
