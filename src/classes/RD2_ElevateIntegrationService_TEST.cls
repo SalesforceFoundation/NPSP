@@ -37,6 +37,8 @@
 private class RD2_ElevateIntegrationService_TEST {
     private static final String CURRENCY_CAD = 'CAD';
     private static final String CURRENCY_USD = 'USD';
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
+    private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
 
     private static final String COMMITMENT_ID = '0009989378376210918302112371207242332342432';
 
@@ -282,8 +284,85 @@ private class RD2_ElevateIntegrationService_TEST {
             'Non-Elevate user should have permission to change currency on an RD not originated in Elevate');
     }
 
+    /****
+    * @description Verifies that any existing Opps are linked to a new RD if the CommitmentId matches
+    */
+    @isTest
+    private static void shouldLinkOppsToRDMatchingCommitmentId() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        List<Opportunity> opps = new List<Opportunity>{
+            getOpportunityBaseBuilder()
+                .withCommitmentId(COMMITMENT_ID)
+                .build(),
+            getOpportunityBaseBuilder()
+                .withCommitmentId('BAD_ID')
+                .build(),
+            getOpportunityBaseBuilder()
+                .build()
+        };
+        insert opps;
 
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            getRecurringDonationBaseBuilder()
+                .withCommitmentId(COMMITMENT_ID)
+                .build(),
+            getRecurringDonationBaseBuilder()
+                .withCommitmentId('NOTHING')
+                .build(),
+            getRecurringDonationBaseBuilder()
+                .build()
+        };
+
+        Test.startTest();
+        insert rds;
+        Test.stopTest();
+
+        Set<Id> oppIds = new Map<Id, Opportunity>(opps).keySet();
+
+        for (Opportunity opp : oppGateway.getRecords(oppIds)) {
+            if (opp.CommitmentId__c == COMMITMENT_ID) {
+                System.assertEquals(rds[0].Id, opp.npe03__Recurring_Donation__c,
+                    'The Opp.RecurringDonationId should match the related RD');
+            } else {
+                System.assertEquals(null, opp.npe03__Recurring_Donation__c,
+                    'The RecurringDonationId should be null');
+            }
+        }
+
+    }
+
+    /***
+    * @description Verifies that an Opps already linked to an RD is not re-linked to a different RD
+    * if the CommitmentId matches
+    */
+    @isTest
+    private static void shouldNotLinkAlreadyAssignedOppsToRDMatchingCommitmentId() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c otherRd = getRecurringDonationBaseBuilder()
+            .build();
+        insert otherRd;
+
+        Opportunity opp = getOpportunityBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .withRecurringDonation(otherRd.Id)
+            .build();
+        insert opp;
+
+        npe03__Recurring_Donation__c newRd = getRecurringDonationBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .build();
+
+        Test.startTest();
+        insert newRd;
+        Test.stopTest();
+
+        opp = oppGateway.getRecord(opp.Id);
+        System.assertEquals(otherRd.Id, opp.npe03__Recurring_Donation__c,
+            'The Opp.RecurringDonationId should still be linked to the original RD');
+
+    }
 
     // Helpers
     ///////////////////

@@ -112,4 +112,37 @@ public inherited sharing class RD2_ElevateIntegrationService {
         return !isChanged;
     }
 
+
+    /**
+    * @description For each CommitmentId, find any existing Opportunities with the matching Commitmentid
+    * and update the RecuringDonation lookup field (only if null).
+    * @param rdIdByCommitmentId Map by CommitmentId
+    */
+    public void matchRecurringDonationsToOpps(Map<String, Id> rdIdByCommitmentId) {
+
+        if (rdIdByCommitmentId == null || rdIdByCommitmentId.isEmpty()) {
+            return;
+        }
+
+        // Skip the process if the Id does not point to a RecurringDonation record
+        if (rdIdByCommitmentId.values()[0].getSobjectType() != npe03__Recurring_Donation__c.SObjectType) {
+            return;
+        }
+
+        List<Opportunity> oppsToUpdate = new List<Opportunity>();
+        for (Opportunity opp : [SELECT Id, npe03__Recurring_Donation__c, CommitmentId__c
+            FROM Opportunity
+            WHERE CommitmentId__c IN :rdIdByCommitmentId.keySet()
+        ]) {
+            if (opp.CommitmentId__c == null || opp.npe03__Recurring_Donation__c != null) {
+                continue;
+            }
+            opp.npe03__Recurring_Donation__c = rdIdByCommitmentId.get(opp.CommitmentId__c);
+            oppsToUpdate.add(opp);
+        }
+
+        if (!oppsToUpdate.isEmpty()) {
+            UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.Elevate.name());
+        }
+    }
 }

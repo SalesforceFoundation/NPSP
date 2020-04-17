@@ -508,6 +508,18 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
+    * @description Sets CommitmentId field
+    * @param commitmentId  value
+    * @return TEST_RecurringDonationBuilder Builder instance
+    */
+    public TEST_RecurringDonationBuilder withCommitmentId(String commitmentId) {
+        validateMode(Mode.Enhanced);
+
+        valuesByFieldName.put('CommitmentId__c', commitmentId);
+        return this;
+    }
+
+    /***
     * @description Tell the build process to call the getNextDonationDate() method in the ScheduleService
     * @return TEST_RecurringDonationBuilder Builder instance
     */
