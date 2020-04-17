@@ -1,11 +1,14 @@
 import time
+import re
 from cumulusci.robotframework.utils import capture_screenshot_on_error
 from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
+from selenium.common.exceptions import ElementClickInterceptedException
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
 
+OID_REGEX = r"^(%2F)?([a-zA-Z0-9]{15,18})$"
 @pageobject("Landing", "GE_Gift_Entry")
 class GiftEntryLandingPage(BaseNPSPPage, BasePage):
 
@@ -48,6 +51,26 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         elif action=="Delete":
             self.selenium.wait_until_page_does_not_contain(name)     
 
+    def get_template_record_id(self,template):
+        """ Parses the current url to get the object id of the current record.
+            Expects url format like: [a-zA-Z0-9]{15,18}
+        """
+        locator=npsp_lex_locators["link-text"].format(template)
+        element = self.selenium.get_webelement(locator)
+        e=element.get_attribute("href")
+        print(f"url is {e}")
+        for part in e.split("="):
+            oid_match = re.match(OID_REGEX, part)
+            if oid_match is not None:
+                return oid_match.group(2)
+        raise AssertionError("Could not parse record id from url: {}".format(e))
+
+    def store_template_record_id(self,template):
+        """ Parses the template href to get the object id of the current record.
+            Expects url format like: [a-zA-Z0-9]{15,18}
+        """
+        id=self.get_template_record_id(template) 
+        self.salesforce.store_session_record("Form_Template__c",id)   
 
 @pageobject("Template", "GE_Gift_Entry")
 class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
@@ -75,8 +98,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         """Select the specified field under specified object group 
            to add the field to gift entry form and verify field is added"""
         locator=npsp_lex_locators["gift_entry"]["form_object_dropdown"].format(object_group)
-        self.selenium.scroll_element_into_view(locator)
-        self.selenium.click_element(locator)
+        self.salesforce._jsclick(locator)
         element=self.selenium.get_webelement(locator)
         status=element.get_attribute("aria-expanded")
         if status=="false":
@@ -86,29 +108,70 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         self.selenium.click_element(field_checkbox)
         field_label=object_group+': '+field
         self.selenium.wait_until_page_contains(field_label)
+    
 
-    def fill_gift_entry_form(self,**kwargs):
+    @capture_screenshot_on_error                
+    def fill_ge_form(self,**kwargs):
         """"""
-        for key,value in kwargs.items():
-            if value=='checked':
-                field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(key)
-                self.selenium.select_checkbox(field_checkbox)
-            elif value=='unchecked': 
-                field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(key)
-                self.selenium.unselect_checkbox(field_checkbox)   
-            elif "Date" in key:
-                field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
-                self.selenium.click_element(field_loc)
-                locator=npsp_lex_locators["bge"]["datepicker_open"].format(field)  
-                self.selenium.wait_until_page_contains_element(locator)
-                self.selenium.click_button(value)    
-                self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
-            else:
-                loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")   
-                self.selenium.click_element(loc) 
-                popup=npsp_lex_locators["flexipage-popup"]
-                if popup:
-                    
-                
+        for field,option in kwargs.items():
+            for section,value in option.items():
+                if section=="Required":
+                    label=section+" "+field
+                    if value=='checked':
+                        field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(label)
+                        cb_loc=self.selenium.get_webelement(field_checkbox)
+                        if not cb_loc.is_selected():
+                            self.salesforce._jsclick(field_checkbox)
+                    elif value=='unchecked': 
+                        field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(label)
+                        cb_loc=self.selenium.get_webelement(field_checkbox)
+                        if cb_loc.is_selected():
+                            self.salesforce._jsclick(field_checkbox)
+                elif section=="Default Value":
+                    key=section+" "+field
+                    field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
+                    placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
+                    self.selenium.scroll_element_into_view(field_loc)
+                    try:
+                        self.selenium.click_element(field_loc)
+                    except ElementClickInterceptedException:
+                        self.selenium.execute_javascript("window.scrollBy(0,100)")
+                        self.selenium.click_element(field_loc)    
+                    if placeholder=="Select an Option":
+                        popup=npsp_lex_locators["flexipage-popup"]
+                        self.selenium.wait_until_page_contains_element(popup)
+                        option=npsp_lex_locators["span_button"].format(value)
+                        self.selenium.click_element(option)
+                    elif placeholder=="Search...":
+                        self.salesforce.populate_lookup_field(key,value)
+                    elif "Date" in field:
+                        locator=npsp_lex_locators["bge"]["datepicker_open"].format("Opportunity: Close Date")  
+                        self.selenium.wait_until_page_contains_element(locator)
+                        self.selenium.click_button(value)    
+                        self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
+                    else:
+                        self.salesforce._populate_field(field_loc,value) 
+    
+    def add_field_bundle_to_new_section(self,bundle):
+        """"""
+        try:
+            self.selenium.click_button("Add Section")
+        except ElementClickInterceptedException:
+            self.selenium.execute_javascript("window.scrollBy(0,100)")
+            self.selenium.click_button("Add Section")
+        checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(bundle)
+        self.selenium.scroll_element_into_view(checkbox)
+        cb_loc=self.selenium.get_webelement(checkbox)
+        if not cb_loc.is_selected():
+            self.selenium.click_element(checkbox)    
+
+
+
+
+
+
+
+
+                        
 
 

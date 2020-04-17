@@ -244,7 +244,7 @@ npsp_lex_locators={
         'field_mapping':'//input[@name="{}"]',
         'combobox':'//div[contains(@class,"slds-is-open") and @role="combobox"]',
         'footer-btn':"//footer[@class='slds-modal__footer']/button[text()='{}']", 
-        'button':"//button[text()='Create New Field Mapping']",
+        'button':"//button[text()='{}']",
         'field-label':'//lightning-formatted-text[text()="{}"]',
         },
     'modal-form':{
@@ -255,7 +255,7 @@ npsp_lex_locators={
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::{}',
         'actions_dropdown':'//tbody/tr[./th//a[text()="{}"]]/td//button',
         'form_object_dropdown':'//*[@data-qa-locator="{}"]//button',
-        'checkbox':'//*[@data-qa-locator="{}"]//span[@class="slds-checkbox_faux"]',
+        'checkbox':'//*[contains(@data-qa-locator,"{}")]//span[@class="slds-checkbox_faux"]',
         },    
     
 }
