@@ -6238,6 +6238,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The request timed out. Please try again or contact your Salesforce administrator.</value>
     </labels>
     <labels>
+        <fullName>gePaymentServicesConfigError</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Services configuration error</shortDescription>
+        <value>Elevate customer configuration not found. Please complete Elevate onboarding.</value>
+    </labels>
+    <labels>
         <fullName>gePS_IntegrationTestInvalidAPIKey</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

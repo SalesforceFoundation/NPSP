@@ -46,16 +46,44 @@ public class GE_PaymentServices_TEST {
     public static final String GOOD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + GOOD_TOKEN + '"}';
     public static final String BAD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + BAD_TOKEN + '"}';
 
+    private static String testMerchantId = 'abc123-xyz456';
+    private static String testApiKey = 'def1234-tuv4567';
+    private static String testMakanaApiKey = 'ghi12345-qrs45678';
+
+    // Key-Values by service name
+    private static final Map<String, List<Map<String, String>>> testConfig =
+            new Map<String, List<Map<String, String>>>{
+                    GE_PaymentServices.PAYMENTS_SERVICE_NAME =>
+                            new List<Map<String, String>>{
+                                    new Map<String, String>{
+                                            'key' => GE_PaymentServices.SFDO_MERCHANTIDS,
+                                            'value' => testMerchantId
+                                    },
+                                    new Map<String, String>{
+                                            'key' => 'sfdo.roles',
+                                            'value' => 'Payments.Purchase'
+                                    },
+                                    new Map<String, String>{
+                                            'key' => GE_PaymentServices.API_Key,
+                                            'value' => testApiKey
+                                    }
+                            }
+            };
+
     @isTest static void shouldReturnSuccessfulResponse() {
-        // Set mock callout class 
+        PS_IntegrationService.setConfiguration(testConfig);
+
+        // Set mock callout class
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
         DataImport__c dataImport = new DataImport__c();
         dataImport.Donation_Amount__c = 150;
         dataImport.Payment_Authorization_Token__c = GOOD_TOKEN;
 
+        Test.startTest();
         GE_PaymentServices paymentServices = new GE_PaymentServices();
         paymentServices.setPurchaseCallBody(GOOD_PURCHASE_CALL_BODY);
         GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
+        Test.stopTest();
 
         String actualValue = response.body;
         String expectedValue = SUCCESS_RESPONSE_BODY;
@@ -64,15 +92,19 @@ public class GE_PaymentServices_TEST {
     }
 
     @isTest static void shouldReturnFailedResponse() {
-        // Set mock callout class 
+        PS_IntegrationService.setConfiguration(testConfig);
+
+        // Set mock callout class
         Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
         DataImport__c dataImport = new DataImport__c();
         dataImport.Donation_Amount__c = null;
         dataImport.Payment_Authorization_Token__c = BAD_TOKEN;
 
+        Test.startTest();
         GE_PaymentServices paymentServices = new GE_PaymentServices();
         paymentServices.setPurchaseCallBody(BAD_PURCHASE_CALL_BODY);
         GE_PaymentServices.ResponseWrapper response = paymentServices.createTransaction();
+        Test.stopTest();
 
         String actualValue = response.body;
         String expectedValue = FAILED_RESPONSE_BODY;
@@ -96,5 +128,75 @@ public class GE_PaymentServices_TEST {
 
             return res;
         }
+    }
+
+    @IsTest
+    private static void shouldUsePaymentServicesConfig() {
+        PS_IntegrationService.setConfiguration(testConfig);
+
+        Test.startTest();
+        GE_PaymentServices service = new GE_PaymentServices();
+        Test.stopTest();
+
+        // Verify that the config properties of the class are
+        // the same as those of the inserted config records
+        System.assertEquals(testMerchantId,
+                service.config.get(GE_PaymentServices.SFDO_MERCHANTIDS));
+        System.assertEquals(testApiKey, service.config.get(GE_PaymentServices.API_Key));
+    }
+
+    @IsTest
+    private static void shouldThrowConfigNotFoundError() {
+        Boolean exceptionThrown = false;
+        try {
+            // Instantiate GE_PaymentServices when not yet configured
+            GE_PaymentServices paymentServices = new GE_PaymentServices();
+        } catch (GE_PaymentServices.PaymentServicesException pse) {
+            System.assertEquals(System.Label.gePaymentServicesConfigError, pse.getMessage());
+            exceptionThrown = true;
+        }
+        System.assertEquals(true, exceptionThrown,
+                'An Exception should be thrown if' +
+                        'Payment Services has not been configured.');
+    }
+
+    /**
+     * @description When GE_PaymentServices is initialized with its
+     *              default payment service names, it should use the apiKey
+     *              from "makana" set if not found or null in "payments" config set
+    */
+    @IsTest
+    private static void shouldUseMakanaApiKey() {
+        PS_IntegrationService.setConfiguration(testConfig);
+
+        // Set payments Api key to null and set an Api key for makana
+        PS_IntegrationService.setConfiguration(
+                new Map<String, List<Map<String, String>>>{
+                        GE_PaymentServices.PAYMENTS_SERVICE_NAME =>
+                                new List<Map<String, String>>{
+                                        new Map<String, String>{
+                                                'key' => GE_PaymentServices.API_Key,
+                                                'value' => null
+                                        }
+                                },
+                        GE_PaymentServices.MAKANA_SERVICE_NAME =>
+                                new List<Map<String, String>>{
+                                        new Map<String, String>{
+                                                'key' => GE_PaymentServices.API_Key,
+                                                'value' => testMakanaApiKey
+                                        }
+                                }
+                }
+        );
+
+        Test.startTest();
+        GE_PaymentServices service = new GE_PaymentServices();
+        Test.stopTest();
+
+        // Verify apiKey matches makana, while the rest match payments
+        System.assertEquals(testMakanaApiKey,
+                service.config.get(GE_PaymentServices.API_Key));
+        System.assertEquals(testMerchantId,
+                service.config.get(GE_PaymentServices.SFDO_MERCHANTIDS));
     }
 }

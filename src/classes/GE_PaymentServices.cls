@@ -35,15 +35,43 @@
 * @description Class holds payment services related methods.
 */
 public with sharing class GE_PaymentServices {
+    @TestVisible class PaymentServicesException extends Exception {}
 
     PurchaseCallBody purchaseCallBody;
 
-    public GE_PaymentServices() {}
+    // Properties used to configure headers in
+    // HTTP Requests to Elevate payment services
+    @TestVisible static final String API_Key = 'apiKey';
+    @TestVisible static final String BASE_URL = 'baseURL';
+    @TestVisible static final String JWT_TOKEN = 'jwttoken';
+    @TestVisible static final String SFDO_MERCHANTIDS = 'sfdo.merchantids';
+    @TestVisible static final String SFDO_GATEWAYIDS = 'sfdo.gatewayids';
+    @TestVisible protected final String SFDO_ROLES = 'sfdo.roles';
+    @TestVisible static final String SFDO_USERNAME = 'sfdo.username';
+    @TestVisible static final String ELEVATE_SDK = 'elevateSDK';
+    @TestVisible static final String PRODUCTID = 'productId';
+
+    // Names of Payment Service configuration sets
+    @TestVisible static final String PAYMENTS_SERVICE_NAME = 'payments';
+    @TestVisible static final String MAKANA_SERVICE_NAME = 'makana';
+
+    @TestVisible Map<String, String> config;
+
+    public GE_PaymentServices() {
+        config = new Configuration().keyValueMap;
+        if (config.isEmpty()) {
+            throw new PaymentServicesException(System.Label.gePaymentServicesConfigError);
+        }
+    }
 
     public void setPurchaseCallBody(String jsonString) {
         Map<String, Object> requestBodyParameters =
-            (Map<String, Object>) JSON.deserializeUntyped(jsonString);
-        this.purchaseCallBody = new PurchaseCallBody().applyAll(requestBodyParameters);
+                (Map<String, Object>) JSON.deserializeUntyped(jsonString);
+        this.purchaseCallBody = new PurchaseCallBody(
+                'USD',
+                config.get(SFDO_MERCHANTIDS),
+                config.get(SFDO_GATEWAYIDS)
+        ).applyAll(requestBodyParameters);
     }
 
     /*******************************************************************************************************
@@ -57,9 +85,11 @@ public with sharing class GE_PaymentServices {
         request.setEndpoint(getEndpointRoot() + getEndpoint(ElevateEndpoints.PURCHASE));
         request.setMethod('POST');
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-        request.setHeader('jwttoken', getJwt());
-        request.setHeader('sfdo.merchantids', getMerchantIds());
-        request.setHeader('sfdo.username', UserInfo.getUserName());
+        request.setHeader(JWT_TOKEN, getJwt());
+        if (config.get(SFDO_MERCHANTIDS) != null) {
+            request.setHeader(SFDO_MERCHANTIDS, config.get(SFDO_MERCHANTIDS));
+        }
+        request.setHeader(SFDO_USERNAME, UserInfo.getUserName());
 
         // Set the body as a JSON object...
         String purchaseCallBodyString = purchaseCallBody.getAsJson();
@@ -85,33 +115,32 @@ public with sharing class GE_PaymentServices {
         return null;
     }
 
-    // TODO: Get header/secret info from payments configuration hidden sobject
     public String getEndpointRoot() {
-        return 'https://olzivl9ym0.execute-api.us-west-2.amazonaws.com';
+        return config.get(BASE_URL);
     }
 
     public String getJwt() {
-        JWTPayload jwtPayload = new JWTPayload();
-        String jwt = UTIL_Jwt.getSignedJWTFromString(jwtPayload.getAsString(), getJwtSecret());
+        JWTPayload jwtPayload = new JWTPayload(this);
+        String jwt = UTIL_Jwt.getSignedJWTFromString(
+                jwtPayload.getAsString(),
+                config.get(API_KEY)
+        );
 
         return jwt;
     }
 
-    private String getMerchantIds() {
-        return '2db73f51-ca1e-4664-9c7a-9705e3f44fad';
-    }
-
-    private String getJwtSecret() {
-        return 'foo';
+    public String getElevateSDKURL() {
+        return config.get(ELEVATE_SDK);
     }
 
     /*******************************************************************************************************
     * @description Inner class to assist in constructing the Payload portion of a JSON Web Token.
     */
     public with sharing class JWTPayload {
+        GE_PaymentServices paymentServicesInstance;
 
-        public JWTPayload(/*SecretObject config*/) {
-            // TODO: Handle secret object fields
+        public JWTPayload(GE_PaymentServices serviceInstance) {
+            this.paymentServicesInstance = serviceInstance;
         }
 
         private Long getEpochTimestamp(DateTime dt) {
@@ -130,13 +159,20 @@ public with sharing class GE_PaymentServices {
             generator.writeStringField('iss', 'ApiKeyManager'); // Issuer
             generator.writeNumberField('exp', getExpirationDate(1)); // Expires at
             generator.writeStringField('sub', UserInfo.getUserName()); // Subject
-            generator.writeStringField('sfdo.id', 'bees'); // Org ID
+            generator.writeStringField('sfdo.id', 'bees');
             generator.writeStringField('sfdo.product', 'CRM'); // Product
-            generator.writeStringField('sfdo.roles', 'Payments.Purchase'); // Call Role
+            if (paymentServicesInstance.config.get(
+                    paymentServicesInstance.SFDO_ROLES) != null) {
+                generator.writeStringField(
+                        paymentServicesInstance.SFDO_ROLES,
+                        paymentServicesInstance.config.get(paymentServicesInstance.SFDO_ROLES)
+                );
+            }
 
             return generator.getAsString();
         }
     }
+
 
     /*******************************************************************************************************
     * @description Inner class of PurchaseCallBody to assist in constructing the metadata property.
@@ -155,10 +191,10 @@ public with sharing class GE_PaymentServices {
         */
         public Double amount;
         // Currency code for the amount property. Currently an ENUM = [USD] from Elevate
-        public String currencyCode = getCurrencyCode();
+        public String currencyCode;
         public String paymentMethodToken;
-        public String merchantId = getMerchantId();
-        public String gatewayId = getGatewayId();
+        public String merchantId;
+        public String gatewayId;
         public String email;
         public String firstName;
         public String lastName;
@@ -181,22 +217,10 @@ public with sharing class GE_PaymentServices {
         // The ISO 3166-1 alpha-2 country code. E.g. US
         public String country;
 
-        private String getCurrencyCode() {
-            return 'USD';
-        }
-
-        private String getMerchantId() {
-            return '2db73f51-ca1e-4664-9c7a-9705e3f44fad';
-        }
-
-        private String getGatewayId() {
-            return '9d6c6140-a890-4c84-aebc-8907bd2c541f';
-        }
-
-        public PurchaseCallBody() {
-            this.currencyCode = getCurrencyCode();
-            this.merchantId = getMerchantId();
-            this.gatewayId = getGatewayId();
+        public PurchaseCallBody(String currencyCode, String merchantIds, String gatewayIds) {
+            this.currencyCode = currencyCode;
+            this.merchantId = merchantIds;
+            this.gatewayId = gatewayIds;
         }
 
         public String getAsJson() {
@@ -236,4 +260,54 @@ public with sharing class GE_PaymentServices {
             }
         }
     }
+
+    /**
+    * @description Inner class responsible for retrieving Payment Services configuration from
+    *              application storage and building and exposing a set of key-value
+    *              configuration pairs.
+    */
+    @TestVisible
+    private class Configuration {
+        public Configuration() {}
+
+        public Map<String, String> keyValueMap {
+            get {
+                if (keyValueMap == null) {
+                    keyValueMap = new Map<String, String>();
+                    String makanaKey;
+                    for (Payment_Services_Configuration__c configRecord :
+                            getConfigRecordsByName(
+                                    new List<String>{
+                                            PAYMENTS_SERVICE_NAME, MAKANA_SERVICE_NAME
+                                    }
+                            )) {
+                        if (configRecord.Service__c == PAYMENTS_SERVICE_NAME) {
+                            keyValueMap.put(configRecord.Key__c, configRecord.Value__c);
+                        } else if (configRecord.Key__c == API_Key &&
+                                configRecord.Service__c == MAKANA_SERVICE_NAME) {
+                            makanaKey = configRecord.Value__c;
+                        }
+                    }
+
+                    // If the payments service config does not have an Api key
+                    // and makana does, use the makana Api key
+                    if (makanaKey != null && keyValueMap.get(API_Key) == null) {
+                        keyValueMap.put(API_Key, makanaKey);
+                    }
+                }
+                return keyValueMap;
+            }
+            private set;
+        }
+
+        private List<Payment_Services_Configuration__c> getConfigRecordsByName(List<String>
+                serviceNames) {
+            return [
+                    SELECT Key__c, Value__c, Service__c
+                    FROM Payment_Services_Configuration__c
+                    WHERE Service__c IN :serviceNames
+            ];
+        }
+    }
+
 }

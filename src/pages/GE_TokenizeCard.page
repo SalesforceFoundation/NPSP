@@ -1,4 +1,5 @@
-<apex:page showHeader="false" applyHtmlTag="true" applyBodyTag="false">
+<apex:page controller="GE_PaymentServices" showHeader="false" applyHtmlTag="true"
+           applyBodyTag="false">
 
     <head>
         <apex:slds />
@@ -10,9 +11,7 @@
         </form>
     </article>
 
-    <!-- TODO: Update src with production url and/or upload as static resource -->
-    <script src="https://dmjphp3j3je7i.cloudfront.net/elevate.min.js"></script>
-
+    <script src="{!elevateSDKURL}"></script>
     <script>
         const hostname = window.location.hostname;
         const arr = hostname.split(".");
