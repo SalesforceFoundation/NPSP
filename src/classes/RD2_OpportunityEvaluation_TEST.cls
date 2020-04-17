@@ -44,9 +44,6 @@ private class RD2_OpportunityEvaluation_TEST {
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final Integer MONTHS_TO_YEAR_END = START_DATE.monthsBetween(Date.newInstance(2020, 1, 1));
-    private static final Id MOCK_COMMITMENT_ID = '707f100007HyXHJAA3';
-
-    private static PS_IntegrationServiceConfig_TEST.Stub mockperms = new PS_IntegrationServiceConfig_TEST.Stub();
 
     /****
     * @description Creates data required for unit tests
