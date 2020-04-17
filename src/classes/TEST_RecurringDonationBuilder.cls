@@ -475,18 +475,6 @@ public without sharing class TEST_RecurringDonationBuilder {
     }
 
     /***
-    * @description Sets CommitmentId field
-    * @param commitmentId  value
-    * @return TEST_RecurringDonationBuilder Builder instance
-    */
-    public TEST_RecurringDonationBuilder withCommitmentId(String commitmentId) {
-        validateMode(Mode.Enhanced);
-
-        valuesByFieldName.put('CommitmentId__c', commitmentId);
-        return this;
-    }
-
-    /***
     * @description Sets Next Donation Date. It's the same field as NextPaymentDate, but in RD2 this field is generally
     * calculated automatically during insert.
     * @param dt Date
