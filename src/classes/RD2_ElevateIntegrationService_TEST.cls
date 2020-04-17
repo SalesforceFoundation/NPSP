@@ -34,11 +34,11 @@
 * @description Unit Tests for the Elevate Integration Service
 */
 @IsTest
-private class RD2_ElevateIntegrationService_TEST {
+public class RD2_ElevateIntegrationService_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
 
-    private static final String COMMITMENT_ID = '0009989378376210918302112371207242332342432';
+    public static final String COMMITMENT_ID = '0009989378376210918302112371207242332342432';
 
     /****
     * @description Creates data required for unit tests

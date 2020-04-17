@@ -44,7 +44,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static final String OPTION_NAME_DISABLE_FIRST = RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
     private static final String OPTION_NAME_DISABLE_ALL = RD2_Constants.InstallmentCreateOptions.Disable_All_Installments.name();
     private static final String OPTION_NAME_ALWAYS_CREATE_NEXT = RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
-    private static final Id MOCK_COMMITMENT_ID = '707f100007HyXHJAA3';
+    private static final String MOCK_COMMITMENT_ID = RD2_ElevateIntegrationService_TEST.COMMITMENT_ID;
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final Integer MONTHS_TO_DEC = START_DATE.monthsBetween(Date.newInstance(2019, 12, 15));
@@ -53,9 +53,6 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static final String PAYMENT_CHECK = 'Check';
     private static final Decimal RD_AMOUNT = 100;
     private static final Decimal RD_NEW_AMOUNT = 200;
-
-    private static PS_IntegrationServiceConfig_TEST.Stub mockperms = new PS_IntegrationServiceConfig_TEST.Stub();
-
 
     /****
     * @description Creates data required for unit tests
@@ -413,54 +410,53 @@ private class RD2_OpportunityEvaluationService_TEST {
             'The installment Opportunity should be created: ' + opps);
     }
 
+
     /**
-    * @description Verifies no opportunity is created on RD insert when elevate integration
-    * is enabled and RD is created with commitment Id.
+    * @description Verifies no installment Opportunity is created on RD insert when
+    * Elevate integration is enabled and Commitment Id is specified on the RD.
     */
     @IsTest
-    private static void shouldNotCreateFutureOppWhenRDisFromElevateWithCommitmentID() {
+    private static void shouldNotCreateOppOnElevateRdInsertWhenIntegrationIsEnabled() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
 
-        mockperms.withIsIntegrationEnabled(true);
-
-        List<Opportunity> opps = testDataForElevateRD(mockperms, MOCK_COMMITMENT_ID);
+        npe03__Recurring_Donation__c rd = setUpElevateTestData(configStub, MOCK_COMMITMENT_ID);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
 
         System.assertEquals(0, opps.size(),
-            'The installment Opportunity should not be created: ' + opps);
-
+            'No installment Opportunity should be created for the Elevate RD when integration is enabled: ' + opps);
     }
 
     /**
-    * @description Verifies opportunity is created on RD insert when elevate integration
-    * is enabled and RD is created without commitment Id.
+    * @description Verifies an installment Opportunity is created on RD insert when
+    * Elevate integration is enabled and Commitment Id is not specified on the RD.
     */
     @IsTest
-    private static void shouldCreateFutureOppWhenRDisFromElevateWithoutCommitmentId() {
+    private static void shouldCreateOppOnNonElevateRDInsertWhenIntegrationIsEnabled() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
 
-        mockperms.withIsIntegrationEnabled(true);
-
-        Id MockId = null;
-        List<Opportunity> opps = testDataForElevateRD(mockperms, MockId);
+        npe03__Recurring_Donation__c rd = setUpElevateTestData(configStub, null);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
 
         System.assertEquals(1, opps.size(),
-            'The installment Opportunity should not be created: ' + opps);
-
-
+            'An installment Opportunity should be created for the non-Elevate RD: ' + opps);
     }
 
     /**
-    * @description Verifies opportunity is created on RD insert when elevate integration
-    * is disabled and RD is created with commitment Id.
+    * @description Verifies an installment Opportunity is created on RD insert when
+    * Elevate integration is disabled and Commitment Id is specified on the RD.
     */
     @IsTest
-    private static void shouldCreateFutureOppWhenRDIsNotFromElevateWithCommitmentId() {
+    private static void shouldCreateOppOnElevateRDInsertWhenIntegrationIsDisabled() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(false);
 
-        mockperms.withIsIntegrationEnabled(false);
-
-        List<Opportunity> opps = testDataForElevateRD(mockperms, MOCK_COMMITMENT_ID);
+        npe03__Recurring_Donation__c rd = setUpElevateTestData(configStub, MOCK_COMMITMENT_ID);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
 
         System.assertEquals(1, opps.size(),
-            'The installment Opportunity should not be created: ' + opps);
-
+            'An installment Opportunity should be created for the Elevate RD when integration is disabled: ' + opps);
     }
 
     /***
@@ -1597,27 +1593,25 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /****
-    * @description Sets up test data for elevate Recurring donations
-    * @param configStub Elevate Integration Service stub
-    * @param Id is the Mock commitment Id for setting up elevate Recurring Donations
-    * @return List of opportunities
+    * @description Sets up a Recurring Donation used in the Elevate tests
+    * @param configStub Elevate Integration Service configuration stub
+    * @param commitmentId RD Commitment Id
+    * @return npe03__Recurring_Donation__c
     */
-    private static List<Opportunity> testDataForElevateRD(PS_IntegrationServiceConfig_TEST.Stub configStub, Id MOCK_COMMITMENT_ID) {
+    private static npe03__Recurring_Donation__c setUpElevateTestData(PS_IntegrationServiceConfig_TEST.Stub configStub, String commitmentId) {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        RD2_RecurringDonation.config =  (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
+        RD2_RecurringDonation.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth('20')
-            .withCalculateNextDonationDate()
-            .withCommitmentId(MOCK_COMMITMENT_ID)
+            .withCommitmentId(commitmentId)
             .build();
 
         Test.startTest();
         insert rd;
         Test.stopTest();
 
-        return  oppGateway.getRecords(rd);
-
+        return rd;
     }
 }

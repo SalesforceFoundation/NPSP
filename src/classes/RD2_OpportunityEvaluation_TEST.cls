@@ -126,27 +126,24 @@ private class RD2_OpportunityEvaluation_TEST {
             'Next Year Value should be zero for a Closed RD');
     }
 
-    /**
-    * @description Verifies no opportunity is created on RD insert when elevate integration
-    * is enabled and RD have commitment Id.
+
+   /**
+    * @description Verifies no installment Opportunity is created by the RD batch when
+    * Elevate integration is enabled and Commitment Id is specified on the RD.
     */
     @IsTest
-    private static void shouldNotCreateFutureOppWhenRDIsFromElevateIntegration() {
+    private static void shouldNotCreateNextOppForElevateRDWhenIntegrationIsEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         final Date today = START_DATE.addMonths(1);
         RD2_ScheduleService.currentDate = today;
 
-        Boolean isEnabled = true;
-        mockperms.withIsIntegrationEnabled(isEnabled);
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
+        RD2_RecurringDonation.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
-            .withDayOfMonth('20')
-            .withCalculateNextDonationDate()
-            .withCommitmentId(MOCK_COMMITMENT_ID)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
             .build();
-
-        RD2_RecurringDonation.config =  (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, mockperms);
-
         insert rd;
 
         runBatch(new RD2_OpportunityEvaluation_BATCH(today));
@@ -154,10 +151,9 @@ private class RD2_OpportunityEvaluation_TEST {
         assertBatchJobIteration(1);
 
         List<Opportunity> opps = oppGateway.getRecords(rd);
-        System.assertEquals(0, opps.size(), 'No new Opp should be created: ' + opps);
-
+        System.assertEquals(0, opps.size(),
+            'No installment Opportunity should be created for the Elevate RD when integration is enabled: ' + opps);
     }
-
 
     /**
      * @description Verifies an Opp with Close Date today is not created if it already exists
