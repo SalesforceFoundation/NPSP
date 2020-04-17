@@ -14,6 +14,13 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.wait_until_location_contains("/lightning/r/Opportunity/",message="Current page is not a Opportunity detail view")
 
+    def ensure_opportunity_details_are_loaded(self,objectID, value):
+        """ Navigate to the page with objectid mentioned
+           Wait for the page to load and confirm atleast the opportunity name exists
+        """
+        self.pageobjects.go_to_page("Details", "Opportunity", objectID)
+        self.npsp.navigate_to_and_validate_field_value("Opportunity Name", "contains", value)
+
     def navigate_to_matching_gifts_page(self):
         self.npsp.click_more_actions_button()
         self.selenium.click_link('Find Matched Gifts')
