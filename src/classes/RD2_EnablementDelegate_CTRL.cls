@@ -84,7 +84,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Control if the simple or complex enablement page should be displayed  
+    * @description Indicates if the simple or the full enablement page version should be displayed
     */
     public static Boolean isSimpleVersion {
         get {
@@ -171,14 +171,15 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Determines if the dry run is outdated. Return false when no RD exist
+    * @description Determines if the dry run is outdated.  When no legacy RD exists,
+    * the validation is skipped and no warning should be displayed about outdated validation.
     * @param state Enablement state
     * @return Boolean
     */
     private static Boolean isDryRunOutdated(EnablementState state) {
-        return (!isSimpleVersion) 
-            ? batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit
-            : false;
+        return (isSimpleVersion) 
+            ? false
+            : batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
     }
 
     /***
@@ -218,7 +219,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Tracks the enhanced Recurring Donation enablement user action. Set enable confrimation when no RD exist
+    * @description Tracks the enhanced Recurring Donation enablement user action. Automatically set Enable confirmation
+    * when no legacy RD exists since the confirmation is not applicable on a simple enablement page version.
     * @return void
     */
     @AuraEnabled

@@ -10,42 +10,42 @@
     /****
     * @description Confirms MetaDeploy has been deployed
     */
-   confirmDeploy: function (component) {
+    confirmDeploy: function (component) {
     //disable the current active step so the next step is enabled only on current step success
-    component.set('v.state.isMetaConfirmed', false);
-    this.showSpinner(component, 'metadeployConfirmSpinner');
+        component.set('v.state.isMetaConfirmed', false);
+        this.showSpinner(component, 'metadeployConfirmSpinner');
 
-    component.set('v.state.isDryRunInProgress', false);
-    component.set('v.state.isDryRunStopped', false);
+        component.set('v.state.isDryRunInProgress', false);
+        component.set('v.state.isDryRunStopped', false);
 
-    this.clearError(component);
+        this.clearError(component);
 
-    var action = component.get('c.confirmMetaDeploy');
+        var action = component.get('c.confirmMetaDeploy');
 
-    action.setCallback(this, function (response) {
-        if (!component.isValid()) {
-            return;
-        }
-        const state = response.getState();
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            const state = response.getState();
 
-        if (state === 'SUCCESS') {
-            component.set('v.state.isMetaConfirmed', true);
+            if (state === 'SUCCESS') {
+                component.set('v.state.isMetaConfirmed', true);
 
-        } else if (state === 'ERROR') {
-            this.handleError(component, response.getError(), 'metadeploy');
-        }
+            } else if (state === 'ERROR') {
+                this.handleError(component, response.getError(), 'metadeploy');
+            }
 
-        this.refreshMetaDeploy(component);
-        this.hideSpinner(component, 'metadeployConfirmSpinner');
-    });
+            this.refreshMetaDeploy(component);
+            this.hideSpinner(component, 'metadeployConfirmSpinner');
+        });
 
-    $A.enqueueAction(action);
+        $A.enqueueAction(action);
     },
 
     /****
     * @description Enables enhanced Recurring Donations
     */
-   completeEnable: function (component) {
+    completeEnable: function (component) {
         //disable the current active step so the next step is enabled only on current step success
         component.set('v.state.isEnabled', false);
         this.clearError(component);
@@ -96,9 +96,9 @@
     /****
     * @description Enables input field edit
     */
-   enableEdit: function (component, inputName) {
-    let inputComp = component.find(inputName);
-    $A.util.removeClass(inputComp, "disabledEdit");
+    enableEdit: function (component, inputName) {
+        let inputComp = component.find(inputName);
+        $A.util.removeClass(inputComp, "disabledEdit");
     },
 
     /**
@@ -125,24 +125,24 @@
     * @description Loads the enablement state and enables/disables page elements based on it
     */
    getDeployURL: function (component) {
-    var action = component.get("c.getMetaDeployURL");
+        var action = component.get("c.getMetaDeployURL");
 
-    action.setCallback(this, function (response) {
-        if (!component.isValid()) {
-            return;
-        }
-        let state = response.getState();
+        action.setCallback(this, function (response) {
+            if (!component.isValid()) {
+                return;
+            }
+            let state = response.getState();
 
-        if (state === "SUCCESS") {
-            const metaDeployURL = response.getReturnValue();
-            component.set('v.metaDeployURL', metaDeployURL);
+            if (state === "SUCCESS") {
+                const metaDeployURL = response.getReturnValue();
+                component.set('v.metaDeployURL', metaDeployURL);
 
-        } else if (state === "ERROR") {
-            component.set('v.metaDeployURL', 'https://install.salesforce.org/products/npsp/enhanced-recurring-donations');
-        }
-    });
+            } else if (state === "ERROR") {
+                component.set('v.metaDeployURL', 'https://install.salesforce.org/products/npsp/enhanced-recurring-donations');
+            }
+        });
 
-    $A.enqueueAction(action);
+        $A.enqueueAction(action);
     },
 
     /****
@@ -209,7 +209,7 @@
     /****
     * @description Refreshes enable Recurring Donations section
     */
-   refreshEnable: function (component) {
+    refreshEnable: function (component) {
         let state = component.get("v.state");
 
         let enableProgress = 0;

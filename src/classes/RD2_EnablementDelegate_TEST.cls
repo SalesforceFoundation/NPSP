@@ -518,7 +518,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     }
 
     /***
-    * @description Verifies that when a legacy RD exists, the enablement page should load the complex version 
+    * @description Verifies that when a legacy RD exists, the enablement page should load the full version 
     */
     @isTest
     private static void shouldIndicateStandardPageConfigWhenLegacyRdExists() {
@@ -537,7 +537,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
     */
     @isTest
     private static void shouldPreserveSinglePageConfigWhenEnablingRdThroughSimplePage() {
-        Boolean beforeEnablePageVersion = RD2_EnablementDelegate_CTRL.isSimpleVersion;
+        Boolean isSimpleVersionBefore = RD2_EnablementDelegate_CTRL.isSimpleVersion;
         
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -549,10 +549,10 @@ public with sharing class RD2_EnablementDelegate_TEST {
         .build();
 
         Test.startTest();
-        Boolean afterEnablePageVersion = RD2_EnablementDelegate_CTRL.isSimpleVersion;
+        Boolean isSimpleVersionAfter = RD2_EnablementDelegate_CTRL.isSimpleVersion;
         Test.stopTest();
 
-        System.assertEquals(beforeEnablePageVersion, afterEnablePageVersion, 'The page version should stay the same once enablement is fully completed');
+        System.assertEquals(isSimpleVersionBefore, isSimpleVersionAfter, 'The page version should stay the same once enablement is fully completed');
     }
 
     // Helpers

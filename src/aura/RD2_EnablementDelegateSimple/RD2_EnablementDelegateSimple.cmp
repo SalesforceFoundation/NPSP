@@ -204,16 +204,6 @@
                                 value="{!$Label.c.RD2_EnablementMigrationCompleteMessage}" />
                         </aura:if>
                     </lightning:layoutItem>
-                    <lightning:layoutItem size="3" />
-
-                    <lightning:layoutItem size="9" >
-                        <aura:if isTrue="{!equals(v.errorSection, 'migration')}">
-                            <c:pageNotification severity="error" size="small" message="{!v.errorMessage}" />
-                        </aura:if>
-                    </lightning:layoutItem>
-                
-                    <lightning:layoutItem size="3" padding="horizontal-medium" class="slds-p-bottom_xx-large">
-                    </lightning:layoutItem>
                 </lightning:layout>
             </lightning:card>
         </lightning:layoutItem>
