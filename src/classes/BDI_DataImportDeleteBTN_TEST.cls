@@ -152,6 +152,33 @@ class BDI_DataImportDeleteBTN_TEST {
     }
 
     /**
+      * @description operation:
+      *    Test calling deleteFoundRecords when user does not currently have permission
+      * verify:
+      *    All imported records are deleted
+      */
+    @isTest
+    static void TestCannotDeleteImportedDataImportRecordsBtn() {
+        DataImport__c[] records = setUpData();
+        BDI_DataImportDeleteBTN_CTRL ctrl;
+        ctrl = clickButton(BDI_DataImportDeleteBTN_CTRL.ACTION_DELETE_ALL);
+
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock();
+        utilPermissionsMockInstance.canDeleteDataImport = false;
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
+                UTIL_Permissions.class,
+                utilPermissionsMockInstance);
+        UTIL_Permissions.setInstance(utilPermissionsMock);
+
+        Test.startTest();
+        ctrl.deleteFoundRecords();
+        Test.stopTest();
+
+        records = [SELECT Id, Status__c FROM DataImport__c ORDER BY Status__c];
+        System.assertEquals(4, records.size(), 'No records should have been deleted.');
+    }
+
+    /**
     * @description operation: 
     *    Test Delete Imported Data Import Records button when user does not have delete permission
     * verify: 
@@ -256,25 +283,15 @@ class BDI_DataImportDeleteBTN_TEST {
     }
 
     /**
-     * @description Set up page and test specified delete action type default canDelete to true
-     * @param actionType Specific action type to delete all or imported Data Import records
-     * @return PageReference
-     */
-    static BDI_DataImportDeleteBTN_CTRL clickButton(String actionType) {
-        return clickButton(actionType, true);
-    }
-
-    /**
      * @description Set up page and test specified delete action type
      * @param actionType Specific action type to delete all or imported Data Import records
      * @param canDelete Set to true when the test should have the delete permissions
      * @return PageReference
      */
-    static BDI_DataImportDeleteBTN_CTRL clickButton(String actionType, Boolean canDelete) {
+    static BDI_DataImportDeleteBTN_CTRL clickButton(String actionType) {
         ApexPages.currentPage().getParameters().put('action', actionType);
 
         BDI_DataImportDeleteBTN_CTRL ctrl = new BDI_DataImportDeleteBTN_CTRL();
-        ctrl.canDelete = canDelete;
 
         System.assertEquals(null, ctrl.buttonClick(), 'The button click should always return null to display a message.');
 
@@ -295,10 +312,17 @@ class BDI_DataImportDeleteBTN_TEST {
         BDI_DataImportDeleteBTN_CTRL ctrl;
         DataImport__c[] records = setUpData();
 
+        UTIL_PermissionsMock utilPermissionsMockInstance = new UTIL_PermissionsMock();
+        utilPermissionsMockInstance.canDeleteDataImport = canDelete;
+        UTIL_Permissions utilPermissionsMock = (UTIL_Permissions) Test.createStub(
+                UTIL_Permissions.class,
+                utilPermissionsMockInstance);
+        UTIL_Permissions.setInstance(utilPermissionsMock);
+
         Test.startTest();
 
         System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
-            ctrl = clickButton(actionType, canDelete);
+            ctrl = clickButton(actionType);
             ctrl.deleteFoundRecords();
         }
 
@@ -329,5 +353,25 @@ class BDI_DataImportDeleteBTN_TEST {
         System.assert(actual.getRedirect());
         System.assertEquals(expectedUrl, actual.getUrl());
     }
-	
+
+    /**
+    * @description StubProvider implementation used to modify Data Import Permissions in a test context
+    */
+    private class UTIL_PermissionsMock implements StubProvider {
+
+        public Boolean canDeleteDataImport = true;
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            if (stubbedMethodName == 'canDelete' && listOfArgs.size() == 1) {
+                Schema.SObjectType sObjectType = (Schema.SObjectType)listOfArgs[0];
+                if(sObjectType == DataImport__c.SObjectType) {
+                    return canDeleteDataImport;
+                }
+            }
+            return true;
+        }
+    }
 }
