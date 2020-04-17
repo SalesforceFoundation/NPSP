@@ -44,6 +44,19 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     public Boolean showContinueBtn { get; set; }
 
     /***
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private static UTIL_Permissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = new UTIL_Permissions();
+            }
+            return permissions;
+        }
+        set;
+    }
+    /***
     * @description Class constructor
     * @param controller The StandardController to the Recurring Donation
     */
@@ -142,14 +155,19 @@ public with sharing class RD_AddDonationsBTN_CTRL {
      * @description Validate that the current User has the appropriate permissions and that Legacy RD is enabled
      */
     public void validate() {
+        SObjectType objType = Opportunity.sObjectType;
+
         if (RD2_EnablementService.isRecurringDonations2Enabled) {
             addMessageAndReturn(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationLimitedToLegacyMode);
 
         } else if (sc.getId() == null) {
             addMessageAndReturn(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationMissingId);
 
-        } else if (!Schema.SObjectType.Opportunity.isCreateable()) {
-            addMessageAndReturn(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied);
+        } else if (!permissions.canCreate(objType)
+            || !permissions.canUpdate(objType)
+            || !permissions.canDelete(objType)
+        ) {
+            addMessageAndReturn(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationPermissionDenied);
 
         } else {
             this.showContinueBtn = true;

@@ -1,0 +1,128 @@
+{
+    "product": {
+        "title": {
+            "message": "Nonprofit Success Pack (NPSP)",
+            "description": "name of product"
+        },
+        "short_description": {
+            "message": "Die Grundlage für vernetzte gemeinnützige Organisationen",
+            "description": "tagline of product"
+        },
+        "description": {
+            "message": "## Willkommen beim Installationsprogramm für das Nonprofit Success Pack!\r\n\r\n**WICHTIG**: Salesforce empfiehlt nicht, Upgrades direkt in Produktionsorganisationen zu installieren. Installieren Sie Ihr NPSP-Upgrade stattdessen zunächst in einer Ihrer kostenlosen Sandbox-Umgebungen oder in einer Entwicklerorganisation.\r\n\r\n**Wenn Sie ein Upgrade von NPSP 2 durchführen, müssen Sie einen zusätzlichen Schritt *vor* der Ausführung dieses Installationsprogramms ausführen. Führen Sie zunächst nur das Upgrade für das Paket für wiederkehrende Spenden auf Version 3.10 durch, indem Sie das Installationsprogramm ausführen:**\r\n\r\n* [Wiederkehrende Spenden 3.10 in Produktions- oder Developer Edition-Organisationen installieren](https://login.salesforce.com/packaging/installPackage.apexp?p0=04t80000000tpCB)\r\n* [Wiederkehrende Spenden 3.10 in Sandbox-Organisationen installieren](https://test.salesforce.com/packaging/installPackage.apexp?p0=04t80000000tpCB)\r\n\r\nAchten Sie darauf, für „Alle Benutzer“ zu installieren, und befolgen Sie die Anweisungen. Nachdem das Paket für wiederkehrende Spenden aktualisiert wurde, können Sie hier mit der vollständigen Installation des Nonprofit Success Packs fortfahren. Wenn Sie nicht zuerst das Upgrade des Pakets für wiederkehrende Spenden ausführen, wird im Installationsprogramm ein Fehler angezeigt, der sich nur durch Installieren des Wiederkehrende Spenden 3.10-Pakets beheben lässt. Sie brauchen diesen Schritt nicht auszuführen, wenn Sie bereits über eine Vorgängerversion des Nonprofit Success Pack-Pakets (Version 3.0 oder höher) verfügen.",
+            "description": "shown on product detail page (markdown)"
+        },
+        "click_through_agreement": {
+            "message": "Das Nonprofit Success Pack („NPSP“) ist ein Open-Source-Paket, das von Salesforce.org („SFDO“) unter der BSD-3-Klausel-Lizenz lizenziert wird, die unter [https://opensource.org/licenses/BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause) zu finden ist. RAHMEN-ABONNEMENTVERTRÄGE GLEICH WELCHER ART, DIE ZWISCHEN IHNEN ODER IHREM UNTERNEHMEN UND SFDO BESTEHEN, GELTEN NICHT FÜR IHRE NUTZUNG VON NPSP. NPSP wird „WIE BESEHEN“ UND IN DER VORLIEGENDEN FORM ZUR VERFÜGUNG GESTELLT, UND SFDO ÜBERNIMMT KEINE GARANTIE GLEICH WELCHER ART IM HINBLICK AUF NPSP, SEI SIE AUSDRÜCKLICH, IMPLIZIERT, GESETZLICH ODER ANDERWEITIG, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF JEGLICHE IMPLIZITE GARANTIEN DER MARKTGÄNGIGKEIT, DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK, DER MÄNGELFREIHEIT ODER DER NICHTVERLETZUNG VON RECHTEN DRITTER, SOWEIT DIES NACH GELTENDEM RECHT ZULÄSSIG IST.\r\n\r\nSFDO ÜBERNIMMT KEINE HAFTUNG, DIE SICH AUS IHRER NUTZUNG VON NPSP ERGIBT ODER DAMIT ZUSAMMENHÄNGT, FÜR DIREKTE SCHÄDEN ODER FÜR ENTGANGENE GEWINNE, EINNAHMEN, GOODWILL ODER INDIREKTE, BESONDERE, ZUFÄLLIGE SCHÄDEN; FOLGESCHÄDEN, EXEMPLARISCHE SCHÄDEN, DECKUNGSSCHÄDEN; SCHÄDEN AUS BETRIEBSUNTERBRECHUNG ODER STRAFSCHADENSERSATZ, UNABHÄNGIG DAVON, OB EINE KLAGE AUS DEM VERTRAG ABGELEITET IST ODER SICH AUS UNERLAUBTER HANDLUNG ERGIBT UND UNABHÄNGIG VON DER HAFTUNGSTHEORIE, SELBST WENN AUF DIE MÖGLICHKEIT SOLCHER SCHÄDEN HINGEWIESEN WURDE ODER WENN EINE ABHILFEMASSNAHME ANDERWEITIG IHREN WESENTLICHEN ZWECK VERFEHLT. DER VORSTEHENDE HAFTUNGSAUSSCHLUSS GILT NICHT, SOWEIT ER GESETZLICH VERBOTEN IST. SFDO LEHNT JEDE HAFTUNG UND ENTSCHÄDIGUNGSPFLICHT FÜR SCHÄDEN AB, DIE DURCH DRITTE HOSTING-PROVIDER VERURSACHT WERDEN.",
+            "description": "legal text shown in modal dialog"
+        }
+    },
+    "plan:existing_org": {
+        "title": {
+            "message": "NPSP installieren",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "# Willkommen beim Installationsprogramm für das Nonprofit Success Pack!\n\n**WICHTIG**: Salesforce empfiehlt nicht die direkte Installation in Produktionsorganisationen. Installieren Sie NPSP stattdessen zunächst in einer Ihrer kostenlosen Sandbox-Umgebungen oder in einer Entwicklerorganisation.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Vielen Dank für die Installation von NPSP. Bitte besuchen Sie bei Fragen zu NPSP die [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe)-Gruppe auf dem Power of Us-Hub.",
+            "description": "shown after successful installation (markdown)"
+        }
+    },
+    "steps": {
+        "Install {product} {version}": {
+            "message": "{product} {version} installieren",
+            "description": "title of installation step"
+        },
+        "Account Record Types": {
+            "message": "Account-Datensatztypen",
+            "description": "title of installation step"
+        },
+        "Opportunity Record Types": {
+            "message": "Opportunity-Datensatztypen",
+            "description": "title of installation step"
+        },
+        "NPSP Config for Salesforce Mobile App": {
+            "message": "NPSP-Konfiguration für die mobile Salesforce-App",
+            "description": "title of installation step"
+        },
+        "Delete Developer Edition Sample Profiles": {
+            "message": "Beispielprofile der Developer Edition löschen",
+            "description": "title of installation step"
+        },
+        "This deletes sample page layouts and profiles intended for Sales, Marketing, and Support use cases.": {
+            "message": "Hiermit werden Musterseitenlayouts und -profile gelöscht, die für Anwendungsfälle in den Bereichen Vertrieb, Marketing und Support bestimmt sind.",
+            "description": "description of installation step"
+        },
+        "NPSP Trial Experience": {
+            "message": "NPSP-Testerfahrung",
+            "description": "title of installation step"
+        },
+        "Update Admin Profile": {
+            "message": "Administratorprofil aktualisieren",
+            "description": "title of installation step"
+        },
+        "Set Default Relationship Settings": {
+            "message": "Standard-Beziehungseinstellungen festlegen",
+            "description": "title of installation step"
+        },
+        "NPSP Reports & Dashboards": {
+            "message": "NPSP-Berichte und -Dashboards",
+            "description": "title of installation step"
+        },
+        "Enhanced Recurring Donations Metadata Updates": {
+            "message": "Aktualisierungen der Metadaten zu Erweiterte wiederkehrende Spenden",
+            "description": "title of installation step"
+        }
+    },
+    "plan:new_org": {
+        "title": {
+            "message": "NPSP für Trailhead Playgrounds installieren",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "# Willkommen beim Installationsprogramm für das Nonprofit Success Pack!\n\n**WICHTIG**: Salesforce empfiehlt nicht die direkte Installation in Produktionsorganisationen. Installieren Sie NPSP stattdessen zunächst in einer Ihrer kostenlosen Sandbox-Umgebungen oder in einer Entwicklerorganisation.\n\nWarnung: Dieses Installationsprogramm überschreibt nicht verwaltete Metadaten einschließlich Seitenlayouts und Berechtigungen. Es ist für die Verwendung mit Trailhead Playground-Organisationen bestimmt, nicht für Produktionsorganisationen.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Vielen Dank für die Installation von NPSP. Bitte besuchen Sie bei Fragen zu NPSP die [Nonprofit Success Pack](https://powerofus.force.com/_ui/core/chatter/groups/GroupProfilePage?g=0F980000000CjRe)-Gruppe auf dem Power of Us-Hub.",
+            "description": "shown after successful installation (markdown)"
+        },
+        "error_message": {
+            "message": "Um Hilfe zu diesem Fehler zu erhalten, navigieren Sie zu [help.salesforce.com](https://help.salesforce.com/), suchen Sie den Support & Services-Bereich, und öffnen Sie ein Ticket beim technischen Support bei Salesforce. Schließen Sie „NPSP“ in die Betreffzeile ein, und schließen Sie in Ihren Kommentar den hier abgebildeten Installationslink ein.",
+            "description": "shown after failed installation (markdown)"
+        }
+    },
+    "plan:rd2": {
+        "title": {
+            "message": "Aktualisierungen der Metadaten zu Erweiterte wiederkehrende Spenden",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "Installieren Sie neue Metadaten (Werte von Auswahllisten, Hilfetext usw.) für Erweiterte wiederkehrende Spenden. Kehren Sie nach der Installation der Metadaten zu Ihrer Salesforce-Organisation zurück, um das Upgrade auf Erweiterte wiederkehrende Spenden fortzusetzen.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Die Metadaten für Erweiterte wiederkehrende Spenden wurden erfolgreich bereitgestellt. Es sind jedoch noch weitere Aufgaben zu erledigen, um das Upgrade auf Erweiterte wiederkehrende Spenden abzuschließen. Melden Sie sich wieder bei Ihrer Organisation an, um den Upgradeprozess abzuschließen.",
+            "description": "shown after successful installation (markdown)"
+        }
+    },
+    "checks": {
+        "Please ensure that Enhanced Recurring Donations is enabled in your org before beginning the installation.": {
+            "message": "Bitte vergewissern Sie sich, dass Erweiterte wiederkehrende Spenden in Ihrer Organisation aktiviert ist, bevor Sie mit der Installation beginnen.",
+            "description": "shown if validation fails"
+        }
+    },
+    "plan:reports": {
+        "title": {
+            "message": "Berichte und Dashboards installieren",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "Die NPSP-Berichte und -Dashboards werden zusammen mit neuen Testversionen und Installationen von NPSP ab Version 3.90 (Februar 2017) geliefert. Wenn Sie eine frühere Testversion gestartet oder NPSP in einer früheren Version installiert haben, verwenden Sie dieses Installationsprogramm, um die Berichte und Dashboards hinzuzufügen. Umfassende Informationen zu den NPSP-Berichten und -Dashboards finden Sie im [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nDieses Installationsprogramm setzt die 5 Opportunity-Datensatztypen voraus, die in der Testvorlage des standardmäßigen Nonprofit Starter Packs enthalten sind, und erstellt sie, wenn sie in Ihrer Organisation nicht vorhanden sind. Das Installationsprogramm sucht die Datensatztypen anhand des Entwicklernamens (nicht anhand der Bezeichnung). Wenn Sie also die Entwicklernamen der ursprünglichen Datensatztypen geändert haben, fügt das Installationsprogramm sie erneut hinzu. Dies sind die Entwicklernamen der Datensatztypen:\n \n* Donation (Spende)\n* MajorGift (GrößereSchenkung)\n* MatchingDonation (ZugewieseneSpende)\n* Grant (Unterstützung)\n* Membership (Mitgliedschaft)",
+            "description": "shown before user starts installation (markdown)"
+        }
+    }
+}

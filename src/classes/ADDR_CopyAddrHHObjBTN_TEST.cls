@@ -38,7 +38,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     private static Contact contactRecord;
     private static npo02__Household__c householdRecord;
     private static ADDR_CopyAddrHHObjBTN_CTRL copyAddressCtrl;
-    private static PermissionsMock mockPerms = new PermissionsMock();
+    private static UTIL_Permissions_TEST.Stub mockPerms = new UTIL_Permissions_TEST.Stub();
 
     /***
     * @description Create records common to test methods
@@ -364,63 +364,6 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     */
     private static void verifyNoteRecordCount(Id parentId) {
         System.assertEquals(1, [SELECT count() FROM Note where ParentID = :parentId]);
-    }
-
-    /***
-    * @description Stub for UTIL_Permissions instance
-    */
-    private class PermissionsMock implements System.StubProvider {
-        private Boolean hasRead = true;
-        private Boolean hasUpdate = true;
-        private Boolean hasCreate = true;
-        private SObjectType readSObjType;
-        private SObjectType updateSObjType;
-        private SObjectType createSObjType;
-        private Set<SObjectField> readSObjFields = new Set<SObjectField>();
-        private Set<SObjectField> updateSObjFields = new Set<SObjectField>();
-        private Set<SObjectField> createSObjFields = new Set<SObjectField>();
-
-        public Object handleMethodCall(
-            Object stubbedObject,
-            String methodName,
-            Type returnType,
-            List<Type> paramTypes,
-            List<String> paramNames,
-            List<Object> args
-        ) {
-            switch on methodName {
-                when 'canRead' {
-                    readSObjType = (SObjectType) args[0];
-                    readSObjFields = getArgumentFields(args);
-
-                    return hasRead;
-
-                } when 'canUpdate' {
-                    updateSObjType = (SObjectType) args[0];
-                    updateSObjFields = getArgumentFields(args);
-
-                    return hasUpdate;
-
-                } when 'canCreate' {
-                    createSObjType = (SObjectType) args[0];
-                    createSObjFields = getArgumentFields(args);
-
-                    return hasCreate;
-
-                } when else {
-                    return null;
-                }
-            }
-        }
-
-        /***
-        * @description Extracts SObject fields from the second argument if specified
-        * @param args Method arguments
-        * @return Set<SObjectField> Fields specified in the second argument of the stubbed method
-        */
-        private Set<SObjectField> getArgumentFields(List<Object> args) {
-            return args.size() > 1 ? (Set<SObjectField>) args[1] : new Set<SObjectField>();
-        }
     }
 
 }
