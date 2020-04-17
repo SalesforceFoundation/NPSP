@@ -454,7 +454,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Determine if the enablement page should be in simple or complex version
+    * @description Determine if the enablement page should be in simple or full version
     * @return Boolean 
     */
     private static Boolean isSimplePageCandidate() {
