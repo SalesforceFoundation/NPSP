@@ -39,7 +39,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
     * @description Contains configuration related to the Elevate integration service config and permissions
     */
     @TestVisible
-    private PS_IntegrationServiceConfig config {
+    private static PS_IntegrationServiceConfig config {
         get {
             if (config == null) {
                 config = new PS_IntegrationServiceConfig();
@@ -53,7 +53,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
     * @description Returns the Elevate Integration service enablement status
     * @return Boolean
     */
-    public Boolean isIntegrationEnabled() {
+    public static Boolean isIntegrationEnabled() {
         return config.isIntegrationEnabled();
     }
 

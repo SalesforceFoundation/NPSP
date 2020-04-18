@@ -81,17 +81,6 @@ public inherited sharing class RD2_RecurringDonation {
         return reviseNextDonationDate(scheduleService, rd.RecurringDonationSchedules__r);
     }
 
-    @TestVisible
-    private static PS_IntegrationServiceConfig config {
-        get {
-            if (config == null) {
-                config = new PS_IntegrationServiceConfig();
-            }
-            return config;
-        }
-        set;
-    }
-
     /**
     * @description Revises and modifies the Recurring Donation Next Donation Date.
     * Whenever the Next Donation Date is being revised, review the status and the Next Donation Date
@@ -365,9 +354,10 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /***
-    * @description Contains attribute confirming if Elevate Integration is not enabled
+    * @description Checks if the Recurring Donation is originated in Elevate
     */
-    public Boolean isElevateIntegrationDisabled() {
-       return String.isBlank(rd.CommitmentId__c) || !config.isIntegrationEnabled();
+    public Boolean isElevateRecord() {
+       return String.isNotBlank(rd.CommitmentId__c);
     }
+
 }

@@ -136,7 +136,7 @@ private class RD2_OpportunityEvaluation_TEST {
 
         PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
             .withIsIntegrationEnabled(true);
-        RD2_RecurringDonation.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)

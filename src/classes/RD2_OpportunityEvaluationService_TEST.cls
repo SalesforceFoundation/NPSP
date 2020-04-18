@@ -1601,7 +1601,7 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static npe03__Recurring_Donation__c setUpElevateTestData(PS_IntegrationServiceConfig_TEST.Stub configStub, String commitmentId) {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        RD2_RecurringDonation.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth('20')
