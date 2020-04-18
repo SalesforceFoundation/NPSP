@@ -2003,18 +2003,27 @@
         <members>commonYes</members>
         <members>conFailedAccountCreate</members>
         <members>conMergeBtnLabel</members>
+        <members>conMergeDRSPickBtnLabel</members>
+        <members>conMergeDRSStep1</members>
         <members>conMergeErrNoPersonAccounts</members>
+        <members>conMergeErrorNoDRSFound</members>
         <members>conMergeErrorNoDeleteObjPermission</members>
         <members>conMergeErrorNoDeleteRecAccess</members>
+        <members>conMergeErrorNoReadDSRObjPermission</members>
         <members>conMergeFoundContacts</members>
+        <members>conMergeFoundDRS</members>
         <members>conMergePageTitle</members>
         <members>conMergePageTitleDetail</members>
         <members>conMergePortalUser</members>
+        <members>conMergeSearchConText</members>
         <members>conMergeSearchPlaceholder</members>
+        <members>conMergeSeeDupConDRS</members>
+        <members>conMergeSeeDupConText</members>
         <members>conMergeSelectAll</members>
         <members>conMergeSelectContact</members>
         <members>conMergeSelectedContacts</members>
         <members>conMergeStageComplete</members>
+        <members>conMergeTooManyContactError</members>
         <members>conMergeWinnerAsstText</members>
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanMissingField</members>
@@ -3433,6 +3442,7 @@
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
         <members>DataImportBatch__c.BatchGiftEntryTabColumns</members>
+        <members>DuplicateRecordSet.ContactMergeDRS</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
