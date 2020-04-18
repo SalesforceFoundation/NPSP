@@ -94,6 +94,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                 self.selenium.wait_until_page_contains_element(locator)
                 self.salesforce._populate_field(locator, value)   
 
+    @capture_screenshot_on_error
     def select_object_group_field(self,object_group,field):
         """Select the specified field under specified object group 
            to add the field to gift entry form and verify field is added"""
@@ -106,24 +107,27 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(field)  
         self.selenium.scroll_element_into_view(field_checkbox)   
         self.selenium.click_element(field_checkbox)
-        field_label=object_group+': '+field
-        self.selenium.wait_until_page_contains(field_label)
-    
+        loc=npsp_lex_locators["gift_entry"]["field_input"].format(field,"input")
+        self.selenium.wait_until_page_contains_element(loc)
+
 
     @capture_screenshot_on_error                
     def fill_ge_form(self,**kwargs):
         """"""
+        self.selenium.execute_javascript("window.scrollBy(0,0)")
         for field,option in kwargs.items():
             for section,value in option.items():
                 if section=="Required":
                     label=section+" "+field
                     if value=='checked':
                         field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(label)
+                        self.selenium.scroll_element_into_view(field_checkbox)
                         cb_loc=self.selenium.get_webelement(field_checkbox)
                         if not cb_loc.is_selected():
                             self.salesforce._jsclick(field_checkbox)
                     elif value=='unchecked': 
                         field_checkbox=npsp_lex_locators["gift_entry"]["checkbox"].format(label)
+                        self.selenium.scroll_element_into_view(field_checkbox)
                         cb_loc=self.selenium.get_webelement(field_checkbox)
                         if cb_loc.is_selected():
                             self.salesforce._jsclick(field_checkbox)
@@ -145,7 +149,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     elif placeholder=="Search...":
                         self.salesforce.populate_lookup_field(key,value)
                     elif "Date" in field:
-                        locator=npsp_lex_locators["bge"]["datepicker_open"].format("Opportunity: Close Date")  
+                        locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")  
                         self.selenium.wait_until_page_contains_element(locator)
                         self.selenium.click_button(value)    
                         self.selenium.wait_until_page_does_not_contain_element(locator,error="could not open datepicker")
