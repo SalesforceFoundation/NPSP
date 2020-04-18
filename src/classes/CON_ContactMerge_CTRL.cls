@@ -38,35 +38,53 @@ public with sharing class CON_ContactMerge_CTRL {
 
     private static final String MASTER_KEY = '$MASTER$';
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
+    * @description To decide whether to show Dupliacate Record Set record list on the page or not
+    */ 
+    
+    public Boolean showDRS { get; set; }
+
+    /***********************************************************************************************
     * @description Search text entered by user.
     */
     public String searchText { get { return searchText; } set { searchText = value; } }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description List of ContactWrapper objects for display in search results pane.
     */
-    public List<ContactWrapper> searchResults {get; private set;}
+    public List<ContactWrapper> searchResults { get; private set; }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description Map of the contacts selected for merge.
     */
     private Map<String, Contact> selectedRecords;
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description Number of selected records.
     */
-    public Integer selectedRecordsCount {get; private set;} {this.selectedRecordsCount = 0;}
+    public Integer selectedRecordsCount { get; private set; } { this.selectedRecordsCount = 0; }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description Max number of Contacts returned by a query.
     */
+    
     private final Integer SOSL_LIMIT = 100;
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
+    * @description Query limit for DRS records query to be displayed
+    */ 
+    
+    private final Integer SOQL_LIMIT = 5000;
+
+    /***********************************************************************************************
+    * @description Duplicate Record Sets to be displayed on page
+    */ 
+    public List<DuplicateRecordSet> listDuplicateRecordSets { get; set; }
+
+    /***********************************************************************************************
     * @description The contact merge step user is in. (The process has multiple steps.)
     */
-    public Integer step {get; private set;}
+    public Integer step { get; private set; }
 
     public Boolean canContinueWithMerge { get;set; }
 
@@ -74,79 +92,280 @@ public with sharing class CON_ContactMerge_CTRL {
         return UTIL_Describe.getObjectDescribe('Contact').isDeletable();
     }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
+    * @description Check read permission on Duplicate Record Sets
+    */
+    public Boolean hasDSRObjectReadPermission() {
+        return UTIL_Describe.getObjectDescribe('DuplicateRecordSet').isAccessible();
+    }
+
+    /***********************************************************************************************
+    * @description To decide whether to show Search by Contact page or not
+    */ 
+    
+    public Boolean showContactSearch { get; set; }
+    
+    /***********************************************************************************************
+    * @description To decide whether to show the Show Duplicate Record Set button
+    */
+    public Boolean showDRSButton { get; set; }
+
+    /***********************************************************************************************
+    * @description To decide whether to show the merge page
+    */
+    public Boolean loadMergePage { get; set; }
+
+    /***********************************************************************************************
+    * @description Standard set controller variables
+    */ 
+    public ApexPages.StandardSetController drsSetController {
+        get {
+            if(drsSetController == null){ 
+                drsSetController = new ApexPages.StandardSetController
+                    (Database.getQueryLocator(constructDRSSOQL())); 
+                drsSetController.setPageSize(pageSize);    
+            }
+            return drsSetController;
+        }
+        set;
+     }
+
+     /**********************************************************************************************
+    * @description Duplicate Record Set diplay page size.
+    */
+    private Integer pageSize = 10;
+    
+    /***********************************************************************************************
+    * @description Total number of pages in pagination implemented on Duplicate Record Set 
+    * diplay page.
+    */
+    public Integer totalPages { get; set; }
+    
+    /***********************************************************************************************
+    * @description First Contact created for each DRS
+    */
+    public Map<Id,Contact> firstContactOfDRS { get; set; }
+
+    /***********************************************************************************************
+     * @description To store the selected DRS recordId 
+     */
+    public String drsRecordId { get; set; }
+            
+    /***********************************************************************************************
+    * @description Checks whether there are more records to display on next page in pagination  
+    * implemented on Duplicate Record Set diplay page.
+    */
+    
+    public Boolean hasNext {
+        get {
+            return drsSetController.getHasNext();
+        }
+        set;
+    }
+    
+    /***********************************************************************************************
+    * @description Checks whether there are records prior to the records dislayed on the current  
+    * page to be display on the previous page in pagination implemented on Duplicate Record Set 
+    * diplay page.
+    */
+    
+    public Boolean hasPrevious {
+        get {
+            return drsSetController.getHasPrevious();
+        }
+        set;
+    }
+    
+    /***********************************************************************************************
+    * @description Page number of the current page
+    */
+    
+    public Integer pageNumber {
+        get {
+            return drsSetController.getPageNumber();
+        }
+        set;
+    } 
+
+    /***********************************************************************************************
+    * @description The list of contact field names that are used in search and displayed in Found 
+    * Contacts.
+    */
+    private List<String> listStrContactField {
+        get {
+            if (listStrContactField == null) {
+                listStrContactField = UTIL_Describe.listStrFromFieldSet
+                    ('Contact', UTIL_Namespace.StrTokenNSPrefix('ContactMergeFoundFS'));
+                Set<String> setStr = new Set<String>(listStrContactField);
+                // now add additional fields we know we need
+                setStr.add('Id');
+                setStr.add('Name');
+                listStrContactField.clear();
+                listStrContactField.addAll(setStr);
+            }
+            return listStrContactField;
+        }
+        set;
+    }
+
+    /***********************************************************************************************
+    * @description List of DRS fields that need to be displayed on DRS list page
+    */
+    private List<String> drsFieldNames {
+        get {
+            if (drsFieldNames == null) {
+                drsFieldNames = UTIL_Describe.listStrFromFieldSet
+                    ('DuplicateRecordSet', UTIL_Namespace.StrTokenNSPrefix('ContactMergeDRS'));
+                Set<String> setStr = new Set<String>(drsfieldNames);
+                // now add additional fields we know we need
+                setStr.add('Id');
+                setStr.add('Name');
+                setStr.add('DuplicateRuleId');
+                setStr.add('RecordCount');
+                setStr.add('LastModifiedDate');
+                drsFieldNames.clear();
+                drsFieldNames.addAll(setStr);
+            }
+            return drsFieldNames;
+        }
+        set;
+    }
+    
+    /***********************************************************************************************
+    * @description List of DRI fields to be queried
+    */
+    private List<String> driFieldNames {
+        get {
+            if (driFieldNames == null) {
+                driFieldNames = new List<String>();
+                driFieldNames.add('RecordId');
+            }
+            return driFieldNames;
+        }
+        set;
+    }
+
+    /***********************************************************************************************
+    * @description List of readonly fields
+    */
+    public static List<String> readOnlyFields = new List<String>{
+        'npo02__TotalOppAmount__c',
+        'npo02__AverageAmount__c',
+        'npo02__SmallestAmount__c',
+        'npo02__LargestAmount__c',
+        'npo02__FirstCloseDate__c',
+        'npo02__LastCloseDate__c',
+        'npo02__NumberOfClosedOpps__c',
+        'npo02__OppAmountThisYear__c',
+        'npo02__OppsClosedThisYear__c',
+        'npo02__OppAmountLastYear__c',
+        'npo02__OppsClosedLastYear__c',
+        'npo02__OppsClosed2YearsAgo__c',
+        'npo02__OppAmount2YearsAgo__c',
+        'npo02__OppsClosedLastNDays__c',
+        'npo02__OppAmountLastNDays__c',
+        'npo02__TotalMembershipOppAmount__c',
+        'npo02__NumberOfMembershipOpps__c',
+        'npo02__LastMembershipDate__c',
+        'npo02__LastMembershipAmount__c',
+        'npo02__LastMembershipLevel__c',
+        'npo02__LastMembershipOrigin__c',
+        'npo02__MembershipJoinDate__c',
+        'npo02__MembershipEndDate__c',
+        'npo02__LastOppAmount__c',
+        'npo02__Best_Gift_Year__c',
+        'npo02__Best_Gift_Year_Total__c',
+        'Soft_Credit_Last_N_Days__c',
+        'npo02__Soft_Credit_Last_Year__c',
+        'npo02__Soft_Credit_This_Year__c',
+        'npo02__Soft_Credit_Total__c',
+        'npo02__Soft_Credit_Two_Years_Ago__c',
+        'First_Soft_Credit_Amount__c',
+        'First_Soft_Credit_Date__c',
+        'Largest_Soft_Credit_Amount__c',
+        'Largest_Soft_Credit_Date__c',
+        'Last_Soft_Credit_Amount__c',
+        'Last_Soft_Credit_Date__c',
+        'Number_of_Soft_Credits__c',
+        'Number_of_Soft_Credits_Last_N_Days__c',
+        'Number_of_Soft_Credits_Last_Year__c',
+        'Number_of_Soft_Credits_This_Year__c',
+        'Number_of_Soft_Credits_Two_Years_Ago__c'
+    };
+
+    /***********************************************************************************************
     * @description Wraps a contact together with a checkbox, to allow contact selection.
     */
     public class ContactWrapper {
-        /*******************************************************************************************************
+        /*******************************************************************************************
         * @description The contact.
         */
-        public Contact con {get; set;}
-        /*******************************************************************************************************
+        public Contact contactRecord { get; set; }
+        /*******************************************************************************************
         * @description The checkbox.
         */
-        public Boolean selected {get; set;}
+        public Boolean selected { get; set; }
 
-        /*******************************************************************************************************
+        /*******************************************************************************************
         * @description Constructor that initializes instance properties.
         * @c The contact to wrap.
         */
         public ContactWrapper(Contact c) {
-            con = c;
+            contactRecord = c;
             selected = false;
         }
     }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description The rows to merge.
     */
-    public List<FieldRow> fieldRows {get; private set;}
+    public List<FieldRow> fieldRows { get; private set; }
 
-    /*******************************************************************************************************
-    * @description The struct to save all the information belonging to each contact field, including values for
-    * all the contacts to merge.
+    /***********************************************************************************************
+    * @description The struct to save all the information belonging to each contact field, including
+    * values for all the contacts to merge.
     */
     public class FieldRow {
-        /*******************************************************************************************************
+        /*******************************************************************************************
         * @description Stores the field Label.
         */
-        public String fieldLabel {get; private set;}
-        /*******************************************************************************************************
+        public String fieldLabel { get; private set; }
+        /*******************************************************************************************
         * @description Stores the field api name.
         */
-        public String fieldName {get; private set;}
-        /*******************************************************************************************************
+        public String fieldName { get; private set; }
+        /*******************************************************************************************
         * @description Property to tell whether UI must should a radio to select the field value.
         */
-        public boolean showRadio {get; private set;}
-        /*******************************************************************************************************
+        public Boolean showRadio { get; private set; }
+        /*******************************************************************************************
         * @description  List of values for each contact record.
         */
-        public List<Cell> values {get; private set;}
-        /*******************************************************************************************************
+        public List<Cell> values { get; private set; }
+        /*******************************************************************************************
         * @description Selected record.
         */
-        public String selectedValue {get; set;}
-        /*******************************************************************************************************
+        public String selectedValue { get; set; }
+        /*******************************************************************************************
         * @description The class style.
         */
-        public String styleClass {get; private set;}
+        public String styleClass { get; private set; }
 
-        /*******************************************************************************************************
+        /*******************************************************************************************
         * @description Constructor that initializes the values property.
         */
         public FieldRow() {
             this.values = new List<Cell>();
         }
 
-        /*******************************************************************************************************
+        /*******************************************************************************************
         * @description Constructor that initializes the values property.
         * @param fieldName The name of the field.
         * @param fieldLabel The field label.
         * @param showRadio Wether a radio button should be displayed for the row.
         * @param styleClass The style class.
         */
-        public FieldRow(String fieldName, String fieldLabel, boolean showRadio, String styleClass) {
+        public FieldRow(String fieldName, String fieldLabel, Boolean showRadio, String styleClass) {
             this();
             this.fieldName = fieldName;
             this.fieldLabel = fieldLabel;
@@ -155,20 +374,20 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description The cell for a corresponding field row in the UI table.
     */
     public class Cell {
-        /*******************************************************************************************************
+        /*******************************************************************************************
         * @description Id of the record to which this value belongs.
         */
-        public String objId {get; private set;}
-        /*******************************************************************************************************
+        public String objId { get; private set; }
+        /*******************************************************************************************
         * @description The actual value.
         */
-        public String value {get; private set;}
+        public String value { get; private set; }
 
-        /*******************************************************************************************************
+        /*******************************************************************************************
         * @description Constructor that sets instance properties.
         * @param objectId The ID of the object whose field represented by the cell.
         * @param value The value of the field represented by the cell.
@@ -179,48 +398,69 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description Constructor for StandardSetController to allow invocation from list views.
-    * @param controller The default list controller for contact. It allows us to do pagination on the page.
+    * @param controller The default list controller for contact. It allows us to do pagination on 
+    * the page.
     */
     public CON_ContactMerge_CTRL(ApexPages.StandardSetController controller){
         searchText='';
         searchResults = new List<ContactWrapper>();
-        selectedRecords = new Map<String, Contact>();
+        listDuplicateRecordSets = new List<DuplicateRecordSet>();
         step = 1;
         fieldRows = new List<FieldRow>();
         canContinueWithMerge = true;
-
-        set<Id> mergeIds = new set<Id>();
+        Set<Id> mergeIds = new Set<Id>();
+        selectedRecords = new Map<String, Contact>();
+        firstContactOfDRS = new Map<Id,Contact>();
+        showContactSearch = false;
+        showDRSButton = true;
+        loadMergePage = false;
+        showDRS = false;
 
         if (!hasContactObjectDeletePermission()) {
             canContinueWithMerge = false;
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.conMergeErrorNoDeleteObjPermission));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 
+                System.Label.conMergeErrorNoDeleteObjPermission));
             return;
         }
 
-        //if any selected records were passed the standard set controller show the merge page with those records
-        for(Contact c : (list<Contact>)controller.getSelected()) {
+        //if any selected records were passed the standard set controller show the merge page with 
+        // those records
+        for(Contact c : (List<Contact>)controller.getSelected()) {
             mergeIds.add(c.Id);
         }
 
         if(!mergeIds.isEmpty()) {
             loadMergeCandidates(mergeIds);
+            if(!ApexPages.hasMessages()) {
+                showDRSButton = false;
+                showContactSearch = true;
+            }
         }
 
         //otherwise, check for a search parameter for the SOSL query and use that
         else if(ApexPages.CurrentPage().getParameters().containsKey('srch')) {
             searchText = ApexPages.CurrentPage().getParameters().get('srch');
+            showDRSButton = false;
+            showContactSearch = true;
             search();
         }
-        //otherwise, check for a mergeIds parameter, which should contain a comma separated list of Ids to merge
-        else if(ApexPages.CurrentPage().getParameters().containsKey('mergeIds') && ApexPages.CurrentPage().getParameters().get('mergeIds') != '') {
+        //otherwise, check for a mergeIds parameter, which should contain a comma separated list 
+        //of Ids to merge
+        else if(ApexPages.CurrentPage().getParameters().containsKey('mergeIds') && 
+            ApexPages.CurrentPage().getParameters().get('mergeIds') != '') {
             try {
                 //attempt to deserialise the comma separated Ids into a list and then a set
-                mergeIds = new set<Id>((list<Id>)ApexPages.CurrentPage().getParameters().get('mergeIds').split(','));
+                mergeIds = new set<Id>((list<Id>)ApexPages.CurrentPage().getParameters()
+                    .get('mergeIds').split(','));
                 //if we got any ids, use to try and enter the merge selected records page
                 if (mergeIds != null) {
                     loadMergeCandidates(mergeIds);
+                    if(!ApexPages.hasMessages()) {
+                        showDRSButton = false;
+                        showContactSearch = true;
+                    }
                 }
             }
             catch(StringException e){
@@ -229,13 +469,13 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
 
-    /*******************************************************************************************************
-    * @description Selects all the values of a certain record. Used by the "Select All" command link on the page.
+    /***********************************************************************************************
+    * @description Selects all the values of a certain record. Used by the "Select All" command link
+    * on the page.
     * @return void
     */
     public void selectDefaultRecord() {
         String recordId = Apexpages.currentPage().getParameters().get('recordId');
-        //UTIL_Debug.debug('Selected Record: ' + recordId);
         if (recordId != null && selectedRecords.keySet().contains(recordId)) {
             for (FieldRow row : fieldRows) {
                 if (row.showRadio) {
@@ -245,53 +485,63 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
 
-    /*******************************************************************************************************
-    * @description Shows the next step of the wizard where user can see the diff of the records before merge.
+    /***********************************************************************************************
+    * @description Shows the next step of the wizard where user can see the diff of the records 
+    * before merge.
     */
     public void nextStep() {
 
-        set<Id> mergeIds = new set<Id>();
+        Set<Id> mergeIds = new Set<Id>();
         for (ContactWrapper c : searchResults) {
             if (c.selected) {
-                mergeIds.add(c.con.Id);
+                mergeIds.add(c.contactRecord.Id);
             }
         }
         loadMergeCandidates(mergeIds);
     }
 
-    /*******************************************************************************************************
-    * @description Shows the next step of the wizard where user can see the diff of the records before merge.
+    /***********************************************************************************************
+    * @description Shows the next step of the wizard where user can see the diff of the records 
+    * before merge.
     */
-    private void loadMergeCandidates(set<Id> mergeCandidates) {
+    private void loadMergeCandidates(Set<Id> mergeCandidates) {
 
-        // Check we have atleast 2 and not more than 3 records selected for merge. If not throw an error.
+        // Check we have atleast 2 and not more than 3 records selected for merge. 
+        // If not throw an error.
         if (mergeCandidates.size() <=1) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Too_Few_Contacts));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+                Label.npe01.Contact_Merge_Error_Too_Few_Contacts));
             return;
         }
 
         if (mergeCandidates.size() >3 ) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Too_Many_Contacts));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+                Label.npe01.Contact_Merge_Error_Too_Many_Contacts));
             return;
         }
 
         selectedRecordsCount = mergeCandidates.size();
+        fieldRows.clear();
+        selectedRecords.clear();
 
         Map<String, Schema.SObjectField> contactFields = Schema.SObjectType.Contact.fields.getMap();
-        Map<String, Schema.DescribeFieldResult> standardFieldMap = new Map<String, Schema.DescribeFieldResult>();
-        Map<String, Schema.DescribeFieldResult> customFieldMap = new Map<String, Schema.DescribeFieldResult>();
+        Map<String, Schema.DescribeFieldResult> standardFieldMap = 
+            new Map<String, Schema.DescribeFieldResult>();
+        Map<String, Schema.DescribeFieldResult> customFieldMap = 
+            new Map<String, Schema.DescribeFieldResult>();
 
         // Construct the query string
-        String query = 'Select id, name, ';
+        String query = 'SELECT Id, Name, ';
         for (String fieldName : contactFields.keySet()) {
-            Schema.SobjectField f = contactFields.get(fieldName);
-            Schema.DescribeFieldResult fResult = f.getDescribe();
+            Schema.SobjectField field = contactFields.get(fieldName);
+            Schema.DescribeFieldResult fResult = field.getDescribe();
 
             // Ignore fields that have an identical API name as an npsp prefixed field
             // This is due to a bug in dynamic SOQL, quich causes querying for two real fields,
             // e.g. npsp__foo__c and foo__c, to throw a duplicate field selected error.
             // Only select the NPSP namespaced field and ignore the same field without namespace
-            if (!String.isBlank(UTIL_Namespace.getNamespace()) && !fieldName.startsWith(UTIL_Namespace.getNamespace()+'__') &&
+            if (!String.isBlank(UTIL_Namespace.getNamespace()) && 
+                !fieldName.startsWith(UTIL_Namespace.getNamespace()+'__') &&
                 contactFields.containsKey(UTIL_Namespace.StrTokenNSPrefix(fieldName))) {
 
                 continue;
@@ -300,12 +550,12 @@ public with sharing class CON_ContactMerge_CTRL {
             // Only include the fields which are updateable and accessible
             if (fResult.isUpdateable() && fResult.isAccessible() && !isNPSPHiddenField(fieldname)) {
                 // If the field is type lookup, select the parent name
-                string relName = fResult.getRelationshipName();
+                String relName = fResult.getRelationshipName();
                 if (string.isBlank(relName)) {
                     query += (fieldName + ',');
                 } else {
                     //find the Name field for the related object
-                    string nameField = getRelatedObjNameField(fResult);
+                    String nameField = getRelatedObjNameField(fResult);
 
                     if (nameField!=null) {
                         query += (relName + '.' + nameField + ',');
@@ -324,26 +574,29 @@ public with sharing class CON_ContactMerge_CTRL {
         // Finally completing the query by appending the table name and the filter clause
         query += ' from Contact where id IN :mergeCandidates';
 
-        //UTIL_Debug.debug('The contact query is: ' + query);
-
         List<Contact> contacts;
         try {
             contacts = Database.query(query); // Query the records
-            // Ensure we got back the same number of records as expected. In case any record got deleted/moved since last search.
+            // Ensure we got back the same number of records as expected. 
+            // In case any record got deleted/moved since last search.
             if (contacts == null || contacts.size() != mergeCandidates.size()) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Query_Failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+                    Label.npe01.Contact_Merge_Error_Query_Failed + ' ' + 
+                    Label.npe01.Contact_Merge_Error_please_retry));
                 return;
             }
         } catch (Exception e) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, Label.npe01.Contact_Merge_Error_Contact_not_found + ' Error: ' + e));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+                Label.npe01.Contact_Merge_Error_Contact_not_found + ' Error: ' + e));
             return;
         }
 
         if (!canUserDeleteSelectedContacts(mergeCandidates)) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, System.Label.conMergeErrorNoDeleteRecAccess));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+                System.Label.conMergeErrorNoDeleteRecAccess));
             return;
         }
-
+        
         // Update the list of searched records with only the ones selected
         searchResults.clear();
         for (Contact c : contacts) {
@@ -362,7 +615,7 @@ public with sharing class CON_ContactMerge_CTRL {
 
         // Add the first row of type header with contact names as titles
         FieldRow temp = new FieldRow('', '', false, 'header');
-        for (Sobject c: contacts) {
+        for (Contact c: contacts) {
             Contact con = (Contact) c;
             temp.values.add(new Cell(c.id, con.name));
         }
@@ -372,10 +625,11 @@ public with sharing class CON_ContactMerge_CTRL {
         temp = new FieldRow(MASTER_KEY, 'Master Record', true, null);
         {
             DateTime lastModifiedDate;
-            for (Sobject c: contacts) {
+            for (Contact c: contacts) {
                 temp.values.add(new Cell(c.id, null));
                 if (lastModifiedDate == null ||
-                    (lastModifiedDate != null && (DateTime)c.get('lastModifiedDate') > lastModifiedDate)) {
+                    (lastModifiedDate != null && 
+                    (DateTime)c.get('lastModifiedDate') > lastModifiedDate)) {
                     temp.selectedValue = c.id;
                     lastModifiedDate = (DateTime)c.get('lastModifiedDate');
                 }
@@ -384,16 +638,21 @@ public with sharing class CON_ContactMerge_CTRL {
         fieldRows.add(temp);
 
         // Add the portal row if any of the contacts have a user record
-        List<User> portalUsers = new List<User>([SELECT Id, ContactId FROM User WHERE ContactId IN :contacts]);
+        List<User> portalUsers = new List<User>([
+            SELECT Id, ContactId 
+            FROM User 
+            WHERE ContactId IN :contacts]);
         if (!portalUsers.isEmpty()) {
             Map<Id, Boolean> hasUserRecordByContactId = new Map<Id, Boolean>();
             for (User portalUser : portalUsers) {
                 hasUserRecordByContactId.put(portalUser.ContactId, true);
             }
-            temp = new FieldRow(System.Label.conMergePortalUser, System.Label.conMergePortalUser, false, null);
-            for (Sobject c: contacts) {
+            temp = new FieldRow(System.Label.conMergePortalUser, 
+                System.Label.conMergePortalUser, false, null);
+            for (Contact c: contacts) {
                 Contact con = (Contact) c;
-                temp.values.add(new Cell(c.id, String.valueOf(hasUserRecordByContactId.containsKey(c.Id))));
+                temp.values.add(new Cell(c.id, 
+                    String.valueOf(hasUserRecordByContactId.containsKey(c.Id))));
             }
             fieldRows.add(temp);
         }
@@ -420,11 +679,13 @@ public with sharing class CON_ContactMerge_CTRL {
         // Add created by and last modified by system fields to the list of FieldRow
         FieldRow createdByRow = new FieldRow('CreatedById', 'Created By', false, null),
             lastModifiedByRow = new FieldRow('LastModifiedById', 'Last Modified By', false, null);
-        for (Sobject c: contacts) {
+        for (Contact c: contacts) {
             SObject createdBy = c.getSObject('createdby');
             SObject modifiedBy = c.getSObject('lastModifiedBy');
-            createdByRow.values.add(new Cell(c.id, (createdBy != null ? createdBy.get('name') : '') + ' ' + c.get('createdDate')));
-            lastModifiedByRow.values.add(new Cell(c.id, (modifiedBy != null ? modifiedBy.get('name') : '') + ' ' + c.get('LastModifiedDate')));
+            createdByRow.values.add(new Cell(c.id, 
+                (createdBy != null ? createdBy.get('name') : '') + ' ' + c.get('createdDate')));
+            lastModifiedByRow.values.add(new Cell(c.id, 
+                (modifiedBy != null ? modifiedBy.get('name') : '') + ' ' + c.get('LastModifiedDate')));
         }
         fieldRows.add(createdByRow);
         fieldRows.add(lastModifiedByRow);
@@ -434,14 +695,16 @@ public with sharing class CON_ContactMerge_CTRL {
 
     }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description Returns a referenced object's name field.
-    * @param controller The default list controller for contact. It allows us to do pagination on the page.
+    * @param controller The default list controller for contact. It allows us to do pagination 
+    * on the page.
     * @return string The name of the name field, or null if we couldn't find one.
     */
-    private string getRelatedObjNameField(Schema.DescribeFieldResult fieldDesc) {
-        string nameField = 'Name';
-        Map<String, Schema.SObjectField> mapRelatedObjectFields = fieldDesc.getReferenceTo()[0].getDescribe().fields.getMap();
+    private String getRelatedObjNameField(Schema.DescribeFieldResult fieldDesc) {
+        String nameField = 'Name';
+        Map<String, Schema.SObjectField> mapRelatedObjectFields = 
+            fieldDesc.getReferenceTo()[0].getDescribe().fields.getMap();
 
         //if Name isn't the correct name field, find it
         if (!mapRelatedObjectFields.containsKey(nameField)) {
@@ -454,10 +717,12 @@ public with sharing class CON_ContactMerge_CTRL {
         return nameField;
     }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description Adds field information and field values to the list of field rows.
     */
-    private void addFieldComparisonRows(String fieldName, Schema.DescribeFieldResult fieldDesc, List<SObject> objs) {
+    private void addFieldComparisonRows(String fieldName, 
+        Schema.DescribeFieldResult fieldDesc, 
+        List<SObject> objs) {
         // Create a new FieldRow item
         FieldRow row = new FieldRow();
         row.fieldName = fieldName;
@@ -470,9 +735,10 @@ public with sharing class CON_ContactMerge_CTRL {
         }
 
         row.values = new List<Cell>();
-
-        boolean isDifferent = false; // flag to indicate whether atleast one pair of field values is different across all contacts
-        boolean isNull = true; // flag to indicate whether all the field values are null
+        //flag to indicate whether atleast one pair of field values is different across all contacts
+        Boolean isDifferent = false; 
+        // flag to indicate whether all the field values are null
+        Boolean isNull = true; 
         Integer idx = 0;
 
         List<String> values = new List<String>();
@@ -499,7 +765,8 @@ public with sharing class CON_ContactMerge_CTRL {
                 prev = String.valueOf(c.get(fieldName));
             }
             if (idx > 0 && !isNull) {
-                // Check if atleast one of the values is different. If yes then update the isDifferent flag
+                // Check if atleast one of the values is different. 
+                // If yes then update the isDifferent flag
                 String current = String.valueOf(c.get(fieldName));
                 if ((prev != null && !prev.equals(current)) ||
                     (current != null && !current.equals(prev))) {
@@ -528,104 +795,60 @@ public with sharing class CON_ContactMerge_CTRL {
                 row.values.add(new Cell(objs[i].id, val));
             }
             // Show the select radio only if the field values are different.
-            // Dont let user choose the account as you dont want users to assign a differnt account in One to One case.
-            row.showRadio = (isDifferent && !fieldName.equalsIgnoreCase('accountId') && !isNPSPReadOnly(fieldName));
+            // Dont let user choose the account as you dont want users to assign a differnt
+            // account in One to One case.
+            row.showRadio = (isDifferent && !fieldName.equalsIgnoreCase('accountId') && 
+                !isNPSPReadOnly(fieldName));
             fieldRows.add(row);
         }
     }
 
-    /*******************************************************************************************************
-    * @description returns whether the field should be treated as an NPSP read only field, typically one
-    * of our rollup fields that get automatically populated by rollups, and users should not direclty modify.
-    * @return boolean true if should be treated as readonly, false if not.
+    /***********************************************************************************************
+    * @description returns whether the field should be treated as an NPSP read only field, typically
+    * one of our rollup fields that get automatically populated by rollups, and users should 
+    * not direclty modify.
+    * @return Boolean true if should be treated as readonly, false if not.
     */
-    private boolean isNPSPReadOnly(string strField) {
-        // we have to maintain our own set of readonly fields, because
-        // RLLP_OppRollup_UTIL.ContactFields doesn't include them all!
-        list<string> listStrField = new list<string>{
-            'npo02__TotalOppAmount__c',
-            'npo02__AverageAmount__c',
-            'npo02__SmallestAmount__c',
-            'npo02__LargestAmount__c',
-            'npo02__FirstCloseDate__c',
-            'npo02__LastCloseDate__c',
-            'npo02__NumberOfClosedOpps__c',
-            'npo02__OppAmountThisYear__c',
-            'npo02__OppsClosedThisYear__c',
-            'npo02__OppAmountLastYear__c',
-            'npo02__OppsClosedLastYear__c',
-            'npo02__OppsClosed2YearsAgo__c',
-            'npo02__OppAmount2YearsAgo__c',
-            'npo02__OppsClosedLastNDays__c',
-            'npo02__OppAmountLastNDays__c',
-            'npo02__TotalMembershipOppAmount__c',
-            'npo02__NumberOfMembershipOpps__c',
-            'npo02__LastMembershipDate__c',
-            'npo02__LastMembershipAmount__c',
-            'npo02__LastMembershipLevel__c',
-            'npo02__LastMembershipOrigin__c',
-            'npo02__MembershipJoinDate__c',
-            'npo02__MembershipEndDate__c',
-            'npo02__LastOppAmount__c',
-            'npo02__Best_Gift_Year__c',
-            'npo02__Best_Gift_Year_Total__c',
-            'Soft_Credit_Last_N_Days__c',
-            'npo02__Soft_Credit_Last_Year__c',
-            'npo02__Soft_Credit_This_Year__c',
-            'npo02__Soft_Credit_Total__c',
-            'npo02__Soft_Credit_Two_Years_Ago__c',
-            'First_Soft_Credit_Amount__c',
-            'First_Soft_Credit_Date__c',
-            'Largest_Soft_Credit_Amount__c',
-            'Largest_Soft_Credit_Date__c',
-            'Last_Soft_Credit_Amount__c',
-            'Last_Soft_Credit_Date__c',
-            'Number_of_Soft_Credits__c',
-            'Number_of_Soft_Credits_Last_N_Days__c',
-            'Number_of_Soft_Credits_Last_Year__c',
-            'Number_of_Soft_Credits_This_Year__c',
-            'Number_of_Soft_Credits_Two_Years_Ago__c'
-        };
-
-        for (string strF : listStrField) {
-           if (strField.equalsIgnoreCase(strF))
-               return true;
+    private Boolean isNPSPReadOnly(String strField) {
+        for (String strF : readOnlyFields) {
+            if (strField.equalsIgnoreCase(strF))
+                return true;
         }
         return false;
     }
 
 
-    /*******************************************************************************************************
-    * @description returns whether the field should be treated as an NPSP hidden field, typically one
-    * of our deprecated or system fields
-    * @return boolean true if should be treated as hidden, false if not.
+    /***********************************************************************************************
+    * @description returns whether the field should be treated as an NPSP hidden field, typically
+    * one of our deprecated or system fields
+    * @return Boolean true if should be treated as hidden, false if not.
     */
-    private boolean isNPSPHiddenField(string strField) {
-        list<string> listStrField = new list<string>{
+    private Boolean isNPSPHiddenField(String strField) {
+        List<String> listStrField = new List<String>{
             'npe01__SystemAccountProcessor__c',
             'npo02__SystemHouseholdProcessor__c',
             'npe01__SystemIsIndividual__c',
             'Current_Address__c'
         };
 
-        for (string strF : listStrField) {
-           if (strField.equalsIgnoreCase(strF))
-               return true;
+        for (String strF : listStrField) {
+            if (strField.equalsIgnoreCase(strF))
+                return true;
         }
         return false;
     }
 
-     /*******************************************************************************************************
+    /***********************************************************************************************
     * @description checks if the logged in user have delete permission for the selected records.
     * @param ContactIds list of contacts
-    * @return boolean.  true if delete access is allowed.
-    ********************************************************************************************************/
-    private boolean canUserDeleteSelectedContacts(Set<Id> contactIds) {
+    * @return Boolean.  true if delete access is allowed.
+    */
+    private Boolean canUserDeleteSelectedContacts(Set<Id> contactIds) {
         List <UserRecordAccess> userAccess = [
-             SELECT RecordId, HasEditAccess, HasDeleteAccess, MaxAccessLevel
-             FROM UserRecordAccess
-             WHERE UserId = :UserInfo.getUserId()
-             And RecordId IN :contactIds
+            SELECT RecordId, HasEditAccess, HasDeleteAccess, MaxAccessLevel
+            FROM UserRecordAccess
+            WHERE UserId = :UserInfo.getUserId()
+            And RecordId IN :contactIds
         ];
         for (UserRecordAccess user: userAccess) {
             if (!user.HasDeleteAccess ) {
@@ -635,66 +858,62 @@ public with sharing class CON_ContactMerge_CTRL {
         return true;
     }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description Searches for contacts.
     * @return PageReference The page that it redirects to. Same page user is in.
     */
     public PageReference search() {
-        Try {
-            if(searchText != null && searchText.length()>0){
-                step = 2;
-                this.searchResults = wrapSOSLResults(searchRecords());
-            }
+        try {
+            step = 2;
+            this.searchResults = wrapQueryResults(searchRecords());
+            
+ 
         } catch (exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));
         }
         return null;
     }
 
-    /*******************************************************************************************************
-    * @description Runs SOSL query to find contacts according to the search text entered by the user.
+    /***********************************************************************************************
+    * @description Runs SOSL query to find contacts according to the search text entered by the user
     * @return List<SObject> The list of sObjects returned by the search
     */
     public List<SObject> searchRecords() {
         searchResults.clear();
+        if(showContactSearch == true && searchText != null && searchText.length() > 0) {
+            //build the SOSL query and execute - NOTE: * wildcard will only have effect at the 
+            //middle or end of the search term
+            UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+                .withSelectFields(listStrContactField)
+                .withSearchQuery(searchText)
+                .withWildcard()
+                .withOrderBy(Contact.LastName)
+                .withLimit(SOSL_LIMIT);
 
-        //build the SOSL query and execute - NOTE: * wildcard will only have effect at the middle or end of the search term
-        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
-            .withSelectFields(listStrContactField)
-            .withSearchQuery(searchText)
-            .withWildcard()
-            .withOrderBy(Contact.LastName)
-            .withLimit(SOSL_LIMIT);
-
-        return finder.executeSearch();
-    }
-
-    /*******************************************************************************************************
-    * @description The list of contact field names that are used in search and displayed in Found Contacts.
-    */
-    private list<string> listStrContactField {
-        get {
-            if (listStrContactField == null) {
-                listStrContactField = UTIL_Describe.listStrFromFieldSet('Contact', UTIL_Namespace.StrTokenNSPrefix('ContactMergeFoundFS'));
-                set<string> setStr = new set<string>(listStrContactField);
-                // now add additional fields we know we need
-                setStr.add('Id');
-                setStr.add('Name');
-                listStrContactField.clear();
-                listStrContactField.addAll(setStr);
-            }
-            return listStrContactField;
+            return finder.executeSearch();
+        } else {
+            String whereString = new UTIL_Query()
+                .withFrom('DuplicateRecordItem')
+                .withSelectFields(driFieldNames)
+                .withWhere('DuplicateRecordSetId =:drsRecordId')
+                .build();
+            whereString = 'Id IN ('+ whereString + ')';
+            String queryString = new UTIL_Query()
+                .withFrom('Contact')
+                .withSelectFields(listStrContactField)
+                .withWhere(whereString)
+                .build();
+            return Database.query(queryString);
         }
-        set;
     }
 
-    /*******************************************************************************************************
-    * @description Wraps the SOSL results.
+    /***********************************************************************************************
+    * @description Wraps the Query(SOSL and SOQL) results.
     * @param searchResults The list of SObjects to wrap.
-    * @return List<ContactWrapper> Those records from the passed parameter that are of type Contact are returned
-    * in this list, inside wrappers.
+    * @return List<ContactWrapper> Those records from the passed parameter that are of type Contact
+    * are returned in this list, inside wrappers.
     */
-    public List<ContactWrapper> wrapSOSLResults(List<SObject> searchResults) {
+    public List<ContactWrapper> wrapQueryResults(List<SObject> searchResults) {
         List<ContactWrapper> res = new List<ContactWrapper>();
 
         for (SObject returnedObject : searchResults) {
@@ -705,13 +924,14 @@ public with sharing class CON_ContactMerge_CTRL {
         return res;
     }
 
-    /*******************************************************************************************************
+    /***********************************************************************************************
     * @description Merges the winner and losers.
     * @return PageReference The page that it redirects to. Same page user is in.
     */
     public PageReference mergeContacts() {
         SObject master;
         // Find the master record based the selected value of the Master FieldRow
+        
         for (FieldRow row : fieldRows) {
             if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {
                 master = new Contact(id = row.selectedValue);
@@ -722,20 +942,20 @@ public with sharing class CON_ContactMerge_CTRL {
         if (master != null) {
             // Update the field values of master record based on the selected value for each field.
             for (FieldRow row : fieldRows) {
-                if (row.showRadio && !row.fieldName.equals(MASTER_KEY) && row.selectedValue != master.id) {
+                if (row.showRadio && 
+                    !row.fieldName.equals(MASTER_KEY) && 
+                    row.selectedValue != master.id) {
                     SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
 
-                    //UTIL_Debug.debug('Assigning field: ' + row.fieldName);
-
-                    // Sobject.put is not happy when sobject.get returns null. It throws an exception System.SObjectException: Illegal assignment from Object to String.
-                    // But instead when you pass a null directly to put, it works fine. And hence, this if statement.
+                    // Sobject.put is not happy when sobject.get returns null. It throws an 
+                    // exception System.SObjectException: Illegal assignment from Object to String.
+                    // But instead when you pass a null directly to put, it works fine. 
+                    // And hence, this if statement.
                     if (selectedRecord.get(row.fieldName) == null) {
                         master.put(row.fieldName, null);
                     } else {
                         Object val = selectedRecord.get(row.fieldName);
-                        //UTIL_Debug.debug('Setting value: ' + val);
                         master.put(row.fieldName, val);
-                        //UTIL_Debug.debug('Set value: ' + master.get(row.fieldName));
                     }
                 }
             }
@@ -753,10 +973,15 @@ public with sharing class CON_ContactMerge_CTRL {
             List<Contact> allContacts = new List<Contact>();
             allContacts.add((Contact)master);
             allContacts.addAll(losers);
-            List<Contact> lock = [Select id from Contact where id IN :allContacts for update];
+            List<Contact> lock = [
+                SELECT Id 
+                FROM Contact 
+                WHERE Id IN :allContacts for update];
 
             if (lock == null || lock.size() != allContacts.size()) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Lock_failed  + ' ' + label.npe01.Contact_Merge_Error_please_retry) );
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+                    label.npe01.Contact_Merge_Error_Lock_failed  + ' ' + 
+                    label.npe01.Contact_Merge_Error_please_retry) );
                 return null;
             }
 
@@ -764,13 +989,13 @@ public with sharing class CON_ContactMerge_CTRL {
             try {
                 Database.DMLOptions dml = new Database.DMLOptions();
                 dml.DuplicateRuleHeader.AllowSave = true;
-                // We need to turn off Affiliation processing or there will be duplicate affiliates created
-                // after the merge.  As merge transactions do not fire child triggers
+                // We need to turn off Affiliation processing or there will be duplicate affiliates
+                // created after the merge.  As merge transactions do not fire child triggers
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
 
                 Database.SaveResult sr = UTIL_DMLService.updateRecord(master, dml);
                 if (!sr.isSuccess()) {
-                    string strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
+                    String strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
                     for (Database.Error err : sr.getErrors()) {
                         strErr += err.getMessage() + '\n';
                     }
@@ -795,4 +1020,167 @@ public with sharing class CON_ContactMerge_CTRL {
 
         return null;
     }
+
+    /***********************************************************************************************
+    * @description Shows list of Duplicate Record Set records related to contact dupliacte rules
+    */
+    public void showDuplicateRecordSets() {
+        try {
+            showDRSButton = false;
+            showContactSearch = false;
+            showDRS = true;
+            loadMergePage = true;
+            step = 1;
+            listDuplicateRecordSets = getDuplicateRecordSets();
+            driFieldNames.add('DuplicateRecordSetId');
+            List<DuplicateRecordSet> duplicateRecordSets = new List<DuplicateRecordSet>(
+                (List<DuplicateRecordSet>)Database.query(constructDRSSOQL()));
+            driFieldNames.remove(driFieldNames.indexOf('DuplicateRecordSetId'));
+            //Fetch the ids of all Duplicate Record Items
+            Set<Id> allDRIIds = new Set<Id>();
+            List<DuplicateRecordItem> allDRIs = new List<DuplicateRecordItem>();
+            for (DuplicateRecordSet dupRecSet : duplicateRecordSets) {
+                allDRIIds.addAll(new Map<Id, DuplicateRecordItem>(
+                    dupRecSet.DuplicateRecordItems).keySet());
+                allDRIs.addAll(new Map<Id, DuplicateRecordItem>(
+                    dupRecSet.DuplicateRecordItems).values());
+            }
+            //Fetch the remaining query row limit to ensure that the page will not 
+            //break due to too many query rows error.
+            if ((Limits.getLimitQueryRows() -  Limits.getQueryRows()) < allDRIIds.size()) {
+                ApexPages.addMessage(new ApexPages.Message
+                    (ApexPages.Severity.Error, Label.conMergeTooManyContactError));
+                step = 0;
+                return;
+            }
+            // Construct query to fetch all the related contact records 
+            // to find the first contact related to the DRS record
+            List<String> contactField = new List<String>();
+            contactField.add('Id');
+            contactField.add('Name');
+            contactField.add('createdDate');
+             
+            String whereString = new UTIL_Query()
+                .withFrom('DuplicateRecordItem')
+                .withSelectFields(driFieldNames)
+                .withWhere('Id IN :allDRIIds')
+                .build();
+            whereString = 'Id IN (' + whereString + ')'; 
+            String contactQueryStr =  new UTIL_Query()
+                .withFrom('Contact')
+                .withSelectFields(contactField)
+                .withWhere(whereString)
+                .build();
+            Map<Id,Contact> contacts = new Map<Id,Contact>(
+                (List<Contact>)Database.query(contactQueryStr));
+            for (DuplicateRecordItem dri : allDRIs) {
+                Contact con = contacts.get(dri.RecordId);
+                if (!(firstContactOfDRS.containsKey(dri.DuplicateRecordSetId))) {
+                    firstContactOfDRS.put(dri.DuplicateRecordSetId,con);
+                } else {
+                    if (con.createdDate < 
+                        firstContactOfDRS.get(dri.DuplicateRecordSetId).createdDate) {
+                        firstContactOfDRS.put(dri.DuplicateRecordSetId,con);
+                    }
+                }
+            }
+            totalPages = getTotalPages(); 
+        } catch (exception ex) {
+                ApexPages.addMessage(new ApexPages.Message
+                    (ApexPages.Severity.Error, ex.getMessage()));
+        }
+    }
+
+    /**********************************************************************************************
+    * @description Construct SOQL query to fetch all the contact related Duplicate Record Sets
+    * @return String Returns the query to fetch Duplicate Record Sets
+    */
+    public String constructDRSSOQL() {
+        //build SOQL subquery on Duplicate Record Items
+        String subQueryOrderBy = 'CreatedDate ASC';
+        
+        String subQuery =  new UTIL_Query()
+            .withFrom('DuplicateRecordItems')
+            .withSelectFields(driFieldNames)                                  
+            .build();
+        String subQueryStr = '('+subQuery+')';
+        drsFieldNames.add(subQueryStr);
+        String setOrderBy = 'LastModifiedDate DESC ';
+        String setWhereClause = 'RecordCount > 1 AND DuplicateRule.SObjectType = \'Contact\'';
+        //build the SOQL query and execute
+        String queryStr =  new UTIL_Query()
+            .withFrom(DuplicateRecordSet.sObjectType)
+            .withSelectFields(drsFieldNames)
+            .withWhere(setWhereClause)
+            .withOrderBy(setOrderBy)
+            .withLimit(SOQL_LIMIT)
+            .build();
+        drsFieldNames.remove(drsFieldNames.indexOf(subQueryStr));
+        return queryStr;
+    }
+
+    /***********************************************************************************************
+     * @description Displays the Search by Contact page of Contact Merge
+     * 
+     */
+    public void showContactSearchPage() {
+        loadMergePage = true;
+        step = 1;
+        searchText='';
+        showContactSearch = true; 
+        showDRSButton = true;
+        showDRS = false;              
+    }
+
+    /***********************************************************************************************
+     * @description Fetches the list of Duplicate Record Sets from standard set controller 
+     * for pagination
+     * @return List<DuplicateRecordSet> Returns the current list of Duplicate Record Sets
+     */
+    public List<DuplicateRecordSet> getDuplicateRecordSets() {
+        return (List<DuplicateRecordSet>)drsSetController.getRecords();
+    }
+
+    /***********************************************************************************************
+    * @description Calculates total number of pages of Duplicate Record Sets
+    */
+    public Integer getTotalPages() {
+        return (Integer)Math.ceil(Decimal.valueOf(drsSetController.getResultSize())/pageSize);
+    }
+
+    /***********************************************************************************************
+    * @description Fetches the records to be displayed on first page of Duplicate Record Sets
+    */    
+    public void firstPage() {
+        drsSetController.first();
+        listDuplicateRecordSets = getDuplicateRecordSets();
+    }
+    
+    /***********************************************************************************************
+    * @description Fetches the records to be displayed on previous page of Duplicate Record Sets
+    */ 
+    
+    public void previousPage() {
+        drsSetController.previous();
+        listDuplicateRecordSets = getDuplicateRecordSets();
+    }   
+        
+    /***********************************************************************************************
+    * @description Fetches the records to be displayed on next page of Duplicate Record Sets
+    */
+    
+    public void nextPage() {
+        drsSetController.next();
+        listDuplicateRecordSets = getDuplicateRecordSets();     
+    }
+    
+    /***********************************************************************************************
+    * @description Fetches the records to be displayed on last pages of Duplicate Record Sets
+    */ 
+    
+    public void lastPage() {
+        drsSetController.last();
+        listDuplicateRecordSets = getDuplicateRecordSets();    
+    }
+
 }
