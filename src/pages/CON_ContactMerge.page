@@ -15,15 +15,46 @@
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
     <div class="slds-scope">
-
         <!-- PAGE HEADER -->
         <apex:form id="pgHeader">
             <c:UTIL_PageHeader headerLabel="{!$Label.conMergePageTitle}"
                                header="{!$Label.conMergePageTitleDetail}"
                                icon="contact" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="false"/>
+            <!-- PAGE BUTTON-->
+            <div class="slds-grid slds-grid_vertical">
+                <apex:outputPanel rendered="{!AND(canContinueWithMerge,showDRSButton)}">
+                    <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-4">
+                                <apex:outputText escape="false" value="{!$Label.conMergeSeeDupConText}"/>
+                            </div>
+                            <div class="slds-col">
+                                <apex:commandButton id="ShowDRS"
+                                                    action="{!showDuplicateRecordSets}" 
+                                                    value="{!$Label.conMergeSeeDupConDRS}" 
+                                                    styleClass="slds-button slds-button_neutral slds-size_3-of-12"/>
+                            </div>
+                        </div>  
+                    </div>                     
+                </apex:outputPanel>
+                <apex:outputPanel rendered="{!AND((!showContactSearch),canContinueWithMerge)}">
+                    <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">  
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-4">
+                                <apex:outputText escape="false" value="{!$Label.conMergeSearchConText}"/>
+                            </div>
+                            <div class="slds-col"> 
+                                <apex:commandButton id="srchByConBtn"
+                                                    action="{!showContactSearchPage}" 
+                                                    value="{!$Label.conMergeSearchPlaceholder}" 
+                                                    styleClass="slds-button slds-button_neutral slds-size_3-of-12"/>             
+                            </div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+            </div>
         </apex:form>
-
         <style type="text/css">
             .slds .slds-path__stage {
                 /* fix weird issue where check icon was not aligning properly */
@@ -42,65 +73,172 @@
                 display: inline-flex;
             }
         </style>
-
         <apex:variable var="step1class" value="{!IF(step == 1, 'slds-is-current', 'slds-is-complete')}"/>
         <apex:variable var="step2class" value="{!IF(step < 2, 'slds-is-incomplete', IF(step == 2, 'slds-is-current', 'slds-is-complete'))}"/>
         <apex:variable var="step3class" value="{!IF(step < 3, 'slds-is-incomplete', IF(STEP == 3, 'slds-is-current', 'slds-is-complete'))}"/>
-
-        <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">
-            <div class="slds-path" role="application tablist">
-                <ul class="slds-path__nav" role="presentation">
-                    <li class="slds-path__item {!step1class}" role="presentation">
-                        <div class="slds-path__link" role="tab">
-                            <span class="slds-path__stage">
-                                <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
-                                    <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
-                                </svg>
-                                <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
-                            </span>
-                            <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step1}</span>
-                        </div>
-                    </li>
-                    <li class="slds-path__item {!step2class}" role="presentation">
-                        <div class="slds-path__link" role="tab">
-                            <span class="slds-path__stage">
-                                <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
-                                    <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
-                                </svg>
-                                <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
-                            </span>
-                            <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step2}</span>
-                        </div>
-                    </li>
-                    <li class="slds-path__item {!step3class}" role="presentation">
-                        <div class="slds-path__link" role="tab">
-                            <span class="slds-path__stage">
-                                <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
-                                    <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
-                                </svg>
-                                <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
-                            </span>
-                            <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step3}</span>
-                        </div>
-                    </li>
-                    <li class="slds-path__item slds-is-incomplete" role="presentation">
-                        <div class="slds-path__link" role="tab">
-                            <span class="slds-path__stage">
-                                <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
-                                    <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
-                                </svg>
-                                <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
-                            </span>
-                            <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step4}</span>
-                        </div>
-                    </li>
-                </ul>
+        <apex:outputPanel rendered="{!loadMergePage}">
+            <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">
+                <div class="slds-path" role="application tablist">
+                    <ul class="slds-path__nav" role="presentation">
+                        <li class="slds-path__item {!step1class}" role="presentation">
+                            <div class="slds-path__link" role="tab">
+                                <span class="slds-path__stage">
+                                    <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
+                                        <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
+                                    </svg>
+                                    <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
+                                </span>
+                                <apex:outputPanel rendered="{!showContactSearch}">
+                                    <span class="slds-path__title">{!$Label.npe01__contact_merge_step1}</span>
+                                </apex:outputPanel>
+                                <apex:outputPanel rendered="{!showDRS}">
+                                    <span class="slds-path__title">{!$Label.conMergeDRSStep1}</span>
+                                </apex:outputPanel>
+                            </div>
+                        </li>
+                        <li class="slds-path__item {!step2class}" role="presentation">
+                            <div class="slds-path__link" role="tab">
+                                <span class="slds-path__stage">
+                                    <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
+                                        <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
+                                    </svg>
+                                    <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
+                                </span>
+                                <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step2}</span>
+                            </div>
+                        </li>
+                        <li class="slds-path__item {!step3class}" role="presentation">
+                            <div class="slds-path__link" role="tab">
+                                <span class="slds-path__stage">
+                                    <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
+                                        <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
+                                    </svg>
+                                    <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
+                                </span>
+                                <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step3}</span>
+                            </div>
+                        </li>
+                        <li class="slds-path__item slds-is-incomplete" role="presentation">
+                            <div class="slds-path__link" role="tab">
+                                <span class="slds-path__stage">
+                                    <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
+                                        <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
+                                    </svg>
+                                    <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
+                                </span>
+                                <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step4}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-
+        </apex:outputpanel>
         <c:UTIL_PageMessages html-class="slds-grid slds-grid_align-center slds-m-bottom_small"/>
-
-        <apex:outputText rendered="{!AND(step <= 2, canContinueWithMerge)}">
+        <apex:outputPanel id="drsDisplay" rendered="{!AND(step == 1,showDRS)}">
+            <apex:variable var="hasResults" value="{!listDuplicateRecordSets.size > 0}"/>
+            <apex:variable var="cardClass" value="{!IF(hasResults, '', 'slds-card_empty')}"/> 
+            <apex:form >
+                <div class="slds-card slds-m-horizontal_large {!cardClass}">
+                    <apex:outputText rendered="{!NOT(hasResults)}">
+                        <h3 class="slds-text-heading_small slds-p-top_large slds-p-bottom_large slds-p-left_x-small slds-p-right_x-small">
+                            <apex:outputText escape="false" value="{!$Label.conMergeErrorNoDRSFound}"/>
+                        </h3>
+                    </apex:outputText>
+                    <apex:outputText rendered="{!hasResults}">
+                        <div class="slds-card__header slds-grid slds-grid_align-spread">
+                            <h2 class="slds-text-heading_small slds-truncate slds-align-middle">
+                                {!$Label.conMergeFoundDRS}
+                            </h2>
+                        </div>
+                        <div class="slds-card__body">
+                            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                                <thead>
+                                    <tr>
+                                        <th class="slds-text-heading_label" scope="col">Duplicate Record Set Name</th>
+                                        <th class="slds-text-heading_label" scope="col">Last Modified Date</th>
+                                        <th class="slds-text-heading_label" scope="col">Duplicate Rule</th>
+                                        <th class="slds-text-heading_label" scope="col">Record Count</th>
+                                        <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}" var="field">
+                                            <th class="slds-text-heading_label" scope="col">
+                                                <apex:outputText value="{!field.label}"/>
+                                            </th>
+                                        </apex:repeat>
+                                        <th class="slds-text-heading_label" scope="col">First Contact Name</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <apex:repeat value="{!listDuplicateRecordSets}" var="drs">
+                                        <tr>
+                                            <td>
+                                                <a href="{!URLFOR($Action.DuplicateRecordSet.View, drs.Id)}" class="slds-truncate">
+                                                    <apex:outputText value="{!drs.Name}"/>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span class="slds-truncate">
+                                                    <apex:outputField value="{!drs.LastModifiedDate}"/>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="slds-truncate">
+                                                    <apex:outputField value="{!drs.DuplicateRuleId}"/>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="slds-truncate">
+                                                    <apex:outputField value="{!drs.RecordCount}"/>
+                                                </span>
+                                            </td>
+                                            <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}" var="field">
+                                                <td>
+                                                    <span class="slds-truncate">
+                                                        <apex:outputField value="{!drs[field]}"/>
+                                                    </span>
+                                                </td>
+                                            </apex:repeat>
+                                            <td>
+                                                <a href="{!URLFOR($Action.Contact.View, firstContactOfDRS[drs.Id])}" class="slds-truncate">
+                                                    <apex:outputText value="{!firstContactOfDRS[drs.Id].Name}"/>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <apex:actionRegion >
+                                                    <apex:commandlink action="{!search}" value="{!$Label.conMergeDRSPickBtnLabel}" 
+                                                                    styleClass="slds-button slds-button_brand">
+                                                        <apex:param name="DRSID" value="{!drs.Id}" assignTo="{!drsRecordId}"/>
+                                                    </apex:commandlink>  
+                                                </apex:actionRegion>   
+                                            </td>
+                                        </tr>
+                                    </apex:repeat>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div  class="slds-card__footer">
+                            <apex:commandButton action="{!firstPage}" value="{!$Label.labelListViewFirst}" 
+                                                styleClass="slds-button slds-button_brand"
+                                                reRender="drsDisplay"
+                                                disabled="{!(!hasPrevious)}"/> 
+                            <apex:commandButton action="{!previousPage}" value="{!$Label.labelListViewPrevious}" 
+                                                styleClass="slds-button slds-button_brand"
+                                                reRender="drsDisplay"
+                                                disabled="{!(!hasPrevious)}"/>
+                            <apex:outputLabel styleClass="slds-p-left_x-small slds-p-right_x-small" value=" Page {!pageNumber} of {!totalPages} " />
+                            <apex:commandButton action="{!nextPage}" value="{!$Label.labelListViewNext}" 
+                                                styleClass="slds-button slds-button_brand"
+                                                reRender="drsDisplay"
+                                                disabled="{!(!hasNext)}"/>
+                            <apex:commandButton action="{!lastPage}" value="{!$Label.labelListViewLast}" 
+                                                styleClass="slds-button slds-button_brand"
+                                                reRender="drsDisplay"
+                                                disabled="{!(!hasNext)}"/>  
+                        </div>
+                    </apex:outputText>
+                </div>
+            </apex:form>
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!AND(step <= 2, canContinueWithMerge,showContactSearch)}">
             <div class="slds-text-align_center slds-m-bottom_x-large">
                 <apex:form styleClass="slds-form slds-form_inline">
                     <div class="slds-form-element slds-size_1-of-2">
@@ -116,77 +254,76 @@
                     <apex:commandButton action="{!search}" value="{!$Label.mtchBtnSearch}" styleClass="slds-button slds-button_brand"/>
                 </apex:form>
             </div>
-        </apex:outputText>
-
-        <apex:outputText rendered="{!step == 2}">
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!step == 2}">
             <apex:variable var="hasResults" value="{!searchResults.size > 0}"/>
             <apex:variable var="cardClass" value="{!IF(hasResults, '', 'slds-card_empty')}"/>
-
             <apex:form >
                 <div class="slds-card slds-m-horizontal_large {!cardClass}">
                     <div class="slds-card__header slds-grid slds-grid_align-spread">
-                        <h2 class="slds-text-heading_small slds-truncate slds-align-middle">{!$Label.conMergeFoundContacts}</h2>
+                        <h2 class="slds-text-heading_small slds-truncate slds-align-middle">
+                            {!$Label.conMergeFoundContacts}
+                        </h2>
                         <apex:commandButton action="{!nextStep}" rendered="{!hasResults}" value="{!$Label.labelListViewNext}" styleClass="slds-button slds-button_neutral"/>
                     </div>
                     <div class="slds-card__body">
-                        <apex:outputText rendered="{!NOT(hasResults)}">
-                        <h3 class="slds-text-heading_small slds-p-top_large slds-p-bottom_large">
-                            <apex:outputText value="{!$Label.npe01__contact_merge_error_confirm_message_nothing_found}"/>
-                        </h3>
-                        </apex:outputText>
-                        <apex:outputText rendered="{!hasResults}">
-
-                            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th class="slds-text-heading_label" scope="col">Name</th>
-                                        <apex:repeat value="{!$ObjectType.Contact.FieldSets.ContactMergeFoundFS}" var="field">
-                                            <th class="slds-text-heading_label" scope="col">
-                                                <apex:outputText value="{!field.label}"/>
-                                            </th>
-                                        </apex:repeat>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <apex:repeat value="{!searchResults}" var="item">
+                        <apex:outputPanel rendered="{!NOT(hasResults)}">
+                            <h3 class="slds-text-heading_small slds-p-top_large slds-p-bottom_large">
+                                <apex:outputText value="{!$Label.npe01__contact_merge_error_confirm_message_nothing_found}"/>
+                            </h3>
+                        </apex:outputPanel>
+                        <div Class="slds-scrollable_x">
+                            <apex:outputPanel rendered="{!hasResults}">
+                                <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                                    <thead>
                                         <tr>
-                                            <td class="slds-row-select">
-                                                <label class="slds-checkbox">
-                                                    <apex:inputCheckbox value="{!item.selected}"/>
-                                                    <span class="slds-checkbox_faux" id="fauxCBSelect"></span>
-                                                    <span class="slds-form-element__label slds-assistive-text">
-                                                        {!$Label.conMergeSelectContact} <apex:outputText value="{!item.con.Name}"/>
-                                                    </span>
-                                                </label>
-                                            </td>
-                                            <td>
-                                                <a href="{!URLFOR($Action.Contact.View, item.con.Id)}" class="slds-truncate">
-                                                    <apex:outputText value="{!item.con.Name}"/>
-                                                </a>
-                                            </td>
+                                            <th></th>
+                                            <th class="slds-text-heading_label" scope="col">Name</th>
                                             <apex:repeat value="{!$ObjectType.Contact.FieldSets.ContactMergeFoundFS}" var="field">
-                                                <td>
-                                                    <span class="slds-truncate">
-                                                        <apex:outputField value="{!item.con[field]}"/>
-                                                    </span>
-                                                </td>
+                                                <th class="slds-text-heading_label" scope="col">
+                                                    <apex:outputText value="{!field.label}"/>
+                                                </th>
                                             </apex:repeat>
                                         </tr>
-                                    </apex:repeat>
-                                </tbody>
-                            </table>
-                        </apex:outputText>
+                                    </thead>
+                                    <tbody>
+                                        <apex:repeat value="{!searchResults}" var="item">
+                                            <tr>
+                                                <td class="slds-row-select">
+                                                    <label class="slds-checkbox">
+                                                        <apex:inputCheckbox value="{!item.selected}"/>
+                                                        <span class="slds-checkbox_faux" id="fauxCBSelect"></span>
+                                                        <span class="slds-form-element__label slds-assistive-text">
+                                                            {!$Label.conMergeSelectContact} <apex:outputText value="{!item.contactRecord.Name}"/>
+                                                        </span>
+                                                    </label>
+                                                </td>
+                                                <td>
+                                                    <a href="{!URLFOR($Action.Contact.View, item.contactRecord.Id)}" class="slds-truncate">
+                                                        <apex:outputText value="{!item.contactRecord.Name}"/>
+                                                    </a>
+                                                </td>
+                                                <apex:repeat value="{!$ObjectType.Contact.FieldSets.ContactMergeFoundFS}" var="field">
+                                                    <td>
+                                                        <span class="slds-truncate">
+                                                            <apex:outputField value="{!item.contactRecord[field]}"/>
+                                                        </span>
+                                                    </td>
+                                                </apex:repeat>
+                                            </tr>
+                                        </apex:repeat>
+                                    </tbody>
+                                </table>
+                            </apex:outputPanel>
+                        </div>
                     </div>
                     <div class="slds-card__footer">
                         <apex:commandButton action="{!nextStep}" rendered="{!hasResults}" value="{!$Label.labelListViewNext}" styleClass="slds-button slds-button_neutral"/>
                     </div>
                 </div>
             </apex:form>
-        </apex:outputText>
-
-        <apex:outputText id="contactMerge" rendered="{!step == 3}">
-
+        </apex:outputPanel>
+        <apex:outputPanel id="contactMerge" rendered="{!step == 3}">
             <apex:form id="mergeForm" styleClass="slds-form">
                 <div class="slds-card slds-m-horizontal_large slds-m-bottom_large hide-when-modal-open">
                     <div class="slds-card__header slds-grid slds-grid_align-spread">
@@ -198,7 +335,7 @@
                             <thead>
                                 <!-- header row(s) -->
                                 <apex:repeat var="row" value="{!fieldRows}">
-                                    <apex:outputText rendered="{!row.styleClass == 'header'}">
+                                    <apex:outputPanel rendered="{!row.styleClass == 'header'}">
                                         <tr>
                                             <th class="slds-size_1-of-12"></th>
                                             <apex:repeat var="col" value="{!row.values}">
@@ -212,13 +349,13 @@
                                                 </th>
                                             </apex:repeat>
                                         </tr>
-                                    </apex:outputText>
+                                    </apex:outputPanel>
                                 </apex:repeat>
                             </thead>
                             <tbody>
                                 <!-- master row(s) -->
                                 <apex:repeat var="row" value="{!fieldRows}">
-                                    <apex:outputText rendered="{!row.fieldName == '$MASTER$'}">
+                                    <apex:outputPanel rendered="{!row.fieldName == '$MASTER$'}">
                                         <tr>
                                             <th class="slds-size_1-of-12">
                                                 <apex:inputHidden id="winner" value="{!row.selectedValue}"/>
@@ -242,7 +379,7 @@
                                                 </th>
                                             </apex:repeat>
                                         </tr>
-                                    </apex:outputText>
+                                    </apex:outputPanel>
                                 </apex:repeat>
                             </tbody>
                             <tbody>
@@ -322,9 +459,7 @@
                     </div>
                     <div class="slds-backdrop" tabindex="-1"></div>
                 </div>
-
             </apex:form>
-
             <script>
                 document.getElementById('{!$Component.mergeForm}').addEventListener(
                     'submit',
@@ -341,7 +476,6 @@
                     false
                 );
             </script>
-        </apex:outputText>
-
+        </apex:outputPanel>
     </div>
 </apex:page>
