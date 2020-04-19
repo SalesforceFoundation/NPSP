@@ -22,9 +22,13 @@
         if (!namespace || namespace === '') {
             namespace = 'c';
         }
+
+        var isSimpleVersion = {!isSimpleVersion};
+        var compName = namespace + (isSimpleVersion === true ? ':RD2_EnablementDelegateSimple' : ':RD2_EnablementDelegate');
+
         $Lightning.use(namespace + ":RD2_EnablementApp", function () {
             $Lightning.createComponent(
-                namespace + ":RD2_EnablementDelegate",
+                compName,
                 {},
                 "enablementDelegateDiv",
                 function () {
