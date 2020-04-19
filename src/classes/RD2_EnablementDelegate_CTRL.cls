@@ -84,6 +84,19 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
+    * @description Indicates if the simple or the full enablement page version should be displayed
+    */
+    public static Boolean isSimpleVersion {
+        get {
+            if (isSimpleVersion == null) {
+                isSimpleVersion = isSimplePageCandidate();
+            }
+            return isSimpleVersion;
+        }
+        set;
+    }
+
+    /***
     * @description A unique enhanced Recurring Donation enablement panel Id
     */
     public override String idPanel() {
@@ -158,12 +171,15 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Determines if the dry run is outdated
+    * @description Determines if the dry run is outdated.  When no legacy RD exists,
+    * the validation is skipped and no warning should be displayed about outdated validation.
     * @param state Enablement state
     * @return Boolean
     */
     private static Boolean isDryRunOutdated(EnablementState state) {
-        return batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
+        return (isSimpleVersion) 
+            ? false
+            : batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
     }
 
     /***
@@ -203,7 +219,8 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Tracks the enhanced Recurring Donation enablement user action
+    * @description Tracks the enhanced Recurring Donation enablement user action. Automatically set Enable confirmation
+    * when no legacy RD exists since the confirmation is not applicable on a simple enablement page version.
     * @return void
     */
     @AuraEnabled
@@ -213,6 +230,11 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         if (isDryRunOutdated(state)) {
             throwAuraHandledException(System.Label.RD2_EnablementDryRunOutdatedError);
         }
+
+        if (isSimpleVersion) {
+            state.isConfirmed = true;
+            saveEnablementState(state);
+        }   
 
         try {
             STG_Panel.stgService.stgRD.IsRecurringDonations2Enabled__c = true;
@@ -268,7 +290,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     }
 
     /***
-    * @description Tracks the MetaDeploy install confirmation user action
+    * @description Tracks the MetaDeploy install confirmation user action.
     * @return void
     */
     @AuraEnabled
@@ -279,6 +301,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
 
         EnablementState state = getEnablementState();
         state.isMetaConfirmed = true;
+
         saveEnablementState(state);
     }
 
@@ -430,7 +453,21 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
         throw e;
     }
 
+    /***
+    * @description Determine if the enablement page should be in simple or full version
+    * @return Boolean 
+    */
+    private static Boolean isSimplePageCandidate() {
+        Boolean noLegacyRd = [
+            SELECT Id
+            FROM npe03__Recurring_Donation__c
+            WHERE (Status__c = null OR InstallmentFrequency__c = null)
+            LIMIT 1].isEmpty();
 
+        Boolean noMigrationRan = String.isBlank(UTIL_CustomSettingsFacade.getRecurringDonationsSettings().RecurringDonations2MigrationState__c);
+
+        return noLegacyRd && noMigrationRan;
+    }
 
     /***
     * @description Represents enhanced Recurring Donation options and status
