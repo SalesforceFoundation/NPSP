@@ -34,13 +34,13 @@
 * @description Unit Tests for the Elevate Integration Service
 */
 @IsTest
-private class RD2_ElevateIntegrationService_TEST {
+public class RD2_ElevateIntegrationService_TEST {
     private static final String CURRENCY_CAD = 'CAD';
     private static final String CURRENCY_USD = 'USD';
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
     private static final TEST_SObjectGateway.OpportunityGateway oppGateway = new TEST_SObjectGateway.OpportunityGateway();
 
-    private static final String COMMITMENT_ID = '0009989378376210918302112371207242332342432';
+    public static final String COMMITMENT_ID = '0009989378376210918302112371207242332342432';
 
     /****
     * @description Creates data required for unit tests
@@ -109,7 +109,7 @@ private class RD2_ElevateIntegrationService_TEST {
 
     /***
     * @description Verifies user can update an RD originated in Elevate when
-    * integration is enabled and user does not have permissions assigned 
+    * integration is enabled and user does not have permissions assigned
     * but the changed RD field is unrestricted (unlocked) field
     */
     @isTest
@@ -124,7 +124,7 @@ private class RD2_ElevateIntegrationService_TEST {
             .withPaidInstallments(5)
             .build();
 
-        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
             'Non-Elevate user should have permission to update unrestricted field on an Elevate RD');
     }
 
@@ -142,13 +142,13 @@ private class RD2_ElevateIntegrationService_TEST {
             .withClosedReason('test')
             .build();
 
-        System.assertEquals(false, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(false, service.hasUpdatePermissions(rd, oldRd),
             'Non-Elevate user should have not permission to update Closed Reason on an active Elevate RD');
     }
 
     /***
     * @description Verifies user can update Closed Reason on a closed RD originated in Elevate when
-    * integration is enabled and user does not have permissions assigned 
+    * integration is enabled and user does not have permissions assigned
     */
     @isTest
     private static void shouldAllowClosedElevateRDUpdateWhenNonElevateUserChangesClosedReason() {
@@ -163,7 +163,7 @@ private class RD2_ElevateIntegrationService_TEST {
             .withClosedReason('test')
             .build();
 
-        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
             'Non-Elevate user should have permission to update Closed Reason on a closed Elevate RD');
     }
 
@@ -181,16 +181,16 @@ private class RD2_ElevateIntegrationService_TEST {
             .withClosedReason('test')
             .build();
 
-        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
             'Non-Elevate user should have permission to update Closed Reason on an active RD not originated in Elevate');
     }
 
     /***
     * @description Verifies user can update an RD not originated in Elevate when
-    * integration is enabled and user does not have permissions assigned 
+    * integration is enabled and user does not have permissions assigned
     */
     @isTest
-    private static void shouldAllowNonElevateRDUpdateWhenNonElevateUser() {        
+    private static void shouldAllowNonElevateRDUpdateWhenNonElevateUser() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         RD2_ElevateIntegrationService service = configureNonElevateUserService();
 
@@ -200,13 +200,13 @@ private class RD2_ElevateIntegrationService_TEST {
             .build();
         System.assertNotEquals(rd.npe03__Contact__c, oldRd.npe03__Contact__c, 'Contact should differ on the RD');
 
-        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
             'Non-Elevate user should have permission to update an RD that is not originated in Elevate');
     }
 
     /***
     * @description Verifies user cannot update an RD originated in Elevate when
-    * RD currency is changed and integration is enabled and user does not have permissions assigned 
+    * RD currency is changed and integration is enabled and user does not have permissions assigned
     */
     @IsTest
     private static void shouldPreventElevateRDUpdateWhenNonElevateUserChangesCurrency() {
@@ -224,13 +224,13 @@ private class RD2_ElevateIntegrationService_TEST {
             .withCurrencyIsoCode(CURRENCY_USD)
             .build();
 
-        System.assertEquals(false, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(false, service.hasUpdatePermissions(rd, oldRd),
             'Non-Elevate user should not have permission to change currency on an Elevate RD');
     }
 
     /***
     * @description Verifies user can update an RD originated in Elevate when
-    * RD currency is changed and integration is enabled and user has permissions assigned 
+    * RD currency is changed and integration is enabled and user has permissions assigned
     */
     @IsTest
     private static void shouldAllowElevateRDUpdateWhenElevateUserChangesCurrency() {
@@ -239,15 +239,15 @@ private class RD2_ElevateIntegrationService_TEST {
         }
 
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
         PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
             .withIsIntegrationEnabled(true)
             .withHasIntegrationPermissions(true);
-
-        RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
-        service.config = (PS_IntegrationServiceConfig) Test.createStub(
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
             PS_IntegrationServiceConfig.class,
             configStub
         );
+        RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
 
         npe03__Recurring_Donation__c rd = getElevateRecurringDonationBaseBuilder()
             .withCurrencyIsoCode(CURRENCY_CAD)
@@ -256,13 +256,13 @@ private class RD2_ElevateIntegrationService_TEST {
             .withCurrencyIsoCode(CURRENCY_USD)
             .build();
 
-        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
             'Elevate user should have permission to change currency on an Elevate RD');
     }
 
     /***
     * @description Verifies user can update an RD not originated in Elevate when
-    * RD currency is changed and integration is enabled and user does not have permissions assigned 
+    * RD currency is changed and integration is enabled and user does not have permissions assigned
     */
     @IsTest
     private static void shouldAllowNonElevateRDUpdateWhenNonElevateUserChangesCurrency() {
@@ -280,7 +280,7 @@ private class RD2_ElevateIntegrationService_TEST {
             .withCurrencyIsoCode(CURRENCY_USD)
             .build();
 
-        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(true, service.hasUpdatePermissions(rd, oldRd),
             'Non-Elevate user should have permission to change currency on an RD not originated in Elevate');
     }
 
@@ -423,13 +423,12 @@ private class RD2_ElevateIntegrationService_TEST {
             .withIsIntegrationEnabled(true)
             .withHasIntegrationPermissions(false);
 
-        RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
-        service.config = (PS_IntegrationServiceConfig) Test.createStub(
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
             PS_IntegrationServiceConfig.class,
             configStub
         );
 
-        return service;
+        return new RD2_ElevateIntegrationService();
     }
 
     /****
@@ -442,7 +441,7 @@ private class RD2_ElevateIntegrationService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_ElevateIntegrationService service = new RD2_ElevateIntegrationService();
-        service.config = (PS_IntegrationServiceConfig) Test.createStub(
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
             PS_IntegrationServiceConfig.class,
             configStub
         );
@@ -453,7 +452,7 @@ private class RD2_ElevateIntegrationService_TEST {
             .build();
         System.assertNotEquals(rd.npe03__Contact__c, oldRd.npe03__Contact__c, 'Contact should differ on the RD');
 
-        System.assertEquals(hasPermission, service.hasUpdatePermissions(rd, oldRd), 
+        System.assertEquals(hasPermission, service.hasUpdatePermissions(rd, oldRd),
             'User should ' + (hasPermission ? '' : 'not ') + 'have permission to update Elevate RD: ' + configStub);
     }
 

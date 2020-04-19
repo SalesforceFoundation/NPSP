@@ -2,7 +2,7 @@
     /****
     * @description Clears the errors on the page
     */
-   clearError: function (component) {
+    clearError: function (component) {
         component.set('v.errorSection', '');
         component.set('v.errorMessage', '');
     },
@@ -11,7 +11,7 @@
     * @description Confirms MetaDeploy has been deployed
     */
     confirmDeploy: function (component) {
-    //disable the current active step so the next step is enabled only on current step success
+        //disable the current active step so the next step is enabled only on current step success
         component.set('v.state.isMetaConfirmed', false);
         this.showSpinner(component, 'metadeployConfirmSpinner');
 
@@ -124,7 +124,7 @@
     /****
     * @description Loads the enablement state and enables/disables page elements based on it
     */
-   getDeployURL: function (component) {
+    getDeployURL: function (component) {
         var action = component.get("c.getMetaDeployURL");
 
         action.setCallback(this, function (response) {
@@ -148,7 +148,7 @@
     /****
     * @description Confirms MetaDeploy has been launched
     */
-   launchDeploy: function (component) {
+    launchDeploy: function (component) {
         this.clearError(component);
 
         var action = component.get('c.launchMetaDeploy');
@@ -182,8 +182,8 @@
             if (!component.isValid()) {
                 return;
             }
+
             const state = response.getState();
-            console.log(response.getReturnValue());
             if (state === "SUCCESS") {
                 const enablementState = JSON.parse(response.getReturnValue());
 
@@ -197,7 +197,6 @@
 
                 this.refreshEnable(component);
                 this.refreshMetaDeploy(component);
-
 
             } else if (state === "ERROR") {
                 this.handleError(component, response.getError());

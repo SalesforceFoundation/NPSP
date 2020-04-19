@@ -43,7 +43,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * @description Contains configuration related to the Elevate integration service config and permissions
      */
     @TestVisible
-    private PS_IntegrationServiceConfig config {
+    private static PS_IntegrationServiceConfig config {
         get {
             if (config == null) {
                 config = new PS_IntegrationServiceConfig();
@@ -74,7 +74,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * @return Boolean
      */
     public Boolean hasUpdatePermissions(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        // Do not check changed fields if 
+        // Do not check changed fields if
         // 1. the Recurring Donation is not referencing an Elevate record or
         // 2. the Elevate integration is not configured/enabled or
         // 3. the user *has* the Elevate integration permission to change the Recurring Donation
@@ -99,7 +99,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
             || rd.PaymentMethod__c != oldRd.PaymentMethod__c
             || rd.Status__c != oldRd.Status__c
             || rd.CommitmentId__c != oldRd.CommitmentId__c;
-        
+
         if (!isChanged && rd.Status__c != RD2_Constants.STATUS_CLOSED) {
             isChanged = rd.ClosedReason__c != oldRd.ClosedReason__c;
         }
