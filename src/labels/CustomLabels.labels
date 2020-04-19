@@ -1726,6 +1726,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <value>Enable the Enhanced Recurring Donations functionality.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnablementEnableSimpleIntro</fullName>
+         <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple enablement section introduction and details</shortDescription>
+        <value>This step changes the processing logic for Recurring Donations to use Enhanced Recurring Donations logic. Recurring Donations will not function the same way as before.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EnablementEnableTitle</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1790,6 +1798,14 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>MetaDeploy link label</shortDescription>
         <value>Launch MetaDeploy</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementMetaDeploySimpleIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple metaDeploy section introduction and guidelines</shortDescription>
+        <value>Use our MetaDeploy service to install the Enhanced Recurring Donations metadata. The metadata includes: new picklist values, updated help text, and a new page layout. MetaDeploy is a service that exists outside of your Salesforce org.</value>
     </labels>
     <labels>
         <fullName>RD2_EnablementMetaDeployTitle</fullName>
@@ -1912,6 +1928,16 @@ If you&apos;re not sure how to resolve these errors, post a message in the Nonpr
         <protected>true</protected>
         <shortDescription>Enablement preparation tasks title</shortDescription>
         <value>Preparation Tasks</value>
+    </labels>
+    <labels>
+        <fullName>RD2_EnablementSimpleIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Simple enablement page introduction and guidelines</shortDescription>
+        <value>Enhanced Recurring Donations makes Recurring Donations more flexible and easier to manage than ever before. To enable Enhanced Recurring Donations, follow the steps below. You must complete ALL the steps to fully enable Enhanced Recurring Donations.
+        &lt;br/&gt;&lt;br/&gt;&lt;b&gt;Because you have no Recurring Donation records, you don&apos;t need to validate or migrate any data.&lt;/b&gt;
+        &lt;br/&gt;&lt;br/&gt;For more information, read the &lt;a href=&quot;https://powerofus.force.com/NPSP_Recurring_Donations&quot; target=&quot;_blank&quot;&gt;Enhanced Recurring Donations documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>RD2_ErrorDataMigrationJobCannotBeRun</fullName>
