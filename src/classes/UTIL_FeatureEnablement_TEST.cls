@@ -41,7 +41,7 @@ private class UTIL_FeatureEnablement_TEST {
 
     /**
      * @description Validates that the FeatureEnablement.FeatureManagement class can be mocked to
-     * force the isRecurringDonations2PilotEnabled() static method to return true
+     * force the isPilotEnabled() static method to return true
      */
     @isTest
     private static void shouldReturnTrueWhenPilotIsEnabled() {
@@ -53,11 +53,11 @@ private class UTIL_FeatureEnablement_TEST {
 
         featureManagement.setPackageBooleanValue(UTIL_FeatureEnablement.FeatureName.PilotEnabled.name(), true);
 
-        System.assertEquals(true, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
+        System.assertEquals(true, UTIL_FeatureEnablement.isPilotEnabled());
     }
 
     /**
-     * @description Validates that the isRecurringDonations2PilotEnabled() method can be forced
+     * @description Validates that the isPilotEnabled() method can be forced
      * to return True by using the OverrideFeature_PilotEnabled__c field on the Package_Settings
      * object.
      */
@@ -72,12 +72,12 @@ private class UTIL_FeatureEnablement_TEST {
         );
 
         System.assertEquals(true,
-            UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
+            UTIL_FeatureEnablement.isPilotEnabled(),
             'The Pilot should be enabled if this test is running in a scratch org');
     }
 
     /**
-     * @description Validates that the isRecurringDonations2PilotEnabled() method can be forced
+     * @description Validates that the isPilotEnabled() method can be forced
      * to return True by using the OverrideFeature_PilotEnabled__c field on the Package_Settings
      * object.
      */
@@ -88,15 +88,15 @@ private class UTIL_FeatureEnablement_TEST {
         }
 
         System.assertEquals(false,
-            UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled(),
+            UTIL_FeatureEnablement.isPilotEnabled(),
             'The Pilot should be disabled if this test is running in a scratch org');
     }
 
     /**
-     * @description Validates that the default for the isRecurringDonations2PilotEnabled() static method is false
+     * @description Validates that the default for the isPilotEnabled() static method is false
      */
     @isTest
     private static void shouldReturnFalseWhenPilotNotEnabled() {
-        System.assertEquals(false, UTIL_FeatureEnablement.isRecurringDonations2PilotEnabled());
+        System.assertEquals(false, UTIL_FeatureEnablement.isPilotEnabled());
     }
 }
