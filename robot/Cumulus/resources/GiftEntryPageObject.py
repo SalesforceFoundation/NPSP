@@ -9,11 +9,12 @@ from NPSP import npsp_lex_locators
 from logging import exception
 
 OID_REGEX = r"^(%2F)?([a-zA-Z0-9]{15,18})$"
+
 @pageobject("Landing", "GE_Gift_Entry")
 class GiftEntryLandingPage(BaseNPSPPage, BasePage):
 
     
-    def _go_to_page(self, filter_name=None):
+    def _go_to_page(self):
         """To go to Gift Entry page"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
@@ -71,6 +72,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         """
         id=self.get_template_record_id(template) 
         self.salesforce.store_session_record("Form_Template__c",id)   
+
 
 @pageobject("Template", "GE_Gift_Entry")
 class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
@@ -179,5 +181,6 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
 
 
                         
+
 
 
