@@ -129,6 +129,85 @@ private class RD2_ElevateIntegrationService_TEST {
 
     }
 
+        /***
+    * @description Verifies that any new opportunities are linked to a existing RD if the CommitmentId matches
+    */
+    @isTest
+    private static void shouldLinkOppsToRDMatchingCommitmentIdOnOppInsert() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            getRecurringDonationBaseBuilder()
+                .withCommitmentId(COMMITMENT_ID)
+                .build(),
+            getRecurringDonationBaseBuilder()
+                .withCommitmentId('NOTHING')
+                .build(),
+            getRecurringDonationBaseBuilder()
+                .build()
+        };
+
+        insert rds;
+        List<Opportunity> opps = new List<Opportunity>{
+            getOpportunityBaseBuilder()
+                .withCommitmentId(COMMITMENT_ID)
+                .build(),
+            getOpportunityBaseBuilder()
+                .withCommitmentId('BAD_ID')
+                .build(),
+            getOpportunityBaseBuilder()
+                .build()
+        };
+
+        Test.startTest();
+        insert opps;
+        Test.stopTest();
+
+        Set<Id> oppIds = new Map<Id, Opportunity>(opps).keySet();
+
+        for (Opportunity opp : oppGateway.getRecords(oppIds)) {
+            if (opp.CommitmentId__c == COMMITMENT_ID) {
+                System.assertEquals(rds[0].Id, opp.npe03__Recurring_Donation__c,
+                    'The Opp.RecurringDonationId should match the related RD');
+            } else {
+                System.assertEquals(null, opp.npe03__Recurring_Donation__c,
+                    'The RecurringDonationId should be null');
+            }
+        }
+
+    }
+
+    /***
+    * @description Verifies that an Opps already linked to an RD on insert will not link to another through CommitmentId
+    */
+    @isTest
+    private static void shouldNotLinkAlreadyAssignedOppsToRDMatchingCommitmentIdOnOppInsert() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>{
+            getRecurringDonationBaseBuilder()
+                .withCommitmentId(COMMITMENT_ID)
+                .build(),
+            getRecurringDonationBaseBuilder()
+                .build()
+        };
+
+        insert rds;
+
+        Opportunity opp = getOpportunityBaseBuilder()
+            .withCommitmentId(COMMITMENT_ID)
+            .withRecurringDonation(rds[1].Id)
+            .build();
+
+        Test.startTest();
+        insert opp;
+        Test.stopTest();
+
+        opp = oppGateway.getRecord(opp.Id);
+        System.assertEquals(rds[1].Id, opp.npe03__Recurring_Donation__c,
+            'The Opp.RecurringDonationId should still be linked to the original RD');
+    }
+
     // Helpers
     ///////////////////
 

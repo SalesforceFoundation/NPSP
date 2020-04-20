@@ -67,4 +67,22 @@ public inherited sharing class RD2_ElevateIntegrationService {
             UTIL_DMLService.updateRecordBatchAndLogErrors(oppsToUpdate, ERR_Handler_API.Context.Elevate.name());
         }
     }
+
+    /***
+    * @description For each Opportunity with CommitmentId, pair with the existing RD with the matching Commitmentid
+    * and update the RecuringDonation lookup field (only if null)
+    * @param oppsByCommitmentId Map by CommitmentId 
+    */
+    public void matchOpportunitiesToRds(Map<String, List<Opportunity>> oppsByCommitmentId) {
+        for(npe03__Recurring_Donation__c rd : [
+            SELECT CommitmentId__c
+            FROM npe03__Recurring_Donation__c
+            WHERE CommitmentId__c IN: oppsByCommitmentId.keySet()]) {
+            
+            for (Opportunity opp : oppsByCommitmentId.get(rd.CommitmentId__c)) {
+                opp.npe03__Recurring_Donation__c = rd.Id;
+            }
+        }
+    }
+
 }
