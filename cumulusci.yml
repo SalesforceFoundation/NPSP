@@ -638,7 +638,7 @@ flows:
         steps:
             1:
                 task: execute_anon
-                # Enables RD2 in Custom Settings
+                # Enables RD2 in Custom Settings. Do this before enabling CRLP so it does not create a rollup for NextDonationDate.
                 options:
                     apex: >
                         npe03__Recurring_Donations_Settings__c rdSettings = npe03__Recurring_Donations_Settings__c.getOrgDefaults();
@@ -646,10 +646,10 @@ flows:
                         upsert rdSettings;
             2:
                 task: enable_customizable_rollups
-                # Enable customizable rollups after enabling RD2 so the npe03__Next_Payment_Date__c rollup is not created
+                # Enable customizable rollups after enabling RD2
             3:
                 task: deploy_rd2_config
-                # Deploys the unpackaged config needed for RD2
+                # Deploys the unpackaged configuration required for RD2
             4:
                 task: custom_settings_value_wait
                 # Wait for CRLP to be fully enabled before continuing with data migration
