@@ -190,7 +190,6 @@ Validate Batch Process When CRLP Checked
 
     Wait For Batch To Process    CRLP_Account_SoftCredit_BATCH            Completed
     Wait For Batch To Process    CRLP_RD_BATCH                            Completed
-    Wait For Batch To Process    CRLP_SkewDispatcher_BATCH                Completed
     Wait For Batch To Process    CRLP_Account_AccSoftCredit_BATCH         Completed
     Wait For Batch To Process    CRLP_Contact_SoftCredit_BATCH            Completed
     Wait For Batch To Process    CRLP_Account_BATCH                       Completed
