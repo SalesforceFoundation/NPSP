@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -33,11 +33,11 @@
 * @group Address Management
 * @description Class that tests ADDR_SmartyStreets_Gateway class.
 */
-@isTest
+@isTest(IsParallel=True)
 public with sharing class ADDR_Validation_Gateway_TEST {
 
     private static Addr_Verification_Settings__c settings;
-    
+
     public static ADDR_SmartyStreets_Gateway createDefaultSettings() {
         // use the household account model
         UTIL_CustomSettingsFacade.getContactsSettings();
@@ -49,15 +49,15 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         settings.Class__c = 'ADDR_SmartyStreets_Validator';
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
-        
+
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         return new ADDR_SmartyStreets_Gateway(settings);
-        
+
     }
-    
+
     public static testMethod void testOneAddress() {
     	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
-        
+
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr = gateway.verifyAddress('single-address');
         Test.stopTest();
@@ -70,12 +70,12 @@ public with sharing class ADDR_Validation_Gateway_TEST {
 
     public static testMethod void testMultiAddress() {
     	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
-    	
+
         Test.startTest();
         list<ADDR_SmartyStreets_Gateway.AddressResponse> srs = gateway.verifyAddresses(
             new list<String>{'One Infinite Loop Cupertino multiple-address, CA', 'Two Infinite Loop Cupertino, CA'} );
         Test.stopTest();
-        
+
         system.assertEquals('1 Infinite Loop', srs[0].delivery_line_1);
         system.assertEquals(37.33118, srs[0].metadata.latitude);
         system.assertEquals('1 Infinite Loop', srs[1].delivery_line_1);
@@ -96,7 +96,7 @@ public with sharing class ADDR_Validation_Gateway_TEST {
 
     public static testMethod void testBadInput() {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
-        
+
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
@@ -108,10 +108,10 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         Test.stopTest();
         system.assertEquals(null, sr);
     }
-    
+
     public static testMethod void testBadAuth() {
     	ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
-        
+
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
@@ -123,10 +123,10 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         Test.stopTest();
         system.assertEquals(null, sr);
     }
-    
+
     public static testMethod void testNoSubscription() {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
-                
+
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
@@ -138,10 +138,10 @@ public with sharing class ADDR_Validation_Gateway_TEST {
         Test.stopTest();
         system.assertEquals(null, sr);
     }
-    
+
     public static testMethod void testServerError() {
         ADDR_SmartyStreets_Gateway gateway = createDefaultSettings();
-                
+
         Test.startTest();
         ADDR_SmartyStreets_Gateway.AddressResponse sr;
         try {
