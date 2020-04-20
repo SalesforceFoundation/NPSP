@@ -62,10 +62,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public static Boolean skipEvaluationService = false;
 
-    public Boolean isIntegrationEnabled() {
-        return RD2_ElevateIntegrationService.isIntegrationEnabled();
-    }
-
     /**
     * @description Indicates if the Opportunity evaluation is invoked from a nightly batch job
     */
@@ -424,7 +420,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         Boolean hasMandatoryConditions = rd.isActive()
             && rd.hasNextDonationDate()
             && rd.hasSchedule()
-            && (!isIntegrationEnabled() || !rd.isElevateRecord());
+            && (!RD2_ElevateIntegrationService.isIntegrationEnabled() || !rd.isElevateRecord());
 
         if (!hasMandatoryConditions) {
             return false;
